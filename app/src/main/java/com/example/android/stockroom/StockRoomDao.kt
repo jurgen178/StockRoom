@@ -139,9 +139,6 @@ interface StockRoomDao {
 //    @Delete
 //    fun deleteAsset(asset: Asset)
 
-    @Query("DELETE FROM asset_table WHERE symbol = :symbol AND shares = :shares AND price = :price")
-    fun deleteAsset(symbol: String, shares: Float, price: Float)
-
     @Transaction
     @Query("SELECT * FROM stock_table")
     fun getAllAssetsLiveData(): LiveData<List<Assets>>
@@ -155,6 +152,9 @@ interface StockRoomDao {
     @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
     fun getAssets(symbol: String): Assets
 //    fun getAllAssets(): LiveData<List<Assets>> = getAllAssets1().getDistinct()
+
+    @Query("DELETE FROM asset_table WHERE symbol = :symbol AND shares = :shares AND price = :price")
+    fun deleteAsset(symbol: String, shares: Float, price: Float)
 
     @Query("DELETE FROM asset_table WHERE symbol = :symbol")
     fun deleteAssets(symbol: String)
@@ -189,4 +189,17 @@ interface StockRoomDao {
 
     @Query("DELETE FROM event_table WHERE symbol = :symbol AND title = :title AND note = :note AND datetime = :datetime")
     fun deleteEvent(symbol: String, title: String, note: String, datetime: Long)
+
+    @Query("DELETE FROM event_table WHERE symbol = :symbol")
+    fun deleteEvents(symbol: String)
+
+    @Transaction
+    fun updateEvents(symbol: String, events: List<Event>) {
+        deleteEvents(symbol)
+        events.forEach { event ->
+            if (event.title.isNotEmpty()) {
+                addEvent(event)
+            }
+        }
+    }
 }
