@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import kotlinx.android.synthetic.main.fragment_summary.view.summaryPieChart
+import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 
 class SummaryFragment : Fragment() {
 
@@ -34,7 +35,7 @@ class SummaryFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View? {
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_summary, container, false)
+    return inflater.inflate(R.layout.fragment_summarygroup, container, false)
   }
 
   override fun onViewCreated(
@@ -48,15 +49,21 @@ class SummaryFragment : Fragment() {
     stockRoomViewModel.logDebug("Summary activity started.")
 
     val groupList: List<Group> = stockRoomViewModel.getGroupsSync()
-    val summaryListAdapter = SummaryListAdapter(requireContext(), groupList)
 
+    val summaryListAdapter = SummaryListAdapter(requireContext())
     val summaryList = view.findViewById<RecyclerView>(R.id.summaryList)
     summaryList.adapter = summaryListAdapter
-    summaryList.layoutManager = LinearLayoutManager(requireContext())
+    summaryList.layoutManager = GridLayoutManager(requireContext(), 3)
+
+    val summaryGroupListAdapter = SummaryGroupListAdapter(requireContext(), groupList)
+    val summaryGroupList = view.findViewById<RecyclerView>(R.id.summaryGroupList)
+    summaryGroupList.adapter = summaryGroupListAdapter
+    summaryGroupList.layoutManager = LinearLayoutManager(requireContext())
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItems ->
         summaryListAdapter.updateData(stockItems)
+        summaryGroupListAdapter.updateData(stockItems)
         updatePieData(view, stockItems)
       }
     })

@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
 
@@ -34,10 +35,10 @@ data class SummaryData(
   val color: Int
 )
 
-class SummaryListAdapter internal constructor(
+class SummaryGroupListAdapter internal constructor(
   val context: Context,
   private val groupList: List<Group>
-) : RecyclerView.Adapter<SummaryListAdapter.OnlineDataViewHolder>() {
+) : RecyclerView.Adapter<SummaryGroupListAdapter.OnlineDataViewHolder>() {
 
   private val groupStandardName = context.getString(R.string.standard_group)
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -54,7 +55,7 @@ class SummaryListAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): OnlineDataViewHolder {
-    val itemView = inflater.inflate(R.layout.summary_item, parent, false)
+    val itemView = inflater.inflate(R.layout.summarygroup_item, parent, false)
     return OnlineDataViewHolder(itemView)
   }
 
@@ -121,10 +122,11 @@ class SummaryListAdapter internal constructor(
     all: Boolean,
     stockItems: List<StockItem>
   ): Pair<SpannableStringBuilder, SpannableStringBuilder> {
+
     var totalPurchasePrice = 0f
     var totalAssets = 0f
     var totalGain = 0f
-    var totalLoss = 0f
+    //var totalLoss = 0f
     var totalShares = 0f
     var totalDividendAssets = 0f
     var totalDividend = 0f
@@ -148,9 +150,9 @@ class SummaryListAdapter internal constructor(
       val gainLoss = assetsPrice - price
       if (gainLoss > 0f) {
         totalGain += gainLoss
-      } else {
-        totalLoss -= gainLoss
-      }
+      } //else {
+      //totalLoss -= gainLoss
+      //}
 
       totalPurchasePrice += price
       totalAssets += assetsPrice
@@ -176,64 +178,118 @@ class SummaryListAdapter internal constructor(
       it.assets.isNotEmpty()
     }
     val stockEvents = stockItemsSelected.filter {
-      it.assets.isNotEmpty()
+      it.events.isNotEmpty()
     }
 
     val totals1 = SpannableStringBuilder()
-        .append("Aktien ")
+        .append("${context.getString(R.string.summary_stocks)} ")
         .bold { append("${stockItemsSelected.size}\n") }
-        .append("Aktien mit Bestand ")
+        .append("${context.getString(R.string.summary_stocks_with_assets)} ")
         .bold { append("${stockAssets.size}\n") }
-        .append("Benachrichtigungen ")
+        .append("${context.getString(R.string.summary_alerts)} ")
         .bold { append("${totalAlerts}\n") }
-        .append("Ereignisse ")
+        .append("${context.getString(R.string.summary_events)} ")
         .bold { append("${stockEvents.size}\n") }
-        .append("Anmerkungen ")
+        .append("${context.getString(R.string.summary_note)} ")
         .bold { append("${totalNotes}\n") }
-        .append("Anzahl Aktien ")
-        .bold { append("${totalShares}\n") }
-        .append("Gesamtkaufpreis ")
+        .append("${context.getString(R.string.summary_number_of_stocks)} ")
+        .bold { append("${DecimalFormat("0.##").format(totalShares)}\n") }
+        .append("${context.getString(R.string.summary_total_purchase_price)} ")
         .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
-        .append("Gesamtbestand ")
+        .append("${context.getString(R.string.summary_total_assets)} ")
         .bold { append("${DecimalFormat("0.00").format(totalAssets)}") }
+
+    /*
+    val s = SpannableStringBuilder()
+            .color(green, { append("Green text ") })
+            .append("Normal text ")
+            .scale(0.5, { append("Text at half size " })
+            .backgroundColor(green, { append("Background green") })
+     */
 
     val totalDividendChange: Float = if (totalDividendAssets > 0f) {
       totalDividend / totalDividendAssets
     } else {
       0f
     }
+
+    val gain = if (totalGain > 0f) {
+      SpannableStringBuilder()
+          .color(
+              context.getColor(R.color.green)
+          ) { bold { append("${DecimalFormat("0.00").format(totalGain)}\n") } }
+    } else {
+      SpannableStringBuilder().bold {
+        append("${DecimalFormat("0.00").format(totalGain)}\n")
+      }
+    }
+
+    // To minimize rounding errors
+    val totalLoss = totalGain - (totalAssets - totalPurchasePrice)
+
+    val loss = if (totalLoss > 0f) {
+      SpannableStringBuilder()
+          .color(
+              context.getColor(R.color.red)
+          ) { bold { append("${DecimalFormat("0.00").format(totalLoss)}\n") } }
+    } else {
+      SpannableStringBuilder().bold {
+        append("${DecimalFormat("0.00").format(totalLoss)}\n")
+      }
+    }
+
+    val total = totalAssets - totalPurchasePrice
+    val gainloss = when {
+      totalAssets > totalPurchasePrice -> {
+        SpannableStringBuilder()
+            .color(
+                context.getColor(R.color.green)
+            ) {
+              bold {
+                append(
+                    "${DecimalFormat("0.00").format(total)}\n"
+                )
+              }
+            }
+      }
+      totalAssets < totalPurchasePrice -> {
+        SpannableStringBuilder().color(context.getColor(R.color.red)) {
+          bold { append("${DecimalFormat("0.00").format(total)}\n") }
+        }
+      }
+      else -> {
+        SpannableStringBuilder().bold {
+          append(
+              "${DecimalFormat("0.00").format(total)}\n"
+          )
+        }
+      }
+    }
+
     val totals2 = SpannableStringBuilder()
-        .append("Gewinn ")
-        .bold { append("${DecimalFormat("0.00").format(totalGain)}\n") }
-        .append("Verlust ")
-        .bold {
-          append(
-              "${DecimalFormat("0.00")
-                  .format(totalLoss)}\n"
-          )
-        }
-        .append("Gewinn-Verlust ")
-        .bold {
-          append(
-              "${DecimalFormat("0.00")
-                  .format(totalAssets - totalPurchasePrice)}\n"
-          )
-        }
-        .append("Bestand mit Dividende ")
+        .append("${context.getString(R.string.summary_gain)} ")
+        .append(gain)
+        //.color(Color.GREEN, { bold { append("${DecimalFormat("0.00").format(totalGain)}\n") } })
+        .append("${context.getString(R.string.summary_loss)} ")
+        .append(loss)
+        .append("${context.getString(R.string.summary_gain_loss)} ")
+        .append(gainloss)
+        .append("\n")
+        .append("${context.getString(R.string.summary_dividend_assets)} ")
         .bold {
           append(
               "${DecimalFormat("0.00")
                   .format(totalDividendAssets)}\n"
           )
         }
-        .append("Bestand ohne Dividende ")
+        .append("${context.getString(R.string.summary_no_dividend_assets)} ")
         .bold {
           append(
               "${DecimalFormat("0.00")
                   .format(totalAssets - totalDividendAssets)}\n"
           )
         }
-        .append("Dividende pro Jahr ")
+        .append("${context.getString(R.string.summary_dividend_per_year)} ")
         .bold {
           append(
               "${DecimalFormat("0.00")

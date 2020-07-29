@@ -18,21 +18,33 @@
       android:orientation="vertical"
       >
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/summaryPieChart"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/summaryList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        tools:listitem="@layout/summary_item"
+        tools:listitem="@layout/summarylist_item"
         />
 
+    <View style="@style/Divider"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/summaryPieChart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        />
+
+    <View style="@style/Divider"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/summaryGroupList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        tools:listitem="@layout/summarygroup_item"
+        />
 
   </LinearLayout>
 
