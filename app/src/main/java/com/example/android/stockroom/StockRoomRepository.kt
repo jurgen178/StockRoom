@@ -131,6 +131,12 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun updateEvents(symbol: String, events: List<Event>) {
+    stockRoomDao.updateEvents(symbol = symbol, events = events)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun getStockDBdata(symbol: String): StockDBdata {
     return stockRoomDao.getStockDBdata(symbol)
   }

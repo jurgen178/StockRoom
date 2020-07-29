@@ -740,7 +740,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }],
     "events": [{
         "datetime": 1,
-        "type": "t1"
+        "note": "n1"
+        "title": "t1"
+        "type": 0
     }],
     "groupColor": 123,
     "groupName": "a",
@@ -809,6 +811,36 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
 
           updateAssets(symbol = symbol, assets = assets)
+        }
+
+        // get events
+        if (jsonObj.has("events")) {
+          val eventsObjArray = jsonObj.getJSONArray("events")
+          val events: MutableList<Event> = mutableListOf()
+
+          /*
+            "events": [{
+                  "datetime": 1,
+                  "note": "n1"
+                  "title": "t1"
+                  "type": 0
+              }],
+           */
+
+          for (j in 0 until eventsObjArray.length()) {
+            val eventsObj: JSONObject = eventsObjArray[j] as JSONObject
+            events.add(
+                Event(
+                    symbol = symbol,
+                    datetime = eventsObj.getLong("datetime"),
+                    note = eventsObj.getString("note"),
+                    title = eventsObj.getString("title"),
+                    type = eventsObj.getInt("type")
+                )
+            )
+          }
+
+          updateEvents(symbol, events)
         }
 
         // get properties
@@ -1195,7 +1227,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val groups: MutableList<Group> = getGroupsSync().toMutableList()
     groups.add(Group(color = backgroundListColor, name = standardGroupName))
     for (i in groups.indices) {
-      var grp: Group = groups[i]
+      val grp: Group = groups[i]
       val s = SpannableString("$space  ${grp.name}")
       s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
 
@@ -1306,9 +1338,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return repository.getEventsLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
-  fun updateEvents(eventlist: List<Events>) {
-    //repository.updateEvents(eventlist)
-  }
+  fun updateEvents(
+    symbol: String,
+    events: List<Event>
+  ) =
+    scope.launch {
+      repository.updateEvents(symbol = symbol.toUpperCase(Locale.ROOT), events = events)
+    }
 
   fun deleteEvent(event: Event) =
     scope.launch {
