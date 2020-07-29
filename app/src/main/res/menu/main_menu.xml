@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+      android:id="@+id/menu_sync"
+      android:icon="@drawable/ic_action_sync"
+      app:showAsAction="always"
+      android:title="" />
+
+  <item
+      android:id="@+id/menu_sort"
+      android:icon="@drawable/ic_action_sort"
+      app:showAsAction="always"
+      android:title="" >
+
+    <!-- Starting the sort sub menu
+      <group android:checkableBehavior="single">
+      </group>
+    -->
+    <menu>
+        <item
+            android:id="@+id/menu_sort_name"
+            android:title="@string/sort_name" />
+        <item
+            android:id="@+id/menu_sort_assets"
+            android:title="@string/sort_assets" />
+        <item
+            android:id="@+id/menu_sort_profit"
+            android:title="@string/sort_profit" />
+        <item
+            android:id="@+id/menu_sort_change"
+            android:title="@string/sort_change" />
+        <item
+            android:id="@+id/menu_sort_dividend"
+            android:title="@string/sort_dividend" />
+        <item
+            android:id="@+id/menu_sort_group"
+            android:title="@string/sort_group" />
+        <item
+            android:id="@+id/menu_sort_unsorted"
+            android:title="@string/sort_group_unsorted" />
+    </menu>
+  </item>
+  <item
+      android:id="@+id/menu_add"
+      android:icon="@drawable/ic_action_add"
+      android:onClick="onAdd"
+      app:showAsAction="always"
+      android:title="" />
+  <item
+      android:id="@+id/menu_settings"
+      android:icon="@drawable/ic_action_settings"
+      android:onClick="onSettings"
+      app:showAsAction="always"
+      android:title="" />
+</menu>
