@@ -35,10 +35,10 @@ data class SummaryData(
   val color: Int
 )
 
-class SummaryGroupListAdapter internal constructor(
+class SummaryGroupAdapter internal constructor(
   val context: Context,
   private val groupList: List<Group>
-) : RecyclerView.Adapter<SummaryGroupListAdapter.OnlineDataViewHolder>() {
+) : RecyclerView.Adapter<SummaryGroupAdapter.OnlineDataViewHolder>() {
 
   private val groupStandardName = context.getString(R.string.standard_group)
   private val inflater: LayoutInflater = LayoutInflater.from(context)

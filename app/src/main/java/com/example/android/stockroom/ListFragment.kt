@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -95,10 +94,6 @@ class ListFragment : Fragment() {
     val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
     val adapter = StockRoomListAdapter(requireContext(), clickListenerGroup, clickListenerSummary)
 
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
-    adapter.coloredDisplay = sharedPreferences.getBoolean("colored_display", false)
-
     val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
 
     recyclerView.adapter = adapter
@@ -131,14 +126,6 @@ class ListFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.updateOnlineDataManually()
-  }
-
-  override fun onCreateOptionsMenu(
-    menu: Menu,
-    inflater: MenuInflater
-  ) {
-    //inflater.inflate(R.menu.main_menu, menu)
-    super.onCreateOptionsMenu(menu, inflater)
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {

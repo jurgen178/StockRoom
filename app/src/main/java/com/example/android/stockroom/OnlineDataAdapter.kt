@@ -30,7 +30,7 @@ data class OnlineData(
 )
 
 class OnlineDataAdapter internal constructor(
-  context: Context
+  val context: Context
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -57,6 +57,29 @@ class OnlineDataAdapter internal constructor(
 
     holder.itemViewOnlineDataDesc.text = current.desc
     holder.itemViewOnlineData.text = current.text
+  }
+
+  private fun formatInt(value: Long): String {
+    return when {
+      value >= 1000000000000L -> {
+        "${DecimalFormat("0.##").format(value / 1000000000000f)}${context.resources.getString(
+            R.string.trillion_abbr
+        )}"
+      }
+      value >= 1000000000L -> {
+        "${DecimalFormat("0.##").format(value / 1000000000f)}${context.resources.getString(
+            R.string.billion_abbr
+        )}"
+      }
+      value >= 1000000L -> {
+        "${DecimalFormat("0.##").format(value / 1000000f)}${context.resources.getString(
+            R.string.million_abbr
+        )}"
+      }
+      else -> {
+        DecimalFormat("0.##").format(value)
+      }
+    }
   }
 
   fun updateData(onlineMarketData: OnlineMarketData) {
@@ -86,10 +109,10 @@ class OnlineDataAdapter internal constructor(
     )
     data.add(
         OnlineData(
-            desc = "regularMarketVolume", text = onlineMarketData.regularMarketVolume.toString()
+            desc = "regularMarketVolume", text = formatInt(onlineMarketData.regularMarketVolume)
         )
     )
-    data.add(OnlineData(desc = "marketCap", text = onlineMarketData.marketCap.toString()))
+    data.add(OnlineData(desc = "marketCap", text = formatInt(onlineMarketData.marketCap)))
     data.add(
         OnlineData(
             desc = "forwardPE", text = DecimalFormat("0.00##").format(onlineMarketData.forwardPE)

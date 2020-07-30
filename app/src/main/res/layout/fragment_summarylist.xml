@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SummaryGroupFragment"
+    tools:context=".SummaryListFragment"
     >
 
   <androidx.core.widget.NestedScrollView
@@ -18,21 +18,12 @@
       android:orientation="vertical"
       >
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/summaryPieChart"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        />
-
-    <View style="@style/Divider"/>
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/summaryGroup"
+        android:id="@+id/summaryList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        tools:listitem="@layout/summarygroup_item"
+        android:layout_margin="4dp"
+        tools:listitem="@layout/summarylist_item"
         />
 
   </LinearLayout>

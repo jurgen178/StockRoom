@@ -39,4 +39,58 @@ limitations under the License. -->
         android:layout_margin="@dimen/big_padding"
         android:textColor="@color/buttonLabel" />
 
+    <View style="@style/Divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/import_section_header"
+        style="@style/section_header"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_margin="16dp"
+        android:text="@string/import_list_desc"
+        />
+
+    <Button
+        android:id="@+id/importButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_import"
+        android:layout_margin="@dimen/big_padding"
+        android:textColor="@color/buttonLabel" />
+
+    <View style="@style/Divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/export_section_header"
+        style="@style/section_header"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_margin="16dp"
+        android:text="@string/export_list_desc"
+        />
+
+    <Button
+        android:id="@+id/exportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_export"
+        android:layout_margin="@dimen/big_padding"
+        android:textColor="@color/buttonLabel" />
+
 </LinearLayout>

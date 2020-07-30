@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieData
@@ -16,12 +15,12 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 
-class SummaryFragment : Fragment() {
+class SummaryGroupFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   companion object {
-    fun newInstance() = SummaryFragment()
+    fun newInstance() = SummaryGroupFragment()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,24 +45,18 @@ class SummaryFragment : Fragment() {
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("Summary activity started.")
+    stockRoomViewModel.logDebug("Summary group activity started.")
 
     val groupList: List<Group> = stockRoomViewModel.getGroupsSync()
 
-    val summaryListAdapter = SummaryListAdapter(requireContext())
-    val summaryList = view.findViewById<RecyclerView>(R.id.summaryList)
-    summaryList.adapter = summaryListAdapter
-    summaryList.layoutManager = GridLayoutManager(requireContext(), 3)
-
-    val summaryGroupListAdapter = SummaryGroupListAdapter(requireContext(), groupList)
-    val summaryGroupList = view.findViewById<RecyclerView>(R.id.summaryGroupList)
-    summaryGroupList.adapter = summaryGroupListAdapter
-    summaryGroupList.layoutManager = LinearLayoutManager(requireContext())
+    val summaryGroupAdapter = SummaryGroupAdapter(requireContext(), groupList)
+    val summaryGroup = view.findViewById<RecyclerView>(R.id.summaryGroup)
+    summaryGroup.adapter = summaryGroupAdapter
+    summaryGroup.layoutManager = LinearLayoutManager(requireContext())
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItems ->
-        summaryListAdapter.updateData(stockItems)
-        summaryGroupListAdapter.updateData(stockItems)
+        summaryGroupAdapter.updateData(stockItems)
         updatePieData(view, stockItems)
       }
     })
@@ -78,7 +71,7 @@ class SummaryFragment : Fragment() {
     return when (item.itemId) {
       R.id.menu_sync -> {
         stockRoomViewModel.updateOnlineDataManually()
-        stockRoomViewModel.logDebug("Update online data manually for summary data.")
+        stockRoomViewModel.logDebug("Update online data manually for summary group data.")
         true
       }
       else -> super.onOptionsItemSelected(item)

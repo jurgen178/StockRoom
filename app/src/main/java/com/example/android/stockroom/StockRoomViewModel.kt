@@ -80,8 +80,6 @@ data class StockItemJson
 )
 
 object Storage {
-  val coloredDisplay = MutableLiveData<Boolean>()
-
   val deleteStockHandler = MutableLiveData<String>()
 }
 
@@ -96,8 +94,6 @@ object SharedRepository {
     get() = debugLiveData
 
   var postMarket: Boolean = true
-
-  var handler: Handler? = null
 }
 
 class StockRoomViewModel(application: Application) : AndroidViewModel(application) {
@@ -241,81 +237,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
     }
     onlineDataHandler.post(onlineDataRunnableCode)
-
-    /*
-    SharedRepository.handler?.removeCallbacksAndMessages(null)
-    SharedRepository.handler = Handler()
-
-    var delay: Long = 2000L
-    val runnableCode = object : Runnable {
-      override fun run() {
-        Log.d("Handlers", "Calling updateStocks() with delay=${delay}")
-
-        scope.launch {
-          val marketState: MarketState = getStockData()
-
-          // Set the delay depending on the market state.
-          delay = when (marketState) {
-            MarketState.REGULAR -> {
-              2 * 1000L
-            }
-            MarketState.PRE, MarketState.POST -> {
-              60 * 1000L
-            }
-            MarketState.PREPRE, MarketState.POSTPOST -> {
-              15 * 60 * 1000L
-            }
-            MarketState.CLOSED -> {
-              60 * 60 * 1000L
-            }
-            MarketState.NO_NETWORK -> {
-              // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
-              maxOf(2 * 60 * 1000L, delay * 2)
-            }
-            MarketState.UNKNOWN -> {
-              60 * 1000L
-            }
-          }
-
-          val marketStateStr = when (marketState) {
-            MarketState.REGULAR -> {
-              "regular market"
-            }
-            MarketState.PRE, MarketState.PREPRE -> {
-              "pre market"
-            }
-            MarketState.POST, MarketState.POSTPOST -> {
-              "post market"
-            }
-            MarketState.CLOSED -> {
-              "market closed"
-            }
-            MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
-              "network not available"
-            }
-          }
-
-          val delaystr = when {
-            delay >= 60 * 60 * 1000L -> {
-              "${delay / (60 * 60 * 1000L)}h"
-            }
-            delay >= 60 * 1000L -> {
-              "${delay / (60 * 1000L)}m"
-            }
-            else -> {
-              "${delay / 1000L}s"
-            }
-          }
-
-          logDebugAsync("update online data ($marketStateStr, interval=$delaystr)")
-        }
-
-        //delay = 1 * 1000L
-        SharedRepository.handler?.postDelayed(this, delay)
-      }
-    }
-    SharedRepository.handler?.post(runnableCode)
-    */
   }
 
   fun updateOnlineDataManually() =
