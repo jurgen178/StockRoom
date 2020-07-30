@@ -1,13 +1,10 @@
 package com.example.android.stockroom
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
@@ -17,7 +14,6 @@ import androidx.preference.PreferenceManager
 class SettingsActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
   private lateinit var sharedPreferences: SharedPreferences
-  private lateinit var stockRoomViewModel: StockRoomViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,9 +24,6 @@ class SettingsActivity : AppCompatActivity(),
         .commit()
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
-    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("Settings activity started.")
   }
 
   override fun onSupportNavigateUp(): Boolean {
@@ -103,16 +96,8 @@ class SettingsActivity : AppCompatActivity(),
       if (buttonUpdateGroups != null) {
         buttonUpdateGroups.onPreferenceClickListener =
           OnPreferenceClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle(R.string.update_groups_title)
-                .setMessage(getString(R.string.delete_all_confirm))
-                .setPositiveButton(R.string.delete) { _, _ ->
-                  // Leave settings activity.
-                  activity?.onBackPressed()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
-
+            val intent = Intent(context, UpdateGroupActivity::class.java)
+            startActivity(intent)
             true
           }
       }

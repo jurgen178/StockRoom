@@ -17,6 +17,7 @@ package com.example.android.stockroom
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import androidx.room.Query
 
 /**
  * Abstracted Repository as promoted by the Architecture Guide.
@@ -30,6 +31,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   val allAssets: LiveData<List<Assets>> = stockRoomDao.getAllAssetsLiveData()
   val allEvents: LiveData<List<Events>> = stockRoomDao.getAllEventsLiveData()
+  val allGroups: LiveData<List<Group>> = stockRoomDao.getAllGroupsLiveData()
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
@@ -43,6 +45,12 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
     return stockRoomDao.getEventsLiveData(symbol)
   }
 
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun setPredefinedGroups() {
+    stockRoomDao.setPredefinedGroups()
+  }
 
   // You must call this on a non-UI thread or your app will crash. So we're making this a
   // suspend function so the caller methods know this.
@@ -155,6 +163,36 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun deleteGroup(color: Int) {
+    return stockRoomDao.deleteGroup(color)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun updateGroupName(color: Int, name: String) {
+    return stockRoomDao.updateGroupName(color, name)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun updateStockGroupColors(colorOld: Int, colorNew: Int) {
+    stockRoomDao.updateStockGroupColors(colorOld, colorNew)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun setStockGroupColor(symbol: String, color: Int) {
+    stockRoomDao.setStockGroupColor(symbol, color)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun deleteAllGroups() {
+    stockRoomDao.deleteAllGroupTable()
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun setGroup(
     color: Int,
     name: String
@@ -164,18 +202,18 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
-  suspend fun setStockGroup(
+  suspend fun setGroup(
     symbol: String,
     name: String,
     color: Int
   ) {
-    stockRoomDao.setStockGroup(symbol, name, color)
+    stockRoomDao.setGroup(symbol, name, color)
   }
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun delete(symbol: String) {
-    return stockRoomDao.delete(symbol)
+    stockRoomDao.delete(symbol)
   }
 
   @Suppress("RedundantSuspendModifier")

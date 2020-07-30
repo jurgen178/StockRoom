@@ -512,14 +512,17 @@ class StockDataActivity : AppCompatActivity() {
       val groups: List<Group> = stockRoomViewModel.getGroupsSync()
       popupMenu.setOnMenuItemClickListener { menuitem ->
         val i: Int = menuitem.itemId - 1
-        var clr: Int
-        var name: String
+        val clr: Int
+        val clrDB: Int
+        val name: String
 
         if (i >= groups.size) {
           clr = application.getColor(R.color.backgroundListColor)
+          clrDB = 0
           name = getString(R.string.standard_group)
         } else {
           clr = groups[i].color
+          clrDB = clr
           name = groups[i].name
         }
 
@@ -528,7 +531,7 @@ class StockDataActivity : AppCompatActivity() {
         textViewGroup.text = name
 
         // Store the selection.
-        stockRoomViewModel.setStockGroup(symbol, name, clr)
+        stockRoomViewModel.setGroup(symbol, name, clrDB)
         true
       }
     }

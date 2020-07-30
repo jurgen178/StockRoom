@@ -26,6 +26,7 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -107,9 +108,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   //   the UI when the data actually changes.
   // - Repository is completely separated from the UI through the ViewModel.
   val onlineMarketDataList: LiveData<List<OnlineMarketData>>
-  private val allProperties: LiveData<List<StockDBdata>>
+  val allProperties: LiveData<List<StockDBdata>>
   private val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
+  val allGroups: LiveData<List<Group>>
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<List<StockItem>>
@@ -160,6 +162,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allProperties = repository.allProperties
     allAssets = repository.allAssets
     allEvents = repository.allEvents
+    allGroups = repository.allGroups
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList
     allStockItems = getMediatorData()
@@ -768,14 +771,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (jsonObj.has("groupColor")) {
           groupColor = jsonObj.getInt("groupColor")
           if (groupName.isNotEmpty()) {
-            setStockGroup(symbol = symbol, color = groupColor, name = groupName)
+            setGroup(symbol = symbol, color = groupColor, name = groupName)
           }
         }
 
         if (jsonObj.has("groupName")) {
           groupName = jsonObj.getString("groupName")
           if (groupColor != 0) {
-            setStockGroup(symbol = symbol, color = groupColor, name = groupName)
+            setGroup(symbol = symbol, color = groupColor, name = groupName)
           }
         }
 
@@ -1074,6 +1077,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
+  fun setPredefinedGroups() = scope.launch {
+    repository.setPredefinedGroups()
+  }
+
   fun updateAlertAbove(
     symbol: String,
     alertAbove: Float
@@ -1171,12 +1178,41 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.setGroup(color, name)
   }
 
-  fun setStockGroup(
+  fun setGroup(
     symbol: String,
     name: String,
     color: Int
   ) = scope.launch {
-    repository.setStockGroup(symbol.toUpperCase(Locale.ROOT), name, color)
+    repository.setGroup(symbol.toUpperCase(Locale.ROOT), name, color)
+  }
+
+  fun updateGroupName(
+    color: Int,
+    name: String
+  ) = scope.launch {
+    repository.updateGroupName(color, name)
+  }
+
+  fun updateStockGroupColors(
+    colorOld: Int,
+    colorNew: Int
+  ) = scope.launch {
+    repository.updateStockGroupColors(colorOld, colorNew)
+  }
+
+  fun setStockGroupColor(
+    symbol: String,
+    color: Int
+  ) = scope.launch {
+    repository.setStockGroupColor(symbol, color)
+  }
+
+  fun deleteGroup(color: Int) = scope.launch {
+    repository.deleteGroup(color)
+  }
+
+  fun deleteAllGroups() = scope.launch {
+    repository.deleteAllGroups()
   }
 
   fun getAssetsSync(symbol: String): Assets? {

@@ -130,7 +130,7 @@ limitations under the License. -->
   <string name="delete_all_assets">Alle Aktien entfernen</string>
   <string name="delete_all_assets_msg">Alle Aktien wurden aus Ihrem Aktienbestand entfernt.</string>
   <string name="asset_summary_text">Gesamtaktienbestand</string>
-  <string name="group_header">Gruppe</string>
+  <string name="group_header">Gruppenliste</string>
   <string name="title_activity_add">Aktien hinzufügen</string>
   <string name="title_activity_stockdata">Aktiendetails</string>
   <string name="import_error">Die ausgewählte Datei konnte nicht importiert werden.</string>
@@ -178,4 +178,18 @@ limitations under the License. -->
   <string name="button_import">Importieren</string>
   <string name="export_section_header">Exportieren</string>
   <string name="button_export">Exportieren</string>
+  <string name="title_activity_updategroup">Gruppenliste bearbeiten</string>
+  <string name="add_group">Gruppe hinzufügen</string>
+  <string name="delete_group_title">Gruppe \'%1$s\' entfernen</string>
+  <string name="delete_group_confirm">Sind Sie sicher, dass Sie die Gruppe \'%1$s\' entfernen möchten?</string>
+  <string name="delete_group_msg">Die Gruppe \'%1$s\' wurde entfernt.</string>
+  <string name="delete_all_groups_confirm">Sind Sie sicher, dass Sie alle Gruppen aus der Gruppenliste entfernen möchten?</string>
+  <string name="delete_allgroups_title">Alle Gruppen entfernen</string>
+  <string name="delete_all_groups_msg">Alle Gruppen wurden aus der Gruppenliste entfernt.</string>
+  <string name="group_color">Gruppenfarbe</string>
+  <string name="group_name_text">Gruppenname</string>
+  <string name="group_color_in_use">Die Gruppenfarbe wird bereits verwendet. Wählen Sie eine andere Farbe aus.</string>
+  <string name="group_name_in_use">Der Gruppenname \'%1$s\' wird bereits verwendet. Wählen Sie einen anderen Namen aus.</string>
+  <string name="group_name_not_empty">Geben Sie einen Gruppenname ein.</string>
+  <string name="event_datetime_format">" • %1$s am %2$s"</string>
 </resources>

@@ -24,6 +24,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -228,7 +229,7 @@ class StockRoomDaoTest {
         assertEquals(groups4.size, 3)
 
         // Delete all groups
-        stockRoomDao.deleteAllGroups()
+        stockRoomDao.deleteAllGroupTable()
         val groups5 = stockRoomDao.getGroups()
         assertEquals(groups5.size, 0)
     }
@@ -240,14 +241,14 @@ class StockRoomDaoTest {
         stockRoomDao.insert(stockDBdata1)
         val stockDBdata2 = stockRoomDao.getStockDBdata("symbol")
         assertEquals(stockDBdata2.groupColor, 0)
-        stockRoomDao.setStockGroup("symbol",  0xfff000)
+        stockRoomDao.setStockGroupColor("symbol",  0xfff000)
         val stockDBdata3 = stockRoomDao.getStockDBdata("symbol")
         assertEquals(stockDBdata3.groupColor, 0xfff000)
 
-        var groups1: MutableList<Group> = mutableListOf()
+        val groups1: MutableList<Group> = mutableListOf()
         groups1.add(Group(color = 1, name = "g1"))
         groups1.add(Group(color = 2, name = "g2"))
-        var groups12: MutableList<Group> = mutableListOf()
+        val groups12: MutableList<Group> = mutableListOf()
         groups12.add(Group(color = 12, name = "g12"))
         groups12.add(Group(color = 22, name = "g22"))
         stockRoomDao.setGroups(groups12)
@@ -281,7 +282,7 @@ class StockRoomDaoTest {
 
         val group10Updated = stockRoomDao.getGroup(10)
         assertEquals(group10Updated.name, "g10")
-        stockRoomDao.updateGroup(10, "g1010")
+        stockRoomDao.updateGroupName(10, "g1010")
         val group1010 = stockRoomDao.getGroup(10)
         assertEquals(group1010.name, "g1010")
 
@@ -309,7 +310,7 @@ class StockRoomDaoTest {
         stockRoomDao.setGroup(Group(color = 5, name = "test2"))
         // Same name, but different color
         stockRoomDao.setGroup(Group(color = 6, name = "test2"))
-        stockRoomDao.setStockGroup(symbol = "VZ", color = Color.BLACK)
+        stockRoomDao.setStockGroupColor(symbol = "VZ", color = Color.BLACK)
         val stockDBdata3 = stockRoomDao.getStockDBdata("VZ")
         assertEquals(stockDBdata3.groupColor, Color.BLACK)
 
@@ -317,6 +318,50 @@ class StockRoomDaoTest {
         assertEquals(groups1.size, 5)
         assertEquals(groups1[3].name, "test2")
         assertEquals(groups1[2].color, 5)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteGroup() {
+        val groups: MutableList<Group> = mutableListOf()
+        groups.add(Group(color = 1, name = "Kaufen"))
+        groups.add(Group(color = 2 ,name = "Verkaufen"))
+        groups.add(Group(color = 3, name = "Beobachten"))
+        stockRoomDao.setGroups(groups)
+
+        val groups1 = stockRoomDao.getGroups()
+        assertEquals(groups1.size, 3)
+        assertEquals(groups1[1].name, "Verkaufen")
+        assertEquals(groups1[1].color, 2)
+
+        stockRoomDao.deleteGroup(2)
+
+        val groups2 = stockRoomDao.getGroups()
+        assertEquals(groups2.size, 2)
+        assertNotEquals(groups2[1].name, "Verkaufen")
+        assertNotEquals(groups2[1].color, 2)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun updateGroupColor() {
+        stockRoomDao.insert(StockDBdata(symbol = "MSFT", groupColor = 1))
+        stockRoomDao.insert(StockDBdata(symbol ="AAPL", groupColor = 2))
+        stockRoomDao.insert(StockDBdata(symbol ="AMZN"))
+        stockRoomDao.insert(StockDBdata(symbol ="TLSA", groupColor = 2))
+        stockRoomDao.insert(StockDBdata(symbol ="VZ", groupColor = 5))
+
+        stockRoomDao.updateStockGroupColors(2, 10)
+        val stockDBdata1 = stockRoomDao.getStockDBdata("AAPL")
+        assertEquals(10, stockDBdata1.groupColor)
+        val stockDBdata2 = stockRoomDao.getStockDBdata("TLSA")
+        assertEquals(10, stockDBdata2.groupColor)
+        val stockDBdata3 = stockRoomDao.getStockDBdata("VZ")
+        assertNotEquals(10, stockDBdata3.groupColor)
+
+        stockRoomDao.setStockGroupColor("MSFT", 123)
+        val stockDBdata4 = stockRoomDao.getStockDBdata("MSFT")
+        assertEquals(123, stockDBdata4.groupColor)
     }
 
     @Test

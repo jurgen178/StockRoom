@@ -107,6 +107,10 @@ dependencies {
   // UI
   implementation "com.google.android.material:material:$rootProject.materialVersion"
 
+  // Color picker
+  //implementation 'com.github.madrapps:pikolo:2.0.1'
+  implementation 'com.larswerkman:HoloColorPicker:1.5'
+
   // Testing
   testImplementation 'junit:junit:4.13'
   androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"

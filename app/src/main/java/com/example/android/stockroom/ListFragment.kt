@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +55,7 @@ class ListFragment : Fragment() {
       val name: String
 
       if (i >= groups.size) {
-        clr = context?.getColor(R.color.backgroundListColor) ?: 0
+        clr = 0
         name = getString(R.string.standard_group)
       } else {
         clr = groups[i].color
@@ -67,7 +66,7 @@ class ListFragment : Fragment() {
       //textViewGroup.text = name
 
       // Store the selection.
-      stockRoomViewModel.setStockGroup(stockItem.stockDBdata.symbol, name, clr)
+      stockRoomViewModel.setGroup(stockItem.stockDBdata.symbol, name, clr)
       true
     }
   }

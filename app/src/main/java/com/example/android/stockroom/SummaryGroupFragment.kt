@@ -47,9 +47,7 @@ class SummaryGroupFragment : Fragment() {
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
     stockRoomViewModel.logDebug("Summary group activity started.")
 
-    val groupList: List<Group> = stockRoomViewModel.getGroupsSync()
-
-    val summaryGroupAdapter = SummaryGroupAdapter(requireContext(), groupList)
+    val summaryGroupAdapter = SummaryGroupAdapter(requireContext())
     val summaryGroup = view.findViewById<RecyclerView>(R.id.summaryGroup)
     summaryGroup.adapter = summaryGroupAdapter
     summaryGroup.layoutManager = LinearLayoutManager(requireContext())
@@ -59,6 +57,10 @@ class SummaryGroupFragment : Fragment() {
         summaryGroupAdapter.updateData(stockItems)
         updatePieData(view, stockItems)
       }
+    })
+
+    stockRoomViewModel.allGroups.observe(viewLifecycleOwner, Observer { groups ->
+      summaryGroupAdapter.addGroups(groups)
     })
   }
 

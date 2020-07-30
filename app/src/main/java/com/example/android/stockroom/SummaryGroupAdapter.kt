@@ -36,13 +36,13 @@ data class SummaryData(
 )
 
 class SummaryGroupAdapter internal constructor(
-  val context: Context,
-  private val groupList: List<Group>
+  val context: Context
 ) : RecyclerView.Adapter<SummaryGroupAdapter.OnlineDataViewHolder>() {
 
   private val groupStandardName = context.getString(R.string.standard_group)
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<SummaryData>()
+  private var groupList: List<Group> = emptyList()
 
   inner class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val summaryItemDataDesc: TextView = itemView.findViewById(R.id.summaryItemDataDesc)
@@ -93,24 +93,32 @@ class SummaryGroupAdapter internal constructor(
         group.color == color
       }?.name
       if (name == null) {
-        Group(color = context.getColor(R.color.backgroundListColor), name = groupStandardName)
+        Group(color = 0, name = groupStandardName)
       } else {
         Group(color = color, name = name)
       }
     }
 
     // Display stats for each group.
-    groups.sortedBy { group ->
-      group.name
+    if(groups.size > 1) {
+      groups.sortedBy { group ->
+        group.name
+      }
+          .forEach { group ->
+            val (text1, text2) = getTotal(group.color, false, stockItems)
+            data.add(
+                SummaryData(
+                    context.getString(R.string.group_name, group.name), text1, text2, group.color
+                )
+            )
+          }
     }
-        .forEach { group ->
-          val (text1, text2) = getTotal(group.color, false, stockItems)
-          data.add(
-              SummaryData(
-                  context.getString(R.string.group_name, group.name), text1, text2, group.color
-              )
-          )
-        }
+
+    notifyDataSetChanged()
+  }
+
+  internal fun addGroups(groups: List<Group>) {
+    groupList = groups
 
     notifyDataSetChanged()
   }

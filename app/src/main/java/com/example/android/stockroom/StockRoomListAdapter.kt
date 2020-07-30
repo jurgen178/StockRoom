@@ -214,7 +214,9 @@ class StockRoomListAdapter internal constructor(
         current.events.forEach {
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-          assets += "\n • ${it.title} on $datetime"
+          assets += "\n${context.resources.getString(
+              R.string.event_datetime_format, it.title, datetime
+          )}"
         }
       }
       if (current.stockDBdata.notes.isNotEmpty()) {
