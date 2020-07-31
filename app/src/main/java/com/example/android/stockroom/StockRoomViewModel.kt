@@ -1341,7 +1341,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun deleteAll() =
     scope.launch {
-      repository.deleteAll(getApplication())
+      repository.deleteAll()
     }
 
   fun logDebug(value: String) {

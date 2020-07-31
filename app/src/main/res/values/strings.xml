@@ -182,8 +182,9 @@ limitations under the License. -->
   <string name="add_group">Gruppe hinzufügen</string>
   <string name="delete_group_title">Gruppe \'%1$s\' entfernen</string>
   <string name="delete_group_confirm">Sind Sie sicher, dass Sie die Gruppe \'%1$s\' entfernen möchten?</string>
+  <string name="delete_group_confirm2">Sind Sie sicher, dass Sie die Gruppe \'%1$s\' mit %2$d Zuordnungen entfernen möchten?</string>
   <string name="delete_group_msg">Die Gruppe \'%1$s\' wurde entfernt.</string>
-  <string name="delete_all_groups_confirm">Sind Sie sicher, dass Sie alle Gruppen aus der Gruppenliste entfernen möchten?</string>
+  <string name="delete_all_groups_confirm">Sind Sie sicher, dass Sie alle Gruppen aus der Gruppenliste entfernen möchten?\nAlle Aktienzuordnungen werden entfernt.</string>
   <string name="delete_allgroups_title">Alle Gruppen entfernen</string>
   <string name="delete_all_groups_msg">Alle Gruppen wurden aus der Gruppenliste entfernt.</string>
   <string name="group_color">Gruppenfarbe</string>

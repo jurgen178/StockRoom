@@ -44,12 +44,11 @@ interface StockRoomDao {
   fun delete(symbol: String)
 
   @Transaction
-  fun deleteAll(context: Context) {
+  fun deleteAll() {
     deleteAllStockTable()
     deleteAllGroupTable()
     deleteAllAssetTable()
     deleteAllEventTable()
-    setPredefinedGroups(context)
   }
 
   @Query("DELETE FROM stock_table")

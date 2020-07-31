@@ -108,8 +108,9 @@ class UpdateGroupActivity : AppCompatActivity() {
   private fun groupItemDeleteClicked(group: GroupData) {
     AlertDialog.Builder(this)
         .setTitle(getString(R.string.delete_group_title, group.name))
-        .setMessage(
-            getString(R.string.delete_group_confirm, group.name)
+        .setMessage(if(group.stats == 0){
+            getString(R.string.delete_group_confirm, group.name)}else
+        {getString(R.string.delete_group_confirm2, group.name, group.stats)}
         )
         .setPositiveButton(R.string.delete) { _, _ ->
           stockDBdataList.forEach {data ->

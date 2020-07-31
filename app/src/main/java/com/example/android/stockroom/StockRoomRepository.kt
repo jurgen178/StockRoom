@@ -225,7 +225,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
-  suspend fun deleteAll(context: Context) {
-    stockRoomDao.deleteAll(context)
+  suspend fun deleteAll() {
+    stockRoomDao.deleteAll()
   }
 }

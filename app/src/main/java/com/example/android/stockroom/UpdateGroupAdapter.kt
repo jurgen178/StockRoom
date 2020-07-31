@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.groupview_item.view.textViewGroupDelete
 data class GroupData(
   var color: Int,
   val name: String,
-  val used: Boolean
+  val stats: Int
 )
 
 class UpdateGroupAdapter internal constructor(
@@ -59,6 +59,7 @@ class UpdateGroupAdapter internal constructor(
     }
 
     val groupItemName: TextView = itemView.findViewById(R.id.groupItemName)
+    val groupItemStats: TextView = itemView.findViewById(R.id.groupItemStats)
     val groupItemGroup: TextView = itemView.findViewById(R.id.groupItemGroup)
   }
 
@@ -80,6 +81,8 @@ class UpdateGroupAdapter internal constructor(
     holder.bindDelete(current, clickListenerDelete)
 
     holder.groupItemName.text = current.name
+    holder.groupItemStats.text = "[${current.stats}]"
+
     var color = current.color
     if (color == 0) {
       color = context.getColor(R.color.backgroundListColor)
@@ -91,16 +94,12 @@ class UpdateGroupAdapter internal constructor(
     holder.groupItemName.setBackgroundResource(background.resourceId)
   }
 
-  private fun mergeData()
-  {
-    if(stockDBdataList.isNotEmpty())
-    {
-      groupDatalist = groupList.map {group ->
-        val used = stockDBdataList.find { item  ->
-          item.groupColor == group.color
-        } != null
-        GroupData(color = group.color, name = group.name, used = used)
+  private fun mergeData() {
+    groupDatalist = groupList.map { group ->
+      val stats = stockDBdataList.count { item ->
+        item.groupColor == group.color
       }
+      GroupData(color = group.color, name = group.name, stats = stats)
     }
   }
 
