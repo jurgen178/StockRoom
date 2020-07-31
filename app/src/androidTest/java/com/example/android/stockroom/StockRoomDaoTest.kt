@@ -144,6 +144,38 @@ class StockRoomDaoTest {
 
     @Test
     @Throws(Exception::class)
+    fun updateStockDBdata() {
+        val stockDBdata1 = StockDBdata("symbol1", groupColor = 123, alertBelow = 1f, alertAbove = 2f, notes = "note")
+        stockRoomDao.insert(stockDBdata1)
+
+        val stockDBdata2 = stockRoomDao.getStockDBdata("symbol1")
+        assertEquals(stockDBdata2.groupColor, 123)
+        assertEquals(stockDBdata2.alertBelow, 1f)
+        assertEquals(stockDBdata2.alertAbove, 2f)
+        assertEquals(stockDBdata2.notes, "note")
+
+        val stockDBdataMatchingSymbol = StockDBdata("symbol1", alertAbove = 10f)
+        stockRoomDao.insert(stockDBdataMatchingSymbol)
+
+        val stockDBdataNotMatchingSymbol = StockDBdata("symbol2", alertAbove = 10f)
+        stockRoomDao.insert(stockDBdataNotMatchingSymbol)
+
+        // Check that insert does not override existing values
+        val stockDBdata4 = stockRoomDao.getStockDBdata("symbol1")
+        assertEquals(stockDBdata4.groupColor, 123)
+        assertEquals(stockDBdata4.alertBelow, 1f)
+        assertEquals(stockDBdata4.alertAbove, 10f)
+        assertEquals(stockDBdata4.notes, "note")
+
+        val stockDBdata5 = stockRoomDao.getStockDBdata("symbol2")
+        assertEquals(stockDBdata5.groupColor, 0)
+        assertEquals(stockDBdata5.alertBelow, 0f)
+        assertEquals(stockDBdata5.alertAbove, 10f)
+        assertEquals(stockDBdata5.notes, "")
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun getAssets() {
         val stockDBdata1 = StockDBdata("symbol1")
         stockRoomDao.insert(stockDBdata1)

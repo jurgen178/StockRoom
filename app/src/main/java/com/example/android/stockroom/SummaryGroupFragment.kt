@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.components.Legend.LegendOrientation.VERTICAL
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -131,7 +132,9 @@ class SummaryGroupFragment : Fragment() {
     //view.summaryPieChart.setUsePercentValues(true)
     view.summaryPieChart.isDrawHoleEnabled = false
     view.summaryPieChart.description.isEnabled = false
-    view.summaryPieChart.setEntryLabelColor(R.color.design_default_color_background)
+    //view.summaryPieChart.setEntryLabelColor(R.color.design_default_color_background)
+    view.summaryPieChart.legend.orientation = VERTICAL
+    //view.summaryPieChart.legend.isEnabled = false
     view.summaryPieChart.invalidate()
     //view.summaryPieChart.animateY(1400, Easing.EaseInOutQuad)
   }

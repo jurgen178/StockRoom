@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
 
@@ -100,7 +101,7 @@ class SummaryGroupAdapter internal constructor(
     }
 
     // Display stats for each group.
-    if(groups.size > 1) {
+    if (groups.size > 1) {
       groups.sortedBy { group ->
         group.name
       }
@@ -189,7 +190,7 @@ class SummaryGroupAdapter internal constructor(
       it.events.isNotEmpty()
     }
 
-    val totals1 = SpannableStringBuilder()
+    val summaryGroup2 = SpannableStringBuilder()
         .append("${context.getString(R.string.summary_stocks)} ")
         .bold { append("${stockItemsSelected.size}\n") }
         .append("${context.getString(R.string.summary_stocks_with_assets)} ")
@@ -205,7 +206,7 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_total_purchase_price)} ")
         .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
         .append("${context.getString(R.string.summary_total_assets)} ")
-        .bold { append("${DecimalFormat("0.00").format(totalAssets)}") }
+        .underline { bold { append("${DecimalFormat("0.00").format(totalAssets)}") } }
 
     /*
     val s = SpannableStringBuilder()
@@ -274,7 +275,7 @@ class SummaryGroupAdapter internal constructor(
       }
     }
 
-    val totals2 = SpannableStringBuilder()
+    val summaryGroup1 = SpannableStringBuilder()
         .append("${context.getString(R.string.summary_gain)} ")
         .append(gain)
         //.color(Color.GREEN, { bold { append("${DecimalFormat("0.00").format(totalGain)}\n") } })
@@ -308,6 +309,8 @@ class SummaryGroupAdapter internal constructor(
           )
         }
 
-    return Pair(totals1, totals2)
+    // summaryGroup1: Gain, loss, dividend
+    // summaryGroup2: Stock summary, properties, assets
+    return Pair(summaryGroup1, summaryGroup2)
   }
 }

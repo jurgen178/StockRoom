@@ -13,6 +13,9 @@ import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.MEDIUM
 
 const val exportListActivityRequestCode = 3
 
@@ -146,10 +149,15 @@ class SettingsActivity : AppCompatActivity(),
     }
 
     private fun onExportList() {
+      // Set default filename.
+      val date = LocalDateTime.now()
+          .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+      val jsonFileName = context?.getString(R.string.json_default_filename, date)
       val intent = Intent()
           .setType("application/json")
           .setAction(Intent.ACTION_CREATE_DOCUMENT)
           .addCategory(Intent.CATEGORY_OPENABLE)
+          .putExtra(Intent.EXTRA_TITLE, jsonFileName)
       startActivityForResult(
           Intent.createChooser(intent, getString(R.string.export_select_file)), exportListActivityRequestCode
       )

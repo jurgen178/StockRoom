@@ -561,9 +561,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
         SortMode.ByGroup -> {
+          // Sort the group items alphabetically.
           stockItems.sortedBy { item ->
-            item.stockDBdata.groupColor
+            item.stockDBdata.symbol
           }
+              .sortedBy { item ->
+                item.stockDBdata.groupColor
+              }
         }
         SortMode.ByUnsorted -> {
           stockItems

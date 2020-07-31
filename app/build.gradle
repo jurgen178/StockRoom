@@ -4,6 +4,14 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+  signingConfigs {
+    stockroom {
+      storeFile file('C:\\Repos\\StockRoom\\sign.jks')
+      storePassword 'aliens1'
+      keyAlias 'key1'
+      keyPassword 'aliens1'
+    }
+  }
   compileSdkVersion 29
   buildToolsVersion '29.0.3'
   defaultConfig {

@@ -130,20 +130,20 @@ class SummaryListAdapter internal constructor(
         }
       }
 
-      val datacolor = if (capital > asset) {
+      val assetChangeColor = if (capital > asset) {
         context.getColor(R.color.green)
       } else if (capital > 0f && capital < asset) {
         context.getColor(R.color.red)
       } else {
-        context.getColor(R.color.backgroundListColor)
+        context.getColor(R.color.material_on_background_emphasis_medium)
       }
 
-      val data = SpannableStringBuilder()
-          .color(datacolor) {
+      val assetChange = SpannableStringBuilder()
+          .color(assetChangeColor) {
             bold { append(changeStr) }
           }
 
-      holder.summaryListItemAssetChange.text = data
+      holder.summaryListItemAssetChange.text = assetChange
       holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
 
       var color = current.stockDBdata.groupColor

@@ -109,19 +109,34 @@ class OnlineDataAdapter internal constructor(
             text = DecimalFormat("0.00##").format(onlineMarketData.fiftyDayAverage)
         )
     )
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_fiftyTwoWeekRange), text = onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)))
-    data.add(
-        OnlineData(desc = context.resources.getString(R.string.onlinedata_regularMarketDayRange), text = onlineMarketData.regularMarketDayRange.replace('.', separatorChar))
-    )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_regularMarketVolume), text = formatInt(onlineMarketData.regularMarketVolume)
+            desc = context.resources.getString(R.string.onlinedata_fiftyTwoWeekRange),
+            text = onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
         )
     )
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_marketCap), text = formatInt(onlineMarketData.marketCap)))
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_forwardPE), text = DecimalFormat("0.00##").format(onlineMarketData.forwardPE)
+            desc = context.resources.getString(R.string.onlinedata_regularMarketDayRange),
+            text = onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_regularMarketVolume),
+            text = formatInt(onlineMarketData.regularMarketVolume)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_marketCap),
+            text = formatInt(onlineMarketData.marketCap)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_forwardPE),
+            text = DecimalFormat("0.00##").format(onlineMarketData.forwardPE)
         )
     )
     data.add(
@@ -146,16 +161,47 @@ class OnlineDataAdapter internal constructor(
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_epsForward), text = DecimalFormat("0.00##").format(onlineMarketData.epsForward)
+            desc = context.resources.getString(R.string.onlinedata_epsForward),
+            text = DecimalFormat("0.00##").format(onlineMarketData.epsForward)
         )
     )
 
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_region), text = onlineMarketData.region))
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_language), text = onlineMarketData.language))
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_fullExchangeName), text = onlineMarketData.fullExchangeName))
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_messageBoardId), text = onlineMarketData.messageBoardId))
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_financialCurrency), text = onlineMarketData.financialCurrency))
-    data.add(OnlineData(desc = context.resources.getString(R.string.onlinedata_marketState), text = onlineMarketData.marketState))
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_region),
+            text = onlineMarketData.region
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_language),
+            text = onlineMarketData.language
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_fullExchangeName),
+            text = onlineMarketData.fullExchangeName
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_messageBoardId),
+            text = onlineMarketData.messageBoardId
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_financialCurrency),
+            text = onlineMarketData.financialCurrency
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_marketState),
+            text = onlineMarketData.marketState
+        )
+    )
 
     notifyDataSetChanged()
   }

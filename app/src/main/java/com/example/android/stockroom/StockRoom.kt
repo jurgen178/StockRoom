@@ -36,10 +36,10 @@ import androidx.room.Relation
 @Entity(tableName = "stock_table")
 data class StockDBdata(
   @PrimaryKey val symbol: String,
-  @ColumnInfo(name = "group_color") val groupColor: Int = 0,
-  val notes: String = "",
-  @ColumnInfo(name = "alert_above") val alertAbove: Float = 0f,
-  @ColumnInfo(name = "alert_below") val alertBelow: Float = 0f
+  @ColumnInfo(name = "group_color") var groupColor: Int = 0,
+  var notes: String = "",
+  @ColumnInfo(name = "alert_above") var alertAbove: Float = 0f,
+  @ColumnInfo(name = "alert_below") var alertBelow: Float = 0f
 )
 
 @Entity(tableName = "group_table")

@@ -216,4 +216,6 @@ limitations under the License. -->
   <string name="onlinedata_messageBoardId">Board-ID</string>
   <string name="onlinedata_financialCurrency">Währung</string>
   <string name="onlinedata_marketState">Marktstatus</string>
+  <string name="json_default_filename">Aktien %1$s</string>
+  <string name="group_summary">Gruppenübersicht</string>
 </resources>

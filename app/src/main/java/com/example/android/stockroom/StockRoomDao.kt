@@ -16,7 +16,6 @@
 
 package com.example.android.stockroom
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Color
 import androidx.lifecycle.LiveData;
@@ -46,7 +45,6 @@ interface StockRoomDao {
   @Transaction
   fun deleteAll() {
     deleteAllStockTable()
-    deleteAllGroupTable()
     deleteAllAssetTable()
     deleteAllEventTable()
   }
@@ -90,7 +88,30 @@ interface StockRoomDao {
 
   // StockDBdata
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insert(stockDBdata: StockDBdata)
+  fun insertStockDBdata(stockDBdata: StockDBdata)
+
+  @Transaction
+  fun insert(stockDBdata: StockDBdata) {
+    val stockData = getStockDBdata(stockDBdata.symbol)
+
+    if (stockData != null) {
+      // Keep old values if not changed.
+      if (stockDBdata.groupColor == 0) {
+        stockDBdata.groupColor = stockData.groupColor
+      }
+      if (stockDBdata.alertBelow == 0f) {
+        stockDBdata.alertBelow = stockData.alertBelow
+      }
+      if (stockDBdata.alertAbove == 0f) {
+        stockDBdata.alertAbove = stockData.alertAbove
+      }
+      if (stockDBdata.notes.isEmpty()) {
+        stockDBdata.notes = stockData.notes
+      }
+    }
+
+    insertStockDBdata(stockDBdata)
+  }
 
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getStockDBdata(symbol: String): StockDBdata

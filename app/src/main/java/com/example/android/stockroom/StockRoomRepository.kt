@@ -18,7 +18,6 @@ package com.example.android.stockroom
 import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.room.Query
 
 /**
  * Abstracted Repository as promoted by the Architecture Guide.
@@ -34,6 +33,10 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   val allEvents: LiveData<List<Events>> = stockRoomDao.getAllEventsLiveData()
   val allGroups: LiveData<List<Group>> = stockRoomDao.getAllGroupsLiveData()
 
+  // You must call this on a non-UI thread or your app will crash. So we're making this a
+  // suspend function so the caller methods know this.
+  // Like this, Room ensures that you're not doing any long running operations on the main
+  // thread, blocking the UI.
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   fun getAssetsLiveData(symbol: String): LiveData<Assets> {
@@ -46,17 +49,12 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
     return stockRoomDao.getEventsLiveData(symbol)
   }
 
-
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun setPredefinedGroups(context: Context) {
     stockRoomDao.setPredefinedGroups(context)
   }
 
-  // You must call this on a non-UI thread or your app will crash. So we're making this a
-  // suspend function so the caller methods know this.
-  // Like this, Room ensures that you're not doing any long running operations on the main
-  // thread, blocking the UI.
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun insert(stockDBdata: StockDBdata) {

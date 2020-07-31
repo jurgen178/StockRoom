@@ -18,20 +18,36 @@
       android:orientation="vertical"
       >
 
+    <TextView
+        android:id="@+id/assetsViewHeadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/current_assets"
+        style="@style/section_header"
+        />
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/summaryPieChart"
         android:layout_width="match_parent"
         android:layout_height="250dp"
+        android:layout_margin="8dp"
         />
 
     <View style="@style/Divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/group_summary"
+        style="@style/section_header"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/summaryGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_margin="4dp"
         tools:listitem="@layout/summarygroup_item"
         />
 
