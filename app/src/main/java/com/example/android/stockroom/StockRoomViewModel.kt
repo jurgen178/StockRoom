@@ -26,7 +26,6 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -36,6 +35,7 @@ import androidx.preference.PreferenceManager
 import com.example.android.stockroom.StockRoomViewModel.AlertData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -1018,7 +1018,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         val groupName = groups.find { group ->
           group.color == stockItem.stockDBdata.groupColor
-        }?.name ?: context.getString(R.string.standard_group)
+        }?.name ?: ""
 
         StockItemJson(symbol = stockItem.stockDBdata.symbol,
             groupColor = stockItem.stockDBdata.groupColor,
@@ -1039,7 +1039,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       // Convert to a json string.
-      val jsonString = Gson().toJson(stockItemsJson)
+      val gson: Gson = GsonBuilder()
+          .setPrettyPrinting()
+          .create()
+      val jsonString = gson.toJson(stockItemsJson)
 
       // Write the json string.
       try {

@@ -66,6 +66,7 @@ limitations under the License. -->
         android:layout_margin="@dimen/big_padding"
         android:textColor="@color/buttonLabel" />
 
+<!--
     <View style="@style/Divider"/>
 
     <TextView
@@ -92,5 +93,6 @@ limitations under the License. -->
         android:text="@string/button_export"
         android:layout_margin="@dimen/big_padding"
         android:textColor="@color/buttonLabel" />
+-->
 
 </LinearLayout>

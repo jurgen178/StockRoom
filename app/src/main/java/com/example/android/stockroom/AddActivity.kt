@@ -23,10 +23,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.EditText
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_add.button_add
-import kotlinx.android.synthetic.main.activity_add.exportButton
 import kotlinx.android.synthetic.main.activity_add.importButton
 
 /**
@@ -34,7 +32,6 @@ import kotlinx.android.synthetic.main.activity_add.importButton
  */
 
 const val importListActivityRequestCode = 2
-const val exportListActivityRequestCode = 3
 
 class AddActivity : AppCompatActivity() {
 
@@ -54,11 +51,13 @@ class AddActivity : AppCompatActivity() {
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
     stockRoomViewModel.logDebug("Add activity started.")
 
+/*
     // Setup observer to enable valid data for the export function.
     stockRoomViewModel.allStockItems.observe(this, Observer { items ->
       items?.let {
       }
     })
+*/
 
     button_add.setOnClickListener {
       val replyIntent = Intent()
@@ -81,6 +80,7 @@ class AddActivity : AppCompatActivity() {
       )
     }
 
+    /*
     exportButton.setOnClickListener {
       val intent = Intent()
           .setType("application/json")
@@ -90,7 +90,7 @@ class AddActivity : AppCompatActivity() {
           Intent.createChooser(intent, "Select a file"), exportListActivityRequestCode
       )
     }
-
+*/
   }
 
   override fun onSupportNavigateUp(): Boolean {
@@ -112,7 +112,9 @@ class AddActivity : AppCompatActivity() {
           stockRoomViewModel.importList(applicationContext, importListUri)
           finish()
         }
-      } else
+      }
+      /*
+      else
         if (requestCode == exportListActivityRequestCode) {
           if (data != null && data.data is Uri) {
             val exportListUri = data.data!!
@@ -120,6 +122,7 @@ class AddActivity : AppCompatActivity() {
             finish()
           }
         }
+      */
     }
   }
 }

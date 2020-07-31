@@ -1,19 +1,25 @@
 package com.example.android.stockroom
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 
+const val exportListActivityRequestCode = 3
+
 class SettingsActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
   private lateinit var sharedPreferences: SharedPreferences
+  private lateinit var stockRoomViewModel: StockRoomViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -24,11 +30,41 @@ class SettingsActivity : AppCompatActivity(),
         .commit()
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
+    stockRoomViewModel.logDebug("Settings activity started.")
+
+    // Setup observer to enable valid data for the export function.
+    stockRoomViewModel.allStockItems.observe(this, Observer { items ->
+      items?.let {
+      }
+    })
   }
 
   override fun onSupportNavigateUp(): Boolean {
     onBackPressed()
     return true
+  }
+
+  override fun onActivityResult(
+    requestCode: Int,
+    resultCode: Int,
+    data: Intent?
+  ) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    val resultCodeShort = requestCode.toShort()
+        .toInt()
+    if (resultCode == Activity.RESULT_OK) {
+      if (resultCodeShort == exportListActivityRequestCode) {
+          if (data != null && data.data is Uri) {
+
+            val exportListUri = data.data!!
+            stockRoomViewModel.exportList(applicationContext, exportListUri)
+            finish()
+          }
+        }
+    }
   }
 
   override fun onResume() {
@@ -61,7 +97,6 @@ class SettingsActivity : AppCompatActivity(),
       stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
       stockRoomViewModel.logDebug("Settings fragment started.")
 
-/*
       val buttonExportList: Preference? = findPreference("export_list")
       if (buttonExportList != null) {
         buttonExportList.onPreferenceClickListener =
@@ -70,7 +105,6 @@ class SettingsActivity : AppCompatActivity(),
             true
           }
       }
-      */
 
       val buttonDeleteAll: Preference? = findPreference("delete_all")
       if (buttonDeleteAll != null) {
@@ -109,6 +143,16 @@ class SettingsActivity : AppCompatActivity(),
             true
           }
       }
+    }
+
+    private fun onExportList() {
+      val intent = Intent()
+          .setType("application/json")
+          .setAction(Intent.ACTION_CREATE_DOCUMENT)
+          .addCategory(Intent.CATEGORY_OPENABLE)
+      startActivityForResult(
+          Intent.createChooser(intent, getString(R.string.export_select_file)), exportListActivityRequestCode
+      )
     }
   }
 }

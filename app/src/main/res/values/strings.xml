@@ -197,4 +197,23 @@ limitations under the License. -->
   <string name="add_predef_groups_confirm">Möchten Sie die Beispielgruppen hinzufügen?</string>
   <string name="add_predef_groups_msg">Die Beispielgruppen wurden hinzugefügt.</string>
   <string name="predefined_groups">Kaufen,Verkaufen,Beobachten,Verschenken,Die Katze fragen,Nicht mehr danach gucken,Noch mehr kaufen,Gruppe 1,Gruppe 2,Gruppe 3,Gruppe 4,Gruppe 5</string>
+  <string name="export_select_file">Wählen Sie eine Datei aus</string>
+  <string name="onlinedata_annualDividendYield">Jährliche Dividendenrendite</string>
+  <string name="onlinedata_annualDividendRate">Jährlicher Dividendensatz</string>
+  <string name="onlinedata_regularMarketPreviousClose">Vortagswert</string>
+  <string name="onlinedata_regularMarketOpen">Eröffnungswert</string>
+  <string name="onlinedata_fiftyDayAverage">50-Tage Durchschnitt</string>
+  <string name="onlinedata_fiftyTwoWeekRange">Jahresbereich</string>
+  <string name="onlinedata_regularMarketDayRange">Regulärer Tagesbereich</string>
+  <string name="onlinedata_regularMarketVolume">Marktvolumen</string>
+  <string name="onlinedata_marketCap">Marktkapitalisierung</string>
+  <string name="onlinedata_forwardPE">Zukünftiges PE</string>
+  <string name="onlinedata_epsTrailingTwelveMonths">EPS des vergangenen Jahres</string>
+  <string name="onlinedata_epsForward">Zukünftige EPS</string>
+  <string name="onlinedata_region">Region</string>
+  <string name="onlinedata_language">Sprache</string>
+  <string name="onlinedata_fullExchangeName">Börsenname</string>
+  <string name="onlinedata_messageBoardId">Board-ID</string>
+  <string name="onlinedata_financialCurrency">Währung</string>
+  <string name="onlinedata_marketState">Marktstatus</string>
 </resources>

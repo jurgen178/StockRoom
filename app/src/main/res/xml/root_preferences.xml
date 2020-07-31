@@ -50,6 +50,11 @@
     -->
 
     <Preference
+        app:key="export_list"
+        app:summary="@string/export_list_desc"
+        app:title="@string/export_list" />
+
+    <Preference
         app:key="delete_all"
         app:summary="@string/delete_all_desc"
         app:title="@string/delete_all_title" />
