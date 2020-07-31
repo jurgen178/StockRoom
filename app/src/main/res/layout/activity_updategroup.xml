@@ -42,6 +42,12 @@
           />
 
       <ImageButton
+          android:id="@+id/addPredefinedGroupsButton"
+          android:src="@drawable/ic_action_add_samples"
+          style="@style/asset_item_imagebutton"
+          />
+
+      <ImageButton
           android:id="@+id/deleteAllGroupButton"
           android:src="@drawable/ic_action_delete"
           style="@style/asset_item_imagebutton"

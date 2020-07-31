@@ -1078,26 +1078,57 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   fun setPredefinedGroups() = scope.launch {
-    repository.setPredefinedGroups()
+    repository.setPredefinedGroups(getApplication())
   }
 
+  // Run the alerts synchronous to avoid duplicate alerts when importing or any other fast insert.
+  // Each alerts gets send, and then removed from the DB. If the alerts are send non-blocking,
+  // the alert is still valid for some time and gets send multiple times.
   fun updateAlertAbove(
     symbol: String,
     alertAbove: Float
-  ) = scope.launch {
-    if (symbol.isNotEmpty()) {
-      repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+  ) {
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        if (symbol.isNotEmpty()) {
+          repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+        }
+      }
     }
   }
 
   fun updateAlertBelow(
     symbol: String,
     alertBelow: Float
-  ) = scope.launch {
-    if (symbol.isNotEmpty()) {
-      repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+  ) {
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        if (symbol.isNotEmpty()) {
+          repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+        }
+      }
     }
   }
+
+  /*
+   fun updateAlertAbove(
+     symbol: String,
+     alertAbove: Float
+   ) = scope.launch {
+     if (symbol.isNotEmpty()) {
+       repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+     }
+   }
+
+   fun updateAlertBelow(
+     symbol: String,
+     alertBelow: Float
+   ) = scope.launch {
+     if (symbol.isNotEmpty()) {
+       repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+     }
+   }
+    */
 
   fun updateNotes(
     symbol: String,
@@ -1310,7 +1341,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun deleteAll() =
     scope.launch {
-      repository.deleteAll()
+      repository.deleteAll(getApplication())
     }
 
   fun logDebug(value: String) {

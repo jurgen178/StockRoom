@@ -16,6 +16,8 @@
 
 package com.example.android.stockroom
 
+import android.app.Application
+import android.content.Context
 import android.graphics.Color
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -42,12 +44,12 @@ interface StockRoomDao {
   fun delete(symbol: String)
 
   @Transaction
-  fun deleteAll() {
+  fun deleteAll(context: Context) {
     deleteAllStockTable()
     deleteAllGroupTable()
     deleteAllAssetTable()
     deleteAllEventTable()
-    setPredefinedGroups()
+    setPredefinedGroups(context)
   }
 
   @Query("DELETE FROM stock_table")
@@ -62,7 +64,7 @@ interface StockRoomDao {
   @Query("DELETE FROM event_table")
   fun deleteAllEventTable()
 
-  fun setPredefinedGroups() {
+  fun setPredefinedGroups(context: Context) {
     val groups: MutableList<Group> = mutableListOf()
     groups.add(Group(color = Color.GREEN, name = "Kaufen"))
     groups.add(Group(color = Color.RED, name = "Verkaufen"))
@@ -75,6 +77,15 @@ interface StockRoomDao {
     groups.add(Group(color = Color.rgb(160, 82, 45), name = "Gruppe 2"))
     groups.add(Group(color = Color.rgb(72, 209, 204), name = "Gruppe 3"))
     groups.add(Group(color = Color.BLACK, name = "Gruppe 4"))
+    groups.add(Group(color = Color.rgb(255, 127, 39), name = "Gruppe 5"))
+
+    val strings = context.getString(R.string.predefined_groups)
+    val stringList = strings.split(",")
+    val size = minOf(groups.size, stringList.size)
+    for (i: Int in 0 until size) {
+      groups[i].name = stringList[i]
+    }
+
     setGroups(groups)
   }
 

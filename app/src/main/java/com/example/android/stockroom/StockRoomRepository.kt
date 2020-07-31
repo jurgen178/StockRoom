@@ -15,6 +15,7 @@
  */
 package com.example.android.stockroom
 
+import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.room.Query
@@ -48,8 +49,8 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
-  suspend fun setPredefinedGroups() {
-    stockRoomDao.setPredefinedGroups()
+  suspend fun setPredefinedGroups(context: Context) {
+    stockRoomDao.setPredefinedGroups(context)
   }
 
   // You must call this on a non-UI thread or your app will crash. So we're making this a
@@ -224,7 +225,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
-  suspend fun deleteAll() {
-    stockRoomDao.deleteAll()
+  suspend fun deleteAll(context: Context) {
+    stockRoomDao.deleteAll(context)
   }
 }

@@ -192,4 +192,8 @@ limitations under the License. -->
   <string name="group_name_in_use">Der Gruppenname \'%1$s\' wird bereits verwendet. Wählen Sie einen anderen Namen aus.</string>
   <string name="group_name_not_empty">Geben Sie einen Gruppenname ein.</string>
   <string name="event_datetime_format">" • %1$s am %2$s"</string>
+  <string name="add_predef_groups_title">Beispielgruppen</string>
+  <string name="add_predef_groups_confirm">Möchten Sie die Beispielgruppen hinzufügen?</string>
+  <string name="add_predef_groups_msg">Die Beispielgruppen wurden hinzugefügt.</string>
+  <string name="predefined_groups">Kaufen,Verkaufen,Beobachten,Verschenken,Die Katze fragen,Nicht mehr danach gucken,Noch mehr kaufen,Gruppe 1,Gruppe 2,Gruppe 3,Gruppe 4,Gruppe 5</string>
 </resources>

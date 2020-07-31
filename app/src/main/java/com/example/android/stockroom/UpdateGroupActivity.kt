@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.larswerkman.holocolorpicker.ColorPicker
 import com.larswerkman.holocolorpicker.SVBar
 import kotlinx.android.synthetic.main.activity_updategroup.addGroupButton
+import kotlinx.android.synthetic.main.activity_updategroup.addPredefinedGroupsButton
 import kotlinx.android.synthetic.main.activity_updategroup.deleteAllGroupButton
 import kotlinx.android.synthetic.main.activity_updategroup.groupView
 
@@ -230,6 +231,19 @@ class UpdateGroupActivity : AppCompatActivity() {
           }
       builder
           .create()
+          .show()
+    }
+
+    addPredefinedGroupsButton.setOnClickListener {
+      AlertDialog.Builder(this)
+          .setTitle(R.string.add_predef_groups_title)
+          .setMessage(getString(R.string.add_predef_groups_confirm))
+          .setPositiveButton(R.string.add) { _, _ ->
+            stockRoomViewModel.setPredefinedGroups()
+            Toast.makeText(this, getString(R.string.add_predef_groups_msg), Toast.LENGTH_LONG)
+                .show()
+          }
+          .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
           .show()
     }
 

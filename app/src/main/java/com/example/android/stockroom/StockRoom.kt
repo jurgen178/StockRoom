@@ -45,7 +45,7 @@ data class StockDBdata(
 @Entity(tableName = "group_table")
 data class Group(
   @PrimaryKey var color: Int,
-  val name: String
+  var name: String
 )
 
 @Entity(tableName = "asset_table")
