@@ -1,0 +1,3 @@
+https://stackoverflow.com/questions/56215400/how-to-solve-key-was-created-with-errors
+
+keytool -importkeystore -srckeystore C:\Repos\StockRoom\stockroom.jks -destkeystore C:\Repos\StockRoom\stockroom.jks -deststoretype pkcs12

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/newsItemViewLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/news_item_bg"
+    >
+
+  <TextView
+      android:id="@+id/newsItemTitle"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+  <TextView
+      android:id="@+id/newsItemDate"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="0dp"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
+      android:textSize="10sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/newsItemTitle"
+      />
+  <TextView
+      android:id="@+id/newsItemLink"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_marginTop="0dp"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
+      android:layout_marginBottom="4dp"
+      android:textSize="10sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/newsItemDate"
+      />
+  <TextView
+      android:id="@+id/newsItemPreviewText"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="4dp"
+      android:paddingStart="16dp"
+      android:paddingEnd="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/newsItemLink"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,7 +31,7 @@ class SettingsActivity : AppCompatActivity(),
         .beginTransaction()
         .replace(R.id.settings, SettingsFragment())
         .commit()
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    //supportActionBar?.setDisplayHomeAsUpEnabled(true)
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)

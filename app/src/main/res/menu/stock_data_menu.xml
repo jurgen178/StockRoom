@@ -5,13 +5,12 @@
   <item
       android:id="@+id/menu_sync"
       android:icon="@drawable/ic_action_sync"
-      android:onClick="onSync"
       app:showAsAction="always"
       android:title="" />
   <item
       android:id="@+id/menu_delete"
-      android:icon="@drawable/ic_action_delete"
       android:onClick="onDelete"
+      android:icon="@drawable/ic_action_delete"
       app:showAsAction="always"
       android:title="" />
 

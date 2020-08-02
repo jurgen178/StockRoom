@@ -409,7 +409,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       //val postMarket: Boolean = sharedPreferences.getBoolean("postmarket", true)
 
       // Work off a read-only copy to avoid the java.util.ConcurrentModificationException
-      // while the next update is fetched.
+      // while the next update.
       onlineMarketDataList.toImmutableList()
           .forEach { onlineMarketDataItem ->
             val symbol = onlineMarketDataItem.symbol

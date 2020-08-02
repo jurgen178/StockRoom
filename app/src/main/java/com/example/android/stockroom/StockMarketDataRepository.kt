@@ -28,7 +28,7 @@ class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
             call = {
               api.getStockDataAsync(symbols.joinToString(","))
                   .await()
-            }, errorMessage = "Error fetching finance data."
+            }, errorMessage = "Error getting finance data."
         )
       } catch (e: Exception) {
         Log.d("StockMarketDataRepository.getStockData failed", "Exception=${e}")
@@ -131,7 +131,7 @@ class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
             api.getStockDataAsync(symbol)
                 .await()
           },
-          errorMessage = "Error fetching finance data."
+          errorMessage = "Error getting finance data."
       )
 
       return quoteResponse?.quoteResponse?.result?.firstOrNull()

@@ -72,6 +72,25 @@ class StockRoomTest {
 
   @Test
   @Throws(Exception::class)
+  fun timeConvertTest() {
+    val datetimeStr1 = "Fri, 31 Jul 2020 14:54:54 GMT"
+    val localDateTime1 = LocalDateTime.parse(datetimeStr1, DateTimeFormatter.RFC_1123_DATE_TIME)
+    val dateStr = localDateTime1.format(DateTimeFormatter.ofLocalizedDate(FULL))
+    val timeStr = localDateTime1.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+    assertEquals("Freitag, 31. Juli 2020", dateStr)
+    assertEquals("14:54:54", timeStr)
+
+    val datetimeStr2 = "ABC, 31 Jul 2020 14:54:54 DEF"
+    var localDateTime2: LocalDateTime? = null
+    try {
+      localDateTime2 = LocalDateTime.parse(datetimeStr2, DateTimeFormatter.RFC_1123_DATE_TIME)
+    } catch (e: java.lang.Exception) {
+    }
+    assertEquals(null, localDateTime2)
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun addmap() {
     val assetList = listOf<Asset>(
         Asset(
@@ -355,7 +374,9 @@ var events: List<Event>
             AssetJson(shares = asset.shares, price = asset.price)
           },
           events = stockItem.events.map { event ->
-            EventJson(type = event.type, title = event.title, note = event.note, datetime = event.datetime)
+            EventJson(
+                type = event.type, title = event.title, note = event.note, datetime = event.datetime
+            )
           }
       )
     }

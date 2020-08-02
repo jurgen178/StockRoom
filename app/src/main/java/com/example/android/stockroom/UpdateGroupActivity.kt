@@ -134,7 +134,7 @@ class UpdateGroupActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_updategroup)
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    //supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
     stockRoomViewModel.logDebug("Update group activity started.")

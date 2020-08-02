@@ -12,6 +12,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.time.format.DateTimeFormatter
 
+// https://finance.yahoo.com/quotes/GOOG,MAPP,API,v3,Json,not
+
 /*
 {
     "quoteResponse": {
@@ -319,23 +321,20 @@ data class YahooChartQuoteEntries(
 )
 
 class StockDataEntry(
-  dateTimePoint: Long,
+  var dateTimePoint: Long,
   x: Float,
   high: Float,
   low: Float,
   open: Float,
   close: Float
 ) {
-  var dateTimePoint: Long = dateTimePoint
   var candleEntry: CandleEntry = CandleEntry(x, high, low, open, close)
 }
 
-class DataPoint : Entry, Comparable<DataPoint> {
-
-  constructor(
-    x: Float,
-    y: Float
-  ) : super(x, y)
+class DataPoint(
+  x: Float,
+  y: Float
+) : Entry(x, y), Comparable<DataPoint> {
 
   override fun compareTo(other: DataPoint): Int = x.compareTo(other.x)
 }

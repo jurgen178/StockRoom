@@ -13,57 +13,67 @@ See the License for the specific language governing permissions and
 limitations under the License. -->
 
 <resources>
-  <string name="app_name">Stock Room</string>
-  <string name="title_activity_settings">Einstellungen</string>
-  <string name="hint_add_stock">Aktienkürzel</string>
-  <string name="button_add">Hinzufügen</string>
-  <string name="import_list">Aktienliste Importieren</string>
-  <string name="export_list">Aktienliste Exportieren</string>
+  <!-- App name -->
+  <string name="app_name" translatable="false">Stock Room</string>
+
+  <string name="hint_add_stock">Stock symbol</string>
+  <string name="button_add">Add</string>
   <string name="sort">Sort</string>
 
   <!-- Plurals -->
   <plurals name="events_in_list">
-    <item quantity="one">%1$d Ereignis</item>
-    <item quantity="other">%1$d Ereignisse</item>
+    <item quantity="one">%1$d Event</item>
+    <item quantity="other">%1$d Events</item>
   </plurals>
   <plurals name="asset_added">
-    <item quantity="one">%1$s Aktie zum Kaufpreis von %2$s wurden dem Aktienbestand hinzugefügt.</item>
-    <item quantity="other">%1$s Aktien zum Kaufpreis von %2$s wurden dem Aktienbestand hinzugefügt.</item>
+    <item quantity="one">%1$s stock for %2$s was added to the stock portfolio.</item>
+    <item quantity="other">%1$s stocks for %2$s were added to the stock portfolio.</item>
   </plurals>
   <plurals name="asset_updated">
-    <item quantity="one">%1$s Aktie zum Kaufpreis von %2$s wurden im Aktienbestand aktualisiert.</item>
-    <item quantity="other">%1$s Aktien zum Kaufpreis von %2$s wurden im Aktienbestand aktualisiert.</item>
+    <item quantity="one">%1$s stock for %2$s was updated in the stock portfolio.</item>
+    <item quantity="other">%1$s stocks for %2$s were updated in the stock portfolio.</item>
   </plurals>
   <plurals name="delete_asset_msg">
-    <item quantity="one">%1$s Aktie zum Kaufpreis von %2$s wurden aus Ihrem Aktienbestand entfernt.</item>
-    <item quantity="other">%1$s Aktien zum Kaufpreis von %2$s wurden aus Ihrem Aktienbestand entfernt.</item>
+    <item quantity="one">%1$s stock for %2$s was removed from the stock portfolio..</item>
+    <item quantity="other">%1$s stocks for %2$s were removed from the stock portfolio.</item>
   </plurals>
   <plurals name="delete_asset_confirm">
     <item quantity="one">Sind Sie sicher, dass Sie die %1$s Aktie zum Kaufpreis von %2$s aus Ihrem Aktienbestand entfernen möchten?</item>
     <item quantity="other">Sind Sie sicher, dass Sie die %1$s Aktien zum Kaufpreis von %2$s aus Ihrem Aktienbestand entfernen möchten?</item>
   </plurals>
 
+  <!-- string-array -->
+  <string-array name="predefined_groups">
+    <item>Buy</item>
+    <item>Sell</item>
+    <item>Watch</item>
+    <item>Give away for free</item>
+    <item>Ask the cat</item>
+    <item>Stop looking at</item>
+    <item>Buy more</item>
+    <item>Group 1</item>
+    <item>Group 2</item>
+    <item>Group 3</item>
+    <item>Group 4</item>
+    <item>Group 5</item>
+  </string-array>
+
   <!-- Preference Titles -->
+  <string name="title_activity_settings">Settings</string>
   <string name="general_header">Allgemein</string>
   <string name="display_header">Anzeige</string>
   <string name="feedback_header">Rückmeldung</string>
   <string name="other_header">Sonstige</string>
+  <string name="group_header">Gruppenliste</string>
 
-  <!-- Messages Preferences -->
-  <string name="signature_title">Your signature</string>
-  <string name="reply_title">Default reply action</string>
-
-  <!-- Sync Preferences -->
-  <string name="sync_title">Sync email periodically</string>
-  <string name="attachment_title">Download incoming attachments</string>
-  <string name="attachment_summary_on">Automatically download attachments for incoming emails
-  </string>
-  <string name="attachment_summary_off">Only download attachments when manually requested</string>
   <string name="sort_name">Nach Namen sortieren</string>
   <string name="sort_change">Nach Änderung sortieren</string>
   <string name="sort_group">Nach Gruppe sortieren</string>
-  <string name="delete_stock">Sind Sie sicher dass sie die Aktie \'%1$s\' entfernen möchten?</string>
-  <string name="delete">Entfernen</string>
+  <string name="sort_group_unsorted">Nach Einfügedatum sortiert</string>
+  <string name="sort_assets">Nach Aktienbestand sortieren</string>
+  <string name="sort_profit">Nach Gewinn sortieren</string>
+  <string name="sort_dividend">Nach Dividende sortieren</string>
+
   <string name="cancel">Abbrechen</string>
   <string name="one_day_range">Tagesverlauf</string>
   <string name="five_days_range">Wochenverlauf</string>
@@ -74,7 +84,7 @@ limitations under the License. -->
   <string name="five_year_range">Fünfjahresverlauf</string>
   <string name="max_range">Maximalverlauf</string>
   <string name="use_postmarket">Nachbörsliche Werte</string>
-  <string name="use_postmarket_desc">Vor- und Nachbörsliche Werte anzeigen.</string>
+  <string name="use_postmarket_desc">Vor- und nachbörsliche Werte anzeigen.</string>
   <string name="notes">Anmerkungen</string>
   <string name="alerts">Benachrichtigungen</string>
   <string name="alert_above">Wenn überschritten</string>
@@ -100,7 +110,6 @@ limitations under the License. -->
   <string name="number_of_shares">Anzahl der Aktien</string>
   <string name="price">Kaufpreis</string>
   <string name="remove">Entfernen</string>
-  <string name="current_assets">Aktuelle Aktienbestände</string>
   <string name="shares">Aktien</string>
   <string name="value">Wert</string>
   <string name="no_total_shares">Kaufen Sie zuerst einige Aktien.</string>
@@ -108,14 +117,20 @@ limitations under the License. -->
   <string name="dividend">Dividende</string>
   <string name="dividend_in_list">Dividende:</string>
   <string name="standard_group">Nicht zugeordnet</string>
-  <!-- TODO: Remove or change this placeholder text -->
-  <string name="hello_blank_fragment">Hello blank fragment</string>
-  <string name="sort_group_unsorted">Nach Einfügedatum sortiert</string>
-  <string name="sort_assets">Nach Aktienbestand sortieren</string>
-  <string name="sort_profit">Nach Gewinn sortieren</string>
-  <string name="sort_dividend">Nach Dividende sortieren</string>
+  <string name="import_section_header">Importieren</string>
+  <string name="button_import">Importieren</string>
+  <string name="import_list">Aktienliste Importieren</string>
   <string name="import_list_desc">Aktienliste von einer Text-Datei, CSV-Datei oder JSON-Datei importieren.</string>
+  <string name="import_error">Die ausgewählte Datei konnte nicht importiert werden.</string>
+  <string name="import_csv_symbolcolumn_error">Die ausgewählte CSV-Datei konnte nicht importiert werden. Die Spalte für den Aktiennamen ist nicht vorhanden.</string>
+  <string name="import_msg">%1$s Aktien wurden importiert</string>
+  <string name="export_msg">Ihre Aktienliste mit %1$d Aktiendaten wurde in eine .JSON-Datei exportiert.</string>
+  <string name="export_list">Aktienliste Exportieren</string>
   <string name="export_list_desc">Aktienliste ihres Portfolios in eine .JSON-Datei exportieren.</string>
+  <string name="export_section_header">Exportieren</string>
+  <string name="export_select_file">Wählen Sie eine Datei aus</string>
+  <string name="delete_stock">Sind Sie sicher dass sie die Aktie \'%1$s\' entfernen möchten?</string>
+  <string name="delete">Entfernen</string>
   <string name="delete_all_title">Alle Daten entfernen</string>
   <string name="delete_all_confirm">Sind Sie sich sicher?</string>
   <string name="delete_all_desc">Entfernt alle Aktien und die dazugehörigen Daten.</string>
@@ -123,20 +138,16 @@ limitations under the License. -->
   <string name="debug_desc">Zeigt zusätzliche Debuginformationen an.</string>
   <string name="shares_not_zero">Die Anzahl der Aktien darf nicht 0 sein.</string>
   <string name="price_not_zero">Der Preis der Aktie darf nicht 0 sein.</string>
-  <string name="delete_all_assets_confirm">Sind Sie sicher, dass Sie alle Aktien von \'%1$s\' aus Ihrem Aktienbestand entfernen möchten?</string>
   <string name="add_asset">Zum Aktienbestand hinzufügen</string>
-  <string name="delete_asset">Vom Aktienbestand entfernen</string>
+  <string name="current_assets">Aktuelle Aktienbestände</string>
   <string name="update_asset">Aktienbestand aktualisieren</string>
+  <string name="delete_asset">Vom Aktienbestand entfernen</string>
   <string name="delete_all_assets">Alle Aktien entfernen</string>
   <string name="delete_all_assets_msg">Alle Aktien wurden aus Ihrem Aktienbestand entfernt.</string>
+  <string name="delete_all_assets_confirm">Sind Sie sicher, dass Sie alle Aktien von \'%1$s\' aus Ihrem Aktienbestand entfernen möchten?</string>
   <string name="asset_summary_text">Gesamtaktienbestand</string>
-  <string name="group_header">Gruppenliste</string>
   <string name="title_activity_add">Aktien hinzufügen</string>
   <string name="title_activity_stockdata">Aktiendetails</string>
-  <string name="import_error">Die ausgewählte Datei konnte nicht importiert werden.</string>
-  <string name="import_csv_symbolcolumn_error">Die ausgewählte CSV-Datei konnte nicht importiert werden. Die Spalte für den Aktiennamen ist nicht vorhanden.</string>
-  <string name="import_msg">%1$s Aktien wurden importiert</string>
-  <string name="export_msg">Ihre Aktienliste mit %1$d Aktiendaten wurde in eine .JSON-Datei exportiert.</string>
   <string name="current_events">Ereignisse</string>
   <string name="event_title">Ereignis</string>
   <string name="event_note">Details</string>
@@ -174,10 +185,6 @@ limitations under the License. -->
   <string name="trillion_abbr">Trill.</string>
   <string name="billion_abbr">Mrd.</string>
   <string name="million_abbr">Mio.</string>
-  <string name="import_section_header">Importieren</string>
-  <string name="button_import">Importieren</string>
-  <string name="export_section_header">Exportieren</string>
-  <string name="button_export">Exportieren</string>
   <string name="title_activity_updategroup">Gruppenliste bearbeiten</string>
   <string name="add_group">Gruppe hinzufügen</string>
   <string name="delete_group_title">Gruppe \'%1$s\' entfernen</string>
@@ -196,8 +203,7 @@ limitations under the License. -->
   <string name="add_predef_groups_title">Beispielgruppen</string>
   <string name="add_predef_groups_confirm">Möchten Sie die Beispielgruppen hinzufügen?</string>
   <string name="add_predef_groups_msg">Die Beispielgruppen wurden hinzugefügt.</string>
-  <string name="predefined_groups">Kaufen,Verkaufen,Beobachten,Verschenken,Die Katze fragen,Nicht mehr danach gucken,Noch mehr kaufen,Gruppe 1,Gruppe 2,Gruppe 3,Gruppe 4,Gruppe 5</string>
-  <string name="export_select_file">Wählen Sie eine Datei aus</string>
+  <string name="group_summary">Gruppenübersicht</string>
   <string name="onlinedata_annualDividendYield">Jährliche Dividendenrendite</string>
   <string name="onlinedata_annualDividendRate">Jährlicher Dividendensatz</string>
   <string name="onlinedata_regularMarketPreviousClose">Vortagswert</string>
@@ -217,5 +223,7 @@ limitations under the License. -->
   <string name="onlinedata_financialCurrency">Währung</string>
   <string name="onlinedata_marketState">Marktstatus</string>
   <string name="json_default_filename">Aktien %1$s</string>
-  <string name="group_summary">Gruppenübersicht</string>
+  <string name="news_headline">News for %1$s</string>
+  <string name="news_date_time">%1$s at %2$s</string>
+  <string name="data_headline">Übersicht</string>
 </resources>

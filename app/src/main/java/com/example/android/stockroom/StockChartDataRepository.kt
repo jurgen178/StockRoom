@@ -9,7 +9,7 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
   val data: LiveData<List<StockDataEntry>>
     get() = _data
 
-  suspend fun fetchYahooChartData(
+  suspend fun getChartData(
     symbol: String,
     interval: String,
     range: String
@@ -28,7 +28,7 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
           api.getYahooChartData(stock, interval, range)
               .await()
         },
-        errorMessage = "Error fetching finance data."
+        errorMessage = "Error getting finance data."
     )
 
     val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()

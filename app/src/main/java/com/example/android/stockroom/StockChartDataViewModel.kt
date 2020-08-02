@@ -17,13 +17,13 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
     data = stockChartDataRepository.data
   }
 
-  fun fetchYahooChartData(
+  fun getChartData(
     symbol: String,
     interval: String,
     range: String
   ) {
     viewModelScope.launch {
-      stockChartDataRepository.fetchYahooChartData(symbol, interval, range)
+      stockChartDataRepository.getChartData(symbol, interval, range)
     }
   }
 }
