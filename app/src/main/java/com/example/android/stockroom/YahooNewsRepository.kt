@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class NewsRepository(private val api: NewsApi) : BaseRepository() {
+class YahooNewsRepository(private val api: YahooNewsApi) : BaseRepository() {
 
   private val _data = MutableLiveData<List<NewsData>>()
   val data: LiveData<List<NewsData>>

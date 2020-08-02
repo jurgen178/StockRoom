@@ -47,7 +47,7 @@
         android:id="@+id/summaryGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="2dp"
         tools:listitem="@layout/summarygroup_item"
         />
 

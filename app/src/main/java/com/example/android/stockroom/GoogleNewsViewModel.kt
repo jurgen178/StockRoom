@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class NewsViewModel(application: Application) : AndroidViewModel(application) {
+class GoogleNewsViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val newsRepository: NewsRepository =
-    NewsRepository(NewsApiFactory.newsApi)
+  private val newsRepository: GoogleNewsRepository =
+    GoogleNewsRepository(GoogleNewsApiFactory.newsApi)
 
   val data: LiveData<List<NewsData>>
 

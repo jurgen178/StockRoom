@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/newsItemViewLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,10 +8,9 @@
     >
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/newsRecyclerview"
+      android:id="@+id/yahoonewsRecyclerview"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:padding="@dimen/small_padding"
       tools:listitem="@layout/newsview_item"
       />
 

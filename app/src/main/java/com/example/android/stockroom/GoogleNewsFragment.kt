@@ -9,16 +9,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_news.newsRecyclerview
+import kotlinx.android.synthetic.main.fragment_googlenews.googlenewsRecyclerview
 import java.util.Locale
 
-class NewsFragment : Fragment() {
+class GoogleNewsFragment : Fragment() {
 
-  private lateinit var newsViewModel: NewsViewModel
+  private lateinit var newsViewModel: GoogleNewsViewModel
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   companion object {
-    fun newInstance() = NewsFragment()
+    fun newInstance() = GoogleNewsFragment()
   }
 
   private var symbol: String = ""
@@ -39,7 +39,7 @@ class NewsFragment : Fragment() {
     newsQuery = symbol
 
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_news, container, false)
+    return inflater.inflate(R.layout.fragment_googlenews, container, false)
   }
 
   override fun onViewCreated(
@@ -49,10 +49,10 @@ class NewsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val newsAdapter = NewsAdapter(requireContext())
-    newsRecyclerview.adapter = newsAdapter
-    newsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+    googlenewsRecyclerview.adapter = newsAdapter
+    googlenewsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
 
-    newsViewModel = ViewModelProvider(this).get(NewsViewModel::class.java)
+    newsViewModel = ViewModelProvider(this).get(GoogleNewsViewModel::class.java)
 
     newsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
       newsAdapter.updateData(data)

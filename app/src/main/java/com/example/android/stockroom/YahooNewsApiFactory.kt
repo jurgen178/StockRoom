@@ -9,7 +9,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 // https://news.google.com/rss/search?q=msft&hl=en-US&gl=US&ceid=US:en
 // https://news.google.com/rss/search?q=msft&hl=de&gl=DE&ceid=DE:de
 
-object NewsApiFactory {
+object YahooNewsApiFactory {
 
   // https://futurestud.io/tutorials/retrofit-how-to-integrate-xml-converter
   private fun retrofit(): Retrofit = Retrofit.Builder()
@@ -17,10 +17,10 @@ object NewsApiFactory {
           OkHttpClient().newBuilder()
               .build()
       )
-      .baseUrl("https://news.google.com/")
+      .baseUrl("feeds.finance.yahoo.com/")
       .addConverterFactory(SimpleXmlConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
       .build()
 
-  val newsApi: NewsApi = retrofit().create(NewsApi::class.java)
+  val newsApi: YahooNewsApi = retrofit().create(YahooNewsApi::class.java)
 }
