@@ -51,7 +51,8 @@ class SummaryListAdapter internal constructor(
       itemView.findViewById(R.id.summaryListItemMarketChange)
     val summaryListItemCapital: TextView =
       itemView.findViewById(R.id.summaryListItemCapital)
-    val summaryListItemAssetChange: TextView = itemView.findViewById(R.id.summaryListItemAssetChange)
+    val summaryListItemAssetChange: TextView =
+      itemView.findViewById(R.id.summaryListItemAssetChange)
     val summaryListItemGroup: TextView = itemView.findViewById(R.id.summaryListItemGroup)
   }
 
@@ -73,6 +74,25 @@ class SummaryListAdapter internal constructor(
 
     holder.summaryListItemSymbol.text = current.stockDBdata.symbol
 
+    var color = current.stockDBdata.groupColor
+    if (color == 0) {
+      color = context.getColor(R.color.backgroundListColor)
+    }
+    setBackgroundColor(holder.summaryListItemGroup, color)
+
+    val shares = current.assets.sumByDouble {
+      it.shares.toDouble()
+    }
+        .toFloat()
+
+    var asset: Float = 0f
+    if (shares > 0f) {
+      asset = current.assets.sumByDouble {
+        it.shares.toDouble() * it.price
+      }
+          .toFloat()
+    }
+
     if (current.onlineMarketData.marketPrice > 0f) {
       holder.summaryListItemMarketPrice.text =
         if (current.onlineMarketData.marketPrice > 5f) {
@@ -89,68 +109,58 @@ class SummaryListAdapter internal constructor(
       )}%)"
 
       var changeStr: String = ""
-
-      var asset: Float = 0f
       var capital: Float = 0f
 
-      val shares = current.assets.sumByDouble {
-        it.shares.toDouble()
-      }
-          .toFloat()
-
       if (shares > 0f) {
-        asset = current.assets.sumByDouble {
-          it.shares.toDouble() * it.price
+        capital = current.assets.sumByDouble {
+          it.shares.toDouble() * current.onlineMarketData.marketPrice
         }
             .toFloat()
 
-        if (current.onlineMarketData.marketPrice > 0f) {
-          capital = current.assets.sumByDouble {
-            it.shares.toDouble() * current.onlineMarketData.marketPrice
-          }
-              .toFloat()
+        changeStr += DecimalFormat(
+            "0.00"
+        ).format(
+            capital - asset
+        )
 
-          changeStr += DecimalFormat(
-              "0.00"
-          ).format(
-              capital - asset
-          )
-
-          val changePercent = (capital - asset) * 100f / asset
-          changeStr += " (${if (changePercent >= 0f) {
-            "+"
-          } else {
-            ""
-          }}${DecimalFormat("0.00").format(changePercent)}%)"
-
+        val changePercent = (capital - asset) * 100f / asset
+        changeStr += " (${if (changePercent >= 0f) {
+          "+"
         } else {
-          changeStr += DecimalFormat(
-              "0.00"
-          ).format(asset)
+          ""
+        }}${DecimalFormat("0.00").format(changePercent)}%)"
+
+        val assetChangeColor = if (capital > asset) {
+          context.getColor(R.color.green)
+        } else if (capital < asset) {
+          context.getColor(R.color.red)
+        } else {
+          context.getColor(R.color.material_on_background_emphasis_medium)
         }
-      }
 
-      val assetChangeColor = if (capital > asset) {
-        context.getColor(R.color.green)
-      } else if (capital > 0f && capital < asset) {
-        context.getColor(R.color.red)
+        val assetChange = SpannableStringBuilder()
+            .color(assetChangeColor) {
+              bold { append(changeStr) }
+            }
+
+        holder.summaryListItemAssetChange.text = assetChange
+        holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
       } else {
-        context.getColor(R.color.material_on_background_emphasis_medium)
+        // Don't own any shares of this stock.
+        holder.summaryListItemAssetChange.text = ""
+        holder.summaryListItemCapital.text = ""
       }
+    } else {
+      // offline
+      holder.summaryListItemMarketPrice.text = ""
+      holder.summaryListItemMarketChange.text = ""
+      holder.summaryListItemAssetChange.text = ""
 
-      val assetChange = SpannableStringBuilder()
-          .color(assetChangeColor) {
-            bold { append(changeStr) }
-          }
-
-      holder.summaryListItemAssetChange.text = assetChange
-      holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
-
-      var color = current.stockDBdata.groupColor
-      if (color == 0) {
-        color = context.getColor(R.color.backgroundListColor)
+      if (asset > 0f) {
+        holder.summaryListItemCapital.text = DecimalFormat("0.00").format(asset)
+      } else {
+        holder.summaryListItemCapital.text = ""
       }
-      setBackgroundColor(holder.summaryListItemGroup, color)
     }
   }
 

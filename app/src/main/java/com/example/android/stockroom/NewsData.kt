@@ -71,6 +71,6 @@ interface NewsApi {
   fun getNewsDataAsync(
     @Query(
         value = "q"
-    ) symbols: String
+    ) newsQuery: String
   ): Deferred<Response<NewsResponse>>
 }

@@ -18,10 +18,10 @@ class NewsViewModel(application: Application) : AndroidViewModel(application) {
   }
 
   fun getNewsData(
-    symbol: String
+    newsQuery: String
   ) {
     viewModelScope.launch {
-      newsRepository.getNewsData(symbol)
+      newsRepository.getNewsData(newsQuery)
     }
   }
 }

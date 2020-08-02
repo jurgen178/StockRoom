@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_stock.stockViewpager
@@ -27,19 +26,19 @@ class StockDataActivity : AppCompatActivity() {
 
     stockViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
-        val bundle = Bundle()
-        bundle.putString(
-            "symbol", symbol
-        )
         return when (position) {
           0 -> {
             val instance = StockDataFragment.newInstance()
-            instance.arguments = bundle
+            instance.arguments = Bundle().apply {
+              putString("symbol", symbol)
+            }
             instance
           }
           else -> {
             val instance = NewsFragment.newInstance()
-            instance.arguments = bundle
+            instance.arguments = Bundle().apply {
+              putString("symbol", symbol)
+            }
             instance
           }
         }

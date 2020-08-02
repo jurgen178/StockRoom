@@ -13,18 +13,18 @@ class NewsRepository(private val api: NewsApi) : BaseRepository() {
     get() = _data
 
   suspend fun getNewsData(
-    symbol: String
+    newsQuery: String
   ) {
-    _data.value = getOnlineNewsData(symbol)
+    _data.value = getOnlineNewsData(newsQuery)
   }
 
   suspend fun getOnlineNewsData(
-    stock: String
+    newsQuery: String
   ): List<NewsData>? {
 
     val newsResponse = safeApiCall(
         call = {
-          api.getNewsDataAsync(stock)
+          api.getNewsDataAsync(newsQuery)
               .await()
         },
         errorMessage = "Error getting news data."
