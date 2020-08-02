@@ -108,7 +108,6 @@ class SummaryListAdapter internal constructor(
           current.onlineMarketData.marketChangePercent
       )}%)"
 
-      var changeStr: String = ""
       var capital: Float = 0f
 
       if (shares > 0f) {
@@ -117,39 +116,14 @@ class SummaryListAdapter internal constructor(
         }
             .toFloat()
 
-        changeStr += DecimalFormat(
-            "0.00"
-        ).format(
-            capital - asset
-        )
-
-        val changePercent = (capital - asset) * 100f / asset
-        changeStr += " (${if (changePercent >= 0f) {
-          "+"
-        } else {
-          ""
-        }}${DecimalFormat("0.00").format(changePercent)}%)"
-
-        val assetChangeColor = if (capital > asset) {
-          context.getColor(R.color.green)
-        } else if (capital < asset) {
-          context.getColor(R.color.red)
-        } else {
-          context.getColor(R.color.material_on_background_emphasis_medium)
-        }
-
-        val assetChange = SpannableStringBuilder()
-            .color(assetChangeColor) {
-              bold { append(changeStr) }
-            }
-
-        holder.summaryListItemAssetChange.text = assetChange
         holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
       } else {
         // Don't own any shares of this stock.
-        holder.summaryListItemAssetChange.text = ""
         holder.summaryListItemCapital.text = ""
       }
+
+      holder.summaryListItemAssetChange.text =
+        getAssetChange(current.assets, current.onlineMarketData.marketPrice, context)
     } else {
       // offline
       holder.summaryListItemMarketPrice.text = ""

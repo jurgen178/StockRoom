@@ -155,22 +155,8 @@ class SummaryGroupAdapter internal constructor(
         shares += asset.shares
       }
 
-      val assetsPrice = shares * it.onlineMarketData.marketPrice
-      val gainLoss = assetsPrice - price
-      if (gainLoss > 0f) {
-        totalGain += gainLoss
-      } //else {
-      //totalLoss -= gainLoss
-      //}
-
       totalPurchasePrice += price
-      totalAssets += assetsPrice
       totalShares += shares
-
-      if (it.onlineMarketData.annualDividendRate > 0f) {
-        totalDividendAssets += assetsPrice
-        totalDividend += shares * it.onlineMarketData.annualDividendRate
-      }
 
       if (it.stockDBdata.alertAbove > 0f) {
         totalAlerts++
@@ -180,6 +166,23 @@ class SummaryGroupAdapter internal constructor(
       }
       if (it.stockDBdata.notes.isNotEmpty()) {
         totalNotes++
+      }
+
+      if (it.onlineMarketData.marketPrice > 0f) {
+        val assetsPrice = shares * it.onlineMarketData.marketPrice
+        val gainLoss = assetsPrice - price
+        if (gainLoss > 0f) {
+          totalGain += gainLoss
+        } //else {
+        //totalLoss -= gainLoss
+        //}
+
+        totalAssets += assetsPrice
+
+        if (it.onlineMarketData.annualDividendRate > 0f) {
+          totalDividendAssets += assetsPrice
+          totalDividend += shares * it.onlineMarketData.annualDividendRate
+        }
       }
     }
 
@@ -234,7 +237,11 @@ class SummaryGroupAdapter internal constructor(
     }
 
     // To minimize rounding errors
-    val totalLoss = totalGain - (totalAssets - totalPurchasePrice)
+    val totalLoss = if (totalAssets > 0f) {
+      totalGain - (totalAssets - totalPurchasePrice)
+    } else {
+      0f
+    }
 
     val loss = if (totalLoss > 0f) {
       SpannableStringBuilder()
@@ -247,9 +254,13 @@ class SummaryGroupAdapter internal constructor(
       }
     }
 
-    val total = totalAssets - totalPurchasePrice
+    val total = if (totalAssets > 0f) {
+      totalAssets - totalPurchasePrice
+    } else {
+      0f
+    }
     val gainloss = when {
-      totalAssets > totalPurchasePrice -> {
+      total > 0f -> {
         SpannableStringBuilder()
             .color(
                 context.getColor(R.color.green)
@@ -261,7 +272,7 @@ class SummaryGroupAdapter internal constructor(
               }
             }
       }
-      totalAssets < totalPurchasePrice -> {
+      total < 0f -> {
         SpannableStringBuilder().color(context.getColor(R.color.red)) {
           bold { append("${DecimalFormat("0.00").format(total)}\n") }
         }

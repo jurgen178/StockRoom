@@ -220,7 +220,7 @@ limitations under the License. -->
   <string name="onlinedata_financialCurrency">Währung</string>
   <string name="onlinedata_marketState">Marktstatus</string>
   <string name="json_default_filename">Aktien %1$s</string>
-  <string name="news_headline">"Nachrichten für %1$s</string>
+  <string name="news_headline">Nachrichten für %1$s</string>
   <string name="news_date_time">%1$s um %2$s Uhr</string>
   <string name="data_headline">Übersicht</string>
 </resources>

@@ -9,19 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_yahoonews.yahoonewsRecyclerview
+import kotlinx.android.synthetic.main.fragment_news.newsRecyclerview
 import java.util.Locale
 
-class YahooNewsFragment : Fragment() {
+class NewsFragment : Fragment() {
 
-  private lateinit var newsViewModel: YahooNewsViewModel
+  private lateinit var stockRoomViewModel: StockRoomViewModel
+  private lateinit var yahooNewsViewModel: YahooNewsViewModel
+  private lateinit var googleNewsViewModel: GoogleNewsViewModel
 
   companion object {
-    fun newInstance() = YahooNewsFragment()
+    fun newInstance() = NewsFragment()
   }
 
   private var symbol: String = ""
-  private var newsQuery = ""
+  private var yahooNewsQuery = ""
+  private var googleNewsQuery = ""
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -35,10 +38,11 @@ class YahooNewsFragment : Fragment() {
   ): View? {
 
     symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
-    newsQuery = symbol
+    yahooNewsQuery = symbol
+    googleNewsQuery = symbol
 
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_yahoonews, container, false)
+    return inflater.inflate(R.layout.fragment_news, container, false)
   }
 
   override fun onViewCreated(
@@ -48,16 +52,42 @@ class YahooNewsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val newsAdapter = NewsAdapter(requireContext())
-    yahoonewsRecyclerview.adapter = newsAdapter
-    yahoonewsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+    newsRecyclerview.adapter = newsAdapter
+    newsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
 
-    newsViewModel = ViewModelProvider(this).get(YahooNewsViewModel::class.java)
+    yahooNewsViewModel = ViewModelProvider(this).get(YahooNewsViewModel::class.java)
+    googleNewsViewModel = ViewModelProvider(this).get(GoogleNewsViewModel::class.java)
 
-    newsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+    yahooNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
       newsAdapter.updateData(data)
     })
 
-    getNewsData()
+    yahooNewsViewModel.getNewsData(yahooNewsQuery)
+
+    // use requireActivity() instead of this to have only one shared viewmodel
+    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+    stockRoomViewModel.logDebug("News fragment started.")
+
+    // Get the online data and compose a news query for the symbol.
+    stockRoomViewModel.onlineMarketDataList.observe(viewLifecycleOwner, Observer { data ->
+      data?.let { onlineMarketDataList ->
+        val onlineMarketData = onlineMarketDataList.find { onlineMarketDataItem ->
+          onlineMarketDataItem.symbol == symbol
+        }
+        if (onlineMarketData != null) {
+          googleNewsQuery = onlineMarketData.name
+          //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}, ${onlineMarketData.name}"
+          //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}"
+          getNewsData()
+
+          //stockRoomViewModel.onlineMarketDataList.removeObservers(viewLifecycleOwner)
+        }
+      }
+    })
+
+    googleNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+      newsAdapter.updateData(data)
+    })
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -71,6 +101,7 @@ class YahooNewsFragment : Fragment() {
   }
 
   private fun getNewsData() {
-    newsViewModel.getNewsData(newsQuery)
+    yahooNewsViewModel.getNewsData(yahooNewsQuery)
+    googleNewsViewModel.getNewsData(googleNewsQuery)
   }
 }

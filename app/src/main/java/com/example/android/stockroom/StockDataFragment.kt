@@ -6,11 +6,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -21,8 +21,12 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -65,6 +69,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.linearLayoutGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.notesTextView
 import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
 import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
+import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroupColor
@@ -100,10 +105,89 @@ enum class StockViewMode(val value: Int) {
   Candle(1),
 }
 
+fun getAssetChange(
+  assets: List<Asset>,
+  marketPrice: Float,
+  context: Context
+): SpannableStringBuilder {
+  val shares = assets.sumByDouble {
+    it.shares.toDouble()
+  }
+      .toFloat()
+
+  val asset: Float =
+    if (shares > 0f) {
+      assets.sumByDouble {
+        it.shares.toDouble() * it.price
+      }
+          .toFloat()
+    } else {
+      0f
+    }
+
+  if (marketPrice > 0f) {
+    var changeStr: String = ""
+
+    if (shares > 0f) {
+      val capital = assets.sumByDouble {
+        it.shares.toDouble() * marketPrice
+      }
+          .toFloat()
+
+      val change = capital - asset
+      changeStr += "${if (change >= 0f) {
+        "+"
+      } else {
+        ""
+      }}${DecimalFormat(
+          "0.00"
+      ).format(
+          change
+      )}"
+
+      val changePercent = change * 100f / asset
+      changeStr += " (${if (changePercent >= 0f) {
+        "+"
+      } else {
+        ""
+      }}${DecimalFormat("0.00").format(changePercent)}%)"
+
+      val assetChangeColor = when {
+        capital > asset -> {
+          context.getColor(R.color.green)
+        }
+        capital < asset -> {
+          context.getColor(R.color.red)
+        }
+        else -> {
+          context.getColor(R.color.material_on_background_emphasis_medium)
+        }
+      }
+
+      val assetChange = SpannableStringBuilder()
+          .color(assetChangeColor) {
+            bold { append(changeStr) }
+          }
+
+      return assetChange
+    }
+  }
+
+  return SpannableStringBuilder()
+}
+
+data class AssetsLiveData(
+  var assets: Assets? = null,
+  var marketPrice: Float = 0f
+)
+
 class StockDataFragment : Fragment() {
 
   private lateinit var stockChartDataViewModel: StockChartDataViewModel
   private lateinit var stockRoomViewModel: StockRoomViewModel
+
+  private val assetChange = AssetsLiveData()
+  private val assetChangeLiveData = MediatorLiveData<AssetsLiveData>()
 
   companion object {
     fun newInstance() = StockDataFragment()
@@ -513,6 +597,30 @@ class StockDataFragment : Fragment() {
       if (data != null) {
         eventAdapter.updateEvents(data.events)
       }
+    })
+
+    // Use MediatorLiveView to combine the assets and online data changes.
+    assetChangeLiveData.addSource(assetsLiveData) { value ->
+      if (value != null) {
+        assetChange.assets = value
+        assetChangeLiveData.postValue(assetChange)
+      }
+    }
+
+    assetChangeLiveData.addSource(stockRoomViewModel.onlineMarketDataList) { value ->
+      if (value != null) {
+        val onlineMarketData = value.find { data ->
+          data.symbol == symbol
+        }
+        if (onlineMarketData != null) {
+          assetChange.marketPrice = onlineMarketData.marketPrice
+          assetChangeLiveData.postValue(assetChange)
+        }
+      }
+    }
+
+    assetChangeLiveData.observe(viewLifecycleOwner, Observer { item ->
+      updateAssetChange(item)
     })
 
     stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
@@ -1060,6 +1168,12 @@ class StockDataFragment : Fragment() {
     textViewName.text = name
     textViewMarketPrice.text = DecimalFormat("0.00##").format(marketPrice)
     textViewChange.text = marketChange
+  }
+
+  private fun updateAssetChange(data: AssetsLiveData) {
+    if (data != null) {
+      textViewAssetChange.text = getAssetChange(data.assets?.assets!!, data.marketPrice, context!!)
+    }
   }
 
   private fun updateAlerts() {

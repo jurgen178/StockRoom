@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    xmlns:tools="http://schemas.android.com/tools"
     >
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/yahoonewsRecyclerview"
+      android:id="@+id/newsRecyclerview"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      tools:listitem="@layout/yahoonewsview_item"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

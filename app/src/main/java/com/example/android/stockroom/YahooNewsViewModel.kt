@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 class YahooNewsViewModel(application: Application) : AndroidViewModel(application) {
 
   private val newsRepository: YahooNewsRepository =
-    YahooNewsRepository(YahooNewsApiFactory.newsApi)
+    YahooNewsRepository()
 
   val data: LiveData<List<NewsData>>
 

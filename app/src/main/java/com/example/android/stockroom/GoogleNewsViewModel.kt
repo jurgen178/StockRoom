@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 class GoogleNewsViewModel(application: Application) : AndroidViewModel(application) {
 
   private val newsRepository: GoogleNewsRepository =
-    GoogleNewsRepository(GoogleNewsApiFactory.newsApi)
+    GoogleNewsRepository()
 
   val data: LiveData<List<NewsData>>
 

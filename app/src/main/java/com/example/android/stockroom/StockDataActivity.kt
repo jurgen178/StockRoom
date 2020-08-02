@@ -34,15 +34,8 @@ class StockDataActivity : AppCompatActivity() {
             }
             instance
           }
-          1 -> {
-            val instance = YahooNewsFragment.newInstance()
-            instance.arguments = Bundle().apply {
-              putString("symbol", symbol)
-            }
-            instance
-          }
           else -> {
-            val instance = GoogleNewsFragment.newInstance()
+            val instance = NewsFragment.newInstance()
             instance.arguments = Bundle().apply {
               putString("symbol", symbol)
             }

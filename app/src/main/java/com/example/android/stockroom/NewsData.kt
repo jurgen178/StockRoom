@@ -106,38 +106,40 @@ class NewsResponse {
 
 @Root(name = "item", strict = false)
 class NewsItem {
-  @get:Element(name = "link")
-  @set:Element(name = "link")
+  @get:Element(name = "link", required = false)
+  @set:Element(name = "link", required = false)
   var link: String = ""
 
-  @get:Element(name = "title")
-  @set:Element(name = "title")
+  @get:Element(name = "title", required = false)
+  @set:Element(name = "title", required = false)
   var title: String = ""
 
-  @get:Element(name = "description")
-  @set:Element(name = "description")
+  @get:Element(name = "description", required = false)
+  @set:Element(name = "description", required = false)
   var description: String = ""
 
-  @get:Element(name = "pubDate")
-  @set:Element(name = "pubDate")
+  @get:Element(name = "pubDate", required = false)
+  @set:Element(name = "pubDate", required = false)
   var pubDate: String = ""
 }
 
-// https://finance.yahoo.com/rss/topstories
+interface NewsApi {
+  fun getNewsDataAsync(newsQuery: String): Deferred<Response<NewsResponse>>
+}
 
 //A retrofit Network Interface for the Api
-interface YahooNewsApi {
+interface YahooNewsApi : NewsApi {
   @GET("rss/2.0/headline")
-  fun getNewsDataAsync(
+  override fun getNewsDataAsync(
     @Query(
         value = "s"
     ) newsQuery: String
   ): Deferred<Response<NewsResponse>>
 }
 
-interface GoogleNewsApi {
+interface GoogleNewsApi : NewsApi {
   @GET("rss/search/")
-  fun getNewsDataAsync(
+  override fun getNewsDataAsync(
     @Query(
         value = "q"
     ) newsQuery: String
