@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "542756283393",
+    "firebase_url": "https://stockroom-e6d4c.firebaseio.com",
+    "project_id": "stockroom-e6d4c",
+    "storage_bucket": "stockroom-e6d4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542756283393:android:961bff4a1e145f44f64c00",
+        "android_client_info": {
+          "package_name": "com.android.stockroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542756283393-0o3s13cmfu594m9lu9q2knq9qj29kprv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdHgQodXEZe8cRxhmYtQj-4IpZ8LZdrkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542756283393-0o3s13cmfu594m9lu9q2knq9qj29kprv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
