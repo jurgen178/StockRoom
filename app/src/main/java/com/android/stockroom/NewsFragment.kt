@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_news.newsRecyclerview
+import kotlinx.android.synthetic.main.fragment_news.swipeRefreshLayout
 import java.util.Locale
 
 class NewsFragment : Fragment() {
@@ -17,6 +18,7 @@ class NewsFragment : Fragment() {
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private lateinit var yahooNewsViewModel: YahooNewsViewModel
   private lateinit var googleNewsViewModel: GoogleNewsViewModel
+  private lateinit var newsAdapter:  NewsAdapter
 
   companion object {
     fun newInstance() = NewsFragment()
@@ -51,7 +53,7 @@ class NewsFragment : Fragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val newsAdapter = NewsAdapter(requireContext())
+    newsAdapter = NewsAdapter(requireContext())
     newsRecyclerview.adapter = newsAdapter
     newsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
 
@@ -60,6 +62,9 @@ class NewsFragment : Fragment() {
 
     yahooNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
       newsAdapter.updateData(data)
+
+      // Stop observing now. News needs to be updated manually.
+      yahooNewsViewModel.data.removeObservers(viewLifecycleOwner)
     })
 
     yahooNewsViewModel.getNewsData(yahooNewsQuery)
@@ -78,9 +83,10 @@ class NewsFragment : Fragment() {
           googleNewsQuery = onlineMarketData.name
           //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}, ${onlineMarketData.name}"
           //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}"
-          getNewsData()
+          googleNewsViewModel.getNewsData(googleNewsQuery)
 
-          //stockRoomViewModel.onlineMarketDataList.removeObservers(viewLifecycleOwner)
+          // Stop observing now. News needs to be updated manually.
+          stockRoomViewModel.onlineMarketDataList.removeObservers(viewLifecycleOwner)
         }
       }
     })
@@ -88,20 +94,28 @@ class NewsFragment : Fragment() {
     googleNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
       newsAdapter.updateData(data)
     })
+
+    swipeRefreshLayout.setOnRefreshListener {
+      updateData()
+      swipeRefreshLayout.isRefreshing = false
+    }
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       R.id.menu_sync -> {
-        getNewsData()
+        updateData()
         true
       }
       else -> super.onOptionsItemSelected(item)
     }
   }
 
-  private fun getNewsData() {
+  private fun updateData() {
     yahooNewsViewModel.getNewsData(yahooNewsQuery)
+    newsAdapter.updateData(yahooNewsViewModel.data.value!!)
+
     googleNewsViewModel.getNewsData(googleNewsQuery)
+    newsAdapter.updateData(googleNewsViewModel.data.value!!)
   }
 }

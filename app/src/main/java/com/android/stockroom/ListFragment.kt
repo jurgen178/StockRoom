@@ -1,6 +1,7 @@
 package com.android.stockroom
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -96,7 +98,15 @@ class ListFragment : Fragment() {
     val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
 
     recyclerView.adapter = adapter
-    recyclerView.layoutManager = LinearLayoutManager(context)
+
+    // Set column number depending on orientation.
+    val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+      1
+    } else {
+      2
+    }
+
+    recyclerView.layoutManager = GridLayoutManager(context, spanCount)
 
     // Get a new or existing ViewModel from the ViewModelProvider.
     // use requireActivity() instead of this to have only one shared viewmodel

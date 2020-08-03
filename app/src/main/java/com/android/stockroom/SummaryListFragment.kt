@@ -1,6 +1,7 @@
 package com.android.stockroom
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -48,7 +49,15 @@ class SummaryListFragment : Fragment() {
     val summaryListAdapter = SummaryListAdapter(requireContext(), clickListenerListItem)
     val summaryList = view.findViewById<RecyclerView>(R.id.summaryList)
     summaryList.adapter = summaryListAdapter
-    summaryList.layoutManager = GridLayoutManager(requireContext(), 3)
+
+    // Set column number depending on orientation.
+    val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+      3
+    } else {
+      5
+    }
+
+    summaryList.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItems ->

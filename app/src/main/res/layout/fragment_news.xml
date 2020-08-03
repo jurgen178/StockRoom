@@ -5,13 +5,20 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     >
-
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/newsRecyclerview"
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipeRefreshLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginStart="4dp"
-      android:layout_marginEnd="4dp"
-      />
+      android:layout_weight="1"
+      >
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/newsRecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        />
+
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

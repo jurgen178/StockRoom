@@ -1,5 +1,6 @@
 package com.android.stockroom
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.components.Legend.LegendOrientation.VERTICAL
@@ -51,7 +53,15 @@ class SummaryGroupFragment : Fragment() {
     val summaryGroupAdapter = SummaryGroupAdapter(requireContext())
     val summaryGroup = view.findViewById<RecyclerView>(R.id.summaryGroup)
     summaryGroup.adapter = summaryGroupAdapter
-    summaryGroup.layoutManager = LinearLayoutManager(requireContext())
+
+    // Set column number depending on orientation.
+    val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+      1
+    } else {
+      2
+    }
+
+    summaryGroup.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItems ->
