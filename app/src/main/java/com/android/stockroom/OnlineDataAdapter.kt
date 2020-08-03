@@ -65,17 +65,17 @@ class OnlineDataAdapter internal constructor(
   private fun formatInt(value: Long): String {
     return when {
       value >= 1000000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000000f)}${context.resources.getString(
+        "${DecimalFormat("0.##").format(value / 1000000000000f)}${context.getString(
             R.string.trillion_abbr
         )}"
       }
       value >= 1000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000f)}${context.resources.getString(
+        "${DecimalFormat("0.##").format(value / 1000000000f)}${context.getString(
             R.string.billion_abbr
         )}"
       }
       value >= 1000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000f)}${context.resources.getString(
+        "${DecimalFormat("0.##").format(value / 1000000f)}${context.getString(
             R.string.million_abbr
         )}"
       }
@@ -93,61 +93,61 @@ class OnlineDataAdapter internal constructor(
 
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_regularMarketPreviousClose),
+            desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
             text = DecimalFormat("0.00##").format(onlineMarketData.regularMarketPreviousClose)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_regularMarketOpen),
+            desc = context.getString(R.string.onlinedata_regularMarketOpen),
             text = DecimalFormat("0.00##").format(onlineMarketData.regularMarketOpen)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_fiftyDayAverage),
+            desc = context.getString(R.string.onlinedata_fiftyDayAverage),
             text = DecimalFormat("0.00##").format(onlineMarketData.fiftyDayAverage)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_fiftyTwoWeekRange),
+            desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
             text = onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_regularMarketDayRange),
+            desc = context.getString(R.string.onlinedata_regularMarketDayRange),
             text = onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_regularMarketVolume),
+            desc = context.getString(R.string.onlinedata_regularMarketVolume),
             text = formatInt(onlineMarketData.regularMarketVolume)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_marketCap),
+            desc = context.getString(R.string.onlinedata_marketCap),
             text = formatInt(onlineMarketData.marketCap)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_forwardPE),
+            desc = context.getString(R.string.onlinedata_forwardPE),
             text = DecimalFormat("0.00##").format(onlineMarketData.forwardPE)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_annualDividendRate),
+            desc = context.getString(R.string.onlinedata_annualDividendRate),
             text = DecimalFormat("0.00##").format(onlineMarketData.annualDividendRate)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_annualDividendYield),
+            desc = context.getString(R.string.onlinedata_annualDividendYield),
             text = "${DecimalFormat("0.00##").format(
                 onlineMarketData.annualDividendYield * 100
             )}%"
@@ -155,50 +155,50 @@ class OnlineDataAdapter internal constructor(
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_epsTrailingTwelveMonths),
+            desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
             text = DecimalFormat("0.00##").format(onlineMarketData.epsTrailingTwelveMonths)
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_epsForward),
+            desc = context.getString(R.string.onlinedata_epsForward),
             text = DecimalFormat("0.00##").format(onlineMarketData.epsForward)
         )
     )
 
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_region),
+            desc = context.getString(R.string.onlinedata_region),
             text = onlineMarketData.region
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_language),
+            desc = context.getString(R.string.onlinedata_language),
             text = onlineMarketData.language
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_fullExchangeName),
+            desc = context.getString(R.string.onlinedata_fullExchangeName),
             text = onlineMarketData.fullExchangeName
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_messageBoardId),
+            desc = context.getString(R.string.onlinedata_messageBoardId),
             text = onlineMarketData.messageBoardId
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_financialCurrency),
+            desc = context.getString(R.string.onlinedata_financialCurrency),
             text = onlineMarketData.financialCurrency
         )
     )
     data.add(
         OnlineData(
-            desc = context.resources.getString(R.string.onlinedata_marketState),
+            desc = context.getString(R.string.onlinedata_marketState),
             text = onlineMarketData.marketState
         )
     )

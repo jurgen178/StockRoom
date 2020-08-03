@@ -21,4 +21,5 @@ limitations under the License. -->
     <color name="backgroundListColor">#F0F0FF</color>
     <color name="green">#32CD32</color>
     <color name="red">#DC143C</color>
+    <color name="black">#000000</color>
 </resources>

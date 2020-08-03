@@ -106,7 +106,6 @@ limitations under the License. -->
   <string name="invalid_number">Ungültige Eingabe</string>
   <string name="number_of_shares">Anzahl der Aktien</string>
   <string name="price">Kaufpreis</string>
-  <string name="remove">Entfernen</string>
   <string name="shares">Aktien</string>
   <string name="value">Wert</string>
   <string name="no_total_shares">Kaufen Sie zuerst einige Aktien.</string>
@@ -137,6 +136,7 @@ limitations under the License. -->
   <string name="price_not_zero">Der Preis der Aktie darf nicht 0 sein.</string>
   <string name="add_asset">Zum Aktienbestand hinzufügen</string>
   <string name="current_assets">Aktuelle Aktienbestände</string>
+  <string name="current_portfolio_graph">Aktuelle Aktienbestände, 10 besten Aktien</string>
   <string name="update_asset">Aktienbestand aktualisieren</string>
   <string name="delete_asset">Vom Aktienbestand entfernen</string>
   <string name="delete_all_assets">Alle Aktien entfernen</string>
@@ -145,6 +145,7 @@ limitations under the License. -->
   <string name="asset_summary_text">Gesamtaktienbestand</string>
   <string name="title_activity_add">Aktien hinzufügen</string>
   <string name="title_activity_stockdata">Aktiendetails</string>
+  <string name="add_stock">Aktie \'%1$s\' wurde hinzugefügt.</string>
   <string name="current_events">Ereignisse</string>
   <string name="event_title">Ereignis</string>
   <string name="event_note">Details</string>
@@ -179,7 +180,7 @@ limitations under the License. -->
   <string name="summary_dividend_per_year">Dividende pro Jahr</string>
   <string name="update_groups_title">Gruppenliste bearbeiten</string>
   <string name="update_groups_desc">Namen und zugeordnete Farben der Gruppenliste bearbeiten.</string>
-  <string name="trillion_abbr">Trill.</string>
+  <string name="trillion_abbr">T.</string>
   <string name="billion_abbr">Mrd.</string>
   <string name="million_abbr">Mio.</string>
   <string name="title_activity_updategroup">Gruppenliste bearbeiten</string>
@@ -223,4 +224,7 @@ limitations under the License. -->
   <string name="news_headline">Nachrichten für %1$s</string>
   <string name="news_date_time">%1$s um %2$s Uhr</string>
   <string name="data_headline">Übersicht</string>
+  <string name="donate">Donate</string>
+  <string name="email_feedback_summary">Senden Sie uns Anregungen und Verbesserungen.</string>
+  <string name="email_feedback_title">EMail senden</string>
 </resources>

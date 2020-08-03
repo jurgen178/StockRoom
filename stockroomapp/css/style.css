@@ -1,0 +1,263 @@
+body 
+{
+    background-color:white;
+    font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+}
+
+a, a:visited, a:link
+{
+	text-decoration: none;
+	color:black;
+}
+
+.page 
+{
+}
+
+.header 
+{
+    background-color:#f0f0f0;
+}
+
+.content 
+{
+    /*overflow: auto;  scrollbar nur in div */
+}
+
+.menu-name 
+{
+    font-size:22pt;
+    letter-spacing:5px;
+    padding-left: 40px;
+}
+
+.menu-items 
+{
+}
+
+.menu-item 
+{
+    letter-spacing:3px;
+    float:left;
+    width: 130px;
+    list-style:none;
+    font-size:12pt;
+    line-height:2.0;
+}
+
+.menu-item-other
+{
+    float:left;
+    letter-spacing:1px;
+    width: 120px;
+    list-style:none;
+    font-size:12pt;
+    line-height:1.5;
+}
+
+.menu-item-other a
+{
+    color:grey;
+}
+
+.horizontal-images
+{
+    white-space: nowrap;
+}
+
+.horizontal-images div 
+{
+    display: inline-block;
+    padding-right:50px;
+}
+
+.horizontal-images li img
+{
+    vertical-align:middle;
+}
+
+.horizontal-images #name
+{
+    font-size:16pt;
+    vertical-align:middle;
+    padding:20px;
+    letter-spacing:5px;
+}
+
+.horizontal-image
+{
+  text-align:center;
+}
+
+.kategorie-titel
+{
+    font-size:20pt;
+    letter-spacing:4px;
+    padding:20px;
+}
+
+.kategorie-bild
+{
+    padding:20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.kategorie-text
+{
+    font-size:16pt;
+    letter-spacing:2px;
+}
+
+.kategorie-canvas-size
+{
+    font-size:8pt;
+    letter-spacing:2px;
+}
+
+.img-normal 
+{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.img-extra2 
+{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: absolute;
+    width:auto;
+    display: block;
+    margin: auto;
+}
+
+.seite-titel
+{
+    font-size:20pt;
+    letter-spacing:2px;
+    margin-left: 40px;
+}
+
+.d-block
+{
+    width:100%;
+    height: auto;
+}
+
+.seite-bild
+{
+    width:100%;
+    height: auto;
+}
+
+.seite-text
+{
+    font-size:14pt;
+    letter-spacing:2px;
+    padding: 20px;
+}
+
+.seite-canvas-size
+{
+    font-size:12pt;
+    letter-spacing:2px;
+    padding: 20px;
+}
+
+.seite-preis
+{
+    font-size:12pt;
+    letter-spacing:2px;
+    padding-left:20px;
+}
+
+.seite-shipping-text
+{
+    font-size:10pt;
+    letter-spacing:1px;
+    padding:20px;
+}
+
+.seite-email
+{
+    font-size:12pt;
+    letter-spacing:2px;
+    padding:20px;
+}
+
+.carousel-indicators li {
+    border-radius: 16px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #000000;
+    background-color: rgb(150, 37, 165);
+}
+
+.div-room-view
+{
+    padding: 20px;
+}
+
+.about-text-headline
+{
+    padding: 20px;
+    font-size:18pt;
+    letter-spacing:2px;
+}
+
+.about-text
+{
+    padding: 20px;
+    font-size:14pt;
+}
+
+.about-bild
+{
+  margin:50px;
+}
+
+.index-content
+{
+}
+
+.index-content img
+{
+	margin: 0 auto;
+    display: block;
+	border: 3px solid #ED7BB7;
+    width: 100%;
+    height: auto;
+    max-width: 800px;
+    max-height: 1333px;
+}
+
+.text
+{
+    margin:20px;
+    font-size:14pt;
+}
+
+img
+{
+  border:0px;
+}
+
+.EMail
+{
+    height:40px;
+    font-size:auto;
+    letter-spacing:2px;
+}
+
+.contact
+{
+    margin:20px;
+    color:black;
+}
+
+.back-button
+{
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADb0lEQVRIx52WT2hcVRTGf+fORJMgbYVEWv9uhEBaEpoMEem8DEKtm0qrWLCLItJFFyJIG5CIC12ni3ZhVRCKUEqJ1EVduNHUlzupm5k4Bptu1FUZwRhNTTMhNe9+LuYlDclMk/Rs3uXdc7/z3nfOd841mliUzz+GWbdBL3AQ6BTsAszgDjADjAkqSDd9sfhvIxxb/2IwiloEXcDbVn/eBaaAKjCXuu0E9gA9wA5Jv2F2EbjlvV9qGqBQKLgQwiGDYeAPpMsym3TOVeM4Dg18d5vUCxyX2fPAWZck1+IbN5Y3BCgUCi4kyRBwFLjki8ULbMOifP4tMzsl6bqTPoonJv4DcCu0hBAOAUcx+8zgS7ZrZqPAOTN7KTh3JIqi1tUAgq6UlksmXR0vFhe2i++9XxR8g/QpMATsBbC0Wj42eGrc+zcbHR4YGDAzywA2Pz+/PD09rQcFG8znvxDcw+wDl5ZiF9LlZgdCCC8mSTKcJMlJILPZ38jsipk9B/S6tM7vymyykXMul3saOAecAGpAsilf0hQwa9CXTUX0s3Ouug44A+SBkTRX79Rqte82owfAZTIzCmESeDkLdAIb6jwF/xB4RtIZ4FZbW1tHf39/M9xauVxeAIjjWINRVBV0ZAW77L5C19IyAuwHZszstVQfVi+6VQ2tXY8CX62hac7MdjnA6b5juqdW4JF1irdN1hsyAVjW4J+0t6xauVz+NZfLnaGujb2SvgbGgXsPoH5hnfB2CuaywF/Ak4VCwa3Lww/AMjBiZqeBP2u12vdbSXJqewxmHTAG9IQQdq/dLZVKSalUioHXgQBcaG9vP9Hd3W1b6EsdQB8w5gQVYEfaFTdYqVS6DZwGrgJPtLa2tmyhL+1L50c5i3RT8LvBceDbxv42IakkKZPNZpe3QM8xSVUzqxhAFEX7gU+QPsds1Hu/yENYFEWPmnRYMIzZu977H126Nw2cNbNTBq9GUdT2UODwCvWCOG8hVFbbtfd+ySXJNUnXgfdMemPb40A6DLwP/CQYHZ+YWNw4Mg8caAnOHQGGTPpFZleQplwmMxPHsRpWSz2hx5BeAM4LRovF4lLToZ9Oon1IJ83sWWAWmARuI91ZEVE69PuATklVzC5aCJWVL28aYE2gx4Eeq4McFHRYem0RzFk98JigbFAZ9/7vRjj/A6BAc6F41EmIAAAAAElFTkSuQmCC);
+    height: 24px;
+    width: 24px;
+    display: block;
+    margin-left:40px;
+    margin-top: 10px;
+}

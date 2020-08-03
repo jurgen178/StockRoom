@@ -838,7 +838,7 @@ class StockDataFragment : Fragment() {
       builder.setView(dialogView)
           // Add action buttons
           .setPositiveButton(
-              R.string.remove
+              R.string.delete
           ) { _, _ ->
             val removeSharesText = removeSharesView.text.toString()
             if (removeSharesText.isNotEmpty()) {
@@ -1171,8 +1171,8 @@ class StockDataFragment : Fragment() {
   }
 
   private fun updateAssetChange(data: AssetsLiveData) {
-    if (data != null) {
-      textViewAssetChange.text = getAssetChange(data.assets?.assets!!, data.marketPrice, context!!)
+    if (data.assets != null) {
+      textViewAssetChange.text = getAssetChange(data.assets?.assets!!, data.marketPrice, requireActivity())
     }
   }
 

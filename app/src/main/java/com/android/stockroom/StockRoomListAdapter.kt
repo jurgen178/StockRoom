@@ -187,7 +187,7 @@ class StockRoomListAdapter internal constructor(
 
       if (current.onlineMarketData.annualDividendRate > 0f) {
         assets +=
-          "\n${context.resources.getString(R.string.dividend_in_list)} ${DecimalFormat(
+          "\n${context.getString(R.string.dividend_in_list)} ${DecimalFormat(
               "0.00"
           ).format(
               current.onlineMarketData.annualDividendRate
@@ -197,12 +197,12 @@ class StockRoomListAdapter internal constructor(
       }
 
       if (current.stockDBdata.alertAbove > 0f) {
-        assets += "\n${context.resources.getString(R.string.alert_above_in_list)} ${DecimalFormat(
+        assets += "\n${context.getString(R.string.alert_above_in_list)} ${DecimalFormat(
             "0.####"
         ).format(current.stockDBdata.alertAbove)}"
       }
       if (current.stockDBdata.alertBelow > 0f) {
-        assets += "\n${context.resources.getString(R.string.alert_below_in_list)} ${DecimalFormat(
+        assets += "\n${context.getString(R.string.alert_below_in_list)} ${DecimalFormat(
             "0.####"
         ).format(current.stockDBdata.alertBelow)}"
       }
@@ -214,13 +214,13 @@ class StockRoomListAdapter internal constructor(
         current.events.forEach {
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-          assets += "\n${context.resources.getString(
+          assets += "\n${context.getString(
               R.string.event_datetime_format, it.title, datetime
           )}"
         }
       }
       if (current.stockDBdata.notes.isNotEmpty()) {
-        assets += "\n${context.resources.getString(
+        assets += "\n${context.getString(
             R.string.notes_in_list
         )} ${current.stockDBdata.notes}"
       }

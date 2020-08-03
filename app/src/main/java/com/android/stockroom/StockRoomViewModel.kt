@@ -928,18 +928,26 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
     // only a-z from 1..7 chars in length
-    val assetList = assetItems.filter { map ->
-      map.key.matches("[A-Z]{1,7}".toRegex())
-    }
+//    val assetList = assetItems.filter { map ->
+//      map.key.matches("[A-Z]{1,7}".toRegex())
+//    }
+
+    val assetList = assetItems
+
+    // Limit import.
+    var importcounter: Int = 0
     assetList.forEach { (symbol, assets) ->
-      insert(symbol)
-      // updateAssets filters out empty shares@price
-      updateAssets(symbol = symbol, assets = assets)
+      if (importcounter < 100) {
+        importcounter++
+        insert(symbol)
+        // updateAssets filters out empty shares@price
+        updateAssets(symbol = symbol, assets = assets)
+      }
     }
 
     Toast.makeText(
         context, getApplication<Application>().getString(
-        R.string.import_msg, assetList.size.toString()
+        R.string.import_msg, importcounter.toString()
     ), Toast.LENGTH_LONG
     )
         .show()
@@ -956,10 +964,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       symbol.replace("\"", "")
           .toUpperCase(Locale.ROOT)
     }
-        .filter { symbol ->
-          symbol.matches("[A-Z]{1,7}".toRegex())
-        }
+//        .filter { symbol ->
+//          symbol.matches("[A-Z]{1,7}".toRegex())
+//        }
         .distinct()
+        .take(100)
 
     symbolList.forEach { symbol ->
       insert(symbol)
