@@ -7,12 +7,15 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import kotlinx.android.synthetic.main.activity_settings.settingsViewpager
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -27,11 +30,32 @@ class SettingsActivity : AppCompatActivity(),
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_settings)
+
+    settingsViewpager.adapter = object : FragmentStateAdapter(this) {
+      override fun createFragment(position: Int): Fragment {
+        return when (position) {
+          0 -> {
+            SettingsFragment.newInstance()
+          }
+          else -> {
+            DebugFragment.newInstance()
+          }
+        }
+      }
+
+      override fun getItemCount(): Int {
+        return 2
+      }
+    }
+
+/*
     supportFragmentManager
         .beginTransaction()
         .replace(R.id.settings, SettingsFragment())
         .commit()
     //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+*/
+
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
@@ -94,6 +118,10 @@ class SettingsActivity : AppCompatActivity(),
 
   class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var stockRoomViewModel: StockRoomViewModel
+
+    companion object {
+      fun newInstance() = SettingsFragment()
+    }
 
     override fun onCreatePreferences(
       savedInstanceState: Bundle?,

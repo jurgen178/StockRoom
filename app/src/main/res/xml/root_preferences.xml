@@ -29,32 +29,6 @@
 
   <PreferenceCategory app:title="@string/general_header">
 
-    <!--
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <SwitchPreferenceCompat
-            app:key="colored_display"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="colored_display"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    -->
-
     <Preference
         app:key="export_list"
         app:summary="@string/export_list_desc"
@@ -102,16 +76,5 @@
     </PreferenceScreen>
 
   </PreferenceCategory>
-
-<!--
-  <PreferenceCategory app:title="@string/other_header">
-    <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="debug"
-        app:summary="@string/debug_desc"
-        app:title="@string/debug_title" />
-
-  </PreferenceCategory>
--->
 
 </PreferenceScreen>

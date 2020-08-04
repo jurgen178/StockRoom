@@ -134,7 +134,6 @@ limitations under the License. -->
   <string name="delete_all_confirm">Are you sure?</string>
   <string name="delete_all_desc">Delete all stocks.</string>
   <string name="debug_title">Debug information</string>
-  <string name="debug_desc">Show debug information.</string>
   <string name="shares_not_zero">The number of shares must not be 0.</string>
   <string name="price_not_zero">The price of the stock must not be 0.</string>
   <string name="add_asset">Add assets</string>
@@ -230,4 +229,5 @@ limitations under the License. -->
   <string name="donate">Donate</string>
   <string name="email_feedback_summary">Send us suggestions and new ideas.</string>
   <string name="email_feedback_title">Send EMail</string>
+  <string name="system_header">System</string>
 </resources>

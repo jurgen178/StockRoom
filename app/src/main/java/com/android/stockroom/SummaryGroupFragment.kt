@@ -64,9 +64,9 @@ class SummaryGroupFragment : Fragment() {
     summaryGroup.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItems ->
-        summaryGroupAdapter.updateData(stockItems)
-        updatePieData(view, stockItems)
+      items?.let { stockItemSet ->
+        summaryGroupAdapter.updateData(stockItemSet.stockItems)
+        updatePieData(view, stockItemSet.stockItems)
       }
     })
 

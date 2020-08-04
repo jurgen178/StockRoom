@@ -138,10 +138,11 @@ class SummaryListAdapter internal constructor(
     }
   }
 
-  fun updateData(items: List<StockItem>) {
-    stockItems = items.toMutableList()
-
-    notifyDataSetChanged()
+  fun updateData(stockItemSet: StockItemSet) {
+    if (stockItemSet.dataValid) {
+      stockItems = stockItemSet.stockItems.toMutableList()
+      notifyDataSetChanged()
+    }
   }
 
   override fun getItemCount() = stockItems.size

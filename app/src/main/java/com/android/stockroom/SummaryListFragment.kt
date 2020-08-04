@@ -60,8 +60,8 @@ class SummaryListFragment : Fragment() {
     summaryList.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItems ->
-        summaryListAdapter.updateData(stockItems)
+      items?.let { stockItemSet ->
+        summaryListAdapter.updateData(stockItemSet)
       }
     })
   }

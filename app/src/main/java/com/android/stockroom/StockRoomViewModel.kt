@@ -19,6 +19,8 @@ package com.android.stockroom
 import android.app.Application
 import android.content.Context
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Handler
 import android.text.SpannableString
@@ -115,14 +117,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   val allGroups: LiveData<List<Group>>
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
-  val allStockItems: LiveData<List<StockItem>>
+  val allStockItems: LiveData<StockItemSet>
 
-  private val dataStore = ArrayList<StockItem>()
-  private val _dataStore = MutableLiveData<List<StockItem>>()
-  private val allData: LiveData<List<StockItem>>
+  private val dataStore = StockItemSet()
+  private val _dataStore = MutableLiveData<StockItemSet>()
+  private val allData: LiveData<StockItemSet>
     get() = _dataStore
 
-  private val allMediatorData = MediatorLiveData<List<StockItem>>()
+  private val allMediatorData = MediatorLiveData<StockItemSet>()
 
   // Settings.
   private val sharedPreferences =
@@ -256,7 +258,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  private fun getMediatorData(): LiveData<List<StockItem>> {
+  private fun getMediatorData(): LiveData<StockItemSet> {
 
     val liveDataProperties = allProperties
     val liveDataAssets = allAssets
@@ -302,14 +304,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       stockDBdata.forEach { data ->
         val symbol = data.symbol
         val dataStoreItem =
-          dataStore.find { ds ->
+          dataStore.stockItems.find { ds ->
             symbol == ds.stockDBdata.symbol
           }
 
         if (dataStoreItem != null) {
           dataStoreItem.stockDBdata = data
         } else
-          dataStore.add(
+          dataStore.stockItems.add(
               StockItem(
                   onlineMarketData = OnlineMarketData(symbol = data.symbol),
                   stockDBdata = data,
@@ -320,8 +322,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       // Remove the item from the dataStore because Item was deleted from the DB.
-      if (dataStore.size > stockDBdata.size) {
-        dataStore.removeIf {
+      if (dataStore.stockItems.size > stockDBdata.size) {
+        dataStore.stockItems.removeIf {
           // Remove if item is not found in the DB.
           stockDBdata.find { sd ->
             it.stockDBdata.symbol == sd.symbol
@@ -336,17 +338,22 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateAssetsFromDB(assets: List<Assets>) {
     synchronized(dataStore)
     {
+      // don't wait for valid online data if offline
+      if (!dataStore.dataValid && !isOnline(getApplication())) {
+        dataStore.dataValid = true
+      }
+
       assets.forEach { asset ->
         val symbol = asset.stockDBdata.symbol
         val dataStoreItem =
-          dataStore.find { ds ->
+          dataStore.stockItems.find { ds ->
             symbol == ds.stockDBdata.symbol
           }
 
         if (dataStoreItem != null) {
           dataStoreItem.assets = asset.assets
         } else
-          dataStore.add(
+          dataStore.stockItems.add(
               StockItem(
                   onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
                   stockDBdata = asset.stockDBdata,
@@ -357,8 +364,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       // Remove the item from the dataStore because Item was deleted from the DB.
-      if (dataStore.size > assets.size) {
-        dataStore.removeIf {
+      if (dataStore.stockItems.size > assets.size) {
+        dataStore.stockItems.removeIf {
           // Remove if item is not found in the DB.
           assets.find { ds ->
             it.stockDBdata.symbol == ds.stockDBdata.symbol
@@ -376,14 +383,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       events.forEach { event ->
         val symbol = event.stockDBdata.symbol
         val dataStoreItem =
-          dataStore.find { ds ->
+          dataStore.stockItems.find { ds ->
             symbol == ds.stockDBdata.symbol
           }
 
         if (dataStoreItem != null) {
           dataStoreItem.events = event.events
         } else
-          dataStore.add(
+          dataStore.stockItems.add(
               StockItem(
                   onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
                   stockDBdata = event.stockDBdata,
@@ -394,8 +401,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       // Remove the item from the dataStore because Item was deleted from the DB.
-      if (dataStore.size > events.size) {
-        dataStore.removeIf {
+      if (dataStore.stockItems.size > events.size) {
+        dataStore.stockItems.removeIf {
           // Remove if item is not found in the DB.
           events.find { event ->
             it.stockDBdata.symbol == event.stockDBdata.symbol
@@ -414,12 +421,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       // Work off a read-only copy to avoid the java.util.ConcurrentModificationException
       // while the next update.
+
+      dataStore.dataValid = true
+
       onlineMarketDataList.toImmutableList()
           .forEach { onlineMarketDataItem ->
             val symbol = onlineMarketDataItem.symbol
 
             val dataStoreItem =
-              dataStore.find { ds ->
+              dataStore.stockItems.find { ds ->
                 symbol == ds.stockDBdata.symbol
               }
 
@@ -468,10 +478,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     var marketPrice: Float
   )
 
-  private fun processNotifications(stockItems: List<StockItem>?) {
+  private fun processNotifications(stockItemSet: StockItemSet?) {
     val newAlerts: MutableList<AlertData> = mutableListOf()
 
-    stockItems?.forEach { stockItem ->
+    stockItemSet?.stockItems?.forEach { stockItem ->
       //     allStockItems.value?.forEach { stockItem ->
       val marketPrice = stockItem.onlineMarketData.marketPrice
 
@@ -518,35 +528,42 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private fun process(
-    stockItems: List<StockItem>?,
+    stockItemSet: StockItemSet?,
     runNotifications: Boolean
-  ): List<StockItem>? {
+  ): StockItemSet? {
 
-    if (runNotifications && SharedRepository.notifications) {
-      processNotifications(stockItems)
+    if (stockItemSet != null) {
+      if (runNotifications && SharedRepository.notifications) {
+        processNotifications(stockItemSet)
+      }
+
+      return StockItemSet(
+          dataValid = stockItemSet.dataValid,
+          stockItems = sort(sortMode, stockItemSet).toMutableList()
+      )
     }
 
-    return sort(sortMode, stockItems)
+    return stockItemSet
   }
 
   private fun sort(
     sortMode: SortMode,
-    stockItems: List<StockItem>?
-  ): List<StockItem>? =
-    if (stockItems != null) {
+    stockItemSet: StockItemSet?
+  ): List<StockItem> =
+    if (stockItemSet != null) {
       when (sortMode) {
         SortMode.ByName -> {
-          stockItems.sortedBy { item ->
+          stockItemSet.stockItems.sortedBy { item ->
             item.stockDBdata.symbol
           }
         }
         SortMode.ByAssets -> {
-          stockItems.sortedByDescending { item ->
+          stockItemSet.stockItems.sortedByDescending { item ->
             item.assets.sumByDouble { it.shares.toDouble() * it.price }
           }
         }
         SortMode.ByProfit -> {
-          stockItems.sortedByDescending { item ->
+          stockItemSet.stockItems.sortedByDescending { item ->
             if (item.onlineMarketData.marketPrice > 0f) {
               item.assets.sumByDouble { it.shares.toDouble() * (item.onlineMarketData.marketPrice - it.price) }
             } else {
@@ -555,18 +572,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
         SortMode.ByChange -> {
-          stockItems.sortedByDescending { item ->
+          stockItemSet.stockItems.sortedByDescending { item ->
             item.onlineMarketData.marketChangePercent
           }
         }
         SortMode.ByDividend -> {
-          stockItems.sortedByDescending { item ->
+          stockItemSet.stockItems.sortedByDescending { item ->
             item.onlineMarketData.annualDividendYield
           }
         }
         SortMode.ByGroup -> {
           // Sort the group items alphabetically.
-          stockItems.sortedBy { item ->
+          stockItemSet.stockItems.sortedBy { item ->
             item.stockDBdata.symbol
           }
               .sortedBy { item ->
@@ -574,7 +591,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               }
         }
         SortMode.ByUnsorted -> {
-          stockItems
+          stockItemSet.stockItems
         }
       }
     } else {
@@ -613,6 +630,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
  "annualDividendYield": 0.0,
  "change": -0.19000053,
 */
+
+  fun isOnline(context: Context): Boolean {
+    val connectivityManager =
+      context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (connectivityManager != null) {
+      val capabilities =
+        connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+      if (capabilities != null) {
+        if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+          Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+          return true
+        } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+          Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+          return true
+        } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+          Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+          return true
+        }
+      }
+    }
+    return false
+  }
 
   private fun csvStrToFloat(value: String): Float {
     val s = value.replace("$", "")
@@ -1023,14 +1062,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ) {
 
     // Get stock list.
-    val stockItemList = allStockItems.value
+    val stockItemSet = allStockItems.value
 
     // Gets the groups to resolve the group name
     // Group name is stored per entry and not as one list to simplify the json structure.
     val groups: List<Group> = getGroupsSync()
 
     // Convert stock list for export.
-    if (stockItemList != null) {
+    if (stockItemSet != null) {
+      val stockItemList = stockItemSet.stockItems
       val stockItemsJson = stockItemList.map { stockItem ->
 
         val groupName = groups.find { group ->

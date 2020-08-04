@@ -242,9 +242,11 @@ class StockRoomListAdapter internal constructor(
     }
   }
 
-  internal fun setStockItems(stockItems: List<StockItem>) {
-    submitList(stockItems)
-    notifyDataSetChanged()
+  internal fun setStockItems(stockItemSet: StockItemSet) {
+    if (stockItemSet.dataValid) {
+      submitList(stockItemSet.stockItems)
+      notifyDataSetChanged()
+    }
   }
 }
 

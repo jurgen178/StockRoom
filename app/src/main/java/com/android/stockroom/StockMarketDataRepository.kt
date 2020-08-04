@@ -5,6 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 
+data class StockItemSet
+(
+  var dataValid: Boolean = false,
+  var stockItems: MutableList<StockItem> = mutableListOf()
+)
+
 data class StockItem
 (
   var onlineMarketData: OnlineMarketData,
