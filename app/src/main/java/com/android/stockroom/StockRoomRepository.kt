@@ -31,7 +31,9 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   val allAssets: LiveData<List<Assets>> = stockRoomDao.getAllAssetsLiveData()
   val allEvents: LiveData<List<Events>> = stockRoomDao.getAllEventsLiveData()
-  val allGroups: LiveData<List<Group>> = stockRoomDao.getAllGroupsLiveData()
+  val allAssetTable: LiveData<List<Asset>> = stockRoomDao.getAllAssetTableLiveData()
+  val allEventTable: LiveData<List<Event>> = stockRoomDao.getAllEventTableLiveData()
+  val allGroupTable: LiveData<List<Group>> = stockRoomDao.getAllGroupTableLiveData()
 
   // You must call this on a non-UI thread or your app will crash. So we're making this a
   // suspend function so the caller methods know this.

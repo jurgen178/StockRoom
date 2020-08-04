@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.components.Legend.LegendOrientation.VERTICAL
 import com.github.mikephil.charting.data.PieData
@@ -70,7 +69,7 @@ class SummaryGroupFragment : Fragment() {
       }
     })
 
-    stockRoomViewModel.allGroups.observe(viewLifecycleOwner, Observer { groups ->
+    stockRoomViewModel.allGroupTable.observe(viewLifecycleOwner, Observer { groups ->
       summaryGroupAdapter.addGroups(groups)
     })
   }

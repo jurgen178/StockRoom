@@ -148,7 +148,7 @@ class UpdateGroupActivity : AppCompatActivity() {
     groupView.adapter = updateGroupAdapter
     groupView.layoutManager = LinearLayoutManager(this)
 
-    stockRoomViewModel.allGroups.observe(this, Observer { groups ->
+    stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
       updateGroupAdapter.addGroups(groups)
       groupList = groups
     })

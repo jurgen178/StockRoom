@@ -20,24 +20,58 @@
             background-color: lightgray;
         }
 
-        .totals {
-            background-color: lightgoldenrodyellow;
+        .data_table,
+        .group_table,
+        .asset_table,
+        .event_table {
+            background-color: #F0F0FF;
+            color: black;
         }
     </style>
-    <h2>Holdings</h2>
-    <table class="totals">
+
+    <h2>stock_table</h2>
+    <table class="data_table">
+        <tr>
+            <th>symbol</th>
+            <th>groupColor</th>
+            <th>notes</th>
+            <th>alertAbove</th>
+            <th>alertBelow</th>
+        </tr>
+        <!-- stock_table -->
+    </table>
+
+    <h2>group_table</h2>
+    <table class="group_table">
+        <tr>
+            <th>color</th>
+            <th>name</th>
+        </tr>
+        <!-- group_table -->
+    </table>
+
+    <h2>asset_table</h2>
+    <table class="asset_table">
         <tr>
             <th>id</th>
-            <th>Symbol</th>
-            <th>Shares</th>
-            <th>Price</th>
+            <th>symbol</th>
+            <th>shares</th>
+            <th>price</th>
         </tr>
+        <!-- asset_table -->
+    </table>
+
+    <h2>event_table</h2>
+    <table class="event_table">
         <tr>
-            <td>id1</td>
-            <td>Symbol1</td>
-            <td>Shares1</td>
-            <td>Price1</td>
+            <th>id</th>
+            <th>symbol</th>
+            <th>type</th>
+            <th>title</th>
+            <th>note</th>
+            <th>datetime</th>
         </tr>
+        <!-- event_table -->
     </table>
 </body>
 

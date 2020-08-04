@@ -135,7 +135,7 @@ fun getAssetChange(
           .toFloat()
 
       val change = capital - asset
-      changeStr += "${if (change >= 0f) {
+      changeStr += "${if (change > 0f) {
         "+"
       } else {
         ""
@@ -146,7 +146,7 @@ fun getAssetChange(
       )}"
 
       val changePercent = change * 100f / asset
-      changeStr += " (${if (changePercent >= 0f) {
+      changeStr += " (${if (changePercent > 0f) {
         "+"
       } else {
         ""

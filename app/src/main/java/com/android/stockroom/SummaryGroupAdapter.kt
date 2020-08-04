@@ -191,6 +191,8 @@ class SummaryGroupAdapter internal constructor(
     }
     val stockEvents = stockItemsSelected.filter {
       it.events.isNotEmpty()
+    }.sumBy {
+      it.events.size
     }
 
     val summaryGroup2 = SpannableStringBuilder()
@@ -201,7 +203,7 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_alerts)} ")
         .bold { append("${totalAlerts}\n") }
         .append("${context.getString(R.string.summary_events)} ")
-        .bold { append("${stockEvents.size}\n") }
+        .bold { append("${stockEvents}\n") }
         .append("${context.getString(R.string.summary_note)} ")
         .bold { append("${totalNotes}\n") }
         .append("${context.getString(R.string.summary_number_of_stocks)} ")

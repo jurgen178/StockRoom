@@ -122,7 +122,7 @@ interface StockRoomDao {
   fun getGroup(color: Int): Group
 
   @Query("SELECT * FROM group_table")
-  fun getAllGroupsLiveData(): LiveData<List<Group>>
+  fun getAllGroupTableLiveData(): LiveData<List<Group>>
 
   @Query("UPDATE group_table SET name = :name WHERE color = :color")
   fun updateGroupName(
@@ -200,6 +200,9 @@ interface StockRoomDao {
   fun getAllAssetsLiveData(): LiveData<List<Assets>>
 //    fun getAllAssets(): LiveData<List<Assets>> = getAllAssets1().getDistinct()
 
+  @Query("SELECT * FROM asset_table")
+  fun getAllAssetTableLiveData(): LiveData<List<Asset>>
+
   @Transaction
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getAssetsLiveData(symbol: String): LiveData<Assets>
@@ -241,6 +244,9 @@ interface StockRoomDao {
   @Query("SELECT * FROM stock_table")
   fun getAllEventsLiveData(): LiveData<List<Events>>
 //    fun getAllEvents(): LiveData<List<Events>> = getAllEvents1().getDistinct()
+
+  @Query("SELECT * FROM event_table")
+  fun getAllEventTableLiveData(): LiveData<List<Event>>
 
   @Transaction
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")

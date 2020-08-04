@@ -112,9 +112,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // - Repository is completely separated from the UI through the ViewModel.
   val onlineMarketDataList: LiveData<List<OnlineMarketData>>
   val allProperties: LiveData<List<StockDBdata>>
-  private val allAssets: LiveData<List<Assets>>
+  val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
-  val allGroups: LiveData<List<Group>>
+  val allAssetTable: LiveData<List<Asset>>
+  val allEventTable: LiveData<List<Event>>
+  val allGroupTable: LiveData<List<Group>>
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
@@ -165,7 +167,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allProperties = repository.allProperties
     allAssets = repository.allAssets
     allEvents = repository.allEvents
-    allGroups = repository.allGroups
+    allAssetTable = repository.allAssetTable
+    allEventTable = repository.allEventTable
+    allGroupTable = repository.allGroupTable
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList
     allStockItems = getMediatorData()

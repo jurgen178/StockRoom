@@ -160,7 +160,7 @@ class StockRoomListAdapter internal constructor(
           )}"
 
           val capitalPercent = (capital - asset) * 100f / asset
-          assets += " (${if (capitalPercent >= 0f) {
+          assets += " (${if (capitalPercent > 0f) {
             "+"
           } else {
             ""

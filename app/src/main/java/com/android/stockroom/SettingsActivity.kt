@@ -6,16 +6,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import kotlinx.android.synthetic.main.activity_settings.settingsViewpager
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -31,6 +30,7 @@ class SettingsActivity : AppCompatActivity(),
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_settings)
 
+/*
     settingsViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
         return when (position) {
@@ -47,14 +47,13 @@ class SettingsActivity : AppCompatActivity(),
         return 2
       }
     }
+*/
 
-/*
     supportFragmentManager
         .beginTransaction()
         .replace(R.id.settings, SettingsFragment())
         .commit()
     //supportActionBar?.setDisplayHomeAsUpEnabled(true)
-*/
 
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
@@ -114,6 +113,17 @@ class SettingsActivity : AppCompatActivity(),
     if (key == "notifications") {
       SharedRepository.notifications = sharedPreferences.getBoolean(key, true)
     }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    menuInflater.inflate(R.menu.settings_menu, menu)
+    return true
+  }
+
+  fun onSettings(item: MenuItem) {
+    val intent = Intent(this@SettingsActivity, ListActivity::class.java)
+    startActivity(intent)
   }
 
   class SettingsFragment : PreferenceFragmentCompat() {
