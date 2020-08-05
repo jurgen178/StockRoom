@@ -3,7 +3,6 @@ package com.android.stockroom
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
 
 data class StockItemSet
 (

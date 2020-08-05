@@ -112,7 +112,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // - Repository is completely separated from the UI through the ViewModel.
   val onlineMarketDataList: LiveData<List<OnlineMarketData>>
   val allProperties: LiveData<List<StockDBdata>>
-  val allAssets: LiveData<List<Assets>>
+  private val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
   val allAssetTable: LiveData<List<Asset>>
   val allEventTable: LiveData<List<Event>>
@@ -136,7 +136,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var notifications: Boolean = sharedPreferences.getBoolean("notifications", true)
 
   private val settingSortmode = "SettingSortmode"
-  var sortMode: SortMode
+  private var sortMode: SortMode
     get() {
       return SortMode.values()[sharedPreferences.getInt(
           settingSortmode, SortMode.ByName.value
@@ -563,7 +563,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByAssets -> {
           stockItemSet.stockItems.sortedByDescending { item ->
-            item.assets.sumByDouble { it.shares.toDouble() * it.price }
+            if (item.onlineMarketData.marketPrice > 0f) {
+              item.assets.sumByDouble { it.shares.toDouble() * (item.onlineMarketData.marketPrice) }
+            } else {
+              item.assets.sumByDouble { it.shares.toDouble() * it.price }
+            }
           }
         }
         SortMode.ByProfit -> {
@@ -635,7 +639,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
  "change": -0.19000053,
 */
 
-  fun isOnline(context: Context): Boolean {
+  private fun isOnline(context: Context): Boolean {
     val connectivityManager =
       context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     if (connectivityManager != null) {
@@ -942,7 +946,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     // skip header row
     rows.drop(1)
         .forEach { row ->
-          val symbol = row[symbolColumn].toUpperCase()
+          val symbol = row[symbolColumn].toUpperCase(Locale.ROOT)
           val shares = if (sharesColumn >= 0) {
             csvStrToFloat(row[sharesColumn])
           } else {
@@ -1054,7 +1058,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           context, getApplication<Application>().getString(R.string.import_error), Toast.LENGTH_LONG
       )
           .show()
-      Log.d("Import JSON error", "Exception: ${e}")
+      Log.d("Import JSON error", "Exception: $e")
     }
 
     updateAll()
@@ -1126,7 +1130,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         //    context, getApplication<Application>().getString(R.string.import_error), Toast.LENGTH_LONG
         //)
         //    .show()
-        Log.d("Export JSON error", "Exception: ${e}")
+        Log.d("Export JSON error", "Exception: $e")
       }
     }
   }
@@ -1360,10 +1364,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return stockMarketDataRepository.getStockData(symbols)
   }
 
-  fun updateProperties(properties: List<StockDBdata>) {
-    //repository.updateProperties(properties)
-  }
-
   fun deleteAsset(asset: Asset) =
     scope.launch {
       repository.deleteAsset(asset)
@@ -1390,7 +1390,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return repository.getEventsLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
-  fun updateEvents(
+  private fun updateEvents(
     symbol: String,
     events: List<Event>
   ) =

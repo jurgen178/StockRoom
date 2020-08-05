@@ -92,7 +92,7 @@ class StockRoomTest {
   @Test
   @Throws(Exception::class)
   fun addmap() {
-    val assetList = listOf<Asset>(
+    val assetList = listOf(
         Asset(
             symbol = "s1",
             shares = 11f,
@@ -112,7 +112,7 @@ class StockRoomTest {
     )
     )
 
-    var assetItems = HashMap<String, List<Asset>>()
+    val assetItems = HashMap<String, List<Asset>>()
     assetList.forEach { asset ->
       val symbol = asset.symbol
 
@@ -381,7 +381,7 @@ var events: List<Event>
       )
     }
 
-    var jsonString = Gson().toJson(stockItemsJson)
+    val jsonString = Gson().toJson(stockItemsJson)
 
     /*
 [{

@@ -1,7 +1,6 @@
 package com.android.stockroom
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -33,7 +32,7 @@ object StockApiFactory {
 //      .addInterceptor(authInterceptor)
       .build()
 
-  fun retrofit(): Retrofit = Retrofit.Builder()
+  private fun retrofit(): Retrofit = Retrofit.Builder()
       .client(yahooClient)
       .baseUrl("https://query1.finance.yahoo.com/v7/finance/")
       .addConverterFactory(MoshiConverterFactory.create())

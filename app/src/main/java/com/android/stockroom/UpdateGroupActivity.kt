@@ -59,7 +59,7 @@ class UpdateGroupActivity : AppCompatActivity() {
 
     val clr = group.color
     colorView.color = clr
-    colorView.setOldCenterColor(clr)
+    colorView.oldCenterColor = clr
     colorView.setNewCenterColor(clr)
 //      colorView.addSaturationBar(saturationbarView)
 //      colorView.addValueBar(valuebarView)
@@ -181,7 +181,7 @@ class UpdateGroupActivity : AppCompatActivity() {
 
       val clr = Color.BLUE
       colorView.color = clr
-      colorView.setOldCenterColor(clr)
+      colorView.oldCenterColor = clr
       colorView.setNewCenterColor(clr)
 //      colorView.addSaturationBar(saturationbarView)
 //      colorView.addValueBar(valuebarView)

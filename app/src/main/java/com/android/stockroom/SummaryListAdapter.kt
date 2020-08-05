@@ -17,13 +17,10 @@
 package com.android.stockroom
 
 import android.content.Context
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.summarylist_item.view.summaryListItemLayout
 import java.text.DecimalFormat

@@ -211,7 +211,7 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_total_purchase_price)} ")
         .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
         .append("${context.getString(R.string.summary_total_assets)} ")
-        .underline { bold { append("${DecimalFormat("0.00").format(totalAssets)}") } }
+        .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
 
     /*
     val s = SpannableStringBuilder()

@@ -17,7 +17,7 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
     _data.value = getYahooChartData(symbol, interval, range)
   }
 
-  suspend fun getYahooChartData(
+  private suspend fun getYahooChartData(
     stock: String,
     interval: String,
     range: String
@@ -25,7 +25,7 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
 
     val quoteResponse = safeApiCall(
         call = {
-          api.getYahooChartData(stock, interval, range)
+          api.getYahooChartDataAsync(stock, interval, range)
               .await()
         },
         errorMessage = "Error getting finance data."
@@ -80,8 +80,6 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
       }
       if (j < size && values[j] != null && values[j] != 0f) {
         values[0] = values[j]
-      } else {
-        // All values are null.
       }
     }
 

@@ -72,7 +72,6 @@ import kotlinx.android.synthetic.main.fragment_stockdata.linearLayoutGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.notesTextView
 import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
 import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
-import kotlinx.android.synthetic.main.fragment_stockdata.stockdataLinearLayout
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroup

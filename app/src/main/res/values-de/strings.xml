@@ -56,12 +56,10 @@ limitations under the License. -->
   <string name="general_header">Allgemein</string>
   <string name="display_header">Anzeige</string>
   <string name="feedback_header">Rückmeldung</string>
-  <string name="other_header">Sonstige</string>
   <string name="group_header">Gruppenliste</string>
 
   <string name="hint_add_stock">Aktienkürzel</string>
   <string name="button_add">Hinzufügen</string>
-  <string name="sort">Sortieren</string>
   <string name="sort_name">Nach Namen sortieren</string>
   <string name="sort_change">Nach Änderung sortieren</string>
   <string name="sort_group">Nach Gruppe sortieren</string>
@@ -88,19 +86,14 @@ limitations under the License. -->
   <string name="notes_in_list">Anmerkungen:</string>
   <string name="alert_above_in_list">Benachrichtigung über:</string>
   <string name="alert_below_in_list">Benachrichtigung unter:</string>
-  <string name="alert_above_error">Unterschrittener Wert muß kleiner als überschrittener Wert sein.</string>
-  <string name="alert_below_error">Überschrittener Wert muß größer als unterschrittener Wert sein.</string>
+  <string name="alert_above_error">Unterschrittener Wert muss kleiner als überschrittener Wert sein.</string>
+  <string name="alert_below_error">Überschrittener Wert muss größer als unterschrittener Wert sein.</string>
   <string name="alert_above_notification_title">%1$s ist jetzt über %2$s bei %3$s</string>
   <string name="alert_below_notification_title">%1$s ist jetzt unter %2$s bei %3$s</string>
   <string name="alert_above_notification">Die Aktie %1$s, %2$s, ist jetzt über %3$s bei %4$s.</string>
   <string name="alert_below_notification">Die Aktie %1$s, %2$s, ist jetzt unter %3$s bei %4$s.</string>
-  <string name="alert_dismiss">Nicht mehr anzeigen</string>
-  <string name="add_notes">Anmerkungen hinzufügen</string>
-  <string name="add_alerts">Benachrichtigungen hinzufügen</string>
   <string name="enable_notifications">Benachrichtigungen zulassen</string>
   <string name="add">Hinzufügen</string>
-  <string name="save_notes_title">Anmerkungen speichern</string>
-  <string name="save_notes">Möchten Sie die Anmerkungen speichern?</string>
   <string name="update_notes">Anmerkungen aktualisieren</string>
   <string name="invalid_number">Ungültige Eingabe</string>
   <string name="number_of_shares">Anzahl der Aktien</string>
@@ -109,12 +102,10 @@ limitations under the License. -->
   <string name="value">Wert</string>
   <string name="no_total_shares">Kaufen Sie zuerst einige Aktien.</string>
   <string name="remove_shares_exceeds_total_shares">Die Anzahl muss kleiner als die Gesamtanzahl der Aktien sein.</string>
-  <string name="dividend">Dividende</string>
   <string name="dividend_in_list">Dividende:</string>
   <string name="standard_group">Nicht zugeordnet</string>
   <string name="import_section_header">Importieren</string>
   <string name="button_import">Importieren</string>
-  <string name="import_list">Aktienliste Importieren</string>
   <string name="import_list_desc">Aktienliste von einer Text-Datei, CSV-Datei oder JSON-Datei importieren.</string>
   <string name="import_error">Die ausgewählte Datei konnte nicht importiert werden.</string>
   <string name="import_csv_symbolcolumn_error">Die ausgewählte CSV-Datei konnte nicht importiert werden. Die Spalte für den Aktiennamen ist nicht vorhanden.</string>
@@ -122,7 +113,6 @@ limitations under the License. -->
   <string name="export_msg">Ihre Aktienliste mit %1$d Aktiendaten wurde in eine .JSON-Datei exportiert.</string>
   <string name="export_list">Aktienliste Exportieren</string>
   <string name="export_list_desc">Aktienliste ihres Portfolios in eine .JSON-Datei exportieren.</string>
-  <string name="export_section_header">Exportieren</string>
   <string name="export_select_file">Wählen Sie eine Datei aus</string>
   <string name="delete_stock">Sind Sie sicher dass sie die Aktie \'%1$s\' entfernen möchten?</string>
   <string name="delete">Entfernen</string>

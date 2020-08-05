@@ -1,9 +1,7 @@
 package com.android.stockroom
 
 import android.content.Context
-import android.os.Build.VERSION_CODES
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
@@ -15,12 +13,10 @@ import java.time.format.DateTimeFormatter
 
 class TextMarkerViewCandleChart(
   context: Context,
-  dateTimeFormatter: DateTimeFormatter,
-  stockDataEntries: List<StockDataEntry>
+  private val dateTimeFormatter: DateTimeFormatter,
+  private val stockDataEntries: List<StockDataEntry>
 ) : MarkerView(context, R.layout.text_marker_layout) {
-  private val dateTimeFormatter: DateTimeFormatter = dateTimeFormatter
-  private val stockDataEntries: List<StockDataEntry> = stockDataEntries
-  private var tvContent: TextView = findViewById(R.id.tvContent)
+  private var tvContent = findViewById<TextView>(R.id.tvContent)
   private val offsetPoint by lazy {
     MPPointF(-(width / 2).toFloat(), -height.toFloat())
   }
@@ -64,12 +60,10 @@ class TextMarkerViewCandleChart(
 
 class TextMarkerViewLineChart(
   context: Context,
-  dateTimeFormatter: DateTimeFormatter,
-  stockDataEntries: List<StockDataEntry>
+  private val dateTimeFormatter: DateTimeFormatter,
+  private val stockDataEntries: List<StockDataEntry>
 ) : MarkerView(context, R.layout.text_marker_layout) {
-  private val dateTimeFormatter: DateTimeFormatter = dateTimeFormatter
-  private val stockDataEntries: List<StockDataEntry> = stockDataEntries
-  private var tvContent: TextView = findViewById(R.id.tvContent)
+  private var tvContent = findViewById<TextView>(R.id.tvContent)
   private val offsetPoint by lazy {
     MPPointF(-(width / 2).toFloat(), -height.toFloat())
   }

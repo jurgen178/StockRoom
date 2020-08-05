@@ -9,7 +9,6 @@
       android:title="" />
 
   <item
-      android:id="@+id/menu_sort"
       android:icon="@drawable/ic_action_sort"
       app:showAsAction="always"
       android:title="" >
@@ -43,13 +42,11 @@
     </menu>
   </item>
   <item
-      android:id="@+id/menu_add"
       android:icon="@drawable/ic_action_add2"
       android:onClick="onAdd"
       app:showAsAction="always"
       android:title="" />
   <item
-      android:id="@+id/menu_settings"
       android:icon="@drawable/ic_action_settings"
       android:onClick="onSettings"
       app:showAsAction="always"

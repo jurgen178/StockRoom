@@ -17,7 +17,6 @@
 package com.android.stockroom
 
 import android.content.Context
-import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View

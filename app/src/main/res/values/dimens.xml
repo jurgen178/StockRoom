@@ -18,6 +18,4 @@ limitations under the License. -->
   <dimen name="min_height">48dp</dimen>
   <dimen name="graph_bottom_offset">8dp</dimen>
   <dimen name="small_text">10sp</dimen>
-  <dimen name="button_size">48dp</dimen>
-  <dimen name="button_text">10sp</dimen>
 </resources>

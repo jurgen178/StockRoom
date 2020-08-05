@@ -14,7 +14,6 @@
       >
 
   <LinearLayout
-      android:id="@+id/stockdataLinearLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
@@ -99,7 +98,6 @@
         />
 
     <FrameLayout
-        android:id="@+id/graph_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="4dp"
@@ -218,16 +216,6 @@
         tools:listitem="@layout/onlinedataview_item"
         />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        >
-
-    </LinearLayout>
-
     <View style="@style/Divider"/>
 
     <TextView
@@ -267,7 +255,6 @@
     <View style="@style/Divider"/>
 
     <TextView
-        android:id="@+id/assetsViewHeadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/current_assets"
@@ -310,7 +297,6 @@
     <View style="@style/Divider"/>
 
     <TextView
-        android:id="@+id/eventsViewHeadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/current_events"

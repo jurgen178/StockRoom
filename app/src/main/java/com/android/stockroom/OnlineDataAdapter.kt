@@ -24,8 +24,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.text.NumberFormat
-import java.util.Locale
 
 data class OnlineData(
   val desc: String,
@@ -89,7 +87,7 @@ class OnlineDataAdapter internal constructor(
     data.clear()
 
     val separatorChar: Char = DecimalFormatSymbols.getInstance()
-        .getDecimalSeparator()
+        .decimalSeparator
 
     data.add(
         OnlineData(

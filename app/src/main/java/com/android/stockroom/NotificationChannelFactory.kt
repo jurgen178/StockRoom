@@ -4,11 +4,10 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 
 class NotificationChannelFactory(val context: Context) {
   companion object {
-    val NotificationChannelId = "NotificationChannelId"
+    const val NotificationChannelId = "NotificationChannelId"
   }
 
   init {

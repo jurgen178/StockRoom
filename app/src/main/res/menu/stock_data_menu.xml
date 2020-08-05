@@ -8,7 +8,6 @@
       app:showAsAction="always"
       android:title="" />
   <item
-      android:id="@+id/menu_delete"
       android:onClick="onDelete"
       android:icon="@drawable/ic_action_delete"
       app:showAsAction="always"

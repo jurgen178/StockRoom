@@ -1,7 +1,5 @@
 package com.android.stockroom
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.squareup.moshi.Json
@@ -10,7 +8,6 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.time.format.DateTimeFormatter
 
 // https://finance.yahoo.com/quotes/GOOG,MAPP,API,v3,Json,not
 
@@ -274,7 +271,7 @@ interface YahooApi {
   // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
   // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
   @GET("chart/")
-  fun getYahooChartData(
+  fun getYahooChartDataAsync(
     @Query(
         value = "symbol"
     ) symbol: String,

@@ -153,7 +153,7 @@ class ListActivity : AppCompatActivity() {
 
     val mimeType: String = "text/html"
     val utfType: String = "UTF-8"
-    webview.loadDataWithBaseURL(null, htmlText, mimeType, utfType, null);
+    webview.loadDataWithBaseURL(null, htmlText, mimeType, utfType, null)
   }
 
   private fun Resources.getRawTextFile(@RawRes id: Int) =

@@ -59,12 +59,10 @@ limitations under the License. -->
   <string name="general_header">General</string>
   <string name="display_header">Display</string>
   <string name="feedback_header">Feedback</string>
-  <string name="other_header">Other</string>
   <string name="group_header">Group</string>
 
   <string name="hint_add_stock">Stock symbol</string>
   <string name="button_add">Add</string>
-  <string name="sort">Sort</string>
   <string name="sort_name">Sort by Name</string>
   <string name="sort_change">Sort by Change</string>
   <string name="sort_group">Sort by Group</string>
@@ -97,13 +95,8 @@ limitations under the License. -->
   <string name="alert_below_notification_title">%1$s is now below %2$s at %3$s</string>
   <string name="alert_above_notification">The Stock %1$s, %2$s, is now above %3$s at %4$s.</string>
   <string name="alert_below_notification">The Stock %1$s, %2$s, is now below %3$s at %4$s.</string>
-  <string name="alert_dismiss">Dismiss</string>
-  <string name="add_notes">Add Notes</string>
-  <string name="add_alerts">Add Alerts</string>
   <string name="enable_notifications">Enable Alerts</string>
   <string name="add">Add</string>
-  <string name="save_notes_title">Save notes</string>
-  <string name="save_notes">Would you like to save the notes?</string>
   <string name="update_notes">Update notes</string>
   <string name="invalid_number">Invalid number</string>
   <string name="number_of_shares">Number of shares</string>
@@ -112,12 +105,10 @@ limitations under the License. -->
   <string name="value">Value</string>
   <string name="no_total_shares">Buy some shares first.</string>
   <string name="remove_shares_exceeds_total_shares">Amount must be smaller than the total amount of shares.</string>
-  <string name="dividend">Dividend</string>
   <string name="dividend_in_list">Dividend:</string>
   <string name="standard_group">Not assigned</string>
   <string name="import_section_header">Import</string>
   <string name="button_import">Import</string>
-  <string name="import_list">Import stock list</string>
   <string name="import_list_desc">Import stock list from a .txt, .csv or .json file.</string>
   <string name="import_error">The selected file could not be imported.</string>
   <string name="import_csv_symbolcolumn_error">The selected file could not be imported. The column for the stock name is missing.</string>
@@ -125,7 +116,6 @@ limitations under the License. -->
   <string name="export_msg">Your portfolio with %1$d stocks was exported to a .json file.</string>
   <string name="export_list">Export portfolio</string>
   <string name="export_list_desc">Export portfolio to a .json file.</string>
-  <string name="export_section_header">Export</string>
   <string name="export_select_file">Select a file</string>
   <string name="delete_stock">Are you sure to delete the stock \'%1$s\' ?</string>
   <string name="delete">Delete</string>
@@ -220,7 +210,7 @@ limitations under the License. -->
   <string name="onlinedata_fullExchangeName">Exchange name</string>
   <string name="onlinedata_messageBoardId">Message Board Id</string>
   <string name="onlinedata_financialCurrency">Currency</string>
-  <string name="onlinedata_marketState">Markt state</string>
+  <string name="onlinedata_marketState">Market state</string>
   <string name="json_default_filename">Portfolio %1$s</string>
   <string name="news_headline">News for %1$s</string>
   <string name="news_date_time">%1$s at %2$s</string>

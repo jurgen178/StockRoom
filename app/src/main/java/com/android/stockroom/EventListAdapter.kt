@@ -17,7 +17,6 @@
 package com.android.stockroom
 
 import android.content.Context
-import android.graphics.Color
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -26,17 +25,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetItemsLayout
-import kotlinx.android.synthetic.main.eventview_item.view.textViewEventDateTime
 import kotlinx.android.synthetic.main.eventview_item.view.textViewEventDelete
 import kotlinx.android.synthetic.main.eventview_item.view.textViewEventItemsLayout
-import kotlinx.android.synthetic.main.eventview_item.view.textViewEventNote
-import kotlinx.android.synthetic.main.eventview_item.view.textViewEventTitle
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
-import java.time.format.FormatStyle.SHORT
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 

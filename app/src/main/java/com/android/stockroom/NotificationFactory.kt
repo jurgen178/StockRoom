@@ -23,7 +23,7 @@ class NotificationFactory(
 ) {
   private val notificationId: Int = NotificationID.Id
 
-  val intent = Intent(context, StockDataActivity::class.java).apply {
+  private val intent = Intent(context, StockDataActivity::class.java).apply {
     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     putExtra("symbol", symbol)
   }

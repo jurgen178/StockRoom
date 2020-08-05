@@ -21,8 +21,8 @@ class StockDataActivity : AppCompatActivity() {
     setContentView(R.layout.activity_stock)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    symbol = intent.getStringExtra("symbol")
-        .toUpperCase(Locale.ROOT)
+    val symbolString = intent.getStringExtra("symbol")
+    symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
 
     stockViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
@@ -50,7 +50,7 @@ class StockDataActivity : AppCompatActivity() {
     }
 
     TabLayoutMediator(tab_layout, stockViewpager) { tab, position ->
-      tab.text = when(position) {
+      tab.text = when (position) {
         0 -> getString(R.string.data_headline)
         else -> getString(R.string.news_headline, symbol)
       }

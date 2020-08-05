@@ -216,7 +216,7 @@ class StockRoomDaoTest {
         val stockDBdata1 = StockDBdata("symbol1")
         stockRoomDao.insert(stockDBdata1)
 
-        var assets: MutableList<Asset> = mutableListOf()
+        val assets: MutableList<Asset> = mutableListOf()
         assets.add(Asset(symbol = "symbol1", shares = 10f, price = 123f))
         assets.add(Asset(symbol = "symbol1", shares = 20f, price = 223f))
         //assets.add(Asset(symbol = "symbol2", shares = 30f, price = 323f))
@@ -238,7 +238,7 @@ class StockRoomDaoTest {
     @Test
     @Throws(Exception::class)
     fun addDeleteGroups() {
-        var groups1: MutableList<Group> = mutableListOf()
+        val groups1: MutableList<Group> = mutableListOf()
         groups1.add(Group(color = 1, name = "g1"))
         groups1.add(Group(color = 2, name = "g2"))
         stockRoomDao.setGroups(groups1)
@@ -399,8 +399,8 @@ class StockRoomDaoTest {
     @Test
     @Throws(Exception::class)
     fun getEvents() {
-        val StockDBdata1 = StockDBdata("symbol1")
-        stockRoomDao.insert(StockDBdata1)
+        val stockDBdata1 = StockDBdata("symbol1")
+        stockRoomDao.insert(stockDBdata1)
         val current = LocalDateTime.now()
 
         val dateTime1 = current.toEpochSecond(ZoneOffset.MIN)
@@ -414,8 +414,8 @@ class StockRoomDaoTest {
         val dateTime3 = current.toEpochSecond(ZoneOffset.MAX)
         val event3 = Event(symbol = "symbol2", type = 3, title = "title3", note = "note3", datetime = dateTime3)
         stockRoomDao.addEvent(event3)
-        val StockDBdata2 = StockDBdata("symbol2")
-        stockRoomDao.insert(StockDBdata2)
+        val stockDBdata2 = StockDBdata("symbol2")
+        stockRoomDao.insert(stockDBdata2)
 
         val events1 = stockRoomDao.getEvents("symbol1")
         assertEquals(events1.events.size, 2)
@@ -433,23 +433,23 @@ class StockRoomDaoTest {
     @Test
     @Throws(Exception::class)
     fun delete() {
-        val StockDBdata1 = StockDBdata("symbol1")
-        stockRoomDao.insert(StockDBdata1)
-        val StockDBdata2 = StockDBdata("symbol2")
-        stockRoomDao.insert(StockDBdata2)
+        val stockDBdata1 = StockDBdata("symbol1")
+        stockRoomDao.insert(stockDBdata1)
+        val stockDBdata2 = StockDBdata("symbol2")
+        stockRoomDao.insert(stockDBdata2)
         stockRoomDao.delete("symbol1")
         val allStockDBdata = stockRoomDao.getAllProperties().waitForValue()
         assertEquals(allStockDBdata.size, 1)
-        assertEquals(allStockDBdata[0].symbol, StockDBdata2.symbol)
+        assertEquals(allStockDBdata[0].symbol, stockDBdata2.symbol)
     }
 
     @Test
     @Throws(Exception::class)
     fun deleteAll() {
-        val StockDBdata1 = StockDBdata("symbol1")
-        stockRoomDao.insert(StockDBdata1)
-        val StockDBdata2 = StockDBdata("symbol2")
-        stockRoomDao.insert(StockDBdata2)
+        val stockDBdata1 = StockDBdata("symbol1")
+        stockRoomDao.insert(stockDBdata1)
+        val stockDBdata2 = StockDBdata("symbol2")
+        stockRoomDao.insert(stockDBdata2)
         stockRoomDao.deleteAllStockTable()
         val allStockDBdata = stockRoomDao.getAllProperties().waitForValue()
         assertTrue(allStockDBdata.isEmpty())
