@@ -257,6 +257,9 @@ data class YahooResponse(
   var quoteResponse: QuoteResponse? = null
 )
 
+// https://api.iextrading.com/1.0/ref-data/symbols
+
+
 //A retrofit Network Interface for the Api
 interface YahooApi {
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl

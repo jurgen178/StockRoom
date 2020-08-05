@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.annotation.RawRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
+import kotlinx.android.synthetic.main.activity_list.debugswitch
 import kotlinx.android.synthetic.main.activity_list.webview
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
@@ -17,14 +19,26 @@ import java.time.format.FormatStyle.MEDIUM
 class ListActivity : AppCompatActivity() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
-  private val stockTable = StringBuilder()
-  private val groupTable = StringBuilder()
-  private val assetTable = StringBuilder()
-  private val eventTable = StringBuilder()
+  private val stockTableRows = StringBuilder()
+  private val groupTableRows = StringBuilder()
+  private val assetTableRows = StringBuilder()
+  private val eventTableRows = StringBuilder()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_list)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+    debugswitch.isChecked = sharedPreferences.getBoolean("debug", false)
+
+    debugswitch.setOnCheckedChangeListener{_, isChecked ->
+      sharedPreferences
+          .edit()
+          .putBoolean("debug", isChecked)
+          .apply()
+    }
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
@@ -42,16 +56,16 @@ class ListActivity : AppCompatActivity() {
     stockRoomViewModel.allProperties.observe(this, Observer { items ->
 
       items.forEach { stockItem ->
-        stockTable.append("<tr>")
-        stockTable.append("<td>${stockItem.symbol}</td>")
-        stockTable.append("<td>${getColorStr(stockItem.groupColor)}</td>")
-        stockTable.append("<td>${stockItem.notes}</td>")
-        stockTable.append("<td>${DecimalFormat("0.########").format(stockItem.alertAbove)}</td>")
-        stockTable.append(
-            "<td>${DecimalFormat("0.########")
+        stockTableRows.append("<tr>")
+        stockTableRows.append("<td>${stockItem.symbol}</td>")
+        stockTableRows.append("<td>${getColorStr(stockItem.groupColor)}</td>")
+        stockTableRows.append("<td>${stockItem.notes}</td>")
+        stockTableRows.append("<td>${DecimalFormat("0.####").format(stockItem.alertAbove)}</td>")
+        stockTableRows.append(
+            "<td>${DecimalFormat("0.####")
                 .format(stockItem.alertBelow)}</td>"
         )
-        stockTable.append("</tr>")
+        stockTableRows.append("</tr>")
       }
 
       stockRoomViewModel.allProperties.removeObservers(this)
@@ -61,10 +75,10 @@ class ListActivity : AppCompatActivity() {
     stockRoomViewModel.allGroupTable.observe(this, Observer { items ->
 
       items.forEach { groupItem ->
-        groupTable.append("<tr>")
-        groupTable.append("<td>${getColorStr(groupItem.color)}</td>")
-        groupTable.append("<td>${groupItem.name}</td>")
-        groupTable.append("</tr>")
+        groupTableRows.append("<tr>")
+        groupTableRows.append("<td>${getColorStr(groupItem.color)}</td>")
+        groupTableRows.append("<td>${groupItem.name}</td>")
+        groupTableRows.append("</tr>")
       }
 
       stockRoomViewModel.allGroupTable.removeObservers(this)
@@ -74,12 +88,12 @@ class ListActivity : AppCompatActivity() {
     stockRoomViewModel.allAssetTable.observe(this, Observer { items ->
 
       items.forEach { assetItem ->
-        assetTable.append("<tr>")
-        assetTable.append("<td>${assetItem.id}</td>")
-        assetTable.append("<td>${assetItem.symbol}</td>")
-        assetTable.append("<td>${DecimalFormat("0.########").format(assetItem.shares)}</td>")
-        assetTable.append("<td>${assetItem.price}</td>")
-        assetTable.append("</tr>")
+        assetTableRows.append("<tr>")
+        assetTableRows.append("<td>${assetItem.id}</td>")
+        assetTableRows.append("<td>${assetItem.symbol}</td>")
+        assetTableRows.append("<td>${DecimalFormat("0.####").format(assetItem.shares)}</td>")
+        assetTableRows.append("<td>${assetItem.price}</td>")
+        assetTableRows.append("</tr>")
       }
 
       stockRoomViewModel.allAssetTable.removeObservers(this)
@@ -89,19 +103,24 @@ class ListActivity : AppCompatActivity() {
     stockRoomViewModel.allEventTable.observe(this, Observer { items ->
 
       items.forEach { eventItem ->
-        eventTable.append("<tr>")
-        eventTable.append("<td>${eventItem.id}</td>")
-        eventTable.append("<td>${eventItem.symbol}</td>")
-        eventTable.append("<td>${eventItem.type}</td>")
-        eventTable.append("<td>${eventItem.title}</td>")
-        eventTable.append("<td>${eventItem.note}</td>")
-        eventTable.append("<td>${getDateTimeStr(eventItem.datetime)}</td>")
-        eventTable.append("</tr>")
+        eventTableRows.append("<tr>")
+        eventTableRows.append("<td>${eventItem.id}</td>")
+        eventTableRows.append("<td>${eventItem.symbol}</td>")
+        eventTableRows.append("<td>${eventItem.type}</td>")
+        eventTableRows.append("<td>${eventItem.title}</td>")
+        eventTableRows.append("<td>${eventItem.note}</td>")
+        eventTableRows.append("<td>${getDateTimeStr(eventItem.datetime)}</td>")
+        eventTableRows.append("</tr>")
       }
 
       stockRoomViewModel.allEventTable.removeObservers(this)
       updateHtmlText()
     })
+  }
+
+  override fun onSupportNavigateUp(): Boolean {
+    onBackPressed()
+    return true
   }
 
   private fun getDateTimeStr(datetime: Long): String {
@@ -127,10 +146,10 @@ class ListActivity : AppCompatActivity() {
   private fun updateHtmlText() {
     var htmlText = resources.getRawTextFile(R.raw.debug)
 
-    htmlText = htmlText.replace("<!-- stock_table -->", stockTable.toString())
-    htmlText = htmlText.replace("<!-- group_table -->", groupTable.toString())
-    htmlText = htmlText.replace("<!-- asset_table -->", assetTable.toString())
-    htmlText = htmlText.replace("<!-- event_table -->", eventTable.toString())
+    htmlText = htmlText.replace("<!-- stock_table -->", stockTableRows.toString())
+    htmlText = htmlText.replace("<!-- group_table -->", groupTableRows.toString())
+    htmlText = htmlText.replace("<!-- asset_table -->", assetTableRows.toString())
+    htmlText = htmlText.replace("<!-- event_table -->", eventTableRows.toString())
 
     val mimeType: String = "text/html"
     val utfType: String = "UTF-8"

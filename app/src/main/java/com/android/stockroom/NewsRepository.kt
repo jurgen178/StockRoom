@@ -61,47 +61,54 @@ open class NewsRepository(
     newsQuery: String
   ): List<NewsData>? {
 
-    val newsResponse = safeApiCall(
-        call = {
-          api.getNewsDataAsync(newsQuery)
-              .await()
-        },
-        errorMessage = "Error getting news data."
-    )
-
-    // Convert the response to a news data list.
     var newsData: List<NewsData>? = null
-    if (newsResponse != null) {
-      newsData = newsResponse.newsItems?.filter { newsItem ->
-        newsItem.title.isNotEmpty()
+
+    try {
+      val newsResponse = safeApiCall(
+          call = {
+            api.getNewsDataAsync(newsQuery)
+                .await()
+          },
+          errorMessage = "Error getting news data."
+      )
+
+      // Convert the response to a news data list.
+      if (newsResponse != null) {
+        newsData = newsResponse.newsItems?.filter { newsItem ->
+          newsItem.title.isNotEmpty()
+        }
+            ?.map { newsItem ->
+
+              var date: Long = 0
+              // Convert pubDate field "Fri, 31 Jul 2020 14:54:54 GMT" to unix time
+              try {
+                val localDateTime =
+                  LocalDateTime.parse(newsItem.pubDate, DateTimeFormatter.RFC_1123_DATE_TIME)
+                date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+              } catch (e: java.lang.Exception) {
+              }
+
+              if (date == 0L) {
+                date = LocalDateTime.now()
+                    .toEpochSecond(ZoneOffset.UTC)
+              }
+
+              NewsData(
+                  title = newsItem.title,
+                  text = newsItem.description,
+                  date = date,
+                  link = newsItem.link,
+                  type = newsType
+              )
+            }
+            ?.sortedByDescending { data ->
+              data.date
+            }
       }
-          ?.map { newsItem ->
-
-            var date: Long = 0
-            // Convert pubDate field "Fri, 31 Jul 2020 14:54:54 GMT" to unix time
-            try {
-              val localDateTime =
-                LocalDateTime.parse(newsItem.pubDate, DateTimeFormatter.RFC_1123_DATE_TIME)
-              date = localDateTime.toEpochSecond(ZoneOffset.UTC)
-            } catch (e: java.lang.Exception) {
-            }
-
-            if (date == 0L) {
-              date = LocalDateTime.now()
-                  .toEpochSecond(ZoneOffset.UTC)
-            }
-
-            NewsData(
-                title = newsItem.title,
-                text = newsItem.description,
-                date = date,
-                link = newsItem.link,
-                type = newsType
-            )
-          }
-          ?.sortedByDescending { data ->
-            data.date
-          }
+    }
+    catch(e: Exception)
+    {
+      Log.d("getOnlineNewsData failed", "Exception - $e")
     }
 
     return newsData ?: emptyList()

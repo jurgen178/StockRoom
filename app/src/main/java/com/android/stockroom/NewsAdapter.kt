@@ -153,9 +153,12 @@ class NewsAdapter(
       newsMap[data.date] = data
     }
 
-    // Add/update new news to the date map.
+    // Add news to the date map.
     dataList.forEach { data ->
-      newsMap[data.date] = data
+      // Do not overwrite existing news for that time stamp.
+      if(newsMap[data.date]?.date != data.date) {
+        newsMap[data.date] = data
+      }
     }
 
     // Map back to news list.

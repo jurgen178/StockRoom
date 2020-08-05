@@ -15,7 +15,7 @@
       android:layout_marginBottom="24dp"
       android:layout_marginStart="69dp"
       android:layout_marginEnd="16dp"
-      android:text="@string/system_header"
+      android:text="System"
       android:textColor="@color/colorAccent"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="parent"
@@ -30,18 +30,34 @@
       android:layout_marginEnd="14dp"
       android:layout_marginStart="69dp"
       android:textSize="16sp"
-      android:text="@string/debug_title"
+      android:text="Debug log"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/sectionHeaderTextView"
       />
 
   <View
-      android:id="@+id/divider"
+      android:id="@+id/divider1"
       style="@style/Divider"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/debugswitch"
+      />
+
+  <TextView
+      android:id="@+id/dbHeaderTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:layout_marginBottom="24dp"
+      android:layout_marginStart="69dp"
+      android:layout_marginEnd="16dp"
+      android:text="Data base"
+      android:textColor="@color/colorAccent"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/divider1"
       />
 
   <WebView
@@ -52,7 +68,7 @@
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/divider"
+      app:layout_constraintTop_toBottomOf="@+id/dbHeaderTextView"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

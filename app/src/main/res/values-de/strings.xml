@@ -13,10 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License. -->
 
 <resources>
-  <string name="hint_add_stock">Aktienkürzel</string>
-  <string name="button_add">Hinzufügen</string>
-  <string name="sort">Sortieren</string>
-
   <!-- Plurals -->
   <plurals name="events_in_list">
     <item quantity="one">%1$d Ereignis</item>
@@ -63,6 +59,9 @@ limitations under the License. -->
   <string name="other_header">Sonstige</string>
   <string name="group_header">Gruppenliste</string>
 
+  <string name="hint_add_stock">Aktienkürzel</string>
+  <string name="button_add">Hinzufügen</string>
+  <string name="sort">Sortieren</string>
   <string name="sort_name">Nach Namen sortieren</string>
   <string name="sort_change">Nach Änderung sortieren</string>
   <string name="sort_group">Nach Gruppe sortieren</string>
@@ -130,7 +129,6 @@ limitations under the License. -->
   <string name="delete_all_title">Alle Daten entfernen</string>
   <string name="delete_all_confirm">Sind Sie sich sicher?</string>
   <string name="delete_all_desc">Entfernt alle Aktien und die dazugehörigen Daten.</string>
-  <string name="debug_title">Debuginformationen</string>
   <string name="shares_not_zero">Die Anzahl der Aktien darf nicht 0 sein.</string>
   <string name="price_not_zero">Der Preis der Aktie darf nicht 0 sein.</string>
   <string name="add_asset">Zum Aktienbestand hinzufügen</string>
@@ -177,6 +175,7 @@ limitations under the License. -->
   <string name="summary_dividend_assets">Bestand mit Dividende</string>
   <string name="summary_no_dividend_assets">Bestand ohne Dividende</string>
   <string name="summary_dividend_per_year">Dividende pro Jahr</string>
+  <string name="update_groups_dialog_headline">Gruppe \'%1$s\' bearbeiten</string>
   <string name="update_groups_title">Gruppenliste bearbeiten</string>
   <string name="update_groups_desc">Namen und zugeordnete Farben der Gruppenliste bearbeiten.</string>
   <string name="trillion_abbr">T.</string>
@@ -226,5 +225,4 @@ limitations under the License. -->
   <string name="donate">Donate</string>
   <string name="email_feedback_summary">Senden Sie uns Anregungen und Verbesserungen.</string>
   <string name="email_feedback_title">EMail senden</string>
-  <string name="system_header">System</string>
 </resources>

@@ -8,6 +8,16 @@
             color: white;
         }
 
+        .border {
+            border-collapse: separate !important;
+            border-radius: 10px !important;
+            box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+            border-spacing: 0;
+            overflow: hidden;
+            padding: 10px;
+            margin: 16px;
+        }
+
         table,
         th,
         td {
@@ -20,17 +30,26 @@
             background-color: lightgray;
         }
 
-        .data_table,
+        .stock_table,
         .group_table,
         .asset_table,
         .event_table {
             background-color: #F0F0FF;
             color: black;
         }
+
+        .table_name {
+            background-color: #F0F0FF;
+            font-size: x-large;
+            padding-bottom: 10px;
+            border: #F0F0FF;
+        }
     </style>
 
-    <h2>stock_table</h2>
-    <table class="data_table">
+    <table class="stock_table border">
+        <tr>
+            <th colspan="5" align="left" class="table_name">stock_table</th>
+        </tr>
         <tr>
             <th>symbol</th>
             <th>groupColor</th>
@@ -41,8 +60,12 @@
         <!-- stock_table -->
     </table>
 
-    <h2>group_table</h2>
-    <table class="group_table">
+    </br>
+
+    <table class="group_table border">
+        <tr>
+            <th colspan="5" align="left" class="table_name">group_table</th>
+        </tr>
         <tr>
             <th>color</th>
             <th>name</th>
@@ -50,8 +73,12 @@
         <!-- group_table -->
     </table>
 
-    <h2>asset_table</h2>
-    <table class="asset_table">
+    </br>
+
+    <table class="asset_table border">
+        <tr>
+            <th colspan="5" align="left" class="table_name">asset_table</th>
+        </tr>
         <tr>
             <th>id</th>
             <th>symbol</th>
@@ -61,8 +88,12 @@
         <!-- asset_table -->
     </table>
 
-    <h2>event_table</h2>
-    <table class="event_table">
+    </br>
+
+    <table class="event_table border">
+        <tr>
+            <th colspan="5" align="left" class="table_name">event_table</th>
+        </tr>
         <tr>
             <th>id</th>
             <th>symbol</th>
@@ -73,6 +104,7 @@
         </tr>
         <!-- event_table -->
     </table>
+
 </body>
 
 </html>

@@ -49,7 +49,7 @@ class UpdateGroupActivity : AppCompatActivity() {
 
     val addUpdateGroupsHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateGroupsHeadline)
-    addUpdateGroupsHeadlineView.text = getString(R.string.update_groups_title)
+    addUpdateGroupsHeadlineView.text = getString(R.string.update_groups_dialog_headline, group.name)
 
     val colorView = dialogView.findViewById<ColorPicker>(R.id.colorPicker)
     val svbarView = dialogView.findViewById<SVBar>(R.id.colorPickerSV)
@@ -134,7 +134,7 @@ class UpdateGroupActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_updategroup)
-    //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
     stockRoomViewModel.logDebug("Update group activity started.")

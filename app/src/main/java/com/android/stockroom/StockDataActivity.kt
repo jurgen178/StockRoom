@@ -19,7 +19,7 @@ class StockDataActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_stock)
-    //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     symbol = intent.getStringExtra("symbol")
         .toUpperCase(Locale.ROOT)
@@ -55,6 +55,11 @@ class StockDataActivity : AppCompatActivity() {
         else -> getString(R.string.news_headline, symbol)
       }
     }.attach()
+  }
+
+  override fun onSupportNavigateUp(): Boolean {
+    onBackPressed()
+    return true
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {

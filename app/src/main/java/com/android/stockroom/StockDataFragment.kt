@@ -8,10 +8,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -26,7 +30,6 @@ import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -69,6 +72,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.linearLayoutGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.notesTextView
 import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
 import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
+import kotlinx.android.synthetic.main.fragment_stockdata.stockdataLinearLayout
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroup
@@ -79,6 +83,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.textViewRange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewSymbol
 import kotlinx.android.synthetic.main.fragment_stockdata.updateNotesButton
 import okhttp3.internal.toHexString
+import java.lang.Math.abs
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -180,6 +185,56 @@ data class AssetsLiveData(
   var assets: Assets? = null,
   var marketPrice: Float = 0f
 )
+
+open class OnSwipeTouchListener(ctx: Context?) : OnTouchListener {
+  private val gestureDetector: GestureDetector  = GestureDetector(ctx, GestureListener())
+
+  override fun onTouch(v: View, event: MotionEvent): Boolean {
+    return gestureDetector.onTouchEvent(event)
+  }
+
+  private inner class GestureListener : SimpleOnGestureListener() {
+    private val SWIPE_THRESHOLD = 100
+    private val SWIPE_VELOCITY_THRESHOLD = 100
+
+    override fun onDown(e: MotionEvent): Boolean {
+      return true
+    }
+
+    override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+      var result = false
+      try {
+        val diffY: Float = e2.y - e1.y
+        val diffX: Float = e2.x - e1.x
+        if (abs(diffX) > abs(diffY)) {
+          if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+            if (diffX > 0) {
+              onSwipeRight()
+            } else {
+              onSwipeLeft()
+            }
+            result = true
+          }
+        } else if (abs(diffY) > SWIPE_THRESHOLD && abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+          if (diffY > 0) {
+            onSwipeBottom()
+          } else {
+            onSwipeTop()
+          }
+          result = true
+        }
+      } catch (exception: Exception) {
+        exception.printStackTrace()
+      }
+      return result
+    }
+  }
+
+  open fun onSwipeRight() {}
+  open fun onSwipeLeft() {}
+  open fun onSwipeTop() {}
+  open fun onSwipeBottom() {}
+}
 
 class StockDataFragment : Fragment() {
 
@@ -560,6 +615,49 @@ class StockDataFragment : Fragment() {
     })
 
     textViewSymbol.text = symbol
+
+/*
+    stockdataLinearLayout.setOnTouchListener(object : OnSwipeTouchListener(requireContext()){
+      override fun onSwipeRight() {
+        super.onSwipeRight()
+
+      }
+
+      override fun onSwipeLeft() {
+        super.onSwipeLeft()
+      }
+    })
+*/
+    /*
+
+    stockdataLinearLayout.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
+      override fun onSwipeLeft() {
+        super.onSwipeLeft()
+        Toast.makeText(requireContext(), "Swipe Left gesture detected",
+            Toast.LENGTH_SHORT)
+            .show()
+      }
+      override fun onSwipeRight() {
+        super.onSwipeRight()
+        Toast.makeText(
+            requireContext(),
+            "Swipe Right gesture detected",
+            Toast.LENGTH_SHORT
+        ).show()
+      }
+      override fun onSwipeUp() {
+        super.onSwipeUp()
+        Toast.makeText(requireContext(), "Swipe up gesture detected", Toast.LENGTH_SHORT)
+            .show()
+      }
+      override fun onSwipeDown() {
+        super.onSwipeDown()
+        Toast.makeText(requireContext(), "Swipe down gesture detected", Toast.LENGTH_SHORT)
+            .show()
+      }
+    })
+     */
+
 
     updateStockViewRange(stockViewRange)
 

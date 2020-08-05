@@ -14,11 +14,13 @@ limitations under the License. -->
 
 <resources>
   <!-- App name -->
+  <string name="app_name" translatable="false">Stock Room</string>
+
+  <!-- Plurals -->
   <plurals name="events_in_list">
     <item quantity="one">%1$d Event</item>
     <item quantity="other">%1$d Events</item>
   </plurals>
-
   <plurals name="asset_added">
     <item quantity="one">%1$s stock for %2$s was added to the portfolio.</item>
     <item quantity="other">%1$s stocks for %2$s were added to the portfolio.</item>
@@ -31,36 +33,47 @@ limitations under the License. -->
     <item quantity="one">%1$s stock for %2$s was deleted from the portfolio..</item>
     <item quantity="other">%1$s stocks for %2$s were deleted from the portfolio.</item>
   </plurals>
-
-  <!-- Plurals -->
   <plurals name="delete_asset_confirm">
     <item quantity="one">Are you sure you want to delete the %1$s share at the purchase price of %2$s from your portfolio?</item>
     <item quantity="other">Are you sure you want to delete the %1$s shares at the purchase price of %2$s from your portfolio?</item>
   </plurals>
-  <string name="app_name" translatable="false">Stock Room</string>
-  <string name="hint_add_stock">Stock symbol</string>
-  <string name="button_add">Add</string>
-  <string name="sort">Sort</string>
 
   <!-- string-array -->
-  <string name="title_activity_settings">Settings</string>
+  <string-array name="predefined_groups">
+    <item>Buy</item>
+    <item>Sell</item>
+    <item>Watch</item>
+    <item>Give away for free</item>
+    <item>Ask the cat</item>
+    <item>Stop looking at</item>
+    <item>Buy more</item>
+    <item>Group 1</item>
+    <item>Group 2</item>
+    <item>Group 3</item>
+    <item>Group 4</item>
+    <item>Group 5</item>
+  </string-array>
 
   <!-- Preference Titles -->
+  <string name="title_activity_settings">Settings</string>
   <string name="general_header">General</string>
   <string name="display_header">Display</string>
   <string name="feedback_header">Feedback</string>
   <string name="other_header">Other</string>
   <string name="group_header">Group</string>
-  <string name="sort_name">Sort by Name</string>
 
+  <string name="hint_add_stock">Stock symbol</string>
+  <string name="button_add">Add</string>
+  <string name="sort">Sort</string>
+  <string name="sort_name">Sort by Name</string>
   <string name="sort_change">Sort by Change</string>
   <string name="sort_group">Sort by Group</string>
   <string name="sort_group_unsorted">Unsorted</string>
   <string name="sort_assets">Sort by Assets</string>
   <string name="sort_profit">Sort by Gain</string>
   <string name="sort_dividend">Sort by Dividend</string>
-  <string name="cancel">Cancel</string>
 
+  <string name="cancel">Cancel</string>
   <string name="one_day_range">Daily</string>
   <string name="five_days_range">Weekly</string>
   <string name="one_month_range">Monthly</string>
@@ -119,7 +132,6 @@ limitations under the License. -->
   <string name="delete_all_title">Delete all</string>
   <string name="delete_all_confirm">Are you sure?</string>
   <string name="delete_all_desc">Delete all stocks.</string>
-  <string name="debug_title">Debug information</string>
   <string name="shares_not_zero">The number of shares must not be 0.</string>
   <string name="price_not_zero">The price of the stock must not be 0.</string>
   <string name="add_asset">Add assets</string>
@@ -166,6 +178,7 @@ limitations under the License. -->
   <string name="summary_dividend_assets">Assets with dividend</string>
   <string name="summary_no_dividend_assets">Assets without dividend</string>
   <string name="summary_dividend_per_year">Dividend per year</string>
+  <string name="update_groups_dialog_headline">Update group \'%1$s\'</string>
   <string name="update_groups_title">Update group list</string>
   <string name="update_groups_desc">Update name and assigned group color of the group list.</string>
   <string name="trillion_abbr">T.</string>
@@ -215,19 +228,4 @@ limitations under the License. -->
   <string name="donate">Donate</string>
   <string name="email_feedback_summary">Send us suggestions and new ideas.</string>
   <string name="email_feedback_title">Send EMail</string>
-  <string name="system_header">System</string>
-  <string-array name="predefined_groups">
-    <item>Buy</item>
-    <item>Sell</item>
-    <item>Watch</item>
-    <item>Give away for free</item>
-    <item>Ask the cat</item>
-    <item>Stop looking at</item>
-    <item>Buy more</item>
-    <item>Group 1</item>
-    <item>Group 2</item>
-    <item>Group 3</item>
-    <item>Group 4</item>
-    <item>Group 5</item>
-  </string-array>
 </resources>

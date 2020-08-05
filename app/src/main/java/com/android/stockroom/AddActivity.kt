@@ -46,7 +46,7 @@ class AddActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_add)
     addView = findViewById(R.id.edit_add)
-    //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
     stockRoomViewModel.logDebug("Add activity started.")
