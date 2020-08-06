@@ -191,6 +191,7 @@ limitations under the License. -->
   <string name="add_predef_groups_msg">Die Beispielgruppen wurden hinzugefügt.</string>
   <string name="group_summary">Gruppenübersicht</string>
   <string name="dividend_header">Dividende</string>
+  <string name="dividend_pay_date">Dividenden Auszahlungsdatum</string>
   <string name="annualDividendYield">Jährliche Dividendenrendite</string>
   <string name="annualDividendRate">Jährlicher Dividendensatz</string>
   <string name="quarterlyDividend">Vierteljährliche Dividende</string>

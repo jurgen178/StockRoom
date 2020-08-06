@@ -189,7 +189,7 @@ data class OnlineMarketData(
       name = "regularMarketChangePercent"
   ) var marketChangePercent: Float = 0f,
 
-  var dividendDate: Float = 0f,
+  var dividendDate: Long = 0,
   @field:Json(
       name = "trailingAnnualDividendRate"
   ) var annualDividendRate: Float = 0f,

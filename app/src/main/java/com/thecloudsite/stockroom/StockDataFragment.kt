@@ -94,6 +94,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.format.FormatStyle.LONG
+import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 import java.util.Locale
 
@@ -1302,6 +1303,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun getDividend(data: AssetsLiveData): SpannableStringBuilder {
+
     val dividend = SpannableStringBuilder()
         .append(getString(R.string.annualDividendRate))
         .bold {
@@ -1317,6 +1319,21 @@ class StockDataFragment : Fragment() {
               )}%"
           )
         }
+
+    val dividendDate = data.onlineMarketData?.dividendDate!!
+    val dateTimeNow = LocalDateTime.now()
+        .toEpochSecond(ZoneOffset.UTC)
+    if (dividendDate > 0 && dividendDate > dateTimeNow) {
+      val datetime: LocalDateTime =
+        LocalDateTime.ofEpochSecond(data.onlineMarketData?.dividendDate!!, 0, ZoneOffset.UTC)
+      dividend
+          .append(
+              "\n${getString(R.string.dividend_pay_date)}"
+          )
+          .bold {
+            append(" ${datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))}")
+          }
+    }
 
     if (data.assets != null) {
       val shares = data.assets?.assets?.sumByDouble {
