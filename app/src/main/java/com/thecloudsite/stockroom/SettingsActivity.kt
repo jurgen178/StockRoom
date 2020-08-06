@@ -4,11 +4,17 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.TypefaceSpan
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
@@ -83,13 +89,13 @@ class SettingsActivity : AppCompatActivity(),
         .toInt()
     if (resultCode == Activity.RESULT_OK) {
       if (resultCodeShort == exportListActivityRequestCode) {
-          if (data != null && data.data is Uri) {
+        if (data != null && data.data is Uri) {
 
-            val exportListUri = data.data!!
-            stockRoomViewModel.exportList(applicationContext, exportListUri)
-            finish()
-          }
+          val exportListUri = data.data!!
+          stockRoomViewModel.exportList(applicationContext, exportListUri)
+          finish()
         }
+      }
     }
   }
 
@@ -140,6 +146,49 @@ class SettingsActivity : AppCompatActivity(),
       setPreferencesFromResource(R.xml.root_preferences, rootKey)
       stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
       stockRoomViewModel.logDebug("Settings fragment started.")
+
+      // Set version info.
+      val versionCode = BuildConfig.VERSION_CODE
+      val versionName = BuildConfig.VERSION_NAME
+      val versionBuild = if (BuildConfig.DEBUG) {
+        "(Debug)"
+      } else {
+        ""
+      }
+      val version: Preference? = findPreference("version")
+      val versionStr = SpannableStringBuilder()
+          .append("Version code")
+          .color(
+              context?.getColor(R.color.settingsblue)!!
+          ) { bold { append(" \t\t$versionCode\n") } }
+          .append("Version name")
+          .color(
+              context?.getColor(R.color.settingsblue)!!
+          ) { bold { append(" \t$versionName $versionBuild") } }
+      version?.summary = versionStr
+
+      var versionClickCounter: Int = 1
+      version?.onPreferenceClickListener=
+        OnPreferenceClickListener {
+          versionClickCounter++
+          if(versionClickCounter % 10 == 0 && versionClickCounter % 20 != 0)
+          {
+            AlertDialog.Builder(requireContext())
+                .setTitle("What you are looking for,")
+                .setMessage("is not here.")
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
+          }
+          if(versionClickCounter % 20 == 0)
+          {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Look at")
+                .setMessage("North by Northeast")
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
+          }
+          true
+        }
 
       val buttonExportList: Preference? = findPreference("export_list")
       if (buttonExportList != null) {
@@ -200,7 +249,8 @@ class SettingsActivity : AppCompatActivity(),
           .addCategory(Intent.CATEGORY_OPENABLE)
           .putExtra(Intent.EXTRA_TITLE, jsonFileName)
       startActivityForResult(
-          Intent.createChooser(intent, getString(R.string.export_select_file)), exportListActivityRequestCode
+          Intent.createChooser(intent, getString(R.string.export_select_file)),
+          exportListActivityRequestCode
       )
     }
   }

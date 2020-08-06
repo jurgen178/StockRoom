@@ -206,9 +206,9 @@ limitations under the License. -->
   <string name="onlinedata_epsTrailingTwelveMonths">EPS des vergangenen Jahres</string>
   <string name="onlinedata_epsForward">Zukünftige EPS</string>
   <string name="onlinedata_region">Region</string>
-  <string name="onlinedata_language">Sprache</string>
+  <string name="onlinedata_language">Sprachabkürzung</string>
   <string name="onlinedata_fullExchangeName">Börsenname</string>
-  <string name="onlinedata_messageBoardId">Board-ID</string>
+  <string name="onlinedata_messageBoardId">Board-Id</string>
   <string name="onlinedata_financialCurrency">Währung</string>
   <string name="onlinedata_marketState">Marktstatus</string>
   <string name="json_default_filename">Aktien %1$s</string>
@@ -219,4 +219,5 @@ limitations under the License. -->
   <string name="email_feedback_summary">Senden Sie uns Anregungen und Verbesserungen.</string>
   <string name="email_feedback_title">EMail senden</string>
   <string name="bought_for">Gekauft für %1$s</string>
+  <string name="version">Version</string>
 </resources>

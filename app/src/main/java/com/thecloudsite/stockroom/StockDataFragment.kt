@@ -1201,6 +1201,7 @@ class StockDataFragment : Fragment() {
   private fun onSync() {
     stockRoomViewModel.updateOnlineDataManually()
     stockRoomViewModel.logDebug("Update online data manually for stock data.")
+    updateStockViewRange(stockViewRange)
   }
 
   private fun hideSoftInputFromWindow() {

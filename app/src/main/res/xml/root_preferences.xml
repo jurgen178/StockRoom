@@ -77,4 +77,8 @@
 
   </PreferenceCategory>
 
+  <Preference
+      app:key="version"
+      app:title="@string/version" />
+
 </PreferenceScreen>

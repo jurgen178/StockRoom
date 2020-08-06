@@ -222,4 +222,5 @@ limitations under the License. -->
   <string name="email_feedback_summary">Send us suggestions and new ideas.</string>
   <string name="email_feedback_title">Send EMail</string>
   <string name="bought_for">Bought for %1$s</string>
+  <string name="version">Version</string>
 </resources>
