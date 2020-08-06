@@ -1,4 +1,4 @@
-package com.android.stockroom
+package com.thecloudsite.stockroom
 
 /*
  * Copyright (C) 2017 Google Inc.

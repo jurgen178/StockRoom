@@ -77,14 +77,33 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewAssetChange"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/textViewAsset"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:orientation="horizontal"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        />
+        >
+
+      <TextView
+          android:id="@+id/textViewPurchasePrice"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="13sp"
+          android:gravity="start"
+          android:layout_weight="0.5"
+          />
+
+      <TextView
+          android:id="@+id/textViewAssetChange"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.5"
+          android:gravity="end"
+          />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewRange"
@@ -212,9 +231,38 @@
         android:id="@+id/onlineDataView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         tools:listitem="@layout/onlinedataview_item"
         />
+
+    <LinearLayout
+        android:id="@+id/dividendLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+    <View style="@style/Divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dividend_header"
+        style="@style/section_header"
+        />
+
+    <TextView
+        android:id="@+id/textViewDividend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:layout_margin="16dp"
+        />
+
+    </LinearLayout>
 
     <View style="@style/Divider"/>
 

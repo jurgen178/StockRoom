@@ -193,8 +193,10 @@ limitations under the License. -->
   <string name="add_predef_groups_confirm">Do you want to add the example groups?</string>
   <string name="add_predef_groups_msg">Example groups were added.</string>
   <string name="group_summary">Group summary</string>
-  <string name="onlinedata_annualDividendYield">Annual dividend yield</string>
-  <string name="onlinedata_annualDividendRate">Annual dividend rate</string>
+  <string name="dividend_header">Dividend</string>
+  <string name="annualDividendYield">Annual dividend yield</string>
+  <string name="annualDividendRate">Annual dividend rate</string>
+  <string name="quarterlyDividend">Quarterly dividend</string>
   <string name="onlinedata_regularMarketPreviousClose">Market previous close</string>
   <string name="onlinedata_regularMarketOpen">Market open</string>
   <string name="onlinedata_fiftyDayAverage">50 day average</string>
@@ -218,4 +220,5 @@ limitations under the License. -->
   <string name="donate">Donate</string>
   <string name="email_feedback_summary">Send us suggestions and new ideas.</string>
   <string name="email_feedback_title">Send EMail</string>
+  <string name="bought_for">Bought for %1$s</string>
 </resources>

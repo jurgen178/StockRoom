@@ -190,8 +190,10 @@ limitations under the License. -->
   <string name="add_predef_groups_confirm">Möchten Sie die Beispielgruppen hinzufügen?</string>
   <string name="add_predef_groups_msg">Die Beispielgruppen wurden hinzugefügt.</string>
   <string name="group_summary">Gruppenübersicht</string>
-  <string name="onlinedata_annualDividendYield">Jährliche Dividendenrendite</string>
-  <string name="onlinedata_annualDividendRate">Jährlicher Dividendensatz</string>
+  <string name="dividend_header">Dividende</string>
+  <string name="annualDividendYield">Jährliche Dividendenrendite</string>
+  <string name="annualDividendRate">Jährlicher Dividendensatz</string>
+  <string name="quarterlyDividend">Vierteljährliche Dividende</string>
   <string name="onlinedata_regularMarketPreviousClose">Vortagswert</string>
   <string name="onlinedata_regularMarketOpen">Eröffnungswert</string>
   <string name="onlinedata_fiftyDayAverage">50-Tage Durchschnitt</string>
@@ -215,4 +217,5 @@ limitations under the License. -->
   <string name="donate">Donate</string>
   <string name="email_feedback_summary">Senden Sie uns Anregungen und Verbesserungen.</string>
   <string name="email_feedback_title">EMail senden</string>
+  <string name="bought_for">Gekauft für %1$s</string>
 </resources>
