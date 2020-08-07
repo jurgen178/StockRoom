@@ -129,8 +129,8 @@ class SettingsActivity : AppCompatActivity(),
 
   fun onSettings1(item: MenuItem) {
     AlertDialog.Builder(this)
-        .setTitle("Invest in")
-        .setMessage("debug!")
+        .setTitle("\u0059\u006f\u0075\u0020\u0073\u0068\u006f\u0075\u006c\u0064\u0020\u006d\u0061\u006b\u0065")
+        .setMessage("\u0061\u0020\u0064\u0065\u0062\u0075\u0067\u0020\u0069\u006e\u0076\u0065\u0073\u0074\u006d\u0065\u006e\u0074\u002e")
         .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
         .show()
 //    val intent = Intent(this@SettingsActivity, ListActivity::class.java)

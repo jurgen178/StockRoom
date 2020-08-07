@@ -166,6 +166,9 @@ class MainActivity : AppCompatActivity() {
                 .toUpperCase(Locale.ROOT)
           }
               .distinct()
+              .filter { symbol ->
+                symbol.isNotBlank() && symbol.isNotEmpty()
+              }
 
           symbolList.forEach { symbol ->
             stockRoomViewModel.insert(symbol)
