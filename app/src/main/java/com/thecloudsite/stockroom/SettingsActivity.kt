@@ -127,9 +127,12 @@ class SettingsActivity : AppCompatActivity(),
     return true
   }
 
-  fun onSettings(item: MenuItem) {
+  fun onSettings1(item: MenuItem) {
     val intent = Intent(this@SettingsActivity, ListActivity::class.java)
     startActivity(intent)
+  }
+
+  fun onSettings2(item: MenuItem) {
   }
 
   class SettingsFragment : PreferenceFragmentCompat() {
@@ -167,23 +170,23 @@ class SettingsActivity : AppCompatActivity(),
           ) { bold { append(" \t$versionName $versionBuild") } }
       version?.summary = versionStr
 
-      var versionClickCounter: Int = 1
-      version?.onPreferenceClickListener=
+      // https://convertcodes.com/unicode-converter-encode-decode-utf/
+      var versionClickCounter: Int = 0
+      version?.onPreferenceClickListener =
         OnPreferenceClickListener {
           versionClickCounter++
-          if(versionClickCounter % 10 == 0 && versionClickCounter % 20 != 0)
-          {
+          if (versionClickCounter == 10) {
             AlertDialog.Builder(requireContext())
-                .setTitle("What you are looking for,")
-                .setMessage("is not here.")
+                .setTitle("\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072\u002c")
+                .setMessage("\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e")
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
           }
-          if(versionClickCounter % 20 == 0)
-          {
+          if (versionClickCounter == 20) {
+            versionClickCounter = 0
             AlertDialog.Builder(requireContext())
-                .setTitle("Look at")
-                .setMessage("North by Northeast")
+                .setTitle("\u004c\u006f\u006f\u006b")
+                .setMessage("\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074")
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
           }

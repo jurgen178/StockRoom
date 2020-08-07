@@ -9,10 +9,11 @@ apply plugin: 'kotlin-android-extensions'
 android {
   signingConfigs {
     stockroom {
-      storeFile file('C:\\Repos\\StockRoom\\sign.jks')
-      storePassword 'aliens1'
-      keyAlias 'key1'
-      keyPassword 'aliens1'
+      storeFile file(RELEASE_STORE_FILE)
+      storePassword RELEASE_STORE_PASSWORD
+      keyAlias RELEASE_KEY_ALIAS
+      keyPassword RELEASE_KEY_PASSWORD
+      v2SigningEnabled true
     }
   }
   compileSdkVersion 30

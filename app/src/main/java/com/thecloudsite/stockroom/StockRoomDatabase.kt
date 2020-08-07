@@ -85,105 +85,12 @@ abstract class StockRoomDatabase : RoomDatabase() {
       }
     }
 
-    private fun importExampleJSON1(
-      stockRoomDao: StockRoomDao,
-      json: String
-    ) {
-      var k: Int = 0
-      val jsonArray = JSONArray(json)
-      val size = jsonArray.length()
-      for (i in 0 until size) {
-        var groupColor: Int = 0
-
-        // get symbol
-        val jsonObj: JSONObject = jsonArray[i] as JSONObject
-        val symbol = jsonObj.getString("symbol")
-            .toUpperCase(Locale.ROOT)
-
-        if (symbol.isNotEmpty()) {
-          stockRoomDao.insert(StockDBdata(symbol.toUpperCase(Locale.ROOT)))
-          k++
-
-          // get assets
-          if (jsonObj.has("assets")) {
-            val assetsObjArray = jsonObj.getJSONArray("assets")
-            val assets: MutableList<Asset> = mutableListOf()
-
-            for (j in 0 until assetsObjArray.length()) {
-              val assetsObj: JSONObject = assetsObjArray[j] as JSONObject
-              assets.add(
-                  Asset(
-                      symbol = symbol,
-                      shares = assetsObj.getDouble("shares")
-                          .toFloat(),
-                      price = assetsObj.getDouble("price")
-                          .toFloat()
-                  )
-              )
-            }
-
-            stockRoomDao.updateAssets(symbol = symbol, assets = assets)
-          }
-
-          // get events
-          if (jsonObj.has("events")) {
-            val eventsObjArray = jsonObj.getJSONArray("events")
-            val events: MutableList<Event> = mutableListOf()
-
-            for (j in 0 until eventsObjArray.length()) {
-              val eventsObj: JSONObject = eventsObjArray[j] as JSONObject
-              events.add(
-                  Event(
-                      symbol = symbol,
-                      datetime = eventsObj.getLong("datetime"),
-                      note = eventsObj.getString("note"),
-                      title = eventsObj.getString("title"),
-                      type = eventsObj.getInt("type")
-                  )
-              )
-            }
-
-            stockRoomDao.updateEvents(symbol, events)
-          }
-
-          // get properties
-          if (jsonObj.has("groupColor")) {
-            groupColor = jsonObj.getInt("groupColor")
-            stockRoomDao.setStockGroupColor(symbol = symbol, color = groupColor)
-          }
-
-          if (jsonObj.has("alertAbove")) {
-            val alertAbove = jsonObj.getDouble("alertAbove")
-                .toFloat()
-            if (alertAbove > 0f) {
-              stockRoomDao.updateAlertAbove(symbol, alertAbove)
-            }
-          }
-
-          if (jsonObj.has("alertBelow")) {
-            val alertBelow = jsonObj.getDouble("alertBelow")
-                .toFloat()
-            if (alertBelow > 0f) {
-              stockRoomDao.updateAlertBelow(symbol, alertBelow)
-            }
-          }
-
-          if (jsonObj.has("notes")) {
-            val notes = jsonObj.getString("notes")
-            if (notes.isNotEmpty()) {
-              stockRoomDao.updateNotes(symbol, notes)
-            }
-          }
-        }
-      }
-    }
-
     private fun importExampleJSON(
       stockRoomDao: StockRoomDao,
       json: String
     ) {
-      val gson = Gson()
       val sType = object : TypeToken<List<StockItemJson>>() {}.type
+      val gson = Gson()
       val stockItemJsonList = gson.fromJson<List<StockItemJson>>(json, sType)
 
       stockItemJsonList.forEach { stockItemJson ->
@@ -191,21 +98,28 @@ abstract class StockRoomDatabase : RoomDatabase() {
         stockRoomDao.insert(
             StockDBdata(
                 symbol = symbol,
-                groupColor = stockItemJson.groupColor,
+                // can be null if it is not in the json
+                groupColor = stockItemJson.groupColor ?: 0,
                 notes = stockItemJson.notes ?: "",
-                alertBelow = stockItemJson.alertBelow,
-                alertAbove = stockItemJson.alertAbove
+                alertBelow = stockItemJson.alertBelow ?: 0f,
+                alertAbove = stockItemJson.alertAbove ?: 0f
             )
         )
 
         stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets.map { asset ->
-          Asset(symbol = symbol, shares = asset.shares, price = asset.price)
+          Asset(symbol = symbol,
+              shares = asset.shares ?: 0f,
+              price = asset.price ?: 0f
+          )
         })
 
         stockRoomDao.updateEvents(symbol = symbol, events = stockItemJson.events.map { event ->
           Event(
-              symbol = symbol, type = event.type, title = event.title, note = event.note,
-              datetime = event.datetime
+              symbol = symbol,
+              type = event.type ?: 0,
+              title = event.title ?: "",
+              note = event.note ?: "",
+              datetime = event.datetime ?: 0L
           )
         })
       }
