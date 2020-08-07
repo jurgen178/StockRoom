@@ -974,14 +974,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
 
-    // only a-z from 1..7 chars in length
-//    val assetList = assetItems.filter { map ->
-//      map.key.matches("[A-Z]{1,7}".toRegex())
-//    }
+    // skip items that end with **, CORE**, SPAXX** or FCASH**
+    val assetList = assetItems.filter { map ->
+      map.key.matches(".*(?<!\\*\\*)\$".toRegex())
+    }
 
-    val assetList = assetItems
-
-    // Limit import.
+    // Limit import to 100.
     var importcounter: Int = 0
     assetList.forEach { (symbol, assets) ->
       if (importcounter < 100) {

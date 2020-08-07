@@ -1,0 +1,229 @@
+[
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 100.0,
+        "shares": 15.0
+      }
+    ],
+    "events": [],
+    "groupColor": -16776961,
+    "groupName": "Beobachten",
+    "notes": "",
+    "symbol": "AAPL"
+  },
+  {
+    "alertAbove": 4000.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 3000.0,
+        "shares": 2.0
+      }
+    ],
+    "events": [],
+    "groupColor": -256,
+    "groupName": "Die Katze fragen",
+    "notes": "",
+    "symbol": "AMZN"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 1.0,
+        "shares": 1100.0
+      }
+    ],
+    "events": [],
+    "groupColor": -256,
+    "groupName": "Die Katze fragen",
+    "notes": "",
+    "symbol": "ANY"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 100.0,
+    "assets": [
+      {
+        "price": 200.0,
+        "shares": 30.0
+      }
+    ],
+    "events": [],
+    "groupColor": -256,
+    "groupName": "Die Katze fragen",
+    "notes": "",
+    "symbol": "BA"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 100.0,
+        "shares": 50.0
+      }
+    ],
+    "events": [],
+    "groupColor": -12004916,
+    "groupName": "Gruppe 3",
+    "notes": "",
+    "symbol": "CVX"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 150.0,
+        "shares": 15.0
+      }
+    ],
+    "events": [
+      {
+        "datetime": 1619870400,
+        "note": "Check the DIS site",
+        "title": "Earnings report",
+        "type": 0
+      }
+    ],
+    "groupColor": -32985,
+    "groupName": "Gruppe 5",
+    "notes": "",
+    "symbol": "DIS"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 120.0,
+        "shares": 5.0
+      }
+    ],
+    "events": [],
+    "groupColor": -32985,
+    "groupName": "Gruppe 5",
+    "notes": "",
+    "symbol": "FB"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 1.0,
+        "shares": 1500.0
+      }
+    ],
+    "events": [],
+    "groupColor": -16777216,
+    "groupName": "Gruppe 4",
+    "notes": "",
+    "symbol": "GE"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 200.0,
+        "shares": 20.0
+      }
+    ],
+    "events": [],
+    "groupColor": -65536,
+    "groupName": "Verkaufen",
+    "notes": "",
+    "symbol": "IBM"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 150.0,
+        "shares": 25.0
+      }
+    ],
+    "events": [],
+    "groupColor": -16776961,
+    "groupName": "Beobachten",
+    "notes": "",
+    "symbol": "MSFT"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 100.0,
+        "shares": 40.0
+      }
+    ],
+    "events": [],
+    "groupColor": -16711936,
+    "groupName": "Kaufen",
+    "notes": "",
+    "symbol": "QCOM"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 15.0,
+        "shares": 180.0
+      }
+    ],
+    "events": [],
+    "groupColor": -65536,
+    "groupName": "Verkaufen",
+    "notes": "",
+    "symbol": "RM"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 10.0,
+        "shares": 100.0
+      }
+    ],
+    "events": [],
+    "groupColor": -256,
+    "groupName": "Die Katze fragen",
+    "notes": "",
+    "symbol": "T"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [
+      {
+        "price": 1000.0,
+        "shares": 5.0
+      }
+    ],
+    "events": [],
+    "groupColor": -12004916,
+    "groupName": "Gruppe 3",
+    "notes": "",
+    "symbol": "TSLA"
+  },
+  {
+    "alertAbove": 0.0,
+    "alertBelow": 0.0,
+    "assets": [],
+    "events": [],
+    "groupColor": 0,
+    "groupName": "",
+    "notes": "",
+    "symbol": "^GSPC"
+  }
+]

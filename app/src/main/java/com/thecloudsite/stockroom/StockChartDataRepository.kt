@@ -32,14 +32,14 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
     )
 
     val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
-    if(quoteResponse != null) {
+    if (quoteResponse != null) {
       val yahooChartData = quoteResponse
 
       if (yahooChartData.chart != null) {
         val yahooChartDataEntry = yahooChartData.chart!!.result[0]
         val timestamps = yahooChartDataEntry.timestamp
         val yahooChartQuoteEntries = yahooChartDataEntry.indicators?.quote?.first()
-        if (timestamps.size == yahooChartQuoteEntries?.close?.size) {
+        if (timestamps.size == yahooChartQuoteEntries?.close?.size && yahooChartQuoteEntries.close.size > 0) {
           val gmtoffset: Long = yahooChartDataEntry.meta?.gmtoffset?.toLong() ?: 0
           // Interpolate values in case value is missing to avoid zero points.
           interpolateData(yahooChartQuoteEntries.high)
