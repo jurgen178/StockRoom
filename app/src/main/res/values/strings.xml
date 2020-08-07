@@ -124,11 +124,11 @@ limitations under the License. -->
   <string name="delete_all_desc">Delete all stocks.</string>
   <string name="shares_not_zero">The number of shares must not be 0.</string>
   <string name="price_not_zero">The price of the stock must not be 0.</string>
-  <string name="add_asset">Add assets</string>
-  <string name="current_assets">Current assets</string>
+  <string name="add_asset">Add asset</string>
+  <string name="current_assets">Assets</string>
   <string name="current_portfolio_graph">Current portfolio, top 10 stocks</string>
-  <string name="update_asset">Update assets</string>
-  <string name="delete_asset">Delete from assets</string>
+  <string name="update_asset">Update asset</string>
+  <string name="delete_asset">Delete from asset</string>
   <string name="delete_all_assets">Delete all assets</string>
   <string name="delete_all_assets_msg">All assets are deleted from the portfolio.</string>
   <string name="delete_all_assets_confirm">Are you sure to delete all assets of \'%1$s\' from your portfolio?</string>
@@ -155,7 +155,7 @@ limitations under the License. -->
   <string name="alert_event_notification_title">Event \'%1$s\' for stock %2$s</string>
   <string name="alert_event_notification">Event notification for stock %1$s\nEvent \'%2$s\'\n%3$s</string>
   <string name="summary_stocks">Stocks</string>
-  <string name="summary_stocks_with_assets">Stocks with asset</string>
+  <string name="summary_stocks_with_assets">Stocks with assets</string>
   <string name="summary_alerts">Alerts</string>
   <string name="summary_events">Events</string>
   <string name="summary_note">Notes</string>
@@ -202,16 +202,16 @@ limitations under the License. -->
   <string name="onlinedata_regularMarketOpen">Market open</string>
   <string name="onlinedata_fiftyDayAverage">50 day average</string>
   <string name="onlinedata_fiftyTwoWeekRange">52 week range</string>
-  <string name="onlinedata_regularMarketDayRange">Market day range</string>
+  <string name="onlinedata_regularMarketDayRange">Day range</string>
   <string name="onlinedata_regularMarketVolume">Market volume</string>
-  <string name="onlinedata_marketCap">Market capitalization</string>
+  <string name="onlinedata_marketCap">Market cap.</string>
   <string name="onlinedata_forwardPE">Forward PE</string>
   <string name="onlinedata_epsTrailingTwelveMonths">EPS trailing 12 month</string>
   <string name="onlinedata_epsForward">EPS forward</string>
   <string name="onlinedata_region">Region</string>
   <string name="onlinedata_language">Language</string>
   <string name="onlinedata_fullExchangeName">Exchange name</string>
-  <string name="onlinedata_messageBoardId">Message Board Id</string>
+  <string name="onlinedata_messageBoardId">Board Id</string>
   <string name="onlinedata_financialCurrency">Currency</string>
   <string name="onlinedata_marketState">Market state</string>
   <string name="json_default_filename">Portfolio %1$s</string>
@@ -225,4 +225,5 @@ limitations under the License. -->
   <string name="version">Version</string>
   <string name="example_List_delete_all">\n\n***\nUse the delete all function in the settings to clear this example list.\n***</string>
   <string name="example_List_note">Sample note.\n1234 abcd.\nLast line of the note.</string>
+  <string name="update">Update</string>
 </resources>

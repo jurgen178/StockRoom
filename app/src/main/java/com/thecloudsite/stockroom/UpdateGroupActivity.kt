@@ -70,7 +70,7 @@ class UpdateGroupActivity : AppCompatActivity() {
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
-            R.string.add
+            R.string.update
         ) { _, _ ->
           val color = colorView.color
           if (clr != color) {

@@ -122,7 +122,7 @@ limitations under the License. -->
   <string name="shares_not_zero">Die Anzahl der Aktien darf nicht 0 sein.</string>
   <string name="price_not_zero">Der Preis der Aktie darf nicht 0 sein.</string>
   <string name="add_asset">Zum Aktienbestand hinzufügen</string>
-  <string name="current_assets">Aktuelle Aktienbestände</string>
+  <string name="current_assets">Aktienbestände</string>
   <string name="current_portfolio_graph">Aktuelle Aktienbestände, 10 besten Aktien</string>
   <string name="update_asset">Aktienbestand aktualisieren</string>
   <string name="delete_asset">Vom Aktienbestand entfernen</string>
@@ -199,11 +199,11 @@ limitations under the License. -->
   <string name="onlinedata_regularMarketOpen">Eröffnungswert</string>
   <string name="onlinedata_fiftyDayAverage">50-Tage Durchschnitt</string>
   <string name="onlinedata_fiftyTwoWeekRange">Jahresbereich</string>
-  <string name="onlinedata_regularMarketDayRange">Regulärer Tagesbereich</string>
+  <string name="onlinedata_regularMarketDayRange">Tagesbereich</string>
   <string name="onlinedata_regularMarketVolume">Marktvolumen</string>
-  <string name="onlinedata_marketCap">Marktkapitalisierung</string>
+  <string name="onlinedata_marketCap">Marktkap.</string>
   <string name="onlinedata_forwardPE">Zukünftiges PE</string>
-  <string name="onlinedata_epsTrailingTwelveMonths">EPS des vergangenen Jahres</string>
+  <string name="onlinedata_epsTrailingTwelveMonths">EPS des verg. Jahres</string>
   <string name="onlinedata_epsForward">Zukünftige EPS</string>
   <string name="onlinedata_region">Region</string>
   <string name="onlinedata_language">Sprachabkürzung</string>
@@ -222,4 +222,5 @@ limitations under the License. -->
   <string name="version">Version</string>
   <string name="example_List_delete_all">\n\n***\nWählen sie in den Einstellungen die Funktion \'Alle Daten entfernen\', um diese Beispielliste zu löschen.\n***</string>
   <string name="example_List_note">Beispielanmerkung.\n1234 abcd.\nLetzte Zeile der Anmerkung.</string>
+  <string name="update">Aktualisieren</string>
 </resources>

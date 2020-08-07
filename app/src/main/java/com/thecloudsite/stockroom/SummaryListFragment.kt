@@ -43,7 +43,7 @@ class SummaryListFragment : Fragment() {
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("Summary list activity started.")
+    stockRoomViewModel.logDebug("Summary list fragment started.")
 
     val clickListenerListItem = { stockItem: StockItem -> clickListenerListItem(stockItem) }
     val summaryListAdapter = SummaryListAdapter(requireContext(), clickListenerListItem)

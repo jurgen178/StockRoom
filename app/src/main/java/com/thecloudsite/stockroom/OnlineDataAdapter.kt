@@ -104,7 +104,7 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_fiftyDayAverage),
-            text = DecimalFormat("0.00##").format(onlineMarketData.fiftyDayAverage)
+            text = DecimalFormat("0.00").format(onlineMarketData.fiftyDayAverage)
         )
     )
     data.add(
@@ -134,7 +134,7 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_forwardPE),
-            text = DecimalFormat("0.00##").format(onlineMarketData.forwardPE)
+            text = DecimalFormat("0.00").format(onlineMarketData.forwardPE)
         )
     )
 
@@ -158,13 +158,13 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
-            text = DecimalFormat("0.00##").format(onlineMarketData.epsTrailingTwelveMonths)
+            text = DecimalFormat("0.00").format(onlineMarketData.epsTrailingTwelveMonths)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_epsForward),
-            text = DecimalFormat("0.00##").format(onlineMarketData.epsForward)
+            text = DecimalFormat("0.00").format(onlineMarketData.epsForward)
         )
     )
 

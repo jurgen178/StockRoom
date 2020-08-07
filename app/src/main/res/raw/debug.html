@@ -18,6 +18,12 @@
             margin: 16px;
         }
 
+        /* set right side margin */
+        .tables {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
         table,
         th,
         td {
@@ -46,64 +52,66 @@
         }
     </style>
 
-    <table class="stock_table border">
-        <tr>
-            <th colspan="5" align="left" class="table_name">stock_table</th>
-        </tr>
-        <tr>
-            <th>symbol</th>
-            <th>groupColor</th>
-            <th>notes</th>
-            <th>alertAbove</th>
-            <th>alertBelow</th>
-        </tr>
-        <!-- stock_table -->
-    </table>
+    <div class="tables">
+        <table class="stock_table border">
+            <tr>
+                <th colspan="5" align="left" class="table_name">stock_table</th>
+            </tr>
+            <tr>
+                <th>symbol</th>
+                <th>groupColor</th>
+                <th>notes</th>
+                <th>alertAbove</th>
+                <th>alertBelow</th>
+            </tr>
+            <!-- stock_table -->
+        </table>
 
-    <br/>
+        <br />
 
-    <table class="group_table border">
-        <tr>
-            <th colspan="5" align="left" class="table_name">group_table</th>
-        </tr>
-        <tr>
-            <th>color</th>
-            <th>name</th>
-        </tr>
-        <!-- group_table -->
-    </table>
+        <table class="group_table border">
+            <tr>
+                <th colspan="5" align="left" class="table_name">group_table</th>
+            </tr>
+            <tr>
+                <th>color</th>
+                <th>name</th>
+            </tr>
+            <!-- group_table -->
+        </table>
 
-    <br/>
+        <br />
 
-    <table class="asset_table border">
-        <tr>
-            <th colspan="5" align="left" class="table_name">asset_table</th>
-        </tr>
-        <tr>
-            <th>id</th>
-            <th>symbol</th>
-            <th>shares</th>
-            <th>price</th>
-        </tr>
-        <!-- asset_table -->
-    </table>
+        <table class="asset_table border">
+            <tr>
+                <th colspan="5" align="left" class="table_name">asset_table</th>
+            </tr>
+            <tr>
+                <th>id</th>
+                <th>symbol</th>
+                <th>shares</th>
+                <th>price</th>
+            </tr>
+            <!-- asset_table -->
+        </table>
 
-    <br/>
+        <br />
 
-    <table class="event_table border">
-        <tr>
-            <th colspan="5" align="left" class="table_name">event_table</th>
-        </tr>
-        <tr>
-            <th>id</th>
-            <th>symbol</th>
-            <th>type</th>
-            <th>title</th>
-            <th>note</th>
-            <th>datetime</th>
-        </tr>
-        <!-- event_table -->
-    </table>
+        <table class="event_table border">
+            <tr>
+                <th colspan="5" align="left" class="table_name">event_table</th>
+            </tr>
+            <tr>
+                <th>id</th>
+                <th>symbol</th>
+                <th>type</th>
+                <th>title</th>
+                <th>note</th>
+                <th>datetime</th>
+            </tr>
+            <!-- event_table -->
+        </table>
+    </div>
 
 </body>
 

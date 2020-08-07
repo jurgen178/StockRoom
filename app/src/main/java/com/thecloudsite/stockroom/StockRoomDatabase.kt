@@ -125,10 +125,6 @@ abstract class StockRoomDatabase : RoomDatabase() {
       }
     }
 
-    private fun Resources.getRawTextFile(@RawRes id: Int) =
-      openRawResource(id).bufferedReader()
-          .use { it.readText() }
-
     fun populateDatabase(
       stockRoomDao: StockRoomDao,
       context: Context

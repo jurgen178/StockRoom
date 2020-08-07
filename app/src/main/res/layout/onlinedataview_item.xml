@@ -24,7 +24,7 @@ limitations under the License. -->
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
-        android:textSize="10sp"
+        android:textSize="12sp"
         />
     <TextView
         android:id="@+id/textViewOnlineData"
@@ -33,7 +33,7 @@ limitations under the License. -->
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:gravity="end"
-        android:textSize="10sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         />
 </LinearLayout>

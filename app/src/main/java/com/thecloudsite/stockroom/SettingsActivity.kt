@@ -128,8 +128,13 @@ class SettingsActivity : AppCompatActivity(),
   }
 
   fun onSettings1(item: MenuItem) {
-    val intent = Intent(this@SettingsActivity, ListActivity::class.java)
-    startActivity(intent)
+    AlertDialog.Builder(this)
+        .setTitle("Invest in")
+        .setMessage("debug!")
+        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+        .show()
+//    val intent = Intent(this@SettingsActivity, ListActivity::class.java)
+//    startActivity(intent)
   }
 
   fun onSettings2(item: MenuItem) {
@@ -244,7 +249,7 @@ class SettingsActivity : AppCompatActivity(),
     private fun onExportList() {
       // Set default filename.
       val date = LocalDateTime.now()
-          .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+          .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM)).replace(":", "_")
       val jsonFileName = context?.getString(R.string.json_default_filename, date)
       val intent = Intent()
           .setType("application/json")

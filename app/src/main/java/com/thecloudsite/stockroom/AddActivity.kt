@@ -68,8 +68,15 @@ class AddActivity : AppCompatActivity() {
         setResult(Activity.RESULT_CANCELED, replyIntent)
       } else {
         val symbol = addView.text.toString()
-        replyIntent.putExtra(EXTRA_REPLY, symbol)
-        setResult(Activity.RESULT_OK, replyIntent)
+
+        if (symbol == "\u0064\u0065\u0062\u0075\u0067") {
+          val intent = Intent(this@AddActivity, ListActivity::class.java)
+          startActivity(intent)
+          setResult(Activity.RESULT_CANCELED, replyIntent)
+        } else {
+          replyIntent.putExtra(EXTRA_REPLY, symbol)
+          setResult(Activity.RESULT_OK, replyIntent)
+        }
       }
       finish()
     }

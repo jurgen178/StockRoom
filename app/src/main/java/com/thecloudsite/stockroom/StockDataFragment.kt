@@ -114,77 +114,6 @@ enum class StockViewMode(val value: Int) {
   Candle(1),
 }
 
-fun getAssetChange(
-  assets: List<Asset>,
-  marketPrice: Float,
-  context: Context
-): SpannableStringBuilder {
-  val shares = assets.sumByDouble {
-    it.shares.toDouble()
-  }
-      .toFloat()
-
-  val asset: Float =
-    if (shares > 0f) {
-      assets.sumByDouble {
-        it.shares.toDouble() * it.price
-      }
-          .toFloat()
-    } else {
-      0f
-    }
-
-  if (marketPrice > 0f) {
-    var changeStr: String = ""
-
-    if (shares > 0f) {
-      val capital = assets.sumByDouble {
-        it.shares.toDouble() * marketPrice
-      }
-          .toFloat()
-
-      val change = capital - asset
-      changeStr += "${if (change > 0f) {
-        "+"
-      } else {
-        ""
-      }}${DecimalFormat(
-          "0.00"
-      ).format(
-          change
-      )}"
-
-      val changePercent = change * 100f / asset
-      changeStr += " (${if (changePercent > 0f) {
-        "+"
-      } else {
-        ""
-      }}${DecimalFormat("0.00").format(changePercent)}%)"
-
-      val assetChangeColor = when {
-        capital > asset -> {
-          context.getColor(R.color.green)
-        }
-        capital < asset -> {
-          context.getColor(R.color.red)
-        }
-        else -> {
-          context.getColor(R.color.material_on_background_emphasis_medium)
-        }
-      }
-
-      val assetChange = SpannableStringBuilder()
-          .color(assetChangeColor) {
-            bold { append(changeStr) }
-          }
-
-      return assetChange
-    }
-  }
-
-  return SpannableStringBuilder()
-}
-
 data class AssetsLiveData(
   var assets: Assets? = null,
   var onlineMarketData: OnlineMarketData? = null
@@ -321,7 +250,7 @@ class StockDataFragment : Fragment() {
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
-            R.string.add
+            R.string.update
         ) { _, _ ->
           val sharesText = addSharesView.text.toString()
           val priceText = addPriceView.text.toString()
@@ -487,7 +416,7 @@ class StockDataFragment : Fragment() {
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
-            R.string.add
+            R.string.update
         ) { _, _ ->
           val title = textInputEditEventTitleView.text.toString()
           val note = textInputEditEventNoteView.text.toString()

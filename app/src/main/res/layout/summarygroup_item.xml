@@ -34,7 +34,7 @@
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
       android:gravity="end"
-      android:textSize="10sp"
+      android:textSize="11sp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/guideline2"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
@@ -48,7 +48,7 @@
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
       android:gravity="end"
-      android:textSize="10sp"
+      android:textSize="11sp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="@+id/guideline2"
@@ -68,7 +68,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.55"
+      app:layout_constraintGuide_percent="0.57"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
