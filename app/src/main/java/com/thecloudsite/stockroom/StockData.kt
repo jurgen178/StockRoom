@@ -14,6 +14,8 @@ import retrofit2.http.Query
 // http://www.google.com/finance/getprices?q=.IXIC&x=INDEXNASDAQ&i=120&p=10m&f=d,c,v,o,h,l&df=cpct&auto=1&ts=1307994768643
 
 
+// https://finance.yahoo.com/quote/MSFT?p=MSFT&.tsrc=fin-srch HTTP/1.1
+
 // https://finance.yahoo.com/quotes/GOOG,MAPP,API,v3,Json,not
 
 /*

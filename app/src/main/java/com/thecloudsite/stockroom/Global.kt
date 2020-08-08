@@ -18,10 +18,13 @@ fun isValidSymbol(symbol: String): Boolean {
       (symbol.length in 1..20)
       &&
       // valid chars
-      symbolUpper.matches("[A-Z0-9.^*:]+".toRegex())
+      symbolUpper.matches("[A-Z0-9.^*:=-]+".toRegex())
       &&
-      // no trailing stars
-      symbolUpper.matches(".*(?<!\\*\\*)\$".toRegex())
+      // at least one A-Z or 0-9
+      symbolUpper.matches(".*[A-Z0-9]+.*".toRegex())
+      &&
+      // no trailing **
+      symbolUpper.matches(".*(?<!\\*\\*)".toRegex())
 }
 
 fun Resources.getRawTextFile(@RawRes id: Int) =

@@ -36,6 +36,8 @@ import androidx.room.Relation
 @Entity(tableName = "stock_table")
 data class StockDBdata(
   @PrimaryKey val symbol: String,
+  var portfolio: String = "",
+  var properties: String = "",
   @ColumnInfo(name = "group_color") var groupColor: Int = 0,
   var notes: String = "",
   @ColumnInfo(name = "alert_above") var alertAbove: Float = 0f,
@@ -53,7 +55,8 @@ data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
   var shares: Float = 0f,
-  val price: Float = 0f
+  val price: Float = 0f,
+  var date: Long = 0L
 )
 
 @Entity(tableName = "event_table")

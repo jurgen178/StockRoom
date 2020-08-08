@@ -138,10 +138,13 @@ class StockRoomTest {
         (symbol.length in 1..20)
         &&
         // valid chars
-        symbolUpper.matches("[A-Z0-9.^*:]+".toRegex())
+        symbolUpper.matches("[A-Z0-9.^*:=-]+".toRegex())
         &&
-        // no trailing stars
-        symbolUpper.matches(".*(?<!\\*\\*)\$".toRegex())
+        // at least one A-Z or 0-9
+        symbolUpper.matches(".*[A-Z0-9]+.*".toRegex())
+        &&
+        // no trailing **
+        symbolUpper.matches(".*(?<!\\*\\*)".toRegex())
   }
 
   @Test
@@ -152,10 +155,18 @@ class StockRoomTest {
     assertEquals(true, isValidSymbol("1"))
     assertEquals(true, isValidSymbol("AAPL"))
     assertEquals(true, isValidSymbol("^12"))
+    assertEquals(true, isValidSymbol("MSFT200814C00165000"))
     assertEquals(true, isValidSymbol("a*b"))
+    assertEquals(true, isValidSymbol("ab*"))
     assertEquals(true, isValidSymbol("a:b"))
+    assertEquals(true, isValidSymbol("A=B"))
+    assertEquals(true, isValidSymbol("A-B"))
+    assertEquals(true, isValidSymbol(".^*:A=-"))
 
     // invalid symbols
+    assertEquals(false, isValidSymbol("."))
+    assertEquals(false, isValidSymbol(".^*:=-"))
+    assertEquals(false, isValidSymbol("a)"))
     assertEquals(false, isValidSymbol(""))
     assertEquals(false, isValidSymbol("    "))
     assertEquals(false, isValidSymbol("ABC**"))
