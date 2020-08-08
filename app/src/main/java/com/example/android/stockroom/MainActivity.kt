@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.activity_main.viewpager
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.Locale
 
 // App constants.
 // https://stackoverflow.com/questions/9947156/what-are-the-default-color-values-for-the-holo-theme-on-android-4-0
@@ -101,14 +102,17 @@ class MainActivity : AppCompatActivity() {
           0 -> {
             ListFragment.newInstance()
           }
+          1 -> {
+            SummaryListFragment.newInstance()
+          }
           else -> {
-            SummaryFragment.newInstance()
+            SummaryGroupFragment.newInstance()
           }
         }
       }
 
       override fun getItemCount(): Int {
-        return 2
+        return 3
       }
     }
 
@@ -152,10 +156,19 @@ class MainActivity : AppCompatActivity() {
 
     if (requestCode == newSymbolActivityRequestCode && resultCode == Activity.RESULT_OK) {
       intentData?.let { data ->
-        val symbol = data.getStringExtra(AddActivity.EXTRA_REPLY)
-        if (symbol != null) {
-          stockRoomViewModel.insert(symbol)
-          Unit
+        val symbolText = data.getStringExtra(AddActivity.EXTRA_REPLY)
+        if (symbolText != null) {
+          val symbols = symbolText.split("[ ,;\r\n\t]".toRegex())
+
+          val symbolList: List<String> = symbols.map { symbol ->
+            symbol.replace("\"", "")
+                .toUpperCase(Locale.ROOT)
+          }
+              .distinct()
+
+          symbolList.forEach { symbol ->
+            stockRoomViewModel.insert(symbol)
+          }
         }
       }
     }

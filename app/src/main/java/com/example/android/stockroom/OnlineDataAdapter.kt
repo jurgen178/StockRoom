@@ -23,6 +23,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
+import java.util.Locale
 
 data class OnlineData(
   val desc: String,
@@ -30,7 +33,7 @@ data class OnlineData(
 )
 
 class OnlineDataAdapter internal constructor(
-  context: Context
+  val context: Context
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -59,51 +62,92 @@ class OnlineDataAdapter internal constructor(
     holder.itemViewOnlineData.text = current.text
   }
 
+  private fun formatInt(value: Long): String {
+    return when {
+      value >= 1000000000000L -> {
+        "${DecimalFormat("0.##").format(value / 1000000000000f)}${context.resources.getString(
+            R.string.trillion_abbr
+        )}"
+      }
+      value >= 1000000000L -> {
+        "${DecimalFormat("0.##").format(value / 1000000000f)}${context.resources.getString(
+            R.string.billion_abbr
+        )}"
+      }
+      value >= 1000000L -> {
+        "${DecimalFormat("0.##").format(value / 1000000f)}${context.resources.getString(
+            R.string.million_abbr
+        )}"
+      }
+      else -> {
+        DecimalFormat("0.##").format(value)
+      }
+    }
+  }
+
   fun updateData(onlineMarketData: OnlineMarketData) {
     data.clear()
 
+    val separatorChar: Char = DecimalFormatSymbols.getInstance()
+        .getDecimalSeparator()
+
     data.add(
         OnlineData(
-            desc = "regularMarketPreviousClose",
+            desc = context.resources.getString(R.string.onlinedata_regularMarketPreviousClose),
             text = DecimalFormat("0.00##").format(onlineMarketData.regularMarketPreviousClose)
         )
     )
     data.add(
         OnlineData(
-            desc = "regularMarketOpen",
+            desc = context.resources.getString(R.string.onlinedata_regularMarketOpen),
             text = DecimalFormat("0.00##").format(onlineMarketData.regularMarketOpen)
         )
     )
     data.add(
         OnlineData(
-            desc = "fiftyDayAverage",
+            desc = context.resources.getString(R.string.onlinedata_fiftyDayAverage),
             text = DecimalFormat("0.00##").format(onlineMarketData.fiftyDayAverage)
         )
     )
-    data.add(OnlineData(desc = "fiftyTwoWeekRange", text = onlineMarketData.fiftyTwoWeekRange))
-    data.add(
-        OnlineData(desc = "regularMarketDayRange", text = onlineMarketData.regularMarketDayRange)
-    )
     data.add(
         OnlineData(
-            desc = "regularMarketVolume", text = onlineMarketData.regularMarketVolume.toString()
-        )
-    )
-    data.add(OnlineData(desc = "marketCap", text = onlineMarketData.marketCap.toString()))
-    data.add(
-        OnlineData(
-            desc = "forwardPE", text = DecimalFormat("0.00##").format(onlineMarketData.forwardPE)
+            desc = context.resources.getString(R.string.onlinedata_fiftyTwoWeekRange),
+            text = onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
         )
     )
     data.add(
         OnlineData(
-            desc = "annualDividendRate",
+            desc = context.resources.getString(R.string.onlinedata_regularMarketDayRange),
+            text = onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_regularMarketVolume),
+            text = formatInt(onlineMarketData.regularMarketVolume)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_marketCap),
+            text = formatInt(onlineMarketData.marketCap)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_forwardPE),
+            text = DecimalFormat("0.00##").format(onlineMarketData.forwardPE)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_annualDividendRate),
             text = DecimalFormat("0.00##").format(onlineMarketData.annualDividendRate)
         )
     )
     data.add(
         OnlineData(
-            desc = "annualDividendYield",
+            desc = context.resources.getString(R.string.onlinedata_annualDividendYield),
             text = "${DecimalFormat("0.00##").format(
                 onlineMarketData.annualDividendYield * 100
             )}%"
@@ -111,22 +155,53 @@ class OnlineDataAdapter internal constructor(
     )
     data.add(
         OnlineData(
-            desc = "epsTrailingTwelveMonths",
+            desc = context.resources.getString(R.string.onlinedata_epsTrailingTwelveMonths),
             text = DecimalFormat("0.00##").format(onlineMarketData.epsTrailingTwelveMonths)
         )
     )
     data.add(
         OnlineData(
-            desc = "epsForward", text = DecimalFormat("0.00##").format(onlineMarketData.epsForward)
+            desc = context.resources.getString(R.string.onlinedata_epsForward),
+            text = DecimalFormat("0.00##").format(onlineMarketData.epsForward)
         )
     )
 
-    data.add(OnlineData(desc = "region", text = onlineMarketData.region))
-    data.add(OnlineData(desc = "language", text = onlineMarketData.language))
-    data.add(OnlineData(desc = "fullExchangeName", text = onlineMarketData.fullExchangeName))
-    data.add(OnlineData(desc = "messageBoardId", text = onlineMarketData.messageBoardId))
-    data.add(OnlineData(desc = "financialCurrency", text = onlineMarketData.financialCurrency))
-    data.add(OnlineData(desc = "marketState", text = onlineMarketData.marketState))
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_region),
+            text = onlineMarketData.region
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_language),
+            text = onlineMarketData.language
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_fullExchangeName),
+            text = onlineMarketData.fullExchangeName
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_messageBoardId),
+            text = onlineMarketData.messageBoardId
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_financialCurrency),
+            text = onlineMarketData.financialCurrency
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.resources.getString(R.string.onlinedata_marketState),
+            text = onlineMarketData.marketState
+        )
+    )
 
     notifyDataSetChanged()
   }

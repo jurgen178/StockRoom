@@ -5,14 +5,12 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -57,7 +55,7 @@ class ListFragment : Fragment() {
       val name: String
 
       if (i >= groups.size) {
-        clr = context?.getColor(R.color.backgroundListColor) ?: 0
+        clr = 0
         name = getString(R.string.standard_group)
       } else {
         clr = groups[i].color
@@ -68,7 +66,7 @@ class ListFragment : Fragment() {
       //textViewGroup.text = name
 
       // Store the selection.
-      stockRoomViewModel.setStockGroup(stockItem.stockDBdata.symbol, name, clr)
+      stockRoomViewModel.setGroup(stockItem.stockDBdata.symbol, name, clr)
       true
     }
   }
@@ -94,10 +92,6 @@ class ListFragment : Fragment() {
       { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
     val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
     val adapter = StockRoomListAdapter(requireContext(), clickListenerGroup, clickListenerSummary)
-
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
-    adapter.coloredDisplay = sharedPreferences.getBoolean("colored_display", false)
 
     val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
 
@@ -131,14 +125,6 @@ class ListFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.updateOnlineDataManually()
-  }
-
-  override fun onCreateOptionsMenu(
-    menu: Menu,
-    inflater: MenuInflater
-  ) {
-    //inflater.inflate(R.menu.main_menu, menu)
-    super.onCreateOptionsMenu(menu, inflater)
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {

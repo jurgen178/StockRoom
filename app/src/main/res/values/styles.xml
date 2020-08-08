@@ -76,7 +76,8 @@ limitations under the License. -->
         <item name="android:background">?android:attr/listDivider</item>
     </style>
     <style name="section_header">
-        <item name="android:textColor">@color/colorAccent</item>
+      <item name="android:textStyle">bold</item>
+      <item name="android:textColor">@color/colorAccent</item>
         <item name="android:layout_marginStart">16sp</item>
     </style>
 </resources>

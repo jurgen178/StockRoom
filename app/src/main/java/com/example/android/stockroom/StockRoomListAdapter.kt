@@ -34,6 +34,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
+import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -53,8 +54,6 @@ class StockRoomListAdapter internal constructor(
   private val clickListenerSummary: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-
-  var coloredDisplay: Boolean = false
 
   inner class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindGroup(
@@ -78,7 +77,7 @@ class StockRoomListAdapter internal constructor(
     val itemViewChange: TextView = itemView.findViewById(R.id.textViewChange)
     val itemViewChangePercent: TextView = itemView.findViewById(R.id.textViewChangePercent)
     val itemViewAssets: TextView = itemView.findViewById(R.id.textViewAssets)
-    val itemLinearLayoutGroup: TextView = itemView.findViewById(R.id.itemview_group)
+    val itemTextViewGroup: TextView = itemView.findViewById(R.id.itemview_group)
     val itemSummary: ConstraintLayout = itemView.findViewById(R.id.item_summary1)
     val itemRedGreen: ConstraintLayout = itemView.findViewById(R.id.item_summary2)
   }
@@ -111,17 +110,12 @@ class StockRoomListAdapter internal constructor(
           } else {
             DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
           }
-        if (coloredDisplay) {
-          holder.itemViewChange.text = ""
-          holder.itemViewChangePercent.text = ""
-        } else {
-          holder.itemViewChange.text =
-            DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
-          holder.itemViewChangePercent.text =
-            "(${DecimalFormat("0.00").format(
-                current.onlineMarketData.marketChangePercent
-            )}%)"
-        }
+        holder.itemViewChange.text =
+          DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
+        holder.itemViewChangePercent.text =
+          "(${DecimalFormat("0.00").format(
+              current.onlineMarketData.marketChangePercent
+          )}%)"
       } else {
         holder.itemViewMarketPrice.text = ""
         holder.itemViewChange.text = ""
@@ -153,12 +147,12 @@ class StockRoomListAdapter internal constructor(
 
           assets += "${DecimalFormat(
               "0.00"
-          ).format(asset)} ${if (capital > asset) {
+          ).format(asset)} ${if (capital >= asset) {
             "+"
           } else {
-            ""
+            "-"
           }} ${DecimalFormat("0.00").format(
-              capital - asset
+              (capital - asset).absoluteValue
           )} = ${DecimalFormat(
               "0.00"
           ).format(
@@ -166,7 +160,7 @@ class StockRoomListAdapter internal constructor(
           )}"
 
           val capitalPercent = (capital - asset) * 100f / asset
-          assets += " (${if (capitalPercent > 0f) {
+          assets += " (${if (capitalPercent >= 0f) {
             "+"
           } else {
             ""
@@ -193,7 +187,9 @@ class StockRoomListAdapter internal constructor(
 
       if (current.onlineMarketData.annualDividendRate > 0f) {
         assets +=
-          "\n${context.resources.getString(R.string.dividend_in_list)} ${DecimalFormat("0.00").format(
+          "\n${context.resources.getString(R.string.dividend_in_list)} ${DecimalFormat(
+              "0.00"
+          ).format(
               current.onlineMarketData.annualDividendRate
           )} (${DecimalFormat("0.00").format(
               current.onlineMarketData.annualDividendYield * 100
@@ -201,10 +197,14 @@ class StockRoomListAdapter internal constructor(
       }
 
       if (current.stockDBdata.alertAbove > 0f) {
-        assets += "\n${context.resources.getString(R.string.alert_above_in_list)} ${DecimalFormat("0.####").format(current.stockDBdata.alertAbove)}"
+        assets += "\n${context.resources.getString(R.string.alert_above_in_list)} ${DecimalFormat(
+            "0.####"
+        ).format(current.stockDBdata.alertAbove)}"
       }
       if (current.stockDBdata.alertBelow > 0f) {
-        assets += "\n${context.resources.getString(R.string.alert_below_in_list)} ${DecimalFormat("0.####").format(current.stockDBdata.alertBelow)}"
+        assets += "\n${context.resources.getString(R.string.alert_below_in_list)} ${DecimalFormat(
+            "0.####"
+        ).format(current.stockDBdata.alertBelow)}"
       }
       if (current.events.isNotEmpty()) {
         val count = current.events.size
@@ -214,34 +214,24 @@ class StockRoomListAdapter internal constructor(
         current.events.forEach {
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-          assets += "\n • ${it.title} on $datetime"
+          assets += "\n${context.resources.getString(
+              R.string.event_datetime_format, it.title, datetime
+          )}"
         }
       }
       if (current.stockDBdata.notes.isNotEmpty()) {
-        assets += "\n${context.resources.getString(R.string.notes_in_list)} ${current.stockDBdata.notes}"
+        assets += "\n${context.resources.getString(
+            R.string.notes_in_list
+        )} ${current.stockDBdata.notes}"
       }
 
       holder.itemViewAssets.text = assets
-      /*
-      val s = current.stockDBdata.symbol[0]
-      val color: Int =
-        when (s) {
-          'A' -> Color.CYAN
-          'B' -> Color.RED
-          'C' -> Color.BLACK
-          'D' -> Color.BLUE
-          'E' -> Color.GRAY
-          'F' -> Color.MAGENTA
-          else -> Color.DKGRAY
-        }
-  */
-      // https://stackoverflow.com/questions/9947156/what-are-the-default-color-values-for-the-holo-theme-on-android-4-0
-      // @android:color/holo_orange_light = 0xffffbb33
+
       var color = current.stockDBdata.groupColor
       if (color == 0) {
         color = context.getColor(R.color.backgroundListColor)
       }
-      setBackgroundColor(holder.itemLinearLayoutGroup, color)
+      setBackgroundColor(holder.itemTextViewGroup, color)
 
       /*
       // Keep the corner radii and only change the background color.

@@ -13,8 +13,10 @@ import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.MEDIUM
 
-const val importListActivityRequestCode = 2
 const val exportListActivityRequestCode = 3
 
 class SettingsActivity : AppCompatActivity(),
@@ -37,24 +39,14 @@ class SettingsActivity : AppCompatActivity(),
 
     // Setup observer to enable valid data for the export function.
     stockRoomViewModel.allStockItems.observe(this, Observer { items ->
-     items?.let {
-     }
-   })
+      items?.let {
+      }
+    })
   }
 
   override fun onSupportNavigateUp(): Boolean {
     onBackPressed()
     return true
-  }
-
-  override fun onResume() {
-    super.onResume()
-    sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-  }
-
-  override fun onPause() {
-    super.onPause()
-    sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
   }
 
   override fun onActivityResult(
@@ -67,15 +59,7 @@ class SettingsActivity : AppCompatActivity(),
     val resultCodeShort = requestCode.toShort()
         .toInt()
     if (resultCode == Activity.RESULT_OK) {
-      if (resultCodeShort == importListActivityRequestCode) {
-        if (data != null && data.data is Uri) {
-
-          val importListUri = data.data!!
-          stockRoomViewModel.importList(applicationContext, importListUri)
-          finish()
-        }
-      } else
-        if (resultCodeShort == exportListActivityRequestCode) {
+      if (resultCodeShort == exportListActivityRequestCode) {
           if (data != null && data.data is Uri) {
 
             val exportListUri = data.data!!
@@ -86,13 +70,20 @@ class SettingsActivity : AppCompatActivity(),
     }
   }
 
+  override fun onResume() {
+    super.onResume()
+    sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+  }
+
+  override fun onPause() {
+    super.onPause()
+    sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+  }
+
   override fun onSharedPreferenceChanged(
     sharedPreferences: SharedPreferences,
     key: String
   ) {
-    if (key == "colored_display") {
-      Storage.coloredDisplay.postValue(sharedPreferences.getBoolean(key, false))
-    }
     if (key == "postmarket") {
       SharedRepository.postMarket = sharedPreferences.getBoolean(key, true)
     }
@@ -108,15 +99,6 @@ class SettingsActivity : AppCompatActivity(),
       setPreferencesFromResource(R.xml.root_preferences, rootKey)
       stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
       stockRoomViewModel.logDebug("Settings fragment started.")
-
-      val buttonImportList: Preference? = findPreference("import_list")
-      if (buttonImportList != null) {
-        buttonImportList.onPreferenceClickListener =
-          OnPreferenceClickListener {
-            onImportList()
-            true
-          }
-      }
 
       val buttonExportList: Preference? = findPreference("export_list")
       if (buttonExportList != null) {
@@ -147,6 +129,16 @@ class SettingsActivity : AppCompatActivity(),
           }
       }
 
+      val buttonUpdateGroups: Preference? = findPreference("update_groups")
+      if (buttonUpdateGroups != null) {
+        buttonUpdateGroups.onPreferenceClickListener =
+          OnPreferenceClickListener {
+            val intent = Intent(context, UpdateGroupActivity::class.java)
+            startActivity(intent)
+            true
+          }
+      }
+
       val buttonFeedback: Preference? = findPreference("feedback")
       if (buttonFeedback != null) {
         buttonFeedback.onPreferenceClickListener =
@@ -156,24 +148,18 @@ class SettingsActivity : AppCompatActivity(),
       }
     }
 
-    private fun onImportList() {
-      var intent = Intent()
-          .setType("*/*")
-          .setAction(Intent.ACTION_OPEN_DOCUMENT)
-      //val intent1 = Intent( this@MainActivity, AddActivity::class.java)
-      //context?.let { intent.setClass(it, SettingsActivity::class.java ) }
-      startActivityForResult(
-          Intent.createChooser(intent, "Select a file"), importListActivityRequestCode
-      )
-    }
-
     private fun onExportList() {
-      var intent = Intent()
+      // Set default filename.
+      val date = LocalDateTime.now()
+          .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+      val jsonFileName = context?.getString(R.string.json_default_filename, date)
+      val intent = Intent()
           .setType("application/json")
           .setAction(Intent.ACTION_CREATE_DOCUMENT)
           .addCategory(Intent.CATEGORY_OPENABLE)
+          .putExtra(Intent.EXTRA_TITLE, jsonFileName)
       startActivityForResult(
-          Intent.createChooser(intent, "Select a file"), exportListActivityRequestCode
+          Intent.createChooser(intent, getString(R.string.export_select_file)), exportListActivityRequestCode
       )
     }
   }
