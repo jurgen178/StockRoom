@@ -35,6 +35,7 @@ import androidx.preference.PreferenceManager
 import com.example.android.stockroom.StockRoomViewModel.AlertData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -80,8 +81,6 @@ data class StockItemJson
 )
 
 object Storage {
-  val coloredDisplay = MutableLiveData<Boolean>()
-
   val deleteStockHandler = MutableLiveData<String>()
 }
 
@@ -96,8 +95,6 @@ object SharedRepository {
     get() = debugLiveData
 
   var postMarket: Boolean = true
-
-  var handler: Handler? = null
 }
 
 class StockRoomViewModel(application: Application) : AndroidViewModel(application) {
@@ -111,9 +108,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   //   the UI when the data actually changes.
   // - Repository is completely separated from the UI through the ViewModel.
   val onlineMarketDataList: LiveData<List<OnlineMarketData>>
-  private val allProperties: LiveData<List<StockDBdata>>
+  val allProperties: LiveData<List<StockDBdata>>
   private val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
+  val allGroups: LiveData<List<Group>>
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<List<StockItem>>
@@ -164,6 +162,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allProperties = repository.allProperties
     allAssets = repository.allAssets
     allEvents = repository.allEvents
+    allGroups = repository.allGroups
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList
     allStockItems = getMediatorData()
@@ -241,81 +240,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
     }
     onlineDataHandler.post(onlineDataRunnableCode)
-
-    /*
-    SharedRepository.handler?.removeCallbacksAndMessages(null)
-    SharedRepository.handler = Handler()
-
-    var delay: Long = 2000L
-    val runnableCode = object : Runnable {
-      override fun run() {
-        Log.d("Handlers", "Calling updateStocks() with delay=${delay}")
-
-        scope.launch {
-          val marketState: MarketState = getStockData()
-
-          // Set the delay depending on the market state.
-          delay = when (marketState) {
-            MarketState.REGULAR -> {
-              2 * 1000L
-            }
-            MarketState.PRE, MarketState.POST -> {
-              60 * 1000L
-            }
-            MarketState.PREPRE, MarketState.POSTPOST -> {
-              15 * 60 * 1000L
-            }
-            MarketState.CLOSED -> {
-              60 * 60 * 1000L
-            }
-            MarketState.NO_NETWORK -> {
-              // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
-              maxOf(2 * 60 * 1000L, delay * 2)
-            }
-            MarketState.UNKNOWN -> {
-              60 * 1000L
-            }
-          }
-
-          val marketStateStr = when (marketState) {
-            MarketState.REGULAR -> {
-              "regular market"
-            }
-            MarketState.PRE, MarketState.PREPRE -> {
-              "pre market"
-            }
-            MarketState.POST, MarketState.POSTPOST -> {
-              "post market"
-            }
-            MarketState.CLOSED -> {
-              "market closed"
-            }
-            MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
-              "network not available"
-            }
-          }
-
-          val delaystr = when {
-            delay >= 60 * 60 * 1000L -> {
-              "${delay / (60 * 60 * 1000L)}h"
-            }
-            delay >= 60 * 1000L -> {
-              "${delay / (60 * 1000L)}m"
-            }
-            else -> {
-              "${delay / 1000L}s"
-            }
-          }
-
-          logDebugAsync("update online data ($marketStateStr, interval=$delaystr)")
-        }
-
-        //delay = 1 * 1000L
-        SharedRepository.handler?.postDelayed(this, delay)
-      }
-    }
-    SharedRepository.handler?.post(runnableCode)
-    */
   }
 
   fun updateOnlineDataManually() =
@@ -637,9 +561,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
         SortMode.ByGroup -> {
+          // Sort the group items alphabetically.
           stockItems.sortedBy { item ->
-            item.stockDBdata.groupColor
+            item.stockDBdata.symbol
           }
+              .sortedBy { item ->
+                item.stockDBdata.groupColor
+              }
         }
         SortMode.ByUnsorted -> {
           stockItems
@@ -847,14 +775,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (jsonObj.has("groupColor")) {
           groupColor = jsonObj.getInt("groupColor")
           if (groupName.isNotEmpty()) {
-            setStockGroup(symbol = symbol, color = groupColor, name = groupName)
+            setGroup(symbol = symbol, color = groupColor, name = groupName)
           }
         }
 
         if (jsonObj.has("groupName")) {
           groupName = jsonObj.getString("groupName")
           if (groupColor != 0) {
-            setStockGroup(symbol = symbol, color = groupColor, name = groupName)
+            setGroup(symbol = symbol, color = groupColor, name = groupName)
           }
         }
 
@@ -1094,7 +1022,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         val groupName = groups.find { group ->
           group.color == stockItem.stockDBdata.groupColor
-        }?.name ?: context.getString(R.string.standard_group)
+        }?.name ?: ""
 
         StockItemJson(symbol = stockItem.stockDBdata.symbol,
             groupColor = stockItem.stockDBdata.groupColor,
@@ -1115,7 +1043,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       // Convert to a json string.
-      val jsonString = Gson().toJson(stockItemsJson)
+      val gson: Gson = GsonBuilder()
+          .setPrettyPrinting()
+          .create()
+      val jsonString = gson.toJson(stockItemsJson)
 
       // Write the json string.
       try {
@@ -1153,23 +1084,58 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
+  fun setPredefinedGroups() = scope.launch {
+    repository.setPredefinedGroups(getApplication())
+  }
+
+  // Run the alerts synchronous to avoid duplicate alerts when importing or any other fast insert.
+  // Each alerts gets send, and then removed from the DB. If the alerts are send non-blocking,
+  // the alert is still valid for some time and gets send multiple times.
   fun updateAlertAbove(
     symbol: String,
     alertAbove: Float
-  ) = scope.launch {
-    if (symbol.isNotEmpty()) {
-      repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+  ) {
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        if (symbol.isNotEmpty()) {
+          repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+        }
+      }
     }
   }
 
   fun updateAlertBelow(
     symbol: String,
     alertBelow: Float
-  ) = scope.launch {
-    if (symbol.isNotEmpty()) {
-      repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+  ) {
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        if (symbol.isNotEmpty()) {
+          repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+        }
+      }
     }
   }
+
+  /*
+   fun updateAlertAbove(
+     symbol: String,
+     alertAbove: Float
+   ) = scope.launch {
+     if (symbol.isNotEmpty()) {
+       repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+     }
+   }
+
+   fun updateAlertBelow(
+     symbol: String,
+     alertBelow: Float
+   ) = scope.launch {
+     if (symbol.isNotEmpty()) {
+       repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+     }
+   }
+    */
 
   fun updateNotes(
     symbol: String,
@@ -1250,12 +1216,41 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.setGroup(color, name)
   }
 
-  fun setStockGroup(
+  fun setGroup(
     symbol: String,
     name: String,
     color: Int
   ) = scope.launch {
-    repository.setStockGroup(symbol.toUpperCase(Locale.ROOT), name, color)
+    repository.setGroup(symbol.toUpperCase(Locale.ROOT), name, color)
+  }
+
+  fun updateGroupName(
+    color: Int,
+    name: String
+  ) = scope.launch {
+    repository.updateGroupName(color, name)
+  }
+
+  fun updateStockGroupColors(
+    colorOld: Int,
+    colorNew: Int
+  ) = scope.launch {
+    repository.updateStockGroupColors(colorOld, colorNew)
+  }
+
+  fun setStockGroupColor(
+    symbol: String,
+    color: Int
+  ) = scope.launch {
+    repository.setStockGroupColor(symbol, color)
+  }
+
+  fun deleteGroup(color: Int) = scope.launch {
+    repository.deleteGroup(color)
+  }
+
+  fun deleteAllGroups() = scope.launch {
+    repository.deleteAllGroups()
   }
 
   fun getAssetsSync(symbol: String): Assets? {

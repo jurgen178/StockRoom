@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/groupItemViewLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/summary_item_bg"
+    >
+
+  <TextView
+      android:id="@+id/groupItemGroup"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:background="@drawable/group_item_bg"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/guideline1"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/groupItemName"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
+      app:layout_constraintEnd_toEndOf="@+id/guideline2"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/groupItemStats"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
+      app:layout_constraintEnd_toEndOf="@+id/guideline3"
+      app:layout_constraintStart_toEndOf="@+id/guideline2"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/textViewGroupDelete"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:drawableStart="@drawable/ic_action_delete2"
+      android:drawableTint="@color/colorPrimaryDark"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.8"
+      app:layout_constraintStart_toStartOf="@+id/guideline3"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="24dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.75"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.85"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

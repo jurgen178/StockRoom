@@ -57,7 +57,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
             // Wipes and rebuilds instead of migrating if no Migration object.
             // Migration is not part of this codelab.
             .fallbackToDestructiveMigration()
-            .addCallback(StockRoomDatabaseCallback(scope))
+            .addCallback(StockRoomDatabaseCallback(scope, context))
             .build()
         INSTANCE = instance
         // return instance
@@ -66,27 +66,28 @@ abstract class StockRoomDatabase : RoomDatabase() {
     }
 
     private class StockRoomDatabaseCallback(
-      private val scope: CoroutineScope
+      private val scope: CoroutineScope,
+        val context: Context
     ) : RoomDatabase.Callback() {
       override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
         INSTANCE?.let { database ->
           scope.launch(Dispatchers.IO) {
-            populateDatabase(database.stockRoomDao())
+            populateDatabase(database.stockRoomDao(), context)
           }
         }
       }
     }
 
-    fun populateDatabase(stockRoomDao: StockRoomDao) {
+    fun populateDatabase(stockRoomDao: StockRoomDao, context: Context) {
       // Add predefined values to the DB.
-      stockRoomDao.setPredefinedGroups()
+      stockRoomDao.setPredefinedGroups(context)
 
       stockRoomDao.insert(StockDBdata(symbol = "MSFT", groupColor = Color.BLUE))
       stockRoomDao.insert(StockDBdata(symbol = "AAPL", groupColor = Color.BLUE))
       stockRoomDao.insert(StockDBdata(symbol = "AMZN", groupColor = Color.MAGENTA))
       stockRoomDao.insert(StockDBdata(symbol = "TSLA", groupColor = Color.YELLOW))
-      stockRoomDao.insert(StockDBdata(symbol = "VZ", groupColor = Color.BLACK))
+      stockRoomDao.insert(StockDBdata(symbol = "^IXIC", groupColor = Color.BLACK))
     }
   }
 }

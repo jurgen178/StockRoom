@@ -1,38 +1,53 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <PreferenceCategory app:title="@string/messages_header">
-
-<!--
-    <EditTextPreference
-        app:key="signature"
-        app:title="@string/signature_title"
-        app:useSimpleSummaryProvider="true" />
-    <ListPreference
-        app:defaultValue="reply"
-        app:entries="@array/reply_entries"
-        app:entryValues="@array/reply_values"
-        app:key="reply"
-        app:title="@string/reply_title"
-        app:useSimpleSummaryProvider="true" />
+  <PreferenceCategory app:title="@string/display_header">
 
     <SwitchPreferenceCompat
-        app:key="colored_display"
-        app:title="@string/sync_title" />
+        app:defaultValue="true"
+        app:key="notifications"
+        app:title="@string/enable_notifications" />
 
     <SwitchPreferenceCompat
-        app:dependency="colored_display"
-        app:key="attachment"
-        app:summaryOff="@string/attachment_summary_off"
-        app:summaryOn="@string/attachment_summary_on"
-        app:title="@string/attachment_title" />
-
--->
+        app:defaultValue="true"
+        app:key="postmarket"
+        app:title="@string/use_postmarket"
+        app:summary="@string/use_postmarket_desc" />
 
     <Preference
-        app:key="import_list"
-        app:summary="@string/import_list_desc"
-        app:title="@string/import_list" />
+        app:key="update_groups"
+        app:summary="@string/update_groups_desc"
+        app:title="@string/update_groups_title" />
+
+  </PreferenceCategory>
+
+  <PreferenceCategory app:title="@string/general_header">
+
+    <!--
+        <EditTextPreference
+            app:key="signature"
+            app:title="@string/signature_title"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:defaultValue="reply"
+            app:entries="@array/reply_entries"
+            app:entryValues="@array/reply_values"
+            app:key="reply"
+            app:title="@string/reply_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="colored_display"
+            app:title="@string/sync_title" />
+
+        <SwitchPreferenceCompat
+            app:dependency="colored_display"
+            app:key="attachment"
+            app:summaryOff="@string/attachment_summary_off"
+            app:summaryOn="@string/attachment_summary_on"
+            app:title="@string/attachment_title" />
+
+    -->
 
     <Preference
         app:key="export_list"
@@ -44,12 +59,9 @@
         app:summary="@string/delete_all_desc"
         app:title="@string/delete_all_title" />
 
-    <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="debug"
-        app:summary="@string/debug_desc"
-        app:title="@string/debug_title" />
+  </PreferenceCategory>
 
+  <PreferenceCategory app:title="@string/feedback_header">
     <Preference
         app:key="feedback"
         app:summary="Report technical issues or suggest new features"
@@ -79,17 +91,12 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory app:title="@string/sync_header">
-
+  <PreferenceCategory app:title="@string/other_header">
     <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="notifications"
-        app:title="@string/enable_notifications" />
-
-    <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="postmarket"
-        app:title="@string/use_postmarket" />
+        app:defaultValue="false"
+        app:key="debug"
+        app:summary="@string/debug_desc"
+        app:title="@string/debug_title" />
 
   </PreferenceCategory>
 

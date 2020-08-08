@@ -44,8 +44,10 @@ limitations under the License. -->
   </plurals>
 
   <!-- Preference Titles -->
-  <string name="messages_header">Messages</string>
-  <string name="sync_header">Sync</string>
+  <string name="general_header">Allgemein</string>
+  <string name="display_header">Anzeige</string>
+  <string name="feedback_header">Rückmeldung</string>
+  <string name="other_header">Sonstige</string>
 
   <!-- Messages Preferences -->
   <string name="signature_title">Your signature</string>
@@ -71,7 +73,8 @@ limitations under the License. -->
   <string name="one_year_range">Einjahresverlauf</string>
   <string name="five_year_range">Fünfjahresverlauf</string>
   <string name="max_range">Maximalverlauf</string>
-  <string name="use_postmarket">Vor- und Nachbörsliche Werte anzeigen</string>
+  <string name="use_postmarket">Nachbörsliche Werte</string>
+  <string name="use_postmarket_desc">Vor- und Nachbörsliche Werte anzeigen.</string>
   <string name="notes">Anmerkungen</string>
   <string name="alerts">Benachrichtigungen</string>
   <string name="alert_above">Wenn überschritten</string>
@@ -127,8 +130,8 @@ limitations under the License. -->
   <string name="delete_all_assets">Alle Aktien entfernen</string>
   <string name="delete_all_assets_msg">Alle Aktien wurden aus Ihrem Aktienbestand entfernt.</string>
   <string name="asset_summary_text">Gesamtaktienbestand</string>
-  <string name="group_header">Gruppe</string>
-  <string name="title_activity_add">Aktie hinzufügen</string>
+  <string name="group_header">Gruppenliste</string>
+  <string name="title_activity_add">Aktien hinzufügen</string>
   <string name="title_activity_stockdata">Aktiendetails</string>
   <string name="import_error">Die ausgewählte Datei konnte nicht importiert werden.</string>
   <string name="import_csv_symbolcolumn_error">Die ausgewählte CSV-Datei konnte nicht importiert werden. Die Spalte für den Aktiennamen ist nicht vorhanden.</string>
@@ -152,4 +155,67 @@ limitations under the License. -->
   <string name="note_deleted">Anmerkung wurde gelöscht.</string>
   <string name="alert_event_notification_title">Ereignis \'%1$s\' für Aktie %2$s</string>
   <string name="alert_event_notification">Ereignismeldung für Aktie %1$s\nEreignis \'%2$s\'\n%3$s</string>
+  <string name="summary_stocks">Aktien</string>
+  <string name="summary_stocks_with_assets">Aktien mit Bestand</string>
+  <string name="summary_alerts">Benachrichtigungen</string>
+  <string name="summary_events">Ereignisse</string>
+  <string name="summary_note">Anmerkungen</string>
+  <string name="summary_number_of_stocks">Anzahl Aktien</string>
+  <string name="summary_total_purchase_price">Gesamtkaufpreis</string>
+  <string name="summary_total_assets">Gesamtbestand</string>
+  <string name="summary_gain">Gewinn</string>
+  <string name="summary_loss">Verlust</string>
+  <string name="summary_gain_loss">Gewinn - Verlust</string>
+  <string name="summary_dividend_assets">Bestand mit Dividende</string>
+  <string name="summary_no_dividend_assets">Bestand ohne Dividende</string>
+  <string name="summary_dividend_per_year">Dividende pro Jahr</string>
+  <string name="update_groups_title">Gruppenliste bearbeiten</string>
+  <string name="update_groups_desc">Namen und zugeordnete Farben der Gruppenliste bearbeiten.</string>
+  <string name="trillion_abbr">Trill.</string>
+  <string name="billion_abbr">Mrd.</string>
+  <string name="million_abbr">Mio.</string>
+  <string name="import_section_header">Importieren</string>
+  <string name="button_import">Importieren</string>
+  <string name="export_section_header">Exportieren</string>
+  <string name="button_export">Exportieren</string>
+  <string name="title_activity_updategroup">Gruppenliste bearbeiten</string>
+  <string name="add_group">Gruppe hinzufügen</string>
+  <string name="delete_group_title">Gruppe \'%1$s\' entfernen</string>
+  <string name="delete_group_confirm">Sind Sie sicher, dass Sie die Gruppe \'%1$s\' entfernen möchten?</string>
+  <string name="delete_group_confirm2">Sind Sie sicher, dass Sie die Gruppe \'%1$s\' mit %2$d Zuordnungen entfernen möchten?</string>
+  <string name="delete_group_msg">Die Gruppe \'%1$s\' wurde entfernt.</string>
+  <string name="delete_all_groups_confirm">Sind Sie sicher, dass Sie alle Gruppen aus der Gruppenliste entfernen möchten?\nAlle Aktienzuordnungen werden entfernt.</string>
+  <string name="delete_allgroups_title">Alle Gruppen entfernen</string>
+  <string name="delete_all_groups_msg">Alle Gruppen wurden aus der Gruppenliste entfernt.</string>
+  <string name="group_color">Gruppenfarbe</string>
+  <string name="group_name_text">Gruppenname</string>
+  <string name="group_color_in_use">Die Gruppenfarbe wird bereits verwendet. Wählen Sie eine andere Farbe aus.</string>
+  <string name="group_name_in_use">Der Gruppenname \'%1$s\' wird bereits verwendet. Wählen Sie einen anderen Namen aus.</string>
+  <string name="group_name_not_empty">Geben Sie einen Gruppenname ein.</string>
+  <string name="event_datetime_format">" • %1$s am %2$s"</string>
+  <string name="add_predef_groups_title">Beispielgruppen</string>
+  <string name="add_predef_groups_confirm">Möchten Sie die Beispielgruppen hinzufügen?</string>
+  <string name="add_predef_groups_msg">Die Beispielgruppen wurden hinzugefügt.</string>
+  <string name="predefined_groups">Kaufen,Verkaufen,Beobachten,Verschenken,Die Katze fragen,Nicht mehr danach gucken,Noch mehr kaufen,Gruppe 1,Gruppe 2,Gruppe 3,Gruppe 4,Gruppe 5</string>
+  <string name="export_select_file">Wählen Sie eine Datei aus</string>
+  <string name="onlinedata_annualDividendYield">Jährliche Dividendenrendite</string>
+  <string name="onlinedata_annualDividendRate">Jährlicher Dividendensatz</string>
+  <string name="onlinedata_regularMarketPreviousClose">Vortagswert</string>
+  <string name="onlinedata_regularMarketOpen">Eröffnungswert</string>
+  <string name="onlinedata_fiftyDayAverage">50-Tage Durchschnitt</string>
+  <string name="onlinedata_fiftyTwoWeekRange">Jahresbereich</string>
+  <string name="onlinedata_regularMarketDayRange">Regulärer Tagesbereich</string>
+  <string name="onlinedata_regularMarketVolume">Marktvolumen</string>
+  <string name="onlinedata_marketCap">Marktkapitalisierung</string>
+  <string name="onlinedata_forwardPE">Zukünftiges PE</string>
+  <string name="onlinedata_epsTrailingTwelveMonths">EPS des vergangenen Jahres</string>
+  <string name="onlinedata_epsForward">Zukünftige EPS</string>
+  <string name="onlinedata_region">Region</string>
+  <string name="onlinedata_language">Sprache</string>
+  <string name="onlinedata_fullExchangeName">Börsenname</string>
+  <string name="onlinedata_messageBoardId">Board-ID</string>
+  <string name="onlinedata_financialCurrency">Währung</string>
+  <string name="onlinedata_marketState">Marktstatus</string>
+  <string name="json_default_filename">Aktien %1$s</string>
+  <string name="group_summary">Gruppenübersicht</string>
 </resources>
