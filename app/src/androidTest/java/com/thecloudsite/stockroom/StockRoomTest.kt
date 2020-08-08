@@ -17,9 +17,9 @@ package com.thecloudsite.stockroom
  */
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.text.NumberFormat
@@ -127,6 +127,42 @@ class StockRoomTest {
 
     assertEquals(assetItems.size, 3)
     assertEquals(assetItems["s2"]?.size, 2)
+  }
+
+  private fun isValidSymbol(symbol: String): Boolean {
+    val symbolUpper = symbol.toUpperCase(Locale.ROOT)
+
+    return symbol.isNotBlank()
+        &&
+        // valid length
+        (symbol.length in 1..20)
+        &&
+        // valid chars
+        symbolUpper.matches("[A-Z0-9.^*:]+".toRegex())
+        &&
+        // no trailing stars
+        symbolUpper.matches(".*(?<!\\*\\*)\$".toRegex())
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun isValidSymbolTest() {
+
+    // valid symbols
+    assertEquals(true, isValidSymbol("1"))
+    assertEquals(true, isValidSymbol("AAPL"))
+    assertEquals(true, isValidSymbol("^12"))
+    assertEquals(true, isValidSymbol("a*b"))
+    assertEquals(true, isValidSymbol("a:b"))
+
+    // invalid symbols
+    assertEquals(false, isValidSymbol(""))
+    assertEquals(false, isValidSymbol("    "))
+    assertEquals(false, isValidSymbol("ABC**"))
+    assertEquals(false, isValidSymbol("\u0001"))
+    assertEquals(false, isValidSymbol("(a)"))
+    assertEquals(false, isValidSymbol("@symbol"))
+    assertEquals(false, isValidSymbol("a#"))
   }
 
   @Test

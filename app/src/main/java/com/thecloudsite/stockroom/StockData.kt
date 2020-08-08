@@ -9,6 +9,11 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+// https://www.google.com/finance?q=msft
+// http://www.google.com/finance?q=INDEXNASDAQ:.IXIC
+// http://www.google.com/finance/getprices?q=.IXIC&x=INDEXNASDAQ&i=120&p=10m&f=d,c,v,o,h,l&df=cpct&auto=1&ts=1307994768643
+
+
 // https://finance.yahoo.com/quotes/GOOG,MAPP,API,v3,Json,not
 
 /*

@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
           }
               .distinct()
               .filter { symbol ->
-                symbol.isNotBlank() && symbol.isNotEmpty()
+                isValidSymbol(symbol)
               }
 
           symbolList.forEach { symbol ->

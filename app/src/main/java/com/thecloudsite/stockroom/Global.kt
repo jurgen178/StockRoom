@@ -7,6 +7,22 @@ import androidx.annotation.RawRes
 import androidx.core.text.bold
 import androidx.core.text.color
 import java.text.DecimalFormat
+import java.util.Locale
+
+fun isValidSymbol(symbol: String): Boolean {
+  val symbolUpper = symbol.toUpperCase(Locale.ROOT)
+
+  return symbol.isNotBlank()
+      &&
+      // valid length
+      (symbol.length in 1..20)
+      &&
+      // valid chars
+      symbolUpper.matches("[A-Z0-9.^*:]+".toRegex())
+      &&
+      // no trailing stars
+      symbolUpper.matches(".*(?<!\\*\\*)\$".toRegex())
+}
 
 fun Resources.getRawTextFile(@RawRes id: Int) =
   openRawResource(id).bufferedReader()
@@ -82,4 +98,3 @@ fun getAssetChange(
 
   return SpannableStringBuilder()
 }
-

@@ -734,7 +734,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     context: Context,
     json: String
   ) {
-    var k: Int = 0
+    var imported: Int = 0
     val jsonArray = JSONArray(json)
     val size = jsonArray.length()
     for (i in 0 until size) {
@@ -746,9 +746,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       val symbol = jsonObj.getString("symbol")
           .toUpperCase(Locale.ROOT)
 
-      if (symbol.isNotEmpty()) {
+      if (isValidSymbol(symbol)) {
         insert(symbol)
-        k++
+        imported++
 
         // get assets
         if (jsonObj.has("assets")) {
@@ -891,7 +891,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     Toast.makeText(
         context, getApplication<Application>().getString(
-        R.string.import_msg, k.toString()
+        R.string.import_msg, imported.toString()
     ), Toast.LENGTH_LONG
     )
         .show()
@@ -974,16 +974,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
 
-    // skip items that end with **, CORE**, SPAXX** or FCASH**
-    val assetList = assetItems.filter { map ->
-      map.key.matches(".*(?<!\\*\\*)\$".toRegex())
-    }
-
     // Limit import to 100.
-    var importcounter: Int = 0
-    assetList.forEach { (symbol, assets) ->
-      if (importcounter < 100) {
-        importcounter++
+    var imported: Int = 0
+    assetItems.forEach { (symbol, assets) ->
+      if (imported < 100 && isValidSymbol(symbol)) {
+        imported++
         insert(symbol)
         // updateAssets filters out empty shares@price
         updateAssets(symbol = symbol, assets = assets)
@@ -992,7 +987,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     Toast.makeText(
         context, getApplication<Application>().getString(
-        R.string.import_msg, importcounter.toString()
+        R.string.import_msg, imported.toString()
     ), Toast.LENGTH_LONG
     )
         .show()
@@ -1004,24 +999,27 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ) {
     val symbols = text.split("[ ,;\r\n\t]".toRegex())
 
-    // only a-z from 1..7 chars in length
-    val symbolList: List<String> = symbols.map { symbol ->
+    var imported = 0
+    symbols.map { symbol ->
       symbol.replace("\"", "")
           .toUpperCase(Locale.ROOT)
     }
+        // only a-z from 1..7 chars in length
 //        .filter { symbol ->
 //          symbol.matches("[A-Z]{1,7}".toRegex())
 //        }
         .distinct()
         .take(100)
-
-    symbolList.forEach { symbol ->
-      insert(symbol)
-    }
+        .forEach { symbol ->
+          if (isValidSymbol(symbol)) {
+            insert(symbol)
+            imported++
+          }
+        }
 
     Toast.makeText(
         context, getApplication<Application>().getString(
-        R.string.import_msg, symbolList.size.toString()
+        R.string.import_msg, imported.toString()
     ), Toast.LENGTH_LONG
     )
         .show()
