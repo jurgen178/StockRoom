@@ -19,10 +19,18 @@ import java.time.format.FormatStyle.MEDIUM
 class ListActivity : AppCompatActivity() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
+
   private val stockTableRows = StringBuilder()
+  private var stockTableRowsCount = 0
+
   private val groupTableRows = StringBuilder()
+  private var groupTableRowsCount = 0
+
   private val assetTableRows = StringBuilder()
+  private var assetTableRowsCount = 0
+
   private val eventTableRows = StringBuilder()
+  private var eventTableRowsCount = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -31,12 +39,12 @@ class ListActivity : AppCompatActivity() {
 
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    debugswitch.isChecked = sharedPreferences.getBoolean("debug", false)
+    debugswitch.isChecked = sharedPreferences.getBoolean("list", false)
 
     debugswitch.setOnCheckedChangeListener{_, isChecked ->
       sharedPreferences
           .edit()
-          .putBoolean("debug", isChecked)
+          .putBoolean("list", isChecked)
           .apply()
     }
 
@@ -54,6 +62,8 @@ class ListActivity : AppCompatActivity() {
   */
 
     stockRoomViewModel.allProperties.observe(this, Observer { items ->
+
+      stockTableRowsCount = items.size
 
       items.forEach { stockItem ->
         stockTableRows.append("<tr>")
@@ -74,6 +84,8 @@ class ListActivity : AppCompatActivity() {
 
     stockRoomViewModel.allGroupTable.observe(this, Observer { items ->
 
+      groupTableRowsCount = items.size
+
       items.forEach { groupItem ->
         groupTableRows.append("<tr>")
         groupTableRows.append("<td>${getColorStr(groupItem.color)}</td>")
@@ -86,6 +98,8 @@ class ListActivity : AppCompatActivity() {
     })
 
     stockRoomViewModel.allAssetTable.observe(this, Observer { items ->
+
+      assetTableRowsCount = items.size
 
       items.forEach { assetItem ->
         assetTableRows.append("<tr>")
@@ -101,6 +115,8 @@ class ListActivity : AppCompatActivity() {
     })
 
     stockRoomViewModel.allEventTable.observe(this, Observer { items ->
+
+      eventTableRowsCount = items.size
 
       items.forEach { eventItem ->
         eventTableRows.append("<tr>")
@@ -144,11 +160,18 @@ class ListActivity : AppCompatActivity() {
     }
 
   private fun updateHtmlText() {
-    var htmlText = resources.getRawTextFile(R.raw.debug)
+    var htmlText = resources.getRawTextFile(R.raw.list)
 
+    htmlText = htmlText.replace("<!-- stock_table_name -->", "stock_table ($stockTableRowsCount)")
     htmlText = htmlText.replace("<!-- stock_table -->", stockTableRows.toString())
+
+    htmlText = htmlText.replace("<!-- group_table_name -->", "group_table ($groupTableRowsCount)")
     htmlText = htmlText.replace("<!-- group_table -->", groupTableRows.toString())
+
+    htmlText = htmlText.replace("<!-- asset_table_name -->", "asset_table ($assetTableRowsCount)")
     htmlText = htmlText.replace("<!-- asset_table -->", assetTableRows.toString())
+
+    htmlText = htmlText.replace("<!-- event_table_name -->", "event_table ($eventTableRowsCount)")
     htmlText = htmlText.replace("<!-- event_table -->", eventTableRows.toString())
 
     val mimeType: String = "text/html"

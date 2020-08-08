@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
 
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    val debug: Boolean = sharedPreferences.getBoolean("debug", false)
+    val debug: Boolean = sharedPreferences.getBoolean("list", false)
     if (debug) {
       recyclerViewDebug.visibility = View.VISIBLE
     } else {

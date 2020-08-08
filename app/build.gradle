@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 // Apply the Crashlytics Gradle plugin
 apply plugin: 'com.google.firebase.crashlytics'
+// Apply the Performance Monitoring plugin
+apply plugin: 'com.google.firebase.firebase-perf'
+
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
@@ -22,8 +25,8 @@ android {
     applicationId 'com.thecloudsite.stockroom'
     minSdkVersion 29
     targetSdkVersion 30
-    versionCode 3
-    versionName "1.0.3"
+    versionCode 4
+    versionName "1.0.4"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     javaCompileOptions {
@@ -71,6 +74,8 @@ dependencies {
   implementation 'com.google.firebase:firebase-analytics-ktx:17.4.4'
   // Add the Firebase Crashlytics SDK.
   implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
+  // Add the dependency for the Performance Monitoring library
+  implementation 'com.google.firebase:firebase-perf:19.0.8'
 
   def moshiVersion = '1.9.3'
   def retrofit2_version = '2.9.0'
