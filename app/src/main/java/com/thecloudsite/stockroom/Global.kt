@@ -31,6 +31,7 @@ fun Resources.getRawTextFile(@RawRes id: Int) =
   openRawResource(id).bufferedReader()
       .use { it.readText() }
 
+// Gets the colored change string "asset (%change)"
 fun getAssetChange(
   assets: List<Asset>,
   marketPrice: Float,

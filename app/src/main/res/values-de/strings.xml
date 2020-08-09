@@ -56,7 +56,7 @@ limitations under the License. -->
   <string name="general_header">Allgemein</string>
   <string name="display_header">Anzeige</string>
   <string name="feedback_header">Rückmeldung</string>
-  <string name="group_header">Gruppenliste</string>
+  <string name="group_header">Gruppe</string>
 
   <string name="hint_add_stock">Aktienkürzel</string>
   <string name="button_add">Hinzufügen</string>

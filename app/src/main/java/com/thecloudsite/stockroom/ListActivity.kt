@@ -132,6 +132,9 @@ class ListActivity : AppCompatActivity() {
       stockRoomViewModel.allEventTable.removeObservers(this)
       updateHtmlText()
     })
+
+    //webview.setBackgroundResource(R.drawable.circuit)
+    //webview.setBackgroundColor(android.graphics.Color.TRANSPARENT);
   }
 
   override fun onSupportNavigateUp(): Boolean {

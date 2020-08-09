@@ -121,6 +121,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
 
+  var portfolio: String = ""
+  var portfolioSymbols: HashSet<String> = HashSet<String>()
+
   private val dataStore = StockItemSet()
   private val _dataStore = MutableLiveData<StockItemSet>()
   private val allData: LiveData<StockItemSet>
@@ -273,7 +276,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     // Changing a table triggers all three DB updates which sends three alerts.
     allMediatorData.addSource(liveDataProperties) { value ->
       if (value != null) {
-        updatePropertiesFromDB(value)
+        updateStockDataFromDB(value)
         allMediatorData.value = process(allData.value, true)
       }
     }
@@ -302,38 +305,49 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return allMediatorData
   }
 
-  private fun updatePropertiesFromDB(stockDBdata: List<StockDBdata>) {
+  private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
     synchronized(dataStore)
     {
-      stockDBdata.forEach { data ->
-        val symbol = data.symbol
-        val dataStoreItem =
-          dataStore.stockItems.find { ds ->
-            symbol == ds.stockDBdata.symbol
+      val portfolioSet: HashSet<String> = HashSet<String>()
+
+      // Use only symbols matching the selected portfolio.
+      stockDBdata.filter { data ->
+        data.portfolio == portfolio
+      }
+          .forEach { data ->
+            val symbol = data.symbol
+            portfolioSet.add(symbol)
+
+            val dataStoreItem =
+              dataStore.stockItems.find { ds ->
+                symbol == ds.stockDBdata.symbol
+              }
+
+            if (dataStoreItem != null) {
+              dataStoreItem.stockDBdata = data
+            } else
+              dataStore.stockItems.add(
+                  StockItem(
+                      onlineMarketData = OnlineMarketData(symbol = data.symbol),
+                      stockDBdata = data,
+                      assets = emptyList(),
+                      events = emptyList()
+                  )
+              )
           }
 
-        if (dataStoreItem != null) {
-          dataStoreItem.stockDBdata = data
-        } else
-          dataStore.stockItems.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = data.symbol),
-                  stockDBdata = data,
-                  assets = emptyList(),
-                  events = emptyList()
-              )
-          )
-      }
+      // only load online data for symbols in the portfolio set
+      portfolioSymbols = portfolioSet
 
-      // Remove the item from the dataStore because Item was deleted from the DB.
-      if (dataStore.stockItems.size > stockDBdata.size) {
-        dataStore.stockItems.removeIf {
-          // Remove if item is not found in the DB.
-          stockDBdata.find { sd ->
-            it.stockDBdata.symbol == sd.symbol
-          } == null
-        }
+      // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
+      //if (dataStore.stockItems.size > stockDBdata.size) {
+      dataStore.stockItems.removeIf {
+        // Remove if item is not found in the DB.
+        stockDBdata.find { sd ->
+          it.stockDBdata.symbol == sd.symbol
+        } == null
       }
+      //}
     }
 
     _dataStore.value = dataStore
@@ -356,7 +370,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.assets = asset.assets
-        } else
+        } /*
+        else
           dataStore.stockItems.add(
               StockItem(
                   onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
@@ -365,17 +380,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   events = emptyList()
               )
           )
+*/
       }
 
-      // Remove the item from the dataStore because Item was deleted from the DB.
-      if (dataStore.stockItems.size > assets.size) {
+      /*
+      // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
+      //if (dataStore.stockItems.size > assets.size) {
         dataStore.stockItems.removeIf {
           // Remove if item is not found in the DB.
           assets.find { ds ->
             it.stockDBdata.symbol == ds.stockDBdata.symbol
           } == null
         }
-      }
+      //}
+      */
     }
 
     _dataStore.value = dataStore
@@ -393,7 +411,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.events = event.events
-        } else
+        } /*
+        else
           dataStore.stockItems.add(
               StockItem(
                   onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
@@ -402,17 +421,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   events = event.events
               )
           )
+*/
       }
 
-      // Remove the item from the dataStore because Item was deleted from the DB.
-      if (dataStore.stockItems.size > events.size) {
+/*
+      // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
+      //if (dataStore.stockItems.size > events.size) {
         dataStore.stockItems.removeIf {
           // Remove if item is not found in the DB.
           events.find { event ->
             it.stockDBdata.symbol == event.stockDBdata.symbol
           } == null
         }
-      }
+      //}
+      */
     }
 
     _dataStore.value = dataStore
@@ -1354,7 +1376,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   suspend fun getStockData(): MarketState {
+    // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
     val symbols: List<String> = repository.getStockSymbols()
+        .filter { symbol ->
+          if (portfolioSymbols.isNotEmpty()) {
+            portfolioSymbols.contains(symbol)
+          } else {
+            true
+          }
+        }
 //   Log.d("Handlers", "Call stockMarketDataRepository.getStockData()")
 //   logDebugAsync("update online data getStockData")
     return stockMarketDataRepository.getStockData(symbols)
