@@ -29,6 +29,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -56,6 +57,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
+import java.util.Observer
 import kotlin.coroutines.CoroutineContext
 
 data class AssetJson(
@@ -121,7 +123,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
 
-  var portfolio: String = ""
+  var selectedPortfolio = MutableLiveData<String>()
+  private val selectedPortfolioLiveData: LiveData<String>
+    get() = selectedPortfolio
+
+  private var portfolios = MutableLiveData<HashSet<String>>()
+  val portfoliosLiveData: LiveData<HashSet<String>>
+    get() = portfolios
+
   var portfolioSymbols: HashSet<String> = HashSet<String>()
 
   private val dataStore = StockItemSet()
@@ -272,8 +281,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val liveDataEvents = allEvents
     val liveDataOnline = onlineMarketDataList
 
-    // false positive notifications for observable queries
-    // Changing a table triggers all three DB updates which sends three alerts.
+    // reload the DB when portfolio is changed.
+    allMediatorData.addSource(selectedPortfolioLiveData) { value ->
+      if (value != null) {
+        updateStockDataFromDB(liveDataProperties.value!!)
+        updateAssetsFromDB(liveDataAssets.value!!)
+        updateEventsFromDB(liveDataEvents.value!!)
+        updateFromOnline(liveDataOnline.value!!)
+        allMediatorData.value = process(allData.value, true)
+      }
+    }
+
     allMediatorData.addSource(liveDataProperties) { value ->
       if (value != null) {
         updateStockDataFromDB(value)
@@ -308,46 +326,66 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
     synchronized(dataStore)
     {
+      val stockDBdataPortfolios: HashSet<String> = HashSet<String>()
       val portfolioSet: HashSet<String> = HashSet<String>()
 
       // Use only symbols matching the selected portfolio.
-      stockDBdata.filter { data ->
-        data.portfolio == portfolio
+      val portfolioData = if (selectedPortfolio.value == null) {
+        stockDBdata
+      } else {
+        stockDBdata.filter { data ->
+          data.portfolio == selectedPortfolio.value
+        }
       }
-          .forEach { data ->
-            val symbol = data.symbol
-            portfolioSet.add(symbol)
 
-            val dataStoreItem =
-              dataStore.stockItems.find { ds ->
-                symbol == ds.stockDBdata.symbol
-              }
+      portfolioData.forEach { data ->
+        val symbol = data.symbol
+        portfolioSet.add(symbol)
 
-            if (dataStoreItem != null) {
-              dataStoreItem.stockDBdata = data
-            } else
-              dataStore.stockItems.add(
-                  StockItem(
-                      onlineMarketData = OnlineMarketData(symbol = data.symbol),
-                      stockDBdata = data,
-                      assets = emptyList(),
-                      events = emptyList()
-                  )
-              )
+        val dataStoreItem =
+          dataStore.stockItems.find { ds ->
+            symbol == ds.stockDBdata.symbol
           }
+
+        if (dataStoreItem != null) {
+          dataStoreItem.stockDBdata = data
+        } else
+          dataStore.stockItems.add(
+              StockItem(
+                  onlineMarketData = OnlineMarketData(symbol = data.symbol),
+                  stockDBdata = data,
+                  assets = emptyList(),
+                  events = emptyList()
+              )
+          )
+      }
 
       // only load online data for symbols in the portfolio set
       portfolioSymbols = portfolioSet
 
       // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
-      //if (dataStore.stockItems.size > stockDBdata.size) {
       dataStore.stockItems.removeIf {
         // Remove if item is not found in the DB.
-        stockDBdata.find { sd ->
+        portfolioData.find { sd ->
           it.stockDBdata.symbol == sd.symbol
         } == null
       }
-      //}
+
+      // Get the portfolios from the unfiltered list.
+      stockDBdata.forEach { data ->
+        stockDBdataPortfolios.add(data.portfolio)
+
+        // Test
+/*
+        stockDBdataPortfolios.add("data.portfolio1")
+        stockDBdataPortfolios.add("data.portfolio2")
+        stockDBdataPortfolios.add("data.portfolio3")
+*/
+      }
+
+      // get all used portfolios
+      // triggers the portfolio menu
+      portfolios.postValue(stockDBdataPortfolios)
     }
 
     _dataStore.value = dataStore
@@ -370,30 +408,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.assets = asset.assets
-        } /*
-        else
-          dataStore.stockItems.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
-                  stockDBdata = asset.stockDBdata,
-                  assets = asset.assets,
-                  events = emptyList()
-              )
-          )
-*/
-      }
-
-      /*
-      // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
-      //if (dataStore.stockItems.size > assets.size) {
-        dataStore.stockItems.removeIf {
-          // Remove if item is not found in the DB.
-          assets.find { ds ->
-            it.stockDBdata.symbol == ds.stockDBdata.symbol
-          } == null
         }
-      //}
-      */
+      }
     }
 
     _dataStore.value = dataStore
@@ -411,30 +427,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.events = event.events
-        } /*
-        else
-          dataStore.stockItems.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
-                  stockDBdata = event.stockDBdata,
-                  assets = emptyList(),
-                  events = event.events
-              )
-          )
-*/
-      }
-
-/*
-      // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
-      //if (dataStore.stockItems.size > events.size) {
-        dataStore.stockItems.removeIf {
-          // Remove if item is not found in the DB.
-          events.find { event ->
-            it.stockDBdata.symbol == event.stockDBdata.symbol
-          } == null
         }
-      //}
-      */
+      }
     }
 
     _dataStore.value = dataStore
@@ -1082,74 +1076,98 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     updateAll()
   }
 
+  private fun getAllDBdata(): List<StockItem> {
+    val stockDBdata = allProperties.value!!
+    val assets = allAssets.value!!
+    val events = allEvents.value!!
+
+    return stockDBdata.map { data ->
+      val symbol = data.symbol
+
+      val assetItem =
+        assets.find { item ->
+          symbol == item.stockDBdata.symbol
+        }
+
+      val eventItem =
+        events.find { item ->
+          symbol == item.stockDBdata.symbol
+        }
+
+      StockItem(
+          onlineMarketData = OnlineMarketData(symbol = data.symbol),
+          stockDBdata = data,
+          assets = assetItem?.assets ?: emptyList(),
+          events = eventItem?.events ?: emptyList()
+      )
+    }
+  }
+
   fun exportList(
     context: Context,
     exportListUri: Uri
   ) {
-
-    // Get stock list.
-    val stockItemSet = allStockItems.value
-
     // Gets the groups to resolve the group name
     // Group name is stored per entry and not as one list to simplify the json structure.
     val groups: List<Group> = getGroupsSync()
 
-    // Convert stock list for export.
-    if (stockItemSet != null) {
-      val stockItemList = stockItemSet.stockItems
-      val stockItemsJson = stockItemList.map { stockItem ->
+    // Export items sorted alphabetically.
+    val stockItemList = getAllDBdata().sortedBy { data ->
+      data.stockDBdata.symbol
+    }
 
-        val groupName = groups.find { group ->
-          group.color == stockItem.stockDBdata.groupColor
-        }?.name ?: ""
+    val stockItemsJson = stockItemList.map { stockItem ->
 
-        StockItemJson(symbol = stockItem.stockDBdata.symbol,
-            groupColor = stockItem.stockDBdata.groupColor,
-            groupName = groupName,
-            alertAbove = stockItem.stockDBdata.alertAbove,
-            alertBelow = stockItem.stockDBdata.alertBelow,
-            notes = stockItem.stockDBdata.notes,
-            assets = stockItem.assets.map { asset ->
-              AssetJson(shares = asset.shares, price = asset.price)
-            },
-            events = stockItem.events.map { event ->
-              EventJson(
-                  type = event.type, title = event.title, note = event.note,
-                  datetime = event.datetime
-              )
-            }
-        )
-      }
+      val groupName = groups.find { group ->
+        group.color == stockItem.stockDBdata.groupColor
+      }?.name ?: ""
 
-      // Convert to a json string.
-      val gson: Gson = GsonBuilder()
-          .setPrettyPrinting()
-          .create()
-      val jsonString = gson.toJson(stockItemsJson)
+      StockItemJson(symbol = stockItem.stockDBdata.symbol,
+          groupColor = stockItem.stockDBdata.groupColor,
+          groupName = groupName,
+          alertAbove = stockItem.stockDBdata.alertAbove,
+          alertBelow = stockItem.stockDBdata.alertBelow,
+          notes = stockItem.stockDBdata.notes,
+          assets = stockItem.assets.map { asset ->
+            AssetJson(shares = asset.shares, price = asset.price)
+          },
+          events = stockItem.events.map { event ->
+            EventJson(
+                type = event.type, title = event.title, note = event.note,
+                datetime = event.datetime
+            )
+          }
+      )
+    }
 
-      // Write the json string.
-      try {
-        context.contentResolver.openOutputStream(exportListUri)
-            ?.use { output ->
-              output as FileOutputStream
-              output.channel.truncate(0)
-              output.write(jsonString.toByteArray())
-            }
+    // Convert to a json string.
+    val gson: Gson = GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+    val jsonString = gson.toJson(stockItemsJson)
 
-        Toast.makeText(
-            context,
-            getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size),
-            Toast.LENGTH_LONG
-        )
-            .show()
+    // Write the json string.
+    try {
+      context.contentResolver.openOutputStream(exportListUri)
+          ?.use { output ->
+            output as FileOutputStream
+            output.channel.truncate(0)
+            output.write(jsonString.toByteArray())
+          }
 
-      } catch (e: Exception) {
-        //Toast.makeText(
-        //    context, getApplication<Application>().getString(R.string.import_error), Toast.LENGTH_LONG
-        //)
-        //    .show()
-        Log.d("Export JSON error", "Exception: $e")
-      }
+      Toast.makeText(
+          context,
+          getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size),
+          Toast.LENGTH_LONG
+      )
+          .show()
+
+    } catch (e: Exception) {
+      //Toast.makeText(
+      //    context, getApplication<Application>().getString(R.string.import_error), Toast.LENGTH_LONG
+      //)
+      //    .show()
+      Log.d("Export JSON error", "Exception: $e")
     }
   }
 

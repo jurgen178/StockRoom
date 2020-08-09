@@ -22,9 +22,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MenuItem.OnMenuItemClickListener
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -117,6 +119,11 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
+    // Update the menu when portfolio data changed.
+    stockRoomViewModel.portfoliosLiveData.observe(this, Observer {
+      invalidateOptionsMenu()
+    })
+
     // Check event every 5s
     val eventHandle: Handler = Handler()
     val eventDelay: Long = 5000L
@@ -127,6 +134,72 @@ class MainActivity : AppCompatActivity() {
       }
     }
     eventHandle.post(eventRunnableCode)
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    menuInflater.inflate(R.menu.main_menu, menu)
+    return true
+  }
+
+  override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+    val portfolioMenuItem = menu?.findItem(R.id.menu_portfolio)
+    portfolioMenuItem?.isVisible = false
+
+    if (stockRoomViewModel.portfoliosLiveData.value != null) {
+      val portfolios = stockRoomViewModel.portfoliosLiveData.value!!
+      if (portfolios.size > 1) {
+        portfolioMenuItem?.isVisible = true
+        val submenu = portfolioMenuItem?.subMenu
+        submenu?.clear()
+
+        // Add portfolios as submenu items.
+        portfolios.forEach { portfolio ->
+          val standardPortfolio = getString(R.string.standard_portfolio)
+          val portfolioName = if (portfolio.isEmpty()) {
+            standardPortfolio
+          } else {
+            portfolio
+          }
+          val subMenuItem = submenu?.add(portfolioName)
+          subMenuItem?.setOnMenuItemClickListener { item ->
+            if (item != null) {
+              var itemText = item.toString()
+              if (itemText == standardPortfolio) {
+                itemText = ""
+              }
+              stockRoomViewModel.selectedPortfolio.postValue(itemText)
+            }
+            true
+          }
+        }
+      }
+    }
+
+    return super.onPrepareOptionsMenu(menu)
+  }
+
+  /*
+  override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+    val item = menu!!.add("Clear Array")
+    item.setOnMenuItemClickListener(object : OnMenuItemClickListener {
+      override fun onMenuItemClick(item: MenuItem?): Boolean {
+        //clearArray()
+        return true
+      }
+    })
+    return super.onPrepareOptionsMenu(menu)
+  }
+   */
+
+  fun onSettings(item: MenuItem) {
+    val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+    startActivity(intent)
+  }
+
+  fun onAdd(item: MenuItem) {
+    val intent = Intent(this@MainActivity, AddActivity::class.java)
+    startActivityForResult(intent, newSymbolActivityRequestCode)
   }
 
   override fun onResume() {
@@ -140,12 +213,6 @@ class MainActivity : AppCompatActivity() {
     } else {
       recyclerViewDebug.visibility = View.GONE
     }
-  }
-
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    menuInflater.inflate(R.menu.main_menu, menu)
-    return true
   }
 
   override fun onActivityResult(
@@ -260,15 +327,5 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
-  }
-
-  fun onSettings(item: MenuItem) {
-    val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-    startActivity(intent)
-  }
-
-  fun onAdd(item: MenuItem) {
-    val intent = Intent(this@MainActivity, AddActivity::class.java)
-    startActivityForResult(intent, newSymbolActivityRequestCode)
   }
 }

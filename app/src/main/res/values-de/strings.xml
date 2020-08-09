@@ -223,4 +223,6 @@ limitations under the License. -->
   <string name="example_List_delete_all">\n\n***\nWählen sie in den Einstellungen die Funktion \'Alle Daten entfernen\', um diese Beispielliste zu löschen.\n***</string>
   <string name="example_List_note">Beispielanmerkung.\n1234 abcd.\nLetzte Zeile der Anmerkung.</string>
   <string name="update">Aktualisieren</string>
+  <string name="standard_portfolio">Standard Portfolio</string>
+  <string name="menu_portfolio_title">Portfolio auswählen</string>
 </resources>
