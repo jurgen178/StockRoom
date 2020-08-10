@@ -101,7 +101,7 @@ object SharedRepository {
   var postMarket: Boolean = true
   var notifications: Boolean = true
 
-  var selectedPortfolio = MutableLiveData<String>()
+  var selectedPortfolio = MutableLiveData<String>("")
   val selectedPortfolioLiveData: LiveData<String>
     get() = selectedPortfolio
 
@@ -335,7 +335,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
     synchronized(dataStore)
     {
-      val stockDBdataPortfolios: HashSet<String> = HashSet<String>()
+      val stockDBdataPortfolios: HashSet<String> = hashSetOf("") // add Standard Portfolio
       val portfolioSet: HashSet<String> = HashSet<String>()
 
       // Use only symbols matching the selected portfolio.
@@ -1494,7 +1494,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun deleteAll() {
     SharedRepository.selectedPortfolio.postValue("")
-    SharedRepository.portfolios.postValue(HashSet())
+    SharedRepository.portfolios.postValue(hashSetOf(""))
 
     scope.launch {
       repository.deleteAll()

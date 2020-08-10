@@ -20,11 +20,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.bold
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -144,8 +146,9 @@ class MainActivity : AppCompatActivity() {
     val portfolioMenuItem = menu?.findItem(R.id.menu_portfolio)
     portfolioMenuItem?.isVisible = false
 
-    if (SharedRepository.portfoliosLiveData.value != null) {
-      val portfolios = SharedRepository.portfoliosLiveData.value!!
+    if (SharedRepository.portfolios.value != null) {
+      val portfolios = SharedRepository.portfolios.value!!
+
       if (portfolios.size > 1) {
         portfolioMenuItem?.isVisible = true
         val submenu = portfolioMenuItem?.subMenu
@@ -169,7 +172,7 @@ class MainActivity : AppCompatActivity() {
                   if (itemText == standardPortfolio) {
                     itemText = ""
                   }
-                  SharedRepository.selectedPortfolio.postValue(itemText)
+                  SharedRepository.selectedPortfolio.value = itemText
                 }
                 true
               }

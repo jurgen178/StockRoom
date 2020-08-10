@@ -671,18 +671,18 @@ class StockDataFragment : Fragment() {
 
     // Portfolio
     val standardPortfolio = getString(R.string.standard_portfolio)
-    val portfolioName = if (stockDBdata.portfolio.isEmpty()) {
+    textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
       standardPortfolio
     } else {
       stockDBdata.portfolio
     }
 
-    textViewPortfolio.text = portfolioName
     // Setup portfolio menu
     textViewPortfolio.setOnClickListener { view ->
       val popupMenu = PopupMenu(requireContext(), view)
 
       var menuIndex: Int = Menu.FIRST
+
       SharedRepository.portfolios.value?.sortedBy {
         it
       }
@@ -781,25 +781,28 @@ class StockDataFragment : Fragment() {
                 }
 
                 textViewPortfolio.text = portfolioText
+
+                val portfolios = SharedRepository.portfolios.value
+                if (portfolios?.find {
+                      it.isEmpty()
+                    } == null) {
+                  portfolios?.add("")
+                }
+
                 if (addSelected) {
                   stockRoomViewModel.setPortfolio(symbol, portfolioText)
-                  //SharedRepository.selectedPortfolio.postValue(portfolioText)
-                  val portfolios = SharedRepository.portfolios.value
                   if (portfolios != null) {
                     portfolios.add(portfolioText)
-                    SharedRepository.portfolios.value = portfolios
                   }
                 } else {
                   stockRoomViewModel.updatePortfolio(selectedPortfolio, portfolioText)
-                  //SharedRepository.selectedPortfolio.postValue(portfolioText)
-                  val portfolios = SharedRepository.portfolios.value
                   if (portfolios != null) {
                     portfolios.remove(selectedPortfolio)
                     portfolios.add(portfolioText)
-                    SharedRepository.portfolios.value = portfolios
                   }
                 }
 
+                SharedRepository.portfolios.value = portfolios
                 SharedRepository.selectedPortfolio.value = portfolioText
               }
               .setNegativeButton(
