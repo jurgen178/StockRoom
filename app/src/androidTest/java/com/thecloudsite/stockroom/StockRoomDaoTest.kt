@@ -155,7 +155,7 @@ class StockRoomDaoTest {
     val stockDBdata1 = StockDBdata(
         symbol = "symbol1",
         portfolio = "portfolio1",
-        properties = "properties1",
+        data = "data1",
         groupColor = 123,
         alertBelow = 1f,
         alertAbove = 2f,
@@ -165,7 +165,7 @@ class StockRoomDaoTest {
 
     val stockDBdata2 = stockRoomDao.getStockDBdata("symbol1")
     assertEquals("portfolio1", stockDBdata2.portfolio)
-    assertEquals("properties1", stockDBdata2.properties)
+    assertEquals("data1", stockDBdata2.data)
     assertEquals(123, stockDBdata2.groupColor)
     assertEquals(1f, stockDBdata2.alertBelow)
     assertEquals(2f, stockDBdata2.alertAbove)

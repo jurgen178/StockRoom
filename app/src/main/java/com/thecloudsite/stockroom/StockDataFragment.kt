@@ -782,27 +782,27 @@ class StockDataFragment : Fragment() {
 
                 textViewPortfolio.text = portfolioText
 
-                val portfolios = SharedRepository.portfolios.value
-                if (portfolios?.find {
-                      it.isEmpty()
-                    } == null) {
-                  portfolios?.add("")
-                }
+//                val portfolios = SharedRepository.portfolios.value
+//                if (portfolios?.find {
+//                      it.isEmpty()
+//                    } == null) {
+//                  portfolios?.add("")
+//                }
 
                 if (addSelected) {
                   stockRoomViewModel.setPortfolio(symbol, portfolioText)
-                  if (portfolios != null) {
-                    portfolios.add(portfolioText)
-                  }
+//                  if (portfolios != null) {
+//                    portfolios.add(portfolioText)
+//                  }
                 } else {
                   stockRoomViewModel.updatePortfolio(selectedPortfolio, portfolioText)
-                  if (portfolios != null) {
-                    portfolios.remove(selectedPortfolio)
-                    portfolios.add(portfolioText)
-                  }
+//                  if (portfolios != null) {
+//                    portfolios.remove(selectedPortfolio)
+//                    portfolios.add(portfolioText)
+//                  }
                 }
 
-                SharedRepository.portfolios.value = portfolios
+                //SharedRepository.portfolios.value = portfolios
                 SharedRepository.selectedPortfolio.value = portfolioText
               }
               .setNegativeButton(

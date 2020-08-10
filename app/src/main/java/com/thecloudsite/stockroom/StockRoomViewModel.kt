@@ -131,7 +131,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
 
-  var portfolioSymbols: HashSet<String> = HashSet<String>()
+  private var portfolioSymbols: HashSet<String> = HashSet<String>()
 
   private val dataStore = StockItemSet()
   private val _dataStore = MutableLiveData<StockItemSet>()
@@ -336,7 +336,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     synchronized(dataStore)
     {
       val stockDBdataPortfolios: HashSet<String> = hashSetOf("") // add Standard Portfolio
-      val portfolioSet: HashSet<String> = HashSet<String>()
+      val usedPortfolioSymbols: HashSet<String> = HashSet<String>()
 
       // Use only symbols matching the selected portfolio.
       val portfolio = SharedRepository.selectedPortfolio.value ?: ""
@@ -346,7 +346,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       portfolioData.forEach { data ->
         val symbol = data.symbol
-        portfolioSet.add(symbol)
+        usedPortfolioSymbols.add(symbol)
 
         val dataStoreItem =
           dataStore.stockItems.find { ds ->
@@ -367,7 +367,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       // only load online data for symbols in the portfolio set
-      portfolioSymbols = portfolioSet
+      portfolioSymbols = usedPortfolioSymbols
 
       // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
       dataStore.stockItems.removeIf {
@@ -664,21 +664,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun isOnline(context: Context): Boolean {
     val connectivityManager =
       context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    if (connectivityManager != null) {
-      val capabilities =
-        connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-      if (capabilities != null) {
-        if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+    val capabilities =
+      connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+    if (capabilities != null) {
+      when {
+        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
           Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-          return true
-        } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+        }
+        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
           Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-          return true
-        } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+        }
+        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
           Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-          return true
         }
       }
+      return true
     }
     return false
   }
@@ -1287,7 +1287,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.setPortfolio(symbol, portfolio)
   }
 
-  fun setData(
+  private fun setData(
     symbol: String,
     data: String
   ) = scope.launch {
