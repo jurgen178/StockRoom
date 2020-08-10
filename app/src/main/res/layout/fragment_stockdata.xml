@@ -264,6 +264,34 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/portfolioLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+    <View style="@style/Divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/portfolio_header"
+        style="@style/section_header"
+        />
+
+    <TextView
+        android:id="@+id/textViewPortfolio"
+        android:layout_width="230dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:textColor="@color/buttonLabel"
+        android:background="@drawable/portfolio_item_bg"
+        android:gravity="center_horizontal|center_vertical"
+        />
+
+    </LinearLayout>
+
     <View style="@style/Divider"/>
 
     <TextView
@@ -284,17 +312,15 @@
       <TextView
           android:id="@+id/textViewGroupColor"
           android:layout_width="20dp"
-          android:layout_height="60dp"
+          android:layout_height="40dp"
           android:background="@drawable/group_item_bg"
-          android:textSize="13sp"
           android:gravity="center_horizontal|center_vertical"
           />
       <TextView
           android:id="@+id/textViewGroup"
-          android:layout_width="200dp"
-          android:layout_height="60dp"
+          android:layout_width="210dp"
+          android:layout_height="40dp"
           android:background="@drawable/stock_item_bg"
-          android:textSize="13sp"
           android:gravity="center_horizontal|center_vertical"
           />
 

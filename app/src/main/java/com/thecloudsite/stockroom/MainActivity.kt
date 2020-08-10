@@ -22,11 +22,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MenuItem.OnMenuItemClickListener
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -120,7 +118,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Update the menu when portfolio data changed.
-    stockRoomViewModel.portfoliosLiveData.observe(this, Observer {
+    SharedRepository.portfoliosLiveData.observe(this, Observer {
       invalidateOptionsMenu()
     })
 
@@ -146,33 +144,36 @@ class MainActivity : AppCompatActivity() {
     val portfolioMenuItem = menu?.findItem(R.id.menu_portfolio)
     portfolioMenuItem?.isVisible = false
 
-    if (stockRoomViewModel.portfoliosLiveData.value != null) {
-      val portfolios = stockRoomViewModel.portfoliosLiveData.value!!
+    if (SharedRepository.portfoliosLiveData.value != null) {
+      val portfolios = SharedRepository.portfoliosLiveData.value!!
       if (portfolios.size > 1) {
         portfolioMenuItem?.isVisible = true
         val submenu = portfolioMenuItem?.subMenu
         submenu?.clear()
 
         // Add portfolios as submenu items.
-        portfolios.forEach { portfolio ->
-          val standardPortfolio = getString(R.string.standard_portfolio)
-          val portfolioName = if (portfolio.isEmpty()) {
-            standardPortfolio
-          } else {
-            portfolio
-          }
-          val subMenuItem = submenu?.add(portfolioName)
-          subMenuItem?.setOnMenuItemClickListener { item ->
-            if (item != null) {
-              var itemText = item.toString()
-              if (itemText == standardPortfolio) {
-                itemText = ""
-              }
-              stockRoomViewModel.selectedPortfolio.postValue(itemText)
-            }
-            true
-          }
+        portfolios.sortedBy {
+          it
         }
+            .forEach { portfolio ->
+              val standardPortfolio = getString(R.string.standard_portfolio)
+              val portfolioName = if (portfolio.isEmpty()) {
+                standardPortfolio
+              } else {
+                portfolio
+              }
+              val subMenuItem = submenu?.add(portfolioName)
+              subMenuItem?.setOnMenuItemClickListener { item ->
+                if (item != null) {
+                  var itemText = item.toString()
+                  if (itemText == standardPortfolio) {
+                    itemText = ""
+                  }
+                  SharedRepository.selectedPortfolio.postValue(itemText)
+                }
+                true
+              }
+            }
       }
     }
 

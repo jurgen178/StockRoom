@@ -228,4 +228,5 @@ limitations under the License. -->
   <string name="update">Update</string>
   <string name="standard_portfolio">Standard-Portfolio</string>
   <string name="menu_portfolio_title">Select Portfolio</string>
+  <string name="portfolio_header">Portfolio</string>
 </resources>

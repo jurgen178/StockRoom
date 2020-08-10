@@ -26,7 +26,6 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -81,6 +80,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroupColor
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewMarketPrice
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewName
+import kotlinx.android.synthetic.main.fragment_stockdata.textViewPortfolio
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewPurchasePrice
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewRange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewSymbol
@@ -665,6 +665,51 @@ class StockDataFragment : Fragment() {
     stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
     val notes = stockDBdata.notes
 
+    // Portfolio
+    val standardPortfolio = getString(R.string.standard_portfolio)
+    val portfolioName = if (stockDBdata.portfolio.isEmpty()) {
+      standardPortfolio
+    } else {
+      stockDBdata.portfolio
+    }
+
+    textViewPortfolio.text = portfolioName
+    textViewPortfolio.setOnClickListener { view ->
+      val popupMenu = PopupMenu(requireContext(), view)
+
+      var menuIndex: Int = Menu.FIRST
+      SharedRepository.portfolios.value?.sortedBy {
+        it
+      }
+          ?.forEach { portfolio ->
+            val name = if (portfolio.isEmpty()) {
+              standardPortfolio
+            } else {
+              portfolio
+            }
+            popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+          }
+
+      popupMenu.show()
+
+      popupMenu.setOnMenuItemClickListener { menuitem ->
+        val i: Int = menuitem.itemId - 1
+        var portfolio = menuitem.title.trim()
+            .toString()
+        textViewPortfolio.text = portfolio
+
+        if (portfolio == standardPortfolio) {
+          portfolio = ""
+        }
+
+        stockRoomViewModel.setPortfolio(symbol, portfolio)
+        SharedRepository.selectedPortfolio.postValue(portfolio)
+
+        true
+      }
+    }
+
+    // Group color
     // color = 0 is not stored in the DB
     var color = stockDBdata.groupColor
     if (color == 0) {

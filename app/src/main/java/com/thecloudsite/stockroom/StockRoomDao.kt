@@ -163,6 +163,12 @@ interface StockRoomDao {
     setStockGroupColor(symbol = symbol, color = color)
   }
 
+  @Query("UPDATE stock_table SET portfolio = :portfolio WHERE symbol = :symbol")
+  fun setPortfolio(
+    symbol: String,
+    portfolio: String
+  )
+
   @Query("UPDATE stock_table SET group_color = :color WHERE symbol = :symbol")
   fun setStockGroupColor(
     symbol: String,

@@ -29,7 +29,6 @@ import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -57,7 +56,6 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
-import java.util.Observer
 import kotlin.coroutines.CoroutineContext
 
 data class AssetJson(
@@ -100,6 +98,16 @@ object SharedRepository {
 
   var postMarket: Boolean = true
   var notifications: Boolean = true
+
+  var portfolios2: HashSet<String> = HashSet()
+
+  var selectedPortfolio = MutableLiveData<String>()
+  val selectedPortfolioLiveData: LiveData<String>
+    get() = selectedPortfolio
+
+  var portfolios = MutableLiveData<HashSet<String>>()
+  val portfoliosLiveData: LiveData<HashSet<String>>
+    get() = portfolios
 }
 
 class StockRoomViewModel(application: Application) : AndroidViewModel(application) {
@@ -122,14 +130,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
-
-  var selectedPortfolio = MutableLiveData<String>()
-  private val selectedPortfolioLiveData: LiveData<String>
-    get() = selectedPortfolio
-
-  private var portfolios = MutableLiveData<HashSet<String>>()
-  val portfoliosLiveData: LiveData<HashSet<String>>
-    get() = portfolios
 
   var portfolioSymbols: HashSet<String> = HashSet<String>()
 
@@ -282,13 +282,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val liveDataOnline = onlineMarketDataList
 
     // reload the DB when portfolio is changed.
-    allMediatorData.addSource(selectedPortfolioLiveData) { value ->
+    allMediatorData.addSource(SharedRepository.selectedPortfolioLiveData) { value ->
       if (value != null) {
         updateStockDataFromDB(liveDataProperties.value!!)
         updateAssetsFromDB(liveDataAssets.value!!)
         updateEventsFromDB(liveDataEvents.value!!)
         updateFromOnline(liveDataOnline.value!!)
         allMediatorData.value = process(allData.value, true)
+        updateOnlineDataManually()
       }
     }
 
@@ -330,12 +331,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       val portfolioSet: HashSet<String> = HashSet<String>()
 
       // Use only symbols matching the selected portfolio.
-      val portfolioData = if (selectedPortfolio.value == null) {
-        stockDBdata
-      } else {
-        stockDBdata.filter { data ->
-          data.portfolio == selectedPortfolio.value
-        }
+      val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+      val portfolioData = stockDBdata.filter { data ->
+        data.portfolio == portfolio
       }
 
       portfolioData.forEach { data ->
@@ -376,16 +374,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockDBdataPortfolios.add(data.portfolio)
 
         // Test
-/*
         stockDBdataPortfolios.add("data.portfolio1")
         stockDBdataPortfolios.add("data.portfolio2")
         stockDBdataPortfolios.add("data.portfolio3")
+/*
 */
       }
 
       // get all used portfolios
       // triggers the portfolio menu
-      portfolios.postValue(stockDBdataPortfolios)
+      SharedRepository.portfolios.postValue(stockDBdataPortfolios)
+      SharedRepository.portfolios2 = stockDBdataPortfolios
     }
 
     _dataStore.value = dataStore
@@ -1254,6 +1253,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     return stockDBdata
+  }
+
+  fun setPortfolio(
+    symbol: String,
+    portfolio: String
+  ) = scope.launch {
+    repository.setPortfolio(symbol, portfolio)
   }
 
   fun getGroupSync(color: Int): Group {
