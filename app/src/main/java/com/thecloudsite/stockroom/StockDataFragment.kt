@@ -26,6 +26,7 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -253,7 +254,9 @@ class StockDataFragment : Fragment() {
             R.string.update
         ) { _, _ ->
           val sharesText = addSharesView.text.toString()
+              .trim()
           val priceText = addPriceView.text.toString()
+              .trim()
           if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
             var price = 0f
             var shares = 0f
@@ -419,6 +422,7 @@ class StockDataFragment : Fragment() {
             R.string.update
         ) { _, _ ->
           val title = textInputEditEventTitleView.text.toString()
+              .trim()
           val note = textInputEditEventNoteView.text.toString()
 
           val datetime: LocalDateTime = LocalDateTime.of(
@@ -674,6 +678,7 @@ class StockDataFragment : Fragment() {
     }
 
     textViewPortfolio.text = portfolioName
+    // Setup portfolio menu
     textViewPortfolio.setOnClickListener { view ->
       val popupMenu = PopupMenu(requireContext(), view)
 
@@ -683,28 +688,139 @@ class StockDataFragment : Fragment() {
       }
           ?.forEach { portfolio ->
             val name = if (portfolio.isEmpty()) {
-              standardPortfolio
+              // first entry in bold
+              SpannableStringBuilder()
+                  .bold { append(standardPortfolio) }
             } else {
               portfolio
             }
             popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
           }
 
+      // Last-1 item is to add a new portfolio
+      // Last item is to rename the portfolio
+      val addPortfolioItem = SpannableStringBuilder()
+          .color(context?.getColor(R.color.colorAccent)!!) {
+            bold { append(getString(R.string.add_portfolio)) }
+          }
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addPortfolioItem)
+
+      // Display 'Rename portfolio' only for other than the standard portfolio.
+      if (stockDBdata.portfolio.isNotEmpty()) {
+        val renamePortfolioItem = SpannableStringBuilder()
+            .color(context?.getColor(R.color.colorAccent)!!) {
+              bold { append(getString(R.string.rename_portfolio)) }
+            }
+        popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, renamePortfolioItem)
+      }
+
       popupMenu.show()
 
       popupMenu.setOnMenuItemClickListener { menuitem ->
-        val i: Int = menuitem.itemId - 1
-        var portfolio = menuitem.title.trim()
-            .toString()
-        textViewPortfolio.text = portfolio
-
-        if (portfolio == standardPortfolio) {
-          portfolio = ""
+        val i = if (stockDBdata.portfolio.isNotEmpty()) {
+          2
+        } else {
+          1
         }
 
-        stockRoomViewModel.setPortfolio(symbol, portfolio)
-        SharedRepository.selectedPortfolio.postValue(portfolio)
+        val addSelected = menuIndex - i == menuitem.itemId
+        val renameSelected = menuIndex - i + 1 == menuitem.itemId
 
+        if (addSelected || renameSelected) {
+          // Add/Rename portfolio
+          val builder = android.app.AlertDialog.Builder(requireContext())
+          // Get the layout inflater
+          val inflater = LayoutInflater.from(requireContext())
+
+          // Inflate and set the layout for the dialog
+          // Pass null as the parent view because its going in the dialog layout
+          val dialogView = inflater.inflate(R.layout.add_portfolio, null)
+
+          val portfolioHeaderView =
+            dialogView.findViewById<TextView>(R.id.portfolioHeader)
+          val portfolioTextView =
+            dialogView.findViewById<TextView>(R.id.portfolioTextView)
+
+          val selectedPortfolio =
+            SharedRepository.selectedPortfolio.value ?: if (stockDBdata.portfolio.isEmpty()) {
+              standardPortfolio
+            } else {
+              stockDBdata.portfolio
+            }
+
+          if (addSelected) {
+            portfolioHeaderView.text = getString(R.string.add_portfolio)
+            portfolioTextView.text = getString(R.string.portfolio_name_text)
+          } else {
+            portfolioHeaderView.text =
+              getString(R.string.rename_portfolio_header, selectedPortfolio)
+            portfolioTextView.text = getString(R.string.portfolio_rename_text)
+          }
+          val addNameView = dialogView.findViewById<TextView>(R.id.addPortfolioName)
+          builder.setView(dialogView)
+              // Add action buttons
+              .setPositiveButton(
+                  if (addSelected) {
+                    R.string.add
+                  } else {
+                    R.string.rename
+                  }
+              ) { _, _ ->
+                val portfolioText = addNameView.text.toString()
+                    .trim()
+                if (portfolioText.isEmpty() || portfolioText.compareTo(
+                        standardPortfolio, true
+                    ) == 0
+                ) {
+                  Toast.makeText(
+                      requireContext(), getString(R.string.portfolio_name_not_empty),
+                      Toast.LENGTH_LONG
+                  )
+                      .show()
+                  return@setPositiveButton
+                }
+
+                textViewPortfolio.text = portfolioText
+                if (addSelected) {
+                  stockRoomViewModel.setPortfolio(symbol, portfolioText)
+                  //SharedRepository.selectedPortfolio.postValue(portfolioText)
+                  val portfolios = SharedRepository.portfolios.value
+                  if (portfolios != null) {
+                    portfolios.add(portfolioText)
+                    SharedRepository.portfolios.value = portfolios
+                  }
+                } else {
+                  stockRoomViewModel.updatePortfolio(selectedPortfolio, portfolioText)
+                  //SharedRepository.selectedPortfolio.postValue(portfolioText)
+                  val portfolios = SharedRepository.portfolios.value
+                  if (portfolios != null) {
+                    portfolios.remove(selectedPortfolio)
+                    portfolios.add(portfolioText)
+                    SharedRepository.portfolios.value = portfolios
+                  }
+                }
+
+                SharedRepository.selectedPortfolio.value = portfolioText
+              }
+              .setNegativeButton(
+                  R.string.cancel
+              ) { _, _ ->
+              }
+          builder
+              .create()
+              .show()
+        } else {
+          var portfolio = menuitem.title.trim()
+              .toString()
+          textViewPortfolio.text = portfolio
+
+          if (portfolio == standardPortfolio) {
+            portfolio = ""
+          }
+
+          stockRoomViewModel.setPortfolio(symbol, portfolio)
+          SharedRepository.selectedPortfolio.value = portfolio
+        }
         true
       }
     }
@@ -842,7 +958,9 @@ class StockDataFragment : Fragment() {
               R.string.add
           ) { _, _ ->
             val sharesText = addSharesView.text.toString()
+                .trim()
             val priceText = addPriceView.text.toString()
+                .trim()
             if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
               var price = 0f
               var shares = 0f
@@ -925,6 +1043,7 @@ class StockDataFragment : Fragment() {
               R.string.delete
           ) { _, _ ->
             val removeSharesText = removeSharesView.text.toString()
+                .trim()
             if (removeSharesText.isNotEmpty()) {
               var shares = 0f
               var valid = true
@@ -1016,6 +1135,7 @@ class StockDataFragment : Fragment() {
               R.string.add
           ) { _, _ ->
             val title = textInputEditEventTitleView.text.toString()
+                .trim()
             val note = textInputEditEventNoteView.text.toString()
             val datetime: LocalDateTime = LocalDateTime.of(
                 datePickerEventDateView.year, datePickerEventDateView.month + 1,

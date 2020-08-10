@@ -28,9 +28,9 @@ data class DebugData(
   val data: String
 )
 
-class DebugListAdapter internal constructor(
+class ListAdapter internal constructor(
   context: Context
-) : RecyclerView.Adapter<DebugListAdapter.DebugDataViewHolder>() {
+) : RecyclerView.Adapter<ListAdapter.DebugDataViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = listOf<DebugData>()

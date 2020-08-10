@@ -169,6 +169,18 @@ interface StockRoomDao {
     portfolio: String
   )
 
+  @Query("UPDATE stock_table SET data = :data WHERE symbol = :symbol")
+  fun setData(
+    symbol: String,
+    data: String
+  )
+
+  @Query("UPDATE stock_table SET portfolio = :portfolioNew WHERE portfolio = :portfolioOld")
+  fun updatePortfolio(
+    portfolioOld: String,
+    portfolioNew: String
+  )
+
   @Query("UPDATE stock_table SET group_color = :color WHERE symbol = :symbol")
   fun setStockGroupColor(
     symbol: String,

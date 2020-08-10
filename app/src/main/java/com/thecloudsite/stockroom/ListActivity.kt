@@ -68,6 +68,8 @@ class ListActivity : AppCompatActivity() {
       items.forEach { stockItem ->
         stockTableRows.append("<tr>")
         stockTableRows.append("<td>${stockItem.symbol}</td>")
+        stockTableRows.append("<td>${stockItem.portfolio}</td>")
+        stockTableRows.append("<td>${stockItem.data}</td>")
         stockTableRows.append("<td>${getColorStr(stockItem.groupColor)}</td>")
         stockTableRows.append("<td>${stockItem.notes}</td>")
         stockTableRows.append("<td>${DecimalFormat("0.####").format(stockItem.alertAbove)}</td>")

@@ -226,7 +226,14 @@ limitations under the License. -->
   <string name="example_List_delete_all">\n\n***\nUse the delete all function in the settings to clear this example list.\n***</string>
   <string name="example_List_note">Sample note.\n1234 abcd.\nLast line of the note.</string>
   <string name="update">Update</string>
-  <string name="standard_portfolio">Standard-Portfolio</string>
+  <string name="standard_portfolio">Standard Portfolio</string>
   <string name="menu_portfolio_title">Select Portfolio</string>
   <string name="portfolio_header">Portfolio</string>
+  <string name="add_portfolio">Add Portfolio</string>
+  <string name="rename_portfolio">Rename Portfolio</string>
+  <string name="rename_portfolio_header">Rename Portfolio \'%1$s\'</string>
+  <string name="rename">Rename</string>
+  <string name="portfolio_name_text">Portfolio name</string>
+  <string name="portfolio_name_not_empty">Enter a Portfolio name.</string>
+  <string name="portfolio_rename_text">New Portfolio name</string>
 </resources>

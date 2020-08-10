@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2e2b0f0cf2c01fc2a07e59500d11f7a6",
+    "identityHash": "88073f54e5e3c5b9a5318783f1f310ae",
     "entities": [
       {
         "tableName": "stock_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `properties` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL, PRIMARY KEY(`symbol`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL, PRIMARY KEY(`symbol`))",
         "fields": [
           {
             "fieldPath": "symbol",
@@ -21,8 +21,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "properties",
-            "columnName": "properties",
+            "fieldPath": "data",
+            "columnName": "data",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -184,7 +184,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2e2b0f0cf2c01fc2a07e59500d11f7a6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88073f54e5e3c5b9a5318783f1f310ae')"
     ]
   }
 }

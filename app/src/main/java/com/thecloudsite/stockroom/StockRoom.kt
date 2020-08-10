@@ -37,7 +37,7 @@ import androidx.room.Relation
 data class StockDBdata(
   @PrimaryKey val symbol: String,
   var portfolio: String = "",
-  var properties: String = "",
+  var data: String = "",
   @ColumnInfo(name = "group_color") var groupColor: Int = 0,
   var notes: String = "",
   @ColumnInfo(name = "alert_above") var alertAbove: Float = 0f,

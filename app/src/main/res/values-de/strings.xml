@@ -223,7 +223,14 @@ limitations under the License. -->
   <string name="example_List_delete_all">\n\n***\nWählen sie in den Einstellungen die Funktion \'Alle Daten entfernen\', um diese Beispielliste zu löschen.\n***</string>
   <string name="example_List_note">Beispielanmerkung.\n1234 abcd.\nLetzte Zeile der Anmerkung.</string>
   <string name="update">Aktualisieren</string>
-  <string name="standard_portfolio">Standard Portfolio</string>
+  <string name="standard_portfolio">Standard-Portfolio</string>
   <string name="menu_portfolio_title">Portfolio auswählen</string>
   <string name="portfolio_header">Portfolio</string>
+  <string name="add_portfolio">Portfolio hinzufügen</string>
+  <string name="rename_portfolio">Portfolio umbenennen</string>
+  <string name="rename_portfolio_header">Portfolio \'%1$s\' umbenennen</string>
+  <string name="rename">Umbenennen</string>
+  <string name="portfolio_name_text">Portfolio name</string>
+  <string name="portfolio_name_not_empty">Geben Sie einen Portfolionamen ein.</string>
+  <string name="portfolio_rename_text">Neuer Portfolio name</string>
 </resources>

@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     // Setup the notification channel.
     NotificationChannelFactory(this)
 
-    val debugListAdapter = DebugListAdapter(this)
+    val debugListAdapter = ListAdapter(this)
     val debugList = findViewById<RecyclerView>(R.id.recyclerViewDebug)
     debugList.adapter = debugListAdapter
     val linearLayoutManager = LinearLayoutManager(this)

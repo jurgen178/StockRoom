@@ -73,6 +73,8 @@ data class EventJson(
 data class StockItemJson
 (
   var symbol: String,
+  val portfolio: String,
+  val data: String,
   val groupColor: Int,
   val groupName: String,
   val notes: String,
@@ -98,8 +100,6 @@ object SharedRepository {
 
   var postMarket: Boolean = true
   var notifications: Boolean = true
-
-  var portfolios2: HashSet<String> = HashSet()
 
   var selectedPortfolio = MutableLiveData<String>()
   val selectedPortfolioLiveData: LiveData<String>
@@ -284,10 +284,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     // reload the DB when portfolio is changed.
     allMediatorData.addSource(SharedRepository.selectedPortfolioLiveData) { value ->
       if (value != null) {
-        updateStockDataFromDB(liveDataProperties.value!!)
-        updateAssetsFromDB(liveDataAssets.value!!)
-        updateEventsFromDB(liveDataEvents.value!!)
-        updateFromOnline(liveDataOnline.value!!)
+        if (liveDataProperties.value != null) {
+          updateStockDataFromDB(liveDataProperties.value!!)
+        }
+        if (liveDataAssets.value != null) {
+          updateAssetsFromDB(liveDataAssets.value!!)
+        }
+        if (liveDataEvents.value != null) {
+          updateEventsFromDB(liveDataEvents.value!!)
+        }
+        if (liveDataOnline.value != null) {
+          updateFromOnline(liveDataOnline.value!!)
+        }
         allMediatorData.value = process(allData.value, true)
         updateOnlineDataManually()
       }
@@ -374,17 +382,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockDBdataPortfolios.add(data.portfolio)
 
         // Test
+/*
         stockDBdataPortfolios.add("data.portfolio1")
         stockDBdataPortfolios.add("data.portfolio2")
         stockDBdataPortfolios.add("data.portfolio3")
-/*
 */
       }
 
       // get all used portfolios
       // triggers the portfolio menu
       SharedRepository.portfolios.postValue(stockDBdataPortfolios)
-      SharedRepository.portfolios2 = stockDBdataPortfolios
     }
 
     _dataStore.value = dataStore
@@ -838,6 +845,22 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
         // get properties
+        if (jsonObj.has("portfolio")) {
+          val portfolio = jsonObj.getString("portfolio")
+              .trim()
+          if (portfolio.isNotEmpty()) {
+            setPortfolio(symbol = symbol, portfolio = portfolio)
+          }
+        }
+
+        if (jsonObj.has("data")) {
+          val data = jsonObj.getString("data")
+              .trim()
+          if (data.isNotEmpty()) {
+            setData(symbol = symbol, data = data)
+          }
+        }
+
         if (jsonObj.has("groupColor")) {
           groupColor = jsonObj.getInt("groupColor")
           if (groupName.isNotEmpty()) {
@@ -1122,6 +1145,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }?.name ?: ""
 
       StockItemJson(symbol = stockItem.stockDBdata.symbol,
+          portfolio = stockItem.stockDBdata.portfolio,
+          data = stockItem.stockDBdata.data,
           groupColor = stockItem.stockDBdata.groupColor,
           groupName = groupName,
           alertAbove = stockItem.stockDBdata.alertAbove,
@@ -1260,6 +1285,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     portfolio: String
   ) = scope.launch {
     repository.setPortfolio(symbol, portfolio)
+  }
+
+  fun setData(
+    symbol: String,
+    data: String
+  ) = scope.launch {
+    repository.setData(symbol, data)
+  }
+
+  fun updatePortfolio(
+    portfolioOld: String,
+    portfolioNew: String
+  ) = scope.launch {
+    repository.updatePortfolio(portfolioOld, portfolioNew)
   }
 
   fun getGroupSync(color: Int): Group {
@@ -1453,10 +1492,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       repository.deleteEvent(event)
     }
 
-  fun deleteAll() =
+  fun deleteAll() {
+    SharedRepository.selectedPortfolio.postValue("")
+    SharedRepository.portfolios.postValue(HashSet())
+
     scope.launch {
       repository.deleteAll()
     }
+  }
 
   fun logDebug(value: String) {
     val time: LocalDateTime = LocalDateTime.now()

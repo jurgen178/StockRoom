@@ -81,7 +81,7 @@ class UpdateGroupActivity : AppCompatActivity() {
             // Add the new color.
             stockRoomViewModel.setGroup(color = color, name = group.name)
           }
-          val nameText = addNameView.text.toString()
+          val nameText = addNameView.text.toString().trim()
           val nameUsed = groupList.find { group ->
             group.color != clr && group.name == nameText
           } != null
@@ -192,7 +192,7 @@ class UpdateGroupActivity : AppCompatActivity() {
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
-            val nameText = addNameView.text.toString()
+            val nameText = addNameView.text.toString().trim()
             if (nameText.isEmpty()) {
               Toast.makeText(
                   this, getString(R.string.group_name_not_empty), Toast.LENGTH_LONG

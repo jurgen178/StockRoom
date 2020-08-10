@@ -67,7 +67,7 @@ class AddActivity : AppCompatActivity() {
       if (TextUtils.isEmpty(addView.text)) {
         setResult(Activity.RESULT_CANCELED, replyIntent)
       } else {
-        val symbol = addView.text.toString()
+        val symbol = addView.text.toString().trim()
 
         if (symbol == "\u0064\u0065\u0062\u0075\u0067") {
           val intent = Intent(this@AddActivity, ListActivity::class.java)

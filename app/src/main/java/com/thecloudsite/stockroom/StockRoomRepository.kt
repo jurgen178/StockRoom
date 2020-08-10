@@ -74,6 +74,24 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun setData(
+    symbol: String,
+    data: String
+  ) {
+    stockRoomDao.setData(symbol, data)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun updatePortfolio(
+    portfolioOld: String,
+    portfolioNew: String
+  ) {
+    stockRoomDao.updatePortfolio(portfolioOld, portfolioNew)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun updateAlertAbove(
     symbol: String,
     alertAbove: Float
