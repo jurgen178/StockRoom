@@ -24,6 +24,7 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Handler
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -38,6 +39,7 @@ import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.thecloudsite.stockroom.MarketState.NO_NETWORK
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -189,77 +191,67 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     // sharedPreferences.getBoolean("postmarket", true) doesn't work here anymore?
     SharedRepository.postMarket = postMarket
     SharedRepository.notifications = notifications
+  }
 
-    // Setup to get the online data every 2s for regular hours.
+  suspend fun getOnlineData(prevOnlineDataDelay: Long) : Pair<Long, MarketState> {
+    val marketState = getStockData()
 
-    // Check online data depending on the market state
-    val onlineDataHandler: Handler = Handler()
-    var onlineDataDelay: Long = 2000L
-    val onlineDataRunnableCode = object : Runnable {
-      override fun run() {
-        scope.launch {
-          val marketState: MarketState = getStockData()
-
-          // Set the delay depending on the market state.
-          onlineDataDelay = when (marketState) {
-            MarketState.REGULAR -> {
-              2 * 1000L
-            }
-            MarketState.PRE, MarketState.POST -> {
-              60 * 1000L
-            }
-            MarketState.PREPRE, MarketState.POSTPOST -> {
-              15 * 60 * 1000L
-            }
-            MarketState.CLOSED -> {
-              60 * 60 * 1000L
-            }
-            MarketState.NO_NETWORK -> {
-              // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
-              maxOf(2 * 60 * 1000L, onlineDataDelay * 2)
-            }
-            MarketState.UNKNOWN -> {
-              60 * 1000L
-            }
-          }
-
-          val marketStateStr = when (marketState) {
-            MarketState.REGULAR -> {
-              "regular market"
-            }
-            MarketState.PRE, MarketState.PREPRE -> {
-              "pre market"
-            }
-            MarketState.POST, MarketState.POSTPOST -> {
-              "post market"
-            }
-            MarketState.CLOSED -> {
-              "market closed"
-            }
-            MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
-              "network not available"
-            }
-          }
-
-          val delaystr = when {
-            onlineDataDelay >= 60 * 60 * 1000L -> {
-              "${onlineDataDelay / (60 * 60 * 1000L)}h"
-            }
-            onlineDataDelay >= 60 * 1000L -> {
-              "${onlineDataDelay / (60 * 1000L)}m"
-            }
-            else -> {
-              "${onlineDataDelay / 1000L}s"
-            }
-          }
-
-          logDebugAsync("update online data ($marketStateStr, interval=$delaystr)")
-        }
-
-        onlineDataHandler.postDelayed(this, onlineDataDelay)
+    // Set the delay depending on the market state.
+    val onlineDataDelay = when (marketState) {
+      MarketState.REGULAR -> {
+        2 * 1000L
+      }
+      MarketState.PRE, MarketState.POST -> {
+        60 * 1000L
+      }
+      MarketState.PREPRE, MarketState.POSTPOST -> {
+        15 * 60 * 1000L
+      }
+      MarketState.CLOSED -> {
+        60 * 60 * 1000L
+      }
+      MarketState.NO_NETWORK -> {
+        // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
+        maxOf(2 * 60 * 1000L, prevOnlineDataDelay * 2)
+      }
+      MarketState.UNKNOWN -> {
+        60 * 1000L
       }
     }
-    onlineDataHandler.post(onlineDataRunnableCode)
+
+    val marketStateStr = when (marketState) {
+      MarketState.REGULAR -> {
+        "regular market"
+      }
+      MarketState.PRE, MarketState.PREPRE -> {
+        "pre market"
+      }
+      MarketState.POST, MarketState.POSTPOST -> {
+        "post market"
+      }
+      MarketState.CLOSED -> {
+        "market closed"
+      }
+      MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
+        "network not available"
+      }
+    }
+
+    val delaystr = when {
+      onlineDataDelay >= 60 * 60 * 1000L -> {
+        "${onlineDataDelay / (60 * 60 * 1000L)}h"
+      }
+      onlineDataDelay >= 60 * 1000L -> {
+        "${onlineDataDelay / (60 * 1000L)}m"
+      }
+      else -> {
+        "${onlineDataDelay / 1000L}s"
+      }
+    }
+
+    logDebugAsync("update online data ($marketStateStr, interval=$delaystr)")
+
+    return Pair(onlineDataDelay, marketState)
   }
 
   fun updateOnlineDataManually() =

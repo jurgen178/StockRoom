@@ -20,13 +20,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.bold
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,10 +35,15 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
 import kotlinx.android.synthetic.main.activity_main.viewpager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Locale
+import kotlin.coroutines.CoroutineContext
 
 // App constants.
 // https://stackoverflow.com/questions/9947156/what-are-the-default-color-values-for-the-holo-theme-on-android-4-0
@@ -51,6 +54,11 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
   private val newSymbolActivityRequestCode = 1
+
+  private val parentJob = Job()
+  private val coroutineContext: CoroutineContext
+    get() = parentJob + Dispatchers.Default
+  private val scope = CoroutineScope(coroutineContext)
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var eventList: MutableList<Events> = mutableListOf()
@@ -124,12 +132,55 @@ class MainActivity : AppCompatActivity() {
       invalidateOptionsMenu()
     })
 
+    // Setup to get the online data every 2s for regular hours.
+    // Check online data depending on the market state
+    val onlineDataHandler: Handler = Handler()
+    var onlineDataStatus: Pair<Long, MarketState> = Pair(2000L, MarketState.UNKNOWN)
+    val onlineDataTimerDelay: Long = 2000L
+    var nextUpdate: Long = 2000L
+    var onlineUpdateTime: Long = 2000L
+    //var forceUpdate = false
+    val onlineDataRunnableCode = object : Runnable {
+      override fun run() {
+        val onlineAvailable =
+          onlineDataStatus.second == MarketState.NO_NETWORK && isOnline(applicationContext)
+        if (onlineAvailable || onlineUpdateTime >= nextUpdate) {
+          scope.launch {
+            onlineDataStatus = stockRoomViewModel.getOnlineData(onlineDataStatus.first)
+            nextUpdate = onlineDataStatus.first
+            onlineUpdateTime = 0L
+          }
+          //forceUpdate = false
+        }
+
+        onlineUpdateTime += onlineDataTimerDelay
+        onlineDataHandler.postDelayed(this, onlineDataTimerDelay)
+      }
+    }
+    onlineDataHandler.post(onlineDataRunnableCode)
+
+    /*
+    val connectivityManager =
+      application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+      override fun onAvailable(network: Network) {
+        //take action when network connection is gained
+        forceUpdate = true
+        //onlineDataHandler.postDelayed(this, onlineDataDelay)
+      }
+      //override fun onLost(network: Network?) {
+      //take action when network connection is lost
+      //}
+    })
+    */
+
     // Check event every 5s
     val eventHandle: Handler = Handler()
     val eventDelay: Long = 5000L
     val eventRunnableCode = object : Runnable {
       override fun run() {
         checkEvents()
+        //stockRoomViewModel.logDebug("Check events.")
         eventHandle.postDelayed(this, eventDelay)
       }
     }
