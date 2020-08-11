@@ -35,7 +35,7 @@
     "assets": [
       {
         "price": 1.0,
-        "shares": 1100.0
+        "shares": 1300.0
       }
     ],
     "events": [],
@@ -176,7 +176,7 @@
     "alertBelow": 0.0,
     "assets": [
       {
-        "price": 15.0,
+        "price": 12.0,
         "shares": 180.0
       }
     ],

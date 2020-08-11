@@ -128,6 +128,22 @@ class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
     return MarketState.UNKNOWN
   }
 
+  suspend fun getStockData2(symbols: List<String>): List<OnlineMarketData> {
+    val quoteResponse: YahooResponse? = try {
+      safeApiCall(
+          call = {
+            api.getStockDataAsync(symbols.joinToString(","))
+                .await()
+          }, errorMessage = "Error getting finance data."
+      )
+    } catch (e: Exception) {
+      Log.d("StockMarketDataRepository.getStockData failed", "Exception=${e}")
+      null
+    }
+
+    return quoteResponse?.quoteResponse?.result ?: emptyList()
+  }
+
   suspend fun getStockData(symbol: String): OnlineMarketData? {
     if (symbol.isNotEmpty()) {
 

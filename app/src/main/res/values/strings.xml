@@ -223,7 +223,7 @@ limitations under the License. -->
   <string name="email_feedback_title">Send EMail</string>
   <string name="bought_for">Bought for %1$s</string>
   <string name="version">Version</string>
-  <string name="example_List_delete_all">\n\n***\nUse the delete all function in the settings to clear this example list.\n***</string>
+  <string name="example_List_delete_all">\n\n***\nUse the \'Delete all\' function in the settings to clear this example list.\n***</string>
   <string name="example_List_note">Sample note.\n1234 abcd.\nLast line of the note.</string>
   <string name="update">Update</string>
   <string name="standard_portfolio">Standard Portfolio</string>

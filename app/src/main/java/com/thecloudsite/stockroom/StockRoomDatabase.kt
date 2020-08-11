@@ -18,6 +18,7 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Color
 import androidx.annotation.RawRes
 import androidx.room.Database
 import androidx.room.Room
@@ -28,6 +29,8 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
@@ -107,7 +110,8 @@ abstract class StockRoomDatabase : RoomDatabase() {
         )
 
         stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets.map { asset ->
-          Asset(symbol = symbol,
+          Asset(
+              symbol = symbol,
               shares = asset.shares ?: 0f,
               price = asset.price ?: 0f
           )
@@ -132,10 +136,65 @@ abstract class StockRoomDatabase : RoomDatabase() {
       // Add predefined values to the DB.
       stockRoomDao.setPredefinedGroups(context)
 
+      // preset with json
+/*
       val jsonText = context.resources.getRawTextFile(R.raw.example_stocks)
       importExampleJSON(stockRoomDao, jsonText)
+  */
 
-      // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
+      val stockMarketDataRepository: StockMarketDataRepository =
+        StockMarketDataRepository(StockApiFactory.yahooApi)
+
+      data class Asset2(
+        val symbol: String,
+        val asset: Float,
+        val gain: Float,
+        val color: Int
+      )
+
+      val assets: List<Asset2> = listOf(
+          Asset2("AAPL", 6500f, 5240f, Color.BLUE),
+          Asset2("AMZN", 6500f, 280f, Color.MAGENTA),
+          Asset2("ANY", 3700f, 2470f, Color.YELLOW),
+          Asset2("BA", 5500f, -640f, Color.GREEN),
+          Asset2("CVX", 4500f, -508f, Color.rgb(0, 191, 255)),
+          Asset2("DIS", 1000f, -320f, Color.GREEN),
+          Asset2("FB", 1000f, 710f, Color.MAGENTA),
+          Asset2("GE", 10000f, 8490f, Color.BLACK),
+          Asset2("IBM", 1000f, 1460f, Color.YELLOW),
+          Asset2("MSFT", 5200f, 1450f, Color.rgb(173, 216, 230)),
+          Asset2("QCOM", 4200f, 240f, Color.rgb(0, 191, 255)),
+          Asset2("RM", 3600f, 1110f, Color.RED),
+          Asset2("T", 1000f, 2010f, Color.MAGENTA),
+          Asset2("TSLA", 7000f, 2060f, Color.rgb(72, 209, 204))
+      )
+
+      val symbols = assets.map { asset ->
+        asset.symbol
+      }
+
+      var onlinedata: List<OnlineMarketData> = emptyList()
+      runBlocking {
+        withContext(Dispatchers.IO) {
+          onlinedata = stockMarketDataRepository.getStockData2(symbols)
+        }
+      }
+
+      assets.forEach { asset ->
+        stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
+
+        val data = onlinedata.find {
+          it.symbol == asset.symbol
+        }
+
+        if (data != null) {
+          val price = data.marketPrice * (1 - asset.gain / asset.asset)
+          val shares = (asset.asset - asset.gain) / price
+          stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price))
+        }
+      }
+
+// List is sorted alphabetically. Add comment about deleting the example list in the first entry.
       stockRoomDao.updateNotes(
           symbol = "AAPL", notes = context.getString(R.string.example_List_delete_all)
       )
@@ -143,39 +202,39 @@ abstract class StockRoomDatabase : RoomDatabase() {
           symbol = "AMZN", notes = context.getString(R.string.example_List_note)
       )
 
-      /*
-      stockRoomDao.insert(StockDBdata(symbol = "AAPL", groupColor = Color.BLUE))
-      stockRoomDao.addAsset(Asset(symbol = "AAPL", shares = 20f, price = 100f))
-      stockRoomDao.updateNotes(symbol = "AAPL", notes = context.getString(R.string.example_List_delete_all))
-      stockRoomDao.insert(StockDBdata(symbol = "AMZN", groupColor = Color.BLUE, alertAbove = 4000f))
-      stockRoomDao.addAsset(Asset(symbol = "AMZN", shares = 2f, price = 3000f))
-      stockRoomDao.updateNotes(symbol = "AMZN", notes = context.getString(R.string.example_List_note))
-      stockRoomDao.insert(StockDBdata(symbol = "BA", groupColor = Color.YELLOW, alertBelow = 100f))
-      stockRoomDao.addAsset(Asset(symbol = "BA", shares = 30f, price = 200f))
-      stockRoomDao.insert(StockDBdata(symbol = "CVX", groupColor = Color.YELLOW))
-      stockRoomDao.addAsset(Asset(symbol = "CVX", shares = 40f, price = 100f))
-      stockRoomDao.insert(StockDBdata(symbol = "DIS", groupColor = Color.YELLOW))
-      stockRoomDao.addAsset(Asset(symbol = "DIS", shares = 15f, price = 150f))
-      stockRoomDao.addEvent(
-          Event(
-              symbol = "DIS", type = 0, datetime = 1619870400, title = "Earnings report",
-              note = "Check the DIS site"
-          )
-      )
-      stockRoomDao.insert(StockDBdata(symbol = "FB", groupColor = Color.RED))
-      stockRoomDao.addAsset(Asset(symbol = "FB", shares = 12f, price = 120f))
-      stockRoomDao.insert(StockDBdata(symbol = "IBM", groupColor = Color.RED))
-      stockRoomDao.addAsset(Asset(symbol = "IBM", shares = 20f, price = 200f))
-      stockRoomDao.insert(StockDBdata(symbol = "MSFT", groupColor = Color.BLUE))
-      stockRoomDao.addAsset(Asset(symbol = "MSFT", shares = 20f, price = 150f))
-      stockRoomDao.insert(StockDBdata(symbol = "QCOM", groupColor = Color.GREEN))
-      stockRoomDao.addAsset(Asset(symbol = "QCOM", shares = 30f, price = 100f))
-      stockRoomDao.insert(StockDBdata(symbol = "T", groupColor = Color.rgb(72, 209, 204)))
-      stockRoomDao.addAsset(Asset(symbol = "T", shares = 100f, price = 10f))
-      stockRoomDao.insert(StockDBdata(symbol = "TSLA", groupColor = Color.rgb(72, 209, 204)))
-      stockRoomDao.addAsset(Asset(symbol = "TSLA", shares = 5f, price = 1000f))
-      stockRoomDao.insert(StockDBdata(symbol = "^GSPC", groupColor = 0))
-       */
+/*
+stockRoomDao.insert(StockDBdata(symbol = "AAPL", groupColor = Color.BLUE))
+stockRoomDao.addAsset(Asset(symbol = "AAPL", shares = 20f, price = 100f))
+stockRoomDao.updateNotes(symbol = "AAPL", notes = context.getString(R.string.example_List_delete_all))
+stockRoomDao.insert(StockDBdata(symbol = "AMZN", groupColor = Color.BLUE, alertAbove = 4000f))
+stockRoomDao.addAsset(Asset(symbol = "AMZN", shares = 2f, price = 3000f))
+stockRoomDao.updateNotes(symbol = "AMZN", notes = context.getString(R.string.example_List_note))
+stockRoomDao.insert(StockDBdata(symbol = "BA", groupColor = Color.YELLOW, alertBelow = 100f))
+stockRoomDao.addAsset(Asset(symbol = "BA", shares = 30f, price = 200f))
+stockRoomDao.insert(StockDBdata(symbol = "CVX", groupColor = Color.YELLOW))
+stockRoomDao.addAsset(Asset(symbol = "CVX", shares = 40f, price = 100f))
+stockRoomDao.insert(StockDBdata(symbol = "DIS", groupColor = Color.YELLOW))
+stockRoomDao.addAsset(Asset(symbol = "DIS", shares = 15f, price = 150f))
+stockRoomDao.addEvent(
+    Event(
+        symbol = "DIS", type = 0, datetime = 1619870400, title = "Earnings report",
+        note = "Check the DIS site"
+    )
+)
+stockRoomDao.insert(StockDBdata(symbol = "FB", groupColor = Color.RED))
+stockRoomDao.addAsset(Asset(symbol = "FB", shares = 12f, price = 120f))
+stockRoomDao.insert(StockDBdata(symbol = "IBM", groupColor = Color.RED))
+stockRoomDao.addAsset(Asset(symbol = "IBM", shares = 20f, price = 200f))
+stockRoomDao.insert(StockDBdata(symbol = "MSFT", groupColor = Color.BLUE))
+stockRoomDao.addAsset(Asset(symbol = "MSFT", shares = 20f, price = 150f))
+stockRoomDao.insert(StockDBdata(symbol = "QCOM", groupColor = Color.GREEN))
+stockRoomDao.addAsset(Asset(symbol = "QCOM", shares = 30f, price = 100f))
+stockRoomDao.insert(StockDBdata(symbol = "T", groupColor = Color.rgb(72, 209, 204)))
+stockRoomDao.addAsset(Asset(symbol = "T", shares = 100f, price = 10f))
+stockRoomDao.insert(StockDBdata(symbol = "TSLA", groupColor = Color.rgb(72, 209, 204)))
+stockRoomDao.addAsset(Asset(symbol = "TSLA", shares = 5f, price = 1000f))
+stockRoomDao.insert(StockDBdata(symbol = "^GSPC", groupColor = 0))
+ */
     }
   }
 }
