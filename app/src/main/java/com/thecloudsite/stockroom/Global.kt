@@ -2,11 +2,16 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.text.SpannableStringBuilder
+import android.util.Log
 import androidx.annotation.RawRes
 import androidx.core.text.bold
 import androidx.core.text.color
 import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.Locale
 
 fun isValidSymbol(symbol: String): Boolean {
@@ -101,4 +106,33 @@ fun getAssetChange(
   }
 
   return SpannableStringBuilder()
+}
+
+fun isOnline(context: Context): Boolean {
+  val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+  val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+  return isConnected
+  /*
+  val connectivityManager =
+    context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  val capabilities =
+    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+  if (capabilities != null) {
+    when {
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+        Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+      }
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+        Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+      }
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+        Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+      }
+    }
+    return true
+  }
+  return false
+
+   */
 }

@@ -661,28 +661,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
  "change": -0.19000053,
 */
 
-  private fun isOnline(context: Context): Boolean {
-    val connectivityManager =
-      context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val capabilities =
-      connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-    if (capabilities != null) {
-      when {
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-          Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-        }
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-          Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-        }
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-          Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-        }
-      }
-      return true
-    }
-    return false
-  }
-
   private fun csvStrToFloat(value: String): Float {
     val s = value.replace("$", "")
     var f: Float

@@ -40,9 +40,14 @@ class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
         null
       }
 
-      // no _data.value because this is a background thread
       val onlineMarketDataResultList: List<OnlineMarketData> = quoteResponse?.quoteResponse?.result
-          ?: return MarketState.NO_NETWORK
+          ?: emptyList()
+
+      // no _data.value because this is a background thread
+      if (onlineMarketDataResultList.isEmpty()) {
+        _data.postValue(onlineMarketDataResultList)
+        return MarketState.NO_NETWORK
+      }
 
       val postMarket: Boolean = SharedRepository.postMarket
 

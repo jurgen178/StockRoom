@@ -17,9 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
-import androidx.annotation.RawRes
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -31,9 +29,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
 import java.util.Locale
+import kotlin.math.roundToInt
 
 /**
  * This is the backend. The database. This used to be done by the OpenHelper.
@@ -136,62 +133,65 @@ abstract class StockRoomDatabase : RoomDatabase() {
       // Add predefined values to the DB.
       stockRoomDao.setPredefinedGroups(context)
 
-      // preset with json
-/*
-      val jsonText = context.resources.getRawTextFile(R.raw.example_stocks)
-      importExampleJSON(stockRoomDao, jsonText)
-  */
+      if (isOnline(context)) {
+        val stockMarketDataRepository: StockMarketDataRepository =
+          StockMarketDataRepository(StockApiFactory.yahooApi)
 
-      val stockMarketDataRepository: StockMarketDataRepository =
-        StockMarketDataRepository(StockApiFactory.yahooApi)
+        data class AssetPreset(
+          val symbol: String,
+          val asset: Float,
+          val gain: Float,
+          val color: Int
+        )
 
-      data class Asset2(
-        val symbol: String,
-        val asset: Float,
-        val gain: Float,
-        val color: Int
-      )
+        val assets: List<AssetPreset> = listOf(
+            AssetPreset("AAPL", 6500f, 5240f, Color.BLUE),
+            AssetPreset("AMZN", 6500f, 280f, Color.MAGENTA),
+            AssetPreset("ANY", 3700f, 2470f, Color.YELLOW),
+            AssetPreset("BA", 5500f, -640f, Color.GREEN),
+            AssetPreset("CVX", 4500f, -508f, Color.rgb(0, 191, 255)),
+            AssetPreset("DIS", 1000f, -320f, Color.GREEN),
+            AssetPreset("FB", 1000f, 710f, Color.MAGENTA),
+            AssetPreset("GE", 10000f, 8490f, Color.BLACK),
+            AssetPreset("IBM", 1000f, 1460f, Color.YELLOW),
+            AssetPreset("MSFT", 5200f, 1450f, Color.rgb(173, 216, 230)),
+            AssetPreset("QCOM", 4200f, 240f, Color.rgb(0, 191, 255)),
+            AssetPreset("RM", 3600f, 1110f, Color.RED),
+            AssetPreset("T", 1000f, 2010f, Color.MAGENTA),
+            AssetPreset("TSLA", 7000f, 2060f, Color.rgb(72, 209, 204))
+        )
 
-      val assets: List<Asset2> = listOf(
-          Asset2("AAPL", 6500f, 5240f, Color.BLUE),
-          Asset2("AMZN", 6500f, 280f, Color.MAGENTA),
-          Asset2("ANY", 3700f, 2470f, Color.YELLOW),
-          Asset2("BA", 5500f, -640f, Color.GREEN),
-          Asset2("CVX", 4500f, -508f, Color.rgb(0, 191, 255)),
-          Asset2("DIS", 1000f, -320f, Color.GREEN),
-          Asset2("FB", 1000f, 710f, Color.MAGENTA),
-          Asset2("GE", 10000f, 8490f, Color.BLACK),
-          Asset2("IBM", 1000f, 1460f, Color.YELLOW),
-          Asset2("MSFT", 5200f, 1450f, Color.rgb(173, 216, 230)),
-          Asset2("QCOM", 4200f, 240f, Color.rgb(0, 191, 255)),
-          Asset2("RM", 3600f, 1110f, Color.RED),
-          Asset2("T", 1000f, 2010f, Color.MAGENTA),
-          Asset2("TSLA", 7000f, 2060f, Color.rgb(72, 209, 204))
-      )
-
-      val symbols = assets.map { asset ->
-        asset.symbol
-      }
-
-      var onlinedata: List<OnlineMarketData> = emptyList()
-      runBlocking {
-        withContext(Dispatchers.IO) {
-          onlinedata = stockMarketDataRepository.getStockData2(symbols)
-        }
-      }
-
-      assets.forEach { asset ->
-        stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
-
-        val data = onlinedata.find {
-          it.symbol == asset.symbol
+        val symbols = assets.map { asset ->
+          asset.symbol
         }
 
-        if (data != null) {
-          val price = data.marketPrice * (1 - asset.gain / asset.asset)
-          val shares = (asset.asset - asset.gain) / price
-          stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price))
+        var onlinedata: List<OnlineMarketData> = emptyList()
+        runBlocking {
+          withContext(Dispatchers.IO) {
+            onlinedata = stockMarketDataRepository.getStockData2(symbols)
+          }
         }
+
+        assets.forEach { asset ->
+          stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
+
+          val data = onlinedata.find {
+            it.symbol == asset.symbol
+          }
+
+          if (data != null) {
+            val assetvalue = asset.asset + ((0..1000).random() - 500).toFloat() / 100
+            val gainvalue = asset.gain + ((0..1000).random() - 500).toFloat() / 100
+            val price = data.marketPrice * (1 - gainvalue / assetvalue)
+            val shares = ((assetvalue - gainvalue) / price).roundToInt()
+                .toFloat()
+            stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price))
+          }
+        }
+      } else {
+        // if offline, preset with json
+        val jsonText = context.resources.getRawTextFile(R.raw.example_stocks)
+        importExampleJSON(stockRoomDao, jsonText)
       }
 
 // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
