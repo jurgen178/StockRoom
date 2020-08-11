@@ -43,7 +43,7 @@ class SummaryListFragment : Fragment() {
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("Summary list fragment started.")
+    //stockRoomViewModel.logDebug("Summary list fragment started.")
 
     val clickListenerListItem = { stockItem: StockItem -> clickListenerListItem(stockItem) }
     val summaryListAdapter = SummaryListAdapter(requireContext(), clickListenerListItem)
@@ -69,6 +69,7 @@ class SummaryListFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.updateOnlineDataManually()
+    //stockRoomViewModel.logDebug("Summary List fragment activated.")
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -102,8 +103,7 @@ class SummaryListFragment : Fragment() {
         true
       }
       R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually()
-        stockRoomViewModel.logDebug("Update online data manually for summary list data.")
+        stockRoomViewModel.updateOnlineDataManually("Update online data manually for summary list data.")
         true
       }
       else -> super.onOptionsItemSelected(item)

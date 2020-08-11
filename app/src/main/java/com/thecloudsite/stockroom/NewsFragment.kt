@@ -71,7 +71,7 @@ class NewsFragment : Fragment() {
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("News fragment started.")
+    //stockRoomViewModel.logDebug("News fragment started.")
 
     // Get the online data and compose a news query for the symbol.
     stockRoomViewModel.onlineMarketDataList.observe(viewLifecycleOwner, Observer { data ->

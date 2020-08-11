@@ -47,7 +47,7 @@ class SummaryGroupFragment : Fragment() {
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("Summary group fragment started.")
+    //stockRoomViewModel.logDebug("Summary group fragment started.")
 
     val summaryGroupAdapter = SummaryGroupAdapter(requireContext())
     val summaryGroup = view.findViewById<RecyclerView>(R.id.summaryGroup)
@@ -77,13 +77,13 @@ class SummaryGroupFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.updateOnlineDataManually()
+    //stockRoomViewModel.logDebug("Summary Group fragment activated.")
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually()
-        stockRoomViewModel.logDebug("Update online data manually for summary group data.")
+        stockRoomViewModel.updateOnlineDataManually("Update online data manually for summary group data.")
         true
       }
       else -> super.onOptionsItemSelected(item)

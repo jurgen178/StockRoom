@@ -19,12 +19,8 @@ package com.thecloudsite.stockroom
 import android.app.Application
 import android.content.Context
 import android.graphics.Color
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
-import android.os.Handler
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -39,7 +35,6 @@ import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.thecloudsite.stockroom.MarketState.NO_NETWORK
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -193,8 +188,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     SharedRepository.notifications = notifications
   }
 
-  suspend fun getOnlineData(prevOnlineDataDelay: Long) : Pair<Long, MarketState> {
-    val marketState = getStockData()
+  suspend fun getOnlineData(prevOnlineDataDelay: Long): Pair<Long, MarketState> {
+    val stockdataResult = getStockData()
+    val marketState = stockdataResult.first
+    val errorMsg = stockdataResult.second
 
     // Set the delay depending on the market state.
     val onlineDataDelay = when (marketState) {
@@ -213,51 +210,68 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       MarketState.NO_NETWORK -> {
         // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
         maxOf(2 * 60 * 1000L, prevOnlineDataDelay * 2)
+        // 10 * 1000L
       }
       MarketState.UNKNOWN -> {
         60 * 1000L
       }
     }
 
-    val marketStateStr = when (marketState) {
-      MarketState.REGULAR -> {
-        "regular market"
+    if (errorMsg.isEmpty()) {
+      val marketStateStr = when (marketState) {
+        MarketState.REGULAR -> {
+          "regular market"
+        }
+        MarketState.PRE, MarketState.PREPRE -> {
+          "pre market"
+        }
+        MarketState.POST, MarketState.POSTPOST -> {
+          "post market"
+        }
+        MarketState.CLOSED -> {
+          "market closed"
+        }
+        MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
+          "network not available"
+        }
       }
-      MarketState.PRE, MarketState.PREPRE -> {
-        "pre market"
-      }
-      MarketState.POST, MarketState.POSTPOST -> {
-        "post market"
-      }
-      MarketState.CLOSED -> {
-        "market closed"
-      }
-      MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
-        "network not available"
-      }
-    }
 
-    val delaystr = when {
-      onlineDataDelay >= 60 * 60 * 1000L -> {
-        "${onlineDataDelay / (60 * 60 * 1000L)}h"
+      val delaystr = when {
+        onlineDataDelay >= 60 * 60 * 1000L -> {
+          "${onlineDataDelay / (60 * 60 * 1000L)}h"
+        }
+        onlineDataDelay >= 60 * 1000L -> {
+          "${onlineDataDelay / (60 * 1000L)}m"
+        }
+        else -> {
+          "${onlineDataDelay / 1000L}s"
+        }
       }
-      onlineDataDelay >= 60 * 1000L -> {
-        "${onlineDataDelay / (60 * 1000L)}m"
-      }
-      else -> {
-        "${onlineDataDelay / 1000L}s"
-      }
-    }
 
-    logDebugAsync("update online data ($marketStateStr, interval=$delaystr)")
+      logDebugAsync("Received online data ($marketStateStr, interval=$delaystr)")
+    } else {
+      logDebugAsync("Error getting online data: $errorMsg")
+    }
 
     return Pair(onlineDataDelay, marketState)
   }
 
-  fun updateOnlineDataManually() =
-    scope.launch {
-      val marketState: MarketState = getStockData()
+  fun updateOnlineDataManually(onlineMsg: String = "") {
+    if (isOnline(getApplication())) {
+      if (onlineMsg.isNotEmpty()) {
+        logDebug(onlineMsg)
+      }
+
+      scope.launch {
+        val stockDataResult = getStockData()
+        if (stockDataResult.second.isNotEmpty()) {
+          logDebugAsync("Error getting online data: ${stockDataResult.second}")
+        }
+      }
+    } else {
+      logDebug("Network is offline. No online data.")
     }
+  }
 
   private fun updateAll() {
     allMediatorData.value = process(allData.value, true)
@@ -347,7 +361,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.stockDBdata = data
-        } else
+        } else {
           dataStore.stockItems.add(
               StockItem(
                   onlineMarketData = OnlineMarketData(symbol = data.symbol),
@@ -356,6 +370,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   events = emptyList()
               )
           )
+        }
       }
 
       // only load online data for symbols in the portfolio set
@@ -653,23 +668,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
  "change": -0.19000053,
 */
 
-  private fun csvStrToFloat(value: String): Float {
-    val s = value.replace("$", "")
-    var f: Float
-    try {
-      f = s.toFloat()
-      if (f == 0f) {
-        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-        f = numberFormat.parse(s)!!
-            .toFloat()
-      }
-    } catch (e: Exception) {
-      f = 0f
-    }
-
-    return f
-  }
-
   /*
   {
     "annualDividendRate": 0.0,
@@ -735,6 +733,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       // get symbol
       val jsonObj: JSONObject = jsonArray[i] as JSONObject
+
+      logDebug("Import JSONObject '$jsonObj'")
+
       val symbol = jsonObj.getString("symbol")
           .toUpperCase(Locale.ROOT)
 
@@ -897,12 +898,32 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
     }
 
-    Toast.makeText(
-        context, getApplication<Application>().getString(
+    val msg = getApplication<Application>().getString(
         R.string.import_msg, imported.toString()
-    ), Toast.LENGTH_LONG
+    )
+    logDebug("Import JSON  '$msg'")
+
+    Toast.makeText(
+        context, msg, Toast.LENGTH_LONG
     )
         .show()
+  }
+
+  private fun csvStrToFloat(value: String): Float {
+    val s = value.replace("$", "")
+    var f: Float
+    try {
+      f = s.toFloat()
+      if (f == 0f) {
+        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+        f = numberFormat.parse(s)!!
+            .toFloat()
+      }
+    } catch (e: Exception) {
+      f = 0f
+    }
+
+    return f
   }
 
   private fun importCSV(
@@ -929,8 +950,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     if (symbolColumn == -1) {
+      val msg = getApplication<Application>().getString(R.string.import_csv_symbolcolumn_error)
+      logDebug("Import CSV  '$msg'")
+
       Toast.makeText(
-          context, getApplication<Application>().getString(R.string.import_csv_symbolcolumn_error),
+          context, msg,
           Toast.LENGTH_LONG
       )
           .show()
@@ -993,10 +1017,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
     }
 
-    Toast.makeText(
-        context, getApplication<Application>().getString(
+    val msg = getApplication<Application>().getString(
         R.string.import_msg, imported.toString()
-    ), Toast.LENGTH_LONG
+    )
+    logDebug("Import CSV  '$msg'")
+
+    Toast.makeText(
+        context, msg, Toast.LENGTH_LONG
     )
         .show()
   }
@@ -1005,6 +1032,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     context: Context,
     text: String
   ) {
+    logDebug("Import TXT  '$text'")
+
     val symbols = text.split("[ ,;\r\n\t]".toRegex())
 
     var imported = 0
@@ -1025,10 +1054,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
 
-    Toast.makeText(
-        context, getApplication<Application>().getString(
+    val msg = getApplication<Application>().getString(
         R.string.import_msg, imported.toString()
-    ), Toast.LENGTH_LONG
+    )
+    logDebug("Import TXT  '$msg'")
+
+    Toast.makeText(
+        context, msg, Toast.LENGTH_LONG
     )
         .show()
   }
@@ -1063,6 +1095,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       )
           .show()
       Log.d("Import JSON error", "Exception: $e")
+      logDebug("Import JSON Exception: $e")
     }
 
     updateAll()
@@ -1149,11 +1182,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             output.write(jsonString.toByteArray())
           }
 
-      Toast.makeText(
-          context,
-          getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size),
-          Toast.LENGTH_LONG
-      )
+      val msg = getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size)
+      logDebug("Export JSON '$msg'")
+
+      Toast.makeText(context, msg, Toast.LENGTH_LONG)
           .show()
 
     } catch (e: Exception) {
@@ -1162,6 +1194,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       //)
       //    .show()
       Log.d("Export JSON error", "Exception: $e")
+      logDebug("Export JSON Exception: $e")
     }
   }
 
@@ -1408,7 +1441,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return stockMarketDataRepository.getStockData(symbol.toUpperCase(Locale.ROOT))
   }
 
-  suspend fun getStockData(): MarketState {
+  suspend fun getStockData(): Pair<MarketState, String> {
     // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
     val symbols: List<String> = repository.getStockSymbols()
         .filter { symbol ->
@@ -1463,6 +1496,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
   fun deleteAll() {
+    logDebug("Deleted all data.")
+
     SharedRepository.selectedPortfolio.postValue("")
     SharedRepository.portfolios.postValue(hashSetOf(""))
 

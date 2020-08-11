@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -51,6 +52,9 @@ import kotlin.coroutines.CoroutineContext
 //val backgroundListColor = 0xffffbb33.toInt()
 //val backgroundListColor = Color.rgb(240, 240, 255)
 
+object SharedHandler {
+}
+
 class MainActivity : AppCompatActivity() {
 
   private val newSymbolActivityRequestCode = 1
@@ -62,6 +66,18 @@ class MainActivity : AppCompatActivity() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var eventList: MutableList<Events> = mutableListOf()
+
+  lateinit var onlineDataHandler: Handler
+  var onlineDataStatus: Pair<Long, MarketState> = Pair(2000L, MarketState.UNKNOWN)
+  val onlineDataTimerDelay: Long = 2000L
+  var nextUpdate: Long = 2000L
+  var onlineUpdateTime: Long = 2000L
+  var isActive = false
+  var onlineNow = false
+  var onlineBefore = false
+
+  lateinit var eventHandler: Handler
+  val eventDelay: Long = 5000L
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -80,6 +96,9 @@ class MainActivity : AppCompatActivity() {
     // Get a new or existing ViewModel from the ViewModelProvider.
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
     stockRoomViewModel.logDebug("Main activity started.")
+    if (!isOnline(applicationContext)) {
+      stockRoomViewModel.logDebug("Network is offline.")
+    }
 
     SharedRepository.alerts.observe(this, Observer { alerts ->
       showAlerts(alerts)
@@ -132,32 +151,9 @@ class MainActivity : AppCompatActivity() {
       invalidateOptionsMenu()
     })
 
-    // Setup to get the online data every 2s for regular hours.
+    // Setup online data every 2s for regular hours.
     // Check online data depending on the market state
-    val onlineDataHandler: Handler = Handler()
-    var onlineDataStatus: Pair<Long, MarketState> = Pair(2000L, MarketState.UNKNOWN)
-    val onlineDataTimerDelay: Long = 2000L
-    var nextUpdate: Long = 2000L
-    var onlineUpdateTime: Long = 2000L
-    //var forceUpdate = false
-    val onlineDataRunnableCode = object : Runnable {
-      override fun run() {
-        val onlineAvailable =
-          onlineDataStatus.second == MarketState.NO_NETWORK && isOnline(applicationContext)
-        if (onlineAvailable || onlineUpdateTime >= nextUpdate) {
-          scope.launch {
-            onlineDataStatus = stockRoomViewModel.getOnlineData(onlineDataStatus.first)
-            nextUpdate = onlineDataStatus.first
-            onlineUpdateTime = 0L
-          }
-          //forceUpdate = false
-        }
-
-        onlineUpdateTime += onlineDataTimerDelay
-        onlineDataHandler.postDelayed(this, onlineDataTimerDelay)
-      }
-    }
-    onlineDataHandler.post(onlineDataRunnableCode)
+    onlineDataHandler = Handler(Looper.getMainLooper())
 
     /*
     val connectivityManager =
@@ -165,26 +161,84 @@ class MainActivity : AppCompatActivity() {
     connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
       override fun onAvailable(network: Network) {
         //take action when network connection is gained
-        forceUpdate = true
         //onlineDataHandler.postDelayed(this, onlineDataDelay)
       }
-      //override fun onLost(network: Network?) {
-      //take action when network connection is lost
-      //}
+
+      override fun onLost(network: Network) {
+        //take action when network connection is lost
+      }
     })
     */
 
-    // Check event every 5s
-    val eventHandle: Handler = Handler()
-    val eventDelay: Long = 5000L
-    val eventRunnableCode = object : Runnable {
-      override fun run() {
-        checkEvents()
-        //stockRoomViewModel.logDebug("Check events.")
-        eventHandle.postDelayed(this, eventDelay)
+    // Setup event handler every 5s.
+    eventHandler = Handler(Looper.getMainLooper())
+  }
+
+  private val onlineDataTask = object : Runnable {
+    override fun run() {
+      onlineBefore = onlineNow
+      onlineNow = isOnline(applicationContext)
+
+      if (onlineBefore && !onlineNow) {
+        stockRoomViewModel.logDebug("Network is offline.")
+      } else
+        if (!onlineBefore && onlineNow) {
+          stockRoomViewModel.logDebug("Network is online.")
+        }
+
+      if (onlineNow) {
+        //stockRoomViewModel.logDebug(
+        //    "${onlineDataStatus.first} ${onlineUpdateTime + onlineDataTimerDelay} >= $nextUpdate"
+        //)
+
+        // isActive : only one getOnlineData at a time
+        if (!isActive && onlineUpdateTime + onlineDataTimerDelay >= nextUpdate) {
+          stockRoomViewModel.logDebug("Schedule to get online data.")
+          isActive = true
+
+          scope.launch {
+            onlineDataStatus = stockRoomViewModel.getOnlineData(onlineDataStatus.first)
+            nextUpdate = onlineDataStatus.first
+            onlineUpdateTime = 0L
+            isActive = false
+          }
+        }
+
+        onlineUpdateTime += onlineDataTimerDelay
       }
+
+      onlineDataHandler.postDelayed(this, onlineDataTimerDelay)
     }
-    eventHandle.post(eventRunnableCode)
+  }
+
+  private val eventTask = object : Runnable {
+    override fun run() {
+      checkEvents()
+      //stockRoomViewModel.logDebug("Check events.")
+      eventHandler.postDelayed(this, eventDelay)
+    }
+  }
+
+  override fun onPause() {
+    super.onPause()
+    onlineDataHandler.removeCallbacks(onlineDataTask)
+    eventHandler.removeCallbacks(eventTask)
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    onlineDataHandler.post(onlineDataTask)
+    eventHandler.post(eventTask)
+
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+    val debug: Boolean = sharedPreferences.getBoolean("list", false)
+    if (debug) {
+      recyclerViewDebug.visibility = View.VISIBLE
+    } else {
+      recyclerViewDebug.visibility = View.GONE
+    }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -224,6 +278,7 @@ class MainActivity : AppCompatActivity() {
                     itemText = ""
                   }
                   SharedRepository.selectedPortfolio.value = itemText
+                  stockRoomViewModel.logDebug("Selected portfolio '$itemText'")
                 }
                 true
               }
@@ -257,19 +312,6 @@ class MainActivity : AppCompatActivity() {
     startActivityForResult(intent, newSymbolActivityRequestCode)
   }
 
-  override fun onResume() {
-    super.onResume()
-
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    val debug: Boolean = sharedPreferences.getBoolean("list", false)
-    if (debug) {
-      recyclerViewDebug.visibility = View.VISIBLE
-    } else {
-      recyclerViewDebug.visibility = View.GONE
-    }
-  }
-
   override fun onActivityResult(
     requestCode: Int,
     resultCode: Int,
@@ -295,9 +337,12 @@ class MainActivity : AppCompatActivity() {
           symbolList.forEach { symbol ->
             stockRoomViewModel.insert(symbol)
 
+            val msg = getString(R.string.add_stock, symbol)
+            stockRoomViewModel.logDebug("AddActivity '$msg'")
+
             Toast.makeText(
                 applicationContext,
-                getString(R.string.add_stock, symbol),
+                msg,
                 Toast.LENGTH_LONG
             )
                 .show()
@@ -335,6 +380,9 @@ class MainActivity : AppCompatActivity() {
         notification.sendNotification()
         // Alert is shown, remove alert.
         stockRoomViewModel.updateAlertAbove(alert.symbol, 0f)
+
+        stockRoomViewModel.logDebug("Alert '$title'")
+        stockRoomViewModel.logDebug("Alert '$text'")
       } else
         if (alert.alertBelow > 0f) {
           val title = getString(
@@ -351,6 +399,9 @@ class MainActivity : AppCompatActivity() {
           notification.sendNotification()
           // Alert is shown, remove alert.
           stockRoomViewModel.updateAlertBelow(alert.symbol, 0f)
+
+          stockRoomViewModel.logDebug("Alert '$title'")
+          stockRoomViewModel.logDebug("Alert '$text'")
         }
     }
   }
@@ -375,6 +426,9 @@ class MainActivity : AppCompatActivity() {
             // Delete event from the DB. This is turn causes an update of the list
             // and runs checkEvents() again.
             stockRoomViewModel.deleteEvent(event)
+
+            stockRoomViewModel.logDebug("Event '$title'")
+            stockRoomViewModel.logDebug("Event '$text'")
 
             // process only one entry
             return

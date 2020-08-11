@@ -64,7 +64,7 @@ class SettingsActivity : AppCompatActivity(),
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("Settings activity started.")
+    //stockRoomViewModel.logDebug("Settings activity started.")
 
     // Setup observer to enable valid data for the export function.
     stockRoomViewModel.allStockItems.observe(this, Observer { items ->
@@ -153,7 +153,7 @@ class SettingsActivity : AppCompatActivity(),
     ) {
       setPreferencesFromResource(R.xml.root_preferences, rootKey)
       stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-      stockRoomViewModel.logDebug("Settings fragment started.")
+      //stockRoomViewModel.logDebug("Settings fragment started.")
 
       // Set version info.
       val versionCode = BuildConfig.VERSION_CODE
