@@ -174,7 +174,7 @@ class StockRoomListAdapter internal constructor(
       }
 
       when {
-        capital > asset -> {
+        capital > 0f && capital > asset -> {
           holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.green))
         }
         capital > 0f && capital < asset -> {

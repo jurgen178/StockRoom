@@ -158,11 +158,16 @@ abstract class StockRoomDatabase : RoomDatabase() {
             AssetPreset("QCOM", 4200f, 240f, Color.rgb(0, 191, 255)),
             AssetPreset("RM", 3600f, 1110f, Color.RED),
             AssetPreset("T", 1000f, 2010f, Color.MAGENTA),
-            AssetPreset("TSLA", 7000f, 2060f, Color.rgb(72, 209, 204))
+            AssetPreset("TSLA", 7000f, 2060f, Color.rgb(72, 209, 204)),
+            AssetPreset("^GSPC", 0f, 0f, 0)
         )
 
         val symbols = assets.map { asset ->
           asset.symbol
+        }
+
+        assets.forEach { asset ->
+          stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
         }
 
         var onlinedata: List<OnlineMarketData> = emptyList()
@@ -173,8 +178,6 @@ abstract class StockRoomDatabase : RoomDatabase() {
         }
 
         assets.forEach { asset ->
-          stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
-
           val data = onlinedata.find {
             it.symbol == asset.symbol
           }
@@ -182,10 +185,13 @@ abstract class StockRoomDatabase : RoomDatabase() {
           if (data != null) {
             val assetvalue = asset.asset + ((0..1000).random() - 500).toFloat() / 100
             val gainvalue = asset.gain + ((0..1000).random() - 500).toFloat() / 100
+
             val price = data.marketPrice * (1 - gainvalue / assetvalue)
             val shares = ((assetvalue - gainvalue) / price).roundToInt()
                 .toFloat()
-            stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price))
+            val price2 = assetvalue / shares
+
+            stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price2))
           }
         }
       } else {
@@ -194,7 +200,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
         importExampleJSON(stockRoomDao, jsonText)
       }
 
-// List is sorted alphabetically. Add comment about deleting the example list in the first entry.
+      // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
       stockRoomDao.updateNotes(
           symbol = "AAPL", notes = context.getString(R.string.example_List_delete_all)
       )
