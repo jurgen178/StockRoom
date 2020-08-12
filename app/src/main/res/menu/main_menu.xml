@@ -20,24 +20,31 @@
     <menu>
       <item
           android:id="@+id/menu_sort_name"
+          android:checkable="true"
           android:title="@string/sort_name" />
       <item
           android:id="@+id/menu_sort_assets"
+          android:checkable="true"
           android:title="@string/sort_assets" />
       <item
           android:id="@+id/menu_sort_profit"
+          android:checkable="true"
           android:title="@string/sort_profit" />
       <item
           android:id="@+id/menu_sort_change"
+          android:checkable="true"
           android:title="@string/sort_change" />
       <item
           android:id="@+id/menu_sort_dividend"
+          android:checkable="true"
           android:title="@string/sort_dividend" />
       <item
           android:id="@+id/menu_sort_group"
+          android:checkable="true"
           android:title="@string/sort_group" />
       <item
           android:id="@+id/menu_sort_unsorted"
+          android:checkable="true"
           android:title="@string/sort_group_unsorted" />
     </menu>
   </item>

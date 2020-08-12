@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -68,48 +67,6 @@ class SummaryListFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.updateOnlineDataManually()
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-      R.id.menu_sort_name -> {
-        updateSortMode(SortMode.ByName)
-        true
-      }
-      R.id.menu_sort_assets -> {
-        updateSortMode(SortMode.ByAssets)
-        true
-      }
-      R.id.menu_sort_profit -> {
-        updateSortMode(SortMode.ByProfit)
-        true
-      }
-      R.id.menu_sort_change -> {
-        updateSortMode(SortMode.ByChange)
-        true
-      }
-      R.id.menu_sort_dividend -> {
-        updateSortMode(SortMode.ByDividend)
-        true
-      }
-      R.id.menu_sort_group -> {
-        updateSortMode(SortMode.ByGroup)
-        true
-      }
-      R.id.menu_sort_unsorted -> {
-        updateSortMode(SortMode.ByUnsorted)
-        true
-      }
-      R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually("Update online data manually.")
-        true
-      }
-      else -> super.onOptionsItemSelected(item)
-    }
-  }
-
-  private fun updateSortMode(sortMode: SortMode) {
-    stockRoomViewModel.updateSortMode(sortMode)
   }
 
   private fun clickListenerListItem(stockItem: StockItem) {

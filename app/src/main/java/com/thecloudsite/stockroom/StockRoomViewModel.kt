@@ -145,13 +145,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var notifications: Boolean = sharedPreferences.getBoolean("notifications", true)
 
   private val settingSortmode = "SettingSortmode"
+
+  var sorting = MutableLiveData<SortMode>()
+  val sortingLiveData: LiveData<SortMode>
+    get() = sorting
+
+  private var _sortMode: SortMode = SortMode.values()[sharedPreferences.getInt(
+      settingSortmode, SortMode.ByName.value
+  )]
   private var sortMode: SortMode
     get() {
-      return SortMode.values()[sharedPreferences.getInt(
-          settingSortmode, SortMode.ByName.value
-      )]
+      return _sortMode
     }
     set(value) {
+      _sortMode = value
       with(sharedPreferences.edit()) {
         putInt(settingSortmode, value.value)
         commit()
@@ -310,6 +317,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataProperties) { value ->
       if (value != null) {
         updateStockDataFromDB(value)
+        updateOnlineDataManually()
         allMediatorData.value = process(allData.value, true)
       }
     }
@@ -557,8 +565,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun updateSortMode(_sortMode: SortMode) {
     sortMode = _sortMode
+    sorting.postValue(sortMode)
     allMediatorData.value = process(allData.value, false)
   }
+
+  fun sortMode() =
+    sortMode
 
   private fun process(
     stockItemSet: StockItemSet?,
@@ -1433,7 +1445,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun delete(symbol: String) = scope.launch {
     if (symbol.isNotEmpty()) {
-      repository.delete(symbol.toUpperCase(Locale.ROOT))
+      val symbolUpper = symbol.toUpperCase(Locale.ROOT)
+      repository.delete(symbolUpper)
+      repository.deleteAssets(symbolUpper)
+      repository.deleteEvents(symbolUpper)
     }
   }
 
@@ -1463,7 +1478,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun deleteAssets(symbol: String) =
     scope.launch {
-      repository.deleteAssets(symbol)
+      repository.deleteAssets(symbol.toUpperCase(Locale.ROOT))
     }
 
   fun updateAssets(
@@ -1493,6 +1508,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   fun deleteEvent(event: Event) =
     scope.launch {
       repository.deleteEvent(event)
+    }
+
+  fun deleteEvents(symbol: String) =
+    scope.launch {
+      repository.deleteEvents(symbol.toUpperCase(Locale.ROOT))
     }
 
   fun deleteAll() {

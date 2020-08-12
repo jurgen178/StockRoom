@@ -166,10 +166,6 @@ abstract class StockRoomDatabase : RoomDatabase() {
           asset.symbol
         }
 
-        assets.forEach { asset ->
-          stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
-        }
-
         var onlinedata: List<OnlineMarketData> = emptyList()
         runBlocking {
           withContext(Dispatchers.IO) {
@@ -178,6 +174,8 @@ abstract class StockRoomDatabase : RoomDatabase() {
         }
 
         assets.forEach { asset ->
+          stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
+
           val data = onlinedata.find {
             it.symbol == asset.symbol
           }
