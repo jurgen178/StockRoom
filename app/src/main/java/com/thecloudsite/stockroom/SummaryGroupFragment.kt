@@ -83,7 +83,7 @@ class SummaryGroupFragment : Fragment() {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually("Update online data manually for summary group data.")
+        stockRoomViewModel.updateOnlineDataManually("Update online data manually.")
         true
       }
       else -> super.onOptionsItemSelected(item)

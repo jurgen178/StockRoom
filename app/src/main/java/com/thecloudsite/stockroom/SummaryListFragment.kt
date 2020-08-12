@@ -103,7 +103,7 @@ class SummaryListFragment : Fragment() {
         true
       }
       R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually("Update online data manually for summary list data.")
+        stockRoomViewModel.updateOnlineDataManually("Update online data manually.")
         true
       }
       else -> super.onOptionsItemSelected(item)

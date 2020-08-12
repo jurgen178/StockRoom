@@ -168,7 +168,7 @@ class ListFragment : Fragment() {
         true
       }
       R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually("Update online data manually for list data.")
+        stockRoomViewModel.updateOnlineDataManually("Update online data manually.")
         true
       }
       else -> super.onOptionsItemSelected(item)
