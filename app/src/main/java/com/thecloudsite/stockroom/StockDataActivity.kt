@@ -73,7 +73,7 @@ class StockDataActivity : AppCompatActivity() {
         .setTitle(R.string.delete)
         .setMessage(getString(R.string.delete_stock, symbol))
         .setPositiveButton(R.string.delete) { dialog, _ ->
-          Storage.deleteStockHandler.postValue(symbol)
+          SharedHandler.deleteStockHandler.postValue(symbol)
           dialog.dismiss()
 
           finish()

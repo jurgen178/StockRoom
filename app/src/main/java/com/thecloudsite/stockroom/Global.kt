@@ -3,15 +3,12 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.content.res.Resources
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.text.SpannableStringBuilder
-import android.util.Log
 import androidx.annotation.RawRes
 import androidx.core.text.bold
 import androidx.core.text.color
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.util.Locale
 
 fun isValidSymbol(symbol: String): Boolean {

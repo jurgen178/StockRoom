@@ -522,7 +522,6 @@ class StockDataFragment : Fragment() {
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-    //stockRoomViewModel.logDebug("Stock data fragment started.")
 
     stockRoomViewModel.onlineMarketDataList.observe(viewLifecycleOwner, Observer { data ->
       data?.let { onlineMarketDataList ->
@@ -1283,7 +1282,6 @@ class StockDataFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.updateOnlineDataManually()
-    //stockRoomViewModel.logDebug("Stock data fragment activated.")
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {

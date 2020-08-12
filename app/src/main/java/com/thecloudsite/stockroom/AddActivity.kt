@@ -52,7 +52,6 @@ class AddActivity : AppCompatActivity() {
     //throw RuntimeException("Test Crash") // Force a crash
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
-    //stockRoomViewModel.logDebug("Add activity started.")
 
 /*
     // Setup observer to enable valid data for the export function.

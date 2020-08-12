@@ -52,9 +52,6 @@ import kotlin.coroutines.CoroutineContext
 //val backgroundListColor = 0xffffbb33.toInt()
 //val backgroundListColor = Color.rgb(240, 240, 255)
 
-object SharedHandler {
-}
-
 class MainActivity : AppCompatActivity() {
 
   private val newSymbolActivityRequestCode = 1
@@ -68,10 +65,10 @@ class MainActivity : AppCompatActivity() {
   private var eventList: MutableList<Events> = mutableListOf()
 
   lateinit var onlineDataHandler: Handler
-  var onlineDataStatus: Pair<Long, MarketState> = Pair(2000L, MarketState.UNKNOWN)
   val onlineDataTimerDelay: Long = 2000L
-  var nextUpdate: Long = 2000L
-  var onlineUpdateTime: Long = 2000L
+  var onlineDataStatus: Pair<Long, MarketState> = Pair(onlineDataTimerDelay, MarketState.UNKNOWN)
+  var nextUpdate: Long = onlineDataTimerDelay
+  var onlineUpdateTime: Long = onlineDataTimerDelay
   var isActive = false
   var onlineNow = false
   var onlineBefore = false
@@ -96,6 +93,7 @@ class MainActivity : AppCompatActivity() {
     // Get a new or existing ViewModel from the ViewModelProvider.
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
     stockRoomViewModel.logDebug("Main activity started.")
+
     if (!isOnline(applicationContext)) {
       stockRoomViewModel.logDebug("Network is offline.")
     }
@@ -122,7 +120,7 @@ class MainActivity : AppCompatActivity() {
       }
     })
 
-    Storage.deleteStockHandler.observe(this, Observer { symbol ->
+    SharedHandler.deleteStockHandler.observe(this, Observer { symbol ->
       stockRoomViewModel.delete(symbol)
     })
 
@@ -151,17 +149,12 @@ class MainActivity : AppCompatActivity() {
       invalidateOptionsMenu()
     })
 
-    // Setup online data every 2s for regular hours.
-    // Check online data depending on the market state
-    onlineDataHandler = Handler(Looper.getMainLooper())
-
     /*
     val connectivityManager =
       application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
       override fun onAvailable(network: Network) {
         //take action when network connection is gained
-        //onlineDataHandler.postDelayed(this, onlineDataDelay)
       }
 
       override fun onLost(network: Network) {
@@ -169,6 +162,9 @@ class MainActivity : AppCompatActivity() {
       }
     })
     */
+
+    // Setup online data every 2s for regular hours.
+    onlineDataHandler = Handler(Looper.getMainLooper())
 
     // Setup event handler every 5s.
     eventHandler = Handler(Looper.getMainLooper())
@@ -192,6 +188,7 @@ class MainActivity : AppCompatActivity() {
         //)
 
         // isActive : only one getOnlineData at a time
+        // next update depends on the market state
         if (!isActive && onlineUpdateTime + onlineDataTimerDelay >= nextUpdate) {
           stockRoomViewModel.logDebug("Schedule to get online data.")
           isActive = true
@@ -221,6 +218,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onPause() {
     super.onPause()
+
     onlineDataHandler.removeCallbacks(onlineDataTask)
     eventHandler.removeCallbacks(eventTask)
   }

@@ -43,6 +43,7 @@ class SummaryGroupAdapter internal constructor(
   private val groupStandardName = context.getString(R.string.standard_group)
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<SummaryData>()
+  private var stockItemsList: List<StockItem> = emptyList()
   private var groupList: List<Group> = emptyList()
 
   inner class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -78,13 +79,18 @@ class SummaryGroupAdapter internal constructor(
   }
 
   fun updateData(stockItems: List<StockItem>) {
+    stockItemsList = stockItems
+    updateData()
+  }
+
+  private fun updateData() {
     data.clear()
-    val (text1, text2) = getTotal(0, true, stockItems)
+    val (text1, text2) = getTotal(0, true, stockItemsList)
     data.add(SummaryData(context.getString(R.string.overview), text1, text2, Color.WHITE))
 
     // Get all groups.
     val groupSet = HashSet<Int>()
-    stockItems.forEach { stockItem ->
+    stockItemsList.forEach { stockItem ->
       groupSet.add(stockItem.stockDBdata.groupColor)
     }
 
@@ -106,7 +112,7 @@ class SummaryGroupAdapter internal constructor(
         group.name
       }
           .forEach { group ->
-            val (text1, text2) = getTotal(group.color, false, stockItems)
+            val (text1, text2) = getTotal(group.color, false, stockItemsList)
             data.add(
                 SummaryData(
                     context.getString(R.string.group_name, group.name), text1, text2, group.color
@@ -118,9 +124,12 @@ class SummaryGroupAdapter internal constructor(
     notifyDataSetChanged()
   }
 
-  internal fun addGroups(groups: List<Group>) {
+  // groups is the second data source and gets called after updateData(stockItems: List<StockItem>),
+  // run updateData for the color assignment
+  fun addGroups(groups: List<Group>) {
     groupList = groups
 
+    updateData()
     notifyDataSetChanged()
   }
 
@@ -191,9 +200,10 @@ class SummaryGroupAdapter internal constructor(
     }
     val stockEvents = stockItemsSelected.filter {
       it.events.isNotEmpty()
-    }.sumBy {
-      it.events.size
     }
+        .sumBy {
+          it.events.size
+        }
 
     val summaryGroup2 = SpannableStringBuilder()
         .append("${context.getString(R.string.summary_stocks)} ")

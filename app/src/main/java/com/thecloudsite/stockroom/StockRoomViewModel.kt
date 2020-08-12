@@ -81,7 +81,7 @@ data class StockItemJson
   var events: List<EventJson>
 )
 
-object Storage {
+object SharedHandler {
   val deleteStockHandler = MutableLiveData<String>()
 }
 
@@ -1098,7 +1098,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       logDebug("Import JSON Exception: $e")
     }
 
-    updateAll()
+    //updateAll()
   }
 
   private fun getAllDBdata(): List<StockItem> {

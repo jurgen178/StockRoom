@@ -110,7 +110,6 @@ class ListFragment : Fragment() {
     // Get a new or existing ViewModel from the ViewModelProvider.
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-    //stockRoomViewModel.logDebug("List fragment started.")
 
     // Rotating device keeps sending alerts.
     // State changes of the lifecycle trigger the notification.
@@ -134,7 +133,6 @@ class ListFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.updateOnlineDataManually()
-    //stockRoomViewModel.logDebug("List fragment activated.")
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {

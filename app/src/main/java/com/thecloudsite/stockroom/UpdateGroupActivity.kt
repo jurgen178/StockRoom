@@ -137,7 +137,6 @@ class UpdateGroupActivity : AppCompatActivity() {
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
-    //stockRoomViewModel.logDebug("Update group activity started.")
 
     val groupItemClickListenerUpdate =
       { group: GroupData -> groupItemUpdateClicked(group) }
