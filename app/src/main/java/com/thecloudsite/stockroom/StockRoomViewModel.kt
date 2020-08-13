@@ -353,9 +353,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       val usedPortfolioSymbols: HashSet<String> = HashSet<String>()
 
       // Use only symbols matching the selected portfolio.
-      val portfolio = SharedRepository.selectedPortfolio.value ?: ""
-      val portfolioData = stockDBdata.filter { data ->
+      var portfolio = SharedRepository.selectedPortfolio.value ?: ""
+      var portfolioData = stockDBdata.filter { data ->
         data.portfolio == portfolio
+      }
+
+      // selected portfolio has no entries: stock added to portfolio, or deleted as last entry from portfolio
+      // revert back to the default portfolio and re-read the selection
+      if(portfolio.isNotEmpty() && portfolioData.isEmpty())
+      {
+        SharedRepository.selectedPortfolio.value = ""
+        portfolio = ""
+        portfolioData = stockDBdata.filter { data ->
+          data.portfolio == portfolio
+        }
       }
 
       portfolioData.forEach { data ->
