@@ -128,7 +128,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
 
-  private var portfolioSymbols: HashSet<String> = HashSet<String>()
+  private var portfolioSymbols: HashSet<String> = HashSet()
 
   private val dataStore = StockItemSet()
   private val _dataStore = MutableLiveData<StockItemSet>()
@@ -146,7 +146,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   private val settingSortmode = "SettingSortmode"
 
-  var sorting = MutableLiveData<SortMode>()
+  private var sorting = MutableLiveData<SortMode>()
   val sortingLiveData: LiveData<SortMode>
     get() = sorting
 
@@ -350,7 +350,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     synchronized(dataStore)
     {
       val stockDBdataPortfolios: HashSet<String> = hashSetOf("") // add Standard Portfolio
-      val usedPortfolioSymbols: HashSet<String> = HashSet<String>()
+      val usedPortfolioSymbols: HashSet<String> = HashSet()
 
       // Use only symbols matching the selected portfolio.
       var portfolio = SharedRepository.selectedPortfolio.value ?: ""
@@ -358,7 +358,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         data.portfolio == portfolio
       }
 
-      // selected portfolio has no entries: stock added to portfolio, or deleted as last entry from portfolio
+      // selected portfolio has no entries
       // revert back to the default portfolio and re-read the selection
       if(portfolio.isNotEmpty() && portfolioData.isEmpty())
       {
@@ -1467,7 +1467,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return stockMarketDataRepository.getStockData(symbol.toUpperCase(Locale.ROOT))
   }
 
-  suspend fun getStockData(): Pair<MarketState, String> {
+  private suspend fun getStockData(): Pair<MarketState, String> {
     // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
     val symbols: List<String> = repository.getStockSymbols()
         .filter { symbol ->
@@ -1547,7 +1547,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     SharedRepository.debugLiveData.value = SharedRepository.debugList
   }
 
-  suspend fun logDebugAsync(value: String) {
+  private suspend fun logDebugAsync(value: String) {
     // Dispatchers.IO does not work ?
     withContext(Dispatchers.Main) {
       synchronized(SharedRepository.debugList) {

@@ -78,13 +78,9 @@ class NewsFragment : Fragment() {
         val onlineMarketData = onlineMarketDataList.find { onlineMarketDataItem ->
           onlineMarketDataItem.symbol == symbol
         }
-        if (onlineMarketData != null) {
-          googleNewsQuery = onlineMarketData.name
-          //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}, ${onlineMarketData.name}"
-          //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}"
-        } else {
-          googleNewsQuery = symbol
-        }
+        googleNewsQuery = onlineMarketData?.name ?: symbol
+        //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}, ${onlineMarketData.name}"
+        //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}"
 
         googleNewsViewModel.getNewsData(googleNewsQuery)
 
