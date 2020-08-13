@@ -142,6 +142,7 @@ limitations under the License. -->
   <string name="event_datetime">Date</string>
   <string name="add_event">Add event</string>
   <string name="update_event">Update event</string>
+  <string name="event_empty">Enter an event.</string>
   <string name="event_updated">The event \'%1$s\' at %2$s was updated.</string>
   <string name="event_added">The event \'%1$s\' at %2$s was added.</string>
   <string name="delete_event">Delete event</string>

@@ -8,14 +8,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
-import android.view.GestureDetector
-import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -87,7 +83,6 @@ import kotlinx.android.synthetic.main.fragment_stockdata.textViewRange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewSymbol
 import kotlinx.android.synthetic.main.fragment_stockdata.updateNotesButton
 import okhttp3.internal.toHexString
-import java.lang.Math.abs
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -119,64 +114,6 @@ data class AssetsLiveData(
   var assets: Assets? = null,
   var onlineMarketData: OnlineMarketData? = null
 )
-
-open class OnSwipeTouchListener(ctx: Context?) : OnTouchListener {
-  private val gestureDetector: GestureDetector = GestureDetector(ctx, GestureListener())
-
-  override fun onTouch(
-    v: View,
-    event: MotionEvent
-  ): Boolean {
-    return gestureDetector.onTouchEvent(event)
-  }
-
-  private inner class GestureListener : SimpleOnGestureListener() {
-    private val SWIPE_THRESHOLD = 100
-    private val SWIPE_VELOCITY_THRESHOLD = 100
-
-    override fun onDown(e: MotionEvent): Boolean {
-      return true
-    }
-
-    override fun onFling(
-      e1: MotionEvent,
-      e2: MotionEvent,
-      velocityX: Float,
-      velocityY: Float
-    ): Boolean {
-      var result = false
-      try {
-        val diffY: Float = e2.y - e1.y
-        val diffX: Float = e2.x - e1.x
-        if (abs(diffX) > abs(diffY)) {
-          if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-            if (diffX > 0) {
-              onSwipeRight()
-            } else {
-              onSwipeLeft()
-            }
-            result = true
-          }
-        } else if (abs(diffY) > SWIPE_THRESHOLD && abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-          if (diffY > 0) {
-            onSwipeBottom()
-          } else {
-            onSwipeTop()
-          }
-          result = true
-        }
-      } catch (exception: Exception) {
-        exception.printStackTrace()
-      }
-      return result
-    }
-  }
-
-  open fun onSwipeRight() {}
-  open fun onSwipeLeft() {}
-  open fun onSwipeTop() {}
-  open fun onSwipeBottom() {}
-}
 
 class StockDataFragment : Fragment() {
 
@@ -431,27 +368,29 @@ class StockDataFragment : Fragment() {
               datePickerEventTimeView.minute
           )
           val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
-          if (event.title != title || event.note != note || event.datetime != seconds) {
-            // delete old event
-            stockRoomViewModel.deleteEvent(event)
-            // add new event
-            stockRoomViewModel.addEvent(
-                Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
-            )
-            Toast.makeText(
-                requireContext(), getString(
-                R.string.event_updated, title, datetime.format(
-                DateTimeFormatter.ofLocalizedDateTime(
-                    FormatStyle.MEDIUM
-                )
-            )
-            ), Toast.LENGTH_LONG
-            )
+          if (title.isEmpty()) {
+            Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
                 .show()
-          }
+          } else
+            if (event.title != title || event.note != note || event.datetime != seconds) {
+              // delete old event
+              stockRoomViewModel.deleteEvent(event)
+              // add new event
+              stockRoomViewModel.addEvent(
+                  Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
+              )
+              Toast.makeText(
+                  requireContext(), getString(
+                  R.string.event_updated, title, datetime.format(
+                  DateTimeFormatter.ofLocalizedDateTime(
+                      FormatStyle.MEDIUM
+                  )
+              )
+              ), Toast.LENGTH_LONG
+              )
+                  .show()
+            }
           hideSoftInputFromWindow()
-/*
-*/
         }
         .setNegativeButton(R.string.cancel,
             DialogInterface.OnClickListener { _, _ ->
@@ -1146,19 +1085,24 @@ class StockDataFragment : Fragment() {
             )
             val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
             // add new event
-            stockRoomViewModel.addEvent(
-                Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
-            )
-            Toast.makeText(
-                requireContext(), getString(
-                R.string.event_added, title, datetime.format(
-                DateTimeFormatter.ofLocalizedDateTime(
-                    FormatStyle.MEDIUM
-                )
-            )
-            ), Toast.LENGTH_LONG
-            )
-                .show()
+            if (title.isNotEmpty()) {
+              stockRoomViewModel.addEvent(
+                  Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
+              )
+              Toast.makeText(
+                  requireContext(), getString(
+                  R.string.event_added, title, datetime.format(
+                  DateTimeFormatter.ofLocalizedDateTime(
+                      FormatStyle.MEDIUM
+                  )
+              )
+              ), Toast.LENGTH_LONG
+              )
+                  .show()
+            } else {
+              Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
+                  .show()
+            }
           }
           .setNegativeButton(
               R.string.cancel
