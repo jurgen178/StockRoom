@@ -1,5 +1,6 @@
 package com.thecloudsite.stockroom
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
@@ -23,13 +24,18 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
     range: String
   ): List<StockDataEntry>? {
 
-    val quoteResponse = safeApiCall(
-        call = {
-          api.getYahooChartDataAsync(stock, interval, range)
-              .await()
-        },
-        errorMessage = "Error getting finance data."
-    )
+    val quoteResponse: YahooChartData? = try {
+      safeApiCall(
+          call = {
+            api.getYahooChartDataAsync(stock, interval, range)
+                .await()
+          },
+          errorMessage = "Error getting finance data."
+      )
+    } catch (e: Exception) {
+      Log.d("StockChartDataRepository.getYahooChartDataAsync() failed", "Exception=$e")
+      null
+    }
 
     val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
     if (quoteResponse != null) {

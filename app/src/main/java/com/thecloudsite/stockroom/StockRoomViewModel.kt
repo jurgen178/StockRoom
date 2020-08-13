@@ -1114,9 +1114,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private fun getAllDBdata(): List<StockItem> {
-    val stockDBdata = allProperties.value!!
-    val assets = allAssets.value!!
-    val events = allEvents.value!!
+    val stockDBdata = allProperties.value ?: emptyList()
+    val assets = allAssets.value ?: emptyList()
+    val events = allEvents.value ?: emptyList()
 
     return stockDBdata.map { data ->
       val symbol = data.symbol

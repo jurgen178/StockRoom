@@ -18,7 +18,7 @@ class NewsFragment : Fragment() {
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private lateinit var yahooNewsViewModel: YahooNewsViewModel
   private lateinit var googleNewsViewModel: GoogleNewsViewModel
-  private lateinit var newsAdapter:  NewsAdapter
+  private lateinit var newsAdapter: NewsAdapter
 
   companion object {
     fun newInstance() = NewsFragment()
@@ -82,11 +82,14 @@ class NewsFragment : Fragment() {
           googleNewsQuery = onlineMarketData.name
           //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}, ${onlineMarketData.name}"
           //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}"
-          googleNewsViewModel.getNewsData(googleNewsQuery)
-
-          // Stop observing now. News needs to be updated manually.
-          stockRoomViewModel.onlineMarketDataList.removeObservers(viewLifecycleOwner)
+        } else {
+          googleNewsQuery = symbol
         }
+
+        googleNewsViewModel.getNewsData(googleNewsQuery)
+
+        // Stop observing now. News needs to be updated manually.
+        stockRoomViewModel.onlineMarketDataList.removeObservers(viewLifecycleOwner)
       }
     })
 
@@ -112,9 +115,13 @@ class NewsFragment : Fragment() {
 
   private fun updateData() {
     yahooNewsViewModel.getNewsData(yahooNewsQuery)
-    newsAdapter.updateData(yahooNewsViewModel.data.value!!)
+    if (yahooNewsViewModel.data.value != null) {
+      newsAdapter.updateData(yahooNewsViewModel.data.value!!)
+    }
 
     googleNewsViewModel.getNewsData(googleNewsQuery)
-    newsAdapter.updateData(googleNewsViewModel.data.value!!)
+    if (googleNewsViewModel.data.value != null) {
+      newsAdapter.updateData(googleNewsViewModel.data.value!!)
+    }
   }
 }
