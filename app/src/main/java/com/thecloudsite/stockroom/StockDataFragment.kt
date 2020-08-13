@@ -69,6 +69,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.linearLayoutGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.notesTextView
 import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
 import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
+import kotlinx.android.synthetic.main.fragment_stockdata.splitAssetsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewAsset
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
@@ -83,6 +84,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.textViewRange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewSymbol
 import kotlinx.android.synthetic.main.fragment_stockdata.updateNotesButton
 import okhttp3.internal.toHexString
+import java.lang.Float.min
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -605,7 +607,7 @@ class StockDataFragment : Fragment() {
     })
 
     stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
-    val notes = stockDBdata.notes
+    //val notes = stockDBdata.notes
 
     // Portfolio
     val standardPortfolio = getString(R.string.standard_portfolio)
@@ -880,6 +882,91 @@ class StockDataFragment : Fragment() {
       updateStockViewMode(StockViewMode.Line)
     }
 
+    splitAssetsButton.setOnClickListener {
+      val assets = stockRoomViewModel.getAssetsSync(symbol)
+      val totalShares = assets?.assets?.sumByDouble { it.shares.toDouble() }
+          ?.toFloat() ?: 0f
+
+      if (totalShares == 0f) {
+        Toast.makeText(
+            requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
+        )
+            .show()
+      } else {
+        val builder = AlertDialog.Builder(requireContext())
+        // Get the layout inflater
+        val inflater = LayoutInflater.from(requireContext())
+
+        val dialogView = inflater.inflate(R.layout.split_asset, null)
+        val splitRatioView = dialogView.findViewById<TextView>(R.id.splitRatio)
+
+        builder.setView(dialogView)
+            // Add action buttons
+            .setPositiveButton(
+                R.string.split
+            ) { _, _ ->
+              val splitRatioText = splitRatioView.text.toString()
+                  .trim()
+              if (splitRatioText.isNotEmpty()) {
+                var splitRatio = 0f
+                var valid = true
+                try {
+                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                  splitRatio = numberFormat.parse(splitRatioText)!!
+                      .toFloat()
+
+                  if (splitRatio <= 0f || splitRatio > 20) {
+                    valid = false
+                  }
+
+                } catch (e: Exception) {
+                  valid = false
+                }
+
+                if (valid && assets?.assets != null) {
+                  var minShares = Float.MAX_VALUE
+                  var minPrice = Float.MAX_VALUE
+                  assets.assets.forEach { asset ->
+                    asset.shares *= splitRatio
+                    asset.price /= splitRatio
+                    minShares = min(asset.shares, minShares)
+                    minPrice = min(asset.price, minPrice)
+                  }
+
+                  if (minShares >= 0.1f && minPrice >= 0.01f) {
+                    stockRoomViewModel.updateAssets(
+                        symbol = symbol, assets = assets.assets
+                    )
+                  } else {
+                    Toast.makeText(
+                        requireContext(), if (minShares >= 0.1f) {
+                      getString(R.string.split_min_price)
+                    } else {
+                      getString(R.string.split_min_shares)
+                    }, Toast.LENGTH_LONG
+                    )
+                        .show()
+                  }
+
+                  hideSoftInputFromWindow()
+                } else {
+                  Toast.makeText(
+                      requireContext(), getString(R.string.invalid_split_entry), Toast.LENGTH_LONG
+                  )
+                      .show()
+                }
+              }
+            }
+            .setNegativeButton(R.string.cancel,
+                DialogInterface.OnClickListener
+                { _, _ ->
+                })
+        builder
+            .create()
+            .show()
+      }
+    }
+
     addAssetsButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
@@ -935,7 +1022,9 @@ class StockDataFragment : Fragment() {
                 valid = false
               }
               if (valid) {
-                stockRoomViewModel.addAsset(Asset(symbol = symbol, shares = shares, price = price))
+                stockRoomViewModel.addAsset(
+                    Asset(symbol = symbol, shares = shares, price = price)
+                )
                 val count: Int = when {
                   shares == 1f -> {
                     1
@@ -958,7 +1047,9 @@ class StockDataFragment : Fragment() {
               }
               hideSoftInputFromWindow()
             } else {
-              Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
+              Toast.makeText(
+                  requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
+              )
                   .show()
             }
           }
@@ -971,86 +1062,87 @@ class StockDataFragment : Fragment() {
     }
 
     removeAssetButton.setOnClickListener {
-      val builder = AlertDialog.Builder(requireContext())
-      // Get the layout inflater
-      val inflater = LayoutInflater.from(requireContext())
+      val assets = stockRoomViewModel.getAssetsSync(symbol)
+      val totalShares = assets?.assets?.sumByDouble { it.shares.toDouble() }
+          ?.toFloat() ?: 0f
 
-      val dialogView = inflater.inflate(R.layout.remove_asset, null)
-      val removeSharesView = dialogView.findViewById<TextView>(R.id.removeShares)
+      if (totalShares == 0f) {
+        Toast.makeText(
+            requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
+        )
+            .show()
+      } else {
+        val builder = AlertDialog.Builder(requireContext())
+        // Get the layout inflater
+        val inflater = LayoutInflater.from(requireContext())
 
-      builder.setView(dialogView)
-          // Add action buttons
-          .setPositiveButton(
-              R.string.delete
-          ) { _, _ ->
-            val removeSharesText = removeSharesView.text.toString()
-                .trim()
-            if (removeSharesText.isNotEmpty()) {
-              var shares = 0f
-              var valid = true
-              try {
-                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                shares = numberFormat.parse(removeSharesText)!!
-                    .toFloat()
-              } catch (e: Exception) {
-                valid = false
-              }
+        val dialogView = inflater.inflate(R.layout.remove_asset, null)
+        val removeSharesView = dialogView.findViewById<TextView>(R.id.removeShares)
 
-              if (valid) {
-                val assetsAdjusted = stockRoomViewModel.getAssetsSync(symbol)
-                if (assetsAdjusted != null) {
+        builder.setView(dialogView)
+            // Add action buttons
+            .setPositiveButton(
+                R.string.delete
+            ) { _, _ ->
+              val removeSharesText = removeSharesView.text.toString()
+                  .trim()
+              if (removeSharesText.isNotEmpty()) {
+                var shares = 0f
+                var valid = true
+                try {
+                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                  shares = numberFormat.parse(removeSharesText)!!
+                      .toFloat()
+                } catch (e: Exception) {
+                  valid = false
+                }
+
+                if (valid) {
                   // Avoid wrong data due to rounding errors.
                   val epsilon = 0.000001f
-                  val totalShares = assetsAdjusted.assets.sumByDouble { it.shares.toDouble() }
-                      .toFloat()
+                  val totalPaidPrice = assets?.assets?.sumByDouble {
+                    it.shares.toDouble() * it.price
+                        .toDouble()
+                  }
+                      ?.toFloat() ?: 0f
+                  val averagePrice = totalPaidPrice / totalShares
 
-                  if (totalShares > 0f) {
-                    val totalPaidPrice = assetsAdjusted.assets.sumByDouble {
-                      it.shares.toDouble() * it.price
-                          .toDouble()
-                    }
-                        .toFloat()
-                    val averagePrice = totalPaidPrice / totalShares
-
-                    if (shares > (totalShares + epsilon)) {
-                      Toast.makeText(
-                          requireContext(), getString(R.string.remove_shares_exceeds_total_shares),
-                          Toast.LENGTH_LONG
-                      )
-                          .show()
-                    } else {
-                      //assetSummary.removeAllViews()
-                      val newTotal: Float = totalPaidPrice - shares * averagePrice
-                      val shareAdjustment: Float = newTotal / totalPaidPrice
-
-                      assetsAdjusted.assets.forEach { asset ->
-                        asset.shares *= shareAdjustment
-                      }
-                      stockRoomViewModel.updateAssets(
-                          symbol = symbol, assets = assetsAdjusted.assets
-                      )
-                    }
-                  } else {
+                  if (shares > (totalShares + epsilon)) {
                     Toast.makeText(
-                        requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
+                        requireContext(),
+                        getString(R.string.remove_shares_exceeds_total_shares),
+                        Toast.LENGTH_LONG
                     )
                         .show()
+                  } else {
+                    //assetSummary.removeAllViews()
+                    val newTotal: Float = totalPaidPrice - shares * averagePrice
+                    val shareAdjustment: Float = newTotal / totalPaidPrice
+
+                    assets?.assets?.forEach { asset ->
+                      asset.shares *= shareAdjustment
+                    }
+                    stockRoomViewModel.updateAssets(
+                        symbol = symbol, assets = assets?.assets!!
+                    )
                   }
                 }
+                hideSoftInputFromWindow()
+              } else {
+                Toast.makeText(
+                    requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
+                )
+                    .show()
               }
-              hideSoftInputFromWindow()
-            } else {
-              Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
-                  .show()
             }
-          }
-          .setNegativeButton(R.string.cancel,
-              DialogInterface.OnClickListener
-              { _, _ ->
-              })
-      builder
-          .create()
-          .show()
+            .setNegativeButton(R.string.cancel,
+                DialogInterface.OnClickListener
+                { _, _ ->
+                })
+        builder
+            .create()
+            .show()
+      }
     }
 
     addEventsButton.setOnClickListener {

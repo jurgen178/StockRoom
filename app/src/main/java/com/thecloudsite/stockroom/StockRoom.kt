@@ -55,7 +55,7 @@ data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
   var shares: Float = 0f,
-  val price: Float = 0f,
+  var price: Float = 0f,
   var date: Long = 0L
 )
 
