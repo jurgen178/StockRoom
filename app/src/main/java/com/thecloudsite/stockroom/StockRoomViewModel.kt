@@ -138,7 +138,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   private val allMediatorData = MediatorLiveData<StockItemSet>()
 
-  private var onlineDataStatus: Pair<Long, MarketState> = Pair(onlineDataTimerDelay, MarketState.UNKNOWN)
+  private var dbDataValid = false
+  private var assetDataValid = false
+  private var eventDataValid = false
+  private var onlineDataValid = false
+
+  private var onlineDataStatus: Pair<Long, MarketState> =
+    Pair(onlineDataTimerDelay, MarketState.UNKNOWN)
   private var nextUpdate: Long = onlineDataTimerDelay
   private var onlineUpdateTime: Long = onlineDataTimerDelay
   private var isActive = false
@@ -233,23 +239,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     if (errorMsg.isEmpty()) {
-      val marketStateStr = when (marketState) {
-        MarketState.REGULAR -> {
-          "regular market"
-        }
-        MarketState.PRE, MarketState.PREPRE -> {
-          "pre market"
-        }
-        MarketState.POST, MarketState.POSTPOST -> {
-          "post market"
-        }
-        MarketState.CLOSED -> {
-          "market closed"
-        }
-        MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
-          "network not available"
-        }
-      }
+
+      val marketStateStr = Enum.toString(marketState)
 
       val delaystr = when {
         onlineDataDelay >= 60 * 60 * 1000L -> {
@@ -316,7 +307,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       scope.launch {
         val stockDataResult = getStockData()
-        if (stockDataResult.second.isNotEmpty()) {
+        if (stockDataResult.second.isEmpty()) {
+          val marketState = stockDataResult.first
+          val marketStateStr = Enum.toString(marketState)
+          logDebugAsync("Received online data ($marketStateStr)")
+        } else {
           logDebugAsync("Error getting online data: ${stockDataResult.second}")
         }
       }
@@ -362,7 +357,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataProperties) { value ->
       if (value != null) {
         updateStockDataFromDB(value)
-        updateOnlineDataManually()
+        if (dataStore.dataValid) {
+          updateOnlineDataManually()
+        }
+        dataValidate()
         allMediatorData.value = process(allData.value, true)
       }
     }
@@ -370,6 +368,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataAssets) { value ->
       if (value != null) {
         updateAssetsFromDB(value)
+        dataValidate()
         allMediatorData.value = process(allData.value, false)
       }
     }
@@ -377,6 +376,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataEvents) { value ->
       if (value != null) {
         updateEventsFromDB(value)
+        dataValidate()
         allMediatorData.value = process(allData.value, false)
       }
     }
@@ -384,6 +384,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataOnline) { value ->
       if (value != null) {
         updateFromOnline(value)
+        dataValidate()
         allMediatorData.value = process(allData.value, true)
       }
     }
@@ -391,9 +392,27 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return allMediatorData
   }
 
+  private fun dataValidate() {
+    synchronized(dataStore)
+    {
+      if (!dataStore.dataValid) {
+        // don't wait for valid online data if offline
+        if (!onlineDataValid && !isOnline(getApplication())) {
+          onlineDataValid = true
+        }
+
+        if (dbDataValid && assetDataValid && eventDataValid && onlineDataValid) {
+          dataStore.dataValid = true
+        }
+      }
+    }
+  }
+
   private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
     synchronized(dataStore)
     {
+      dbDataValid = true
+
       val stockDBdataPortfolios: HashSet<String> = hashSetOf("") // add Standard Portfolio
       val usedPortfolioSymbols: HashSet<String> = HashSet()
 
@@ -405,8 +424,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       // selected portfolio has no entries
       // revert back to the default portfolio and re-read the selection
-      if(portfolio.isNotEmpty() && portfolioData.isEmpty())
-      {
+      if (portfolio.isNotEmpty() && portfolioData.isEmpty()) {
         SharedRepository.selectedPortfolio.value = ""
         portfolio = ""
         portfolioData = stockDBdata.filter { data ->
@@ -471,10 +489,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateAssetsFromDB(assets: List<Assets>) {
     synchronized(dataStore)
     {
-      // don't wait for valid online data if offline
-      if (!dataStore.dataValid && !isOnline(getApplication())) {
-        dataStore.dataValid = true
-      }
+      assetDataValid = true
 
       assets.forEach { asset ->
         val symbol = asset.stockDBdata.symbol
@@ -495,6 +510,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateEventsFromDB(events: List<Events>) {
     synchronized(dataStore)
     {
+      eventDataValid = true
+
       events.forEach { event ->
         val symbol = event.stockDBdata.symbol
         val dataStoreItem =
@@ -514,6 +531,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateFromOnline(onlineMarketDataList: List<OnlineMarketData>) {
     synchronized(dataStore)
     {
+      onlineDataValid = true
+
       //val postMarket: Boolean = sharedPreferences.getBoolean("postmarket", true)
 
       // Work off a read-only copy to avoid the java.util.ConcurrentModificationException

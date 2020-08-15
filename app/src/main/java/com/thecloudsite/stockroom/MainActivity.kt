@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity() {
         .addOnCompleteListener(this) { task ->
           if (task.isSuccessful) {
             val updated = task.result
-            stockRoomViewModel.logDebug("Remote Config fetch activated.")
+            stockRoomViewModel.logDebug("Config activated.")
 
             // Update configuration
             val marketDataBaseUrl = remoteConfig[STOCKMARKETDATA_BASEURL].asString()
@@ -249,11 +249,11 @@ class MainActivity : AppCompatActivity() {
             //stockRoomViewModel.logDebug("Remote Config [baseUrl=$yahooNewsBaseUrl]")
 
             val googleNewsBaseUrl = remoteConfig[GOOGLENEWS_BASEURL].asString()
-            GoogleNewsApiFactory.update("")//googleNewsBaseUrl)
+            GoogleNewsApiFactory.update(googleNewsBaseUrl)
             //stockRoomViewModel.logDebug("Remote Config [baseUrl=$googleNewsBaseUrl]")
 
           } else {
-            stockRoomViewModel.logDebug("Remote Config fetch failed, using defaults.")
+            stockRoomViewModel.logDebug("Config failed, using defaults.")
           }
         }
     // [END fetch_config_with_callback]
@@ -334,7 +334,7 @@ class MainActivity : AppCompatActivity() {
         true
       }
       R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually("Update online data manually.")
+        stockRoomViewModel.updateOnlineDataManually("Schedule to get online data manually.")
         true
       }
       else -> super.onOptionsItemSelected(item)

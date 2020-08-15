@@ -49,12 +49,16 @@ object StockMarketDataApiFactory {
 
   fun update(_baseUrl: String) {
     if (baseUrl != _baseUrl) {
-      baseUrl = checkBaseUrl(_baseUrl)
-
-      yahooApi = try {
-        retrofit().create(YahooApiMarketData::class.java)
-      } catch (e: Exception) {
-        null
+      if (_baseUrl.isBlank()) {
+        baseUrl = ""
+        yahooApi = null
+      } else {
+        baseUrl = checkBaseUrl(_baseUrl)
+        yahooApi = try {
+          retrofit().create(YahooApiMarketData::class.java)
+        } catch (e: Exception) {
+          null
+        }
       }
     }
   }
@@ -105,12 +109,16 @@ object StockChartDataApiFactory {
 
   fun update(_baseUrl: String) {
     if (baseUrl != _baseUrl) {
-      baseUrl = checkBaseUrl(_baseUrl)
-
-      yahooApi = try {
-        retrofit().create(YahooApiChartData::class.java)
-      } catch (e: Exception) {
-        null
+      if (_baseUrl.isBlank()) {
+        baseUrl = ""
+        yahooApi = null
+      } else {
+        baseUrl = checkBaseUrl(_baseUrl)
+        yahooApi = try {
+          retrofit().create(YahooApiChartData::class.java)
+        } catch (e: Exception) {
+          null
+        }
       }
     }
   }

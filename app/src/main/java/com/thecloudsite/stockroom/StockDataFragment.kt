@@ -1347,7 +1347,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun onSync() {
-    stockRoomViewModel.updateOnlineDataManually("Update online data manually.")
+    stockRoomViewModel.updateOnlineDataManually("Schedule to get online data manually.")
     updateStockViewRange(stockViewRange)
   }
 

@@ -13,7 +13,6 @@ import retrofit2.http.Query
 // http://www.google.com/finance?q=INDEXNASDAQ:.IXIC
 // http://www.google.com/finance/getprices?q=.IXIC&x=INDEXNASDAQ&i=120&p=10m&f=d,c,v,o,h,l&df=cpct&auto=1&ts=1307994768643
 
-
 // https://finance.yahoo.com/quote/MSFT?p=MSFT&.tsrc=fin-srch HTTP/1.1
 
 // https://finance.yahoo.com/quotes/GOOG,MAPP,API,v3,Json,not
@@ -241,6 +240,29 @@ enum class MarketState(val value: String) {
   NO_NETWORK("NO_NETWORK"),
   UNKNOWN("")
 }
+
+fun <K> Enum.Companion.toString(marketState: K): String {
+  return when (marketState) {
+    MarketState.REGULAR -> {
+      "regular market"
+    }
+    MarketState.PRE, MarketState.PREPRE -> {
+      "pre market"
+    }
+    MarketState.POST, MarketState.POSTPOST -> {
+      "post market"
+    }
+    MarketState.CLOSED -> {
+      "market closed"
+    }
+    MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
+      "network not available"
+    }
+    else -> ""
+  }
+}
+
+//Enum.toString(DEF_TYPE("default"))
 
 /*
 "preMarketChange": 0.23999023,

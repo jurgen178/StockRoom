@@ -134,6 +134,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
       return Pair(marketState, "")
     }
 
+    _data.postValue(emptyList())
     return Pair(MarketState.UNKNOWN, "")
   }
 

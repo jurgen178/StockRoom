@@ -27,12 +27,16 @@ object GoogleNewsApiFactory {
 
   fun update(_baseUrl: String) {
     if (baseUrl != _baseUrl) {
-      baseUrl = checkBaseUrl(_baseUrl)
-
-      newsApi = try {
-        retrofit().create(GoogleNewsApi::class.java)
-      } catch (e: Exception) {
-        null
+      if (_baseUrl.isBlank()) {
+        baseUrl = ""
+        newsApi = null
+      } else {
+        baseUrl = checkBaseUrl(_baseUrl)
+        newsApi = try {
+          retrofit().create(GoogleNewsApi::class.java)
+        } catch (e: Exception) {
+          null
+        }
       }
     }
   }
