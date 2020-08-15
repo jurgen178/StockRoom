@@ -263,9 +263,8 @@ data class YahooResponse(
 
 // https://api.iextrading.com/1.0/ref-data/symbols
 
-
 //A retrofit Network Interface for the Api
-interface YahooApi {
+interface YahooApiMarketData {
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
   @GET("quote?format=json")
   fun getStockDataAsync(
@@ -273,7 +272,10 @@ interface YahooApi {
         value = "symbols"
     ) symbols: String
   ): Deferred<Response<YahooResponse>>
+}
 
+interface YahooApiChartData {
+  // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
   // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
   // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
   // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]

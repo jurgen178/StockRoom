@@ -18,7 +18,7 @@ data class StockItem
   var events: List<Event>
 )
 
-class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
+class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : BaseRepository() {
 
   private val _data = MutableLiveData<List<OnlineMarketData>>()
   val onlineMarketDataList: LiveData<List<OnlineMarketData>>
@@ -27,7 +27,9 @@ class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
   suspend fun getStockData(symbols: List<String>): Pair<MarketState, String> {
     var errorMsg = ""
 
-    if (symbols.isNotEmpty()) {
+    val api: YahooApiMarketData? = api()
+
+    if (symbols.isNotEmpty() && api != null) {
       //Log.d("Handlers", "stockMarketDataRepository.getStockData()")
 
       val quoteResponse: YahooResponse? = try {
@@ -136,6 +138,8 @@ class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
   }
 
   suspend fun getStockData2(symbols: List<String>): List<OnlineMarketData> {
+    val api: YahooApiMarketData = api() ?: return emptyList()
+
     val quoteResponse: YahooResponse? = try {
       safeApiCall(
           call = {
@@ -152,7 +156,9 @@ class StockMarketDataRepository(private val api: YahooApi) : BaseRepository() {
   }
 
   suspend fun getStockData(symbol: String): OnlineMarketData? {
-    if (symbol.isNotEmpty()) {
+    val api: YahooApiMarketData? = api()
+
+    if (symbol.isNotEmpty() && api != null) {
 
       val quoteResponse: YahooResponse? = try {
         safeApiCall(

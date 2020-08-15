@@ -35,6 +35,7 @@ import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.thecloudsite.stockroom.StockDataFragment.Companion.onlineDataTimerDelay
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -111,7 +112,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   private val repository: StockRoomRepository
   private val stockMarketDataRepository: StockMarketDataRepository =
-    StockMarketDataRepository(StockApiFactory.yahooApi)
+    StockMarketDataRepository { StockMarketDataApiFactory.yahooApi }
 
   // Using LiveData and caching returns has several benefits:
   // - We can put an observer on the data (instead of polling for changes) and only update the
@@ -136,6 +137,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     get() = _dataStore
 
   private val allMediatorData = MediatorLiveData<StockItemSet>()
+
+  private var onlineDataStatus: Pair<Long, MarketState> = Pair(onlineDataTimerDelay, MarketState.UNKNOWN)
+  private var nextUpdate: Long = onlineDataTimerDelay
+  private var onlineUpdateTime: Long = onlineDataTimerDelay
+  private var isActive = false
+  private var onlineNow = false
+  private var onlineBefore = false
 
   // Settings.
   private val sharedPreferences =
@@ -261,6 +269,43 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     return Pair(onlineDataDelay, marketState)
+  }
+
+  fun runOnlineTask() {
+    onlineBefore = onlineNow
+    onlineNow = isOnline(getApplication())
+
+    if (onlineBefore && !onlineNow) {
+      logDebug("Network is offline.")
+    } else
+      if (!onlineBefore && onlineNow) {
+        logDebug("Network is online.")
+        // Schedule now
+        isActive = false
+        nextUpdate = 0
+      }
+
+    if (onlineNow) {
+      //stockRoomViewModel.logDebug(
+      //    "${onlineDataStatus.first} ${onlineUpdateTime + onlineDataTimerDelay} >= $nextUpdate"
+      //)
+
+      // isActive : only one getOnlineData at a time
+      // next update depends on the market state
+      if (!isActive && onlineUpdateTime + onlineDataTimerDelay >= nextUpdate) {
+        logDebug("Schedule to get online data.")
+        isActive = true
+
+        scope.launch {
+          onlineDataStatus = getOnlineData(onlineDataStatus.first)
+          nextUpdate = onlineDataStatus.first
+          onlineUpdateTime = 0L
+          isActive = false
+        }
+      }
+
+      onlineUpdateTime += onlineDataTimerDelay
+    }
   }
 
   fun updateOnlineDataManually(onlineMsg: String = "") {

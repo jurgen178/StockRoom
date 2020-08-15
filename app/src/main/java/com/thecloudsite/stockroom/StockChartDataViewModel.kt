@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 class StockChartDataViewModel(application: Application) : AndroidViewModel(application) {
 
   private val stockChartDataRepository: StockChartDataRepository =
-    StockChartDataRepository(StockApiFactory.yahooApi)
+    StockChartDataRepository { StockChartDataApiFactory.yahooApi }
 
   val data: LiveData<List<StockDataEntry>>
 

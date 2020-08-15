@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
+class StockChartDataRepository(private val api: () -> YahooApiChartData?) : BaseRepository() {
 
   private val _data = MutableLiveData<List<StockDataEntry>>()
   val data: LiveData<List<StockDataEntry>>
@@ -24,6 +24,9 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
     range: String
   ): List<StockDataEntry>? {
 
+    val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
+    val api: YahooApiChartData = api() ?: return stockDataEntries.toList()
+
     val quoteResponse: YahooChartData? = try {
       safeApiCall(
           call = {
@@ -37,7 +40,6 @@ class StockChartDataRepository(private val api: YahooApi) : BaseRepository() {
       null
     }
 
-    val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
     if (quoteResponse != null) {
       val yahooChartData = quoteResponse
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+  <entry>
+    <key>stockMarketDataBaseUrl</key>
+    <value>https://query1.finance.yahoo.com/v7/finance/</value>
+  </entry>
+  <entry>
+    <key>stockChartDataBaseUrl</key>
+    <value>https://query1.finance.yahoo.com/v8/finance/</value>
+  </entry>
+  <entry>
+    <key>yahooNewsBaseUrl</key>
+    <value>https://feeds.finance.yahoo.com/</value>
+  </entry>
+  <entry>
+    <key>googleNewsBaseUrl</key>
+    <value>https://news.google.com/</value>
+  </entry>
+</defaultsMap>
+<!-- END xml_defaults -->

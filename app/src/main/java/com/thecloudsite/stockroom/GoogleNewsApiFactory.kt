@@ -11,16 +11,35 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 object GoogleNewsApiFactory {
 
+  private var defaultBaseUrl = "https://news.google.com/"
+  private var baseUrl = ""
+
   // https://futurestud.io/tutorials/retrofit-how-to-integrate-xml-converter
   private fun retrofit(): Retrofit = Retrofit.Builder()
       .client(
           OkHttpClient().newBuilder()
               .build()
       )
-      .baseUrl("https://news.google.com/")
+      .baseUrl(baseUrl)
       .addConverterFactory(SimpleXmlConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
       .build()
 
-  val newsApi: GoogleNewsApi = retrofit().create(GoogleNewsApi::class.java)
+  fun update(_baseUrl: String) {
+    if (baseUrl != _baseUrl) {
+      baseUrl = checkBaseUrl(_baseUrl)
+
+      newsApi = try {
+        retrofit().create(GoogleNewsApi::class.java)
+      } catch (e: Exception) {
+        null
+      }
+    }
+  }
+
+  init {
+    update(defaultBaseUrl)
+  }
+
+  var newsApi: GoogleNewsApi? = null
 }

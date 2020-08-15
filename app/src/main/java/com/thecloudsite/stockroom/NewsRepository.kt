@@ -10,7 +10,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 open class NewsRepository(
-  private val api: NewsApi,
+  private val api: () -> NewsApi?,
   private val newsType: Int
 ) {
 
@@ -63,6 +63,8 @@ open class NewsRepository(
 
     var newsData: List<NewsData>? = null
 
+    val api: NewsApi = api() ?: return emptyList()
+
     try {
       val newsResponse = safeApiCall(
           call = {
@@ -105,9 +107,7 @@ open class NewsRepository(
               data.date
             }
       }
-    }
-    catch(e: Exception)
-    {
+    } catch (e: Exception) {
       Log.d("getOnlineNewsData failed", "Exception - $e")
     }
 

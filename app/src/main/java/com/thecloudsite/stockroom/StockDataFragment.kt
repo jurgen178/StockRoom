@@ -5,6 +5,8 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
@@ -70,7 +72,6 @@ import kotlinx.android.synthetic.main.fragment_stockdata.notesTextView
 import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
 import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
 import kotlinx.android.synthetic.main.fragment_stockdata.splitAssetsButton
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewAsset
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewDividend
@@ -127,6 +128,7 @@ class StockDataFragment : Fragment() {
 
   companion object {
     fun newInstance() = StockDataFragment()
+    const val onlineDataTimerDelay: Long = 2000L
   }
 
   private lateinit var stockDBdata: StockDBdata
@@ -135,6 +137,8 @@ class StockDataFragment : Fragment() {
 
   private var alertAbove: Float = 0f
   private var alertBelow: Float = 0f
+
+  lateinit var onlineDataHandler: Handler
 
   // Settings.
   private val settingStockViewRange = "SettingStockViewRange"
@@ -429,14 +433,16 @@ class StockDataFragment : Fragment() {
         .show()
   }
 
+  private val onlineDataTask = object : Runnable {
+    override fun run() {
+      stockRoomViewModel.runOnlineTask()
+      onlineDataHandler.postDelayed(this, onlineDataTimerDelay)
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setHasOptionsMenu(true)
-  }
-
-  override fun onPause() {
-    updateAlerts()
-    super.onPause()
   }
 
   override fun onCreateView(
@@ -446,6 +452,9 @@ class StockDataFragment : Fragment() {
   ): View? {
 
     symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
+
+    // Setup online data every 2s for regular hours.
+    onlineDataHandler = Handler(Looper.getMainLooper())
 
     // Inflate the layout for this fragment
     return inflater.inflate(R.layout.fragment_stockdata, container, false)
@@ -1315,8 +1324,15 @@ class StockDataFragment : Fragment() {
         })
   }
 
+  override fun onPause() {
+    updateAlerts()
+    onlineDataHandler.removeCallbacks(onlineDataTask)
+    super.onPause()
+  }
+
   override fun onResume() {
     super.onResume()
+    onlineDataHandler.post(onlineDataTask)
     stockRoomViewModel.updateOnlineDataManually()
   }
 
@@ -1489,10 +1505,7 @@ class StockDataFragment : Fragment() {
   private fun updateAssetChange(data: AssetsLiveData) {
     if (data.assets != null && data.onlineMarketData != null) {
       val purchasePrice = updatePurchasePrice(data.assets?.assets!!)
-      if (purchasePrice.isEmpty()) {
-        textViewAsset.visibility = View.GONE
-      } else {
-        textViewAsset.visibility = View.VISIBLE
+      if (purchasePrice.isNotEmpty()) {
         textViewAssetChange.text =
           getAssetChange(
               data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, requireActivity()
@@ -1508,7 +1521,6 @@ class StockDataFragment : Fragment() {
         dividendLinearLayout.visibility = View.GONE
       }
     } else {
-      textViewAsset.visibility = View.GONE
       dividendLinearLayout.visibility = View.GONE
     }
   }

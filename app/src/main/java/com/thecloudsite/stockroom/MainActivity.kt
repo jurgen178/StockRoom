@@ -33,18 +33,19 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.thecloudsite.stockroom.StockDataFragment.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
 import kotlinx.android.synthetic.main.activity_main.viewpager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Locale
-import kotlin.coroutines.CoroutineContext
 
 // App constants.
 // https://stackoverflow.com/questions/9947156/what-are-the-default-color-values-for-the-holo-theme-on-android-4-0
@@ -56,10 +57,7 @@ class MainActivity : AppCompatActivity() {
 
   private val newSymbolActivityRequestCode = 1
 
-  private val parentJob = Job()
-  private val coroutineContext: CoroutineContext
-    get() = parentJob + Dispatchers.Default
-  private val scope = CoroutineScope(coroutineContext)
+  private lateinit var remoteConfig: FirebaseRemoteConfig
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var eventList: MutableList<Events> = mutableListOf()
@@ -67,16 +65,20 @@ class MainActivity : AppCompatActivity() {
   //private var isLastListItem = false
 
   lateinit var onlineDataHandler: Handler
-  val onlineDataTimerDelay: Long = 2000L
-  var onlineDataStatus: Pair<Long, MarketState> = Pair(onlineDataTimerDelay, MarketState.UNKNOWN)
-  var nextUpdate: Long = onlineDataTimerDelay
-  var onlineUpdateTime: Long = onlineDataTimerDelay
-  var isActive = false
-  var onlineNow = false
-  var onlineBefore = false
 
   lateinit var eventHandler: Handler
   val eventDelay: Long = 5000L
+
+  companion object {
+
+    private const val TAG = "MainActivity"
+
+    // Remote Config keys
+    private const val STOCKMARKETDATA_BASEURL = "stockMarketDataBaseUrl"
+    private const val STOCKCHARTDATA_BASEURL = "stockChartDataBaseUrl"
+    private const val YAHOONEWS_BASEURL = "yahooNewsBaseUrl"
+    private const val GOOGLENEWS_BASEURL = "googleNewsBaseUrl"
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -99,6 +101,8 @@ class MainActivity : AppCompatActivity() {
     if (!isOnline(applicationContext)) {
       stockRoomViewModel.logDebug("Network is offline.")
     }
+
+    updateRemoteConfig()
 
     SharedRepository.alerts.observe(this, Observer { alerts ->
       showAlerts(alerts)
@@ -195,43 +199,69 @@ class MainActivity : AppCompatActivity() {
     eventHandler = Handler(Looper.getMainLooper())
   }
 
-  private val onlineDataTask = object : Runnable {
-    override fun run() {
-      onlineBefore = onlineNow
-      onlineNow = isOnline(applicationContext)
+  private fun updateRemoteConfig() {
+    // Get Remote Config instance.
+    // [START get_remote_config_instance]
+    remoteConfig = Firebase.remoteConfig
+    // [END get_remote_config_instance]
 
-      if (onlineBefore && !onlineNow) {
-        stockRoomViewModel.logDebug("Network is offline.")
-      } else
-        if (!onlineBefore && onlineNow) {
-          stockRoomViewModel.logDebug("Network is online.")
-          // Schedule now
-          isActive = false
-          nextUpdate = 0
-        }
+    // Create a Remote Config Setting to enable developer mode, which you can use to increase
+    // the number of fetches available per hour during development. Also use Remote Config
+    // Setting to set the minimum fetch interval.
+    // [START enable_dev_mode]
 
-      if (onlineNow) {
-        //stockRoomViewModel.logDebug(
-        //    "${onlineDataStatus.first} ${onlineUpdateTime + onlineDataTimerDelay} >= $nextUpdate"
-        //)
+    val configSettings = remoteConfigSettings {
+      minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) {
+        1
+      } else {
+        3600
+      }
+    }
+    remoteConfig.setConfigSettingsAsync(configSettings)
+    // [END enable_dev_mode]
 
-        // isActive : only one getOnlineData at a time
-        // next update depends on the market state
-        if (!isActive && onlineUpdateTime + onlineDataTimerDelay >= nextUpdate) {
-          stockRoomViewModel.logDebug("Schedule to get online data.")
-          isActive = true
+    // Set default Remote Config parameter values. An app uses the in-app default values, and
+    // when you need to adjust those defaults, you set an updated value for only the values you
+    // want to change in the Firebase console. See Best Practices in the README for more
+    // information.
+    // [START set_default_values]
+    remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+    // [END set_default_values]
 
-          scope.launch {
-            onlineDataStatus = stockRoomViewModel.getOnlineData(onlineDataStatus.first)
-            nextUpdate = onlineDataStatus.first
-            onlineUpdateTime = 0L
-            isActive = false
+    // [START fetch_config_with_callback]
+    remoteConfig.fetchAndActivate()
+        .addOnCompleteListener(this) { task ->
+          if (task.isSuccessful) {
+            val updated = task.result
+            stockRoomViewModel.logDebug("Remote Config fetch activated.")
+
+            // Update configuration
+            val marketDataBaseUrl = remoteConfig[STOCKMARKETDATA_BASEURL].asString()
+            StockMarketDataApiFactory.update(marketDataBaseUrl)
+            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$marketDataBaseUrl]")
+
+            val chartDataBaseUrl = remoteConfig[STOCKCHARTDATA_BASEURL].asString()
+            StockChartDataApiFactory.update(chartDataBaseUrl)
+            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$chartDataBaseUrl]")
+
+            val yahooNewsBaseUrl = remoteConfig[YAHOONEWS_BASEURL].asString()
+            YahooNewsApiFactory.update(yahooNewsBaseUrl)
+            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$yahooNewsBaseUrl]")
+
+            val googleNewsBaseUrl = remoteConfig[GOOGLENEWS_BASEURL].asString()
+            GoogleNewsApiFactory.update("")//googleNewsBaseUrl)
+            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$googleNewsBaseUrl]")
+
+          } else {
+            stockRoomViewModel.logDebug("Remote Config fetch failed, using defaults.")
           }
         }
+    // [END fetch_config_with_callback]
+  }
 
-        onlineUpdateTime += onlineDataTimerDelay
-      }
-
+  private val onlineDataTask = object : Runnable {
+    override fun run() {
+      stockRoomViewModel.runOnlineTask()
       onlineDataHandler.postDelayed(this, onlineDataTimerDelay)
     }
   }
