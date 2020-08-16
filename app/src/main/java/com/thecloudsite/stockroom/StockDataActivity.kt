@@ -34,6 +34,13 @@ class StockDataActivity : AppCompatActivity() {
             }
             instance
           }
+          1 -> {
+            val instance = DividendFragment.newInstance()
+            instance.arguments = Bundle().apply {
+              putString("symbol", symbol)
+            }
+            instance
+          }
           else -> {
             val instance = NewsFragment.newInstance()
             instance.arguments = Bundle().apply {
@@ -45,13 +52,14 @@ class StockDataActivity : AppCompatActivity() {
       }
 
       override fun getItemCount(): Int {
-        return 2
+        return 3
       }
     }
 
     TabLayoutMediator(tab_layout, stockViewpager) { tab, position ->
       tab.text = when (position) {
         0 -> getString(R.string.data_headline)
+        1 -> getString(R.string.dividend_header)
         else -> getString(R.string.news_headline, symbol)
       }
     }.attach()

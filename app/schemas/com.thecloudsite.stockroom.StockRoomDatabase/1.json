@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "88073f54e5e3c5b9a5318783f1f310ae",
+    "identityHash": "cfb0ba3d661dd99bc62c35aac7e6ba5b",
     "entities": [
       {
         "tableName": "stock_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL, PRIMARY KEY(`symbol`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `dividend_notes` TEXT NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL, PRIMARY KEY(`symbol`))",
         "fields": [
           {
             "fieldPath": "symbol",
@@ -35,6 +35,12 @@
           {
             "fieldPath": "notes",
             "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dividendNotes",
+            "columnName": "dividend_notes",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -88,7 +94,7 @@
       },
       {
         "tableName": "asset_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `shares` REAL NOT NULL, `price` REAL NOT NULL, `date` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `shares` REAL NOT NULL, `price` REAL NOT NULL, `date` INTEGER NOT NULL, FOREIGN KEY(`symbol`) REFERENCES `stock_table`(`symbol`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -127,12 +133,41 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_asset_table_symbol",
+            "unique": false,
+            "columnNames": [
+              "symbol"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_asset_table_symbol` ON `${TABLE_NAME}` (`symbol`)"
+          },
+          {
+            "name": "index_asset_table_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_asset_table_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stock_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "symbol"
+            ],
+            "referencedColumns": [
+              "symbol"
+            ]
+          }
+        ]
       },
       {
         "tableName": "event_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `type` INTEGER NOT NULL, `title` TEXT NOT NULL, `note` TEXT NOT NULL, `datetime` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `type` INTEGER NOT NULL, `title` TEXT NOT NULL, `note` TEXT NOT NULL, `datetime` INTEGER NOT NULL, FOREIGN KEY(`symbol`) REFERENCES `stock_table`(`symbol`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -177,14 +212,122 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_event_table_symbol",
+            "unique": false,
+            "columnNames": [
+              "symbol"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_event_table_symbol` ON `${TABLE_NAME}` (`symbol`)"
+          },
+          {
+            "name": "index_event_table_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_event_table_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stock_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "symbol"
+            ],
+            "referencedColumns": [
+              "symbol"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "dividend_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `amount` REAL NOT NULL, `type` INTEGER NOT NULL, `paydate` INTEGER NOT NULL, `exdate` INTEGER NOT NULL, FOREIGN KEY(`symbol`) REFERENCES `stock_table`(`symbol`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "symbol",
+            "columnName": "symbol",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paydate",
+            "columnName": "paydate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exdate",
+            "columnName": "exdate",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_dividend_table_symbol",
+            "unique": false,
+            "columnNames": [
+              "symbol"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_dividend_table_symbol` ON `${TABLE_NAME}` (`symbol`)"
+          },
+          {
+            "name": "index_dividend_table_id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_dividend_table_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stock_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "symbol"
+            ],
+            "referencedColumns": [
+              "symbol"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88073f54e5e3c5b9a5318783f1f310ae')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cfb0ba3d661dd99bc62c35aac7e6ba5b')"
     ]
   }
 }

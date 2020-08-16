@@ -24,6 +24,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 interface StockRoomDao {
@@ -45,8 +46,8 @@ interface StockRoomDao {
   @Transaction
   fun deleteAll() {
     deleteAllStockTable()
-    deleteAllAssetTable()
-    deleteAllEventTable()
+    //deleteAllAssetTable()
+    //deleteAllEventTable()
   }
 
   @Query("DELETE FROM stock_table")
@@ -299,4 +300,29 @@ interface StockRoomDao {
       }
     }
   }
+
+//  @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
+//  fun getDividends(symbol: String): Dividends
+
+  @Transaction
+  @Query("SELECT * FROM stock_table")
+  fun getAllDividendsLiveData(): LiveData<List<Dividends>>
+
+  @Transaction
+  @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
+  fun getDividendsLiveData(symbol: String): LiveData<Dividends>
+
+  // Assets
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  fun addDividend(dividend: Dividend)
+
+//  @Query("SELECT * FROM dividend_table WHERE title = :title LIMIT 1")
+//  suspend fun findMovieByTitle(title: String?): Dividend?
+
+  @Transaction
+  @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
+  fun getDividends(symbol: String): Dividends
+
+  @Query("SELECT * FROM dividend_table ORDER BY amount ASC")
+  fun allDividends(): LiveData<List<Dividend>>
 }

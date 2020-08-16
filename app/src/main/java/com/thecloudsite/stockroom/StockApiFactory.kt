@@ -13,6 +13,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 //StockApiFactory to create the Yahoo Api
 object StockMarketDataApiFactory {
+  // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
   private var defaultBaseUrl = "https://query1.finance.yahoo.com/v7/finance/"

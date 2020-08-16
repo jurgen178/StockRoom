@@ -245,4 +245,11 @@ limitations under the License. -->
   <string name="portfolio_name_text">Portfolio name</string>
   <string name="portfolio_name_not_empty">Enter a Portfolio name.</string>
   <string name="portfolio_rename_text">New Portfolio name</string>
+  <string name="dividend">Dividend</string>
+  <string name="dividend_received">Dividend received</string>
+  <string name="dividend_announced">Dividend announced</string>
+  <string name="dividend_date">Pay Date</string>
+  <string name="add_dividend">Add Dividend</string>
+  <string name="dividend_added">Dividend added.</string>
+  <string name="update_dividend">Update dividend</string>
 </resources>

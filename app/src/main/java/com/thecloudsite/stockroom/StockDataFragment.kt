@@ -63,7 +63,6 @@ import kotlinx.android.synthetic.main.fragment_stockdata.buttonOneYear
 import kotlinx.android.synthetic.main.fragment_stockdata.buttonThreeMonth
 import kotlinx.android.synthetic.main.fragment_stockdata.buttonYTD
 import kotlinx.android.synthetic.main.fragment_stockdata.candleStickChart
-import kotlinx.android.synthetic.main.fragment_stockdata.dividendLinearLayout
 import kotlinx.android.synthetic.main.fragment_stockdata.eventsView
 import kotlinx.android.synthetic.main.fragment_stockdata.imageButtonIconCandle
 import kotlinx.android.synthetic.main.fragment_stockdata.imageButtonIconLine
@@ -75,7 +74,6 @@ import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
 import kotlinx.android.synthetic.main.fragment_stockdata.splitAssetsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewDividend
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroupColor
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewMarketPrice
@@ -94,7 +92,6 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.format.FormatStyle.LONG
-import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 import java.util.Locale
 
@@ -1467,58 +1464,6 @@ class StockDataFragment : Fragment() {
     return ""
   }
 
-  private fun getDividend(data: AssetsLiveData): SpannableStringBuilder {
-
-    val dividend = SpannableStringBuilder()
-        .append(getString(R.string.annualDividendRate))
-        .bold {
-          append(
-              " ${DecimalFormat("0.00##").format(data.onlineMarketData?.annualDividendRate)}\n"
-          )
-        }
-        .append(getString(R.string.annualDividendYield))
-        .bold {
-          append(
-              " ${DecimalFormat("0.00##").format(
-                  data.onlineMarketData?.annualDividendYield?.times(100)
-              )}%"
-          )
-        }
-
-    val dividendDate = data.onlineMarketData?.dividendDate!!
-    val dateTimeNow = LocalDateTime.now()
-        .toEpochSecond(ZoneOffset.UTC)
-    if (dividendDate > 0 && dividendDate > dateTimeNow) {
-      val datetime: LocalDateTime =
-        LocalDateTime.ofEpochSecond(data.onlineMarketData?.dividendDate!!, 0, ZoneOffset.UTC)
-      dividend
-          .append(
-              "\n${getString(R.string.dividend_pay_date)}"
-          )
-          .bold {
-            append(" ${datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))}")
-          }
-    }
-
-    if (data.assets != null) {
-      val shares = data.assets?.assets?.sumByDouble {
-        it.shares.toDouble()
-      }
-          ?.toFloat() ?: 0f
-
-      if (shares > 0f) {
-        val totalDividend = shares * data.onlineMarketData?.annualDividendRate!!
-        dividend
-            .append("\n${getString(R.string.quarterlyDividend)}")
-            .bold {
-              append(" ${DecimalFormat("0.00").format(totalDividend / 4f)}")
-            }
-      }
-    }
-
-    return dividend
-  }
-
   private fun updateAssetChange(data: AssetsLiveData) {
     if (data.assets != null && data.onlineMarketData != null) {
       val purchasePrice = updatePurchasePrice(data.assets?.assets!!)
@@ -1530,15 +1475,6 @@ class StockDataFragment : Fragment() {
 
         textViewPurchasePrice.text = purchasePrice
       }
-
-      if (data.onlineMarketData?.annualDividendRate!! > 0f) {
-        dividendLinearLayout.visibility = View.VISIBLE
-        textViewDividend.text = getDividend(data)
-      } else {
-        dividendLinearLayout.visibility = View.GONE
-      }
-    } else {
-      dividendLinearLayout.visibility = View.GONE
     }
   }
 

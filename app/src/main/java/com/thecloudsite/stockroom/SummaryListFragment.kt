@@ -3,6 +3,7 @@ package com.thecloudsite.stockroom
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,8 +50,8 @@ class SummaryListFragment : Fragment() {
     summaryList.adapter = summaryListAdapter
 
     // Set column number depending on orientation and size.
-    // small, standard, large, larger
     val spanCountsPortrait = arrayOf(
+        // small, standard, large, larger
         // 0.85, 1, 1.15, 1.3
         intArrayOf(4, 3, 3, 3),// 375
         intArrayOf(3, 3, 3, 2),// 440

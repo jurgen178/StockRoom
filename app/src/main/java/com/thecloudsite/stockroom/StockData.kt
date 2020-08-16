@@ -174,6 +174,178 @@ https://query2.finance.yahoo.com/v7/finance/quote?formatted=false&symbols=azn
         "error": null
     }
 }
+
+
+
+https://query2.finance.yahoo.com/v10/finance/quoteSummary/msft?modules=financialData
+https://query2.finance.yahoo.com/v10/finance/quoteSummary/msft?modules=calendarEvents
+
+https://query2.finance.yahoo.com/v10/finance/quoteSummary/YOUR_COMPANY_SYMBOL?modules=ANY_PERMITTED_MODULE_SEPPARATED_BY_COMMAS
+
+assetProfile
+financialData
+defaultKeyStatistics
+calendarEvents
+incomeStatementHistory
+cashflowStatementHistory
+balanceSheetHistory
+
+{
+    "quoteSummary": {
+        "result": [{
+            "financialData": {
+                "maxAge": 86400,
+                "currentPrice": {
+                    "raw": 208.9,
+                    "fmt": "208.90"
+                },
+                "targetHighPrice": {
+                    "raw": 260.0,
+                    "fmt": "260.00"
+                },
+                "targetLowPrice": {
+                    "raw": 169.49,
+                    "fmt": "169.49"
+                },
+                "targetMeanPrice": {
+                    "raw": 226.93,
+                    "fmt": "226.93"
+                },
+                "targetMedianPrice": {
+                    "raw": 230.0,
+                    "fmt": "230.00"
+                },
+                "recommendationMean": {
+                    "raw": 1.7,
+                    "fmt": "1.70"
+                },
+                "recommendationKey": "buy",
+                "numberOfAnalystOpinions": {
+                    "raw": 31,
+                    "fmt": "31",
+                    "longFmt": "31"
+                },
+                "totalCash": {
+                    "raw": 136491999232,
+                    "fmt": "136.49B",
+                    "longFmt": "136,491,999,232"
+                },
+                "totalCashPerShare": {
+                    "raw": 18.036,
+                    "fmt": "18.04"
+                },
+                "ebitda": {
+                    "raw": 65258999808,
+                    "fmt": "65.26B",
+                    "longFmt": "65,258,999,808"
+                },
+                "totalDebt": {
+                    "raw": 82109997056,
+                    "fmt": "82.11B",
+                    "longFmt": "82,109,997,056"
+                },
+                "quickRatio": {
+                    "raw": 2.33,
+                    "fmt": "2.33"
+                },
+                "currentRatio": {
+                    "raw": 2.516,
+                    "fmt": "2.52"
+                },
+                "totalRevenue": {
+                    "raw": 143015002112,
+                    "fmt": "143.02B",
+                    "longFmt": "143,015,002,112"
+                },
+                "debtToEquity": {
+                    "raw": 69.406,
+                    "fmt": "69.41"
+                },
+                "revenuePerShare": {
+                    "raw": 18.793,
+                    "fmt": "18.79"
+                },
+                "returnOnAssets": {
+                    "raw": 0.11261,
+                    "fmt": "11.26%"
+                },
+                "returnOnEquity": {
+                    "raw": 0.4014,
+                    "fmt": "40.14%"
+                },
+                "grossProfits": {
+                    "raw": 96937000000,
+                    "fmt": "96.94B",
+                    "longFmt": "96,937,000,000"
+                },
+                "freeCashflow": {
+                    "raw": 34257999872,
+                    "fmt": "34.26B",
+                    "longFmt": "34,257,999,872"
+                },
+                "operatingCashflow": {
+                    "raw": 60674998272,
+                    "fmt": "60.67B",
+                    "longFmt": "60,674,998,272"
+                },
+                "earningsGrowth": {
+                    "raw": -0.142,
+                    "fmt": "-14.20%"
+                },
+                "revenueGrowth": {
+                    "raw": 0.128,
+                    "fmt": "12.80%"
+                },
+                "grossMargins": {
+                    "raw": 0.67780995,
+                    "fmt": "67.78%"
+                },
+                "ebitdaMargins": {
+                    "raw": 0.45631,
+                    "fmt": "45.63%"
+                },
+                "operatingMargins": {
+                    "raw": 0.3703,
+                    "fmt": "37.03%"
+                },
+                "profitMargins": {
+                    "raw": 0.30962,
+                    "fmt": "30.96%"
+                },
+                "financialCurrency": "USD"
+            }
+        }],
+        "error": null
+    }
+}
+
+params = {"formatted": "true",
+        "crumb": "AKV/cl0TOgz", # works without so not sure of significance
+        "lang": "en-US",
+        "region": "US",
+        "modules": "defaultKeyStatistics,financialData,calendarEvents",
+        "corsDomain": "finance.yahoo.com"}
+
+r = requests.get("https://query1.finance.yahoo.com/v10/finance/quoteSummary/GSB", params=params)
+data = r.json()[u'quoteSummary']["result"][0]
+
+r = requests.get('https://query2.finance.yahoo.com/v10/finance/quoteSummary/GLW?formatted=true&crumb=8ldhetOu7RJ&lang=en-US&region=US&modules=summaryDetail&corsDomain=finance.yahoo.com')
+data = r.json()
+financial_data=data['quoteSummary']['result'][0]['summaryDetail']
+twoHundredMA_dict = financial_data['twoHundredDayAverage']
+print(twoHundredMA_dict['fmt'])
+
+https://query2.finance.yahoo.com/v11/finance/quoteSummary/KO?modules=summaryProfile,financialData,defaultKeyStatistics
+
+https://query2.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true&crumb=8ldhetOu7RJ&lang=en-US&region=US&modules=defaultKeyStatistics%2CfinancialData%2CcalendarEvents&corsDomain=finance.yahoo.com
+
+http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=amd&region=1&lang=e
+
+https://query2.finance.yahoo.com/v7/finance/options/amd?date=1487289600
+
+Here's the base call. The {} is for either the number 1 or 2 as both work: query{}.finance.yahoo.com/v7/finance/
+Now, as @Yago notes, you can append chart/ and you can also append options/
+
  */
 
 // Data Model
@@ -287,6 +459,7 @@ data class YahooResponse(
 
 //A retrofit Network Interface for the Api
 interface YahooApiMarketData {
+  // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
   @GET("quote?format=json")
   fun getStockDataAsync(

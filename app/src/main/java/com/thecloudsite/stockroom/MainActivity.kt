@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity() {
     remoteConfig.fetchAndActivate()
         .addOnCompleteListener(this) { task ->
           if (task.isSuccessful) {
-            val updated = task.result
+            //val updated = task.result
             stockRoomViewModel.logDebug("Config activated.")
 
             // Update configuration

@@ -31,6 +31,8 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   val allAssets: LiveData<List<Assets>> = stockRoomDao.getAllAssetsLiveData()
   val allEvents: LiveData<List<Events>> = stockRoomDao.getAllEventsLiveData()
+  val allDividends: LiveData<List<Dividends>> = stockRoomDao.getAllDividendsLiveData()
+
   val allAssetTable: LiveData<List<Asset>> = stockRoomDao.getAllAssetTableLiveData()
   val allEventTable: LiveData<List<Event>> = stockRoomDao.getAllEventTableLiveData()
   val allGroupTable: LiveData<List<Group>> = stockRoomDao.getAllGroupTableLiveData()
@@ -49,6 +51,12 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @WorkerThread
   fun getEventsLiveData(symbol: String): LiveData<Events> {
     return stockRoomDao.getEventsLiveData(symbol)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  fun getDividendsLiveData(symbol: String): LiveData<Dividends> {
+    return stockRoomDao.getDividendsLiveData(symbol)
   }
 
   @Suppress("RedundantSuspendModifier")
@@ -278,4 +286,11 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   suspend fun deleteAll() {
     stockRoomDao.deleteAll()
   }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun addDividend(dividend: Dividend) {
+    stockRoomDao.addDividend(dividend)
+  }
+
 }

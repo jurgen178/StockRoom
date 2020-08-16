@@ -243,32 +243,6 @@
         />
 
     <LinearLayout
-        android:id="@+id/dividendLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
-    <View style="@style/Divider"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dividend_header"
-        style="@style/section_header"
-        />
-
-    <TextView
-        android:id="@+id/textViewDividend"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:layout_margin="16dp"
-        />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/portfolioLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

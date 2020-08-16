@@ -229,6 +229,29 @@ class StockRoomDaoTest {
 
   @Test
   @Throws(Exception::class)
+  fun deleteStockDBdata() {
+    val stockDBdata1 = StockDBdata("symbol1")
+    stockRoomDao.insert(stockDBdata1)
+
+    stockRoomDao.addAsset(Asset(symbol = "symbol1", shares = 10f, price = 123f))
+    val assets1 = stockRoomDao.getAssets("symbol1")
+    assertEquals(1, assets1.assets.size)
+
+    stockRoomDao.addEvent(Event(symbol = "symbol1", type = 1, title = "title1", note = "note1", datetime = 1))
+    val events1 = stockRoomDao.getEvents("symbol1")
+    assertEquals(1, events1.events.size)
+
+    // delete stockDBdata also deletes assets and events
+    stockRoomDao.delete("symbol1")
+
+    val assetsdel = stockRoomDao.getAssets("symbol1")
+    assertEquals(null, assetsdel)
+    val eventsdel = stockRoomDao.getEvents("symbol1")
+    assertEquals(null, eventsdel)
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun updateAssets() {
     val stockDBdata1 = StockDBdata("symbol1")
     stockRoomDao.insert(stockDBdata1)
@@ -448,6 +471,50 @@ class StockRoomDaoTest {
     assertEquals(events2.events.size, 1)
     assertEquals(events2.events[0].type, event3.type)
     assertEquals(events2.events[0].datetime, dateTime3)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun dividendTest() {
+    val stockDBdata1 = StockDBdata("symbol1", dividendNotes = "dividendNotes1")
+    stockRoomDao.insert(stockDBdata1)
+
+    stockRoomDao.addDividend(
+        Dividend(symbol = "symbol1", amount = 11f, type = 21, paydate = 21L, exdate = 31L)
+    )
+    stockRoomDao.addDividend(
+        Dividend(symbol = "symbol1", amount = 12f, type = 22, paydate = 22L, exdate = 32L)
+    )
+
+    val stockDBdata3 = StockDBdata("symbol3", dividendNotes = "dividendNotes3")
+    stockRoomDao.insert(stockDBdata3)
+
+    stockRoomDao.addDividend(
+        Dividend(symbol = "symbol3", amount = 13f, type = 23, paydate = 23L, exdate = 33L)
+    )
+
+    val dividends = stockRoomDao.getDividends("symbol1")
+
+    assertEquals("dividendNotes1", dividends.stockDBdata.dividendNotes)
+    assertEquals(2, dividends.dividends.size)
+    assertEquals("symbol1", dividends.dividends[0].symbol)
+    assertEquals(11f, dividends.dividends[0].amount)
+    assertEquals(21, dividends.dividends[0].type)
+    assertEquals(21L, dividends.dividends[0].paydate)
+    assertEquals(31L, dividends.dividends[0].exdate)
+
+    assertEquals("symbol1", dividends.dividends[1].symbol)
+    assertEquals(12f, dividends.dividends[1].amount)
+    assertEquals(22, dividends.dividends[1].type)
+    assertEquals(22L, dividends.dividends[1].paydate)
+    assertEquals(32L, dividends.dividends[1].exdate)
+
+    stockRoomDao.delete("symbol1")
+
+    val dividends2 = stockRoomDao.getDividends("symbol1")
+    assertEquals(null, dividends2)
+    val dividends3 = stockRoomDao.getDividends("symbol3")
+    assertEquals(1, dividends3.dividends.size)
   }
 
   @Test

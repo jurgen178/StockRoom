@@ -25,6 +25,7 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -122,6 +123,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   val allProperties: LiveData<List<StockDBdata>>
   private val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
+  val allDividends: LiveData<List<Dividends>>
   val allAssetTable: LiveData<List<Asset>>
   val allEventTable: LiveData<List<Event>>
   val allGroupTable: LiveData<List<Group>>
@@ -197,6 +199,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allProperties = repository.allProperties
     allAssets = repository.allAssets
     allEvents = repository.allEvents
+    allDividends = repository.allDividends
     allAssetTable = repository.allAssetTable
     allEventTable = repository.allEventTable
     allGroupTable = repository.allGroupTable
@@ -500,8 +503,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.assets = asset.assets
+        } else
+          dataStore.stockItems.add(
+              StockItem(
+                  onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
+                  stockDBdata = asset.stockDBdata,
+                  assets = asset.assets,
+                  events = emptyList()
+              )
+          )
+      }
+
+ /*
+      // Remove the item from the dataStore because Item was deleted from the DB.
+      if (dataStore.stockItems.size > assets.size) {
+        dataStore.stockItems.removeIf {
+          // Remove if item is not found in the DB.
+          assets.find { ds ->
+            it.stockDBdata.symbol == ds.stockDBdata.symbol
+          } == null
         }
       }
+      */
     }
 
     _dataStore.value = dataStore
@@ -521,7 +544,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.events = event.events
+        } else {
+          dataStore.stockItems.add(
+              StockItem(
+                  onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
+                  stockDBdata = event.stockDBdata,
+                  assets = emptyList(),
+                  events = event.events
+              )
+          )
         }
+
+        /*
+        // Remove the item from the dataStore because Item was deleted from the DB.
+        if (dataStore.stockItems.size > events.size) {
+          dataStore.stockItems.removeIf {
+            // Remove if item is not found in the DB.
+            events.find { event ->
+              it.stockDBdata.symbol == event.stockDBdata.symbol
+            } == null
+          }
+        }
+      */
       }
     }
 
@@ -1522,8 +1566,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     if (symbol.isNotEmpty()) {
       val symbolUpper = symbol.toUpperCase(Locale.ROOT)
       repository.delete(symbolUpper)
-      repository.deleteAssets(symbolUpper)
-      repository.deleteEvents(symbolUpper)
+      //repository.deleteAssets(symbolUpper)
+      //repository.deleteEvents(symbolUpper)
     }
   }
 
@@ -1572,6 +1616,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return repository.getEventsLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
+  fun getDividendsLiveData(symbol: String): LiveData<Dividends> {
+    return repository.getDividendsLiveData(symbol.toUpperCase(Locale.ROOT))
+  }
+
   private fun updateEvents(
     symbol: String,
     events: List<Event>
@@ -1579,6 +1627,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     scope.launch {
       repository.updateEvents(symbol = symbol.toUpperCase(Locale.ROOT), events = events)
     }
+
+  fun addDividend(dividend: Dividend) = scope.launch {
+    repository.addDividend(dividend)
+  }
 
   fun deleteEvent(event: Event) =
     scope.launch {

@@ -19,6 +19,8 @@ package com.thecloudsite.stockroom
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
@@ -40,6 +42,7 @@ data class StockDBdata(
   var data: String = "",
   @ColumnInfo(name = "group_color") var groupColor: Int = 0,
   var notes: String = "",
+  @ColumnInfo(name = "dividend_notes") var dividendNotes: String = "",
   @ColumnInfo(name = "alert_above") var alertAbove: Float = 0f,
   @ColumnInfo(name = "alert_below") var alertBelow: Float = 0f
 )
@@ -50,7 +53,16 @@ data class Group(
   var name: String
 )
 
-@Entity(tableName = "asset_table")
+@Entity(
+    tableName = "asset_table",
+    foreignKeys = [ForeignKey(
+        entity = StockDBdata::class,
+        parentColumns = ["symbol"],
+        childColumns = ["symbol"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index("symbol"), Index("id")]
+)
 data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
@@ -59,7 +71,16 @@ data class Asset(
   var date: Long = 0L
 )
 
-@Entity(tableName = "event_table")
+@Entity(
+    tableName = "event_table",
+    foreignKeys = [ForeignKey(
+        entity = StockDBdata::class,
+        parentColumns = ["symbol"],
+        childColumns = ["symbol"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index("symbol"), Index("id")]
+)
 data class Event(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
@@ -89,3 +110,31 @@ data class Events(
   val events: List<Event>
 )
 
+data class Dividends(
+  @Embedded
+  val stockDBdata: StockDBdata,
+  @Relation(
+      parentColumn = "symbol",
+      entityColumn = "symbol"
+  )
+  val dividends: List<Dividend>
+)
+
+@Entity(
+    tableName = "dividend_table",
+    foreignKeys = [ForeignKey(
+        entity = StockDBdata::class,
+        parentColumns = ["symbol"],
+        childColumns = ["symbol"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index("symbol"), Index("id")]
+)
+data class Dividend(
+  @PrimaryKey(autoGenerate = true) var id: Long? = null,
+  var symbol: String,
+  var amount: Float,
+  val type: Int,
+  val paydate: Long,
+  val exdate: Long
+)
