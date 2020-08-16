@@ -2,6 +2,7 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -468,7 +469,23 @@ class StockDataFragment : Fragment() {
 
     val onlineDataAdapter = OnlineDataAdapter(requireContext())
     onlineDataView.adapter = onlineDataAdapter
-    onlineDataView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+    val portrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+    val largeFont1 = resources.configuration.fontScale >= 1.15f // 0.85, 1, 1.15, 1.3
+    val largeDisplay1 = resources.configuration.densityDpi >= 440 // 374, 440, 490, 540
+    val largeFont2 = resources.configuration.fontScale >= 1f // 0.85, 1, 1.15, 1.3
+    val largeDisplay2 = resources.configuration.densityDpi >= 540 // 374, 440, 490, 540
+    val large = largeFont1 && largeDisplay1 || largeFont2 && largeDisplay2
+    val spanCount = if (large) {
+      if (portrait) {
+        1
+      } else {
+        2
+      }
+    } else {
+      2
+    }
+    onlineDataView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)

@@ -107,6 +107,9 @@ dependencies {
   // MPAndroidChart
   implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+  // FlowLayout
+  implementation 'org.apmem.tools:layouts:1.10@aar'
+
   // Dependencies for working with Architecture components
   // You'll probably have to update the version numbers in build.gradle (Project)
 

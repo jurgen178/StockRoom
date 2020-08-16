@@ -96,6 +96,7 @@ limitations under the License. -->
   <string name="alert_above_notification">The Stock %1$s, %2$s, is now above %3$s at %4$s.</string>
   <string name="alert_below_notification">The Stock %1$s, %2$s, is now below %3$s at %4$s.</string>
   <string name="enable_notifications">Enable Alerts</string>
+  <string name="enable_notifications_desc">Display Alerts if enabled.</string>
   <string name="add">Add</string>
   <string name="update_notes">Update notes</string>
   <string name="invalid_number">Invalid number</string>

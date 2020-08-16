@@ -142,15 +142,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         >
 
+      <org.apmem.tools.layouts.FlowLayout
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          >
       <Button
           android:id="@+id/buttonOneDay"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="8dp"
           android:text="1D"
           style="@style/stock_item_button"
           />
@@ -159,7 +163,6 @@
           android:id="@+id/buttonFiveDays"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="8dp"
           android:text="5D"
           style="@style/stock_item_button"
           />
@@ -225,6 +228,7 @@
           android:visibility="gone"
           style="@style/stock_item_imagebutton"
           />
+      </org.apmem.tools.layouts.FlowLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -339,6 +343,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="end"
@@ -387,6 +392,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="end"
@@ -529,6 +535,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
+          android:layout_marginTop="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginEnd="16dp"
           android:gravity="end"

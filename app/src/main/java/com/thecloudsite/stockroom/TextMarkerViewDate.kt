@@ -7,6 +7,7 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -47,7 +48,7 @@ class TextMarkerViewCandleChart(
         }
       */
         val price =e.close
-          tvContent.text = "${price}\n$date"
+          tvContent.text = "${DecimalFormat("0.00##").format(price)}\n$date"
       } else {
         tvContent.text = ""
       }
@@ -82,7 +83,7 @@ class TextMarkerViewLineChart(
               .format(dateTimeFormatter)
         //val price = AppPreferences.DECIMAL_FORMAT.format(e.y)
         val price = e.y
-        tvContent.text = "${price}\n$date"
+        tvContent.text = "${DecimalFormat("0.00##").format(price)}\n$date"
       } else {
         tvContent.text = ""
       }

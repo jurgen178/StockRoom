@@ -48,11 +48,62 @@ class SummaryListFragment : Fragment() {
     val summaryList = view.findViewById<RecyclerView>(R.id.summaryList)
     summaryList.adapter = summaryListAdapter
 
-    // Set column number depending on orientation.
+    // Set column number depending on orientation and size.
+    // small, standard, large, larger
+    val spanCountsPortrait = arrayOf(
+        // 0.85, 1, 1.15, 1.3
+        intArrayOf(4, 3, 3, 3),// 375
+        intArrayOf(3, 3, 3, 2),// 440
+        intArrayOf(3, 3, 2, 2),// 490
+        intArrayOf(3, 2, 2, 2) // 540
+    )
+
+    val spanCountsLandscape = arrayOf(
+        // 0.85, 1, 1.15, 1.3
+        intArrayOf(7, 5, 5, 5),// 375
+        intArrayOf(5, 5, 5, 4),// 440
+        intArrayOf(5, 5, 4, 4),// 490
+        intArrayOf(5, 4, 4, 4) // 540
+    )
+
+    //  x: fontScale
+    // 0.85, 1, 1.15, 1.3
+    val x = when {
+      resources.configuration.fontScale <= 0.85f -> {
+        0
+      }
+      resources.configuration.fontScale <= 1f -> {
+        1
+      }
+      resources.configuration.fontScale <= 1.15f -> {
+        2
+      }
+      else -> {
+        3
+      }
+    }
+
+    //  y: densityDpi
+    // 375, 440, 490, 540
+    val y = when {
+      resources.configuration.densityDpi <= 375 -> {
+        0
+      }
+      resources.configuration.densityDpi <= 440 -> {
+        1
+      }
+      resources.configuration.densityDpi <= 490 -> {
+        2
+      }
+      else -> {
+        3
+      }
+    }
+
     val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-      3
+      spanCountsPortrait[y][x]
     } else {
-      5
+      spanCountsLandscape[y][x]
     }
 
     summaryList.layoutManager = GridLayoutManager(requireContext(), spanCount)
