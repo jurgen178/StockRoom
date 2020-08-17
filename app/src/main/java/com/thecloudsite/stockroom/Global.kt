@@ -29,6 +29,13 @@ fun isValidSymbol(symbol: String): Boolean {
       symbolUpper.matches(".*(?<!\\*\\*)".toRegex())
 }
 
+// Used when export to Json as Gson cannot handle NaN.
+fun validateFloat(value: Float): Float {
+  return if (value.isFinite())
+    value else
+    0f
+}
+
 fun Resources.getRawTextFile(@RawRes id: Int) =
   openRawResource(id).bufferedReader()
       .use { it.readText() }

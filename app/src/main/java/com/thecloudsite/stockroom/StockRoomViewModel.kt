@@ -69,6 +69,13 @@ data class EventJson(
   val datetime: Long
 )
 
+data class DividendJson(
+  var amount: Float,
+  val type: Int,
+  val paydate: Long,
+  val exdate: Long
+)
+
 data class StockItemJson
 (
   var symbol: String,
@@ -77,10 +84,12 @@ data class StockItemJson
   val groupColor: Int,
   val groupName: String,
   val notes: String,
+  var dividendNotes: String,
   val alertAbove: Float,
   val alertBelow: Float,
   var assets: List<AssetJson>,
-  var events: List<EventJson>
+  var events: List<EventJson>,
+  var dividends: List<DividendJson>
 )
 
 object SharedHandler {
@@ -335,6 +344,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val liveDataProperties = allProperties
     val liveDataAssets = allAssets
     val liveDataEvents = allEvents
+    val liveDataDividends = allDividends
     val liveDataOnline = onlineMarketDataList
 
     // reload the DB when portfolio is changed.
@@ -382,6 +392,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         dataValidate()
         allMediatorData.value = process(allData.value, false)
       }
+    }
+
+    // observe dividends, used for export
+    allMediatorData.addSource(liveDataDividends) { value ->
     }
 
     allMediatorData.addSource(liveDataOnline) { value ->
@@ -452,7 +466,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   onlineMarketData = OnlineMarketData(symbol = data.symbol),
                   stockDBdata = data,
                   assets = emptyList(),
-                  events = emptyList()
+                  events = emptyList(),
+                  dividends = emptyList()
               )
           )
         }
@@ -509,22 +524,23 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
                   stockDBdata = asset.stockDBdata,
                   assets = asset.assets,
-                  events = emptyList()
+                  events = emptyList(),
+                  dividends = emptyList()
               )
           )
       }
 
- /*
-      // Remove the item from the dataStore because Item was deleted from the DB.
-      if (dataStore.stockItems.size > assets.size) {
-        dataStore.stockItems.removeIf {
-          // Remove if item is not found in the DB.
-          assets.find { ds ->
-            it.stockDBdata.symbol == ds.stockDBdata.symbol
-          } == null
-        }
-      }
-      */
+      /*
+           // Remove the item from the dataStore because Item was deleted from the DB.
+           if (dataStore.stockItems.size > assets.size) {
+             dataStore.stockItems.removeIf {
+               // Remove if item is not found in the DB.
+               assets.find { ds ->
+                 it.stockDBdata.symbol == ds.stockDBdata.symbol
+               } == null
+             }
+           }
+           */
     }
 
     _dataStore.value = dataStore
@@ -550,7 +566,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
                   stockDBdata = event.stockDBdata,
                   assets = emptyList(),
-                  events = event.events
+                  events = event.events,
+                  dividends = emptyList()
               )
           )
         }
@@ -946,6 +963,25 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           updateEvents(symbol, events)
         }
 
+        // get dividends
+        if (jsonObj.has("dividends")) {
+          val dividendsObjArray = jsonObj.getJSONArray("dividends")
+
+          for (j in 0 until dividendsObjArray.length()) {
+            val dividendsObj: JSONObject = dividendsObjArray[j] as JSONObject
+            addDividend(
+                Dividend(
+                    symbol = symbol,
+                    amount = dividendsObj.getDouble("amount")
+                        .toFloat(),
+                    type = dividendsObj.getInt("type"),
+                    paydate = dividendsObj.getLong("paydate"),
+                    exdate = dividendsObj.getLong("exdate")
+                )
+            )
+          }
+        }
+
         // get properties
         if (jsonObj.has("portfolio")) {
           val portfolio = jsonObj.getString("portfolio")
@@ -997,6 +1033,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           val notes = jsonObj.getString("notes")
           if (notes.isNotEmpty()) {
             updateNotes(symbol, notes)
+          }
+        }
+
+        if (jsonObj.has("dividendNotes")) {
+          val dividendNotes = jsonObj.getString("dividendNotes")
+          if (dividendNotes.isNotEmpty()) {
+            updateDividendNotes(symbol, dividendNotes)
           }
         }
 
@@ -1236,6 +1279,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val stockDBdata = allProperties.value ?: emptyList()
     val assets = allAssets.value ?: emptyList()
     val events = allEvents.value ?: emptyList()
+    val dividends = allDividends.value ?: emptyList()
 
     return stockDBdata.map { data ->
       val symbol = data.symbol
@@ -1250,11 +1294,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           symbol == item.stockDBdata.symbol
         }
 
+      val dividendItem =
+        dividends.find { item ->
+          symbol == item.stockDBdata.symbol
+        }
+
       StockItem(
           onlineMarketData = OnlineMarketData(symbol = data.symbol),
           stockDBdata = data,
           assets = assetItem?.assets ?: emptyList(),
-          events = eventItem?.events ?: emptyList()
+          events = eventItem?.events ?: emptyList(),
+          dividends = dividendItem?.dividends ?: emptyList()
       )
     }
   }
@@ -1283,16 +1333,25 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           data = stockItem.stockDBdata.data,
           groupColor = stockItem.stockDBdata.groupColor,
           groupName = groupName,
-          alertAbove = stockItem.stockDBdata.alertAbove,
-          alertBelow = stockItem.stockDBdata.alertBelow,
+          alertAbove = validateFloat(stockItem.stockDBdata.alertAbove),
+          alertBelow = validateFloat(stockItem.stockDBdata.alertBelow),
           notes = stockItem.stockDBdata.notes,
+          dividendNotes = stockItem.stockDBdata.dividendNotes,
           assets = stockItem.assets.map { asset ->
-            AssetJson(shares = asset.shares, price = asset.price)
+            AssetJson(shares = validateFloat(asset.shares), price = validateFloat(asset.price))
           },
           events = stockItem.events.map { event ->
             EventJson(
                 type = event.type, title = event.title, note = event.note,
                 datetime = event.datetime
+            )
+          },
+          dividends = stockItem.dividends.map { dividend ->
+            DividendJson(
+                amount = validateFloat(dividend.amount),
+                exdate = dividend.exdate,
+                paydate = dividend.paydate,
+                type = dividend.type
             )
           }
       )

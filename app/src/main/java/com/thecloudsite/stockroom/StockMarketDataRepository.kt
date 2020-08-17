@@ -15,7 +15,8 @@ data class StockItem
   var onlineMarketData: OnlineMarketData,
   var stockDBdata: StockDBdata,
   var assets: List<Asset>,
-  var events: List<Event>
+  var events: List<Event>,
+  var dividends: List<Dividend>
 )
 
 class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : BaseRepository() {
