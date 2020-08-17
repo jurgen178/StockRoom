@@ -206,7 +206,9 @@ limitations under the License. -->
   <string name="dividend_pay_date">Dividend Pay Date</string>
   <string name="annualDividendYield">Annual dividend yield</string>
   <string name="annualDividendRate">Annual dividend rate</string>
-  <string name="quarterlyDividend">Quarterly dividend</string>
+  <string name="quarterlyDividend">Estimated quarterly dividend</string>
+  <string name="monthly">monthly</string>
+  <string name="yearly">yearly</string>
   <string name="onlinedata_regularMarketPreviousClose">Market previous close</string>
   <string name="onlinedata_regularMarketOpen">Market open</string>
   <string name="onlinedata_fiftyDayAverage">50 day average</string>

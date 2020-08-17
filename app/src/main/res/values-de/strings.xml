@@ -203,7 +203,9 @@ limitations under the License. -->
   <string name="dividend_pay_date">Dividenden Auszahlungsdatum</string>
   <string name="annualDividendYield">Jährliche Dividendenrendite</string>
   <string name="annualDividendRate">Jährlicher Dividendensatz</string>
-  <string name="quarterlyDividend">Vierteljährliche Dividende</string>
+  <string name="quarterlyDividend">Geschätzte vierteljährliche Dividende</string>
+  <string name="monthly">monatlich</string>
+  <string name="yearly">jährlich</string>
   <string name="onlinedata_regularMarketPreviousClose">Vortagswert</string>
   <string name="onlinedata_regularMarketOpen">Eröffnungswert</string>
   <string name="onlinedata_fiftyDayAverage">50-Tage Durchschnitt</string>

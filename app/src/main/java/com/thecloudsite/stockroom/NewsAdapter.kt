@@ -33,6 +33,30 @@ import java.time.format.FormatStyle.MEDIUM
 const val news_type_yahoo: Int = 0
 const val news_type_google: Int = 1
 
+val excludeUrlList = arrayListOf<String>(
+    "newsdaemon.com",
+    "newsheater.com",
+    "investorsobserver.com",
+    "stocksregister.com",
+    "marketingsentinel.com",
+    "dbtnews.com",
+    "oracledispatch.com",
+    "friscoherald.com",
+    "investchronicle.com",
+    "scientect.com",
+    "mzpnews.com",
+    "cometreports.com",
+    "onenewspage.com",
+    "pinevillevoice.com",
+    "reportswatch.com",
+    "newsbrok.com",
+    "startupng.com.ng",
+    "primefeed.in",
+    "thedailychronicle.in",
+    "galusaustralis.com",
+    "bulletinline.com"
+)
+
 data class NewsData(
   val title: String,
   val text: String,
@@ -90,8 +114,7 @@ class NewsAdapter(
     }
   }
 
-  private fun getTimeDateStr(date: Long): String
-  {
+  private fun getTimeDateStr(date: Long): String {
     val localDateTime = LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.UTC)
     val dateStr = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
     val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
@@ -112,12 +135,19 @@ class NewsAdapter(
 
         val current: NewsData = newsDataList[position]
 
-        holder.yahooNewsItemTitle.text = HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        holder.yahooNewsItemTitle.text =
+          HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
         holder.yahooNewsItemDate.text = getTimeDateStr(current.date)
 
-        holder.yahooNewsItemLink.text = HtmlCompat.fromHtml("<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>", HtmlCompat.FROM_HTML_MODE_LEGACY)
-        holder.yahooNewsItemLink.setLinkTextColor(context.getColor(R.color.material_on_background_emphasis_medium))
-        holder.yahooNewsItemText.text = HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        holder.yahooNewsItemLink.text = HtmlCompat.fromHtml(
+            "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+        holder.yahooNewsItemLink.setLinkTextColor(
+            context.getColor(R.color.material_on_background_emphasis_medium)
+        )
+        holder.yahooNewsItemText.text =
+          HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
         // Make links clickable.
         holder.yahooNewsItemLink.movementMethod = LinkMovementMethod.getInstance()
       }
@@ -127,7 +157,8 @@ class NewsAdapter(
 
         val current: NewsData = newsDataList[position]
 
-        holder.googleNewsItemTitle.text = HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        holder.googleNewsItemTitle.text =
+          HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
         holder.googleNewsItemDate.text = getTimeDateStr(current.date)
 
         holder.googleNewsItemPreviewText.text =
@@ -152,13 +183,16 @@ class NewsAdapter(
       newsMap[data.date] = data
     }
 
-    // Add news to the date map.
-    dataList.forEach { data ->
-      // Do not overwrite existing news for that time stamp.
-      if(newsMap[data.date]?.date != data.date) {
-        newsMap[data.date] = data
-      }
+    // Filter news urls and add to the date map.
+    dataList.filterNot { data ->
+      excludeUrlList.any { data.link.contains(it) }
     }
+        .forEach { data ->
+          // Do not overwrite existing news for that time stamp.
+          if (newsMap[data.date]?.date != data.date) {
+            newsMap[data.date] = data
+          }
+        }
 
     // Map back to news list.
     this.newsDataList = newsMap.map { mapdata ->

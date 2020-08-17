@@ -25,7 +25,6 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -1681,12 +1680,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  fun delete(symbol: String) = scope.launch {
+  fun deleteStock(symbol: String) = scope.launch {
     if (symbol.isNotEmpty()) {
       val symbolUpper = symbol.toUpperCase(Locale.ROOT)
-      repository.delete(symbolUpper)
-      //repository.deleteAssets(symbolUpper)
-      //repository.deleteEvents(symbolUpper)
+      repository.deleteStock(symbolUpper)
+      repository.deleteAssets(symbolUpper)
+      repository.deleteEvents(symbolUpper)
+      repository.deleteDividends(symbolUpper)
     }
   }
 

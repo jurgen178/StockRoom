@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     })
 
     SharedHandler.deleteStockHandler.observe(this, Observer { symbol ->
-      stockRoomViewModel.delete(symbol)
+      stockRoomViewModel.deleteStock(symbol)
 
 /*
       if (isLastListItem &&

@@ -81,9 +81,9 @@ class DividendFragment : Fragment() {
     val dialogView = inflater.inflate(R.layout.add_dividend, null)
     dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
     dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
-    val addUpdateSharesHeadlineView =
+    val addUpdateDividendHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-    addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
+    addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
     addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
     val datePickerDividendDateView =
@@ -125,13 +125,15 @@ class DividendFragment : Fragment() {
               )
               val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
-              stockRoomViewModel.deleteDividend(dividend)
-              stockRoomViewModel.addDividend(
-                  Dividend(
-                      symbol = symbol, amount = dividendAmount, exdate = 0L, paydate = seconds,
-                      type = DividendType.Received.value
-                  )
-              )
+              if (dividend.amount != dividendAmount || dividend.exdate != 0L || dividend.paydate != seconds) {
+                stockRoomViewModel.deleteDividend(dividend)
+                stockRoomViewModel.addDividend(
+                    Dividend(
+                        symbol = symbol, amount = dividendAmount, exdate = 0L, paydate = seconds,
+                        type = DividendType.Received.value
+                    )
+                )
+              }
             }
             hideSoftInputFromWindow()
           } else {
@@ -200,9 +202,9 @@ class DividendFragment : Fragment() {
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
     val dialogView = inflater.inflate(R.layout.add_dividend, null)
-    val addUpdateSharesHeadlineView =
+    val addUpdateDividendHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-    addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
+    addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
     addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
 
@@ -259,14 +261,16 @@ class DividendFragment : Fragment() {
               )
               val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
-              stockRoomViewModel.deleteDividend(dividend)
-              stockRoomViewModel.addDividend(
-                  Dividend(
-                      symbol = symbol, amount = dividendAmount, exdate = secondsEx,
-                      paydate = seconds,
-                      type = DividendType.Announced.value
-                  )
-              )
+              if (dividend.amount != dividendAmount || dividend.exdate != secondsEx || dividend.paydate != seconds) {
+                stockRoomViewModel.deleteDividend(dividend)
+                stockRoomViewModel.addDividend(
+                    Dividend(
+                        symbol = symbol, amount = dividendAmount, exdate = secondsEx,
+                        paydate = seconds,
+                        type = DividendType.Announced.value
+                    )
+                )
+              }
             }
             hideSoftInputFromWindow()
           } else {
@@ -427,9 +431,9 @@ class DividendFragment : Fragment() {
       val dialogView = inflater.inflate(R.layout.add_dividend, null)
       dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
       dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
-      val addUpdateSharesHeadlineView =
+      val addUpdateDividendHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-      addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
+      addUpdateDividendHeadlineView.text = getString(R.string.add_dividend)
       val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
       val datePickerDividendDateView =
         dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
@@ -506,9 +510,9 @@ class DividendFragment : Fragment() {
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
       val dialogView = inflater.inflate(R.layout.add_dividend, null)
-      val addUpdateSharesHeadlineView =
+      val addUpdateDividendHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-      addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
+      addUpdateDividendHeadlineView.text = getString(R.string.add_dividend)
       val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
 
       val datePickerDividendDateView =
@@ -718,6 +722,15 @@ class DividendFragment : Fragment() {
             .bold {
               append(" ${DecimalFormat("0.00").format(totalDividend / 4f)}")
             }
+            .append("\n(${getString(R.string.monthly)}")
+            .bold {
+              append(" ${DecimalFormat("0.00").format(totalDividend / 12f)}")
+            }
+            .append(", ${getString(R.string.yearly)}")
+            .bold {
+              append(" ${DecimalFormat("0.00").format(totalDividend)}")
+            }
+            .append(")")
       }
     }
 
