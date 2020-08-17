@@ -39,7 +39,7 @@ import java.time.format.FormatStyle.MEDIUM
 class DividendReceivedListAdapter internal constructor(
   private val context: Context,
   private val clickListenerUpdate: (Dividend) -> Unit,
-  private val clickListenerDelete: (String?, Dividend?) -> Unit
+  private val clickListenerDelete: (String?, Dividend?, List<Dividend>?) -> Unit
 ) : RecyclerView.Adapter<DividendReceivedListAdapter.DividendReceivedViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -56,17 +56,28 @@ class DividendReceivedListAdapter internal constructor(
     fun bindDelete(
       symbol: String?,
       dividend: Dividend?,
-      clickListenerDelete: (String?, Dividend?) -> Unit
+      dividendList: List<Dividend>?,
+      clickListenerDelete: (String?, Dividend?, List<Dividend>?) -> Unit
     ) {
-      itemView.textViewDividendReceivedDelete.setOnClickListener { clickListenerDelete(symbol, dividend) }
+      itemView.textViewDividendReceivedDelete.setOnClickListener {
+        clickListenerDelete(
+            symbol, dividend, dividendList
+        )
+      }
     }
 
-    val textViewDividendReceivedAmount: TextView = itemView.findViewById(R.id.textViewDividendReceivedAmount)
-    val textViewDividendReceivedDate: TextView = itemView.findViewById(R.id.textViewDividendReceivedDate)
-    val textViewDividendReceivedDelete: TextView = itemView.findViewById(R.id.textViewDividendReceivedDelete)
-    val dividendReceivedSummaryView: LinearLayout = itemView.findViewById(R.id.dividendReceivedSummaryView)
-    val dividendReceivedConstraintLayout: ConstraintLayout = itemView.findViewById(R.id.dividendReceivedConstraintLayout)
-    val dividendReceivedLinearLayout: LinearLayout = itemView.findViewById(R.id.dividendReceivedLinearLayout)
+    val textViewDividendReceivedAmount: TextView =
+      itemView.findViewById(R.id.textViewDividendReceivedAmount)
+    val textViewDividendReceivedDate: TextView =
+      itemView.findViewById(R.id.textViewDividendReceivedDate)
+    val textViewDividendReceivedDelete: TextView =
+      itemView.findViewById(R.id.textViewDividendReceivedDelete)
+    val dividendReceivedSummaryView: LinearLayout =
+      itemView.findViewById(R.id.dividendReceivedSummaryView)
+    val dividendReceivedConstraintLayout: ConstraintLayout =
+      itemView.findViewById(R.id.dividendReceivedConstraintLayout)
+    val dividendReceivedLinearLayout: LinearLayout =
+      itemView.findViewById(R.id.dividendReceivedLinearLayout)
   }
 
   override fun onCreateViewHolder(
@@ -89,7 +100,9 @@ class DividendReceivedListAdapter internal constructor(
       holder.textViewDividendReceivedDate.text = context.getString(R.string.dividend_date)
       holder.textViewDividendReceivedDelete.visibility = View.GONE
       holder.dividendReceivedSummaryView.visibility = View.GONE
-      holder.dividendReceivedConstraintLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.dividendReceivedConstraintLayout.setBackgroundColor(
+          context.getColor(R.color.backgroundListColor)
+      )
 
       val background = TypedValue()
       holder.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
@@ -97,17 +110,15 @@ class DividendReceivedListAdapter internal constructor(
       // Last entry is summary.
       if (position == dividendList.size - 1) {
         // handler for delete all
-        holder.bindDelete(current.symbol, null, clickListenerDelete)
+        holder.bindDelete(current.symbol, null, dividendList, clickListenerDelete)
 
-        holder.textViewDividendReceivedAmount.text =           DecimalFormat("0.##").format(current.amount)
+        holder.textViewDividendReceivedAmount.text = DecimalFormat("0.00##").format(current.amount)
         holder.textViewDividendReceivedDate.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
         if (dividendList.size <= 2) {
           holder.textViewDividendReceivedDelete.visibility = View.GONE
-        }
-        else
-        {
+        } else {
           holder.textViewDividendReceivedDelete.visibility = View.VISIBLE
         }
 
@@ -118,11 +129,13 @@ class DividendReceivedListAdapter internal constructor(
         holder.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
       } else {
         holder.bindUpdate(current, clickListenerUpdate)
-        holder.bindDelete(null, current, clickListenerDelete)
+        holder.bindDelete(null, current, null, clickListenerDelete)
 
-        holder.textViewDividendReceivedAmount.text = DecimalFormat("0.##").format(current.amount)
-        val datetime: LocalDateTime = LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
-        holder.textViewDividendReceivedDate.text = datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        holder.textViewDividendReceivedAmount.text = DecimalFormat("0.00##").format(current.amount)
+        val datetime: LocalDateTime =
+          LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
+        holder.textViewDividendReceivedDate.text =
+          datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
 
         holder.textViewDividendReceivedDelete.visibility = View.VISIBLE
         holder.dividendReceivedSummaryView.visibility = View.GONE
@@ -137,8 +150,11 @@ class DividendReceivedListAdapter internal constructor(
 
   internal fun updateDividends(dividends: Dividends) {
     // Headline placeholder
-    dividendList = mutableListOf(Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0))
-    dividendList.addAll(dividends.dividends)
+    dividendList =
+      mutableListOf(Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0))
+    dividendList.addAll(dividends.dividends.sortedBy { dividend ->
+      dividend.paydate
+    })
 
     val dividendTotal = dividendList.sumByDouble {
       it.amount.toDouble()
@@ -147,7 +163,9 @@ class DividendReceivedListAdapter internal constructor(
 
     // Summary
     val symbol: String = dividendList.firstOrNull()?.symbol ?: ""
-    dividendList.add(Dividend(symbol = symbol, amount = dividendTotal, exdate = 0L, paydate = 0L, type = 0))
+    dividendList.add(
+        Dividend(symbol = symbol, amount = dividendTotal, exdate = 0L, paydate = 0L, type = 0)
+    )
 
     notifyDataSetChanged()
   }
