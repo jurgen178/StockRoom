@@ -202,7 +202,7 @@ limitations under the License. -->
   <string name="add_predef_groups_confirm">Do you want to add the example groups?</string>
   <string name="add_predef_groups_msg">Example groups were added.</string>
   <string name="group_summary">Group summary</string>
-  <string name="dividend_header">Dividend</string>
+  <string name="dividend_header">Reported Dividend</string>
   <string name="dividend_pay_date">Dividend Pay Date</string>
   <string name="annualDividendYield">Annual dividend yield</string>
   <string name="annualDividendRate">Annual dividend rate</string>
@@ -252,4 +252,15 @@ limitations under the License. -->
   <string name="add_dividend">Add Dividend</string>
   <string name="dividend_added">Dividend added.</string>
   <string name="update_dividend">Update dividend</string>
+  <string name="dividend_amount">Dividend amount</string>
+  <string name="dividend_not_zero">The Dividend amount must not be 0.</string>
+  <string name="delete_all_dividends">Delete all dividend entries</string>
+  <string name="delete_all_dividends_confirm">All dividend entries deleted.</string>
+  <string name="delete_all_dividends_msg">Are you sure to delete all dividend entries?</string>
+  <string name="delete_dividend">Delete dividend entry</string>
+  <string name="dividend_deleted">Dividend entry deleted.</string>
+  <string name="delete_dividend_confirm">Are you sure to delete the entry with the amount \'%1$s\' from %2$s</string>
+  <string name="dividend_received_summary_text">Total dividends received</string>
+  <string name="dividend_headline">Dividend</string>
+  <string name="dividend_exdate">Ex-Dividend</string>
 </resources>

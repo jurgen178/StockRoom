@@ -237,7 +237,9 @@ class StockRoomDaoTest {
     val assets1 = stockRoomDao.getAssets("symbol1")
     assertEquals(1, assets1.assets.size)
 
-    stockRoomDao.addEvent(Event(symbol = "symbol1", type = 1, title = "title1", note = "note1", datetime = 1))
+    stockRoomDao.addEvent(
+        Event(symbol = "symbol1", type = 1, title = "title1", note = "note1", datetime = 1)
+    )
     val events1 = stockRoomDao.getEvents("symbol1")
     assertEquals(1, events1.events.size)
 
@@ -515,6 +517,36 @@ class StockRoomDaoTest {
     assertEquals(null, dividends2)
     val dividends3 = stockRoomDao.getDividends("symbol3")
     assertEquals(1, dividends3.dividends.size)
+
+    stockRoomDao.deleteDividend(
+        symbol = "symbol3", amount = 13f, type = 23, paydate = 23L, exdate = 33L
+    )
+
+    val dividends4 = stockRoomDao.getDividends("symbol3")
+    assertEquals(0, dividends4.dividends.size)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun deleteDividendsTest() {
+    val stockDBdata1 = StockDBdata("symbol1", dividendNotes = "dividendNotes1")
+    stockRoomDao.insert(stockDBdata1)
+
+    stockRoomDao.addDividend(
+        Dividend(symbol = "symbol1", amount = 11f, type = 21, paydate = 21L, exdate = 31L)
+    )
+    stockRoomDao.addDividend(
+        Dividend(symbol = "symbol1", amount = 12f, type = 22, paydate = 22L, exdate = 32L)
+    )
+
+    val dividends = stockRoomDao.getDividends("symbol1")
+
+    assertEquals(2, dividends.dividends.size)
+
+    stockRoomDao.deleteDividends("symbol1")
+
+    val dividends1 = stockRoomDao.getDividends("symbol1")
+    assertEquals(0, dividends.dividends.size)
   }
 
   @Test

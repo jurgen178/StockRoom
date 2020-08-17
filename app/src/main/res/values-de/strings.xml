@@ -199,7 +199,7 @@ limitations under the License. -->
   <string name="add_predef_groups_confirm">Möchten Sie die Beispielgruppen hinzufügen?</string>
   <string name="add_predef_groups_msg">Die Beispielgruppen wurden hinzugefügt.</string>
   <string name="group_summary">Gruppenübersicht</string>
-  <string name="dividend_header">Dividende</string>
+  <string name="dividend_header">Aktuelle Dividende</string>
   <string name="dividend_pay_date">Dividenden Auszahlungsdatum</string>
   <string name="annualDividendYield">Jährliche Dividendenrendite</string>
   <string name="annualDividendRate">Jährlicher Dividendensatz</string>
@@ -243,10 +243,21 @@ limitations under the License. -->
   <string name="portfolio_name_not_empty">Geben Sie einen Portfolionamen ein.</string>
   <string name="portfolio_rename_text">Neuer Portfolio name</string>
   <string name="dividend">Dividende</string>
-  <string name="dividend_received">Dividend received</string>
-  <string name="dividend_announced">Dividend announced</string>
-  <string name="dividend_date">Pay Date</string>
-  <string name="add_dividend">Add Dividend</string>
-  <string name="dividend_added">Dividend added.</string>
-  <string name="update_dividend">Update dividend</string>
+  <string name="dividend_received">Ausgezahlte Dividenden</string>
+  <string name="dividend_announced">Angekündigte Dividenden</string>
+  <string name="dividend_date">Auszahlungsdatum</string>
+  <string name="add_dividend">Dividendenwert hinzufügen</string>
+  <string name="dividend_added">Dividendenwert hinzugefügt.</string>
+  <string name="update_dividend">Dividendenwert aktualisieren</string>
+  <string name="dividend_amount">Dividendenwert</string>
+  <string name="dividend_not_zero">Der Dividendenwert darf nicht 0 sein.</string>
+  <string name="delete_all_dividends">Alle Dividendeneinträge entfernen</string>
+  <string name="delete_all_dividends_confirm">Sind Sie sicher, dass Sie alle Dividendeneinträge entfernen möchten?</string>
+  <string name="delete_all_dividends_msg">Alle Dividendeneinträge wurden entfernt.</string>
+  <string name="delete_dividend">Dividendeneintrag entfernen</string>
+  <string name="dividend_deleted">Dividendeneintrag entfernt.</string>
+  <string name="delete_dividend_confirm">Sind Sie sicher, dass Sie den Dividendeneintrag mit dem Wert \'%1$s\' vom %2$s entfernen möchten?</string>
+  <string name="dividend_received_summary_text">Gesamtdividendenbetrag</string>
+  <string name="dividend_headline">Dividende</string>
+  <string name="dividend_exdate">Ex-Dividend</string>
 </resources>

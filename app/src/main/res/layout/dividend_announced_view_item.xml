@@ -20,45 +20,21 @@ limitations under the License. -->
     android:orientation="vertical"
     >
 
-  <LinearLayout
-      android:id="@+id/assetSummaryView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="4dp"
-      android:orientation="vertical"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      >
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginEnd="4dp"
-        android:background="?android:attr/listDivider"
-        />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textSize="11sp"
-          android:text="@string/asset_summary_text"
-          />
-  </LinearLayout>
-
   <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/textViewAssetLayout"
+      android:id="@+id/dividendAnnouncedConstraintLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
       >
 
     <LinearLayout
-        android:id="@+id/textViewAssetItemsLayout"
+        android:id="@+id/dividendAnnouncedLinearLayout"
         android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
         >
@@ -69,7 +45,7 @@ limitations under the License. -->
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textViewAssetShares"
+        android:id="@+id/textViewDividendAnnouncedAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -81,32 +57,33 @@ limitations under the License. -->
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewAssetPrice"
+        android:id="@+id/textViewDividendAnnouncedExDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="0dp"
-        />
-    <TextView
-        android:id="@+id/textViewAssetTotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteY="0dp"
         />
 
     <TextView
-        android:id="@+id/textViewAssetDelete"
+        android:id="@+id/textViewDividendAnnouncedPayDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="0dp"
+        />
+
+    <TextView
+        android:id="@+id/textViewDividendAnnouncedDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_action_delete2"
@@ -122,14 +99,14 @@ limitations under the License. -->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25"
+        app:layout_constraintGuide_percent="0.33"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.55"
+        app:layout_constraintGuide_percent="0.62"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"

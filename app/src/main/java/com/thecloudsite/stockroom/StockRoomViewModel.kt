@@ -1401,6 +1401,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
+  fun updateDividendNotes(
+    symbol: String,
+    notes: String
+  ) = scope.launch {
+    if (symbol.isNotEmpty()) {
+      repository.updateDividendNotes(symbol.toUpperCase(Locale.ROOT), notes)
+    }
+  }
+
   fun getStockDBdataSync(symbol: String): StockDBdata {
     var stockDBdata: StockDBdata = StockDBdata(symbol = symbol)
     runBlocking {
@@ -1630,6 +1639,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun addDividend(dividend: Dividend) = scope.launch {
     repository.addDividend(dividend)
+  }
+
+  fun deleteDividend(dividend: Dividend) = scope.launch {
+    repository.deleteDividend(dividend)
+  }
+
+  fun deleteDividends(symbol: String) = scope.launch {
+    repository.deleteDividends(symbol.toUpperCase(Locale.ROOT))
   }
 
   fun deleteEvent(event: Event) =

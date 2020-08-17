@@ -152,9 +152,12 @@ class DividendReceivedListAdapter internal constructor(
     // Headline placeholder
     dividendList =
       mutableListOf(Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0))
-    dividendList.addAll(dividends.dividends.sortedBy { dividend ->
-      dividend.paydate
-    })
+    dividendList.addAll(dividends.dividends.filter { dividend ->
+      dividend.type == DividendType.Received.value
+    }
+        .sortedBy { dividend ->
+          dividend.paydate
+        })
 
     val dividendTotal = dividendList.sumByDouble {
       it.amount.toDouble()

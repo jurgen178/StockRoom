@@ -1382,7 +1382,7 @@ class StockDataFragment : Fragment() {
     // Pass null as the parent view because its going in the dialog layout
     val dialogView = inflater.inflate(R.layout.add_note, null)
     val textInputEditNoteView =
-      dialogView.findViewById<TextView>(R.id.textInputEditEventNote)
+      dialogView.findViewById<TextView>(R.id.textInputEditNote)
 
     val note = notesTextView.text
     textInputEditNoteView.text = note

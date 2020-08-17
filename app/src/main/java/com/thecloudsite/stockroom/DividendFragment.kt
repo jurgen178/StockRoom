@@ -1,7 +1,6 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -20,12 +20,15 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.thecloudsite.stockroom.StockDataFragment.Companion
+import kotlinx.android.synthetic.main.add_dividend.datePickerDividendExDate
+import kotlinx.android.synthetic.main.add_dividend.textViewDividendExDate
+import kotlinx.android.synthetic.main.fragment_dividend.addDividendAnnouncedButton
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButton
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNotesTextView
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
 import kotlinx.android.synthetic.main.fragment_dividend.updateDividendNotesButton
 import kotlinx.android.synthetic.main.fragment_dividend.dividendLinearLayout
+import kotlinx.android.synthetic.main.fragment_dividend.dividendsAnnouncedView
 import kotlinx.android.synthetic.main.fragment_dividend.textViewDividend
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -35,11 +38,14 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 import java.util.Locale
 
+enum class DividendType(val value: Int) {
+  Received(0),
+  Announced(1),
+}
+
 class DividendFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
-
-  private val dividendChange = AssetsLiveData()
 
   private val assetChange = AssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<AssetsLiveData>()
@@ -51,8 +57,6 @@ class DividendFragment : Fragment() {
 
   lateinit var onlineDataHandler: Handler
 
-  private lateinit var stockDBdata: StockDBdata
-  private var stockDataEntries: List<StockDataEntry>? = null
   private var symbol: String = ""
 
   private fun dividendReceivedItemUpdateClicked(dividend: Dividend) {
@@ -63,86 +67,59 @@ class DividendFragment : Fragment() {
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
     val dialogView = inflater.inflate(R.layout.add_dividend, null)
-
+    textViewDividendExDate.visibility = View.GONE
+    datePickerDividendExDate.visibility = View.GONE
     val addUpdateSharesHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-    addUpdateSharesHeadlineView.text = getString(R.string.update_dividend)
-    val addSharesView = dialogView.findViewById<TextView>(R.id.addShares)
-    addSharesView.text = DecimalFormat("0.######").format(dividend.amount)
-    val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
-    addPriceView.text = DecimalFormat("0.######").format(dividend.paydate)
+    addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
+    val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
+    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
+    val datePickerDividendDateView =
+      dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
+    val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
+    // month is starting from zero
+    datePickerDividendDateView.updateDate(
+        localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
+    )
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val sharesText = addSharesView.text.toString()
+          val addDividendText = addDividendView.text.toString()
               .trim()
-          val priceText = addPriceView.text.toString()
-              .trim()
-          if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
-            var price = 0f
-            var shares = 0f
+          if (addDividendText.isNotEmpty()) {
+            var dividendAmount = 0f
             var valid = true
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-              price = numberFormat.parse(priceText)!!
+              dividendAmount = numberFormat.parse(addDividendText)!!
                   .toFloat()
             } catch (e: Exception) {
               valid = false
             }
-            if (price <= 0f) {
+            if (dividendAmount <= 0f) {
               Toast.makeText(
-                  requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+                  requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
               )
                   .show()
               valid = false
             }
-            try {
-              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-              shares = numberFormat.parse(sharesText)!!
-                  .toFloat()
-            } catch (e: Exception) {
-              valid = false
-            }
-            if (shares <= 0f) {
-              Toast.makeText(
-                  requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
-              )
-                  .show()
-              valid = false
-            }
+
             if (valid) {
-/*
-              val assetnew = Asset(symbol = symbol, shares = shares, price = price)
-              if (asset.shares != assetnew.shares || asset.price != assetnew.price) {
-                // delete old asset
-                stockRoomViewModel.deleteAsset(asset)
-                // add new asset
-                stockRoomViewModel.addAsset(assetnew)
-                val count: Int = when {
-                  shares == 1f -> {
-                    1
-                  }
-                  shares > 1f -> {
-                    shares.toInt() + 1
-                  }
-                  else -> {
-                    0
-                  }
-                }
+              val datetime: LocalDateTime = LocalDateTime.of(
+                  datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
+                  datePickerDividendDateView.dayOfMonth, 0, 0
+              )
+              val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
-                val pluralstr = resources.getQuantityString(
-                    R.plurals.asset_updated, count, DecimalFormat("0.##").format(shares),
-                    DecimalFormat("0.##").format(price)
-                )
-
-                Toast.makeText(
-                    requireContext(), pluralstr, Toast.LENGTH_LONG
-                )
-                    .show()
-              }
-              */
+              stockRoomViewModel.deleteDividend(dividend)
+              stockRoomViewModel.addDividend(
+                  Dividend(
+                      symbol = symbol, amount = dividendAmount, exdate = 0L, paydate = seconds,
+                      type = DividendType.Received.value
+                  )
+              )
             }
             hideSoftInputFromWindow()
           } else {
@@ -150,10 +127,10 @@ class DividendFragment : Fragment() {
                 .show()
           }
         }
-        .setNegativeButton(R.string.cancel,
-            DialogInterface.OnClickListener { _, _ ->
-              //getDialog().cancel()
-            })
+        .setNegativeButton(
+            R.string.cancel
+        ) { _, _ ->
+        }
     builder
         .create()
         .show()
@@ -161,31 +138,157 @@ class DividendFragment : Fragment() {
 
   private fun dividendReceivedItemDeleteClicked(
     symbol: String?,
-    dividend: Dividend?
+    dividend: Dividend?,
+    dividendList: List<Dividend>?
   ) {
     // Summary tag?
-    if (symbol != null && dividend == null) {
+    if (symbol != null && dividend == null && dividendList != null) {
       android.app.AlertDialog.Builder(requireContext())
-          .setTitle(R.string.delete_all_assets)
-          .setMessage(getString(R.string.delete_all_assets_confirm, symbol))
+          .setTitle(R.string.delete_all_dividends)
+          .setMessage(getString(R.string.delete_all_dividends_confirm))
           .setPositiveButton(R.string.delete) { _, _ ->
-            //stockRoomViewModel.deleteDividends(symbol)
+            dividendList.forEach { dividend ->
+              stockRoomViewModel.deleteDividend(dividend)
+            }
+
             Toast.makeText(
-                requireContext(), getString(R.string.delete_all_assets_msg), Toast.LENGTH_LONG
+                requireContext(), getString(R.string.delete_all_dividends_msg), Toast.LENGTH_LONG
             )
                 .show()
           }
           .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
           .show()
-    } else if (dividend != null) {
+    } else if (dividend != null && dividendList == null) {
+      val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
       android.app.AlertDialog.Builder(requireContext())
-          .setTitle(R.string.delete_asset)
-          .setMessage("test"
+          .setTitle(R.string.delete_dividend)
+          .setMessage(
+              getString(
+                  R.string.delete_dividend_confirm, DecimalFormat("0.####").format(dividend.amount),
+                  localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+              )
           )
           .setPositiveButton(R.string.delete) { _, _ ->
-            //stockRoomViewModel.deleteAsset(asset)
+            stockRoomViewModel.deleteDividend(dividend)
             Toast.makeText(
-                requireContext(), "test", Toast.LENGTH_LONG
+                requireContext(), R.string.dividend_deleted, Toast.LENGTH_LONG
+            )
+                .show()
+          }
+          .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+          .show()
+    }
+  }
+
+  private fun dividendAnnouncedItemUpdateClicked(dividend: Dividend) {
+    val builder = AlertDialog.Builder(requireContext())
+    // Get the layout inflater
+    val inflater = LayoutInflater.from(requireContext())
+
+    // Inflate and set the layout for the dialog
+    // Pass null as the parent view because its going in the dialog layout
+    val dialogView = inflater.inflate(R.layout.add_dividend, null)
+    val addUpdateSharesHeadlineView =
+      dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
+    addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
+    val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
+    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
+
+    val datePickerDividendDateView =
+      dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
+    val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
+    // month is starting from zero
+    datePickerDividendDateView.updateDate(
+        localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
+    )
+
+    val datePickerDividendExDateView =
+      dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate)
+    val localDateTimeEx = LocalDateTime.ofEpochSecond(dividend.exdate, 0, ZoneOffset.UTC)
+    // month is starting from zero
+    datePickerDividendExDateView.updateDate(
+        localDateTimeEx.year, localDateTimeEx.month.value - 1, localDateTimeEx.dayOfMonth
+    )
+    builder.setView(dialogView)
+        // Add action buttons
+        .setPositiveButton(
+            R.string.update
+        ) { _, _ ->
+          val addDividendText = addDividendView.text.toString()
+              .trim()
+          if (addDividendText.isNotEmpty()) {
+            var dividendAmount = 0f
+            var valid = true
+            try {
+              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+              dividendAmount = numberFormat.parse(addDividendText)!!
+                  .toFloat()
+            } catch (e: Exception) {
+              valid = false
+            }
+            if (dividendAmount <= 0f) {
+              Toast.makeText(
+                  requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
+              )
+                  .show()
+              valid = false
+            }
+
+            if (valid) {
+              val datetime: LocalDateTime = LocalDateTime.of(
+                  datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
+                  datePickerDividendDateView.dayOfMonth, 0, 0
+              )
+              val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
+
+              val datetimeEx: LocalDateTime = LocalDateTime.of(
+                  datePickerDividendExDateView.year, datePickerDividendExDateView.month + 1,
+                  datePickerDividendExDateView.dayOfMonth, 0, 0
+              )
+              val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
+
+              stockRoomViewModel.deleteDividend(dividend)
+              stockRoomViewModel.addDividend(
+                  Dividend(
+                      symbol = symbol, amount = dividendAmount, exdate = secondsEx, paydate = seconds,
+                      type = DividendType.Announced.value
+                  )
+              )
+            }
+            hideSoftInputFromWindow()
+          } else {
+            Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
+                .show()
+          }
+        }
+        .setNegativeButton(
+            R.string.cancel
+        ) { _, _ ->
+        }
+    builder
+        .create()
+        .show()
+  }
+
+  private fun dividendAnnouncedItemDeleteClicked(
+    symbol: String?,
+    dividend: Dividend?
+  ) {
+    // Summary tag?
+    if (dividend != null) {
+      val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
+      android.app.AlertDialog.Builder(requireContext())
+          .setTitle(R.string.delete_dividend)
+          .setMessage(
+              getString(
+                  R.string.delete_dividend_confirm, DecimalFormat("0.####").format(dividend.amount),
+                  localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+              )
+          )
+          .setPositiveButton(R.string.delete) { _, _ ->
+            stockRoomViewModel.deleteDividend(dividend)
+            Toast.makeText(
+                requireContext(), R.string.dividend_deleted, Toast.LENGTH_LONG
             )
                 .show()
           }
@@ -234,26 +337,46 @@ class DividendFragment : Fragment() {
     val dividendReceivedClickListenerUpdate =
       { dividend: Dividend -> dividendReceivedItemUpdateClicked(dividend) }
     val dividendReceivedClickListenerDelete =
-      { symbol: String?, dividend: Dividend? -> dividendReceivedItemDeleteClicked(symbol, dividend) }
+      { symbol: String?, dividend: Dividend?, dividendList: List<Dividend>? ->
+        dividendReceivedItemDeleteClicked(
+            symbol, dividend, dividendList
+        )
+      }
     val dividendReceivedListAdapter =
-      DividendReceivedListAdapter(requireContext(), dividendReceivedClickListenerUpdate, dividendReceivedClickListenerDelete)
+      DividendReceivedListAdapter(
+          requireContext(), dividendReceivedClickListenerUpdate, dividendReceivedClickListenerDelete
+      )
     dividendsReceivedView.adapter = dividendReceivedListAdapter
     dividendsReceivedView.layoutManager = LinearLayoutManager(requireContext())
+
+    // announced dividends
+    val dividendAnnouncedClickListenerUpdate =
+      { dividend: Dividend -> dividendAnnouncedItemUpdateClicked(dividend) }
+    val dividendAnnouncedClickListenerDelete =
+      { symbol: String?, dividend: Dividend? ->
+        dividendAnnouncedItemDeleteClicked(
+            symbol, dividend
+        )
+      }
+    val dividendAnnouncedListAdapter =
+      DividendAnnouncedListAdapter(
+          requireContext(), dividendAnnouncedClickListenerUpdate, dividendAnnouncedClickListenerDelete
+      )
+    dividendsAnnouncedView.adapter = dividendAnnouncedListAdapter
+    dividendsAnnouncedView.layoutManager = LinearLayoutManager(requireContext())
 
     // Update the dividend list.
     val dividendsLiveData: LiveData<Dividends> = stockRoomViewModel.getDividendsLiveData(symbol)
     dividendsLiveData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
         dividendReceivedListAdapter.updateDividends(data)
+        dividendAnnouncedListAdapter.updateDividends(data)
         dividendNotesTextView.text = data.stockDBdata.dividendNotes
       }
     })
 
     val assetsLiveData: LiveData<Assets> = stockRoomViewModel.getAssetsLiveData(symbol)
     assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
-      if (data != null) {
-        //assetAdapter.updateAssets(data.assets)
-      }
     })
 
     // Use MediatorLiveView to combine the assets and online data changes.
@@ -280,11 +403,6 @@ class DividendFragment : Fragment() {
       updateAssetChange(item)
     })
 
-    stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
-    //val notes = stockDBdata.notes
-
-    //notesTextView.text = stockDBdata.notes
-
     addDividendReceivedButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
@@ -293,56 +411,56 @@ class DividendFragment : Fragment() {
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
       val dialogView = inflater.inflate(R.layout.add_dividend, null)
+      textViewDividendExDate.visibility = View.GONE
+      datePickerDividendExDate.visibility = View.GONE
       val addUpdateSharesHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
       addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
-      val addSharesView = dialogView.findViewById<TextView>(R.id.addShares)
-      val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
+      val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
+      val datePickerDividendDateView =
+        dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
       builder.setView(dialogView)
           // Add action buttons
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
-            val sharesText = addSharesView.text.toString()
+            val addDividendText = addDividendView.text.toString()
                 .trim()
-            val priceText = addPriceView.text.toString()
-                .trim()
-            if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
-              var price = 0f
-              var shares = 0f
+            if (addDividendText.isNotEmpty()) {
+              var dividendAmount = 0f
               var valid = true
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                price = numberFormat.parse(priceText)!!
+                dividendAmount = numberFormat.parse(addDividendText)!!
                     .toFloat()
               } catch (e: Exception) {
                 valid = false
               }
-              if (price <= 0f) {
+              if (dividendAmount <= 0f) {
                 Toast.makeText(
-                    requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+                    requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
                 )
                     .show()
                 valid = false
               }
-              try {
-                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                shares = numberFormat.parse(sharesText)!!
-                    .toFloat()
-              } catch (e: Exception) {
-                valid = false
-              }
-              if (shares <= 0f) {
-                Toast.makeText(
-                    requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
-                )
-                    .show()
-                valid = false
-              }
-              if (valid) {
-                stockRoomViewModel.addDividend(Dividend(symbol = symbol, amount = shares, exdate = 0L, paydate = 0L, type = 0))
 
-                Toast.makeText(requireContext(), getString(R.string.dividend_added), Toast.LENGTH_LONG)
+              if (valid) {
+                val datetime: LocalDateTime = LocalDateTime.of(
+                    datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
+                    datePickerDividendDateView.dayOfMonth, 0, 0
+                )
+                val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
+
+                stockRoomViewModel.addDividend(
+                    Dividend(
+                        symbol = symbol, amount = dividendAmount, exdate = 0L, paydate = seconds,
+                        type = DividendType.Received.value
+                    )
+                )
+
+                Toast.makeText(
+                    requireContext(), getString(R.string.dividend_added), Toast.LENGTH_LONG
+                )
                     .show()
               }
               hideSoftInputFromWindow()
@@ -353,20 +471,107 @@ class DividendFragment : Fragment() {
                   .show()
             }
           }
-          .setNegativeButton(R.string.cancel,
-              DialogInterface.OnClickListener { _, _ ->
-              })
+          .setNegativeButton(
+              R.string.cancel
+          ) { _, _ ->
+          }
+      builder
+          .create()
+          .show()
+    }
+
+    addDividendAnnouncedButton.setOnClickListener {
+      val builder = AlertDialog.Builder(requireContext())
+      // Get the layout inflater
+      val inflater = LayoutInflater.from(requireContext())
+
+      // Inflate and set the layout for the dialog
+      // Pass null as the parent view because its going in the dialog layout
+      val dialogView = inflater.inflate(R.layout.add_dividend, null)
+      val addUpdateSharesHeadlineView =
+        dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
+      addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
+      val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
+
+      val datePickerDividendDateView =
+        dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
+
+      val datePickerDividendExDateView =
+        dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate)
+
+      builder.setView(dialogView)
+          // Add action buttons
+          .setPositiveButton(
+              R.string.add
+          ) { _, _ ->
+            val addDividendText = addDividendView.text.toString()
+                .trim()
+            if (addDividendText.isNotEmpty()) {
+              var dividendAmount = 0f
+              var valid = true
+              try {
+                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                dividendAmount = numberFormat.parse(addDividendText)!!
+                    .toFloat()
+              } catch (e: Exception) {
+                valid = false
+              }
+              if (dividendAmount <= 0f) {
+                Toast.makeText(
+                    requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
+                )
+                    .show()
+                valid = false
+              }
+
+              if (valid) {
+                val datetime: LocalDateTime = LocalDateTime.of(
+                    datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
+                    datePickerDividendDateView.dayOfMonth, 0, 0
+                )
+                val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
+
+                val datetimeEx: LocalDateTime = LocalDateTime.of(
+                    datePickerDividendExDateView.year, datePickerDividendExDateView.month + 1,
+                    datePickerDividendExDateView.dayOfMonth, 0, 0
+                )
+                val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
+
+                stockRoomViewModel.addDividend(
+                    Dividend(
+                        symbol = symbol, amount = dividendAmount, exdate = secondsEx, paydate = seconds,
+                        type = DividendType.Announced.value
+                    )
+                )
+
+                Toast.makeText(
+                    requireContext(), getString(R.string.dividend_added), Toast.LENGTH_LONG
+                )
+                    .show()
+              }
+              hideSoftInputFromWindow()
+            } else {
+              Toast.makeText(
+                  requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
+              )
+                  .show()
+            }
+          }
+          .setNegativeButton(
+              R.string.cancel
+          ) { _, _ ->
+          }
       builder
           .create()
           .show()
     }
 
     updateDividendNotesButton.setOnClickListener {
-      updateNotes()
+      updateDividendNotes()
     }
 
     dividendNotesTextView.setOnClickListener {
-      updateNotes()
+      updateDividendNotes()
     }
   }
 
@@ -389,7 +594,7 @@ class DividendFragment : Fragment() {
     }
   }
 
-  private fun updateNotes() {
+  private fun updateDividendNotes() {
     val builder = AlertDialog.Builder(requireContext())
     // Get the layout inflater
     val inflater = LayoutInflater.from(requireContext())
@@ -398,7 +603,7 @@ class DividendFragment : Fragment() {
     // Pass null as the parent view because its going in the dialog layout
     val dialogView = inflater.inflate(R.layout.add_note, null)
     val textInputEditNoteView =
-      dialogView.findViewById<TextView>(R.id.textInputEditEventNote)
+      dialogView.findViewById<TextView>(R.id.textInputEditNote)
 
     val note = dividendNotesTextView.text
     textInputEditNoteView.text = note
@@ -412,7 +617,7 @@ class DividendFragment : Fragment() {
 
           if (noteText != note) {
             dividendNotesTextView.text = noteText
-            stockRoomViewModel.updateNotes(symbol, noteText)
+            stockRoomViewModel.updateDividendNotes(symbol, noteText)
 
             if (noteText.isEmpty()) {
               Toast.makeText(

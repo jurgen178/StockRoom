@@ -28,14 +28,14 @@ class StockDataActivity : AppCompatActivity() {
       override fun createFragment(position: Int): Fragment {
         return when (position) {
           0 -> {
-            val instance = StockDataFragment.newInstance()
+            val instance = DividendFragment.newInstance()
             instance.arguments = Bundle().apply {
               putString("symbol", symbol)
             }
             instance
           }
           1 -> {
-            val instance = DividendFragment.newInstance()
+            val instance = StockDataFragment.newInstance()
             instance.arguments = Bundle().apply {
               putString("symbol", symbol)
             }
@@ -56,10 +56,12 @@ class StockDataActivity : AppCompatActivity() {
       }
     }
 
+    stockViewpager.setCurrentItem(1, false)
+
     TabLayoutMediator(tab_layout, stockViewpager) { tab, position ->
       tab.text = when (position) {
-        0 -> getString(R.string.data_headline)
-        1 -> getString(R.string.dividend_header)
+        0 -> getString(R.string.dividend_headline)
+        1 -> getString(R.string.data_headline)
         else -> getString(R.string.news_headline, symbol)
       }
     }.attach()
