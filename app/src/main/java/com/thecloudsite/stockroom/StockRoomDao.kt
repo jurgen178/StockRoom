@@ -47,8 +47,10 @@ interface StockRoomDao {
   @Transaction
   fun deleteAll() {
     deleteAllStockTable()
-    //deleteAllAssetTable()
-    //deleteAllEventTable()
+    deleteAllGroupTable()
+    deleteAllAssetTable()
+    deleteAllEventTable()
+    deleteAllDividendTable()
   }
 
   @Query("DELETE FROM stock_table")
@@ -62,6 +64,9 @@ interface StockRoomDao {
 
   @Query("DELETE FROM event_table")
   fun deleteAllEventTable()
+
+  @Query("DELETE FROM dividend_table")
+  fun deleteAllDividendTable()
 
   fun setPredefinedGroups(context: Context) {
     val groups: MutableList<Group> = mutableListOf()
@@ -316,6 +321,11 @@ interface StockRoomDao {
   fun getAllDividendsLiveData(): LiveData<List<Dividends>>
 
   @Transaction
+  @Query("SELECT * FROM dividend_table")
+  fun getAllDividendTableLiveData(): LiveData<List<Dividend>>
+
+
+  @Transaction
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getDividendsLiveData(symbol: String): LiveData<Dividends>
 
@@ -336,17 +346,16 @@ interface StockRoomDao {
     exdate: Long
   )
 
-  @Transaction
   @Query("DELETE FROM dividend_table WHERE symbol = :symbol")
   fun deleteDividends(symbol: String)
 
 //  @Query("SELECT * FROM dividend_table WHERE title = :title LIMIT 1")
 //  suspend fun findMovieByTitle(title: String?): Dividend?
 
-  @Transaction
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getDividends(symbol: String): Dividends
 
+  @Transaction
   @Query("SELECT * FROM dividend_table ORDER BY amount ASC")
   fun allDividends(): LiveData<List<Dividend>>
 }

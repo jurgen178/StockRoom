@@ -263,4 +263,7 @@ limitations under the License. -->
   <string name="dividend_received_summary_text">Total dividends received</string>
   <string name="dividend_headline">Dividend</string>
   <string name="dividend_exdate">Ex-Dividend</string>
+  <string name="totaldividend_payed">Dividend paid</string>
+  <string name="totaldividend_payedYTD">Dividend paid YTD</string>
+  <string name="no_online_dividend_data">No online dividend data</string>
 </resources>

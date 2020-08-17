@@ -135,6 +135,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   val allDividends: LiveData<List<Dividends>>
   val allAssetTable: LiveData<List<Asset>>
   val allEventTable: LiveData<List<Event>>
+  val allDividendTable: LiveData<List<Dividend>>
   val allGroupTable: LiveData<List<Group>>
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
@@ -152,6 +153,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var dbDataValid = false
   private var assetDataValid = false
   private var eventDataValid = false
+  private var dividendDataValid = false
   private var onlineDataValid = false
 
   private var onlineDataStatus: Pair<Long, MarketState> =
@@ -211,6 +213,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allDividends = repository.allDividends
     allAssetTable = repository.allAssetTable
     allEventTable = repository.allEventTable
+    allDividendTable = repository.allDividendTable
     allGroupTable = repository.allGroupTable
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList
@@ -396,6 +399,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     // observe dividends, used for export
     allMediatorData.addSource(liveDataDividends) { value ->
+      if (value != null) {
+        updateDividendsFromDB(value)
+        dataValidate()
+        allMediatorData.value = process(allData.value, false)
+      }
     }
 
     allMediatorData.addSource(liveDataOnline) { value ->
@@ -568,6 +576,49 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   assets = emptyList(),
                   events = event.events,
                   dividends = emptyList()
+              )
+          )
+        }
+
+        /*
+        // Remove the item from the dataStore because Item was deleted from the DB.
+        if (dataStore.stockItems.size > events.size) {
+          dataStore.stockItems.removeIf {
+            // Remove if item is not found in the DB.
+            events.find { event ->
+              it.stockDBdata.symbol == event.stockDBdata.symbol
+            } == null
+          }
+        }
+      */
+      }
+    }
+
+    _dataStore.value = dataStore
+  }
+
+  private fun updateDividendsFromDB(dividends: List<Dividends>) {
+    synchronized(dataStore)
+    {
+      dividendDataValid = true
+
+      dividends.forEach { dividend ->
+        val symbol = dividend.stockDBdata.symbol
+        val dataStoreItem =
+          dataStore.stockItems.find { ds ->
+            symbol == ds.stockDBdata.symbol
+          }
+
+        if (dataStoreItem != null) {
+          dataStoreItem.dividends = dividend.dividends
+        } else {
+          dataStore.stockItems.add(
+              StockItem(
+                  onlineMarketData = OnlineMarketData(symbol = dividend.stockDBdata.symbol),
+                  stockDBdata = dividend.stockDBdata,
+                  assets = emptyList(),
+                  events = emptyList(),
+                  dividends = dividend.dividends
               )
           )
         }

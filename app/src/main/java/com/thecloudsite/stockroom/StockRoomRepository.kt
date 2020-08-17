@@ -35,6 +35,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   val allAssetTable: LiveData<List<Asset>> = stockRoomDao.getAllAssetTableLiveData()
   val allEventTable: LiveData<List<Event>> = stockRoomDao.getAllEventTableLiveData()
+  val allDividendTable: LiveData<List<Dividend>> = stockRoomDao.getAllDividendTableLiveData()
   val allGroupTable: LiveData<List<Group>> = stockRoomDao.getAllGroupTableLiveData()
 
   // You must call this on a non-UI thread or your app will crash. So we're making this a

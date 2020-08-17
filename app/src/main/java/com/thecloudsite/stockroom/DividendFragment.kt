@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
+import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -20,16 +22,13 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.add_dividend.datePickerDividendExDate
-import kotlinx.android.synthetic.main.add_dividend.textViewDividendExDate
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendAnnouncedButton
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButton
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNotesTextView
-import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
-import kotlinx.android.synthetic.main.fragment_dividend.updateDividendNotesButton
-import kotlinx.android.synthetic.main.fragment_dividend.dividendLinearLayout
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsAnnouncedView
+import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
 import kotlinx.android.synthetic.main.fragment_dividend.textViewDividend
+import kotlinx.android.synthetic.main.fragment_dividend.updateDividendNotesButton
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -41,6 +40,19 @@ import java.util.Locale
 enum class DividendType(val value: Int) {
   Received(0),
   Announced(1),
+}
+
+class CustomDatePicker(
+  context: Context?,
+  attrs: AttributeSet?
+) :
+    DatePicker(context, attrs) {
+  override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+    if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+      parent?.requestDisallowInterceptTouchEvent(true)
+    }
+    return false
+  }
 }
 
 class DividendFragment : Fragment() {
@@ -67,13 +79,13 @@ class DividendFragment : Fragment() {
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
     val dialogView = inflater.inflate(R.layout.add_dividend, null)
-    textViewDividendExDate.visibility = View.GONE
-    datePickerDividendExDate.visibility = View.GONE
+    dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
+    dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
     val addUpdateSharesHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
     addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
+    addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
     val datePickerDividendDateView =
       dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
     val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
@@ -164,7 +176,7 @@ class DividendFragment : Fragment() {
           .setTitle(R.string.delete_dividend)
           .setMessage(
               getString(
-                  R.string.delete_dividend_confirm, DecimalFormat("0.####").format(dividend.amount),
+                  R.string.delete_dividend_confirm, DecimalFormat("0.##").format(dividend.amount),
                   localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
               )
           )
@@ -192,7 +204,7 @@ class DividendFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
     addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
+    addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
 
     val datePickerDividendDateView =
       dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
@@ -250,7 +262,8 @@ class DividendFragment : Fragment() {
               stockRoomViewModel.deleteDividend(dividend)
               stockRoomViewModel.addDividend(
                   Dividend(
-                      symbol = symbol, amount = dividendAmount, exdate = secondsEx, paydate = seconds,
+                      symbol = symbol, amount = dividendAmount, exdate = secondsEx,
+                      paydate = seconds,
                       type = DividendType.Announced.value
                   )
               )
@@ -281,7 +294,7 @@ class DividendFragment : Fragment() {
           .setTitle(R.string.delete_dividend)
           .setMessage(
               getString(
-                  R.string.delete_dividend_confirm, DecimalFormat("0.####").format(dividend.amount),
+                  R.string.delete_dividend_confirm, DecimalFormat("0.##").format(dividend.amount),
                   localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
               )
           )
@@ -360,7 +373,8 @@ class DividendFragment : Fragment() {
       }
     val dividendAnnouncedListAdapter =
       DividendAnnouncedListAdapter(
-          requireContext(), dividendAnnouncedClickListenerUpdate, dividendAnnouncedClickListenerDelete
+          requireContext(), dividendAnnouncedClickListenerUpdate,
+          dividendAnnouncedClickListenerDelete
       )
     dividendsAnnouncedView.adapter = dividendAnnouncedListAdapter
     dividendsAnnouncedView.layoutManager = LinearLayoutManager(requireContext())
@@ -411,14 +425,18 @@ class DividendFragment : Fragment() {
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
       val dialogView = inflater.inflate(R.layout.add_dividend, null)
-      textViewDividendExDate.visibility = View.GONE
-      datePickerDividendExDate.visibility = View.GONE
+      dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
+      dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
       val addUpdateSharesHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
       addUpdateSharesHeadlineView.text = getString(R.string.add_dividend)
       val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
       val datePickerDividendDateView =
         dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
+
+      datePickerDividendDateView
+
+
       builder.setView(dialogView)
           // Add action buttons
           .setPositiveButton(
@@ -539,7 +557,8 @@ class DividendFragment : Fragment() {
 
                 stockRoomViewModel.addDividend(
                     Dividend(
-                        symbol = symbol, amount = dividendAmount, exdate = secondsEx, paydate = seconds,
+                        symbol = symbol, amount = dividendAmount, exdate = secondsEx,
+                        paydate = seconds,
                         type = DividendType.Announced.value
                     )
                 )
@@ -644,15 +663,10 @@ class DividendFragment : Fragment() {
   }
 
   private fun updateAssetChange(data: AssetsLiveData) {
-    if (data.assets != null && data.onlineMarketData != null) {
-      if (data.onlineMarketData?.annualDividendRate!! > 0f) {
-        dividendLinearLayout.visibility = View.VISIBLE
-        textViewDividend.text = getDividend(data)
-      } else {
-        dividendLinearLayout.visibility = View.GONE
-      }
+    if (data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0f) {
+      textViewDividend.text = getDividend(data)
     } else {
-      dividendLinearLayout.visibility = View.GONE
+      textViewDividend.text = getString(R.string.no_online_dividend_data)
     }
   }
 
@@ -668,9 +682,11 @@ class DividendFragment : Fragment() {
         .append(getString(R.string.annualDividendYield))
         .bold {
           append(
-              " ${DecimalFormat("0.00##").format(
-                  data.onlineMarketData?.annualDividendYield?.times(100)
-              )}%"
+              " ${
+                DecimalFormat("0.00##").format(
+                    data.onlineMarketData?.annualDividendYield?.times(100)
+                )
+              }%"
           )
         }
 

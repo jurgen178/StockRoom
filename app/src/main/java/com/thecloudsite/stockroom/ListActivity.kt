@@ -32,6 +32,9 @@ class ListActivity : AppCompatActivity() {
   private val eventTableRows = StringBuilder()
   private var eventTableRowsCount = 0
 
+  private val dividendTableRows = StringBuilder()
+  private var dividendTableRowsCount = 0
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_list)
@@ -41,7 +44,7 @@ class ListActivity : AppCompatActivity() {
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
     debugswitch.isChecked = sharedPreferences.getBoolean("list", false)
 
-    debugswitch.setOnCheckedChangeListener{_, isChecked ->
+    debugswitch.setOnCheckedChangeListener { _, isChecked ->
       sharedPreferences
           .edit()
           .putBoolean("list", isChecked)
@@ -74,8 +77,10 @@ class ListActivity : AppCompatActivity() {
         stockTableRows.append("<td>${stockItem.notes}</td>")
         stockTableRows.append("<td>${DecimalFormat("0.####").format(stockItem.alertAbove)}</td>")
         stockTableRows.append(
-            "<td>${DecimalFormat("0.####")
-                .format(stockItem.alertBelow)}</td>"
+            "<td>${
+              DecimalFormat("0.####")
+                  .format(stockItem.alertBelow)
+            }</td>"
         )
         stockTableRows.append("</tr>")
       }
@@ -135,6 +140,25 @@ class ListActivity : AppCompatActivity() {
       updateHtmlText()
     })
 
+    stockRoomViewModel.allDividendTable.observe(this, Observer { items ->
+
+      dividendTableRowsCount = items.size
+
+      items.forEach { dividendItem ->
+        dividendTableRows.append("<tr>")
+        dividendTableRows.append("<td>${dividendItem.id}</td>")
+        dividendTableRows.append("<td>${dividendItem.symbol}</td>")
+        dividendTableRows.append("<td>${DecimalFormat("0.####").format(dividendItem.amount)}</td>")
+        dividendTableRows.append("<td>${dividendItem.type}</td>")
+        dividendTableRows.append("<td>${getDateStr(dividendItem.exdate)}</td>")
+        dividendTableRows.append("<td>${getDateStr(dividendItem.paydate)}</td>")
+        dividendTableRows.append("</tr>")
+      }
+
+      stockRoomViewModel.allDividendTable.removeObservers(this)
+      updateHtmlText()
+    })
+
     //webview.setBackgroundResource(R.drawable.circuit)
     //webview.setBackgroundColor(android.graphics.Color.TRANSPARENT);
   }
@@ -144,13 +168,32 @@ class ListActivity : AppCompatActivity() {
     return true
   }
 
+  private fun getDateStr(datetime: Long): String {
+    return if (datetime != 0L) {
+      val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+      val dateTimeStr =
+        "${datetime}</br>${
+          localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        }"
+      dateTimeStr
+    } else {
+      "0"
+    }
+  }
+
   private fun getDateTimeStr(datetime: Long): String {
-    val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
-    val dateTimeStr =
-      "${datetime}</br>${localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-      }&nbsp;${localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-      }"
-    return dateTimeStr
+    return if (datetime != 0L) {
+      val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+      val dateTimeStr =
+        "${datetime}</br>${
+          localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        }&nbsp;${
+          localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+        }"
+      dateTimeStr
+    } else {
+      "0"
+    }
   }
 
   private fun getColorStr(color: Int): String =
@@ -178,6 +221,9 @@ class ListActivity : AppCompatActivity() {
 
     htmlText = htmlText.replace("<!-- event_table_name -->", "event_table ($eventTableRowsCount)")
     htmlText = htmlText.replace("<!-- event_table -->", eventTableRows.toString())
+
+    htmlText = htmlText.replace("<!-- dividend_table_name -->", "dividend_table ($dividendTableRowsCount)")
+    htmlText = htmlText.replace("<!-- dividend_table -->", dividendTableRows.toString())
 
     val mimeType: String = "text/html"
     val utfType: String = "UTF-8"

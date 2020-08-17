@@ -54,14 +54,7 @@ data class Group(
 )
 
 @Entity(
-    tableName = "asset_table",
-    foreignKeys = [ForeignKey(
-        entity = StockDBdata::class,
-        parentColumns = ["symbol"],
-        childColumns = ["symbol"],
-        onDelete = ForeignKey.CASCADE
-    )],
-    indices = [Index("symbol"), Index("id")]
+    tableName = "asset_table"
 )
 data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
@@ -72,14 +65,7 @@ data class Asset(
 )
 
 @Entity(
-    tableName = "event_table",
-    foreignKeys = [ForeignKey(
-        entity = StockDBdata::class,
-        parentColumns = ["symbol"],
-        childColumns = ["symbol"],
-        onDelete = ForeignKey.CASCADE
-    )],
-    indices = [Index("symbol"), Index("id")]
+    tableName = "event_table"
 )
 data class Event(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
@@ -121,14 +107,14 @@ data class Dividends(
 )
 
 @Entity(
-    tableName = "dividend_table",
+    tableName = "dividend_table"/*,
     foreignKeys = [ForeignKey(
         entity = StockDBdata::class,
         parentColumns = ["symbol"],
         childColumns = ["symbol"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index("symbol"), Index("id")]
+    indices = [Index("symbol"), Index("id")]*/
 )
 data class Dividend(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,

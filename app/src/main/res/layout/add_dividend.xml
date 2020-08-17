@@ -73,7 +73,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
             />
-        <DatePicker
+        <com.thecloudsite.stockroom.CustomDatePicker
             android:id="@+id/datePickerDividendExDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/datePickerDividendExDate"
             />
-        <DatePicker
+        <com.thecloudsite.stockroom.CustomDatePicker
             android:id="@+id/datePickerDividendDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -68,6 +68,7 @@ class AddActivity : AppCompatActivity() {
       } else {
         val symbol = addView.text.toString().trim()
 
+        // https://convertcodes.com/unicode-converter-encode-decode-utf/
         if (symbol == "\u0064\u0065\u0062\u0075\u0067") {
           val intent = Intent(this@AddActivity, ListActivity::class.java)
           startActivity(intent)

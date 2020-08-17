@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -12,6 +13,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.core.text.italic
+import androidx.core.text.superscript
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
@@ -125,8 +128,13 @@ class SettingsActivity : AppCompatActivity(),
 
   fun onSettings1(item: MenuItem) {
     AlertDialog.Builder(this)
-        .setTitle("\u0059\u006f\u0075\u0020\u0073\u0068\u006f\u0075\u006c\u0064\u0020\u006d\u0061\u006b\u0065")
-        .setMessage("\u0061\u0020\u0064\u0065\u0062\u0075\u0067\u0020\u0069\u006e\u0076\u0065\u0073\u0074\u006d\u0065\u006e\u0074\u002e")
+        // https://convertcodes.com/unicode-converter-encode-decode-utf/
+        .setTitle(
+            "\u0059\u006f\u0075\u0020\u0073\u0068\u006f\u0075\u006c\u0064\u0020\u006d\u0061\u006b\u0065"
+        )
+        .setMessage(
+            "\u0061\u0020\u0064\u0065\u0062\u0075\u0067\u0020\u0069\u006e\u0076\u0065\u0073\u0074\u006d\u0065\u006e\u0074\u002e"
+        )
         .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
         .show()
 //    val intent = Intent(this@SettingsActivity, ListActivity::class.java)
@@ -168,25 +176,40 @@ class SettingsActivity : AppCompatActivity(),
           .color(
               context?.getColor(R.color.settingsblue)!!
           ) { bold { append(" \t$versionName $versionBuild") } }
+          .italic {
+            color(0xffffbb33.toInt()) {
+              // https://convertcodes.com/unicode-converter-encode-decode-utf/
+              append(
+                  "\n\u006a\u0075\u0072\u0067\u0065\u006e\u0031\u0037\u0038\u002c\u0020\u0061\u0069\u0061\u006d\u0061\u006e\u002c\u0020\u006b\u0065\u006e\u0064\u0079\u002c\u0020\u0062\u006c\u0075\u006c\u0062\u0020\u0061\u006e\u0064\u0020\u0074\u0075\u006c\u0062\u0070\u0069\u0072"
+              )
+            }
+          }
       version?.summary = versionStr
 
-      // https://convertcodes.com/unicode-converter-encode-decode-utf/
       var versionClickCounter: Int = 0
       version?.onPreferenceClickListener =
         OnPreferenceClickListener {
           versionClickCounter++
           if (versionClickCounter == 10) {
             AlertDialog.Builder(requireContext())
-                .setTitle("\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072\u002c")
-                .setMessage("\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e")
+                // https://convertcodes.com/unicode-converter-encode-decode-utf/
+                .setTitle(
+                    "\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072\u002c"
+                )
+                .setMessage(
+                    "\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e"
+                )
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
           }
           if (versionClickCounter == 20) {
             versionClickCounter = 0
             AlertDialog.Builder(requireContext())
+                // https://convertcodes.com/unicode-converter-encode-decode-utf/
                 .setTitle("\u004c\u006f\u006f\u006b")
-                .setMessage("\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074")
+                .setMessage(
+                    "\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074"
+                )
                 .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
           }
@@ -244,7 +267,8 @@ class SettingsActivity : AppCompatActivity(),
     private fun onExportList() {
       // Set default filename.
       val date = LocalDateTime.now()
-          .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM)).replace(":", "_")
+          .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+          .replace(":", "_")
       val jsonFileName = context?.getString(R.string.json_default_filename, date)
       val intent = Intent()
           .setType("application/json")

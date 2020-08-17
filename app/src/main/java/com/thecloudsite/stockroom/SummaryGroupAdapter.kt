@@ -28,6 +28,8 @@ import androidx.core.text.color
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 data class SummaryData(
   val desc: String,
@@ -148,37 +150,51 @@ class SummaryGroupAdapter internal constructor(
     var totalShares = 0f
     var totalDividendAssets = 0f
     var totalDividend = 0f
+    var totalDividendPayed = 0f
+    var totalDividendPayedYTD = 0f
     var totalAlerts: Int = 0
     var totalNotes: Int = 0
+
+    val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0)
+    val secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
 
     val stockItemsSelected =
       stockItems.filter {
         all || it.stockDBdata.groupColor == color
       }
 
-    stockItemsSelected.forEach {
+    stockItemsSelected.forEach { stockItem ->
       var shares = 0f
       var price = 0f
-      it.assets.forEach { asset ->
+      stockItem.assets.forEach { asset ->
         price += asset.shares * asset.price
         shares += asset.shares
+      }
+
+      stockItem.dividends.forEach { dividend ->
+        if (dividend.type == DividendType.Received.value) {
+          totalDividendPayed += dividend.amount
+          if (dividend.paydate >= secondsYTD) {
+            totalDividendPayedYTD += dividend.amount
+          }
+        }
       }
 
       totalPurchasePrice += price
       totalShares += shares
 
-      if (it.stockDBdata.alertAbove > 0f) {
+      if (stockItem.stockDBdata.alertAbove > 0f) {
         totalAlerts++
       }
-      if (it.stockDBdata.alertBelow > 0f) {
+      if (stockItem.stockDBdata.alertBelow > 0f) {
         totalAlerts++
       }
-      if (it.stockDBdata.notes.isNotEmpty()) {
+      if (stockItem.stockDBdata.notes.isNotEmpty()) {
         totalNotes++
       }
 
-      if (it.onlineMarketData.marketPrice > 0f) {
-        val assetsPrice = shares * it.onlineMarketData.marketPrice
+      if (stockItem.onlineMarketData.marketPrice > 0f) {
+        val assetsPrice = shares * stockItem.onlineMarketData.marketPrice
         val gainLoss = assetsPrice - price
         if (gainLoss > 0f) {
           totalGain += gainLoss
@@ -188,9 +204,9 @@ class SummaryGroupAdapter internal constructor(
 
         totalAssets += assetsPrice
 
-        if (it.onlineMarketData.annualDividendRate > 0f) {
+        if (stockItem.onlineMarketData.annualDividendRate > 0f) {
           totalDividendAssets += assetsPrice
-          totalDividend += shares * it.onlineMarketData.annualDividendRate
+          totalDividend += shares * stockItem.onlineMarketData.annualDividendRate
         }
       }
     }
@@ -217,7 +233,7 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_note)} ")
         .bold { append("${totalNotes}\n") }
         .append("${context.getString(R.string.summary_number_of_stocks)} ")
-        .bold { append("${DecimalFormat("0.##").format(totalShares)}\n") }
+        .bold { append("${DecimalFormat("0.##").format(totalShares)}\n\n") }
         .append("${context.getString(R.string.summary_total_purchase_price)} ")
         .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
         .append("${context.getString(R.string.summary_total_assets)} ")
@@ -310,25 +326,51 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_dividend_assets)} ")
         .bold {
           append(
-              "${DecimalFormat("0.00")
-                  .format(totalDividendAssets)}\n"
+              "${
+                DecimalFormat("0.00")
+                    .format(totalDividendAssets)
+              }\n"
           )
         }
         .append("${context.getString(R.string.summary_no_dividend_assets)} ")
         .bold {
           append(
-              "${DecimalFormat("0.00")
-                  .format(totalAssets - totalDividendAssets)}\n"
+              "${
+                DecimalFormat("0.00")
+                    .format(totalAssets - totalDividendAssets)
+              }\n"
           )
         }
         .append("${context.getString(R.string.summary_dividend_per_year)} ")
         .bold {
           append(
-              "${DecimalFormat("0.00")
-                  .format(totalDividend)} (${DecimalFormat("0.00")
-                  .format(
-                      totalDividendChange * 100
-                  )}%)"
+              "${
+                DecimalFormat("0.00")
+                    .format(totalDividend)
+              } (${
+                DecimalFormat("0.00")
+                    .format(
+                        totalDividendChange * 100
+                    )
+              }%)\n"
+          )
+        }
+        .append("${context.getString(R.string.totaldividend_payed)} ")
+        .bold {
+          append(
+              "${
+                DecimalFormat("0.00")
+                    .format(totalDividendPayed)
+              }\n"
+          )
+        }
+        .append("${context.getString(R.string.totaldividend_payedYTD)} ")
+        .bold {
+          append(
+              "${
+                DecimalFormat("0.00")
+                    .format(totalDividendPayedYTD)
+              }"
           )
         }
 
