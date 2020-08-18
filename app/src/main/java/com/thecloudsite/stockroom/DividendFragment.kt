@@ -22,6 +22,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.mikephil.charting.charts.LineChart
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendAnnouncedButton
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButton
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNotesTextView
@@ -42,6 +43,7 @@ enum class DividendType(val value: Int) {
   Announced(1),
 }
 
+// Enable scrolling by disable parent scrolling
 class CustomDatePicker(
   context: Context?,
   attrs: AttributeSet?

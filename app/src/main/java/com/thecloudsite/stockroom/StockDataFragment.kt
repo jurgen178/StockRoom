@@ -11,9 +11,11 @@ import android.os.Looper
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -115,6 +117,33 @@ data class AssetsLiveData(
   var assets: Assets? = null,
   var onlineMarketData: OnlineMarketData? = null
 )
+
+// Enable scrolling by disable parent scrolling
+class CustomLineChart(
+  context: Context?,
+  attrs: AttributeSet?
+) :
+    LineChart(context, attrs) {
+  override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+    if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+      parent?.requestDisallowInterceptTouchEvent(true)
+    }
+    return false
+  }
+}
+
+class CustomCandleStickChart(
+  context: Context?,
+  attrs: AttributeSet?
+) :
+    CandleStickChart(context, attrs) {
+  override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+    if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+      parent?.requestDisallowInterceptTouchEvent(true)
+    }
+    return false
+  }
+}
 
 class StockDataFragment : Fragment() {
 

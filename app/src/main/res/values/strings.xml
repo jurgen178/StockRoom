@@ -143,7 +143,7 @@ limitations under the License. -->
   <string name="asset_summary_text">Total assets</string>
   <string name="title_activity_add">Add stocks</string>
   <string name="title_activity_stockdata">Stock details</string>
-  <string name="add_stock">Added stock \'%1$s\'</string>
+  <string name="add_stock">Added stock \'%1$s\' to the standard portfolio.</string>
   <string name="current_events">Events</string>
   <string name="event_title">Event</string>
   <string name="event_note">Details</string>

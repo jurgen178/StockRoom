@@ -485,7 +485,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
       dataStore.stockItems.removeIf {
-        // Remove if item is not found in the DB.
         portfolioData.find { sd ->
           it.stockDBdata.symbol == sd.symbol
         } == null
@@ -525,16 +524,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (dataStoreItem != null) {
           dataStoreItem.assets = asset.assets
-        } else
-          dataStore.stockItems.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
-                  stockDBdata = asset.stockDBdata,
-                  assets = asset.assets,
-                  events = emptyList(),
-                  dividends = emptyList()
-              )
-          )
+        } else {
+          val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+          if (asset.stockDBdata.portfolio == portfolio) {
+            dataStore.stockItems.add(
+                StockItem(
+                    onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
+                    stockDBdata = asset.stockDBdata,
+                    assets = asset.assets,
+                    events = emptyList(),
+                    dividends = emptyList()
+                )
+            )
+          }
+        }
       }
 
       /*
@@ -568,15 +571,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (dataStoreItem != null) {
           dataStoreItem.events = event.events
         } else {
-          dataStore.stockItems.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
-                  stockDBdata = event.stockDBdata,
-                  assets = emptyList(),
-                  events = event.events,
-                  dividends = emptyList()
-              )
-          )
+          val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+          if (event.stockDBdata.portfolio == portfolio) {
+            dataStore.stockItems.add(
+                StockItem(
+                    onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
+                    stockDBdata = event.stockDBdata,
+                    assets = emptyList(),
+                    events = event.events,
+                    dividends = emptyList()
+                )
+            )
+          }
         }
 
         /*
@@ -611,15 +617,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (dataStoreItem != null) {
           dataStoreItem.dividends = dividend.dividends
         } else {
-          dataStore.stockItems.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = dividend.stockDBdata.symbol),
-                  stockDBdata = dividend.stockDBdata,
-                  assets = emptyList(),
-                  events = emptyList(),
-                  dividends = dividend.dividends
-              )
-          )
+          val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+          if (dividend.stockDBdata.portfolio == portfolio) {
+            dataStore.stockItems.add(
+                StockItem(
+                    onlineMarketData = OnlineMarketData(symbol = dividend.stockDBdata.symbol),
+                    stockDBdata = dividend.stockDBdata,
+                    assets = emptyList(),
+                    events = emptyList(),
+                    dividends = dividend.dividends
+                )
+            )
+          }
         }
 
         /*
