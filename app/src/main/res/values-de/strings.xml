@@ -83,7 +83,7 @@ limitations under the License. -->
   <string name="five_year_range">Fünfjahresverlauf</string>
   <string name="max_range">Maximalverlauf</string>
   <string name="use_postmarket">Nachbörsliche Werte</string>
-  <string name="use_postmarket_desc">Vor- und nachbörsliche Werte anzeigen.</string>
+  <string name="use_postmarket_desc">Vor- und nachbörsliche Werte anzeigen. Die Werte werden in kursiver Schrift angezeigt.</string>
   <string name="notes">Anmerkungen</string>
   <string name="alerts">Benachrichtigungen</string>
   <string name="alert_above">Wenn überschritten</string>

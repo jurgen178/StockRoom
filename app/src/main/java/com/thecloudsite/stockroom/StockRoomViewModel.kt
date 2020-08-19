@@ -1188,7 +1188,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       d = s.toDouble()
       if (d == 0.0) {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-        d = numberFormat.parse(s)!!.toDouble()
+        d = numberFormat.parse(s)!!
+            .toDouble()
       }
     } catch (e: Exception) {
       d = 0.0
@@ -1511,10 +1512,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.setPredefinedGroups(getApplication())
   }
 
-  // Run the alerts synchronous to avoid duplicate alerts when importing or any other fast insert.
+  // Run the alerts synchronous to avoid duplicate alerts.
   // Each alerts gets send, and then removed from the DB. If the alerts are send non-blocking,
   // the alert is still valid for some time and gets send multiple times.
-  fun updateAlertAbove(
+  fun updateAlertAboveSync(
     symbol: String,
     alertAbove: Double
   ) {
@@ -1527,7 +1528,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  fun updateAlertBelow(
+  fun updateAlertBelowSync(
     symbol: String,
     alertBelow: Double
   ) {
@@ -1540,25 +1541,24 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  /*
-   fun updateAlertAbove(
-     symbol: String,
-     alertAbove: Double
-   ) = scope.launch {
-     if (symbol.isNotEmpty()) {
-       repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
-     }
-   }
+  // Do not use the Sync version of these functions for the import.
+  private fun updateAlertAbove(
+    symbol: String,
+    alertAbove: Double
+  ) = scope.launch {
+    if (symbol.isNotEmpty()) {
+      repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+    }
+  }
 
-   fun updateAlertBelow(
-     symbol: String,
-     alertBelow: Double
-   ) = scope.launch {
-     if (symbol.isNotEmpty()) {
-       repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
-     }
-   }
-    */
+  private fun updateAlertBelow(
+    symbol: String,
+    alertBelow: Double
+  ) = scope.launch {
+    if (symbol.isNotEmpty()) {
+      repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+    }
+  }
 
   fun updateNotes(
     symbol: String,

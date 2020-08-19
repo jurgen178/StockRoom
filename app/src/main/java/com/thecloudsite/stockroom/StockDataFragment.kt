@@ -1519,10 +1519,10 @@ class StockDataFragment : Fragment() {
     // If both are set, below value must be smaller than the above value.
     if (!(alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove)) {
       if (stockDBdata.alertAbove != alertAbove) {
-        stockRoomViewModel.updateAlertAbove(symbol, alertAbove)
+        stockRoomViewModel.updateAlertAboveSync(symbol, alertAbove)
       }
       if (stockDBdata.alertBelow != alertBelow) {
-        stockRoomViewModel.updateAlertBelow(symbol, alertBelow)
+        stockRoomViewModel.updateAlertBelowSync(symbol, alertBelow)
       }
     }
   }

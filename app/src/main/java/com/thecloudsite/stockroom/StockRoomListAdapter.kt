@@ -18,11 +18,14 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.bold
+import androidx.core.text.italic
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -104,18 +107,32 @@ class StockRoomListAdapter internal constructor(
       holder.itemViewSymbol.text = current.onlineMarketData.symbol
       holder.itemViewName.text = current.onlineMarketData.name
       if (current.onlineMarketData.marketPrice > 0.0) {
-        holder.itemViewMarketPrice.text =
-          if (current.onlineMarketData.marketPrice > 5.0) {
-            DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
-          } else {
-            DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
-          }
-        holder.itemViewChange.text =
-          DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
-        holder.itemViewChangePercent.text =
-          "(${DecimalFormat("0.00").format(
+        val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
+          DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
+        } else {
+          DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
+        }
+        val change = DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
+        val changePercent = "(${
+          DecimalFormat("0.00").format(
               current.onlineMarketData.marketChangePercent
-          )}%)"
+          )
+        }%)"
+
+        if (current.onlineMarketData.postMarketData) {
+          holder.itemViewMarketPrice.text = SpannableStringBuilder()
+              .italic { append(marketPrice) }
+
+          holder.itemViewChange.text = SpannableStringBuilder()
+              .italic { append(change) }
+
+          holder.itemViewChangePercent.text = SpannableStringBuilder()
+              .italic { append(changePercent) }
+        } else {
+          holder.itemViewMarketPrice.text = marketPrice
+          holder.itemViewChange.text = change
+          holder.itemViewChangePercent.text = changePercent
+        }
       } else {
         holder.itemViewMarketPrice.text = ""
         holder.itemViewChange.text = ""
@@ -142,26 +159,36 @@ class StockRoomListAdapter internal constructor(
             it.shares * current.onlineMarketData.marketPrice
           }
 
-          assets += "${DecimalFormat(
-              "0.00"
-          ).format(asset)} ${if (capital >= asset) {
-            "+"
-          } else {
-            "-"
-          }} ${DecimalFormat("0.00").format(
-              (capital - asset).absoluteValue
-          )} = ${DecimalFormat(
-              "0.00"
-          ).format(
-              capital
-          )}"
+          assets += "${
+            DecimalFormat(
+                "0.00"
+            ).format(asset)
+          } ${
+            if (capital >= asset) {
+              "+"
+            } else {
+              "-"
+            }
+          } ${
+            DecimalFormat("0.00").format(
+                (capital - asset).absoluteValue
+            )
+          } = ${
+            DecimalFormat(
+                "0.00"
+            ).format(
+                capital
+            )
+          }"
 
           val capitalPercent = (capital - asset) * 100.0 / asset
-          assets += " (${if (capitalPercent > 0.0) {
-            "+"
-          } else {
-            ""
-          }}${DecimalFormat("0.00").format(capitalPercent)}%)"
+          assets += " (${
+            if (capitalPercent > 0.0) {
+              "+"
+            } else {
+              ""
+            }
+          }${DecimalFormat("0.00").format(capitalPercent)}%)"
 
         } else {
           assets += DecimalFormat(
@@ -184,24 +211,32 @@ class StockRoomListAdapter internal constructor(
 
       if (current.onlineMarketData.annualDividendRate > 0.0) {
         assets +=
-          "\n${context.getString(R.string.dividend_in_list)} ${DecimalFormat(
-              "0.00"
-          ).format(
-              current.onlineMarketData.annualDividendRate
-          )} (${DecimalFormat("0.00").format(
-              current.onlineMarketData.annualDividendYield * 100.0
-          )}%)"
+          "\n${context.getString(R.string.dividend_in_list)} ${
+            DecimalFormat(
+                "0.00"
+            ).format(
+                current.onlineMarketData.annualDividendRate
+            )
+          } (${
+            DecimalFormat("0.00").format(
+                current.onlineMarketData.annualDividendYield * 100.0
+            )
+          }%)"
       }
 
       if (current.stockDBdata.alertAbove > 0.0) {
-        assets += "\n${context.getString(R.string.alert_above_in_list)} ${DecimalFormat(
-            "0.####"
-        ).format(current.stockDBdata.alertAbove)}"
+        assets += "\n${context.getString(R.string.alert_above_in_list)} ${
+          DecimalFormat(
+              "0.####"
+          ).format(current.stockDBdata.alertAbove)
+        }"
       }
       if (current.stockDBdata.alertBelow > 0.0) {
-        assets += "\n${context.getString(R.string.alert_below_in_list)} ${DecimalFormat(
-            "0.####"
-        ).format(current.stockDBdata.alertBelow)}"
+        assets += "\n${context.getString(R.string.alert_below_in_list)} ${
+          DecimalFormat(
+              "0.####"
+          ).format(current.stockDBdata.alertBelow)
+        }"
       }
       if (current.events.isNotEmpty()) {
         val count = current.events.size
@@ -211,15 +246,19 @@ class StockRoomListAdapter internal constructor(
         current.events.forEach {
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-          assets += "\n${context.getString(
-              R.string.event_datetime_format, it.title, datetime
-          )}"
+          assets += "\n${
+            context.getString(
+                R.string.event_datetime_format, it.title, datetime
+            )
+          }"
         }
       }
       if (current.stockDBdata.notes.isNotEmpty()) {
-        assets += "\n${context.getString(
-            R.string.notes_in_list
-        )} ${current.stockDBdata.notes}"
+        assets += "\n${
+          context.getString(
+              R.string.notes_in_list
+          )
+        } ${current.stockDBdata.notes}"
       }
 
       holder.itemViewAssets.text = assets
@@ -246,9 +285,9 @@ class StockRoomListAdapter internal constructor(
     // for sorting when the online data is ready.
 
     //if (stockItemSet.allDataReady) {
-      submitList(stockItemSet.stockItems)
-      notifyDataSetChanged()
-    //}
+    submitList(stockItemSet.stockItems)
+    notifyDataSetChanged()
+    //}po
   }
 }
 

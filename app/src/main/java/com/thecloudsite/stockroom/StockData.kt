@@ -1,5 +1,6 @@
 package com.thecloudsite.stockroom
 
+import androidx.room.Ignore
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.squareup.moshi.Json
@@ -366,6 +367,8 @@ data class OnlineMarketData(
   @field:Json(
       name = "regularMarketChangePercent"
   ) var marketChangePercent: Double = 0.0,
+
+  var postMarketData: Boolean = false,
 
   var dividendDate: Long = 0,
   @field:Json(

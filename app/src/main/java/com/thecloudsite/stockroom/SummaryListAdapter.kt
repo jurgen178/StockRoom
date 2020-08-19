@@ -17,10 +17,12 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.summarylist_item.view.summaryListItemLayout
 import java.text.DecimalFormat
@@ -89,19 +91,31 @@ class SummaryListAdapter internal constructor(
     }
 
     if (current.onlineMarketData.marketPrice > 0.0) {
-      holder.summaryListItemMarketPrice.text =
-        if (current.onlineMarketData.marketPrice > 5.0) {
-          DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
-        } else {
-          DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
-        }
+      val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
+        DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
+      } else {
+        DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
+      }
 
-      holder.summaryListItemMarketChange.text = "${
-      DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)} (${DecimalFormat(
-          "0.00"
-      ).format(
-          current.onlineMarketData.marketChangePercent
-      )}%)"
+      val marketChange = "${
+        DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
+      } (${
+        DecimalFormat(
+            "0.00"
+        ).format(
+            current.onlineMarketData.marketChangePercent
+        )
+      }%)"
+
+      if (current.onlineMarketData.postMarketData) {
+        holder.summaryListItemMarketPrice.text = SpannableStringBuilder()
+            .italic { append(marketPrice) }
+        holder.summaryListItemMarketChange.text = SpannableStringBuilder()
+            .italic { append(marketChange) }
+      } else {
+        holder.summaryListItemMarketPrice.text = marketPrice
+        holder.summaryListItemMarketChange.text = marketChange
+      }
 
       var capital: Double = 0.0
 
@@ -139,8 +153,8 @@ class SummaryListAdapter internal constructor(
     // for sorting when the online data is ready.
 
     //if (stockItemSet.allDataReady) {
-      stockItems = stockItemSet.stockItems.toMutableList()
-      notifyDataSetChanged()
+    stockItems = stockItemSet.stockItems.toMutableList()
+    notifyDataSetChanged()
     //}
   }
 

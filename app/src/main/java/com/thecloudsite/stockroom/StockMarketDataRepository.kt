@@ -61,12 +61,15 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
         val onlineMarketDataResultList2 = onlineMarketDataResultList.map { onlineMarketData ->
           val onlineMarketData2: OnlineMarketData = onlineMarketData
 
+          onlineMarketData2.postMarketData = false
+
           if ((onlineMarketData.marketState == MarketState.POST.value
                   || onlineMarketData.marketState == MarketState.POSTPOST.value
                   || onlineMarketData.marketState == MarketState.PREPRE.value
                   || onlineMarketData.marketState == MarketState.CLOSED.value)
               && onlineMarketData.postMarketPrice > 0.0
           ) {
+            onlineMarketData2.postMarketData = true
             onlineMarketData2.marketPrice =
               onlineMarketData.postMarketPrice
             onlineMarketData2.marketChange =
@@ -77,6 +80,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
             if ((onlineMarketData.marketState == MarketState.PRE.value)
                 && onlineMarketData.preMarketPrice > 0.0
             ) {
+              onlineMarketData2.postMarketData = true
               onlineMarketData2.marketPrice =
                 onlineMarketData.preMarketPrice
               onlineMarketData2.marketChange =

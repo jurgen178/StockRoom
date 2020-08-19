@@ -111,8 +111,17 @@ interface StockRoomDao {
       if (stockDBdata.alertAbove == 0.0) {
         stockDBdata.alertAbove = stockData.alertAbove
       }
+      if (stockDBdata.data.isEmpty()) {
+        stockDBdata.data = stockData.data
+      }
       if (stockDBdata.notes.isEmpty()) {
         stockDBdata.notes = stockData.notes
+      }
+      if (stockDBdata.dividendNotes.isEmpty()) {
+        stockDBdata.dividendNotes = stockData.dividendNotes
+      }
+      if (stockDBdata.portfolio.isEmpty()) {
+        stockDBdata.portfolio = stockData.portfolio
       }
     }
 
