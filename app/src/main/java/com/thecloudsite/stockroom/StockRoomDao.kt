@@ -276,7 +276,7 @@ interface StockRoomDao {
     assetOld: Asset,
     assetNew: Asset
   ) {
-    // delete the exact asset inluding the id because duplicate entries are valid
+    // delete the exact asset including the id because duplicate entries are valid
     // events and dividends delete entries without matching the id to remove all duplicates
     deleteAsset(assetOld)
     addAsset(assetNew)

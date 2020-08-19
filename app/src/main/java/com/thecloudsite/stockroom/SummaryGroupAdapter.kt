@@ -277,14 +277,15 @@ class SummaryGroupAdapter internal constructor(
       0f
     }
 
-    val loss = if (totalLoss > 0f) {
+    // Possible rounding error
+    val loss = if (totalLoss > 0.0001f) {
       SpannableStringBuilder()
           .color(
               context.getColor(R.color.red)
           ) { bold { append("${DecimalFormat("0.00").format(totalLoss)}\n") } }
     } else {
       SpannableStringBuilder().bold {
-        append("${DecimalFormat("0.00").format(totalLoss)}\n")
+        append("0.00\n")
       }
     }
 
@@ -313,9 +314,7 @@ class SummaryGroupAdapter internal constructor(
       }
       else -> {
         SpannableStringBuilder().bold {
-          append(
-              "${DecimalFormat("0.00").format(total)}\n"
-          )
+          append("0.00\n")
         }
       }
     }
