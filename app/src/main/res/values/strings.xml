@@ -18,8 +18,8 @@ limitations under the License. -->
 
   <!-- Plurals -->
   <plurals name="events_in_list">
-    <item quantity="one">%1$d Event</item>
-    <item quantity="other">%1$d Events</item>
+    <item quantity="one">%1$d Event:</item>
+    <item quantity="other">%1$d Events:</item>
   </plurals>
   <plurals name="asset_added">
     <item quantity="one">%1$s stock for %2$s was added to the portfolio.</item>

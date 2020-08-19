@@ -15,8 +15,8 @@ limitations under the License. -->
 <resources>
   <!-- Plurals -->
   <plurals name="events_in_list">
-    <item quantity="one">%1$d Ereignis</item>
-    <item quantity="other">%1$d Ereignisse</item>
+    <item quantity="one">%1$d Ereignis:</item>
+    <item quantity="other">%1$d Ereignisse:</item>
   </plurals>
   <plurals name="asset_added">
     <item quantity="one">%1$s Aktie zum Kaufpreis von %2$s wurden dem Aktienbestand hinzugefügt.</item>

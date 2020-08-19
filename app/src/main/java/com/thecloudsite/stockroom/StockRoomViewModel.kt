@@ -150,11 +150,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   private val allMediatorData = MediatorLiveData<StockItemSet>()
 
-  private var dbDataValid = false
-  private var assetDataValid = false
-  private var eventDataValid = false
-  private var dividendDataValid = false
-  private var onlineDataValid = false
+  //private var dbDataValid = false
+  //private var assetDataValid = false
+  //private var eventDataValid = false
+  //private var dividendDataValid = false
+  //private var onlineDataValid = false
 
   private var onlineDataStatus: Pair<Long, MarketState> =
     Pair(onlineDataTimerDelay, MarketState.UNKNOWN)
@@ -376,7 +376,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         //if (dataStore.allDataReady) {
         updateOnlineDataManually()
         //}
-        dataValidate()
+        //dataValidate()
         allMediatorData.value = process(allData.value, true)
       }
     }
@@ -384,7 +384,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataAssets) { value ->
       if (value != null) {
         updateAssetsFromDB(value)
-        dataValidate()
+        //dataValidate()
         allMediatorData.value = process(allData.value, false)
       }
     }
@@ -392,7 +392,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataEvents) { value ->
       if (value != null) {
         updateEventsFromDB(value)
-        dataValidate()
+        //dataValidate()
         allMediatorData.value = process(allData.value, false)
       }
     }
@@ -401,7 +401,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataDividends) { value ->
       if (value != null) {
         updateDividendsFromDB(value)
-        dataValidate()
+        //dataValidate()
         allMediatorData.value = process(allData.value, false)
       }
     }
@@ -409,7 +409,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataOnline) { value ->
       if (value != null) {
         updateFromOnline(value)
-        dataValidate()
+        //dataValidate()
         allMediatorData.value = process(allData.value, true)
       }
     }
@@ -417,8 +417,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return allMediatorData
   }
 
-  private fun dataValidate() {
 /*
+  private fun dataValidate() {
     synchronized(dataStore)
     {
       if (!dataStore.allDataReady) {
@@ -432,13 +432,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
       }
     }
-*/
   }
+*/
 
   private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
     synchronized(dataStore)
     {
-      dbDataValid = true
+      //dbDataValid = true
 
       val stockDBdataPortfolios: HashSet<String> = hashSetOf("") // add Standard Portfolio
       val usedPortfolioSymbols: HashSet<String> = HashSet()
@@ -516,7 +516,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateAssetsFromDB(assets: List<Assets>) {
     synchronized(dataStore)
     {
-      assetDataValid = true
+      //assetDataValid = true
 
       assets.forEach { asset ->
         val symbol = asset.stockDBdata.symbol
@@ -562,7 +562,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateEventsFromDB(events: List<Events>) {
     synchronized(dataStore)
     {
-      eventDataValid = true
+      //eventDataValid = true
 
       events.forEach { event ->
         val symbol = event.stockDBdata.symbol
@@ -608,7 +608,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateDividendsFromDB(dividends: List<Dividends>) {
     synchronized(dataStore)
     {
-      dividendDataValid = true
+      //dividendDataValid = true
 
       dividends.forEach { dividend ->
         val symbol = dividend.stockDBdata.symbol
@@ -642,15 +642,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateFromOnline(onlineMarketDataList: List<OnlineMarketData>) {
     synchronized(dataStore)
     {
-      onlineDataValid = true
-
-      //val postMarket: Boolean = sharedPreferences.getBoolean("postmarket", true)
+      //onlineDataValid = true
+      //dataStore.allDataReady = true
 
       // Work off a read-only copy to avoid the java.util.ConcurrentModificationException
       // while the next update.
-
-      dataStore.allDataReady = true
-
       onlineMarketDataList.toImmutableList()
           .forEach { onlineMarketDataItem ->
             val symbol = onlineMarketDataItem.symbol

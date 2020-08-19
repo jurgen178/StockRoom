@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -105,6 +106,7 @@ class StockRoomListAdapter internal constructor(
 
       holder.itemViewSymbol.text = current.onlineMarketData.symbol
       holder.itemViewName.text = current.onlineMarketData.name
+
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
           DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
@@ -143,7 +145,7 @@ class StockRoomListAdapter internal constructor(
         it.shares
       }
 
-      var assets: String = ""
+      val assets = SpannableStringBuilder()
 
       var asset: Double = 0.0
       var capital: Double = 0.0
@@ -158,41 +160,43 @@ class StockRoomListAdapter internal constructor(
             it.shares * current.onlineMarketData.marketPrice
           }
 
-          assets += "${
-            DecimalFormat(
-                "0.00"
-            ).format(asset)
-          } ${
-            if (capital >= asset) {
-              "+"
-            } else {
-              "-"
-            }
-          } ${
-            DecimalFormat("0.00").format(
-                (capital - asset).absoluteValue
-            )
-          } = ${
-            DecimalFormat(
-                "0.00"
-            ).format(
-                capital
-            )
-          }"
+          assets.append(
+              "${
+                DecimalFormat(
+                    "0.00"
+                ).format(asset)
+              } ${
+                if (capital >= asset) {
+                  "+"
+                } else {
+                  "-"
+                }
+              } ${
+                DecimalFormat("0.00").format(
+                    (capital - asset).absoluteValue
+                )
+              } = "
+          )
+
+          assets.bold { append(DecimalFormat("0.00").format(capital)) }
 
           val capitalPercent = (capital - asset) * 100.0 / asset
-          assets += " (${
-            if (capitalPercent > 0.0) {
-              "+"
-            } else {
-              ""
-            }
-          }${DecimalFormat("0.00").format(capitalPercent)}%)"
+          assets.append(
+              " (${
+                if (capitalPercent > 0.0) {
+                  "+"
+                } else {
+                  ""
+                }
+              }${DecimalFormat("0.00").format(capitalPercent)}%)"
+          )
 
         } else {
-          assets += DecimalFormat(
-              "0.00"
-          ).format(asset)
+          assets.append(
+              DecimalFormat(
+                  "0.00"
+              ).format(asset)
+          )
         }
       }
 
@@ -209,55 +213,64 @@ class StockRoomListAdapter internal constructor(
       }
 
       if (current.onlineMarketData.annualDividendRate > 0.0) {
-        assets +=
-          "\n${context.getString(R.string.dividend_in_list)} ${
-            DecimalFormat(
-                "0.00"
-            ).format(
-                current.onlineMarketData.annualDividendRate
-            )
-          } (${
-            DecimalFormat("0.00").format(
-                current.onlineMarketData.annualDividendYield * 100.0
-            )
-          }%)"
+        assets.append(
+            "\n${context.getString(R.string.dividend_in_list)} ${
+              DecimalFormat(
+                  "0.00"
+              ).format(
+                  current.onlineMarketData.annualDividendRate
+              )
+            } (${
+              DecimalFormat("0.00").format(
+                  current.onlineMarketData.annualDividendYield * 100.0
+              )
+            }%)"
+        )
       }
 
       if (current.stockDBdata.alertAbove > 0.0) {
-        assets += "\n${context.getString(R.string.alert_above_in_list)} ${
-          DecimalFormat(
-              "0.####"
-          ).format(current.stockDBdata.alertAbove)
-        }"
+        assets.append(
+            "\n${context.getString(R.string.alert_above_in_list)} ${
+              DecimalFormat(
+                  "0.####"
+              ).format(current.stockDBdata.alertAbove)
+            }"
+        )
       }
       if (current.stockDBdata.alertBelow > 0.0) {
-        assets += "\n${context.getString(R.string.alert_below_in_list)} ${
-          DecimalFormat(
-              "0.####"
-          ).format(current.stockDBdata.alertBelow)
-        }"
+        assets.append(
+            "\n${context.getString(R.string.alert_below_in_list)} ${
+              DecimalFormat(
+                  "0.####"
+              ).format(current.stockDBdata.alertBelow)
+            }"
+        )
       }
       if (current.events.isNotEmpty()) {
         val count = current.events.size
-        val eventstr = context.resources.getQuantityString(R.plurals.events_in_list, count, count)
+        val eventStr = context.resources.getQuantityString(R.plurals.events_in_list, count, count)
 
-        assets += "\n$eventstr:"
+        assets.append("\n$eventStr")
         current.events.forEach {
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-          assets += "\n${
-            context.getString(
-                R.string.event_datetime_format, it.title, datetime
-            )
-          }"
+          assets.append(
+              "\n${
+                context.getString(
+                    R.string.event_datetime_format, it.title, datetime
+                )
+              }"
+          )
         }
       }
       if (current.stockDBdata.notes.isNotEmpty()) {
-        assets += "\n${
-          context.getString(
-              R.string.notes_in_list
-          )
-        } ${current.stockDBdata.notes}"
+        assets.append(
+            "\n${
+              context.getString(
+                  R.string.notes_in_list
+              )
+            } ${current.stockDBdata.notes}"
+        )
       }
 
       holder.itemViewAssets.text = assets
@@ -286,7 +299,7 @@ class StockRoomListAdapter internal constructor(
     //if (stockItemSet.allDataReady) {
     submitList(stockItemSet.stockItems)
     notifyDataSetChanged()
-    //}po
+    //}
   }
 }
 

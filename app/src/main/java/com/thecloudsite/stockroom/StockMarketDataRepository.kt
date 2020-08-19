@@ -31,8 +31,6 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
     val api: YahooApiMarketData? = api()
 
     if (symbols.isNotEmpty() && api != null) {
-      //Log.d("Handlers", "stockMarketDataRepository.getStockData()")
-
       val quoteResponse: YahooResponse? = try {
         safeApiCall(
             call = {
@@ -57,7 +55,8 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
       val postMarket: Boolean = SharedRepository.postMarket
 
       if (postMarket) {
-        // Transform onlinedata, replace market value with postmarket value
+        // Transform onlinedata
+        // replace market value with postmarket value
         val onlineMarketDataResultList2 = onlineMarketDataResultList.map { onlineMarketData ->
           val onlineMarketData2: OnlineMarketData = onlineMarketData
 
