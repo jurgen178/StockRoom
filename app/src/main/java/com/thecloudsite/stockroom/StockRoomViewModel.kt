@@ -71,6 +71,7 @@ data class EventJson(
 data class DividendJson(
   var amount: Float,
   val type: Int,
+  val cycle: Int,
   val paydate: Long,
   val exdate: Long
 )
@@ -947,7 +948,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           .toUpperCase(Locale.ROOT)
 
       if (isValidSymbol(symbol)) {
-        insert(symbol)
+        val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+        insert(symbol = symbol, portfolio = portfolio.trim())
         imported++
 
         // get assets
@@ -957,39 +959,57 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
           for (j in 0 until assetsObjArray.length()) {
             val assetsObj: JSONObject = assetsObjArray[j] as JSONObject
-            assets.add(
-                Asset(
-                    symbol = symbol,
-                    shares = assetsObj.getDouble("shares")
-                        .toFloat(),
-                    price = assetsObj.getDouble("price")
-                        .toFloat()
+            if (assetsObj.has("shares") && assetsObj.has("price")) {
+              val shares = assetsObj.getDouble("shares")
+                  .toFloat()
+              val price = assetsObj.getDouble("price")
+                  .toFloat()
+              if (shares > 0f && price > 0f) {
+                assets.add(
+                    Asset(
+                        symbol = symbol,
+                        shares = shares,
+                        price = price
+                    )
                 )
-            )
+              }
+            }
           }
 
-          updateAssets(symbol = symbol, assets = assets)
+          if (assets.isNotEmpty()) {
+            updateAssets(symbol = symbol, assets = assets)
+          }
         }
 
         if (jsonObj.has("position")) {
-          val position = jsonObj.getJSONObject("position")
-          val holdings = position.getJSONArray("holdings")
-          val assets: MutableList<Asset> = mutableListOf()
+          val positionObj = jsonObj.getJSONObject("position")
+          if (positionObj.has("holdings")) {
+            val holdings = positionObj.getJSONArray("holdings")
+            val assets: MutableList<Asset> = mutableListOf()
 
-          for (j in 0 until holdings.length()) {
-            val holding: JSONObject = holdings[j] as JSONObject
-            assets.add(
-                Asset(
-                    symbol = symbol,
-                    shares = holding.getDouble("shares")
-                        .toFloat(),
-                    price = holding.getDouble("price")
-                        .toFloat()
-                )
-            )
+            for (j in 0 until holdings.length()) {
+              val holdingObj: JSONObject = holdings[j] as JSONObject
+              if (holdingObj.has("shares") && holdingObj.has("price")) {
+                val shares = holdingObj.getDouble("shares")
+                    .toFloat()
+                val price = holdingObj.getDouble("price")
+                    .toFloat()
+                if (shares > 0f && price > 0f) {
+                  assets.add(
+                      Asset(
+                          symbol = symbol,
+                          shares = shares,
+                          price = price
+                      )
+                  )
+                }
+              }
+            }
+
+            if (assets.isNotEmpty()) {
+              updateAssets(symbol = symbol, assets = assets)
+            }
           }
-
-          updateAssets(symbol = symbol, assets = assets)
         }
 
         // get events
@@ -1008,18 +1028,35 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
           for (j in 0 until eventsObjArray.length()) {
             val eventsObj: JSONObject = eventsObjArray[j] as JSONObject
-            events.add(
-                Event(
-                    symbol = symbol,
-                    datetime = eventsObj.getLong("datetime"),
-                    note = eventsObj.getString("note"),
-                    title = eventsObj.getString("title"),
-                    type = eventsObj.getInt("type")
+
+            if (eventsObj.has("datetime") && eventsObj.has("title")) {
+              val title = eventsObj.getString("title")
+                  .trim()
+              if (title.isNotEmpty()) {
+                events.add(
+                    Event(
+                        symbol = symbol,
+                        datetime = eventsObj.getLong("datetime"),
+                        note = if (eventsObj.has("note")) {
+                          eventsObj.getString("note")
+                        } else {
+                          ""
+                        },
+                        title = title,
+                        type = if (eventsObj.has("type")) {
+                          eventsObj.getInt("type")
+                        } else {
+                          0
+                        }
+                    )
                 )
-            )
+              }
+            }
           }
 
-          updateEvents(symbol, events)
+          if (events.isNotEmpty()) {
+            updateEvents(symbol, events)
+          }
         }
 
         // get dividends
@@ -1028,25 +1065,45 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
           for (j in 0 until dividendsObjArray.length()) {
             val dividendsObj: JSONObject = dividendsObjArray[j] as JSONObject
-            addDividend(
-                Dividend(
-                    symbol = symbol,
-                    amount = dividendsObj.getDouble("amount")
-                        .toFloat(),
-                    type = dividendsObj.getInt("type"),
-                    paydate = dividendsObj.getLong("paydate"),
-                    exdate = dividendsObj.getLong("exdate")
+
+            if (dividendsObj.has("amount") && dividendsObj.has("paydate")) {
+              val amount = dividendsObj.getDouble("amount")
+                  .toFloat()
+
+              if (amount > 0f) {
+                addDividend(
+                    Dividend(
+                        symbol = symbol,
+                        amount = amount,
+                        type = if (dividendsObj.has("type")) {
+                          dividendsObj.getInt("type")
+                        } else {
+                          0
+                        },
+                        cycle = if (dividendsObj.has("cycle")) {
+                          dividendsObj.getInt("cycle")
+                        } else {
+                          DividendCycle.Quarterly.value
+                        },
+                        paydate = dividendsObj.getLong("paydate"),
+                        exdate = if (dividendsObj.has("exdate")) {
+                          dividendsObj.getLong("exdate")
+                        } else {
+                          0L
+                        }
+                    )
                 )
-            )
+              }
+            }
           }
         }
 
         // get properties
         if (jsonObj.has("portfolio")) {
-          val portfolio = jsonObj.getString("portfolio")
+          val portfolioStr = jsonObj.getString("portfolio")
               .trim()
           if (portfolio.isNotEmpty()) {
-            setPortfolio(symbol = symbol, portfolio = portfolio)
+            setPortfolio(symbol = symbol, portfolio = portfolioStr)
           }
         }
 
@@ -1066,7 +1123,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
         if (jsonObj.has("groupName")) {
-          groupName = jsonObj.getString("groupName")
+          groupName = jsonObj.getString("groupName").trim()
           if (groupColor != 0) {
             setGroup(symbol = symbol, color = groupColor, name = groupName)
           }
@@ -1241,10 +1298,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     // Limit import to 100.
     var imported: Int = 0
+    val portfolio = SharedRepository.selectedPortfolio.value ?: ""
     assetItems.forEach { (symbol, assets) ->
       if (imported < 100 && isValidSymbol(symbol)) {
         imported++
-        insert(symbol)
+        insert(symbol = symbol, portfolio = portfolio)
         // updateAssets filters out empty shares@price
         updateAssets(symbol = symbol, assets = assets)
       }
@@ -1270,6 +1328,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val symbols = text.split("[ ,;\r\n\t]".toRegex())
 
     var imported = 0
+    val portfolio = SharedRepository.selectedPortfolio.value ?: ""
     symbols.map { symbol ->
       symbol.replace("\"", "")
           .toUpperCase(Locale.ROOT)
@@ -1282,7 +1341,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         .take(100)
         .forEach { symbol ->
           if (isValidSymbol(symbol)) {
-            insert(symbol)
+            insert(symbol = symbol, portfolio = portfolio)
             imported++
           }
         }
@@ -1324,7 +1383,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
     } catch (e: Exception) {
       Toast.makeText(
-          context, getApplication<Application>().getString(R.string.import_error), Toast.LENGTH_LONG
+          context, getApplication<Application>().getString(R.string.import_error),
+          Toast.LENGTH_LONG
       )
           .show()
       Log.d("Import JSON error", "Exception: $e")
@@ -1410,7 +1470,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 amount = validateFloat(dividend.amount),
                 exdate = dividend.exdate,
                 paydate = dividend.paydate,
-                type = dividend.type
+                type = dividend.type,
+                cycle = dividend.cycle
             )
           }
       )
@@ -1451,9 +1512,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
    * Launching a new coroutine to insert the data in a non-blocking way
    */
   // viewModelScope.launch(Dispatchers.IO) {
-  fun insert(symbol: String) = scope.launch {
+  fun insert(
+    symbol: String,
+    portfolio: String
+  ) = scope.launch {
     if (symbol.isNotEmpty()) {
-      repository.insert(StockDBdata(symbol.toUpperCase(Locale.ROOT)))
+      repository.insert(
+          StockDBdata(
+              symbol = symbol.toUpperCase(Locale.ROOT),
+              portfolio = portfolio
+          )
+      )
     }
   }
 
@@ -1677,7 +1746,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.addEvent(event)
   }
 
-  fun insert(
+  fun addAsset(
     symbol: String,
     shares: Float,
     price: Float
@@ -1777,6 +1846,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     scope.launch {
       repository.deleteEvents(symbol.toUpperCase(Locale.ROOT))
     }
+
+  fun resetPortfolios() {
+    logDebug("Reset all portfolios.")
+
+    SharedRepository.selectedPortfolio.postValue("")
+    SharedRepository.portfolios.postValue(hashSetOf(""))
+
+    scope.launch {
+      repository.resetPortfolios()
+    }
+  }
 
   fun deleteAll() {
     logDebug("Deleted all data.")

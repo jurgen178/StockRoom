@@ -225,6 +225,26 @@ class SettingsActivity : AppCompatActivity(),
           }
       }
 
+      val buttonResetPortfolios: Preference? = findPreference("reset_portfolios")
+      if (buttonResetPortfolios != null) {
+        buttonResetPortfolios.onPreferenceClickListener =
+          OnPreferenceClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.reset_portfolios_title)
+                .setMessage(getString(R.string.reset_portfolios_confirm))
+                .setPositiveButton(R.string.reset) { _, _ ->
+                  stockRoomViewModel.resetPortfolios()
+
+                  // Leave settings activity.
+                  activity?.onBackPressed()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
+
+            true
+          }
+      }
+
       val buttonDeleteAll: Preference? = findPreference("delete_all")
       if (buttonDeleteAll != null) {
         buttonDeleteAll.onPreferenceClickListener =

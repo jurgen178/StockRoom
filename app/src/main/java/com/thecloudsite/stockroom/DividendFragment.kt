@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -41,6 +42,11 @@ import java.util.Locale
 enum class DividendType(val value: Int) {
   Received(0),
   Announced(1),
+}
+
+enum class DividendCycle(val value: Int) {
+  Monthly(12),
+  Quarterly(4),
 }
 
 // Enable scrolling by disable parent scrolling
@@ -95,6 +101,10 @@ class DividendFragment : Fragment() {
     datePickerDividendDateView.updateDate(
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
+
+    val textViewDividendCycleSpinner = dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
+    textViewDividendCycleSpinner.setSelection(dividendCycleToSelection(dividend.cycle))
+
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
@@ -127,12 +137,14 @@ class DividendFragment : Fragment() {
               )
               val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
-              if (dividend.amount != dividendAmount || dividend.exdate != 0L || dividend.paydate != seconds) {
+              val cycle = dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+
+              if (dividend.amount != dividendAmount || dividend.exdate != 0L || dividend.paydate != seconds || dividend.cycle != cycle) {
                 stockRoomViewModel.deleteDividend(dividend)
                 stockRoomViewModel.addDividend(
                     Dividend(
                         symbol = symbol, amount = dividendAmount, exdate = 0L, paydate = seconds,
-                        type = DividendType.Received.value
+                        type = DividendType.Received.value, cycle = cycle
                     )
                 )
               }
@@ -225,6 +237,10 @@ class DividendFragment : Fragment() {
     datePickerDividendExDateView.updateDate(
         localDateTimeEx.year, localDateTimeEx.month.value - 1, localDateTimeEx.dayOfMonth
     )
+
+    val textViewDividendCycleSpinner = dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
+    textViewDividendCycleSpinner.setSelection(dividendCycleToSelection(dividend.cycle))
+
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
@@ -263,13 +279,15 @@ class DividendFragment : Fragment() {
               )
               val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
+              val cycle = dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+
               if (dividend.amount != dividendAmount || dividend.exdate != secondsEx || dividend.paydate != seconds) {
                 stockRoomViewModel.deleteDividend(dividend)
                 stockRoomViewModel.addDividend(
                     Dividend(
                         symbol = symbol, amount = dividendAmount, exdate = secondsEx,
                         paydate = seconds,
-                        type = DividendType.Announced.value
+                        type = DividendType.Announced.value, cycle = cycle
                     )
                 )
               }
@@ -421,6 +439,7 @@ class DividendFragment : Fragment() {
 
     assetChangeLiveData.observe(viewLifecycleOwner, Observer { item ->
       updateAssetChange(item)
+      dividendReceivedListAdapter.updateAssetData(item)
     })
 
     addDividendReceivedButton.setOnClickListener {
@@ -440,8 +459,8 @@ class DividendFragment : Fragment() {
       val datePickerDividendDateView =
         dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
 
-      datePickerDividendDateView
-
+      val textViewDividendCycleSpinner = dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
+      textViewDividendCycleSpinner.setSelection(dividendCycleToSelection(DividendCycle.Quarterly.value))
 
       builder.setView(dialogView)
           // Add action buttons
@@ -475,10 +494,12 @@ class DividendFragment : Fragment() {
                 )
                 val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
+                val cycle = dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+
                 stockRoomViewModel.addDividend(
                     Dividend(
                         symbol = symbol, amount = dividendAmount, exdate = 0L, paydate = seconds,
-                        type = DividendType.Received.value
+                        type = DividendType.Received.value, cycle = cycle
                     )
                 )
 
@@ -523,6 +544,9 @@ class DividendFragment : Fragment() {
       val datePickerDividendExDateView =
         dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate)
 
+      val textViewDividendCycleSpinner = dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
+      textViewDividendCycleSpinner.setSelection(dividendCycleToSelection(DividendCycle.Quarterly.value))
+
       builder.setView(dialogView)
           // Add action buttons
           .setPositiveButton(
@@ -561,11 +585,13 @@ class DividendFragment : Fragment() {
                 )
                 val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
+                val cycle = dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+
                 stockRoomViewModel.addDividend(
                     Dividend(
                         symbol = symbol, amount = dividendAmount, exdate = secondsEx,
                         paydate = seconds,
-                        type = DividendType.Announced.value
+                        type = DividendType.Announced.value, cycle = cycle
                     )
                 )
 

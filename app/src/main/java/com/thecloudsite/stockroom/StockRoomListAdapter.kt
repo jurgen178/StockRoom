@@ -192,7 +192,7 @@ class StockRoomListAdapter internal constructor(
           ).format(
               current.onlineMarketData.annualDividendRate
           )} (${DecimalFormat("0.00").format(
-              current.onlineMarketData.annualDividendYield * 100
+              current.onlineMarketData.annualDividendYield * 100f
           )}%)"
       }
 

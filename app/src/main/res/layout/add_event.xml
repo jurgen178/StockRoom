@@ -36,7 +36,7 @@
           app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/eventHeadline"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
           />
 
       <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +64,7 @@
           app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayout3"
           />
 
       <com.google.android.material.textfield.TextInputLayout

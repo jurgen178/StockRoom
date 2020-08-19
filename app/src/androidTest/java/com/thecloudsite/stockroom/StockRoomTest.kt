@@ -395,7 +395,8 @@ var events: List<Event>
                 notes = "notes1"
             ),
             listOf(Asset(symbol = "s1", shares = 1f, price = 2f)),
-            listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L))
+            listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
+            listOf(Dividend(symbol = "s1", amount = 0f, type = 0, cycle = 0, exdate = 0L, paydate = 0L))
         )
     )
     stockItems.add(
@@ -406,7 +407,8 @@ var events: List<Event>
                 notes = "notes2"
             ),
             listOf(Asset(symbol = "s2", shares = 3f, price = 4f)),
-            listOf(Event(symbol = "s2", type = 2, title = "ti2", note = "te2", datetime = 2L))
+            listOf(Event(symbol = "s2", type = 2, title = "ti2", note = "te2", datetime = 2L)),
+            listOf(Dividend(symbol = "s1", amount = 0f, type = 0, cycle = 0, exdate = 0L, paydate = 0L))
         )
     )
 

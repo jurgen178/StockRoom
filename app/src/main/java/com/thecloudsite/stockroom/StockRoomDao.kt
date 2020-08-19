@@ -170,6 +170,9 @@ interface StockRoomDao {
     setStockGroupColor(symbol = symbol, color = color)
   }
 
+  @Query("UPDATE stock_table SET portfolio = :portfolio")
+  fun resetPortfolios(portfolio: String = "")
+
   @Query("UPDATE stock_table SET portfolio = :portfolio WHERE symbol = :symbol")
   fun setPortfolio(
     symbol: String,
@@ -336,12 +339,13 @@ interface StockRoomDao {
 //  @Delete
 //  fun deleteDividend(dividend: Dividend)
   @Query(
-      "DELETE FROM dividend_table WHERE symbol = :symbol AND amount = :amount AND type = :type AND paydate = :paydate AND exdate = :exdate"
+      "DELETE FROM dividend_table WHERE symbol = :symbol AND amount = :amount AND type = :type AND cycle = :cycle AND paydate = :paydate AND exdate = :exdate"
   )
   fun deleteDividend(
     symbol: String,
     amount: Float,
     type: Int,
+    cycle: Int,
     paydate: Long,
     exdate: Long
   )
@@ -352,6 +356,7 @@ interface StockRoomDao {
 //  @Query("SELECT * FROM dividend_table WHERE title = :title LIMIT 1")
 //  suspend fun findMovieByTitle(title: String?): Dividend?
 
+  @Transaction
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getDividends(symbol: String): Dividends
 

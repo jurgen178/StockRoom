@@ -51,6 +51,11 @@ limitations under the License. -->
     <item>Gruppe 5</item>
   </string-array>
 
+  <string-array name="dividend_cycles">
+    <item>Monatlich</item>
+    <item>Vierteljährlich</item>
+  </string-array>
+
   <!-- Preference Titles -->
   <string name="title_activity_settings">Einstellungen</string>
   <string name="general_header">Allgemein</string>
@@ -140,7 +145,7 @@ limitations under the License. -->
   <string name="asset_summary_text">Gesamtaktienbestand</string>
   <string name="title_activity_add">Aktien hinzufügen</string>
   <string name="title_activity_stockdata">Aktiendetails</string>
-  <string name="add_stock">Aktie \'%1$s\' wurde dem Standard-Portfolio hinzugefügt.</string>
+  <string name="add_stock">Aktie \'%1$s\' wurde hinzugefügt.</string>
   <string name="current_events">Ereignisse</string>
   <string name="event_title">Ereignis</string>
   <string name="event_note">Details</string>
@@ -153,7 +158,6 @@ limitations under the License. -->
   <string name="delete_event">Ereignis löschen</string>
   <string name="delete_event_confirm">Sind Sie sicher, dass Sie das Ereignis \'%1$s\' am %2$s entfernen möchten?</string>
   <string name="delete_event_msg">Ereignis \'%1$s\' am %2$s wurde entfernt.</string>
-  <string name="overview">Gesamtübersicht</string>
   <string name="group_name">Gruppe \'%1$s\'</string>
   <string name="note_added">Anmerkung \'%1$s\' wurde hinzugefügt.</string>
   <string name="invalid_entry">Ungültge Eingabe</string>
@@ -234,6 +238,8 @@ limitations under the License. -->
   <string name="example_List_delete_all">\n\n***\nWählen sie in den Einstellungen die Funktion \'Alle Daten entfernen\', um diese Beispielliste zu löschen.\n***</string>
   <string name="example_List_note">Beispielanmerkung.\n1234 abcd.\nLetzte Zeile der Anmerkung.</string>
   <string name="update">Aktualisieren</string>
+  <string name="overview_headline_standard_portfolio">Gesamtübersicht Standard-Portfolio</string>
+  <string name="overview_headline_portfolio">Gesamtübersicht Portfolio \'%1$s\'</string>
   <string name="standard_portfolio">Standard-Portfolio</string>
   <string name="menu_portfolio_title">Portfolio auswählen</string>
   <string name="portfolio_header">Portfolio</string>
@@ -265,4 +271,9 @@ limitations under the License. -->
   <string name="totaldividend_payed">Ausgezahlte Dividende</string>
   <string name="totaldividend_payedYTD">Ausgezahlte Dividende YTD</string>
   <string name="no_online_dividend_data">Keine online Dividendendaten</string>
+  <string name="reset_portfolios_title">Portfolios zurücksetzen</string>
+  <string name="reset_portfolios_desc">Setzt alle Portfolios zum Standard-Portfolio zurück.</string>
+  <string name="reset_portfolios_confirm">Sind Sie sich sicher, dass Sie alle Portfolios zum Standard-Portfolio zurücksetzen wollen?</string>
+  <string name="reset">Zurücksetzen</string>
+  <string name="dividend_cycle">Dividendenzyklus</string>
 </resources>

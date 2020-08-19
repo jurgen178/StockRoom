@@ -130,7 +130,7 @@ class DividendAnnouncedListAdapter internal constructor(
   internal fun updateDividends(dividends: Dividends) {
     // Headline placeholder
     dividendList =
-      mutableListOf(Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0))
+      mutableListOf(Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0, cycle = 0))
     dividendList.addAll(dividends.dividends.filter { dividend ->
       dividend.type == DividendType.Announced.value
     }

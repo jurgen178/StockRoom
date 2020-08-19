@@ -54,6 +54,11 @@ limitations under the License. -->
     <item>Group 5</item>
   </string-array>
 
+  <string-array name="dividend_cycles">
+    <item>Monthly</item>
+    <item>Quarterly</item>
+  </string-array>
+
   <!-- Preference Titles -->
   <string name="title_activity_settings">Settings</string>
   <string name="general_header">General</string>
@@ -143,7 +148,7 @@ limitations under the License. -->
   <string name="asset_summary_text">Total assets</string>
   <string name="title_activity_add">Add stocks</string>
   <string name="title_activity_stockdata">Stock details</string>
-  <string name="add_stock">Added stock \'%1$s\' to the standard portfolio.</string>
+  <string name="add_stock">Added stock \'%1$s\'.</string>
   <string name="current_events">Events</string>
   <string name="event_title">Event</string>
   <string name="event_note">Details</string>
@@ -156,7 +161,6 @@ limitations under the License. -->
   <string name="delete_event">Delete event</string>
   <string name="delete_event_confirm">Are you sure to delete the event \'%1$s\' at %2$s ?</string>
   <string name="delete_event_msg">Event \'%1$s\' at %2$s is deleted.</string>
-  <string name="overview">Overview</string>
   <string name="group_name">Group \'%1$s\'</string>
   <string name="note_added">Note \'%1$s\' added.</string>
   <string name="invalid_entry">Invalid input</string>
@@ -237,6 +241,8 @@ limitations under the License. -->
   <string name="example_List_delete_all">\n\n***\nUse the \'Delete all\' function in the settings to clear this example list.\n***</string>
   <string name="example_List_note">Sample note.\n1234 abcd.\nLast line of the note.</string>
   <string name="update">Update</string>
+  <string name="overview_headline_standard_portfolio">Overview Standard Portfolio</string>
+  <string name="overview_headline_portfolio">Overview Portfolio \'%1$s\'</string>
   <string name="standard_portfolio">Standard Portfolio</string>
   <string name="menu_portfolio_title">Select Portfolio</string>
   <string name="portfolio_header">Portfolio</string>
@@ -268,4 +274,9 @@ limitations under the License. -->
   <string name="totaldividend_payed">Dividend paid</string>
   <string name="totaldividend_payedYTD">Dividend paid YTD</string>
   <string name="no_online_dividend_data">No online dividend data</string>
+  <string name="reset_portfolios_title">Reset Portfolios</string>
+  <string name="reset_portfolios_desc">Reset all Portfolios back to the Standard Portfolio.</string>
+  <string name="reset_portfolios_confirm">Are you sure to reset all Portfolios back to the Standard Portfolio?</string>
+  <string name="reset">Zurücksetzen</string>
+  <string name="dividend_cycle">Dividend Cycle</string>
 </resources>

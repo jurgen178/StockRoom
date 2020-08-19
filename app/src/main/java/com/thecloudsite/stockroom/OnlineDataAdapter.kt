@@ -149,7 +149,7 @@ class OnlineDataAdapter internal constructor(
         OnlineData(
             desc = context.getString(R.string.onlinedata_annualDividendYield),
             text = "${DecimalFormat("0.00##").format(
-                onlineMarketData.annualDividendYield * 100
+                onlineMarketData.annualDividendYield * 100f
             )}%"
         )
     )

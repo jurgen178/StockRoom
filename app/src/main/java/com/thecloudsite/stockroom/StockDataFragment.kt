@@ -531,7 +531,7 @@ class StockDataFragment : Fragment() {
               "${DecimalFormat("0.00##").format(
                   onlineMarketData.annualDividendRate
               )} (${DecimalFormat("0.00##").format(
-                  onlineMarketData.annualDividendYield * 100
+                  onlineMarketData.annualDividendYield * 100f
               )}%)"
             } else {
               ""

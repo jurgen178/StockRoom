@@ -293,6 +293,12 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun resetPortfolios() {
+    stockRoomDao.resetPortfolios()
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun deleteAll() {
     stockRoomDao.deleteAll()
   }
@@ -310,6 +316,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
         symbol = dividend.symbol,
         amount = dividend.amount,
         type = dividend.type,
+        cycle = dividend.cycle,
         paydate = dividend.paydate,
         exdate = dividend.exdate
     )

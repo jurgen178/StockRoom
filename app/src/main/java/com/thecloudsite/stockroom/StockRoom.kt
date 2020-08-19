@@ -121,6 +121,7 @@ data class Dividend(
   var symbol: String,
   var amount: Float,
   val type: Int,
+  val cycle: Int,
   val paydate: Long,
   val exdate: Long
 )

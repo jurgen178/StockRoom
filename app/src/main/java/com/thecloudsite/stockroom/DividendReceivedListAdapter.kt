@@ -45,7 +45,11 @@ class DividendReceivedListAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var dividendList = mutableListOf<Dividend>()
 
-  inner class DividendReceivedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  private var data: AssetsLiveData? = null
+  private var dividends: Dividends? = null
+  private var marketValue: Float = 0f
+
+  class DividendReceivedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
       dividend: Dividend,
       clickListenerUpdate: (Dividend) -> Unit
@@ -131,7 +135,21 @@ class DividendReceivedListAdapter internal constructor(
         holder.bindUpdate(current, clickListenerUpdate)
         holder.bindDelete(null, current, null, clickListenerDelete)
 
-        holder.textViewDividendReceivedAmount.text = DecimalFormat("0.00##").format(current.amount)
+        val dividendYield =
+          if ((current.cycle == DividendCycle.Monthly.value || current.cycle == DividendCycle.Quarterly.value)
+              && current.amount > 0f && marketValue > 0f
+          ) {
+            "\n${
+              DecimalFormat("0.00").format(
+                  (current.cycle * 100f * current.amount / marketValue)
+              )
+            }% p. a."
+          } else {
+            ""
+          }
+        holder.textViewDividendReceivedAmount.text =
+          DecimalFormat("0.00##").format(current.amount) + dividendYield
+
         val datetime: LocalDateTime =
           LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
         holder.textViewDividendReceivedDate.text =
@@ -148,27 +166,62 @@ class DividendReceivedListAdapter internal constructor(
     }
   }
 
-  internal fun updateDividends(dividends: Dividends) {
-    // Headline placeholder
-    dividendList =
-      mutableListOf(Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0))
-    dividendList.addAll(dividends.dividends.filter { dividend ->
-      dividend.type == DividendType.Received.value
-    }
-        .sortedBy { dividend ->
-          dividend.paydate
-        })
+  internal fun updateAssetData(_data: AssetsLiveData) {
+    data = _data
+    updateData()
+  }
 
-    val dividendTotal = dividendList.sumByDouble {
-      it.amount.toDouble()
-    }
-        .toFloat()
+  internal fun updateDividends(_dividends: Dividends) {
+    dividends = _dividends
+    updateData()
+  }
 
-    // Summary
-    val symbol: String = dividendList.firstOrNull()?.symbol ?: ""
-    dividendList.add(
-        Dividend(symbol = symbol, amount = dividendTotal, exdate = 0L, paydate = 0L, type = 0)
-    )
+  internal fun updateData() {
+    if (data != null) {
+      marketValue = if (data!!.assets != null) {
+        val totalShares = data!!.assets?.assets?.sumByDouble {
+          it.shares.toDouble()
+        }
+            ?.toFloat() ?: 0f
+
+        if (totalShares > 0f) {
+          val marketPrice: Float = data!!.onlineMarketData?.marketPrice ?: 0f
+          totalShares * marketPrice
+        } else {
+          0f
+        }
+      } else {
+        0f
+      }
+    }
+
+    if (dividends != null) {
+      // Headline placeholder
+      dividendList =
+        mutableListOf(
+            Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
+        )
+      dividendList.addAll(dividends!!.dividends.filter { dividend ->
+        dividend.type == DividendType.Received.value
+      }
+          .sortedBy { dividend ->
+            dividend.paydate
+          })
+
+      val dividendTotal = dividendList.sumByDouble {
+        it.amount.toDouble()
+      }
+          .toFloat()
+
+      // Summary
+      val symbol: String = dividendList.firstOrNull()?.symbol ?: ""
+      dividendList.add(
+          Dividend(
+              symbol = symbol, amount = dividendTotal, exdate = 0L, paydate = 0L, type = 0,
+              cycle = 0
+          )
+      )
+    }
 
     notifyDataSetChanged()
   }

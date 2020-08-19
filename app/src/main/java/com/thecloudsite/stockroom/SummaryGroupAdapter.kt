@@ -88,7 +88,13 @@ class SummaryGroupAdapter internal constructor(
   private fun updateData() {
     data.clear()
     val (text1, text2) = getTotal(0, true, stockItemsList)
-    data.add(SummaryData(context.getString(R.string.overview), text1, text2, Color.WHITE))
+    val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+    val overview = if (portfolio.isEmpty()) {
+      context.getString(R.string.overview_headline_standard_portfolio)
+    } else {
+      context.getString(R.string.overview_headline_portfolio, portfolio)
+    }
+    data.add(SummaryData(overview, text1, text2, Color.WHITE))
 
     // Get all groups.
     val groupSet = HashSet<Int>()
@@ -350,7 +356,7 @@ class SummaryGroupAdapter internal constructor(
               } (${
                 DecimalFormat("0.00")
                     .format(
-                        totalDividendChange * 100
+                        totalDividendChange * 100f
                     )
               }%)\n"
           )

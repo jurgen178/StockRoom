@@ -38,6 +38,13 @@
         />
 
     <Preference
+        app:key="reset_portfolios"
+        app:summary="@string/reset_portfolios_desc"
+        app:title="@string/reset_portfolios_title"
+        app:icon="@drawable/ic_action_reset_portfolios"
+        />
+
+    <Preference
         app:key="delete_all"
         app:summary="@string/delete_all_desc"
         app:title="@string/delete_all_title"

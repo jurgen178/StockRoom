@@ -35,9 +35,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/dividend_amount"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
+            app:layout_constraintEnd_toStartOf="@+id/guideline1"
             app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addUpdateDividendHeadline"
             />
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout1"
@@ -45,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewDividendAmount"
+            app:layout_constraintStart_toEndOf="@+id/guideline1"
             app:layout_constraintTop_toBottomOf="@+id/addUpdateDividendHeadline"
             >
           <com.google.android.material.textfield.TextInputEditText
@@ -63,7 +64,29 @@
               />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+      <TextView
+          android:id="@+id/textViewDividendCycle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:text="@string/dividend_cycle"
+          app:layout_constraintBottom_toBottomOf="@+id/textViewDividendCycleSpinner"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/guideline1"
+          app:layout_constraintTop_toTopOf="@+id/textViewDividendCycleSpinner"
+          />
+
+      <Spinner
+          android:id="@+id/textViewDividendCycleSpinner"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="32dp"
+          android:entries="@array/dividend_cycles"
+          app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
+          />
+      <TextView
             android:id="@+id/textViewDividendExDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,7 +94,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/dividend_exdate"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDividendCycleSpinner"
             />
         <com.thecloudsite.stockroom.CustomDatePicker
             android:id="@+id/datePickerDividendExDate"
@@ -104,6 +127,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewDividendDate"
             />
+
+      <androidx.constraintlayout.widget.Guideline
+          android:id="@+id/guideline1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 

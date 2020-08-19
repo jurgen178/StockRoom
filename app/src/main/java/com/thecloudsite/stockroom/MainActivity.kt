@@ -441,8 +441,9 @@ class MainActivity : AppCompatActivity() {
                 isValidSymbol(symbol)
               }
 
+          val portfolio = SharedRepository.selectedPortfolio.value ?: ""
           symbolList.forEach { symbol ->
-            stockRoomViewModel.insert(symbol)
+            stockRoomViewModel.insert(symbol = symbol, portfolio = portfolio)
 
             val msg = getString(R.string.add_stock, symbol)
             stockRoomViewModel.logDebug("AddActivity '$msg'")

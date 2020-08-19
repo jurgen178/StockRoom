@@ -11,6 +11,28 @@ import androidx.core.text.color
 import java.text.DecimalFormat
 import java.util.Locale
 
+
+/*
+enum class DividendCycle(val value: Int) {
+  Monthly(12),
+  Quarterly(4),
+}
+*/
+
+fun dividendSelectionToCycle(selection: Int): Int {
+  return if (selection == 0)
+    DividendCycle.Monthly.value
+  else
+    DividendCycle.Quarterly.value
+}
+
+fun dividendCycleToSelection(cycle: Int): Int {
+  return if (cycle == DividendCycle.Monthly.value)
+    0
+  else
+    1
+}
+
 fun isValidSymbol(symbol: String): Boolean {
   val symbolUpper = symbol.toUpperCase(Locale.ROOT)
 
@@ -71,22 +93,28 @@ fun getAssetChange(
           .toFloat()
 
       val change = capital - asset
-      changeStr += "${if (change > 0f) {
-        "+"
-      } else {
-        ""
-      }}${DecimalFormat(
-          "0.00"
-      ).format(
-          change
-      )}"
+      changeStr += "${
+        if (change > 0f) {
+          "+"
+        } else {
+          ""
+        }
+      }${
+        DecimalFormat(
+            "0.00"
+        ).format(
+            change
+        )
+      }"
 
       val changePercent = change * 100f / asset
-      changeStr += " (${if (changePercent > 0f) {
-        "+"
-      } else {
-        ""
-      }}${DecimalFormat("0.00").format(changePercent)}%)"
+      changeStr += " (${
+        if (changePercent > 0f) {
+          "+"
+        } else {
+          ""
+        }
+      }${DecimalFormat("0.00").format(changePercent)}%)"
 
       val assetChangeColor = when {
         capital > asset -> {
