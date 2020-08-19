@@ -132,7 +132,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   val allProperties: LiveData<List<StockDBdata>>
   private val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
-  val allDividends: LiveData<List<Dividends>>
+  private val allDividends: LiveData<List<Dividends>>
   val allAssetTable: LiveData<List<Asset>>
   val allEventTable: LiveData<List<Event>>
   val allDividendTable: LiveData<List<Dividend>>
@@ -224,7 +224,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     SharedRepository.notifications = notifications
   }
 
-  suspend fun getOnlineData(prevOnlineDataDelay: Long): Pair<Long, MarketState> {
+  private suspend fun getOnlineData(prevOnlineDataDelay: Long): Pair<Long, MarketState> {
     val stockdataResult = getStockData()
     val marketState = stockdataResult.first
     val errorMsg = stockdataResult.second
@@ -791,18 +791,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         SortMode.ByAssets -> {
           stockItemSet.stockItems.sortedByDescending { item ->
             if (item.onlineMarketData.marketPrice > 0.0) {
-              item.assets.sumByDouble { it.shares.toDouble() * (item.onlineMarketData.marketPrice) }
+              item.assets.sumByDouble { it.shares * (item.onlineMarketData.marketPrice) }
             } else {
-              item.assets.sumByDouble { it.shares.toDouble() * it.price }
+              item.assets.sumByDouble { it.shares * it.price }
             }
           }
         }
         SortMode.ByProfit -> {
           stockItemSet.stockItems.sortedByDescending { item ->
             if (item.onlineMarketData.marketPrice > 0.0) {
-              item.assets.sumByDouble { it.shares.toDouble() * (item.onlineMarketData.marketPrice - it.price) }
+              item.assets.sumByDouble { it.shares * (item.onlineMarketData.marketPrice - it.price) }
             } else {
-              item.assets.sumByDouble { it.shares.toDouble() * it.price }
+              item.assets.sumByDouble { it.shares * it.price }
             }
           }
         }

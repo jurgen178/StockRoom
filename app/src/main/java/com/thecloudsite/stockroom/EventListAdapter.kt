@@ -44,7 +44,7 @@ class EventListAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var eventList = mutableListOf<Event>()
 
-  inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
       event: Event,
       clickListenerUpdate: (Event) -> Unit

@@ -1,6 +1,5 @@
 package com.thecloudsite.stockroom
 
-import androidx.room.Ignore
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.squareup.moshi.Json

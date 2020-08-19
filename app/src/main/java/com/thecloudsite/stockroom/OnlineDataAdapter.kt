@@ -37,7 +37,7 @@ class OnlineDataAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
 
-  inner class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val itemViewOnlineDataDesc: TextView = itemView.findViewById(R.id.textViewOnlineDataDesc)
     val itemViewOnlineData: TextView = itemView.findViewById(R.id.textViewOnlineData)
   }

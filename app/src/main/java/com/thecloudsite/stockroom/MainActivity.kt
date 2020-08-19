@@ -71,8 +71,6 @@ class MainActivity : AppCompatActivity() {
 
   companion object {
 
-    private const val TAG = "MainActivity"
-
     // Remote Config keys
     private const val STOCKMARKETDATA_BASEURL = "stockMarketDataBaseUrl"
     private const val STOCKCHARTDATA_BASEURL = "stockChartDataBaseUrl"

@@ -3,7 +3,6 @@ package com.thecloudsite.stockroom
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

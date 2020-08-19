@@ -43,7 +43,7 @@ class UpdateGroupAdapter internal constructor(
   private var stockDBdataList: List<StockDBdata> = emptyList()
   private var groupDatalist: List<GroupData> = emptyList()
 
-  inner class UpdateGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class UpdateGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
       group: GroupData,
       clickListenerUpdate: (GroupData) -> Unit

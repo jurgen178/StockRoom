@@ -48,7 +48,7 @@ class SummaryGroupAdapter internal constructor(
   private var stockItemsList: List<StockItem> = emptyList()
   private var groupList: List<Group> = emptyList()
 
-  inner class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val summaryItemDataDesc: TextView = itemView.findViewById(R.id.summaryItemDataDesc)
     val summaryItemData1: TextView = itemView.findViewById(R.id.summaryItemData1)
     val summaryItemData2: TextView = itemView.findViewById(R.id.summaryItemData2)
@@ -372,10 +372,8 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.totaldividend_payedYTD)} ")
         .bold {
           append(
-              "${
-                DecimalFormat("0.00")
-                    .format(totalDividendPayedYTD)
-              }"
+              DecimalFormat("0.00")
+                  .format(totalDividendPayedYTD)
           )
         }
 

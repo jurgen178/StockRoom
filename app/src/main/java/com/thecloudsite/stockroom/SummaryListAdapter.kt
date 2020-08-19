@@ -35,7 +35,7 @@ class SummaryListAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var stockItems: MutableList<StockItem> = mutableListOf()
 
-  inner class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit

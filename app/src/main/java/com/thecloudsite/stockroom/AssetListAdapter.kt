@@ -41,7 +41,7 @@ class AssetListAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var assetList = mutableListOf<Asset>()
 
-  inner class AssetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class AssetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
       asset: Asset,
       clickListenerUpdate: (Asset) -> Unit

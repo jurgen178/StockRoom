@@ -35,7 +35,7 @@ class ListAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = listOf<DebugData>()
 
-  inner class DebugDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class DebugDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val debugItemTimeStamp: TextView = itemView.findViewById(R.id.debugItemTimeStamp)
     val debugItemData: TextView = itemView.findViewById(R.id.debugItemData)
   }

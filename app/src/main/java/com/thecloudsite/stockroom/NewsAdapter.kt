@@ -33,7 +33,7 @@ import java.time.format.FormatStyle.MEDIUM
 const val news_type_yahoo: Int = 0
 const val news_type_google: Int = 1
 
-val excludeUrlList = arrayListOf<String>(
+val excludeUrlList = arrayListOf(
     "newsdaemon.com",
     "newsheater.com",
     "investorsobserver.com",
@@ -76,7 +76,7 @@ class NewsAdapter(
   private var newsDataList = listOf<NewsData>()
 
   // https://medium.com/@ivancse.58/android-and-kotlin-recyclerview-with-multiple-view-types-65285a254393
-  inner class YahooNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+  class YahooNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
     override fun bind(item: NewsData) {
     }
 
@@ -86,7 +86,7 @@ class NewsAdapter(
     val yahooNewsItemText: TextView = itemView.findViewById(R.id.yahooNewsItemText)
   }
 
-  inner class GoogleNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+  class GoogleNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
     override fun bind(item: NewsData) {
     }
 

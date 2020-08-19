@@ -44,7 +44,7 @@ class DividendAnnouncedListAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var dividendList = mutableListOf<Dividend>()
 
-  inner class DividendAnnouncedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class DividendAnnouncedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
       dividend: Dividend,
       clickListenerUpdate: (Dividend) -> Unit

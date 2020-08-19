@@ -72,9 +72,9 @@ dependencies {
 
   // Add the Firebase SDK for Google Analytics.
   implementation 'com.google.firebase:firebase-config-ktx:19.2.0'
-  implementation 'com.google.firebase:firebase-analytics-ktx:17.4.4'
+  implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
   // Add the Firebase Crashlytics SDK.
-  implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
+  implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
   // Add the dependency for the Performance Monitoring library
   implementation 'com.google.firebase:firebase-perf:19.0.8'
 
@@ -120,7 +120,7 @@ dependencies {
 
   // Lifecycle components
   implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
-  kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
+  implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.archLifecycleVersion"
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.archLifecycleVersion"
 
   // Kotlin components
