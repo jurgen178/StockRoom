@@ -86,7 +86,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.textViewRange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewSymbol
 import kotlinx.android.synthetic.main.fragment_stockdata.updateNotesButton
 import okhttp3.internal.toHexString
-import java.lang.Float.min
+import java.lang.Double.min
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -175,8 +175,8 @@ class StockDataFragment : Fragment() {
   private var stockDataEntries: List<StockDataEntry>? = null
   private var symbol: String = ""
 
-  private var alertAbove: Float = 0f
-  private var alertBelow: Float = 0f
+  private var alertAbove: Double = 0.0
+  private var alertBelow: Double = 0.0
 
   lateinit var onlineDataHandler: Handler
 
@@ -241,17 +241,17 @@ class StockDataFragment : Fragment() {
           val priceText = addPriceView.text.toString()
               .trim()
           if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
-            var price = 0f
-            var shares = 0f
+            var price = 0.0
+            var shares = 0.0
             var valid = true
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
               price = numberFormat.parse(priceText)!!
-                  .toFloat()
+                  .toDouble()
             } catch (e: Exception) {
               valid = false
             }
-            if (price <= 0f) {
+            if (price <= 0.0) {
               Toast.makeText(
                   requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
               )
@@ -261,11 +261,11 @@ class StockDataFragment : Fragment() {
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
               shares = numberFormat.parse(sharesText)!!
-                  .toFloat()
+                  .toDouble()
             } catch (e: Exception) {
               valid = false
             }
-            if (shares <= 0f) {
+            if (shares <= 0.0) {
               Toast.makeText(
                   requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
               )
@@ -277,10 +277,10 @@ class StockDataFragment : Fragment() {
               if (asset.shares != assetnew.shares || asset.price != assetnew.price) {
                 stockRoomViewModel.updateAsset2(asset, assetnew)
                 val count: Int = when {
-                  shares == 1f -> {
+                  shares == 1.0 -> {
                     1
                   }
-                  shares > 1f -> {
+                  shares > 1.0 -> {
                     shares.toInt() + 1
                   }
                   else -> {
@@ -334,10 +334,10 @@ class StockDataFragment : Fragment() {
           .show()
     } else if (asset != null) {
       val count: Int = when {
-        asset.shares == 1f -> {
+        asset.shares == 1.0 -> {
           1
         }
-        asset.shares > 1f -> {
+        asset.shares > 1.0 -> {
           asset.shares.toInt() + 1
         }
         else -> {
@@ -506,9 +506,9 @@ class StockDataFragment : Fragment() {
     onlineDataView.adapter = onlineDataAdapter
 
     val portrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-    val largeFont1 = resources.configuration.fontScale >= 1.15f // 0.85, 1, 1.15, 1.3
+    val largeFont1 = resources.configuration.fontScale >= 1.15 // 0.85, 1, 1.15, 1.3
     val largeDisplay1 = resources.configuration.densityDpi >= 440 // 374, 440, 490, 540
-    val largeFont2 = resources.configuration.fontScale >= 1f // 0.85, 1, 1.15, 1.3
+    val largeFont2 = resources.configuration.fontScale >= 1.0 // 0.85, 1, 1.15, 1.3
     val largeDisplay2 = resources.configuration.densityDpi >= 540 // 374, 440, 490, 540
     val large = largeFont1 && largeDisplay1 || largeFont2 && largeDisplay2
     val spanCount = if (large) {
@@ -536,11 +536,11 @@ class StockDataFragment : Fragment() {
 
           /*
           val dividendText =
-            if (onlineMarketData.annualDividendRate > 0f && onlineMarketData.annualDividendYield > 0f) {
+            if (onlineMarketData.annualDividendRate > 0.0 && onlineMarketData.annualDividendYield > 0.0) {
               "${DecimalFormat("0.00##").format(
                   onlineMarketData.annualDividendRate
               )} (${DecimalFormat("0.00##").format(
-                  onlineMarketData.annualDividendYield * 100f
+                  onlineMarketData.annualDividendYield * 100.0
               )}%)"
             } else {
               ""
@@ -889,20 +889,20 @@ class StockDataFragment : Fragment() {
     alertAbove = stockDBdata.alertAbove
     alertBelow = stockDBdata.alertBelow
 
-    if (alertAbove > 0f && alertBelow > 0f && alertBelow >= alertAbove) {
-      alertAbove = 0f
-      alertBelow = 0f
+    if (alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove) {
+      alertAbove = 0.0
+      alertBelow = 0.0
     }
 
     alertAboveInputEditText.setText(
-        if (alertAbove > 0f) {
+        if (alertAbove > 0.0) {
           DecimalFormat("0.####").format(alertAbove)
         } else {
           ""
         }
     )
     alertBelowInputEditText.setText(
-        if (alertBelow > 0f) {
+        if (alertBelow > 0.0) {
           DecimalFormat("0.####").format(alertBelow)
         } else {
           ""
@@ -945,10 +945,10 @@ class StockDataFragment : Fragment() {
 
     splitAssetsButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val totalShares = assets?.assets?.sumByDouble { it.shares.toDouble() }
-          ?.toFloat() ?: 0f
+      val totalShares = assets?.assets?.sumByDouble { it.shares }
+          ?: 0.0
 
-      if (totalShares == 0f) {
+      if (totalShares == 0.0) {
         Toast.makeText(
             requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
         )
@@ -969,14 +969,14 @@ class StockDataFragment : Fragment() {
               val splitRatioText = splitRatioView.text.toString()
                   .trim()
               if (splitRatioText.isNotEmpty()) {
-                var splitRatio = 0f
+                var splitRatio = 0.0
                 var valid = true
                 try {
                   val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                   splitRatio = numberFormat.parse(splitRatioText)!!
-                      .toFloat()
+                      .toDouble()
 
-                  if (splitRatio <= 0f || splitRatio > 20) {
+                  if (splitRatio <= 0.0 || splitRatio > 20.0) {
                     valid = false
                   }
 
@@ -985,8 +985,8 @@ class StockDataFragment : Fragment() {
                 }
 
                 if (valid && assets?.assets != null) {
-                  var minShares = Float.MAX_VALUE
-                  var minPrice = Float.MAX_VALUE
+                  var minShares = Double.MAX_VALUE
+                  var minPrice = Double.MAX_VALUE
                   assets.assets.forEach { asset ->
                     asset.shares *= splitRatio
                     asset.price /= splitRatio
@@ -994,13 +994,13 @@ class StockDataFragment : Fragment() {
                     minPrice = min(asset.price, minPrice)
                   }
 
-                  if (minShares >= 0.1f && minPrice >= 0.01f) {
+                  if (minShares >= 0.1 && minPrice >= 0.01) {
                     stockRoomViewModel.updateAssets(
                         symbol = symbol, assets = assets.assets
                     )
                   } else {
                     Toast.makeText(
-                        requireContext(), if (minShares >= 0.1f) {
+                        requireContext(), if (minShares >= 0.1) {
                       getString(R.string.split_min_price)
                     } else {
                       getString(R.string.split_min_shares)
@@ -1051,17 +1051,17 @@ class StockDataFragment : Fragment() {
             val priceText = addPriceView.text.toString()
                 .trim()
             if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
-              var price = 0f
-              var shares = 0f
+              var price = 0.0
+              var shares = 0.0
               var valid = true
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                 price = numberFormat.parse(priceText)!!
-                    .toFloat()
+                    .toDouble()
               } catch (e: Exception) {
                 valid = false
               }
-              if (price <= 0f) {
+              if (price <= 0.0) {
                 Toast.makeText(
                     requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
                 )
@@ -1071,11 +1071,11 @@ class StockDataFragment : Fragment() {
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                 shares = numberFormat.parse(sharesText)!!
-                    .toFloat()
+                    .toDouble()
               } catch (e: Exception) {
                 valid = false
               }
-              if (shares <= 0f) {
+              if (shares <= 0.0) {
                 Toast.makeText(
                     requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
                 )
@@ -1087,10 +1087,10 @@ class StockDataFragment : Fragment() {
                     Asset(symbol = symbol, shares = shares, price = price)
                 )
                 val count: Int = when {
-                  shares == 1f -> {
+                  shares == 1.0 -> {
                     1
                   }
-                  shares > 1f -> {
+                  shares > 1.0 -> {
                     shares.toInt() + 1
                   }
                   else -> {
@@ -1124,10 +1124,10 @@ class StockDataFragment : Fragment() {
 
     removeAssetButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val totalShares = assets?.assets?.sumByDouble { it.shares.toDouble() }
-          ?.toFloat() ?: 0f
+      val totalShares = assets?.assets?.sumByDouble { it.shares }
+          ?: 0.0
 
-      if (totalShares == 0f) {
+      if (totalShares == 0.0) {
         Toast.makeText(
             requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
         )
@@ -1148,24 +1148,21 @@ class StockDataFragment : Fragment() {
               val removeSharesText = removeSharesView.text.toString()
                   .trim()
               if (removeSharesText.isNotEmpty()) {
-                var shares = 0f
+                var shares = 0.0
                 var valid = true
                 try {
                   val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                   shares = numberFormat.parse(removeSharesText)!!
-                      .toFloat()
+                      .toDouble()
                 } catch (e: Exception) {
                   valid = false
                 }
 
                 if (valid) {
                   // Avoid wrong data due to rounding errors.
-                  val epsilon = 0.000001f
                   val totalPaidPrice = assets?.assets?.sumByDouble {
-                    it.shares.toDouble() * it.price
-                        .toDouble()
-                  }
-                      ?.toFloat() ?: 0f
+                    it.shares * it.price
+                  } ?: 0.0
                   val averagePrice = totalPaidPrice / totalShares
 
                   if (shares > (totalShares + epsilon)) {
@@ -1177,8 +1174,8 @@ class StockDataFragment : Fragment() {
                         .show()
                   } else {
                     //assetSummary.removeAllViews()
-                    val newTotal: Float = totalPaidPrice - shares * averagePrice
-                    val shareAdjustment: Float = newTotal / totalPaidPrice
+                    val newTotal: Double = totalPaidPrice - shares * averagePrice
+                    val shareAdjustment: Double = newTotal / totalPaidPrice
 
                     assets?.assets?.forEach { asset ->
                       asset.shares *= shareAdjustment
@@ -1282,7 +1279,7 @@ class StockDataFragment : Fragment() {
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                 alertAbove = numberFormat.parse(s.toString())
-                    .toFloat()
+                    .toDouble()
               } catch (e: NumberFormatException) {
                 alertAboveInputLayout.error = getString(R.string.invalid_number)
                 valid = false
@@ -1290,11 +1287,11 @@ class StockDataFragment : Fragment() {
                 valid = false
               }
 
-              if (valid && alertAbove == 0f) {
+              if (valid && alertAbove == 0.0) {
                 alertAboveInputLayout.error = getString(R.string.invalid_number)
                 valid = false
               }
-              if (valid && alertAbove > 0f && alertBelow > 0f) {
+              if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
                 if (valid && alertBelow >= alertAbove) {
                   alertAboveInputLayout.error = getString(R.string.alert_below_error)
                   valid = false
@@ -1302,7 +1299,7 @@ class StockDataFragment : Fragment() {
               }
 
               if (!valid) {
-                alertAbove = 0f
+                alertAbove = 0.0
               }
             }
           }
@@ -1333,7 +1330,7 @@ class StockDataFragment : Fragment() {
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                 alertBelow = numberFormat.parse(s.toString())
-                    .toFloat()
+                    .toDouble()
               } catch (e: NumberFormatException) {
                 alertBelowInputLayout.error = getString(R.string.invalid_number)
                 valid = false
@@ -1342,11 +1339,11 @@ class StockDataFragment : Fragment() {
               }
             }
 
-            if (valid && alertBelow == 0f) {
+            if (valid && alertBelow == 0.0) {
               alertBelowInputLayout.error = getString(R.string.invalid_number)
               valid = false
             }
-            if (valid && alertAbove > 0f && alertBelow > 0f) {
+            if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
               if (valid && alertBelow >= alertAbove) {
                 alertBelowInputLayout.error = getString(R.string.alert_above_error)
                 valid = false
@@ -1354,7 +1351,7 @@ class StockDataFragment : Fragment() {
             }
 
             if (!valid) {
-              alertBelow = 0f
+              alertBelow = 0.0
             }
           }
 
@@ -1462,7 +1459,7 @@ class StockDataFragment : Fragment() {
 
   private fun updateHeader(onlineMarketData: OnlineMarketData?) {
     var name: String = ""
-    var marketPrice: Float = 0f
+    var marketPrice: Double = 0.0
     var marketChange: String = ""
 
     if (onlineMarketData != null) {
@@ -1488,15 +1485,13 @@ class StockDataFragment : Fragment() {
     assets: List<Asset>
   ): String {
     val sharesTotal = assets.sumByDouble {
-      it.shares.toDouble()
+      it.shares
     }
-        .toFloat()
 
-    if (sharesTotal > 0f) {
+    if (sharesTotal > 0.0) {
       val assetTotal = assets.sumByDouble {
-        it.shares.toDouble() * it.price
+        it.shares * it.price
       }
-          .toFloat()
 
       return getString(
           R.string.bought_for, DecimalFormat("0.00##").format(assetTotal / sharesTotal)
@@ -1522,7 +1517,7 @@ class StockDataFragment : Fragment() {
 
   private fun updateAlerts() {
     // If both are set, below value must be smaller than the above value.
-    if (!(alertAbove > 0f && alertBelow > 0f && alertBelow >= alertAbove)) {
+    if (!(alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove)) {
       if (stockDBdata.alertAbove != alertAbove) {
         stockRoomViewModel.updateAlertAbove(symbol, alertAbove)
       }

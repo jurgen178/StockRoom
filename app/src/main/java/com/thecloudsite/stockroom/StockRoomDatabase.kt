@@ -101,16 +101,16 @@ abstract class StockRoomDatabase : RoomDatabase() {
                 // can be null if it is not in the json
                 groupColor = stockItemJson.groupColor ?: 0,
                 notes = stockItemJson.notes ?: "",
-                alertBelow = stockItemJson.alertBelow ?: 0f,
-                alertAbove = stockItemJson.alertAbove ?: 0f
+                alertBelow = stockItemJson.alertBelow ?: 0.0,
+                alertAbove = stockItemJson.alertAbove ?: 0.0
             )
         )
 
         stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets.map { asset ->
           Asset(
               symbol = symbol,
-              shares = asset.shares ?: 0f,
-              price = asset.price ?: 0f
+              shares = asset.shares ?: 0.0,
+              price = asset.price ?: 0.0
           )
         })
 
@@ -139,27 +139,27 @@ abstract class StockRoomDatabase : RoomDatabase() {
 
         data class AssetPreset(
           val symbol: String,
-          val asset: Float,
-          val gain: Float,
+          val asset: Double,
+          val gain: Double,
           val color: Int
         )
 
         val assets: List<AssetPreset> = listOf(
-            AssetPreset("AAPL", 6500f, 5240f, Color.BLUE),
-            AssetPreset("AMZN", 6500f, 280f, Color.MAGENTA),
-            AssetPreset("ANY", 3700f, 2470f, Color.YELLOW),
-            AssetPreset("BA", 5500f, -640f, Color.GREEN),
-            AssetPreset("CVX", 4500f, -508f, Color.rgb(0, 191, 255)),
-            AssetPreset("DIS", 1000f, -320f, Color.GREEN),
-            AssetPreset("FB", 1000f, 710f, Color.MAGENTA),
-            AssetPreset("GE", 10000f, 8490f, Color.BLACK),
-            AssetPreset("IBM", 1000f, 1460f, Color.YELLOW),
-            AssetPreset("MSFT", 5200f, 1450f, Color.rgb(173, 216, 230)),
-            AssetPreset("QCOM", 4200f, 240f, Color.rgb(0, 191, 255)),
-            AssetPreset("RM", 3600f, 1110f, Color.RED),
-            AssetPreset("T", 1000f, 2010f, Color.MAGENTA),
-            AssetPreset("TSLA", 7000f, 2060f, Color.rgb(72, 209, 204)),
-            AssetPreset("^GSPC", 0f, 0f, 0)
+            AssetPreset("AAPL", 6500.0, 5240.0, Color.BLUE),
+            AssetPreset("AMZN", 6500.0, 280.0, Color.MAGENTA),
+            AssetPreset("ANY", 3700.0, 2470.0, Color.YELLOW),
+            AssetPreset("BA", 5500.0, -640.0, Color.GREEN),
+            AssetPreset("CVX", 4500.0, -508.0, Color.rgb(0, 191, 255)),
+            AssetPreset("DIS", 1000.0, -320.0, Color.GREEN),
+            AssetPreset("FB", 1000.0, 710.0, Color.MAGENTA),
+            AssetPreset("GE", 10000.0, 8490.0, Color.BLACK),
+            AssetPreset("IBM", 1000.0, 1460.0, Color.YELLOW),
+            AssetPreset("MSFT", 5200.0, 1450.0, Color.rgb(173, 216, 230)),
+            AssetPreset("QCOM", 4200.0, 240.0, Color.rgb(0, 191, 255)),
+            AssetPreset("RM", 3600.0, 1110.0, Color.RED),
+            AssetPreset("T", 1000.0, 2010.0, Color.MAGENTA),
+            AssetPreset("TSLA", 7000.0, 2060.0, Color.rgb(72, 209, 204)),
+            AssetPreset("^GSPC", 0.0, 0.0, 0)
         )
 
         val symbols = assets.map { asset ->
@@ -181,12 +181,12 @@ abstract class StockRoomDatabase : RoomDatabase() {
           }
 
           if (data != null) {
-            val assetvalue = asset.asset + ((0..1000).random() - 500).toFloat() / 100
-            val gainvalue = asset.gain + ((0..1000).random() - 500).toFloat() / 100
+            val assetvalue = asset.asset + ((0..1000).random() - 500).toDouble() / 100
+            val gainvalue = asset.gain + ((0..1000).random() - 500).toDouble() / 100
 
             val price = data.marketPrice * (1 - gainvalue / assetvalue)
             val shares = ((assetvalue - gainvalue) / price).roundToInt()
-                .toFloat()
+                .toDouble()
             val price2 = assetvalue / shares
 
             stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price2))
@@ -208,17 +208,17 @@ abstract class StockRoomDatabase : RoomDatabase() {
 
 /*
 stockRoomDao.insert(StockDBdata(symbol = "AAPL", groupColor = Color.BLUE))
-stockRoomDao.addAsset(Asset(symbol = "AAPL", shares = 20f, price = 100f))
+stockRoomDao.addAsset(Asset(symbol = "AAPL", shares = 20.0, price = 100.0))
 stockRoomDao.updateNotes(symbol = "AAPL", notes = context.getString(R.string.example_List_delete_all))
-stockRoomDao.insert(StockDBdata(symbol = "AMZN", groupColor = Color.BLUE, alertAbove = 4000f))
-stockRoomDao.addAsset(Asset(symbol = "AMZN", shares = 2f, price = 3000f))
+stockRoomDao.insert(StockDBdata(symbol = "AMZN", groupColor = Color.BLUE, alertAbove = 4000.0))
+stockRoomDao.addAsset(Asset(symbol = "AMZN", shares = 2.0, price = 3000.0))
 stockRoomDao.updateNotes(symbol = "AMZN", notes = context.getString(R.string.example_List_note))
-stockRoomDao.insert(StockDBdata(symbol = "BA", groupColor = Color.YELLOW, alertBelow = 100f))
-stockRoomDao.addAsset(Asset(symbol = "BA", shares = 30f, price = 200f))
+stockRoomDao.insert(StockDBdata(symbol = "BA", groupColor = Color.YELLOW, alertBelow = 100.0))
+stockRoomDao.addAsset(Asset(symbol = "BA", shares = 30.0, price = 200.0))
 stockRoomDao.insert(StockDBdata(symbol = "CVX", groupColor = Color.YELLOW))
-stockRoomDao.addAsset(Asset(symbol = "CVX", shares = 40f, price = 100f))
+stockRoomDao.addAsset(Asset(symbol = "CVX", shares = 40.0, price = 100.0))
 stockRoomDao.insert(StockDBdata(symbol = "DIS", groupColor = Color.YELLOW))
-stockRoomDao.addAsset(Asset(symbol = "DIS", shares = 15f, price = 150f))
+stockRoomDao.addAsset(Asset(symbol = "DIS", shares = 15.0, price = 150.0))
 stockRoomDao.addEvent(
     Event(
         symbol = "DIS", type = 0, datetime = 1619870400, title = "Earnings report",
@@ -226,17 +226,17 @@ stockRoomDao.addEvent(
     )
 )
 stockRoomDao.insert(StockDBdata(symbol = "FB", groupColor = Color.RED))
-stockRoomDao.addAsset(Asset(symbol = "FB", shares = 12f, price = 120f))
+stockRoomDao.addAsset(Asset(symbol = "FB", shares = 12.0, price = 120.0))
 stockRoomDao.insert(StockDBdata(symbol = "IBM", groupColor = Color.RED))
-stockRoomDao.addAsset(Asset(symbol = "IBM", shares = 20f, price = 200f))
+stockRoomDao.addAsset(Asset(symbol = "IBM", shares = 20.0, price = 200.0))
 stockRoomDao.insert(StockDBdata(symbol = "MSFT", groupColor = Color.BLUE))
-stockRoomDao.addAsset(Asset(symbol = "MSFT", shares = 20f, price = 150f))
+stockRoomDao.addAsset(Asset(symbol = "MSFT", shares = 20.0, price = 150.0))
 stockRoomDao.insert(StockDBdata(symbol = "QCOM", groupColor = Color.GREEN))
-stockRoomDao.addAsset(Asset(symbol = "QCOM", shares = 30f, price = 100f))
+stockRoomDao.addAsset(Asset(symbol = "QCOM", shares = 30.0, price = 100.0))
 stockRoomDao.insert(StockDBdata(symbol = "T", groupColor = Color.rgb(72, 209, 204)))
-stockRoomDao.addAsset(Asset(symbol = "T", shares = 100f, price = 10f))
+stockRoomDao.addAsset(Asset(symbol = "T", shares = 100.0, price = 10.0))
 stockRoomDao.insert(StockDBdata(symbol = "TSLA", groupColor = Color.rgb(72, 209, 204)))
-stockRoomDao.addAsset(Asset(symbol = "TSLA", shares = 5f, price = 1000f))
+stockRoomDao.addAsset(Asset(symbol = "TSLA", shares = 5.0, price = 1000.0))
 stockRoomDao.insert(StockDBdata(symbol = "^GSPC", groupColor = 0))
  */
     }

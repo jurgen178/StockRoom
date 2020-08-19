@@ -359,30 +359,30 @@ data class OnlineMarketData(
     // Market values will be set with the post market values when the aftermarket option is set.
   @field:Json(
       name = "regularMarketPrice"
-  ) var marketPrice: Float = 0f,
+  ) var marketPrice: Double = 0.0,
   @field:Json(
       name = "regularMarketChange"
-  ) var marketChange: Float = 0f,
+  ) var marketChange: Double = 0.0,
   @field:Json(
       name = "regularMarketChangePercent"
-  ) var marketChangePercent: Float = 0f,
+  ) var marketChangePercent: Double = 0.0,
 
   var dividendDate: Long = 0,
   @field:Json(
       name = "trailingAnnualDividendRate"
-  ) var annualDividendRate: Float = 0f,
+  ) var annualDividendRate: Double = 0.0,
   @field:Json(
       name = "trailingAnnualDividendYield"
-  ) var annualDividendYield: Float = 0f,
+  ) var annualDividendYield: Double = 0.0,
 
   var marketState: String = "", // "marketState":"PREPRE" or "marketState":"PRE" or "marketState": "REGULAR" or "marketState":"POST" or "marketState":"POSTPOST" or "marketState":"CLOSED"
-  var preMarketChangePercent: Float = 0f,
-  var preMarketPrice: Float = 0f,
-  var preMarketChange: Float = 0f,
+  var preMarketChangePercent: Double = 0.0,
+  var preMarketPrice: Double = 0.0,
+  var preMarketChange: Double = 0.0,
 
-  var postMarketChangePercent: Float = 0f,
-  var postMarketPrice: Float = 0f,
-  var postMarketChange: Float = 0f,
+  var postMarketChangePercent: Double = 0.0,
+  var postMarketPrice: Double = 0.0,
+  var postMarketChange: Double = 0.0,
 
   var region: String = "",
   var language: String = "",
@@ -390,16 +390,16 @@ data class OnlineMarketData(
   var messageBoardId: String = "",
   var financialCurrency: String = "",
   var sharesOutstanding: Long = 0L,
-  var fiftyDayAverage: Float = 0f,
+  var fiftyDayAverage: Double = 0.0,
   var fiftyTwoWeekRange: String = "",
   var marketCap: Long = 0L,
   var regularMarketDayRange: String = "",
   var regularMarketVolume: Long = 0L,
-  var regularMarketPreviousClose: Float = 0f,
-  var regularMarketOpen: Float = 0f,
-  var forwardPE: Float = 0f,
-  var epsTrailingTwelveMonths: Float = 0f,
-  var epsForward: Float = 0f
+  var regularMarketPreviousClose: Double = 0.0,
+  var regularMarketOpen: Double = 0.0,
+  var forwardPE: Double = 0.0,
+  var epsTrailingTwelveMonths: Double = 0.0,
+  var epsForward: Double = 0.0
 )
 
 enum class MarketState(val value: String) {
@@ -517,22 +517,22 @@ data class YahooChartIndicators(
 
 @JsonClass(generateAdapter = true)
 data class YahooChartQuoteEntries(
-  var high: MutableList<Float> = mutableListOf(),
-  var low: MutableList<Float> = mutableListOf(),
-  var open: MutableList<Float> = mutableListOf(),
-  var close: MutableList<Float> = mutableListOf()
-//  var volume: MutableList<Float> = mutableListOf()
+  var high: MutableList<Double> = mutableListOf(),
+  var low: MutableList<Double> = mutableListOf(),
+  var open: MutableList<Double> = mutableListOf(),
+  var close: MutableList<Double> = mutableListOf()
+//  var volume: MutableList<Double> = mutableListOf()
 )
 
 class StockDataEntry(
   var dateTimePoint: Long,
-  x: Float,
-  high: Float,
-  low: Float,
-  open: Float,
-  close: Float
+  x: Double,
+  high: Double,
+  low: Double,
+  open: Double,
+  close: Double
 ) {
-  var candleEntry: CandleEntry = CandleEntry(x, high, low, open, close)
+  var candleEntry: CandleEntry = CandleEntry(x.toFloat(), high.toFloat(), low.toFloat(), open.toFloat(), close.toFloat())
 }
 
 class DataPoint(

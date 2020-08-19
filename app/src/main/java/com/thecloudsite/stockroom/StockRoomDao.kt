@@ -105,10 +105,10 @@ interface StockRoomDao {
       if (stockDBdata.groupColor == 0) {
         stockDBdata.groupColor = stockData.groupColor
       }
-      if (stockDBdata.alertBelow == 0f) {
+      if (stockDBdata.alertBelow == 0.0) {
         stockDBdata.alertBelow = stockData.alertBelow
       }
-      if (stockDBdata.alertAbove == 0f) {
+      if (stockDBdata.alertAbove == 0.0) {
         stockDBdata.alertAbove = stockData.alertAbove
       }
       if (stockDBdata.notes.isEmpty()) {
@@ -200,13 +200,13 @@ interface StockRoomDao {
   @Query("UPDATE stock_table SET alert_above = :alertAbove WHERE symbol = :symbol")
   fun updateAlertAbove(
     symbol: String,
-    alertAbove: Float
+    alertAbove: Double
   )
 
   @Query("UPDATE stock_table SET alert_below = :alertBelow WHERE symbol = :symbol")
   fun updateAlertBelow(
     symbol: String,
-    alertBelow: Float
+    alertBelow: Double
   )
 
   @Query("UPDATE stock_table SET notes = :notes WHERE symbol = :symbol")
@@ -249,8 +249,8 @@ interface StockRoomDao {
   @Query("DELETE FROM asset_table WHERE symbol = :symbol AND shares = :shares AND price = :price")
   fun deleteAsset(
     symbol: String,
-    shares: Float,
-    price: Float
+    shares: Double,
+    price: Double
   )
 
   @Query("DELETE FROM asset_table WHERE symbol = :symbol")
@@ -288,7 +288,6 @@ interface StockRoomDao {
     assets: List<Asset>
   ) {
     deleteAssets(symbol)
-    val epsilon = 0.000001f
     assets.forEach { asset ->
       if (asset.shares > epsilon && asset.price > epsilon) {
         addAsset(asset)
@@ -411,7 +410,7 @@ interface StockRoomDao {
   )
   fun deleteDividend(
     symbol: String,
-    amount: Float,
+    amount: Double,
     type: Int,
     cycle: Int,
     paydate: Long,

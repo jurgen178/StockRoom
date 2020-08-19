@@ -57,8 +57,8 @@ import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 
 data class AssetJson(
-  var shares: Float,
-  val price: Float
+  var shares: Double,
+  val price: Double
 )
 
 data class EventJson(
@@ -69,7 +69,7 @@ data class EventJson(
 )
 
 data class DividendJson(
-  var amount: Float,
+  var amount: Double,
   val type: Int,
   val cycle: Int,
   val paydate: Long,
@@ -85,8 +85,8 @@ data class StockItemJson
   val groupName: String,
   val notes: String,
   var dividendNotes: String,
-  val alertAbove: Float,
-  val alertBelow: Float,
+  val alertAbove: Double,
+  val alertBelow: Double,
   var assets: List<AssetJson>,
   var events: List<EventJson>,
   var dividends: List<DividendJson>
@@ -669,7 +669,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         || onlineMarketDataItem.marketState == MarketState.POSTPOST.value
                         || onlineMarketDataItem.marketState == MarketState.PREPRE.value
                         || onlineMarketDataItem.marketState == MarketState.CLOSED.value)
-                    && onlineMarketDataItem.postMarketPrice > 0f
+                    && onlineMarketDataItem.postMarketPrice > 0.0
                 ) {
                   dataStoreItem.onlineMarketData.marketPrice =
                     onlineMarketDataItem.postMarketPrice
@@ -679,7 +679,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     onlineMarketDataItem.postMarketChangePercent
                 } else
                   if ((onlineMarketDataItem.marketState == MarketState.PRE.value)
-                      && onlineMarketDataItem.preMarketPrice > 0f
+                      && onlineMarketDataItem.preMarketPrice > 0.0
                   ) {
                     dataStoreItem.onlineMarketData.marketPrice =
                       onlineMarketDataItem.preMarketPrice
@@ -700,9 +700,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   data class AlertData(
     var symbol: String,
     var name: String,
-    var alertAbove: Float,
-    var alertBelow: Float,
-    var marketPrice: Float
+    var alertAbove: Double,
+    var alertBelow: Double,
+    var marketPrice: Double
   )
 
   private fun processNotifications(stockItemSet: StockItemSet?) {
@@ -712,25 +712,25 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       //     allStockItems.value?.forEach { stockItem ->
       val marketPrice = stockItem.onlineMarketData.marketPrice
 
-      if (marketPrice > 0f && SharedRepository.alertsData.value != null) {
+      if (marketPrice > 0.0 && SharedRepository.alertsData.value != null) {
         if (SharedRepository.alertsData.value!!.find {
               it.symbol == stockItem.stockDBdata.symbol
             } == null) {
-          if (stockItem.stockDBdata.alertAbove > 0f && stockItem.stockDBdata.alertAbove < marketPrice) {
+          if (stockItem.stockDBdata.alertAbove > 0.0 && stockItem.stockDBdata.alertAbove < marketPrice) {
             val alertDataAbove = AlertData(
                 symbol = stockItem.stockDBdata.symbol,
                 name = stockItem.onlineMarketData.name,
                 alertAbove = stockItem.stockDBdata.alertAbove,
-                alertBelow = 0f,
+                alertBelow = 0.0,
                 marketPrice = marketPrice
             )
             newAlerts.add(alertDataAbove)
           } else
-            if (stockItem.stockDBdata.alertBelow > 0f && stockItem.stockDBdata.alertBelow > marketPrice) {
+            if (stockItem.stockDBdata.alertBelow > 0.0 && stockItem.stockDBdata.alertBelow > marketPrice) {
               val alertDataBelow = AlertData(
                   symbol = stockItem.stockDBdata.symbol,
                   name = stockItem.onlineMarketData.name,
-                  alertAbove = 0f,
+                  alertAbove = 0.0,
                   alertBelow = stockItem.stockDBdata.alertBelow,
                   marketPrice = marketPrice
               )
@@ -790,7 +790,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByAssets -> {
           stockItemSet.stockItems.sortedByDescending { item ->
-            if (item.onlineMarketData.marketPrice > 0f) {
+            if (item.onlineMarketData.marketPrice > 0.0) {
               item.assets.sumByDouble { it.shares.toDouble() * (item.onlineMarketData.marketPrice) }
             } else {
               item.assets.sumByDouble { it.shares.toDouble() * it.price }
@@ -799,7 +799,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByProfit -> {
           stockItemSet.stockItems.sortedByDescending { item ->
-            if (item.onlineMarketData.marketPrice > 0f) {
+            if (item.onlineMarketData.marketPrice > 0.0) {
               item.assets.sumByDouble { it.shares.toDouble() * (item.onlineMarketData.marketPrice - it.price) }
             } else {
               item.assets.sumByDouble { it.shares.toDouble() * it.price }
@@ -951,10 +951,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             val assetsObj: JSONObject = assetsObjArray[j] as JSONObject
             if (assetsObj.has("shares") && assetsObj.has("price")) {
               val shares = assetsObj.getDouble("shares")
-                  .toFloat()
               val price = assetsObj.getDouble("price")
-                  .toFloat()
-              if (shares > 0f && price > 0f) {
+              if (shares > 0.0 && price > 0.0) {
                 assets.add(
                     Asset(
                         symbol = symbol,
@@ -981,10 +979,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               val holdingObj: JSONObject = holdings[j] as JSONObject
               if (holdingObj.has("shares") && holdingObj.has("price")) {
                 val shares = holdingObj.getDouble("shares")
-                    .toFloat()
                 val price = holdingObj.getDouble("price")
-                    .toFloat()
-                if (shares > 0f && price > 0f) {
+                if (shares > 0.0 && price > 0.0) {
                   assets.add(
                       Asset(
                           symbol = symbol,
@@ -1058,9 +1054,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
             if (dividendsObj.has("amount") && dividendsObj.has("paydate")) {
               val amount = dividendsObj.getDouble("amount")
-                  .toFloat()
 
-              if (amount > 0f) {
+              if (amount > 0.0) {
                 val dividend = Dividend(
                     symbol = symbol,
                     amount = amount,
@@ -1122,16 +1117,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (jsonObj.has("alertAbove")) {
           val alertAbove = jsonObj.getDouble("alertAbove")
-              .toFloat()
-          if (alertAbove > 0f) {
+          if (alertAbove > 0.0) {
             updateAlertAbove(symbol, alertAbove)
           }
         }
 
         if (jsonObj.has("alertBelow")) {
           val alertBelow = jsonObj.getDouble("alertBelow")
-              .toFloat()
-          if (alertBelow > 0f) {
+          if (alertBelow > 0.0) {
             updateAlertBelow(symbol, alertBelow)
           }
         }
@@ -1155,16 +1148,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
           if (properties.has("alertAbove")) {
             val alertAbove = properties.getDouble("alertAbove")
-                .toFloat()
-            if (alertAbove > 0f) {
+            if (alertAbove > 0.0) {
               updateAlertAbove(symbol, alertAbove)
             }
           }
 
           if (properties.has("alertBelow")) {
             val alertBelow = properties.getDouble("alertBelow")
-                .toFloat()
-            if (alertBelow > 0f) {
+            if (alertBelow > 0.0) {
               updateAlertBelow(symbol, alertBelow)
             }
           }
@@ -1190,21 +1181,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         .show()
   }
 
-  private fun csvStrToFloat(value: String): Float {
+  private fun csvStrToDouble(value: String): Double {
     val s = value.replace("$", "")
-    var f: Float
+    var d: Double
     try {
-      f = s.toFloat()
-      if (f == 0f) {
+      d = s.toDouble()
+      if (d == 0.0) {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-        f = numberFormat.parse(s)!!
-            .toFloat()
+        d = numberFormat.parse(s)!!.toDouble()
       }
     } catch (e: Exception) {
-      f = 0f
+      d = 0.0
     }
 
-    return f
+    return d
   }
 
   private fun importCSV(
@@ -1261,14 +1251,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         .forEach { row ->
           val symbol = row[symbolColumn].toUpperCase(Locale.ROOT)
           val shares = if (sharesColumn >= 0) {
-            csvStrToFloat(row[sharesColumn])
+            csvStrToDouble(row[sharesColumn])
           } else {
-            0f
+            0.0
           }
           val price = if (priceColumn >= 0) {
-            csvStrToFloat(row[priceColumn])
+            csvStrToDouble(row[priceColumn])
           } else {
-            0f
+            0.0
           }
           if (symbol.isNotEmpty()) {
             val asset = Asset(
@@ -1443,12 +1433,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           data = stockItem.stockDBdata.data,
           groupColor = stockItem.stockDBdata.groupColor,
           groupName = groupName,
-          alertAbove = validateFloat(stockItem.stockDBdata.alertAbove),
-          alertBelow = validateFloat(stockItem.stockDBdata.alertBelow),
+          alertAbove = validateDouble(stockItem.stockDBdata.alertAbove),
+          alertBelow = validateDouble(stockItem.stockDBdata.alertBelow),
           notes = stockItem.stockDBdata.notes,
           dividendNotes = stockItem.stockDBdata.dividendNotes,
           assets = stockItem.assets.map { asset ->
-            AssetJson(shares = validateFloat(asset.shares), price = validateFloat(asset.price))
+            AssetJson(shares = validateDouble(asset.shares), price = validateDouble(asset.price))
           },
           events = stockItem.events.map { event ->
             EventJson(
@@ -1458,7 +1448,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           },
           dividends = stockItem.dividends.map { dividend ->
             DividendJson(
-                amount = validateFloat(dividend.amount),
+                amount = validateDouble(dividend.amount),
                 exdate = dividend.exdate,
                 paydate = dividend.paydate,
                 type = dividend.type,
@@ -1526,7 +1516,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // the alert is still valid for some time and gets send multiple times.
   fun updateAlertAbove(
     symbol: String,
-    alertAbove: Float
+    alertAbove: Double
   ) {
     runBlocking {
       withContext(Dispatchers.IO) {
@@ -1539,7 +1529,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun updateAlertBelow(
     symbol: String,
-    alertBelow: Float
+    alertBelow: Double
   ) {
     runBlocking {
       withContext(Dispatchers.IO) {
@@ -1553,7 +1543,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   /*
    fun updateAlertAbove(
      symbol: String,
-     alertAbove: Float
+     alertAbove: Double
    ) = scope.launch {
      if (symbol.isNotEmpty()) {
        repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
@@ -1562,7 +1552,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
    fun updateAlertBelow(
      symbol: String,
-     alertBelow: Float
+     alertBelow: Double
    ) = scope.launch {
      if (symbol.isNotEmpty()) {
        repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
@@ -1758,8 +1748,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun addAsset(
     symbol: String,
-    shares: Float,
-    price: Float
+    shares: Double,
+    price: Double
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.addAsset(

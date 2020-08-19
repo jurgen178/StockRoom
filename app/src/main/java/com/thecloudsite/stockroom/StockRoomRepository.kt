@@ -103,7 +103,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @WorkerThread
   suspend fun updateAlertAbove(
     symbol: String,
-    alertAbove: Float
+    alertAbove: Double
   ) {
     stockRoomDao.updateAlertAbove(symbol, alertAbove)
   }
@@ -112,7 +112,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @WorkerThread
   suspend fun updateAlertBelow(
     symbol: String,
-    alertBelow: Float
+    alertBelow: Double
   ) {
     stockRoomDao.updateAlertBelow(symbol, alertBelow)
   }

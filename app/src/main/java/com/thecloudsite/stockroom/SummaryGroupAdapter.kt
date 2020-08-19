@@ -149,15 +149,15 @@ class SummaryGroupAdapter internal constructor(
     stockItems: List<StockItem>
   ): Pair<SpannableStringBuilder, SpannableStringBuilder> {
 
-    var totalPurchasePrice = 0f
-    var totalAssets = 0f
-    var totalGain = 0f
-    //var totalLoss = 0f
-    var totalShares = 0f
-    var totalDividendAssets = 0f
-    var totalDividend = 0f
-    var totalDividendPayed = 0f
-    var totalDividendPayedYTD = 0f
+    var totalPurchasePrice = 0.0
+    var totalAssets = 0.0
+    var totalGain = 0.0
+    //var totalLoss = 0.0
+    var totalShares = 0.0
+    var totalDividendAssets = 0.0
+    var totalDividend = 0.0
+    var totalDividendPayed = 0.0
+    var totalDividendPayedYTD = 0.0
     var totalAlerts: Int = 0
     var totalNotes: Int = 0
 
@@ -170,8 +170,8 @@ class SummaryGroupAdapter internal constructor(
       }
 
     stockItemsSelected.forEach { stockItem ->
-      var shares = 0f
-      var price = 0f
+      var shares = 0.0
+      var price = 0.0
       stockItem.assets.forEach { asset ->
         price += asset.shares * asset.price
         shares += asset.shares
@@ -189,20 +189,20 @@ class SummaryGroupAdapter internal constructor(
       totalPurchasePrice += price
       totalShares += shares
 
-      if (stockItem.stockDBdata.alertAbove > 0f) {
+      if (stockItem.stockDBdata.alertAbove > 0.0) {
         totalAlerts++
       }
-      if (stockItem.stockDBdata.alertBelow > 0f) {
+      if (stockItem.stockDBdata.alertBelow > 0.0) {
         totalAlerts++
       }
       if (stockItem.stockDBdata.notes.isNotEmpty()) {
         totalNotes++
       }
 
-      if (stockItem.onlineMarketData.marketPrice > 0f) {
+      if (stockItem.onlineMarketData.marketPrice > 0.0) {
         val assetsPrice = shares * stockItem.onlineMarketData.marketPrice
         val gainLoss = assetsPrice - price
-        if (gainLoss > 0f) {
+        if (gainLoss > 0.0) {
           totalGain += gainLoss
         } //else {
         //totalLoss -= gainLoss
@@ -210,7 +210,7 @@ class SummaryGroupAdapter internal constructor(
 
         totalAssets += assetsPrice
 
-        if (stockItem.onlineMarketData.annualDividendRate > 0f) {
+        if (stockItem.onlineMarketData.annualDividendRate > 0.0) {
           totalDividendAssets += assetsPrice
           totalDividend += shares * stockItem.onlineMarketData.annualDividendRate
         }
@@ -253,13 +253,13 @@ class SummaryGroupAdapter internal constructor(
             .backgroundColor(green, { append("Background green") })
      */
 
-    val totalDividendChange: Float = if (totalDividendAssets > 0f) {
+    val totalDividendChange: Double = if (totalDividendAssets > 0.0) {
       totalDividend / totalDividendAssets
     } else {
-      0f
+      0.0
     }
 
-    val gain = if (totalGain > 0f) {
+    val gain = if (totalGain > 0.0) {
       SpannableStringBuilder()
           .color(
               context.getColor(R.color.green)
@@ -271,14 +271,14 @@ class SummaryGroupAdapter internal constructor(
     }
 
     // To minimize rounding errors
-    val totalLoss = if (totalAssets > 0f) {
+    val totalLoss = if (totalAssets > 0.0) {
       totalGain - (totalAssets - totalPurchasePrice)
     } else {
-      0f
+      0.0
     }
 
     // Possible rounding error
-    val loss = if (totalLoss > 0.0001f) {
+    val loss = if (totalLoss > epsilon) {
       SpannableStringBuilder()
           .color(
               context.getColor(R.color.red)
@@ -289,13 +289,13 @@ class SummaryGroupAdapter internal constructor(
       }
     }
 
-    val total = if (totalAssets > 0f) {
+    val total = if (totalAssets > 0.0) {
       totalAssets - totalPurchasePrice
     } else {
-      0f
+      0.0
     }
     val gainloss = when {
-      total > 0f -> {
+      total > 0.0 -> {
         SpannableStringBuilder()
             .color(
                 context.getColor(R.color.green)
@@ -307,7 +307,7 @@ class SummaryGroupAdapter internal constructor(
               }
             }
       }
-      total < 0f -> {
+      total < 0.0 -> {
         SpannableStringBuilder().color(context.getColor(R.color.red)) {
           bold { append("${DecimalFormat("0.00").format(total)}\n") }
         }
@@ -355,7 +355,7 @@ class SummaryGroupAdapter internal constructor(
               } (${
                 DecimalFormat("0.00")
                     .format(
-                        totalDividendChange * 100f
+                        totalDividendChange * 100.0
                     )
               }%)\n"
           )

@@ -43,8 +43,8 @@ data class StockDBdata(
   @ColumnInfo(name = "group_color") var groupColor: Int = 0,
   var notes: String = "",
   @ColumnInfo(name = "dividend_notes") var dividendNotes: String = "",
-  @ColumnInfo(name = "alert_above") var alertAbove: Float = 0f,
-  @ColumnInfo(name = "alert_below") var alertBelow: Float = 0f
+  @ColumnInfo(name = "alert_above") var alertAbove: Double = 0.0,
+  @ColumnInfo(name = "alert_below") var alertBelow: Double = 0.0
 )
 
 @Entity(tableName = "group_table")
@@ -59,8 +59,8 @@ data class Group(
 data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
-  var shares: Float = 0f,
-  var price: Float = 0f,
+  var shares: Double = 0.0,
+  var price: Double = 0.0,
   var date: Long = 0L
 )
 
@@ -119,7 +119,7 @@ data class Dividends(
 data class Dividend(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   var symbol: String,
-  var amount: Float,
+  var amount: Double,
   val type: Int,
   val cycle: Int,
   val paydate: Long,

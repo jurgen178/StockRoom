@@ -113,16 +113,16 @@ class DividendFragment : Fragment() {
           val addDividendText = addDividendView.text.toString()
               .trim()
           if (addDividendText.isNotEmpty()) {
-            var dividendAmount = 0f
+            var dividendAmount = 0.0
             var valid = true
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
               dividendAmount = numberFormat.parse(addDividendText)!!
-                  .toFloat()
+                  .toDouble()
             } catch (e: Exception) {
               valid = false
             }
-            if (dividendAmount <= 0f) {
+            if (dividendAmount <= 0.0) {
               Toast.makeText(
                   requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
               )
@@ -260,12 +260,12 @@ class DividendFragment : Fragment() {
         ) { _, _ ->
           val addDividendText = addDividendView.text.toString()
               .trim()
-          var dividendAmount = 0f
+          var dividendAmount = 0.0
           if (addDividendText.isNotEmpty()) {
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
               dividendAmount = numberFormat.parse(addDividendText)!!
-                  .toFloat()
+                  .toDouble()
             } catch (e: Exception) {
             }
           }
@@ -481,16 +481,16 @@ class DividendFragment : Fragment() {
             val addDividendText = addDividendView.text.toString()
                 .trim()
             if (addDividendText.isNotEmpty()) {
-              var dividendAmount = 0f
+              var dividendAmount = 0.0
               var valid = true
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                 dividendAmount = numberFormat.parse(addDividendText)!!
-                    .toFloat()
+                    .toDouble()
               } catch (e: Exception) {
                 valid = false
               }
-              if (dividendAmount <= 0f) {
+              if (dividendAmount <= 0.0) {
                 Toast.makeText(
                     requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
                 )
@@ -572,12 +572,12 @@ class DividendFragment : Fragment() {
           ) { _, _ ->
             val addDividendText = addDividendView.text.toString()
                 .trim()
-            var dividendAmount = 0f
+            var dividendAmount = 0.0
             if (addDividendText.isNotEmpty()) {
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
                 dividendAmount = numberFormat.parse(addDividendText)!!
-                    .toFloat()
+                    .toDouble()
               } catch (e: Exception) {
               }
             }
@@ -701,7 +701,7 @@ class DividendFragment : Fragment() {
   }
 
   private fun updateAssetChange(data: AssetsLiveData) {
-    if (data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0f) {
+    if (data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0.0) {
       textViewDividend.text = getDividend(data)
     } else {
       textViewDividend.text = getString(R.string.no_online_dividend_data)
@@ -745,20 +745,19 @@ class DividendFragment : Fragment() {
 
     if (data.assets != null) {
       val shares = data.assets?.assets?.sumByDouble {
-        it.shares.toDouble()
-      }
-          ?.toFloat() ?: 0f
+        it.shares
+      } ?: 0.0
 
-      if (shares > 0f) {
+      if (shares > 0.0) {
         val totalDividend = shares * data.onlineMarketData?.annualDividendRate!!
         dividend
             .append("\n${getString(R.string.quarterlyDividend)}")
             .bold {
-              append(" ${DecimalFormat("0.00").format(totalDividend / 4f)}")
+              append(" ${DecimalFormat("0.00").format(totalDividend / 4.0)}")
             }
             .append("\n(${getString(R.string.monthly)}")
             .bold {
-              append(" ${DecimalFormat("0.00").format(totalDividend / 12f)}")
+              append(" ${DecimalFormat("0.00").format(totalDividend / 12.0)}")
             }
             .append(", ${getString(R.string.yearly)}")
             .bold {

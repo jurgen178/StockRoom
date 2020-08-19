@@ -63,17 +63,17 @@ class OnlineDataAdapter internal constructor(
   private fun formatInt(value: Long): String {
     return when {
       value >= 1000000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000000f)}${context.getString(
+        "${DecimalFormat("0.##").format(value / 1000000000000.0)}${context.getString(
             R.string.trillion_abbr
         )}"
       }
       value >= 1000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000f)}${context.getString(
+        "${DecimalFormat("0.##").format(value / 1000000000.0)}${context.getString(
             R.string.billion_abbr
         )}"
       }
       value >= 1000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000f)}${context.getString(
+        "${DecimalFormat("0.##").format(value / 1000000.0)}${context.getString(
             R.string.million_abbr
         )}"
       }
@@ -149,7 +149,7 @@ class OnlineDataAdapter internal constructor(
         OnlineData(
             desc = context.getString(R.string.onlinedata_annualDividendYield),
             text = "${DecimalFormat("0.00##").format(
-                onlineMarketData.annualDividendYield * 100f
+                onlineMarketData.annualDividendYield * 100.0
             )}%"
         )
     )

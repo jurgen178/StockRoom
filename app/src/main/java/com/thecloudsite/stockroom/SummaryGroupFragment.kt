@@ -97,17 +97,16 @@ class SummaryGroupFragment : Fragment() {
 
     data class AssetSummary(
       val symbol: String,
-      val assets: Float,
+      val assets: Double,
       val color: Int
     )
 
     val assetList: MutableList<AssetSummary> = mutableListOf()
-    var assetsTotal = 0f
+    var assetsTotal = 0.0
     stockItems.forEach { stockItem ->
-      val shares: Float = stockItem.assets.sumByDouble { asset ->
-        asset.shares.toDouble()
+      val shares: Double = stockItem.assets.sumByDouble { asset ->
+        asset.shares
       }
-          .toFloat()
       val assets = shares * stockItem.onlineMarketData.marketPrice
       assetsTotal += assets
       val color = if (stockItem.stockDBdata.groupColor != 0) {
@@ -120,11 +119,11 @@ class SummaryGroupFragment : Fragment() {
       )
     }
 
-    if (assetsTotal > 0f) {
+    if (assetsTotal > 0.0) {
       assetList.sortedBy { item -> item.assets }
           .takeLast(10)
           .forEach { assetItem ->
-            listPie.add(PieEntry(assetItem.assets, assetItem.symbol))
+            listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
             listColors.add(assetItem.color)
           }
     }

@@ -65,7 +65,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
                   || onlineMarketData.marketState == MarketState.POSTPOST.value
                   || onlineMarketData.marketState == MarketState.PREPRE.value
                   || onlineMarketData.marketState == MarketState.CLOSED.value)
-              && onlineMarketData.postMarketPrice > 0f
+              && onlineMarketData.postMarketPrice > 0.0
           ) {
             onlineMarketData2.marketPrice =
               onlineMarketData.postMarketPrice
@@ -75,7 +75,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
               onlineMarketData.postMarketChangePercent
           } else
             if ((onlineMarketData.marketState == MarketState.PRE.value)
-                && onlineMarketData.preMarketPrice > 0f
+                && onlineMarketData.preMarketPrice > 0.0
             ) {
               onlineMarketData2.marketPrice =
                 onlineMarketData.preMarketPrice

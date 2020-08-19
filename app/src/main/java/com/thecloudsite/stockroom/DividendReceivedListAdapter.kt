@@ -47,7 +47,7 @@ class DividendReceivedListAdapter internal constructor(
 
   private var data: AssetsLiveData? = null
   private var dividends: Dividends? = null
-  private var marketValue: Float = 0f
+  private var marketValue: Double = 0.0
 
   class DividendReceivedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
@@ -137,11 +137,11 @@ class DividendReceivedListAdapter internal constructor(
 
         val dividendYield =
           if ((current.cycle == DividendCycle.Monthly.value || current.cycle == DividendCycle.Quarterly.value)
-              && current.amount > 0f && marketValue > 0f
+              && current.amount > 0.0 && marketValue > 0.0
           ) {
             "\n${
               DecimalFormat("0.00").format(
-                  (current.cycle * 100f * current.amount / marketValue)
+                  (current.cycle * 100.0 * current.amount / marketValue)
               )
             }% p. a."
           } else {
@@ -180,18 +180,17 @@ class DividendReceivedListAdapter internal constructor(
     if (data != null) {
       marketValue = if (data!!.assets != null) {
         val totalShares = data!!.assets?.assets?.sumByDouble {
-          it.shares.toDouble()
-        }
-            ?.toFloat() ?: 0f
+          it.shares
+        } ?: 0.0
 
-        if (totalShares > 0f) {
-          val marketPrice: Float = data!!.onlineMarketData?.marketPrice ?: 0f
+        if (totalShares > 0.0) {
+          val marketPrice: Double = data!!.onlineMarketData?.marketPrice ?: 0.0
           totalShares * marketPrice
         } else {
-          0f
+          0.0
         }
       } else {
-        0f
+        0.0
       }
     }
 
@@ -199,7 +198,7 @@ class DividendReceivedListAdapter internal constructor(
       // Headline placeholder
       dividendList =
         mutableListOf(
-            Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
+            Dividend(symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
         )
       dividendList.addAll(dividends!!.dividends.filter { dividend ->
         dividend.type == DividendType.Received.value
@@ -209,9 +208,8 @@ class DividendReceivedListAdapter internal constructor(
           })
 
       val dividendTotal = dividendList.sumByDouble {
-        it.amount.toDouble()
+        it.amount
       }
-          .toFloat()
 
       // Summary
       val symbol: String = dividendList.firstOrNull()?.symbol ?: ""

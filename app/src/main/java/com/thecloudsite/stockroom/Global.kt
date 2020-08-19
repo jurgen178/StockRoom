@@ -11,6 +11,8 @@ import androidx.core.text.color
 import java.text.DecimalFormat
 import java.util.Locale
 
+// Rounding error
+const val epsilon = 0.000001
 
 /*
 enum class DividendCycle(val value: Int) {
@@ -18,6 +20,7 @@ enum class DividendCycle(val value: Int) {
   Quarterly(4),
 }
 */
+
 
 fun dividendSelectionToCycle(selection: Int): Int {
   return if (selection == 0)
@@ -52,10 +55,10 @@ fun isValidSymbol(symbol: String): Boolean {
 }
 
 // Used when export to Json as Gson cannot handle NaN.
-fun validateFloat(value: Float): Float {
+fun validateDouble(value: Double): Double {
   return if (value.isFinite())
     value else
-    0f
+    0.0
 }
 
 fun Resources.getRawTextFile(@RawRes id: Int) =
@@ -65,36 +68,33 @@ fun Resources.getRawTextFile(@RawRes id: Int) =
 // Gets the colored change string "asset (%change)"
 fun getAssetChange(
   assets: List<Asset>,
-  marketPrice: Float,
+  marketPrice: Double,
   context: Context
 ): SpannableStringBuilder {
   val shares = assets.sumByDouble {
-    it.shares.toDouble()
+    it.shares
   }
-      .toFloat()
 
-  val asset: Float =
-    if (shares > 0f) {
+  val asset: Double =
+    if (shares > 0.0) {
       assets.sumByDouble {
-        it.shares.toDouble() * it.price
+        it.shares * it.price
       }
-          .toFloat()
     } else {
-      0f
+      0.0
     }
 
-  if (marketPrice > 0f) {
+  if (marketPrice > 0.0) {
     var changeStr: String = ""
 
-    if (shares > 0f) {
+    if (shares > 0.0) {
       val capital = assets.sumByDouble {
-        it.shares.toDouble() * marketPrice
+        it.shares * marketPrice
       }
-          .toFloat()
 
       val change = capital - asset
       changeStr += "${
-        if (change > 0f) {
+        if (change > 0.0) {
           "+"
         } else {
           ""
@@ -107,9 +107,9 @@ fun getAssetChange(
         )
       }"
 
-      val changePercent = change * 100f / asset
+      val changePercent = change * 100.0 / asset
       changeStr += " (${
-        if (changePercent > 0f) {
+        if (changePercent > 0.0) {
           "+"
         } else {
           ""

@@ -59,7 +59,7 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
             val dateTimePoint = (timestamps[i] + gmtoffset)
             stockDataEntries.add(
                 StockDataEntry(
-                    dateTimePoint, i.toFloat(),
+                    dateTimePoint, i.toDouble(),
                     yahooChartQuoteEntries.high[i],
                     yahooChartQuoteEntries.low[i],
                     yahooChartQuoteEntries.open[i],
@@ -77,45 +77,45 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
   // Interpolate values in case value is missing to avoid zero points.
   // For example: 3.2948999404907227,null,3.299999952316284,3.309799909591675,3.309999942779541,3.3299999237060547,...
   private fun interpolateData(
-    values: MutableList<Float>
+    values: MutableList<Double>
   ) {
     val size: Int = values.size
     // The first value must not be null because it is used as the first left side value.
-    if (values[0] == null || values[0] == 0f) {
+    if (values[0] == null || values[0] == 0.0) {
       var j: Int = 1
-      while (j < size && (values[j] == null || values[j] == 0f)) {
+      while (j < size && (values[j] == null || values[j] == 0.0)) {
         j++
       }
-      if (j < size && values[j] != null && values[j] != 0f) {
+      if (j < size && values[j] != null && values[j] != 0.0) {
         values[0] = values[j]
       }
     }
 
     // The last value must not be null because it is used as the last right side value.
-    if (size > 1 && (values[size - 1] == null || values[size - 1] == 0f)) {
+    if (size > 1 && (values[size - 1] == null || values[size - 1] == 0.0)) {
       var j: Int = size - 1
-      while (j > 0 && (values[j] == null || values[j] == 0f)) {
+      while (j > 0 && (values[j] == null || values[j] == 0.0)) {
         j--
       }
-      if (j > 0 && values[j] != null && values[j] != 0f) {
+      if (j > 0 && values[j] != null && values[j] != 0.0) {
         values[size - 1] = values[j]
       }
     }
 
     for (i in 1 until size) {
-      if (values[i] == null || values[i] == 0f) {
+      if (values[i] == null || values[i] == 0.0) {
         // Index is missing. Search for the next available index.
         var j: Int = i + 1
-        while (j < size && (values[j] == null || values[j] == 0f)) {
+        while (j < size && (values[j] == null || values[j] == 0.0)) {
           j++
         }
-        if (j < size && values[j] != null && values[j] != 0f) {
+        if (j < size && values[j] != null && values[j] != 0.0) {
           // Calculate the weighted interpolated values.
           val prevValue = values[i - 1]
           // No interpolation for more than three missing values.
           // This is often the case when a stock is halted or not traded for that day.
           val segment = if (j > i + 3) {
-            0f
+            0.0
           } else {
             (values[j] - prevValue) / (j - i + 1)
           }

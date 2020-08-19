@@ -70,13 +70,13 @@ class SummaryListFragment : Fragment() {
     //  x: fontScale
     // 0.85, 1, 1.15, 1.3
     val x = when {
-      resources.configuration.fontScale <= 0.85f -> {
+      resources.configuration.fontScale <= 0.85 -> {
         0
       }
-      resources.configuration.fontScale <= 1f -> {
+      resources.configuration.fontScale <= 1.0 -> {
         1
       }
-      resources.configuration.fontScale <= 1.15f -> {
+      resources.configuration.fontScale <= 1.15 -> {
         2
       }
       else -> {

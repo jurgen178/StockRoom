@@ -97,7 +97,7 @@ class AssetListAdapter internal constructor(
         // handler for delete all
         holder.bindDelete(current.symbol, null, clickListenerDelete)
 
-        val isSum = current.shares > 0f && current.price > 0f
+        val isSum = current.shares > 0.0 && current.price > 0.0
 
         holder.itemViewShares.text = if (isSum) {
           DecimalFormat("0.##").format(current.shares)
@@ -147,18 +147,16 @@ class AssetListAdapter internal constructor(
 
   internal fun updateAssets(assets: List<Asset>) {
     // Headline placeholder
-    assetList = mutableListOf(Asset(symbol = "", shares = 0f, price = 0f))
+    assetList = mutableListOf(Asset(symbol = "", shares = 0.0, price = 0.0))
     assetList.addAll(assets)
 
     val sharesTotal = assetList.sumByDouble {
-      it.shares.toDouble()
+      it.shares
     }
-        .toFloat()
 
     val assetTotal = assetList.sumByDouble {
-      it.shares.toDouble() * it.price
+      it.shares * it.price
     }
-        .toFloat()
 
     // Summary
     val symbol: String = assets.firstOrNull()?.symbol ?: ""

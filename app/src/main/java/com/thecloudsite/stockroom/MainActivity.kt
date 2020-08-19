@@ -473,7 +473,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun showAlerts(alerts: List<AlertData>) {
     alerts.forEach { alert ->
-      if (alert.alertAbove > 0f) {
+      if (alert.alertAbove > 0.0) {
         val title = getString(
             R.string.alert_above_notification_title, alert.symbol,
             DecimalFormat("0.00##").format(alert.alertAbove),
@@ -487,12 +487,12 @@ class MainActivity : AppCompatActivity() {
         val notification = NotificationFactory(this, title, text, alert.symbol)
         notification.sendNotification()
         // Alert is shown, remove alert.
-        stockRoomViewModel.updateAlertAbove(alert.symbol, 0f)
+        stockRoomViewModel.updateAlertAbove(alert.symbol, 0.0)
 
         stockRoomViewModel.logDebug("Alert '$title'")
         stockRoomViewModel.logDebug("Alert '$text'")
       } else
-        if (alert.alertBelow > 0f) {
+        if (alert.alertBelow > 0.0) {
           val title = getString(
               R.string.alert_below_notification_title, alert.symbol,
               DecimalFormat("0.00##").format(alert.alertBelow),
@@ -506,7 +506,7 @@ class MainActivity : AppCompatActivity() {
           val notification = NotificationFactory(this, title, text, alert.symbol)
           notification.sendNotification()
           // Alert is shown, remove alert.
-          stockRoomViewModel.updateAlertBelow(alert.symbol, 0f)
+          stockRoomViewModel.updateAlertBelow(alert.symbol, 0.0)
 
           stockRoomViewModel.logDebug("Alert '$title'")
           stockRoomViewModel.logDebug("Alert '$text'")

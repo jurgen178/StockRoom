@@ -103,9 +103,9 @@ class StockRoomListAdapter internal constructor(
 
       holder.itemViewSymbol.text = current.onlineMarketData.symbol
       holder.itemViewName.text = current.onlineMarketData.name
-      if (current.onlineMarketData.marketPrice > 0f) {
+      if (current.onlineMarketData.marketPrice > 0.0) {
         holder.itemViewMarketPrice.text =
-          if (current.onlineMarketData.marketPrice > 5f) {
+          if (current.onlineMarketData.marketPrice > 5.0) {
             DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
           } else {
             DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
@@ -124,26 +124,23 @@ class StockRoomListAdapter internal constructor(
       }
 
       val shares = current.assets.sumByDouble {
-        it.shares.toDouble()
+        it.shares
       }
-          .toFloat()
 
       var assets: String = ""
 
-      var asset: Float = 0f
-      var capital: Float = 0f
+      var asset: Double = 0.0
+      var capital: Double = 0.0
 
-      if (shares > 0f) {
+      if (shares > 0.0) {
         asset = current.assets.sumByDouble {
-          it.shares.toDouble() * it.price
+          it.shares * it.price
         }
-            .toFloat()
 
-        if (current.onlineMarketData.marketPrice > 0f) {
+        if (current.onlineMarketData.marketPrice > 0.0) {
           capital = current.assets.sumByDouble {
-            it.shares.toDouble() * current.onlineMarketData.marketPrice
+            it.shares * current.onlineMarketData.marketPrice
           }
-              .toFloat()
 
           assets += "${DecimalFormat(
               "0.00"
@@ -159,8 +156,8 @@ class StockRoomListAdapter internal constructor(
               capital
           )}"
 
-          val capitalPercent = (capital - asset) * 100f / asset
-          assets += " (${if (capitalPercent > 0f) {
+          val capitalPercent = (capital - asset) * 100.0 / asset
+          assets += " (${if (capitalPercent > 0.0) {
             "+"
           } else {
             ""
@@ -174,10 +171,10 @@ class StockRoomListAdapter internal constructor(
       }
 
       when {
-        capital > 0f && capital > asset -> {
+        capital > 0.0 && capital > asset -> {
           holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.green))
         }
-        capital > 0f && capital < asset -> {
+        capital > 0.0 && capital < asset -> {
           holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.red))
         }
         else -> {
@@ -185,23 +182,23 @@ class StockRoomListAdapter internal constructor(
         }
       }
 
-      if (current.onlineMarketData.annualDividendRate > 0f) {
+      if (current.onlineMarketData.annualDividendRate > 0.0) {
         assets +=
           "\n${context.getString(R.string.dividend_in_list)} ${DecimalFormat(
               "0.00"
           ).format(
               current.onlineMarketData.annualDividendRate
           )} (${DecimalFormat("0.00").format(
-              current.onlineMarketData.annualDividendYield * 100f
+              current.onlineMarketData.annualDividendYield * 100.0
           )}%)"
       }
 
-      if (current.stockDBdata.alertAbove > 0f) {
+      if (current.stockDBdata.alertAbove > 0.0) {
         assets += "\n${context.getString(R.string.alert_above_in_list)} ${DecimalFormat(
             "0.####"
         ).format(current.stockDBdata.alertAbove)}"
       }
-      if (current.stockDBdata.alertBelow > 0f) {
+      if (current.stockDBdata.alertBelow > 0.0) {
         assets += "\n${context.getString(R.string.alert_below_in_list)} ${DecimalFormat(
             "0.####"
         ).format(current.stockDBdata.alertBelow)}"

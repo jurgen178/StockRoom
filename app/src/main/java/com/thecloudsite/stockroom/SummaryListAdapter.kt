@@ -78,21 +78,19 @@ class SummaryListAdapter internal constructor(
     setBackgroundColor(holder.summaryListItemGroup, color)
 
     val shares = current.assets.sumByDouble {
-      it.shares.toDouble()
+      it.shares
     }
-        .toFloat()
 
-    var asset: Float = 0f
-    if (shares > 0f) {
+    var asset: Double = 0.0
+    if (shares > 0.0) {
       asset = current.assets.sumByDouble {
-        it.shares.toDouble() * it.price
+        it.shares * it.price
       }
-          .toFloat()
     }
 
-    if (current.onlineMarketData.marketPrice > 0f) {
+    if (current.onlineMarketData.marketPrice > 0.0) {
       holder.summaryListItemMarketPrice.text =
-        if (current.onlineMarketData.marketPrice > 5f) {
+        if (current.onlineMarketData.marketPrice > 5.0) {
           DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
         } else {
           DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
@@ -105,13 +103,12 @@ class SummaryListAdapter internal constructor(
           current.onlineMarketData.marketChangePercent
       )}%)"
 
-      var capital: Float = 0f
+      var capital: Double = 0.0
 
-      if (shares > 0f) {
+      if (shares > 0.0) {
         capital = current.assets.sumByDouble {
-          it.shares.toDouble() * current.onlineMarketData.marketPrice
+          it.shares * current.onlineMarketData.marketPrice
         }
-            .toFloat()
 
         holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
       } else {
@@ -127,7 +124,7 @@ class SummaryListAdapter internal constructor(
       holder.summaryListItemMarketChange.text = ""
       holder.summaryListItemAssetChange.text = ""
 
-      if (asset > 0f) {
+      if (asset > 0.0) {
         holder.summaryListItemCapital.text = DecimalFormat("0.00").format(asset)
       } else {
         holder.summaryListItemCapital.text = ""

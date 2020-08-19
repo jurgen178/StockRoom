@@ -108,7 +108,7 @@ class DividendAnnouncedListAdapter internal constructor(
       holder.bindUpdate(current, clickListenerUpdate)
       holder.bindDelete(null, current, clickListenerDelete)
 
-      holder.textViewDividendAnnouncedAmount.text = if (current.amount > 0f) {
+      holder.textViewDividendAnnouncedAmount.text = if (current.amount > 0.0) {
         DecimalFormat("0.00##").format(current.amount)
       } else {
         ""
@@ -136,7 +136,7 @@ class DividendAnnouncedListAdapter internal constructor(
     // Headline placeholder
     dividendList =
       mutableListOf(
-          Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
+          Dividend(symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
       )
     dividendList.addAll(dividends.dividends.filter { dividend ->
       dividend.type == DividendType.Announced.value
