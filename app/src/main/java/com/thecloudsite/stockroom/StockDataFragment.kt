@@ -28,6 +28,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.core.text.italic
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -1459,13 +1460,14 @@ class StockDataFragment : Fragment() {
 
   private fun updateHeader(onlineMarketData: OnlineMarketData?) {
     var name: String = ""
-    var marketPrice: Double = 0.0
-    var marketChange: String = ""
+    val marketPrice = SpannableStringBuilder()
+    val marketChange = SpannableStringBuilder()
 
     if (onlineMarketData != null) {
       name = onlineMarketData.name
-      marketPrice = onlineMarketData.marketPrice
-      marketChange = "${
+
+      val marketPriceStr = DecimalFormat("0.00##").format(onlineMarketData.marketPrice)
+      val marketChangeStr = "${
         DecimalFormat("0.00##").format(
             onlineMarketData.marketChange
         )
@@ -1474,10 +1476,18 @@ class StockDataFragment : Fragment() {
             "0.00##"
         ).format(onlineMarketData.marketChangePercent)
       }%)"
+
+      if (onlineMarketData.postMarketData) {
+        marketPrice.italic { append(marketPriceStr) }
+        marketChange.italic { append(marketChangeStr) }
+      } else {
+        marketPrice.append(marketPriceStr)
+        marketChange.append(marketChangeStr)
+      }
     }
 
     textViewName.text = name
-    textViewMarketPrice.text = DecimalFormat("0.00##").format(marketPrice)
+    textViewMarketPrice.text = marketPrice
     textViewChange.text = marketChange
   }
 
