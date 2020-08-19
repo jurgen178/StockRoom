@@ -156,13 +156,23 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun deleteAsset(asset: Asset) {
-    stockRoomDao.deleteAsset(symbol = asset.symbol, shares = asset.shares, price = asset.price)
+    //stockRoomDao.deleteAsset(symbol = asset.symbol, shares = asset.shares, price = asset.price)
+    stockRoomDao.deleteAsset(asset)
   }
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun deleteAssets(symbol: String) {
     stockRoomDao.deleteAssets(symbol)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun updateAsset2(
+    assetOld: Asset,
+    assetNew: Asset
+  ) {
+    stockRoomDao.updateAsset2(assetOld, assetNew)
   }
 
   @Suppress("RedundantSuspendModifier")
@@ -192,6 +202,15 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @WorkerThread
   suspend fun deleteEvents(symbol: String) {
     stockRoomDao.deleteEvents(symbol)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun updateEvent2(
+    eventOld: Event,
+    eventNew: Event
+  ) {
+    stockRoomDao.updateEvent2(eventOld, eventNew)
   }
 
   @Suppress("RedundantSuspendModifier")
@@ -305,8 +324,17 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
-  suspend fun addDividend(dividend: Dividend) {
-    stockRoomDao.addDividend(dividend)
+  suspend fun updateDividend2(
+    dividendOld: Dividend,
+    dividendNew: Dividend
+  ) {
+    stockRoomDao.updateDividend2(dividendOld, dividendNew)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun updateDividend(dividend: Dividend) {
+    stockRoomDao.updateDividend(dividend)
   }
 
   @Suppress("RedundantSuspendModifier")

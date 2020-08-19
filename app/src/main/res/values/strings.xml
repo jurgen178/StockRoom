@@ -279,4 +279,5 @@ limitations under the License. -->
   <string name="reset_portfolios_confirm">Are you sure to reset all Portfolios back to the Standard Portfolio?</string>
   <string name="reset">Zurücksetzen</string>
   <string name="dividend_cycle">Dividend Cycle</string>
+  <string name="dividend_updated">Dividend updated.</string>
 </resources>

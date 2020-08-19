@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 
 data class StockItemSet
 (
-  var dataValid: Boolean = false,
+  var allDataReady: Boolean = false,
   var stockItems: MutableList<StockItem> = mutableListOf()
 )
 

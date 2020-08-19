@@ -373,9 +373,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataProperties) { value ->
       if (value != null) {
         updateStockDataFromDB(value)
-        if (dataStore.dataValid) {
-          updateOnlineDataManually()
-        }
+        //if (dataStore.allDataReady) {
+        updateOnlineDataManually()
+        //}
         dataValidate()
         allMediatorData.value = process(allData.value, true)
       }
@@ -418,19 +418,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private fun dataValidate() {
+/*
     synchronized(dataStore)
     {
-      if (!dataStore.dataValid) {
+      if (!dataStore.allDataReady) {
         // don't wait for valid online data if offline
         if (!onlineDataValid && !isOnline(getApplication())) {
           onlineDataValid = true
         }
 
         if (dbDataValid && assetDataValid && eventDataValid && onlineDataValid) {
-          dataStore.dataValid = true
+          dataStore.allDataReady = true
         }
       }
     }
+*/
   }
 
   private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
@@ -631,18 +633,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             )
           }
         }
-
-        /*
-        // Remove the item from the dataStore because Item was deleted from the DB.
-        if (dataStore.stockItems.size > events.size) {
-          dataStore.stockItems.removeIf {
-            // Remove if item is not found in the DB.
-            events.find { event ->
-              it.stockDBdata.symbol == event.stockDBdata.symbol
-            } == null
-          }
-        }
-      */
       }
     }
 
@@ -659,7 +649,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       // Work off a read-only copy to avoid the java.util.ConcurrentModificationException
       // while the next update.
 
-      dataStore.dataValid = true
+      dataStore.allDataReady = true
 
       onlineMarketDataList.toImmutableList()
           .forEach { onlineMarketDataItem ->
@@ -779,7 +769,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       return StockItemSet(
-          dataValid = stockItemSet.dataValid,
+          allDataReady = stockItemSet.allDataReady,
           stockItems = sort(sortMode, stockItemSet).toMutableList()
       )
     }
@@ -1071,28 +1061,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   .toFloat()
 
               if (amount > 0f) {
-                addDividend(
-                    Dividend(
-                        symbol = symbol,
-                        amount = amount,
-                        type = if (dividendsObj.has("type")) {
-                          dividendsObj.getInt("type")
-                        } else {
-                          0
-                        },
-                        cycle = if (dividendsObj.has("cycle")) {
-                          dividendsObj.getInt("cycle")
-                        } else {
-                          DividendCycle.Quarterly.value
-                        },
-                        paydate = dividendsObj.getLong("paydate"),
-                        exdate = if (dividendsObj.has("exdate")) {
-                          dividendsObj.getLong("exdate")
-                        } else {
-                          0L
-                        }
-                    )
+                val dividend = Dividend(
+                    symbol = symbol,
+                    amount = amount,
+                    type = if (dividendsObj.has("type")) {
+                      dividendsObj.getInt("type")
+                    } else {
+                      0
+                    },
+                    cycle = if (dividendsObj.has("cycle")) {
+                      dividendsObj.getInt("cycle")
+                    } else {
+                      DividendCycle.Quarterly.value
+                    },
+                    paydate = dividendsObj.getLong("paydate"),
+                    exdate = if (dividendsObj.has("exdate")) {
+                      dividendsObj.getLong("exdate")
+                    } else {
+                      0L
+                    }
                 )
+
+                updateDividend(dividend)
               }
             }
           }
@@ -1123,7 +1113,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
         if (jsonObj.has("groupName")) {
-          groupName = jsonObj.getString("groupName").trim()
+          groupName = jsonObj.getString("groupName")
+              .trim()
           if (groupColor != 0) {
             setGroup(symbol = symbol, color = groupColor, name = groupName)
           }
@@ -1681,6 +1672,25 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return menuStrings
   }
 
+  suspend fun getStockData(symbol: String): OnlineMarketData? {
+    return stockMarketDataRepository.getStockData(symbol.toUpperCase(Locale.ROOT))
+  }
+
+  private suspend fun getStockData(): Pair<MarketState, String> {
+    // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
+    val symbols: List<String> = repository.getStockSymbols()
+        .filter { symbol ->
+          if (portfolioSymbols.isNotEmpty()) {
+            portfolioSymbols.contains(symbol)
+          } else {
+            true
+          }
+        }
+//   Log.d("Handlers", "Call stockMarketDataRepository.getStockData()")
+//   logDebugAsync("update online data getStockData")
+    return stockMarketDataRepository.getStockData(symbols)
+  }
+
   fun setGroup(
     color: Int,
     name: String
@@ -1768,25 +1778,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  suspend fun getStockData(symbol: String): OnlineMarketData? {
-    return stockMarketDataRepository.getStockData(symbol.toUpperCase(Locale.ROOT))
-  }
-
-  private suspend fun getStockData(): Pair<MarketState, String> {
-    // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
-    val symbols: List<String> = repository.getStockSymbols()
-        .filter { symbol ->
-          if (portfolioSymbols.isNotEmpty()) {
-            portfolioSymbols.contains(symbol)
-          } else {
-            true
-          }
-        }
-//   Log.d("Handlers", "Call stockMarketDataRepository.getStockData()")
-//   logDebugAsync("update online data getStockData")
-    return stockMarketDataRepository.getStockData(symbols)
-  }
-
   fun deleteAsset(asset: Asset) =
     scope.launch {
       repository.deleteAsset(asset)
@@ -1795,6 +1786,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   fun deleteAssets(symbol: String) =
     scope.launch {
       repository.deleteAssets(symbol.toUpperCase(Locale.ROOT))
+    }
+
+  fun updateAsset2(
+    assetOld: Asset,
+    assetNew: Asset
+  ) =
+    scope.launch {
+      repository.updateAsset2(assetOld, assetNew)
     }
 
   fun updateAssets(
@@ -1817,6 +1816,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return repository.getDividendsLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
+  fun updateEvent2(
+    eventOld: Event,
+    eventNew: Event
+  ) =
+    scope.launch {
+      repository.updateEvent2(eventOld, eventNew)
+    }
+
   private fun updateEvents(
     symbol: String,
     events: List<Event>
@@ -1825,8 +1832,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       repository.updateEvents(symbol = symbol.toUpperCase(Locale.ROOT), events = events)
     }
 
-  fun addDividend(dividend: Dividend) = scope.launch {
-    repository.addDividend(dividend)
+  fun updateDividend2(
+    dividendOld: Dividend,
+    dividendNew: Dividend
+  ) =
+    scope.launch {
+      repository.updateDividend2(dividendOld, dividendNew)
+    }
+
+  fun updateDividend(dividend: Dividend) = scope.launch {
+    repository.updateDividend(dividend)
   }
 
   fun deleteDividend(dividend: Dividend) = scope.launch {
@@ -1880,7 +1895,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private suspend fun logDebugAsync(value: String) {
-    // Dispatchers.IO does not work ?
+    // Dispatchers.IO does not work here
     withContext(Dispatchers.Main) {
       synchronized(SharedRepository.debugList) {
         logDebug(value)

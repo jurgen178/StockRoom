@@ -136,10 +136,15 @@ class SummaryListAdapter internal constructor(
   }
 
   fun updateData(stockItemSet: StockItemSet) {
-    if (stockItemSet.dataValid) {
+    // Using allDataReady the list is updated only if all data sources are ready
+    // which can take a few seconds because of the slow online data.
+    // Without this check, the list is filled instantly, but might be reshuffled
+    // for sorting when the online data is ready.
+
+    //if (stockItemSet.allDataReady) {
       stockItems = stockItemSet.stockItems.toMutableList()
       notifyDataSetChanged()
-    }
+    //}
   }
 
   override fun getItemCount() = stockItems.size

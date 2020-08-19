@@ -145,6 +145,19 @@ class CustomCandleStickChart(
   }
 }
 
+class CustomTimePicker(
+  context: Context?,
+  attrs: AttributeSet?
+) :
+    TimePicker(context, attrs) {
+  override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+    if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+      parent?.requestDisallowInterceptTouchEvent(true)
+    }
+    return false
+  }
+}
+
 class StockDataFragment : Fragment() {
 
   private lateinit var stockChartDataViewModel: StockChartDataViewModel
@@ -262,10 +275,7 @@ class StockDataFragment : Fragment() {
             if (valid) {
               val assetnew = Asset(symbol = symbol, shares = shares, price = price)
               if (asset.shares != assetnew.shares || asset.price != assetnew.price) {
-                // delete old asset
-                stockRoomViewModel.deleteAsset(asset)
-                // add new asset
-                stockRoomViewModel.addAsset(assetnew)
+                stockRoomViewModel.updateAsset2(asset, assetnew)
                 val count: Int = when {
                   shares == 1f -> {
                     1
@@ -406,12 +416,11 @@ class StockDataFragment : Fragment() {
                 .show()
           } else
             if (event.title != title || event.note != note || event.datetime != seconds) {
-              // delete old event
-              stockRoomViewModel.deleteEvent(event)
-              // add new event
-              stockRoomViewModel.addEvent(
+              stockRoomViewModel.updateEvent2(
+                  event,
                   Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
               )
+
               Toast.makeText(
                   requireContext(), getString(
                   R.string.event_updated, title, datetime.format(
@@ -1459,11 +1468,15 @@ class StockDataFragment : Fragment() {
     if (onlineMarketData != null) {
       name = onlineMarketData.name
       marketPrice = onlineMarketData.marketPrice
-      marketChange = "${DecimalFormat("0.00##").format(
-          onlineMarketData.marketChange
-      )} (${DecimalFormat(
-          "0.00##"
-      ).format(onlineMarketData.marketChangePercent)}%)"
+      marketChange = "${
+        DecimalFormat("0.00##").format(
+            onlineMarketData.marketChange
+        )
+      } (${
+        DecimalFormat(
+            "0.00##"
+        ).format(onlineMarketData.marketChangePercent)
+      }%)"
     }
 
     textViewName.text = name

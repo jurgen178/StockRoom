@@ -101,7 +101,7 @@ interface StockRoomDao {
     val stockData = getStockDBdata(stockDBdata.symbol)
 
     if (stockData != null) {
-      // Keep old values if not changed.
+      // Keep old values if defaults are used.
       if (stockDBdata.groupColor == 0) {
         stockDBdata.groupColor = stockData.groupColor
       }
@@ -226,8 +226,8 @@ interface StockRoomDao {
   fun addAsset(asset: Asset)
 
   // id must match to delete the entry
-//    @Delete
-//    fun deleteAsset(asset: Asset)
+  @Delete
+  fun deleteAsset(asset: Asset)
 
   @Transaction
   @Query("SELECT * FROM stock_table")
@@ -255,6 +255,32 @@ interface StockRoomDao {
 
   @Query("DELETE FROM asset_table WHERE symbol = :symbol")
   fun deleteAssets(symbol: String)
+
+  /*
+  @Transaction
+  fun updateAsset2(
+    assetOld: Asset,
+    assetNew: Asset
+  ) {
+    deleteAsset(
+        assetOld.symbol,
+        assetOld.shares,
+        assetOld.price
+    )
+    addAsset(assetNew)
+  }
+  */
+
+  @Transaction
+  fun updateAsset2(
+    assetOld: Asset,
+    assetNew: Asset
+  ) {
+    // delete the exact asset inluding the id because duplicate entries are valid
+    // events and dividends delete entries without matching the id to remove all duplicates
+    deleteAsset(assetOld)
+    addAsset(assetNew)
+  }
 
   @Transaction
   fun updateAssets(
@@ -304,6 +330,20 @@ interface StockRoomDao {
   fun deleteEvents(symbol: String)
 
   @Transaction
+  fun updateEvent2(
+    eventOld: Event,
+    eventNew: Event
+  ) {
+    deleteEvent(
+        eventOld.symbol,
+        eventOld.title,
+        eventOld.note,
+        eventOld.datetime
+    )
+    addEvent(eventNew)
+  }
+
+  @Transaction
   fun updateEvents(
     symbol: String,
     events: List<Event>
@@ -327,10 +367,38 @@ interface StockRoomDao {
   @Query("SELECT * FROM dividend_table")
   fun getAllDividendTableLiveData(): LiveData<List<Dividend>>
 
-
   @Transaction
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getDividendsLiveData(symbol: String): LiveData<Dividends>
+
+  @Transaction
+  fun updateDividend(dividend: Dividend) {
+    deleteDividend(
+        symbol = dividend.symbol,
+        amount = dividend.amount,
+        type = dividend.type,
+        cycle = dividend.cycle,
+        paydate = dividend.paydate,
+        exdate = dividend.exdate
+    )
+    addDividend(dividend)
+  }
+
+  @Transaction
+  fun updateDividend2(
+    dividendOld: Dividend,
+    dividendNew: Dividend
+  ) {
+    deleteDividend(
+        symbol = dividendOld.symbol,
+        amount = dividendOld.amount,
+        type = dividendOld.type,
+        cycle = dividendOld.cycle,
+        paydate = dividendOld.paydate,
+        exdate = dividendOld.exdate
+    )
+    addDividend(dividendNew)
+  }
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun addDividend(dividend: Dividend)

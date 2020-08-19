@@ -276,4 +276,5 @@ limitations under the License. -->
   <string name="reset_portfolios_confirm">Sind Sie sich sicher, dass Sie alle Portfolios zum Standard-Portfolio zurücksetzen wollen?</string>
   <string name="reset">Zurücksetzen</string>
   <string name="dividend_cycle">Dividendenzyklus</string>
+  <string name="dividend_updated">Dividendenwert aktualisiert.</string>
 </resources>

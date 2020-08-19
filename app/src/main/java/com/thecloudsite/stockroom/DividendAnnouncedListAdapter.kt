@@ -108,7 +108,12 @@ class DividendAnnouncedListAdapter internal constructor(
       holder.bindUpdate(current, clickListenerUpdate)
       holder.bindDelete(null, current, clickListenerDelete)
 
-      holder.textViewDividendAnnouncedAmount.text = DecimalFormat("0.00##").format(current.amount)
+      holder.textViewDividendAnnouncedAmount.text = if (current.amount > 0f) {
+        DecimalFormat("0.00##").format(current.amount)
+      } else {
+        ""
+      }
+
       val datetimeEx: LocalDateTime =
         LocalDateTime.ofEpochSecond(current.exdate, 0, ZoneOffset.UTC)
       holder.textViewDividendAnnouncedExDate.text =
@@ -130,7 +135,9 @@ class DividendAnnouncedListAdapter internal constructor(
   internal fun updateDividends(dividends: Dividends) {
     // Headline placeholder
     dividendList =
-      mutableListOf(Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0, cycle = 0))
+      mutableListOf(
+          Dividend(symbol = "", amount = 0f, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
+      )
     dividendList.addAll(dividends.dividends.filter { dividend ->
       dividend.type == DividendType.Announced.value
     }

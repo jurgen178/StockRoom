@@ -217,8 +217,12 @@ class DividendReceivedListAdapter internal constructor(
       val symbol: String = dividendList.firstOrNull()?.symbol ?: ""
       dividendList.add(
           Dividend(
-              symbol = symbol, amount = dividendTotal, exdate = 0L, paydate = 0L, type = 0,
-              cycle = 0
+              symbol = symbol,
+              amount = dividendTotal,
+              type = 0,
+              cycle = 0,
+              paydate = 0L,
+              exdate = 0L
           )
       )
     }
