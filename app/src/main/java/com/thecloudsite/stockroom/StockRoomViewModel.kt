@@ -164,6 +164,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var onlineNow = false
   private var onlineBefore = false
 
+  private var statsCounter = 0
+  private var responseCounterStart = 0
+
   // Settings.
   private val sharedPreferences =
     PreferenceManager.getDefaultSharedPreferences(application /* Activity context */)
@@ -222,6 +225,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     // sharedPreferences.getBoolean("postmarket", true) doesn't work here anymore?
     SharedRepository.postMarket = postMarket
     SharedRepository.notifications = notifications
+
+    responseCounterStart = responseCounter
   }
 
   private suspend fun getOnlineData(prevOnlineDataDelay: Long): Pair<Long, MarketState> {
@@ -311,6 +316,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       onlineUpdateTime += onlineDataTimerDelay
+
+      statsCounter++
+      //logDebug("responseCounter $responseCounter")
+      // runs every 2s
+      // 30 * 2s = 1min
+      if (statsCounter >= 30) {
+        statsCounter = 0
+        val count = responseCounter - responseCounterStart
+        responseCounterStart = responseCounter
+        logDebug("Internet access count $count/min")
+      }
     }
   }
 

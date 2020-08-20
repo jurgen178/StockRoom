@@ -19,6 +19,11 @@ data class StockItem
   var dividends: List<Dividend>
 )
 
+var responseCounter = 0
+@Synchronized fun updateCounter(){
+  responseCounter++
+}
+
 class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : BaseRepository() {
 
   private val _data = MutableLiveData<List<OnlineMarketData>>()
@@ -34,6 +39,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
       val quoteResponse: YahooResponse? = try {
         safeApiCall(
             call = {
+              updateCounter()
               api.getStockDataAsync(symbols.joinToString(","))
                   .await()
             }, errorMessage = "Error getting finance data."
@@ -148,6 +154,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
     val quoteResponse: YahooResponse? = try {
       safeApiCall(
           call = {
+            updateCounter()
             api.getStockDataAsync(symbols.joinToString(","))
                 .await()
           }, errorMessage = "Error getting finance data."
@@ -168,6 +175,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
       val quoteResponse: YahooResponse? = try {
         safeApiCall(
             call = {
+              updateCounter()
               api.getStockDataAsync(symbol)
                   .await()
             },

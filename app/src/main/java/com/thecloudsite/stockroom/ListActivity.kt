@@ -75,12 +75,10 @@ class ListActivity : AppCompatActivity() {
         stockTableRows.append("<td>${stockItem.data}</td>")
         stockTableRows.append("<td>${getColorStr(stockItem.groupColor)}</td>")
         stockTableRows.append("<td>${stockItem.notes}</td>")
+        stockTableRows.append("<td>${stockItem.dividendNotes}</td>")
         stockTableRows.append("<td>${DecimalFormat("0.####").format(stockItem.alertAbove)}</td>")
         stockTableRows.append(
-            "<td>${
-              DecimalFormat("0.####")
-                  .format(stockItem.alertBelow)
-            }</td>"
+            "<td>${DecimalFormat("0.####").format(stockItem.alertBelow)}</td>"
         )
         stockTableRows.append("</tr>")
       }
@@ -114,6 +112,7 @@ class ListActivity : AppCompatActivity() {
         assetTableRows.append("<td>${assetItem.symbol}</td>")
         assetTableRows.append("<td>${DecimalFormat("0.####").format(assetItem.shares)}</td>")
         assetTableRows.append("<td>${assetItem.price}</td>")
+        assetTableRows.append("<td>${getDateStr(assetItem.date)}</td>")
         assetTableRows.append("</tr>")
       }
 
@@ -150,8 +149,9 @@ class ListActivity : AppCompatActivity() {
         dividendTableRows.append("<td>${dividendItem.symbol}</td>")
         dividendTableRows.append("<td>${DecimalFormat("0.####").format(dividendItem.amount)}</td>")
         dividendTableRows.append("<td>${dividendItem.type}</td>")
-        dividendTableRows.append("<td>${getDateStr(dividendItem.exdate)}</td>")
+        dividendTableRows.append("<td>${dividendItem.cycle}</td>")
         dividendTableRows.append("<td>${getDateStr(dividendItem.paydate)}</td>")
+        dividendTableRows.append("<td>${getDateStr(dividendItem.exdate)}</td>")
         dividendTableRows.append("</tr>")
       }
 
@@ -222,7 +222,8 @@ class ListActivity : AppCompatActivity() {
     htmlText = htmlText.replace("<!-- event_table_name -->", "event_table ($eventTableRowsCount)")
     htmlText = htmlText.replace("<!-- event_table -->", eventTableRows.toString())
 
-    htmlText = htmlText.replace("<!-- dividend_table_name -->", "dividend_table ($dividendTableRowsCount)")
+    htmlText =
+      htmlText.replace("<!-- dividend_table_name -->", "dividend_table ($dividendTableRowsCount)")
     htmlText = htmlText.replace("<!-- dividend_table -->", dividendTableRows.toString())
 
     val mimeType: String = "text/html"

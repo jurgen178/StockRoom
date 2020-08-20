@@ -30,6 +30,7 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
     val quoteResponse: YahooChartData? = try {
       safeApiCall(
           call = {
+            updateCounter()
             api.getYahooChartDataAsync(stock, interval, range)
                 .await()
           },

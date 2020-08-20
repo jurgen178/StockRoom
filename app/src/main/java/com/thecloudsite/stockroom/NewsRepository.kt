@@ -68,6 +68,7 @@ open class NewsRepository(
     try {
       val newsResponse = safeApiCall(
           call = {
+            updateCounter()
             api.getNewsDataAsync(newsQuery)
                 .await()
           },
