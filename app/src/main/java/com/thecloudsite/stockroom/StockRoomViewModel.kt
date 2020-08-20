@@ -116,6 +116,10 @@ object SharedRepository {
   var portfolios = MutableLiveData<HashSet<String>>()
   val portfoliosLiveData: LiveData<HashSet<String>>
     get() = portfolios
+
+  var statsCounter = 0
+  var responseCounterStart = 0
+  var lastStatsCounters = IntArray(5){ _ -> -1 }
 }
 
 class StockRoomViewModel(application: Application) : AndroidViewModel(application) {
@@ -163,9 +167,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var isActive = false
   private var onlineNow = false
   private var onlineBefore = false
-
-  private var statsCounter = 0
-  private var responseCounterStart = 0
 
   // Settings.
   private val sharedPreferences =
@@ -226,7 +227,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     SharedRepository.postMarket = postMarket
     SharedRepository.notifications = notifications
 
-    responseCounterStart = responseCounter
+    SharedRepository.responseCounterStart = responseCounter
   }
 
   private suspend fun getOnlineData(prevOnlineDataDelay: Long): Pair<Long, MarketState> {
@@ -317,23 +318,36 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       onlineUpdateTime += onlineDataTimerDelay
 
-      statsCounter++
+      SharedRepository.statsCounter++
       //logDebug("responseCounter $responseCounter")
       // runs every 2s
       // 30 * 2s = 1min
-      if (statsCounter >= 30) {
-        statsCounter = 0
-        val count = responseCounter - responseCounterStart
-        responseCounterStart = responseCounter
-        logDebug("Internet access count $count/min")
+      if (SharedRepository.statsCounter >= 3) {
+        SharedRepository.statsCounter = 0
+        val count = responseCounter - SharedRepository.responseCounterStart
+        SharedRepository.responseCounterStart = responseCounter
+        val lastCounts = SharedRepository.lastStatsCounters.filter { it >= 0 }
+            .joinToString(
+                prefix = "[",
+                separator = ",",
+                postfix = "]"
+            )
+        logDebug("Internet access count $count/min $lastCounts")
+        SharedRepository.lastStatsCounters.forEachIndexed { i, _ ->
+          val reverseIndex = SharedRepository.lastStatsCounters.size - i - 1
+          if (reverseIndex > 0) {
+            SharedRepository.lastStatsCounters[reverseIndex] = SharedRepository.lastStatsCounters[reverseIndex - 1]
+          }
+        }
+        SharedRepository.lastStatsCounters[0] = count
       }
     }
   }
 
-  fun updateOnlineDataManually(onlineMsg: String = "") {
+  fun updateOnlineDataManually(msg: String = "") {
     if (isOnline(getApplication())) {
-      if (onlineMsg.isNotEmpty()) {
-        logDebug(onlineMsg)
+      if (msg.isNotEmpty()) {
+        logDebug(msg)
       }
 
       scope.launch {
@@ -377,6 +391,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         if (liveDataEvents.value != null) {
           updateEventsFromDB(liveDataEvents.value!!)
+        }
+        if (liveDataDividends.value != null) {
+          updateDividendsFromDB(liveDataDividends.value!!)
         }
         if (liveDataOnline.value != null) {
           updateFromOnline(liveDataOnline.value!!)
@@ -774,7 +791,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     stockItemSet: StockItemSet?,
     runNotifications: Boolean
   ): StockItemSet? {
-
     if (stockItemSet != null) {
       if (runNotifications && SharedRepository.notifications) {
         processNotifications(stockItemSet)
@@ -1193,21 +1209,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         .show()
   }
 
-  private fun csvStrToDouble(value: String): Double {
-    val s = value.replace("$", "")
-    var d: Double
+  private fun csvStrToDouble(str: String): Double {
+    val s = str.replace("$", "")
+    var value: Double
     try {
-      d = s.toDouble()
-      if (d == 0.0) {
+      value = s.toDouble()
+      if (value == 0.0) {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-        d = numberFormat.parse(s)!!
+        value = numberFormat.parse(s)!!
             .toDouble()
       }
     } catch (e: Exception) {
-      d = 0.0
+      value = 0.0
     }
 
-    return d
+    return value
   }
 
   private fun importCSV(
@@ -1263,29 +1279,32 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     rows.drop(1)
         .forEach { row ->
           val symbol = row[symbolColumn].toUpperCase(Locale.ROOT)
-          val shares = if (sharesColumn >= 0) {
-            csvStrToDouble(row[sharesColumn])
-          } else {
-            0.0
-          }
-          val price = if (priceColumn >= 0) {
-            csvStrToDouble(row[priceColumn])
-          } else {
-            0.0
-          }
-          if (symbol.isNotEmpty()) {
-            val asset = Asset(
-                symbol = symbol,
-                shares = shares,
-                price = price
-            )
-
-            if (assetItems.containsKey(symbol)) {
-              val list = assetItems[symbol]!!.toMutableList()
-              list.add(asset)
-              assetItems[symbol] = list
+          if (symbol.isNotEmpty() && isValidSymbol(symbol)) {
+            val shares = if (sharesColumn >= 0) {
+              csvStrToDouble(row[sharesColumn])
             } else {
-              assetItems[symbol] = listOf(asset)
+              0.0
+            }
+            val price = if (priceColumn >= 0) {
+              csvStrToDouble(row[priceColumn])
+            } else {
+              0.0
+            }
+
+            if (shares > 0.0 && price > 0.0) {
+              val asset = Asset(
+                  symbol = symbol,
+                  shares = shares,
+                  price = price
+              )
+
+              if (assetItems.containsKey(symbol)) {
+                val list = assetItems[symbol]!!.toMutableList()
+                list.add(asset)
+                assetItems[symbol] = list
+              } else {
+                assetItems[symbol] = listOf(asset)
+              }
             }
           }
         }
@@ -1294,7 +1313,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     var imported: Int = 0
     val portfolio = SharedRepository.selectedPortfolio.value ?: ""
     assetItems.forEach { (symbol, assets) ->
-      if (imported < 100 && isValidSymbol(symbol)) {
+      if (imported < 100) {
         imported++
         insert(symbol = symbol, portfolio = portfolio)
         // updateAssets filters out empty shares@price

@@ -91,6 +91,63 @@ class StockRoomTest {
 
   @Test
   @Throws(Exception::class)
+  fun accessCounterTest() {
+    val lastStatsCounters = IntArray(5){ _ -> -1 }
+
+    fun getCounts(): String {
+      return lastStatsCounters.filter { it >= 0 }
+          .joinToString(
+              prefix = "[",
+              separator = ",",
+              postfix = "]"
+          )
+    }
+
+    fun shiftRight() {
+      lastStatsCounters.forEachIndexed { i, _ ->
+        val reverseIndex = lastStatsCounters.size - i - 1
+        if (reverseIndex > 0) {
+          lastStatsCounters[reverseIndex] = lastStatsCounters[reverseIndex - 1]
+        }
+      }
+    }
+
+    var lastCounts = getCounts()
+    assertEquals("[]", lastCounts)
+
+    shiftRight()
+    lastStatsCounters[0] = 1
+    lastCounts = getCounts()
+    assertEquals("[1]", lastCounts)
+
+    shiftRight()
+    lastStatsCounters[0] = 2
+    lastCounts = getCounts()
+    assertEquals("[2,1]", lastCounts)
+
+    shiftRight()
+    lastStatsCounters[0] = 0
+    lastCounts = getCounts()
+    assertEquals("[0,2,1]", lastCounts)
+
+    shiftRight()
+    lastStatsCounters[0] = 4
+    lastCounts = getCounts()
+    assertEquals("[4,0,2,1]", lastCounts)
+
+    shiftRight()
+    lastStatsCounters[0] = 5
+    lastCounts = getCounts()
+    assertEquals("[5,4,0,2,1]", lastCounts)
+
+    shiftRight()
+    lastStatsCounters[0] = 6
+    lastCounts = getCounts()
+    assertEquals("[6,5,4,0,2]", lastCounts)
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun addmap() {
     val assetList = listOf(
         Asset(
@@ -196,20 +253,21 @@ class StockRoomTest {
     assertEquals(symbolList.size, 7)
   }
 
-  private fun csvStrToDouble(value: String): Double {
-    val s = value.replace("$", "")
-    var d: Double
+  private fun csvStrToDouble(str: String): Double {
+    val s = str.replace("$", "")
+    var value: Double
     try {
-      d = s.toDouble()
-      if (d == 0.0) {
+      value = s.toDouble()
+      if (value == 0.0) {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-        d = numberFormat.parse(s)!!.toDouble()
+        value = numberFormat.parse(s)!!
+            .toDouble()
       }
     } catch (e: Exception) {
-      d = 0.0
+      value = 0.0
     }
 
-    return d
+    return value
   }
 
   @Test
