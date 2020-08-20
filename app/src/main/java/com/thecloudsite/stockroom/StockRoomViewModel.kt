@@ -118,8 +118,9 @@ object SharedRepository {
     get() = portfolios
 
   var statsCounter = 0
+  var statsCounterMax = 0
   var responseCounterStart = 0
-  var lastStatsCounters = IntArray(5){ _ -> -1 }
+  var lastStatsCounters = IntArray(5) { _ -> -1 }
 }
 
 class StockRoomViewModel(application: Application) : AndroidViewModel(application) {
@@ -322,9 +323,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       //logDebug("responseCounter $responseCounter")
       // runs every 2s
       // 30 * 2s = 1min
-      if (SharedRepository.statsCounter >= 3) {
+      if (SharedRepository.statsCounter >= 30) {
         SharedRepository.statsCounter = 0
         val count = responseCounter - SharedRepository.responseCounterStart
+        if (count > SharedRepository.statsCounterMax) {
+          SharedRepository.statsCounterMax = count
+        }
         SharedRepository.responseCounterStart = responseCounter
         val lastCounts = SharedRepository.lastStatsCounters.filter { it >= 0 }
             .joinToString(
@@ -332,11 +336,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 separator = ",",
                 postfix = "]"
             )
-        logDebug("Internet access count $count/min $lastCounts")
+        logDebug("Internet access count $count/min $lastCounts[${SharedRepository.statsCounterMax}]")
         SharedRepository.lastStatsCounters.forEachIndexed { i, _ ->
           val reverseIndex = SharedRepository.lastStatsCounters.size - i - 1
           if (reverseIndex > 0) {
-            SharedRepository.lastStatsCounters[reverseIndex] = SharedRepository.lastStatsCounters[reverseIndex - 1]
+            SharedRepository.lastStatsCounters[reverseIndex] =
+              SharedRepository.lastStatsCounters[reverseIndex - 1]
           }
         }
         SharedRepository.lastStatsCounters[0] = count
