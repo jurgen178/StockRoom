@@ -1116,11 +1116,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
 
-        // get properties
         if (jsonObj.has("portfolio")) {
           val portfolioStr = jsonObj.getString("portfolio")
               .trim()
-          if (portfolio.isNotEmpty()) {
+          if (portfolioStr.isNotEmpty()) {
             setPortfolio(symbol = symbol, portfolio = portfolioStr)
           }
         }

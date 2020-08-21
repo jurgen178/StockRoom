@@ -379,11 +379,11 @@ class MainActivity : AppCompatActivity() {
               subMenuItem?.setOnMenuItemClickListener { item ->
                 if (item != null) {
                   var itemText = item.toString()
+                  stockRoomViewModel.logDebug("Selected portfolio '$itemText'")
                   if (itemText == standardPortfolio) {
                     itemText = ""
                   }
                   SharedRepository.selectedPortfolio.value = itemText
-                  stockRoomViewModel.logDebug("Selected portfolio '$itemText'")
                 }
                 true
               }
