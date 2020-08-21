@@ -76,9 +76,9 @@ class ListActivity : AppCompatActivity() {
         stockTableRows.append("<td>${getColorStr(stockItem.groupColor)}</td>")
         stockTableRows.append("<td>${stockItem.notes}</td>")
         stockTableRows.append("<td>${stockItem.dividendNotes}</td>")
-        stockTableRows.append("<td>${DecimalFormat("0.####").format(stockItem.alertAbove)}</td>")
+        stockTableRows.append("<td>${DecimalFormat("0.00##").format(stockItem.alertAbove)}</td>")
         stockTableRows.append(
-            "<td>${DecimalFormat("0.####").format(stockItem.alertBelow)}</td>"
+            "<td>${DecimalFormat("0.00##").format(stockItem.alertBelow)}</td>"
         )
         stockTableRows.append("</tr>")
       }
@@ -147,7 +147,7 @@ class ListActivity : AppCompatActivity() {
         dividendTableRows.append("<tr>")
         dividendTableRows.append("<td>${dividendItem.id}</td>")
         dividendTableRows.append("<td>${dividendItem.symbol}</td>")
-        dividendTableRows.append("<td>${DecimalFormat("0.####").format(dividendItem.amount)}</td>")
+        dividendTableRows.append("<td>${DecimalFormat("0.00##").format(dividendItem.amount)}</td>")
         dividendTableRows.append("<td>${dividendItem.type}</td>")
         dividendTableRows.append("<td>${dividendItem.cycle}</td>")
         dividendTableRows.append("<td>${getDateStr(dividendItem.paydate)}</td>")

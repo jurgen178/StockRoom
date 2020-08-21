@@ -229,9 +229,9 @@ class StockDataFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateSharesHeadline)
     addUpdateSharesHeadlineView.text = getString(R.string.update_asset)
     val addSharesView = dialogView.findViewById<TextView>(R.id.addShares)
-    addSharesView.text = DecimalFormat("0.######").format(asset.shares)
+    addSharesView.text = DecimalFormat("0.####").format(asset.shares)
     val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
-    addPriceView.text = DecimalFormat("0.######").format(asset.price)
+    addPriceView.text = DecimalFormat("0.00##").format(asset.price)
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
@@ -290,8 +290,8 @@ class StockDataFragment : Fragment() {
                 }
 
                 val pluralstr = resources.getQuantityString(
-                    R.plurals.asset_updated, count, DecimalFormat("0.##").format(shares),
-                    DecimalFormat("0.##").format(price)
+                    R.plurals.asset_updated, count, DecimalFormat("0.####").format(shares),
+                    DecimalFormat("0.00##").format(price)
                 )
 
                 Toast.makeText(
@@ -350,15 +350,15 @@ class StockDataFragment : Fragment() {
           .setTitle(R.string.delete_asset)
           .setMessage(
               resources.getQuantityString(
-                  R.plurals.delete_asset_confirm, count, DecimalFormat("0.##").format(asset.shares),
-                  DecimalFormat("0.##").format(asset.price)
+                  R.plurals.delete_asset_confirm, count, DecimalFormat("0.####").format(asset.shares),
+                  DecimalFormat("0.00##").format(asset.price)
               )
           )
           .setPositiveButton(R.string.delete) { _, _ ->
             stockRoomViewModel.deleteAsset(asset)
             val pluralstr = resources.getQuantityString(
-                R.plurals.delete_asset_msg, count, DecimalFormat("0.##").format(asset.shares),
-                DecimalFormat("0.##").format(asset.price)
+                R.plurals.delete_asset_msg, count, DecimalFormat("0.####").format(asset.shares),
+                DecimalFormat("0.00##").format(asset.price)
             )
 
             Toast.makeText(
@@ -897,14 +897,14 @@ class StockDataFragment : Fragment() {
 
     alertAboveInputEditText.setText(
         if (alertAbove > 0.0) {
-          DecimalFormat("0.####").format(alertAbove)
+          DecimalFormat("0.00##").format(alertAbove)
         } else {
           ""
         }
     )
     alertBelowInputEditText.setText(
         if (alertBelow > 0.0) {
-          DecimalFormat("0.####").format(alertBelow)
+          DecimalFormat("0.00##").format(alertBelow)
         } else {
           ""
         }
@@ -1100,8 +1100,8 @@ class StockDataFragment : Fragment() {
                 }
 
                 val pluralstr = resources.getQuantityString(
-                    R.plurals.asset_added, count, DecimalFormat("0.##").format(shares),
-                    DecimalFormat("0.##").format(price)
+                    R.plurals.asset_added, count, DecimalFormat("0.####").format(shares),
+                    DecimalFormat("0.00##").format(price)
                 )
 
                 Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)

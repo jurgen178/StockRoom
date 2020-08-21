@@ -232,7 +232,7 @@ class StockRoomListAdapter internal constructor(
         assets.append(
             "\n${context.getString(R.string.alert_above_in_list)} ${
               DecimalFormat(
-                  "0.####"
+                  "0.00##"
               ).format(current.stockDBdata.alertAbove)
             }"
         )
@@ -241,7 +241,7 @@ class StockRoomListAdapter internal constructor(
         assets.append(
             "\n${context.getString(R.string.alert_below_in_list)} ${
               DecimalFormat(
-                  "0.####"
+                  "0.00##"
               ).format(current.stockDBdata.alertBelow)
             }"
         )

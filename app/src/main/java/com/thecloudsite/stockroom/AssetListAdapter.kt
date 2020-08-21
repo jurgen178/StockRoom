@@ -100,7 +100,7 @@ class AssetListAdapter internal constructor(
         val isSum = current.shares > 0.0 && current.price > 0.0
 
         holder.itemViewShares.text = if (isSum) {
-          DecimalFormat("0.##").format(current.shares)
+          DecimalFormat("0.####").format(current.shares)
         } else {
           ""
         }
@@ -130,7 +130,7 @@ class AssetListAdapter internal constructor(
         holder.bindUpdate(current, clickListenerUpdate)
         holder.bindDelete(null, current, clickListenerDelete)
 
-        holder.itemViewShares.text = DecimalFormat("0.##").format(current.shares)
+        holder.itemViewShares.text = DecimalFormat("0.####").format(current.shares)
         holder.itemViewPrice.text = DecimalFormat("0.00##").format(current.price)
         holder.itemViewTotal.text = DecimalFormat("0.00").format(current.shares * current.price)
 

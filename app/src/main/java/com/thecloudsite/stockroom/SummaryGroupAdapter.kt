@@ -239,7 +239,7 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_note)} ")
         .bold { append("${totalNotes}\n") }
         .append("${context.getString(R.string.summary_number_of_stocks)} ")
-        .bold { append("${DecimalFormat("0.##").format(totalShares)}\n\n") }
+        .bold { append("${DecimalFormat("0.####").format(totalShares)}\n\n") }
         .append("${context.getString(R.string.summary_total_purchase_price)} ")
         .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
         .append("${context.getString(R.string.summary_total_assets)} ")
