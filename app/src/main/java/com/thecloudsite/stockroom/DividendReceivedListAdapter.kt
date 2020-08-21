@@ -136,7 +136,10 @@ class DividendReceivedListAdapter internal constructor(
         holder.bindDelete(null, current, null, clickListenerDelete)
 
         val dividendYield =
-          if ((current.cycle == DividendCycle.Monthly.value || current.cycle == DividendCycle.Quarterly.value)
+          if ((current.cycle == DividendCycle.Monthly.value
+                  || current.cycle == DividendCycle.Quarterly.value
+                  || current.cycle == DividendCycle.SemiAnnual.value
+                  || current.cycle == DividendCycle.Annual.value)
               && current.amount > 0.0 && marketValue > 0.0
           ) {
             "\n${

@@ -46,6 +46,8 @@ enum class DividendType(val value: Int) {
 enum class DividendCycle(val value: Int) {
   Monthly(12),
   Quarterly(4),
+  SemiAnnual(2),
+  Annual(1),
 }
 
 // Enable scrolling by disable parent scrolling
@@ -140,7 +142,10 @@ class DividendFragment : Fragment() {
               val cycle =
                 dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
 
-              if (dividend.amount != dividendAmount || dividend.exdate != 0L || dividend.paydate != seconds || dividend.cycle != cycle) {
+              if (dividend.amount != dividendAmount
+                  || dividend.cycle != cycle
+                  || dividend.paydate != seconds
+              ) {
                 stockRoomViewModel.updateDividend2(
                     dividend,
                     Dividend(
@@ -284,7 +289,11 @@ class DividendFragment : Fragment() {
 
           val cycle = dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
 
-          if (dividend.amount != dividendAmount || dividend.exdate != secondsEx || dividend.paydate != seconds) {
+          if (dividend.amount != dividendAmount
+              || dividend.cycle != cycle
+              || dividend.paydate != seconds
+              || dividend.exdate != secondsEx
+          ) {
             stockRoomViewModel.updateDividend2(
                 dividend,
                 Dividend(
@@ -759,7 +768,7 @@ class DividendFragment : Fragment() {
             .bold {
               append(" ${DecimalFormat("0.00").format(totalDividend / 12.0)}")
             }
-            .append(", ${getString(R.string.yearly)}")
+            .append(", ${getString(R.string.annual)}")
             .bold {
               append(" ${DecimalFormat("0.00").format(totalDividend)}")
             }

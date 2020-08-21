@@ -54,6 +54,8 @@ limitations under the License. -->
   <string-array name="dividend_cycles">
     <item>Monatlich</item>
     <item>Vierteljährlich</item>
+    <item>Halbjährlich</item>
+    <item>Jährlich</item>
   </string-array>
 
   <!-- Preference Titles -->
@@ -209,7 +211,7 @@ limitations under the License. -->
   <string name="annualDividendRate">Jährlicher Dividendensatz</string>
   <string name="quarterlyDividend">Geschätzte vierteljährliche Dividende</string>
   <string name="monthly">monatlich</string>
-  <string name="yearly">jährlich</string>
+  <string name="annual">jährlich</string>
   <string name="onlinedata_regularMarketPreviousClose">Vortagswert</string>
   <string name="onlinedata_regularMarketOpen">Eröffnungswert</string>
   <string name="onlinedata_fiftyDayAverage">50-Tage Durchschnitt</string>

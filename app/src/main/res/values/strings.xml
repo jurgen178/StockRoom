@@ -57,6 +57,8 @@ limitations under the License. -->
   <string-array name="dividend_cycles">
     <item>Monthly</item>
     <item>Quarterly</item>
+    <item>Semi Annual</item>
+    <item>Annual</item>
   </string-array>
 
   <!-- Preference Titles -->
@@ -212,7 +214,7 @@ limitations under the License. -->
   <string name="annualDividendRate">Annual dividend rate</string>
   <string name="quarterlyDividend">Estimated quarterly dividend</string>
   <string name="monthly">monthly</string>
-  <string name="yearly">yearly</string>
+  <string name="annual">annual</string>
   <string name="onlinedata_regularMarketPreviousClose">Market previous close</string>
   <string name="onlinedata_regularMarketOpen">Market open</string>
   <string name="onlinedata_fiftyDayAverage">50 day average</string>

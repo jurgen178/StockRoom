@@ -18,22 +18,28 @@ const val epsilon = 0.000001
 enum class DividendCycle(val value: Int) {
   Monthly(12),
   Quarterly(4),
+  SemiAnnual(2),
+  Annual(1),
 }
 */
 
 
 fun dividendSelectionToCycle(selection: Int): Int {
-  return if (selection == 0)
-    DividendCycle.Monthly.value
-  else
-    DividendCycle.Quarterly.value
+  return when (selection) {
+    0 -> DividendCycle.Monthly.value
+    2 -> DividendCycle.SemiAnnual.value
+    3 -> DividendCycle.Annual.value
+    else -> DividendCycle.Quarterly.value
+  }
 }
 
 fun dividendCycleToSelection(cycle: Int): Int {
-  return if (cycle == DividendCycle.Monthly.value)
-    0
-  else
-    1
+  return when (cycle) {
+    DividendCycle.Monthly.value -> 0
+    DividendCycle.SemiAnnual.value -> 2
+    DividendCycle.Annual.value -> 3
+    else -> 1
+  }
 }
 
 fun isValidSymbol(symbol: String): Boolean {
