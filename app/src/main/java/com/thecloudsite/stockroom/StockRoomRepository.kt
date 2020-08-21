@@ -301,7 +301,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun deleteStock(symbol: String) {
-    stockRoomDao.delete(symbol)
+    stockRoomDao.deleteStock(symbol)
   }
 
   @Suppress("RedundantSuspendModifier")

@@ -336,7 +336,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 separator = ",",
                 postfix = "]"
             )
-        logDebug("Internet access count $count/min $lastCounts[${SharedRepository.statsCounterMax}]")
+        logDebug(
+            "Internet access count $count/min $lastCounts[${SharedRepository.statsCounterMax}]"
+        )
         SharedRepository.lastStatsCounters.forEachIndexed { i, _ ->
           val reverseIndex = SharedRepository.lastStatsCounters.size - i - 1
           if (reverseIndex > 0) {
@@ -1525,6 +1527,31 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
+  // Get the colored menu entries for the groups.
+  fun getGroupsMenuList(standardGroupName: String): List<SpannableString> {
+    val menuStrings: MutableList<SpannableString> = mutableListOf()
+
+    val space: String = "    "
+    val spacePos = space.length
+    val groups: MutableList<Group> = getGroupsSync().toMutableList()
+    groups.add(Group(color = backgroundListColor, name = standardGroupName))
+    for (i in groups.indices) {
+      val grp: Group = groups[i]
+      val s = SpannableString("$space  ${grp.name}")
+      s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
+
+      // backgroundListColor is light color, make the group name readable
+      if (grp.color == backgroundListColor) {
+        grp.color = Color.BLACK
+      }
+
+      s.setSpan(ForegroundColorSpan(grp.color), spacePos, s.length, 0)
+      menuStrings.add(s)
+    }
+
+    return menuStrings
+  }
+
   /**
    * Launching a new coroutine to insert the data in a non-blocking way
    */
@@ -1672,31 +1699,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return groups
   }
 
-  // Get the colored menu entries for the groups.
-  fun getGroupsMenuList(standardGroupName: String): List<SpannableString> {
-    val menuStrings: MutableList<SpannableString> = mutableListOf()
-
-    val space: String = "    "
-    val spacePos = space.length
-    val groups: MutableList<Group> = getGroupsSync().toMutableList()
-    groups.add(Group(color = backgroundListColor, name = standardGroupName))
-    for (i in groups.indices) {
-      val grp: Group = groups[i]
-      val s = SpannableString("$space  ${grp.name}")
-      s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
-
-      // backgroundListColor is light color, make the group name readable
-      if (grp.color == backgroundListColor) {
-        grp.color = Color.BLACK
-      }
-
-      s.setSpan(ForegroundColorSpan(grp.color), spacePos, s.length, 0)
-      menuStrings.add(s)
-    }
-
-    return menuStrings
-  }
-
   suspend fun getStockData(symbol: String): OnlineMarketData? {
     return stockMarketDataRepository.getStockData(symbol.toUpperCase(Locale.ROOT))
   }
@@ -1795,11 +1797,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun deleteStock(symbol: String) = scope.launch {
     if (symbol.isNotEmpty()) {
-      val symbolUpper = symbol.toUpperCase(Locale.ROOT)
-      repository.deleteStock(symbolUpper)
-      repository.deleteAssets(symbolUpper)
-      repository.deleteEvents(symbolUpper)
-      repository.deleteDividends(symbolUpper)
+      repository.deleteStock(symbol.toUpperCase(Locale.ROOT))
     }
   }
 

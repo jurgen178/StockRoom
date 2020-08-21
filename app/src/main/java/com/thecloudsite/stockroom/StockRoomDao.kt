@@ -41,7 +41,15 @@ interface StockRoomDao {
   fun getAll(): LiveData<List<StockDBdata>>
 
   @Query("DELETE FROM stock_table WHERE symbol = :symbol")
-  fun delete(symbol: String)
+  fun deleteSymbol(symbol: String)
+
+  @Transaction
+  fun deleteStock(symbol: String) {
+    deleteAssets(symbol)
+    deleteEvents(symbol)
+    deleteDividends(symbol)
+    deleteSymbol(symbol)
+  }
 
   @Transaction
   fun deleteAll() {

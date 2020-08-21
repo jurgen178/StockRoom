@@ -282,7 +282,7 @@ class StockRoomDaoTest {
     assertEquals(1, events1.events.size)
 
     // delete stockDBdata also deletes assets and events
-    stockRoomDao.delete("symbol1")
+    stockRoomDao.deleteSymbol("symbol1")
 
     val assetsdel = stockRoomDao.getAssets("symbol1")
     assertEquals(null, assetsdel)
@@ -549,7 +549,7 @@ class StockRoomDaoTest {
     assertEquals(22L, dividends.dividends[1].paydate)
     assertEquals(32L, dividends.dividends[1].exdate)
 
-    stockRoomDao.delete("symbol1")
+    stockRoomDao.deleteSymbol("symbol1")
 
     val dividends2 = stockRoomDao.getDividends("symbol1")
     assertEquals(null, dividends2)
@@ -594,7 +594,7 @@ class StockRoomDaoTest {
     stockRoomDao.insert(stockDBdata1)
     val stockDBdata2 = StockDBdata("symbol2")
     stockRoomDao.insert(stockDBdata2)
-    stockRoomDao.delete("symbol1")
+    stockRoomDao.deleteSymbol("symbol1")
     val allStockDBdata = stockRoomDao.getAllProperties()
         .waitForValue()
     assertEquals(allStockDBdata.size, 1)
