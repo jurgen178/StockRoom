@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.text.scale
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
@@ -175,11 +176,13 @@ class SettingsActivity : AppCompatActivity(),
               context?.getColor(R.color.settingsblue)!!
           ) { bold { append(" \t$versionName $versionBuild") } }
           .italic {
-            color(0xffffbb33.toInt()) {
-              // https://convertcodes.com/unicode-converter-encode-decode-utf/
-              append(
-                  "\n\u006a\u0075\u0072\u0067\u0065\u006e\u0031\u0037\u0038\u002c\u0020\u0061\u0069\u0061\u006d\u0061\u006e\u002c\u0020\u006b\u0065\u006e\u0064\u0079\u002c\u0020\u0062\u006c\u0075\u006c\u0062\u0020\u0061\u006e\u0064\u0020\u0074\u0075\u006c\u0062\u0070\u0069\u0072"
-              )
+            scale(0.8f) {
+              color(0xffffbb33.toInt()) {
+                // https://convertcodes.com/unicode-converter-encode-decode-utf/
+                append(
+                    "\n\u006a\u0075\u0072\u0067\u0065\u006e\u0031\u0037\u0038\u002c\u0020\u0061\u0069\u0061\u006d\u0061\u006e\u002c\u0020\u006b\u0065\u006e\u0064\u0079\u002c\u0020\u0062\u006c\u0075\u006c\u0062\u0020\u0061\u006e\u0064\u0020\u0074\u0075\u006c\u0062\u0070\u0069\u0072"
+                )
+              }
             }
           }
       version?.summary = versionStr
