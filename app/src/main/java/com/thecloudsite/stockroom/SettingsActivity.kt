@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
 const val exportListActivityRequestCode = 3
+//const val authActivityRequestCode = 4
 
 class SettingsActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -95,6 +96,24 @@ class SettingsActivity : AppCompatActivity(),
         }
       }
     }
+    /*
+    else
+      if (requestCode == authActivityRequestCode) {
+        val response = IdpResponse.fromResultIntent(data)
+
+        if (resultCode == Activity.RESULT_OK) {
+          // Successfully signed in
+          val user = FirebaseAuth.getInstance().currentUser
+
+          exportListToCloud()
+          // ...
+        } else {
+          // Sign in failed. If response is null the user canceled the
+          // sign-in flow using the back button. Otherwise check
+          // response.getError().getErrorCode() and handle the error.
+          // ...
+        }
+      }*/
   }
 
   override fun onResume() {
@@ -246,6 +265,17 @@ class SettingsActivity : AppCompatActivity(),
           }
       }
 
+/*
+      val buttonExportListToCloud: Preference? = findPreference("export_cloud")
+      if (buttonExportListToCloud != null) {
+        buttonExportListToCloud.onPreferenceClickListener =
+          OnPreferenceClickListener {
+            onExportListToCloud()
+            true
+          }
+      }
+*/
+
       val buttonDeleteAll: Preference? = findPreference("delete_all")
       if (buttonDeleteAll != null) {
         buttonDeleteAll.onPreferenceClickListener =
@@ -301,5 +331,77 @@ class SettingsActivity : AppCompatActivity(),
           exportListActivityRequestCode
       )
     }
+
+    /*
+    FirebaseUser user = firebaseAuth.getCurrentUser();
+    if (user != null) {
+      FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).setValue(true);
+    }
+
+
+    private fun onExportListToCloud() {
+      val auth: FirebaseAuth = Firebase.auth
+
+      // Check if user is signed in (non-null) and update UI accordingly.
+      val currentUser = auth.currentUser
+
+      if (currentUser != null) {
+        val myRef2 = Firebase.database.getReference("message")
+        myRef2.keepSynced(true)
+        myRef2.setValue("Hello, World!1234")
+            .addOnSuccessListener {
+              // Write was successful!
+              val a= it
+              // ...
+            }
+            .addOnFailureListener {
+              // Write failed
+              val a= it
+              // ...
+            }
+        Firebase.database.reference.setValue("abcd")
+
+        // Read from the database
+        myRef2.addListenerForSingleValueEvent(object : ValueEventListener {
+          override fun onDataChange(dataSnapshot: DataSnapshot) {
+            // This method is called once with the initial value and again
+            // whenever data at this location is updated.
+            val value = dataSnapshot.getValue<String>()
+            val a = value
+            //Log.d(TAG, "Value is: $value")
+          }
+
+          override fun onCancelled(error: DatabaseError) {
+            // Failed to read value
+            //Log.w(TAG, "Failed to read value.", error.toException())
+          }
+        })
+        exportListToCloud()
+      } else {
+
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.EmailBuilder()
+                .build(),
+            AuthUI.IdpConfig.GoogleBuilder()
+                .build()
+            /*,
+            AuthUI.IdpConfig.PhoneBuilder().build(),
+            AuthUI.IdpConfig.FacebookBuilder().build(),
+            AuthUI.IdpConfig.TwitterBuilder().build()
+             */
+        )
+
+        // Create and launch sign-in intent
+        startActivityForResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build(),
+            authActivityRequestCode
+        )
+      }
+    }
+    */
+
   }
 }

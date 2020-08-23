@@ -77,6 +77,21 @@ dependencies {
   implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
   // Add the dependency for the Performance Monitoring library
   implementation 'com.google.firebase:firebase-perf:19.0.8'
+  // Add the Realtime Database SDK
+  implementation 'com.google.firebase:firebase-database-ktx:19.3.1'
+  // Add the dependencies for FirebaseUI
+  //implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
+  // Add Firebase Authentication to your app and Google Play services
+  //implementation 'com.google.firebase:firebase-auth-ktx:19.3.2'
+  //implementation 'com.google.android.gms:play-services-auth:18.1.0'
+
+  // Required only if Facebook login support is required
+  // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94
+  //implementation 'com.facebook.android:facebook-android-sdk:4.x'
+
+  // Required only if Twitter login support is required
+  // Find the latest Twitter SDK releases here: https://goo.gl/E5wZvQ
+  //implementation 'com.twitter.sdk.android:twitter-core:3.x'
 
   def moshiVersion = '1.9.3'
   def retrofit2_version = '2.9.0'

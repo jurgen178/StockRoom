@@ -37,6 +37,15 @@
         app:icon="@drawable/ic_action_export"
         />
 
+<!--
+    <Preference
+        app:key="export_cloud"
+        app:summary="@string/export_cloud_desc"
+        app:title="@string/export_cloud"
+        app:icon="@drawable/ic_action_export"
+        />
+-->
+
     <Preference
         app:key="reset_portfolios"
         app:summary="@string/reset_portfolios_desc"

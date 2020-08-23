@@ -33,6 +33,11 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
@@ -99,6 +104,36 @@ class MainActivity : AppCompatActivity() {
     if (!isOnline(applicationContext)) {
       stockRoomViewModel.logDebug("Network is offline.")
     }
+
+
+
+    // When you enable disk persistence, your app writes the data locally
+    // to the device so your app can maintain state while offline, even
+    // if the user or operating system restarts the app.
+    //Firebase.database.setPersistenceEnabled(true)
+
+    // Write a message to the database
+    val database = Firebase.database
+    val myRef = database.getReference("message")
+
+    myRef.setValue("Hello, World!A")
+
+
+    // Read from the database
+    myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+      override fun onDataChange(dataSnapshot: DataSnapshot) {
+        // This method is called once with the initial value and again
+        // whenever data at this location is updated.
+        val value = dataSnapshot.getValue<String>()
+        val a = value
+        //Log.d(TAG, "Value is: $value")
+      }
+
+      override fun onCancelled(error: DatabaseError) {
+        // Failed to read value
+        //Log.w(TAG, "Failed to read value.", error.toException())
+      }
+    })
 
     updateRemoteConfig()
 
