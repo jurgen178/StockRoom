@@ -275,7 +275,7 @@ limitations under the License. -->
   <string name="dividend_exdate">Ex-Dividend</string>
   <string name="totaldividend_payed">Dividend paid</string>
   <string name="totaldividend_payedYTD">Dividend paid YTD</string>
-  <string name="no_online_dividend_data">No online dividend data</string>
+  <string name="no_dividend_data">No dividend data.</string>
   <string name="reset_portfolios_title">Reset Portfolios</string>
   <string name="reset_portfolios_desc">Reset all Portfolios back to the Standard Portfolio.</string>
   <string name="reset_portfolios_confirm">Are you sure to reset all Portfolios back to the Standard Portfolio?</string>

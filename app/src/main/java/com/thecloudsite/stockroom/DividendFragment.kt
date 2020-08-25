@@ -713,7 +713,7 @@ class DividendFragment : Fragment() {
     if (data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0.0) {
       textViewDividend.text = getDividend(data)
     } else {
-      textViewDividend.text = getString(R.string.no_online_dividend_data)
+      textViewDividend.text = getString(R.string.no_dividend_data)
     }
   }
 
