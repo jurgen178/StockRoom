@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -33,11 +34,6 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
@@ -81,6 +77,8 @@ class MainActivity : AppCompatActivity() {
     private const val STOCKCHARTDATA_BASEURL = "stockChartDataBaseUrl"
     private const val YAHOONEWS_BASEURL = "yahooNewsBaseUrl"
     private const val GOOGLENEWS_BASEURL = "googleNewsBaseUrl"
+    private const val USER_MSG_TITLE = "userMsgTitle"
+    private const val USER_MSG = "userMsg"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,8 +103,7 @@ class MainActivity : AppCompatActivity() {
       stockRoomViewModel.logDebug("Network is offline.")
     }
 
-
-
+/*
     // When you enable disk persistence, your app writes the data locally
     // to the device so your app can maintain state while offline, even
     // if the user or operating system restarts the app.
@@ -134,6 +131,7 @@ class MainActivity : AppCompatActivity() {
         //Log.w(TAG, "Failed to read value.", error.toException())
       }
     })
+*/
 
     updateRemoteConfig()
 
@@ -285,6 +283,15 @@ class MainActivity : AppCompatActivity() {
             GoogleNewsApiFactory.update(googleNewsBaseUrl)
             //stockRoomViewModel.logDebug("Remote Config [baseUrl=$googleNewsBaseUrl]")
 
+            val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
+            val userMsg = remoteConfig[USER_MSG].asString()
+            if(userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
+              AlertDialog.Builder(this)
+                  .setTitle(userMsgTitle)
+                  .setMessage(userMsg)
+                  .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                  .show()
+            }
           } else {
             stockRoomViewModel.logDebug("Config failed, using defaults.")
           }
