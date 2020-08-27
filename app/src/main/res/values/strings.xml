@@ -78,6 +78,7 @@ limitations under the License. -->
   <string name="sort_profit">Sort by Gain</string>
   <string name="sort_dividend">Sort by Dividend</string>
 
+  <string name="ok">OK</string>
   <string name="cancel">Cancel</string>
   <string name="one_day_range">Daily</string>
   <string name="five_days_range">Weekly</string>

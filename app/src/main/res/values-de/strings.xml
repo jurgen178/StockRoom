@@ -75,6 +75,7 @@ limitations under the License. -->
   <string name="sort_profit">Nach Gewinn sortieren</string>
   <string name="sort_dividend">Nach Dividende sortieren</string>
 
+  <string name="ok">OK</string>
   <string name="cancel">Abbrechen</string>
   <string name="one_day_range">Tagesverlauf</string>
   <string name="five_days_range">Wochenverlauf</string>

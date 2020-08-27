@@ -153,7 +153,7 @@ class SettingsActivity : AppCompatActivity(),
         .setMessage(
             "\u0061\u0020\u0064\u0065\u0062\u0075\u0067\u0020\u0069\u006e\u0076\u0065\u0073\u0074\u006d\u0065\u006e\u0074\u002e"
         )
-        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+        .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
         .show()
 //    val intent = Intent(this@SettingsActivity, ListActivity::class.java)
 //    startActivity(intent)
@@ -219,7 +219,7 @@ class SettingsActivity : AppCompatActivity(),
                 .setMessage(
                     "\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e"
                 )
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                 .show()
           }
           if (versionClickCounter == 20) {
@@ -230,7 +230,7 @@ class SettingsActivity : AppCompatActivity(),
                 .setMessage(
                     "\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074"
                 )
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                 .show()
           }
           true

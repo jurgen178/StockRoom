@@ -289,7 +289,7 @@ class MainActivity : AppCompatActivity() {
               AlertDialog.Builder(this)
                   .setTitle(userMsgTitle)
                   .setMessage(userMsg)
-                  .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                  .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                   .show()
             }
           } else {
