@@ -92,7 +92,7 @@ class StockRoomTest {
   @Test
   @Throws(Exception::class)
   fun accessCounterTest() {
-    val lastStatsCounters = IntArray(5){ _ -> -1 }
+    val lastStatsCounters = IntArray(5){ -1 }
 
     fun getCounts(): String {
       return lastStatsCounters.filter { it >= 0 }
