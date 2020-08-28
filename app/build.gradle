@@ -64,7 +64,7 @@ repositories {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation 'androidx.appcompat:appcompat:1.2.0'
-  implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+  implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
   implementation 'com.google.android.material:material:1.2.0'
   implementation 'androidx.preference:preference:1.1.1'
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -74,11 +74,11 @@ dependencies {
   implementation 'com.google.firebase:firebase-config-ktx:19.2.0'
   implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
   // Add the Firebase Crashlytics SDK.
-  implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+  implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.1'
   // Add the dependency for the Performance Monitoring library
   implementation 'com.google.firebase:firebase-perf:19.0.8'
   // Add the Realtime Database SDK
-  implementation 'com.google.firebase:firebase-database-ktx:19.3.1'
+  implementation 'com.google.firebase:firebase-database-ktx:19.4.0'
   // Add the dependencies for FirebaseUI
   //implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
   // Add Firebase Authentication to your app and Google Play services
