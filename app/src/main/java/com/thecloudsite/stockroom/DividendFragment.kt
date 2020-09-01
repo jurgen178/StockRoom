@@ -112,7 +112,8 @@ class DividendFragment : Fragment() {
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val addDividendText = addDividendView.text.toString()
+          // Add () to avoid cast exception.
+          val addDividendText = (addDividendView.text).toString()
               .trim()
           if (addDividendText.isNotEmpty()) {
             var dividendAmount = 0.0
@@ -263,7 +264,8 @@ class DividendFragment : Fragment() {
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val addDividendText = addDividendView.text.toString()
+          // Add () to avoid cast exception.
+          val addDividendText = (addDividendView.text).toString()
               .trim()
           var dividendAmount = 0.0
           if (addDividendText.isNotEmpty()) {
@@ -487,7 +489,8 @@ class DividendFragment : Fragment() {
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
-            val addDividendText = addDividendView.text.toString()
+            // Add () to avoid cast exception.
+            val addDividendText = (addDividendView.text).toString()
                 .trim()
             if (addDividendText.isNotEmpty()) {
               var dividendAmount = 0.0
@@ -579,7 +582,8 @@ class DividendFragment : Fragment() {
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
-            val addDividendText = addDividendView.text.toString()
+            // Add () to avoid cast exception.
+            val addDividendText = (addDividendView.text).toString()
                 .trim()
             var dividendAmount = 0.0
             if (addDividendText.isNotEmpty()) {
@@ -679,7 +683,8 @@ class DividendFragment : Fragment() {
         .setPositiveButton(
             R.string.add
         ) { _, _ ->
-          val noteText = textInputEditNoteView.text.toString()
+          // Add () to avoid cast exception.
+          val noteText = (textInputEditNoteView.text).toString()
 
           if (noteText != note) {
             dividendNotesTextView.text = noteText

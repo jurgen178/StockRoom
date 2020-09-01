@@ -237,9 +237,10 @@ class StockDataFragment : Fragment() {
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val sharesText = addSharesView.text.toString()
+          // Add () to avoid cast exception.
+          val sharesText = (addSharesView.text).toString()
               .trim()
-          val priceText = addPriceView.text.toString()
+          val priceText = (addPriceView.text).toString()
               .trim()
           if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
             var price = 0.0
@@ -402,9 +403,10 @@ class StockDataFragment : Fragment() {
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val title = textInputEditEventTitleView.text.toString()
+          // Add () to avoid cast exception.
+          val title = (textInputEditEventTitleView.text).toString()
               .trim()
-          val note = textInputEditEventNoteView.text.toString()
+          val note = (textInputEditEventNoteView.text).toString()
 
           val datetime: LocalDateTime = LocalDateTime.of(
               datePickerEventDateView.year, datePickerEventDateView.month + 1,
@@ -768,7 +770,8 @@ class StockDataFragment : Fragment() {
                     R.string.rename
                   }
               ) { _, _ ->
-                val portfolioText = addNameView.text.toString()
+                // Add () to avoid cast exception.
+                val portfolioText = (addNameView.text).toString()
                     .trim()
                 if (portfolioText.isEmpty() || portfolioText.compareTo(
                         standardPortfolio, true
@@ -967,7 +970,8 @@ class StockDataFragment : Fragment() {
             .setPositiveButton(
                 R.string.split
             ) { _, _ ->
-              val splitRatioText = splitRatioView.text.toString()
+              // Add () to avoid cast exception.
+              val splitRatioText = (splitRatioView.text).toString()
                   .trim()
               if (splitRatioText.isNotEmpty()) {
                 var splitRatio = 0.0
@@ -1047,9 +1051,10 @@ class StockDataFragment : Fragment() {
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
-            val sharesText = addSharesView.text.toString()
+            // Add () to avoid cast exception.
+            val sharesText = (addSharesView.text).toString()
                 .trim()
-            val priceText = addPriceView.text.toString()
+            val priceText = (addPriceView.text).toString()
                 .trim()
             if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
               var price = 0.0
@@ -1146,7 +1151,8 @@ class StockDataFragment : Fragment() {
             .setPositiveButton(
                 R.string.delete
             ) { _, _ ->
-              val removeSharesText = removeSharesView.text.toString()
+              // Add () to avoid cast exception.
+              val removeSharesText = (removeSharesView.text).toString()
                   .trim()
               if (removeSharesText.isNotEmpty()) {
                 var shares = 0.0
@@ -1226,9 +1232,10 @@ class StockDataFragment : Fragment() {
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
-            val title = textInputEditEventTitleView.text.toString()
+            // Add () to avoid cast exception.
+            val title = (textInputEditEventTitleView.text).toString()
                 .trim()
-            val note = textInputEditEventNoteView.text.toString()
+            val note = (textInputEditEventNoteView.text).toString()
             val datetime: LocalDateTime = LocalDateTime.of(
                 datePickerEventDateView.year, datePickerEventDateView.month + 1,
                 datePickerEventDateView.dayOfMonth, datePickerEventTimeView.hour,
@@ -1428,7 +1435,8 @@ class StockDataFragment : Fragment() {
         .setPositiveButton(
             R.string.add
         ) { _, _ ->
-          val noteText = textInputEditNoteView.text.toString()
+          // Add () to avoid cast exception.
+          val noteText = (textInputEditNoteView.text).toString()
 
           if (noteText != note) {
             notesTextView.text = noteText

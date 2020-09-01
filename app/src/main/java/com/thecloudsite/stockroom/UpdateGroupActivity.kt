@@ -81,7 +81,9 @@ class UpdateGroupActivity : AppCompatActivity() {
             // Add the new color.
             stockRoomViewModel.setGroup(color = color, name = group.name)
           }
-          val nameText = addNameView.text.toString().trim()
+          // Add () to avoid cast exception.
+          val nameText = (addNameView.text).toString()
+              .trim()
           val nameUsed = groupList.find { group ->
             group.color != clr && group.name == nameText
           } != null
@@ -108,14 +110,16 @@ class UpdateGroupActivity : AppCompatActivity() {
   private fun groupItemDeleteClicked(group: GroupData) {
     AlertDialog.Builder(this)
         .setTitle(getString(R.string.delete_group_title, group.name))
-        .setMessage(if(group.stats == 0){
-            getString(R.string.delete_group_confirm, group.name)}else
-        {getString(R.string.delete_group_confirm2, group.name, group.stats)}
+        .setMessage(
+            if (group.stats == 0) {
+              getString(R.string.delete_group_confirm, group.name)
+            } else {
+              getString(R.string.delete_group_confirm2, group.name, group.stats)
+            }
         )
         .setPositiveButton(R.string.delete) { _, _ ->
-          stockDBdataList.forEach {data ->
-            if(data.groupColor == group.color)
-            {
+          stockDBdataList.forEach { data ->
+            if (data.groupColor == group.color) {
               // reset color
               stockRoomViewModel.setStockGroupColor(data.symbol, 0)
             }
@@ -191,7 +195,9 @@ class UpdateGroupActivity : AppCompatActivity() {
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
-            val nameText = addNameView.text.toString().trim()
+            // Add () to avoid cast exception.
+            val nameText = (addNameView.text).toString()
+                .trim()
             if (nameText.isEmpty()) {
               Toast.makeText(
                   this, getString(R.string.group_name_not_empty), Toast.LENGTH_LONG
@@ -253,9 +259,8 @@ class UpdateGroupActivity : AppCompatActivity() {
           .setMessage(getString(R.string.delete_all_groups_confirm))
           .setPositiveButton(R.string.delete) { _, _ ->
             // Remove color form all stocks.
-            stockDBdataList.forEach {data ->
-              if(data.groupColor != 0)
-              {
+            stockDBdataList.forEach { data ->
+              if (data.groupColor != 0) {
                 // reset color
                 stockRoomViewModel.setStockGroupColor(data.symbol, 0)
               }
