@@ -172,10 +172,14 @@ class SummaryGroupAdapter internal constructor(
     stockItemsSelected.forEach { stockItem ->
       var shares = 0.0
       var price = 0.0
+
       stockItem.assets.forEach { asset ->
         price += asset.shares * asset.price
         shares += asset.shares
       }
+
+      totalPurchasePrice += price
+      totalShares += shares
 
       stockItem.dividends.forEach { dividend ->
         if (dividend.type == DividendType.Received.value) {
@@ -185,9 +189,6 @@ class SummaryGroupAdapter internal constructor(
           }
         }
       }
-
-      totalPurchasePrice += price
-      totalShares += shares
 
       if (stockItem.stockDBdata.alertAbove > 0.0) {
         totalAlerts++
