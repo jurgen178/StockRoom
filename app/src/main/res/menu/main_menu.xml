@@ -62,11 +62,13 @@
       app:showAsAction="always" />
 
   <item
+      android:icon="@drawable/ic_action_select_portfolio"
       android:id="@+id/menu_portfolio"
       android:title="@string/menu_portfolio_title"
+      app:showAsAction="always"
       android:visible="false">
     <menu>
-
     </menu>
   </item>
+
 </menu>
