@@ -309,10 +309,10 @@ class StockDataFragment : Fragment() {
                 .show()
           }
         }
-        .setNegativeButton(R.string.cancel,
-            { _, _ ->
-              //getDialog().cancel()
-            })
+        .setNegativeButton(R.string.cancel
+        ) { _, _ ->
+          //getDialog().cancel()
+        }
     builder
         .create()
         .show()
@@ -440,9 +440,9 @@ class StockDataFragment : Fragment() {
             }
           hideSoftInputFromWindow()
         }
-        .setNegativeButton(R.string.cancel,
-            { _, _ ->
-            })
+        .setNegativeButton(R.string.cancel
+        ) { _, _ ->
+        }
     builder
         .create()
         .show()
@@ -1026,9 +1026,9 @@ class StockDataFragment : Fragment() {
                 }
               }
             }
-            .setNegativeButton(R.string.cancel,
-                { _, _ ->
-                })
+            .setNegativeButton(R.string.cancel
+            ) { _, _ ->
+            }
         builder
             .create()
             .show()
@@ -1124,9 +1124,9 @@ class StockDataFragment : Fragment() {
                   .show()
             }
           }
-          .setNegativeButton(R.string.cancel,
-              { _, _ ->
-              })
+          .setNegativeButton(R.string.cancel
+          ) { _, _ ->
+          }
       builder
           .create()
           .show()
@@ -1204,9 +1204,9 @@ class StockDataFragment : Fragment() {
                     .show()
               }
             }
-            .setNegativeButton(R.string.cancel,
-                { _, _ ->
-                })
+            .setNegativeButton(R.string.cancel
+            ) { _, _ ->
+            }
         builder
             .create()
             .show()
