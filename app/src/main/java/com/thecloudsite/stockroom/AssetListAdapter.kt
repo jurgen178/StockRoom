@@ -147,7 +147,7 @@ class AssetListAdapter internal constructor(
 
   internal fun updateAssets(assets: List<Asset>) {
     // Headline placeholder
-    assetList = mutableListOf(Asset(symbol = "", shares = 0.0, price = 0.0))
+    assetList = mutableListOf(Asset(symbol = "", shares = 0.0, price = 0.0, date = 0L))
     assetList.addAll(assets)
 
     val sharesTotal = assetList.sumByDouble {
@@ -160,7 +160,7 @@ class AssetListAdapter internal constructor(
 
     // Summary
     val symbol: String = assets.firstOrNull()?.symbol ?: ""
-    assetList.add(Asset(id = null, symbol = symbol, shares = sharesTotal, price = assetTotal))
+    assetList.add(Asset(id = null, symbol = symbol, shares = sharesTotal, price = assetTotal, date = 0L))
 
     notifyDataSetChanged()
   }

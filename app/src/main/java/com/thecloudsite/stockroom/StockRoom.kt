@@ -57,9 +57,9 @@ data class Group(
 data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
-  var shares: Double = 0.0,
-  var price: Double = 0.0,
-  var date: Long = 0L
+  var shares: Double,
+  var price: Double,
+  var date: Long
 )
 
 @Entity(

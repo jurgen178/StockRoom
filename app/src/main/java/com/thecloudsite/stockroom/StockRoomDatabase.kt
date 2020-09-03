@@ -110,7 +110,8 @@ abstract class StockRoomDatabase : RoomDatabase() {
           Asset(
               symbol = symbol,
               shares = asset.shares ?: 0.0,
-              price = asset.price ?: 0.0
+              price = asset.price ?: 0.0,
+              date = asset.date ?: 0L
           )
         })
 
@@ -189,7 +190,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
                 .toDouble()
             val price2 = assetvalue / shares
 
-            stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price2))
+            stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price2, date = 0L))
           }
         }
       } else {

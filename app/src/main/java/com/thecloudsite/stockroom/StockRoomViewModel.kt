@@ -58,7 +58,8 @@ import kotlin.coroutines.CoroutineContext
 
 data class AssetJson(
   var shares: Double,
-  val price: Double
+  val price: Double,
+  val date: Long
 )
 
 data class EventJson(
@@ -992,7 +993,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     Asset(
                         symbol = symbol,
                         shares = shares,
-                        price = price
+                        price = price,
+                        date = if (assetsObj.has("date")) {
+                          assetsObj.getLong("date")
+                        } else {
+                          0L
+                        }
                     )
                 )
               }
@@ -1020,7 +1026,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                       Asset(
                           symbol = symbol,
                           shares = shares,
-                          price = price
+                          price = price,
+                          date = 0L
                       )
                   )
                 }
@@ -1301,7 +1308,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               val asset = Asset(
                   symbol = symbol,
                   shares = shares,
-                  price = price
+                  price = price,
+                  date = 0L
               )
 
               if (assetItems.containsKey(symbol)) {
@@ -1476,7 +1484,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           notes = stockItem.stockDBdata.notes,
           dividendNotes = stockItem.stockDBdata.dividendNotes,
           assets = stockItem.assets.map { asset ->
-            AssetJson(shares = validateDouble(asset.shares), price = validateDouble(asset.price))
+            AssetJson(
+                shares = validateDouble(asset.shares), price = validateDouble(asset.price),
+                date = asset.date
+            )
           },
           events = stockItem.events.map { event ->
             EventJson(
@@ -1786,11 +1797,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   fun addAsset(
     symbol: String,
     shares: Double,
-    price: Double
+    price: Double,
+    date: Long
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.addAsset(
-          Asset(symbol = symbol.toUpperCase(Locale.ROOT), shares = shares, price = price)
+          Asset(
+              symbol = symbol.toUpperCase(Locale.ROOT), shares = shares, price = price, date = date
+          )
       )
     }
   }

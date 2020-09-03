@@ -112,7 +112,7 @@ class ListActivity : AppCompatActivity() {
         assetTableRows.append("<td>${assetItem.symbol}</td>")
         assetTableRows.append("<td>${DecimalFormat("0.####").format(assetItem.shares)}</td>")
         assetTableRows.append("<td>${assetItem.price}</td>")
-        assetTableRows.append("<td>${getDateStr(assetItem.date)}</td>")
+        assetTableRows.append("<td>${getDateTimeStr(assetItem.date)}</td>")
         assetTableRows.append("</tr>")
       }
 
