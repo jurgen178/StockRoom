@@ -37,7 +37,8 @@ import kotlin.math.roundToInt
  * The fact that this has very few comments emphasizes its coolness.
  */
 @Database(
-    entities = [StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class], version = 1,
+    entities = [StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class],
+    version = 1,
     exportSchema = true
 )
 abstract class StockRoomDatabase : RoomDatabase() {
@@ -190,7 +191,9 @@ abstract class StockRoomDatabase : RoomDatabase() {
                 .toDouble()
             val price2 = assetvalue / shares
 
-            stockRoomDao.addAsset(Asset(symbol = asset.symbol, shares = shares, price = price2, date = 0L))
+            stockRoomDao.addAsset(
+                Asset(symbol = asset.symbol, shares = shares, price = price2, date = 0L)
+            )
           }
         }
       } else {

@@ -275,7 +275,8 @@ class StockDataFragment : Fragment() {
               valid = false
             }
             if (valid) {
-              val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+              val date = LocalDateTime.now()
+                  .toEpochSecond(ZoneOffset.UTC)
               val assetnew = Asset(symbol = symbol, shares = shares, price = price, date = date)
               if (asset.shares != assetnew.shares || asset.price != assetnew.price || asset.date != assetnew.date) {
                 stockRoomViewModel.updateAsset2(asset, assetnew)
@@ -309,7 +310,7 @@ class StockDataFragment : Fragment() {
           }
         }
         .setNegativeButton(R.string.cancel,
-            DialogInterface.OnClickListener { _, _ ->
+            { _, _ ->
               //getDialog().cancel()
             })
     builder
@@ -352,7 +353,8 @@ class StockDataFragment : Fragment() {
           .setTitle(R.string.delete_asset)
           .setMessage(
               resources.getQuantityString(
-                  R.plurals.delete_asset_confirm, count, DecimalFormat("0.####").format(asset.shares),
+                  R.plurals.delete_asset_confirm, count,
+                  DecimalFormat("0.####").format(asset.shares),
                   DecimalFormat("0.00##").format(asset.price)
               )
           )
@@ -439,7 +441,7 @@ class StockDataFragment : Fragment() {
           hideSoftInputFromWindow()
         }
         .setNegativeButton(R.string.cancel,
-            DialogInterface.OnClickListener { _, _ ->
+            { _, _ ->
             })
     builder
         .create()
@@ -1025,7 +1027,6 @@ class StockDataFragment : Fragment() {
               }
             }
             .setNegativeButton(R.string.cancel,
-                DialogInterface.OnClickListener
                 { _, _ ->
                 })
         builder
@@ -1090,7 +1091,8 @@ class StockDataFragment : Fragment() {
                 valid = false
               }
               if (valid) {
-                val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                val date = LocalDateTime.now()
+                    .toEpochSecond(ZoneOffset.UTC)
                 stockRoomViewModel.addAsset(
                     Asset(symbol = symbol, shares = shares, price = price, date = date)
                 )
@@ -1123,7 +1125,7 @@ class StockDataFragment : Fragment() {
             }
           }
           .setNegativeButton(R.string.cancel,
-              DialogInterface.OnClickListener { _, _ ->
+              { _, _ ->
               })
       builder
           .create()
@@ -1203,7 +1205,6 @@ class StockDataFragment : Fragment() {
               }
             }
             .setNegativeButton(R.string.cancel,
-                DialogInterface.OnClickListener
                 { _, _ ->
                 })
         builder
