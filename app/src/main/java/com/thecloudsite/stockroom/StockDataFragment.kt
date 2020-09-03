@@ -278,7 +278,7 @@ class StockDataFragment : Fragment() {
               val date = LocalDateTime.now()
                   .toEpochSecond(ZoneOffset.UTC)
               val assetnew = Asset(symbol = symbol, shares = shares, price = price, date = date)
-              if (asset.shares != assetnew.shares || asset.price != assetnew.price || asset.date != assetnew.date) {
+              if (asset.shares != assetnew.shares || asset.price != assetnew.price) {
                 stockRoomViewModel.updateAsset2(asset, assetnew)
                 val count: Int = when {
                   shares == 1.0 -> {
