@@ -144,7 +144,6 @@ class SummaryGroupFragment : Fragment() {
     val centerText = SpannableStringBuilder()
         .append("${context?.getString(R.string.summary_total_assets)} ")
         .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
-
     view.summaryPieChart.centerText = centerText
 
     view.summaryPieChart.description.isEnabled = false

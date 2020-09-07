@@ -1,7 +1,6 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
