@@ -59,7 +59,9 @@ data class Asset(
   val symbol: String,
   var shares: Double,
   var price: Double,
-  var date: Long
+  var date: Long = 0L,
+  var commission: Double = 0.0,
+  var type: Int = 0
 )
 
 @Entity(

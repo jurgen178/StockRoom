@@ -192,7 +192,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
             val price2 = assetvalue / shares
 
             stockRoomDao.addAsset(
-                Asset(symbol = asset.symbol, shares = shares, price = price2, date = 0L)
+                Asset(symbol = asset.symbol, shares = shares, price = price2)
             )
           }
         }

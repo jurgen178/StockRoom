@@ -440,6 +440,8 @@ var events: List<Event>
     var shares: Double,
     val price: Double,
     val date: Long
+    // val commission: Double,
+    // val type: Int
   )
 
   data class EventJson(
@@ -506,7 +508,7 @@ var events: List<Event>
           notes = stockItem.stockDBdata.notes,
           dividendNotes = stockItem.stockDBdata.dividendNotes,
           assets = stockItem.assets.map { asset ->
-            AssetJson(shares = asset.shares, price = asset.price, date = asset.date)
+            AssetJson(shares = asset.shares, price = asset.price, date = asset.date)//, commission = asset.commission, type = asset.type)
           },
           events = stockItem.events.map { event ->
             EventJson(

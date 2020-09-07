@@ -60,6 +60,8 @@ data class AssetJson(
   var shares: Double,
   val price: Double,
   val date: Long
+    // val commission: Double,
+    // val type: Int
 )
 
 data class EventJson(
@@ -998,6 +1000,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                           assetsObj.getLong("date")
                         } else {
                           0L
+                        },
+                        commission = if (assetsObj.has("commission")) {
+                          assetsObj.getDouble("commission")
+                        } else {
+                          0.0
+                        },
+                        type = if (assetsObj.has("type")) {
+                          assetsObj.getInt("type")
+                        } else {
+                          0
                         }
                     )
                 )
@@ -1026,8 +1038,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                       Asset(
                           symbol = symbol,
                           shares = shares,
-                          price = price,
-                          date = 0L
+                          price = price
                       )
                   )
                 }
@@ -1308,8 +1319,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               val asset = Asset(
                   symbol = symbol,
                   shares = shares,
-                  price = price,
-                  date = 0L
+                  price = price
               )
 
               if (assetItems.containsKey(symbol)) {
@@ -1485,8 +1495,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           dividendNotes = stockItem.stockDBdata.dividendNotes,
           assets = stockItem.assets.map { asset ->
             AssetJson(
-                shares = validateDouble(asset.shares), price = validateDouble(asset.price),
+                shares = validateDouble(asset.shares),
+                price = validateDouble(asset.price),
                 date = asset.date
+                //commission = asset.commission,
+                //type = asset.type
             )
           },
           events = stockItem.events.map { event ->

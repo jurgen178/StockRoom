@@ -63,7 +63,8 @@ class AssetListAdapter internal constructor(
     val itemViewDelete: TextView = itemView.findViewById(R.id.textViewAssetDelete)
     val assetSummaryView: LinearLayout = itemView.findViewById(R.id.assetSummaryView)
     val itemViewLayout: ConstraintLayout = itemView.findViewById(R.id.textViewAssetLayout)
-    val textViewAssetItemsLayout: LinearLayout = itemView.findViewById(R.id.textViewAssetItemsLayout)
+    val textViewAssetItemsLayout: LinearLayout =
+      itemView.findViewById(R.id.textViewAssetItemsLayout)
   }
 
   override fun onCreateViewHolder(
@@ -115,9 +116,7 @@ class AssetListAdapter internal constructor(
         // no delete icon for empty list, headline + summaryline = 2
         if (assetList.size <= 2) {
           holder.itemViewDelete.visibility = View.GONE
-        }
-        else
-        {
+        } else {
           holder.itemViewDelete.visibility = View.VISIBLE
         }
 
@@ -147,7 +146,13 @@ class AssetListAdapter internal constructor(
 
   internal fun updateAssets(assets: List<Asset>) {
     // Headline placeholder
-    assetList = mutableListOf(Asset(symbol = "", shares = 0.0, price = 0.0, date = 0L))
+    assetList = mutableListOf(
+        Asset(
+            symbol = "",
+            shares = 0.0,
+            price = 0.0
+        )
+    )
     assetList.addAll(assets)
 
     val sharesTotal = assetList.sumByDouble {
@@ -160,7 +165,14 @@ class AssetListAdapter internal constructor(
 
     // Summary
     val symbol: String = assets.firstOrNull()?.symbol ?: ""
-    assetList.add(Asset(id = null, symbol = symbol, shares = sharesTotal, price = assetTotal, date = 0L))
+    assetList.add(
+        Asset(
+            id = null,
+            symbol = symbol,
+            shares = sharesTotal,
+            price = assetTotal
+        )
+    )
 
     notifyDataSetChanged()
   }

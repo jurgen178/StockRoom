@@ -2,10 +2,13 @@ package com.thecloudsite.stockroom
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.bold
+import androidx.core.text.underline
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +19,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
+import java.text.DecimalFormat
 
 class SummaryGroupFragment : Fragment() {
 
@@ -102,13 +106,13 @@ class SummaryGroupFragment : Fragment() {
     )
 
     val assetList: MutableList<AssetSummary> = mutableListOf()
-    var assetsTotal = 0.0
+    var totalAssets = 0.0
     stockItems.forEach { stockItem ->
       val shares: Double = stockItem.assets.sumByDouble { asset ->
         asset.shares
       }
       val assets = shares * stockItem.onlineMarketData.marketPrice
-      assetsTotal += assets
+      totalAssets += assets
       val color = if (stockItem.stockDBdata.groupColor != 0) {
         stockItem.stockDBdata.groupColor
       } else {
@@ -119,7 +123,7 @@ class SummaryGroupFragment : Fragment() {
       )
     }
 
-    if (assetsTotal > 0.0) {
+    if (totalAssets > 0.0) {
       assetList.sortedBy { item -> item.assets }
           .takeLast(10)
           .forEach { assetItem ->
@@ -135,7 +139,14 @@ class SummaryGroupFragment : Fragment() {
     view.summaryPieChart.data = pieData
 
     //view.summaryPieChart.setUsePercentValues(true)
-    view.summaryPieChart.isDrawHoleEnabled = false
+    view.summaryPieChart.isDrawHoleEnabled = true
+
+    val centerText = SpannableStringBuilder()
+        .append("${context?.getString(R.string.summary_total_assets)} ")
+        .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
+
+    view.summaryPieChart.centerText = centerText
+
     view.summaryPieChart.description.isEnabled = false
     view.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
     view.summaryPieChart.invalidate()

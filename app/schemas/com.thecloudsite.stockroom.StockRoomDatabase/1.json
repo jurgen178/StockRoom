@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "04a7835815f9739e60a3ec1a0356f956",
+    "identityHash": "4011d5c6fd2e06049624b6a87761c509",
     "entities": [
       {
         "tableName": "stock_table",
@@ -94,7 +94,7 @@
       },
       {
         "tableName": "asset_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `shares` REAL NOT NULL, `price` REAL NOT NULL, `date` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `shares` REAL NOT NULL, `price` REAL NOT NULL, `date` INTEGER NOT NULL, `commission` REAL NOT NULL, `type` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -123,6 +123,18 @@
           {
             "fieldPath": "date",
             "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "commission",
+            "columnName": "commission",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -246,7 +258,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '04a7835815f9739e60a3ec1a0356f956')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4011d5c6fd2e06049624b6a87761c509')"
     ]
   }
 }
