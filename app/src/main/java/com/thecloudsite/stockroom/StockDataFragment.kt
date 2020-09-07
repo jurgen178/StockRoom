@@ -1747,7 +1747,7 @@ class StockDataFragment : Fragment() {
     }
   }
 
-  protected fun setupCandleStickChart() {
+  private fun setupCandleStickChart() {
     val candleStickChart
         : CandleStickChart = view?.findViewById(R.id.candleStickChart)!!
     candleStickChart.isDoubleTapToZoomEnabled = false

@@ -64,7 +64,8 @@ val excludeUrlList = arrayListOf(
     "gnghockey.com",
     "redandblackonline.com",
     "njmmanews.com",
-    "prnewswire.co.uk"
+    "prnewswire.co.uk",
+    "themarketchronicles.com"
 )
 
 data class NewsData(

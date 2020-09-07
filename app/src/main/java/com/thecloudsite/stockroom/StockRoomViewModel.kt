@@ -110,7 +110,7 @@ object SharedRepository {
   var postMarket: Boolean = true
   var notifications: Boolean = true
 
-  var selectedPortfolio = MutableLiveData<String>("")
+  var selectedPortfolio = MutableLiveData("")
   val selectedPortfolioLiveData: LiveData<String>
     get() = selectedPortfolio
 

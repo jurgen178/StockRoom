@@ -237,8 +237,8 @@ limitations under the License. -->
   <string name="news_date_time">%1$s at %2$s</string>
   <string name="data_headline">Overview</string>
   <string name="donate">Donate</string>
-  <string name="email_feedback_summary">Send us suggestions and new ideas.</string>
-  <string name="email_feedback_title">Send EMail</string>
+  <string name="email_feedback_summary">Send an email directly to the developers.</string>
+  <string name="email_feedback_title">Send email</string>
   <string name="bought_for">Bought for %1$s</string>
   <string name="version">Version</string>
   <string name="example_List_delete_all">\n\n***\nUse the \'Delete all\' function in the settings to clear this example list.\n***</string>
