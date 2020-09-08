@@ -1,6 +1,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -15,11 +16,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.Legend.LegendForm.SQUARE
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class SummaryGroupFragment : Fragment() {
 
@@ -128,12 +136,27 @@ class SummaryGroupFragment : Fragment() {
           .takeLast(10)
           .forEach { assetItem ->
             listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
+            //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat("0.00").format(assetItem.assets)}"))
             listColors.add(assetItem.color)
           }
     }
 
     val pieDataSet = PieDataSet(listPie, "")
     pieDataSet.colors = listColors
+    pieDataSet.valueTextSize = 10f
+    // pieDataSet.valueFormatter = DefaultValueFormatter(2)
+    pieDataSet.valueFormatter = object : ValueFormatter() {
+      override fun getFormattedValue(value: Float) =
+        DecimalFormat("0.00").format(value)
+    }
+
+    // Line start
+    pieDataSet.valueLinePart1OffsetPercentage = 80f
+    // Radial length
+    pieDataSet.valueLinePart1Length = 0.4f
+    // Horizontal length
+    pieDataSet.valueLinePart2Length = .2f
+    pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
 
     val pieData = PieData(pieDataSet)
     view.summaryPieChart.data = pieData
@@ -148,6 +171,11 @@ class SummaryGroupFragment : Fragment() {
 
     view.summaryPieChart.description.isEnabled = false
     view.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+
+    //val legendList: MutableList<LegendEntry> = mutableListOf()
+    //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
+    //view.summaryPieChart.legend.setCustom(legendList)
+
     view.summaryPieChart.invalidate()
   }
 }
