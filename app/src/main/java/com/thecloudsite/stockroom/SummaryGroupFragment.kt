@@ -16,18 +16,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.Legend.LegendForm.SQUARE
-import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.DefaultValueFormatter
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 class SummaryGroupFragment : Fragment() {
 
@@ -132,13 +126,36 @@ class SummaryGroupFragment : Fragment() {
     }
 
     if (totalAssets > 0.0) {
-      assetList.sortedBy { item -> item.assets }
-          .takeLast(10)
+      val sortedAssetList = assetList.sortedBy { item -> item.assets }
+
+      // Display first 10 values
+      val n = 10
+      sortedAssetList.takeLast(n)
           .forEach { assetItem ->
             listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
             //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat("0.00").format(assetItem.assets)}"))
             listColors.add(assetItem.color)
           }
+
+      if (sortedAssetList.size == n + 1) {
+        val assetItem = sortedAssetList.first()
+        listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
+        listColors.add(Color.GRAY)
+      } else
+        if (sortedAssetList.size > n + 1) {
+          var otherAssets: Double = 0.0
+          val otherAssetList = sortedAssetList.dropLast(n)
+          otherAssetList.forEach { assetItem ->
+            otherAssets += assetItem.assets
+          }
+          listPie.add(
+              PieEntry(
+                  otherAssets.toFloat(),
+                  "${otherAssetList.last().symbol}-${otherAssetList.first().symbol}"
+              )
+          )
+          listColors.add(Color.GRAY)
+        }
     }
 
     val pieDataSet = PieDataSet(listPie, "")
