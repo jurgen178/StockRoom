@@ -132,7 +132,7 @@ limitations under the License. -->
   <string name="price_not_zero">Der Preis der Aktie darf nicht 0 sein.</string>
   <string name="add_asset">Zum Aktienbestand hinzufügen</string>
   <string name="current_assets">Aktienbestände</string>
-  <string name="current_portfolio_graph">Aktuelle Aktienbestände, 10 besten Aktien</string>
+  <string name="current_portfolio_graph">Aktuelle Aktienbestände, 10 größten Aktien</string>
   <string name="update_asset">Aktienbestand aktualisieren</string>
   <string name="delete_asset">Vom Aktienbestand entfernen</string>
   <string name="delete_all_assets">Alle Aktien entfernen</string>

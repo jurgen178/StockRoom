@@ -29,7 +29,7 @@
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/summaryPieChart"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="290dp"
         android:layout_margin="8dp"
         />
 

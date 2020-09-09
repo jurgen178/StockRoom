@@ -126,32 +126,33 @@ class SummaryGroupFragment : Fragment() {
     }
 
     if (totalAssets > 0.0) {
-      val sortedAssetList = assetList.sortedBy { item -> item.assets }
+      val sortedAssetList = assetList.sortedByDescending { item -> item.assets }
 
-      // Display first 10 values
+      // Display first 10 values from asset high to low.
       val n = 10
-      sortedAssetList.takeLast(n)
+      sortedAssetList.take(n)
           .forEach { assetItem ->
             listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
             //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat("0.00").format(assetItem.assets)}"))
             listColors.add(assetItem.color)
           }
 
+      // Add the sum of the remaining values.
       if (sortedAssetList.size == n + 1) {
-        val assetItem = sortedAssetList.first()
+        val assetItem = sortedAssetList.last()
         listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
         listColors.add(Color.GRAY)
       } else
         if (sortedAssetList.size > n + 1) {
           var otherAssets: Double = 0.0
-          val otherAssetList = sortedAssetList.dropLast(n)
+          val otherAssetList = sortedAssetList.drop(n)
           otherAssetList.forEach { assetItem ->
             otherAssets += assetItem.assets
           }
           listPie.add(
               PieEntry(
                   otherAssets.toFloat(),
-                  "${otherAssetList.last().symbol}-${otherAssetList.first().symbol}"
+                  "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
               )
           )
           listColors.add(Color.GRAY)
@@ -188,6 +189,9 @@ class SummaryGroupFragment : Fragment() {
 
     view.summaryPieChart.description.isEnabled = false
     view.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+    view.summaryPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+
+    view.summaryPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
 
     //val legendList: MutableList<LegendEntry> = mutableListOf()
     //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
