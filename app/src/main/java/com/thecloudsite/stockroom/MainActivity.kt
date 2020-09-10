@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     private const val GOOGLENEWS_BASEURL = "googleNewsBaseUrl"
     private const val USER_MSG_TITLE = "userMsgTitle"
     private const val USER_MSG = "userMsg"
+    var realtimeOverride: Boolean = false
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -285,7 +286,7 @@ class MainActivity : AppCompatActivity() {
 
             val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
             val userMsg = remoteConfig[USER_MSG].asString()
-            if(userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
+            if (userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
               AlertDialog.Builder(this)
                   .setTitle(userMsgTitle)
                   .setMessage(userMsg)

@@ -240,26 +240,30 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val errorMsg = stockdataResult.second
 
     // Set the delay depending on the market state.
-    val onlineDataDelay = when (marketState) {
-      MarketState.REGULAR -> {
-        2 * 1000L
-      }
-      MarketState.PRE, MarketState.POST -> {
-        60 * 1000L
-      }
-      MarketState.PREPRE, MarketState.POSTPOST -> {
-        15 * 60 * 1000L
-      }
-      MarketState.CLOSED -> {
-        60 * 60 * 1000L
-      }
-      MarketState.NO_NETWORK -> {
-        // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
-        maxOf(2 * 60 * 1000L, prevOnlineDataDelay * 2)
-        // 10 * 1000L
-      }
-      MarketState.UNKNOWN -> {
-        60 * 1000L
+    val onlineDataDelay = if (MainActivity.realtimeOverride) {
+      2 * 1000L
+    } else {
+      when (marketState) {
+        MarketState.REGULAR -> {
+          2 * 1000L
+        }
+        MarketState.PRE, MarketState.POST -> {
+          60 * 1000L
+        }
+        MarketState.PREPRE, MarketState.POSTPOST -> {
+          15 * 60 * 1000L
+        }
+        MarketState.CLOSED -> {
+          60 * 60 * 1000L
+        }
+        MarketState.NO_NETWORK -> {
+          // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
+          maxOf(2 * 60 * 1000L, prevOnlineDataDelay * 2)
+          // 10 * 1000L
+        }
+        MarketState.UNKNOWN -> {
+          60 * 1000L
+        }
       }
     }
 

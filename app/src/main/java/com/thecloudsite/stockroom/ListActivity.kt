@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_list.debugswitch
+import kotlinx.android.synthetic.main.activity_list.realtimeswitch
 import kotlinx.android.synthetic.main.activity_list.webview
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
@@ -49,6 +50,12 @@ class ListActivity : AppCompatActivity() {
           .edit()
           .putBoolean("list", isChecked)
           .apply()
+    }
+
+    // Only valid for the current App run.
+    realtimeswitch.isChecked = MainActivity.realtimeOverride
+    realtimeswitch.setOnCheckedChangeListener { _, isChecked ->
+      MainActivity.realtimeOverride = isChecked
     }
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)

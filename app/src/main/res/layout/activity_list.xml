@@ -36,12 +36,25 @@
       app:layout_constraintTop_toBottomOf="@+id/sectionHeaderTextView"
       />
 
+  <Switch
+      android:id="@+id/realtimeswitch"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="14dp"
+      android:layout_marginStart="69dp"
+      android:textSize="16sp"
+      android:text="@string/realtime"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/debugswitch"
+      />
+
   <View
       android:id="@+id/divider1"
       style="@style/Divider"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/debugswitch"
+      app:layout_constraintTop_toBottomOf="@+id/realtimeswitch"
       />
 
   <TextView

@@ -282,4 +282,5 @@ limitations under the License. -->
   <string name="reset">Zurücksetzen</string>
   <string name="dividend_cycle">Dividendenzyklus</string>
   <string name="dividend_updated">Dividendenwert aktualisiert.</string>
+  <string name="realtime">Immer Realtime verwenden</string>
 </resources>
