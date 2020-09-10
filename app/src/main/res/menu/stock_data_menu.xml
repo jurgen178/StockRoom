@@ -6,11 +6,13 @@
       android:id="@+id/menu_sync"
       android:icon="@drawable/ic_action_sync"
       app:showAsAction="always"
-      android:title="" />
+      android:title="@string/menu_sync"
+      />
   <item
       android:onClick="onDelete"
       android:icon="@drawable/ic_action_delete"
       app:showAsAction="always"
-      android:title="" />
+      android:title="@string/delete"
+      />
 
 </menu>

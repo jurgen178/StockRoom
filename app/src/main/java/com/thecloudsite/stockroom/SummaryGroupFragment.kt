@@ -120,6 +120,7 @@ class SummaryGroupFragment : Fragment() {
       } else {
         context?.getColor(R.color.backgroundListColor)
       }
+      
       assetList.add(
           AssetSummary(stockItem.stockDBdata.symbol, assets, color!!)
       )
@@ -140,15 +141,16 @@ class SummaryGroupFragment : Fragment() {
       // Add the sum of the remaining values.
       if (sortedAssetList.size == n + 1) {
         val assetItem = sortedAssetList.last()
+
         listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
         listColors.add(Color.GRAY)
       } else
         if (sortedAssetList.size > n + 1) {
-          var otherAssets: Double = 0.0
           val otherAssetList = sortedAssetList.drop(n)
-          otherAssetList.forEach { assetItem ->
-            otherAssets += assetItem.assets
+          val otherAssets = otherAssetList.sumByDouble { assetItem ->
+            assetItem.assets
           }
+
           listPie.add(
               PieEntry(
                   otherAssets.toFloat(),

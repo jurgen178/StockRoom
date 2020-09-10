@@ -67,6 +67,8 @@ limitations under the License. -->
   <string name="display_header">Display</string>
   <string name="feedback_header">Feedback</string>
   <string name="group_header">Group</string>
+  <string name="menu_sync">Update</string>
+  <string name="menu_sort">Sort</string>
 
   <string name="hint_add_stock">Stock symbol</string>
   <string name="button_add">Add</string>

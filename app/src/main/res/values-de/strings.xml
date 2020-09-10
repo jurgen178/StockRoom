@@ -64,6 +64,8 @@ limitations under the License. -->
   <string name="display_header">Anzeige</string>
   <string name="feedback_header">Rückmeldung</string>
   <string name="group_header">Gruppe</string>
+  <string name="menu_sync">Aktualisieren</string>
+  <string name="menu_sort">Sortieren</string>
 
   <string name="hint_add_stock">Aktienkürzel</string>
   <string name="button_add">Hinzufügen</string>
