@@ -275,7 +275,8 @@ class StockDataFragment : Fragment() {
             }
             if (valid) {
               // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-              val assetnew = Asset(symbol = symbol, shares = shares, price = price, date = asset.date)
+              val assetnew =
+                Asset(symbol = symbol, shares = shares, price = price, date = asset.date)
               if (asset.shares != assetnew.shares || asset.price != assetnew.price) {
                 stockRoomViewModel.updateAsset2(asset, assetnew)
                 val count: Int = when {
@@ -307,7 +308,8 @@ class StockDataFragment : Fragment() {
                 .show()
           }
         }
-        .setNegativeButton(R.string.cancel
+        .setNegativeButton(
+            R.string.cancel
         ) { _, _ ->
           //getDialog().cancel()
         }
@@ -438,7 +440,8 @@ class StockDataFragment : Fragment() {
             }
           hideSoftInputFromWindow()
         }
-        .setNegativeButton(R.string.cancel
+        .setNegativeButton(
+            R.string.cancel
         ) { _, _ ->
         }
     builder
@@ -1024,7 +1027,8 @@ class StockDataFragment : Fragment() {
                 }
               }
             }
-            .setNegativeButton(R.string.cancel
+            .setNegativeButton(
+                R.string.cancel
             ) { _, _ ->
             }
         builder
@@ -1122,7 +1126,8 @@ class StockDataFragment : Fragment() {
                   .show()
             }
           }
-          .setNegativeButton(R.string.cancel
+          .setNegativeButton(
+              R.string.cancel
           ) { _, _ ->
           }
       builder
@@ -1202,7 +1207,8 @@ class StockDataFragment : Fragment() {
                     .show()
               }
             }
-            .setNegativeButton(R.string.cancel
+            .setNegativeButton(
+                R.string.cancel
             ) { _, _ ->
             }
         builder
@@ -1791,7 +1797,9 @@ class StockDataFragment : Fragment() {
     series.increasingPaintStyle = Paint.Style.FILL
     series.neutralColor = Color.LTGRAY
     series.setDrawValues(false)
-    candleStickChart.data = CandleData(series)
+
+    val candleData = CandleData(series)
+    candleStickChart.data = candleData
 
     when (stockViewRange) {
       StockViewRange.OneDay -> {
@@ -1812,7 +1820,12 @@ class StockDataFragment : Fragment() {
     val yAxis: YAxis = candleStickChart.axisRight
 
     xAxis.valueFormatter = xAxisFormatter
-    yAxis.valueFormatter = DefaultValueFormatter(2)
+    val digits = if (candleData.yMax < 1.0) {
+      4
+    } else {
+      2
+    }
+    yAxis.valueFormatter = DefaultValueFormatter(digits)
 
     xAxis.position = XAxis.XAxisPosition.BOTTOM
     yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
@@ -1885,7 +1898,12 @@ class StockDataFragment : Fragment() {
     }
 
     xAxis.valueFormatter = xAxisFormatter
-    yAxis.valueFormatter = DefaultValueFormatter(2)
+    val digits = if (lineData.yMax < 1.0) {
+      4
+    } else {
+      2
+    }
+    yAxis.valueFormatter = DefaultValueFormatter(digits)
 
     xAxis.position = XAxis.XAxisPosition.BOTTOM
     yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)

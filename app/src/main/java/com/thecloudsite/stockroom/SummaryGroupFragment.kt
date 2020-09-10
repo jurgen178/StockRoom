@@ -120,7 +120,7 @@ class SummaryGroupFragment : Fragment() {
       } else {
         context?.getColor(R.color.backgroundListColor)
       }
-      
+
       assetList.add(
           AssetSummary(stockItem.stockDBdata.symbol, assets, color!!)
       )
