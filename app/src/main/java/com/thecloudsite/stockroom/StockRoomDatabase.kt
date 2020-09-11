@@ -149,19 +149,14 @@ abstract class StockRoomDatabase : RoomDatabase() {
         val assets: List<AssetPreset> = listOf(
             AssetPreset("AAPL", 6500.0, 5240.0, Color.BLUE),
             AssetPreset("AMZN", 6500.0, 280.0, Color.MAGENTA),
-            AssetPreset("ANY", 3700.0, 2470.0, Color.YELLOW),
+            AssetPreset("GE", 3700.0, 2470.0, Color.BLACK),
             AssetPreset("BA", 5500.0, -640.0, Color.GREEN),
             AssetPreset("CVX", 4500.0, -508.0, Color.rgb(0, 191, 255)),
-            AssetPreset("DIS", 1000.0, -320.0, Color.GREEN),
-            AssetPreset("FB", 1000.0, 710.0, Color.MAGENTA),
-            AssetPreset("GE", 10000.0, 8490.0, Color.BLACK),
-            AssetPreset("IBM", 1000.0, 1460.0, Color.YELLOW),
+            AssetPreset("ANY", 8000.0, 6490.0, Color.YELLOW),
             AssetPreset("MSFT", 5200.0, 1450.0, Color.rgb(173, 216, 230)),
             AssetPreset("QCOM", 4200.0, 240.0, Color.rgb(0, 191, 255)),
             AssetPreset("RM", 3600.0, 1110.0, Color.RED),
-            AssetPreset("T", 1000.0, 2010.0, Color.MAGENTA),
             AssetPreset("TSLA", 7000.0, 2060.0, Color.rgb(72, 209, 204)),
-            AssetPreset("^GSPC", 0.0, 0.0, 0)
         )
 
         val symbols = assets.map { asset ->
