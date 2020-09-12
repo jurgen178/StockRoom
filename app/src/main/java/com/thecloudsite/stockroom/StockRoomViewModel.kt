@@ -980,7 +980,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           .toUpperCase(Locale.ROOT)
 
       if (isValidSymbol(symbol)) {
-        val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+        var portfolio = SharedRepository.selectedPortfolio.value ?: ""
+
+        if (jsonObj.has("portfolio")) {
+          portfolio = jsonObj.getString("portfolio")
+          //if (portfolio.isNotEmpty()) {
+          //  setPortfolio(symbol = symbol, portfolio = portfolio)
+          //}
+        }
+
         insert(symbol = symbol, portfolio = portfolio.trim())
         imported++
 
@@ -1137,14 +1145,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 updateDividend(dividend)
               }
             }
-          }
-        }
-
-        if (jsonObj.has("portfolio")) {
-          val portfolioStr = jsonObj.getString("portfolio")
-              .trim()
-          if (portfolioStr.isNotEmpty()) {
-            setPortfolio(symbol = symbol, portfolio = portfolioStr)
           }
         }
 
