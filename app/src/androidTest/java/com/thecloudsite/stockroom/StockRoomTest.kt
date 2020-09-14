@@ -258,7 +258,7 @@ class StockRoomTest {
   }
 
   private fun csvStrToDouble(str: String): Double {
-    val s = str.replace("$", "")
+    val s = str.replace("$", "").replace(",", "")
     var value: Double
     try {
       value = s.toDouble()
@@ -316,16 +316,9 @@ class StockRoomTest {
     rows.drop(1)
         .forEach { row ->
           val symbol = row[symbolColumn].toUpperCase()
-          val shares = if (sharesColumn >= 0) {
-            csvStrToDouble(row[sharesColumn])
-          } else {
-            0.0
-          }
-          val price = if (priceColumn >= 0) {
-            csvStrToDouble(row[priceColumn])
-          } else {
-            0.0
-          }
+          val shares = csvStrToDouble(row[sharesColumn])
+          val price = csvStrToDouble(row[priceColumn])
+
           if (symbol.isNotEmpty()) {
             val asset = Asset(
                 symbol = symbol,

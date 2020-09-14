@@ -190,10 +190,10 @@ class SettingsActivity : AppCompatActivity(),
           .color(
               context?.getColor(R.color.settingsblue)!!
           ) { bold { append(" \t\t$versionCode\n") } }
-          .append("Version name")
-          .color(
-              context?.getColor(R.color.settingsblue)!!
-          ) { bold { append(" \t$versionName $versionBuild") } }
+//          .append("Version name")
+//          .color(
+//              context?.getColor(R.color.settingsblue)!!
+//          ) { bold { append(" \t$versionName $versionBuild") } }
           .italic {
             scale(0.8f) {
               color(0xffffbb33.toInt()) {

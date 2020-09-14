@@ -1238,7 +1238,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private fun csvStrToDouble(str: String): Double {
-    val s = str.replace("$", "")
+    val s = str.replace("$", "").replace(",", "")
     var value: Double
     try {
       value = s.toDouble()
@@ -1278,7 +1278,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     if (symbolColumn == -1) {
-      val msg = getApplication<Application>().getString(R.string.import_csv_symbolcolumn_error)
+      val msg = getApplication<Application>().getString(R.string.import_csv_column_error, "Symbol|Name")
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
@@ -1295,10 +1295,34 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           || it.compareTo(other = "Shares", ignoreCase = true) == 0
     }
 
+    if (sharesColumn == -1) {
+      val msg = getApplication<Application>().getString(R.string.import_csv_column_error, "Shares|Quantity")
+      logDebug("Import CSV  '$msg'")
+
+      Toast.makeText(
+          context, msg,
+          Toast.LENGTH_LONG
+      )
+          .show()
+      return
+    }
+
     // try columns "Cost Basis Per Share", "Price"
     val priceColumn = headerRow.indexOfFirst {
       it.compareTo(other = "Cost Basis Per Share", ignoreCase = true) == 0
           || it.compareTo(other = "Price", ignoreCase = true) == 0
+    }
+
+    if (priceColumn == -1) {
+      val msg = getApplication<Application>().getString(R.string.import_csv_column_error, "Price|Cost Basis Per Share")
+      logDebug("Import CSV  '$msg'")
+
+      Toast.makeText(
+          context, msg,
+          Toast.LENGTH_LONG
+      )
+          .show()
+      return
     }
 
     val assetItems = HashMap<String, List<Asset>>()
@@ -1308,16 +1332,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         .forEach { row ->
           val symbol = row[symbolColumn].toUpperCase(Locale.ROOT)
           if (symbol.isNotEmpty() && isValidSymbol(symbol)) {
-            val shares = if (sharesColumn >= 0) {
-              csvStrToDouble(row[sharesColumn])
-            } else {
-              0.0
-            }
-            val price = if (priceColumn >= 0) {
-              csvStrToDouble(row[priceColumn])
-            } else {
-              0.0
-            }
+            val shares = csvStrToDouble(row[sharesColumn])
+            val price = csvStrToDouble(row[priceColumn])
 
             if (shares > 0.0 && price > 0.0) {
               val asset = Asset(
@@ -1424,7 +1440,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
     } catch (e: Exception) {
       Toast.makeText(
-          context, getApplication<Application>().getString(R.string.import_error),
+          context, getApplication<Application>().getString(R.string.import_error, e.message),
           Toast.LENGTH_LONG
       )
           .show()

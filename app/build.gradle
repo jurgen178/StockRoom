@@ -25,8 +25,8 @@ android {
     applicationId 'com.thecloudsite.stockroom'
     minSdkVersion 29
     targetSdkVersion 30
-    versionCode 7
-    versionName "1.0.7"
+    versionCode 8
+    versionName "8"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     javaCompileOptions {
@@ -117,7 +117,7 @@ dependencies {
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
 
   // CSV reader
-  implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.10.4")
+  implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.11.0")
 
   // MPAndroidChart
   implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'

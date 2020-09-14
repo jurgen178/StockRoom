@@ -118,8 +118,8 @@ limitations under the License. -->
   <string name="import_section_header">Importieren</string>
   <string name="button_import">Importieren</string>
   <string name="import_list_desc">Aktienliste von einer Text-Datei, CSV-Datei oder JSON-Datei importieren.</string>
-  <string name="import_error">Die ausgewählte Datei konnte nicht importiert werden.</string>
-  <string name="import_csv_symbolcolumn_error">Die ausgewählte CSV-Datei konnte nicht importiert werden. Die Spalte für den Aktiennamen ist nicht vorhanden.</string>
+  <string name="import_error">Die ausgewählte Datei konnte nicht importiert werden.\n%1$s</string>
+  <string name="import_csv_column_error">Die ausgewählte CSV-Datei konnte nicht importiert werden. Die Spalte \'%1$s\' ist nicht vorhanden.</string>
   <string name="import_msg">%1$s Aktien wurden importiert</string>
   <string name="export_msg">Ihre Aktienliste mit %1$d Aktiendaten wurde in eine .JSON-Datei exportiert.</string>
   <string name="export_list">Aktienliste Exportieren</string>
