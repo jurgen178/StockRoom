@@ -14,7 +14,7 @@ buildscript {
         classpath 'com.google.gms:google-services:4.3.3'
         
         // Add the Crashlytics Gradle plugin.
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.1'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
         // To benefit from the latest Performance Monitoring plugin features,
         // update your Android Gradle Plugin dependency to at least v3.4.0
         classpath 'com.android.tools.build:gradle:4.0.1'
@@ -38,6 +38,5 @@ ext {
     roomVersion = '2.2.5'
     archLifecycleVersion = '2.2.0'
     coreTestingVersion = '2.1.0'
-    materialVersion = '1.1.2'
     coroutines = '1.3.9'
 }

@@ -178,7 +178,7 @@ class SettingsActivity : AppCompatActivity(),
 
       // Set version info.
       val versionCode = BuildConfig.VERSION_CODE
-      val versionName = BuildConfig.VERSION_NAME
+      //val versionName = BuildConfig.VERSION_NAME
       val versionBuild = if (BuildConfig.DEBUG) {
         "(Debug)"
       } else {
@@ -189,8 +189,9 @@ class SettingsActivity : AppCompatActivity(),
           .append("Version code")
           .color(
               context?.getColor(R.color.settingsblue)!!
-          ) { bold { append(" \t\t$versionCode\n") } }
-//          .append("Version name")
+          ) { bold { append(" $versionCode $versionBuild") } }
+//          ) { bold { append(" \t\t$versionCode") } }
+//          .append("\nVersion name")
 //          .color(
 //              context?.getColor(R.color.settingsblue)!!
 //          ) { bold { append(" \t$versionName $versionBuild") } }
@@ -214,7 +215,7 @@ class SettingsActivity : AppCompatActivity(),
             AlertDialog.Builder(requireContext())
                 // https://convertcodes.com/unicode-converter-encode-decode-utf/
                 .setTitle(
-                    "\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072\u002c"
+                    "\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072"
                 )
                 .setMessage(
                     "\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e"

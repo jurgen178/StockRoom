@@ -40,18 +40,21 @@
           android:id="@+id/addGroupButton"
           android:src="@drawable/ic_action_add_circle_outline"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/add_group"
           />
 
       <ImageButton
           android:id="@+id/addPredefinedGroupsButton"
           android:src="@drawable/ic_action_add_samples"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/add_predef_groups_title"
           />
 
       <ImageButton
           android:id="@+id/deleteAllGroupButton"
           android:src="@drawable/ic_action_delete"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/add_all_groups"
           />
 
     </LinearLayout>

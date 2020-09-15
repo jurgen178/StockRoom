@@ -94,6 +94,7 @@
           android:id="@+id/addDividendReceivedButton"
           android:src="@drawable/ic_action_add_circle_outline"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/add_dividend"
           />
 
     </LinearLayout>
@@ -130,6 +131,7 @@
           android:id="@+id/addDividendAnnouncedButton"
           android:src="@drawable/ic_action_add_circle_outline"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/add_dividend"
           />
 
     </LinearLayout>
@@ -167,6 +169,7 @@
             android:src="@drawable/ic_action_note_add"
             style="@style/asset_item_imagebutton"
             android:tooltipText="@string/update_notes"
+            android:contentDescription="@string/update_notes"
             />
       </LinearLayout>
 

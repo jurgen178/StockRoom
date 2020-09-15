@@ -35,12 +35,10 @@ import java.time.format.FormatStyle.MEDIUM
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
 class EventListAdapter internal constructor(
-  context: Context,
+  private val context: Context,
   private val clickListenerUpdate: (Event) -> Unit,
   private val clickListenerDelete: (Event) -> Unit
 ) : RecyclerView.Adapter<EventListAdapter.EventViewHolder>() {
-
-  private val context = context
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var eventList = mutableListOf<Event>()
 

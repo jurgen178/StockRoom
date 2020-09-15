@@ -220,6 +220,7 @@
           android:src="@drawable/ic_candlegraph"
           android:visibility="gone"
           style="@style/stock_item_imagebutton"
+          android:contentDescription="1D"
           />
 
       <ImageButton
@@ -227,6 +228,7 @@
           android:src="@drawable/ic_linegraph"
           android:visibility="gone"
           style="@style/stock_item_imagebutton"
+          android:contentDescription="@string/linegraph"
           />
       </org.apmem.tools.layouts.FlowLayout>
     </LinearLayout>
@@ -327,18 +329,21 @@
           android:id="@+id/splitAssetsButton"
           android:src="@drawable/ic_action_split"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/split_asset"
           />
 
       <ImageButton
           android:id="@+id/addAssetsButton"
           android:src="@drawable/ic_action_add_circle_outline"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/add_asset"
           />
 
       <ImageButton
           android:id="@+id/removeAssetButton"
           android:src="@drawable/ic_action_remove_circle_outline"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/remove_asset"
           />
 
     </LinearLayout>
@@ -376,6 +381,7 @@
           android:id="@+id/addEventsButton"
           android:src="@drawable/ic_action_event_note"
           style="@style/asset_item_imagebutton"
+          android:contentDescription="@string/add_event"
           />
 
     </LinearLayout>
@@ -420,6 +426,7 @@
       <ImageView
           android:src="@drawable/ic_action_trending_up"
           style="@style/alert_item_imagebutton"
+          android:contentDescription="@string/alert_above"
           />
 
       <com.google.android.material.textfield.TextInputLayout
@@ -468,6 +475,7 @@
       <ImageView
           android:src="@drawable/ic_action_trending_down"
           style="@style/alert_item_imagebutton"
+          android:contentDescription="@string/alert_below"
           />
 
       <com.google.android.material.textfield.TextInputLayout
@@ -519,6 +527,7 @@
             android:src="@drawable/ic_action_note_add"
             style="@style/asset_item_imagebutton"
             android:tooltipText="@string/update_notes"
+            android:contentDescription="@string/update_notes"
             />
       </LinearLayout>
 

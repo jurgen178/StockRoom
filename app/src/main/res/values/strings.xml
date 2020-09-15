@@ -136,6 +136,7 @@ limitations under the License. -->
   <string name="shares_not_zero">The number of shares must not be 0.</string>
   <string name="price_not_zero">The price of the stock must not be 0.</string>
   <string name="add_asset">Add asset</string>
+  <string name="remove_asset">Remove asset</string>
   <string name="current_assets">Assets</string>
   <string name="current_portfolio_graph">Current portfolio, top 10 stocks</string>
   <string name="update_asset">Update asset</string>
@@ -194,6 +195,7 @@ limitations under the License. -->
   <string name="million_abbr">M.</string>
   <string name="title_activity_updategroup">Update group list</string>
   <string name="add_group">Add group</string>
+  <string name="add_all_groups">Delete all groups</string>
   <string name="delete_group_title">Delete group \'%1$s\'</string>
   <string name="delete_group_confirm">Are you sure to delete the group \'%1$s\' ?</string>
   <string name="delete_group_confirm2">Are you sure to delete the group \'%1$s\' used by %2$d stocks?</string>
@@ -286,4 +288,5 @@ limitations under the License. -->
   <string name="dividend_cycle">Dividend Cycle</string>
   <string name="dividend_updated">Dividend updated.</string>
   <string name="realtime">Always use Realtime</string>
+  <string name="linegraph">Line graph</string>
 </resources>
