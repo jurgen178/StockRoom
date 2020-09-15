@@ -653,7 +653,7 @@ class DividendFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     onlineDataHandler.post(onlineDataTask)
-    stockRoomViewModel.updateOnlineDataManually()
+    stockRoomViewModel.runOnlineTaskManually()
   }
 
   private fun hideSoftInputFromWindow() {

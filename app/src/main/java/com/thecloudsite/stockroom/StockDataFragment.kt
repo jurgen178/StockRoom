@@ -1423,7 +1423,7 @@ class StockDataFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     onlineDataHandler.post(onlineDataTask)
-    stockRoomViewModel.updateOnlineDataManually()
+    stockRoomViewModel.runOnlineTaskManually()
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -1437,7 +1437,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun onSync() {
-    stockRoomViewModel.updateOnlineDataManually("Schedule to get online data manually.")
+    stockRoomViewModel.runOnlineTaskManually("Schedule to get online data manually.")
     updateStockViewRange(stockViewRange)
   }
 

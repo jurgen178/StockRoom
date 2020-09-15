@@ -131,6 +131,6 @@ class ListFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
-    stockRoomViewModel.updateOnlineDataManually()
+    stockRoomViewModel.runOnlineTaskManually()
   }
 }

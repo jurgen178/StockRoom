@@ -291,7 +291,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return Pair(onlineDataDelay, marketState)
   }
 
-  fun runOnlineTask() {
+  private fun onlineTask() {
     onlineBefore = onlineNow
     onlineNow = isOnline(getApplication())
 
@@ -358,6 +358,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
+  fun runOnlineTask() {
+    synchronized(onlineUpdateTime)
+    {
+      onlineTask()
+    }
+  }
+
+  fun runOnlineTaskManually(msg: String = "") {
+    synchronized(onlineUpdateTime)
+    {
+      if (msg.isNotEmpty()) {
+        logDebug(msg)
+      }
+
+      // Reset to run now.
+      onlineUpdateTime = 0
+      nextUpdate = 0
+      onlineTask()
+    }
+  }
+
+/*
   fun updateOnlineDataManually(msg: String = "") {
     if (isOnline(getApplication())) {
       if (msg.isNotEmpty()) {
@@ -378,6 +400,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       logDebug("Network is offline. No online data.")
     }
   }
+ */
 
   private fun updateAll() {
     allMediatorData.value = process(allData.value, true)
@@ -413,7 +436,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           updateFromOnline(liveDataOnline.value!!)
         }
         allMediatorData.value = process(allData.value, true)
-        updateOnlineDataManually()
+        runOnlineTaskManually()
       }
     }
 
@@ -421,7 +444,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       if (value != null) {
         updateStockDataFromDB(value)
         //if (dataStore.allDataReady) {
-        updateOnlineDataManually()
+        runOnlineTaskManually()
         //}
         //dataValidate()
         allMediatorData.value = process(allData.value, true)
@@ -1238,7 +1261,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private fun csvStrToDouble(str: String): Double {
-    val s = str.replace("$", "").replace(",", "")
+    val s = str.replace("$", "")
+        .replace(",", "")
     var value: Double
     try {
       value = s.toDouble()
@@ -1278,7 +1302,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     if (symbolColumn == -1) {
-      val msg = getApplication<Application>().getString(R.string.import_csv_column_error, "Symbol|Name")
+      val msg =
+        getApplication<Application>().getString(R.string.import_csv_column_error, "Symbol|Name")
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
@@ -1296,7 +1321,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     if (sharesColumn == -1) {
-      val msg = getApplication<Application>().getString(R.string.import_csv_column_error, "Shares|Quantity")
+      val msg =
+        getApplication<Application>().getString(R.string.import_csv_column_error, "Shares|Quantity")
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
@@ -1314,7 +1340,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     if (priceColumn == -1) {
-      val msg = getApplication<Application>().getString(R.string.import_csv_column_error, "Price|Cost Basis Per Share")
+      val msg = getApplication<Application>().getString(
+          R.string.import_csv_column_error, "Price|Cost Basis Per Share"
+      )
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(

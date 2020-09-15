@@ -81,13 +81,13 @@ class SummaryGroupFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
-    stockRoomViewModel.updateOnlineDataManually()
+    stockRoomViewModel.runOnlineTaskManually()
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       R.id.menu_sync -> {
-        stockRoomViewModel.updateOnlineDataManually("Schedule to get online data manually.")
+        stockRoomViewModel.runOnlineTaskManually("Schedule to get online data manually.")
         true
       }
       else -> super.onOptionsItemSelected(item)

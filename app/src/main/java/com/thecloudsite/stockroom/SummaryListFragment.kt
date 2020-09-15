@@ -117,7 +117,7 @@ class SummaryListFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
-    stockRoomViewModel.updateOnlineDataManually()
+    stockRoomViewModel.runOnlineTaskManually()
   }
 
   private fun clickListenerListItem(stockItem: StockItem) {
