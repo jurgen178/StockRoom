@@ -529,6 +529,10 @@ class StockDataFragment : Fragment() {
     }
     onlineDataView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
+    var timeInSeconds5minUpdate = LocalDateTime.now()
+        .toEpochSecond(ZoneOffset.UTC)
+    var timeInSeconds24hUpdate = timeInSeconds5minUpdate
+
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
@@ -540,6 +544,28 @@ class StockDataFragment : Fragment() {
         if (onlineMarketData != null) {
           updateHeader(onlineMarketData)
           onlineDataAdapter.updateData(onlineMarketData)
+
+          // Update charts
+          val timeInSecondsNow = LocalDateTime.now()
+              .toEpochSecond(ZoneOffset.UTC)
+
+          // Update daily and 5-day chart every 5min
+          if (stockViewRange == StockViewRange.OneDay
+              || stockViewRange == StockViewRange.FiveDays
+          ) {
+            if (timeInSecondsNow > timeInSeconds5minUpdate + 5 * 60) {
+              timeInSeconds5minUpdate = timeInSecondsNow
+              getData(stockViewRange)
+              getStockView(stockViewRange, stockViewMode)
+            }
+          } else {
+            // Update other charts every day
+            if (timeInSecondsNow > timeInSeconds24hUpdate + 24 * 60 * 60) {
+              timeInSeconds24hUpdate = timeInSecondsNow
+              getData(stockViewRange)
+              getStockView(stockViewRange, stockViewMode)
+            }
+          }
 
           /*
           val dividendText =
