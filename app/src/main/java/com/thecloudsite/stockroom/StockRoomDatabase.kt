@@ -163,7 +163,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
           asset.symbol
         }
 
-        var onlinedata: List<OnlineMarketData> = emptyList()
+        var onlinedata: List<OnlineMarketData>
         runBlocking {
           withContext(Dispatchers.IO) {
             onlinedata = stockMarketDataRepository.getStockData2(symbols)

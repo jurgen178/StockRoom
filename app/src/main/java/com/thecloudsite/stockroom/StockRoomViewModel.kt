@@ -1719,7 +1719,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   fun getGroupSync(color: Int): Group {
-    var group: Group? = null
+    var group: Group?
     runBlocking {
       withContext(Dispatchers.IO) {
         group = repository.getGroup(color)
