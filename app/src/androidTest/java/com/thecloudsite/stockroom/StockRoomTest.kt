@@ -1,7 +1,5 @@
-package com.thecloudsite.stockroom
-
 /*
- * Copyright (C) 2017 Google Inc.
+ * Copyright (C) 2020
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +13,8 @@ package com.thecloudsite.stockroom
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.thecloudsite.stockroom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
