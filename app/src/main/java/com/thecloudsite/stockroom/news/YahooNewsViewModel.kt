@@ -20,8 +20,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.thecloudsite.stockroom.news.NewsData
-import com.thecloudsite.stockroom.news.YahooNewsRepository
 import kotlinx.coroutines.launch
 
 class YahooNewsViewModel(application: Application) : AndroidViewModel(application) {

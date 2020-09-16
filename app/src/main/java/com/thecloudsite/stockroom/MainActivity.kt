@@ -73,8 +73,6 @@ class MainActivity : AppCompatActivity() {
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var eventList: MutableList<Events> = mutableListOf()
 
-  //private var isLastListItem = false
-
   lateinit var onlineDataHandler: Handler
 
   lateinit var eventHandler: Handler
@@ -170,15 +168,6 @@ class MainActivity : AppCompatActivity() {
 
     SharedHandler.deleteStockHandler.observe(this, Observer { symbol ->
       stockRoomViewModel.deleteStock(symbol)
-
-/*
-      if (isLastListItem &&
-          SharedRepository.selectedPortfolio.value != null &&
-          SharedRepository.selectedPortfolio.value!!.isNotEmpty()
-      ) {
-        SharedRepository.selectedPortfolio.value = ""
-      }
-*/
     })
 
     viewpager.adapter = object : FragmentStateAdapter(this) {
@@ -210,15 +199,6 @@ class MainActivity : AppCompatActivity() {
     stockRoomViewModel.sortingLiveData.observe(this, Observer {
       invalidateOptionsMenu()
     })
-
-    /*
-       // Keep track if there is only one item left to reset the portfolio if this item is deleted.
-       stockRoomViewModel.allStockItems.observe(this, Observer { stockItemSet ->
-         if (stockItemSet != null) {
-           isLastListItem = stockItemSet.stockItems.size == 1
-         }
-       })
-       */
 
     /*
     val connectivityManager =

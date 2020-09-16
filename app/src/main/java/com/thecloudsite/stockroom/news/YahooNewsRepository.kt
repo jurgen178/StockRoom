@@ -16,8 +16,4 @@
 
 package com.thecloudsite.stockroom.news
 
-import com.thecloudsite.stockroom.news.NewsRepository
-import com.thecloudsite.stockroom.news.YahooNewsApiFactory
-import com.thecloudsite.stockroom.news.news_type_yahoo
-
 class YahooNewsRepository : NewsRepository({ YahooNewsApiFactory.newsApi }, news_type_yahoo)
