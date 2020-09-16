@@ -43,7 +43,7 @@ open class NewsRepository(
         data = result.data
       is Result.Error -> {
         Log.d(
-            "BaseRepository safeApiCall failed", "$errorMessage & Exception - ${result.exception}"
+            "NewsRepository safeApiCall failed", "$errorMessage & Exception - ${result.exception}"
         )
       }
     }
