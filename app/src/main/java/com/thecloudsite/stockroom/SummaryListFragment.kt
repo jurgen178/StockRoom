@@ -133,12 +133,13 @@ class SummaryListFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
-    stockRoomViewModel.runOnlineTaskManually()
+    stockRoomViewModel.runOnlineTaskNow()
   }
 
   private fun clickListenerListItem(stockItem: StockItem) {
     val intent = Intent(context, StockDataActivity::class.java)
     intent.putExtra("symbol", stockItem.onlineMarketData.symbol)
+    stockRoomViewModel.runOnlineTaskNow()
     startActivity(intent)
   }
 }

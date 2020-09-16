@@ -380,7 +380,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  fun runOnlineTaskManually(msg: String = "") {
+  fun runOnlineTaskNow(msg: String = "") {
     synchronized(onlineUpdateTime)
     {
       if (msg.isNotEmpty()) {
@@ -451,7 +451,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           updateFromOnline(liveDataOnline.value!!)
         }
         allMediatorData.value = process(allData.value, true)
-        runOnlineTaskManually()
+        runOnlineTaskNow()
       }
     }
 
@@ -459,7 +459,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       if (value != null) {
         updateStockDataFromDB(value)
         //if (dataStore.allDataReady) {
-        runOnlineTaskManually()
+        runOnlineTaskNow()
         //}
         //dataValidate()
         allMediatorData.value = process(allData.value, true)

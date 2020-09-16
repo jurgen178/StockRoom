@@ -365,7 +365,7 @@ class MainActivity : AppCompatActivity() {
         true
       }
       R.id.menu_sync -> {
-        stockRoomViewModel.runOnlineTaskManually("Schedule to get online data manually.")
+        stockRoomViewModel.runOnlineTaskNow("Schedule to get online data manually.")
         true
       }
       else -> super.onOptionsItemSelected(item)

@@ -98,6 +98,7 @@ class ListFragment : Fragment() {
   private fun clickListenerSummary(stockItem: StockItem) {
     val intent = Intent(context, StockDataActivity::class.java)
     intent.putExtra("symbol", stockItem.onlineMarketData.symbol)
+    stockRoomViewModel.runOnlineTaskNow()
     startActivity(intent)
   }
 
@@ -155,6 +156,6 @@ class ListFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
-    stockRoomViewModel.runOnlineTaskManually()
+    stockRoomViewModel.runOnlineTaskNow()
   }
 }
