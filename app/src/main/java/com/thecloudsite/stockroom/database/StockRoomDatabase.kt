@@ -41,6 +41,7 @@ import kotlin.math.roundToInt
     version = 1,
     exportSchema = true
 )
+
 abstract class StockRoomDatabase : RoomDatabase() {
 
   abstract fun stockRoomDao(): StockRoomDao
@@ -61,11 +62,9 @@ abstract class StockRoomDatabase : RoomDatabase() {
             StockRoomDatabase::class.java,
             "stockroom_database"
         )
-            // Wipes and rebuilds instead of migrating if no Migration object.
-            // Migration is not part of this codelab.
-            .fallbackToDestructiveMigration()
             .addCallback(StockRoomDatabaseCallback(scope, context))
             .build()
+
         INSTANCE = instance
         // return instance
         instance

@@ -1,26 +1,11 @@
 [
   {
-    "alertAbove": 0.0,
-    "alertBelow": 0.0,
-    "assets": [
-      {
-        "price": 100.0,
-        "shares": 15.0
-      }
-    ],
-    "events": [],
-    "groupColor": -16776961,
-    "groupName": "Beobachten",
-    "notes": "",
-    "symbol": "AAPL"
-  },
-  {
     "alertAbove": 4000.0,
     "alertBelow": 0.0,
     "assets": [
       {
         "price": 3000.0,
-        "shares": 2.0
+        "shares": 1.0
       }
     ],
     "events": [],
@@ -35,7 +20,7 @@
     "assets": [
       {
         "price": 1.0,
-        "shares": 1300.0
+        "shares": 2800.0
       }
     ],
     "events": [],
@@ -64,23 +49,8 @@
     "alertBelow": 0.0,
     "assets": [
       {
-        "price": 100.0,
-        "shares": 50.0
-      }
-    ],
-    "events": [],
-    "groupColor": -12004916,
-    "groupName": "Gruppe 3",
-    "notes": "",
-    "symbol": "CVX"
-  },
-  {
-    "alertAbove": 0.0,
-    "alertBelow": 0.0,
-    "assets": [
-      {
         "price": 150.0,
-        "shares": 15.0
+        "shares": 20.0
       }
     ],
     "events": [
@@ -101,23 +71,8 @@
     "alertBelow": 0.0,
     "assets": [
       {
-        "price": 120.0,
-        "shares": 5.0
-      }
-    ],
-    "events": [],
-    "groupColor": -32985,
-    "groupName": "Gruppe 5",
-    "notes": "",
-    "symbol": "FB"
-  },
-  {
-    "alertAbove": 0.0,
-    "alertBelow": 0.0,
-    "assets": [
-      {
         "price": 1.0,
-        "shares": 1500.0
+        "shares": 300.0
       }
     ],
     "events": [],
@@ -132,7 +87,7 @@
     "assets": [
       {
         "price": 200.0,
-        "shares": 20.0
+        "shares": 25.0
       }
     ],
     "events": [],
@@ -177,7 +132,7 @@
     "assets": [
       {
         "price": 12.0,
-        "shares": 180.0
+        "shares": 90.0
       }
     ],
     "events": [],
@@ -200,30 +155,5 @@
     "groupName": "Die Katze fragen",
     "notes": "",
     "symbol": "T"
-  },
-  {
-    "alertAbove": 0.0,
-    "alertBelow": 0.0,
-    "assets": [
-      {
-        "price": 1000.0,
-        "shares": 5.0
-      }
-    ],
-    "events": [],
-    "groupColor": -12004916,
-    "groupName": "Gruppe 3",
-    "notes": "",
-    "symbol": "TSLA"
-  },
-  {
-    "alertAbove": 0.0,
-    "alertBelow": 0.0,
-    "assets": [],
-    "events": [],
-    "groupColor": 0,
-    "groupName": "",
-    "notes": "",
-    "symbol": "^GSPC"
   }
 ]
