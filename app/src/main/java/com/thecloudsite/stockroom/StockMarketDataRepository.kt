@@ -19,6 +19,10 @@ package com.thecloudsite.stockroom
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.database.Event
+import com.thecloudsite.stockroom.database.StockDBdata
 
 data class StockItemSet
 (

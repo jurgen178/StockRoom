@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded

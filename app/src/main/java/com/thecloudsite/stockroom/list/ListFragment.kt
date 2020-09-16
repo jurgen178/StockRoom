@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.list
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -29,6 +29,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.R.layout
+import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.StockDataActivity
+import com.thecloudsite.stockroom.StockItem
+import com.thecloudsite.stockroom.StockRoomListAdapter
+import com.thecloudsite.stockroom.StockRoomViewModel
+import com.thecloudsite.stockroom.database.Group
 
 // https://stackoverflow.com/questions/55372259/how-to-use-tablayout-with-viewpager2-in-android
 
@@ -57,7 +65,7 @@ class ListFragment : Fragment() {
     val popupMenu = PopupMenu(context, itemView)
 
     var menuIndex: Int = Menu.FIRST
-    stockRoomViewModel.getGroupsMenuList(getString(R.string.standard_group))
+    stockRoomViewModel.getGroupsMenuList(getString(string.standard_group))
         .forEach {
           popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
         }
@@ -72,7 +80,7 @@ class ListFragment : Fragment() {
 
       if (i >= groups.size) {
         clr = 0
-        name = getString(R.string.standard_group)
+        name = getString(string.standard_group)
       } else {
         clr = groups[i].color
         name = groups[i].name
@@ -142,7 +150,7 @@ class ListFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    return inflater.inflate(R.layout.fragment_list, container, false)
+    return inflater.inflate(layout.fragment_list, container, false)
   }
 
   override fun onResume() {

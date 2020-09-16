@@ -25,6 +25,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.database.Event
 import kotlinx.android.synthetic.main.eventview_item.view.textViewEventDelete
 import kotlinx.android.synthetic.main.eventview_item.view.textViewEventItemsLayout
 import java.time.LocalDateTime

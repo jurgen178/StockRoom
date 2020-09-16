@@ -19,6 +19,15 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Assets
+import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.database.Event
+import com.thecloudsite.stockroom.database.Events
+import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.database.StockRoomDao
 
 /**
  * Abstracted Repository as promoted by the Architecture Guide.

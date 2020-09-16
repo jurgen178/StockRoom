@@ -39,6 +39,14 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.thecloudsite.stockroom.DividendCycle.Quarterly
+import com.thecloudsite.stockroom.DividendType.Announced
+import com.thecloudsite.stockroom.DividendType.Received
+import com.thecloudsite.stockroom.database.Assets
+import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.utils.dividendCycleToSelection
+import com.thecloudsite.stockroom.utils.dividendSelectionToCycle
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendAnnouncedButton
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButton
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNotesTextView
@@ -168,7 +176,7 @@ class DividendFragment : Fragment() {
                     Dividend(
                         symbol = symbol,
                         amount = dividendAmount,
-                        type = DividendType.Received.value,
+                        type = Received.value,
                         cycle = cycle,
                         paydate = seconds,
                         exdate = 0L
@@ -317,7 +325,7 @@ class DividendFragment : Fragment() {
                 Dividend(
                     symbol = symbol,
                     amount = dividendAmount,
-                    type = DividendType.Announced.value,
+                    type = Announced.value,
                     cycle = cycle,
                     paydate = seconds,
                     exdate = secondsEx
@@ -497,7 +505,7 @@ class DividendFragment : Fragment() {
       val textViewDividendCycleSpinner =
         dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
       textViewDividendCycleSpinner.setSelection(
-          dividendCycleToSelection(DividendCycle.Quarterly.value)
+          dividendCycleToSelection(Quarterly.value)
       )
 
       builder.setView(dialogView)
@@ -539,7 +547,7 @@ class DividendFragment : Fragment() {
                 val dividend = Dividend(
                     symbol = symbol,
                     amount = dividendAmount,
-                    type = DividendType.Received.value,
+                    type = Received.value,
                     cycle = cycle,
                     paydate = seconds,
                     exdate = 0L
@@ -590,7 +598,7 @@ class DividendFragment : Fragment() {
       val textViewDividendCycleSpinner =
         dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
       textViewDividendCycleSpinner.setSelection(
-          dividendCycleToSelection(DividendCycle.Quarterly.value)
+          dividendCycleToSelection(Quarterly.value)
       )
 
       builder.setView(dialogView)
@@ -629,7 +637,7 @@ class DividendFragment : Fragment() {
             val dividend = Dividend(
                 symbol = symbol,
                 amount = dividendAmount,
-                type = DividendType.Announced.value,
+                type = Announced.value,
                 cycle = cycle,
                 paydate = seconds,
                 exdate = secondsEx

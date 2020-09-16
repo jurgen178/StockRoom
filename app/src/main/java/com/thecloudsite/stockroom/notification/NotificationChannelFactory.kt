@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.notification
 
 import android.app.Notification
 import android.app.NotificationChannel

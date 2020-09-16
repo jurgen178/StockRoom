@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.notification
 
 import android.app.PendingIntent
 import android.content.Context
@@ -23,6 +23,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
+import com.thecloudsite.stockroom.R.drawable
+import com.thecloudsite.stockroom.StockDataActivity
 import java.util.concurrent.atomic.AtomicInteger
 
 object NotificationID {
@@ -54,7 +56,7 @@ class NotificationFactory(
 
   private val notificationBuilder: Builder =
     Builder(context, NotificationChannelFactory.NotificationChannelId)
-        .setSmallIcon(R.drawable.ic_notification_chart)
+        .setSmallIcon(drawable.ic_notification_chart)
         .setContentTitle(
             title
         )

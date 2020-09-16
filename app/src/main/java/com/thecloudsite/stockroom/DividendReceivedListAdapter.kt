@@ -26,6 +26,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.database.Dividends
 import kotlinx.android.synthetic.main.dividend_received_view_item.view.dividendReceivedLinearLayout
 import kotlinx.android.synthetic.main.dividend_received_view_item.view.textViewDividendReceivedDelete
 import java.text.DecimalFormat

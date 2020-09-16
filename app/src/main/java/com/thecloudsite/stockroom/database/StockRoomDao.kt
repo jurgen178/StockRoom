@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.database
 
 import android.content.Context
 import android.graphics.Color
@@ -25,6 +25,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.thecloudsite.stockroom.R.array
+import com.thecloudsite.stockroom.utils.epsilon
 
 @Dao
 interface StockRoomDao {
@@ -90,7 +92,7 @@ interface StockRoomDao {
     groups.add(Group(color = Color.BLACK, name = "Gruppe 4"))
     groups.add(Group(color = Color.rgb(255, 127, 39), name = "Gruppe 5"))
 
-    val stringList = context.resources.getStringArray(R.array.predefined_groups)
+    val stringList = context.resources.getStringArray(array.predefined_groups)
     val size = minOf(groups.size, stringList.size)
     for (i: Int in 0 until size) {
       groups[i].name = stringList[i]

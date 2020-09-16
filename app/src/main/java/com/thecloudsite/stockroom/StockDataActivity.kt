@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.thecloudsite.stockroom.news.NewsFragment
 import kotlinx.android.synthetic.main.activity_stock.stockViewpager
 import kotlinx.android.synthetic.main.activity_stock.tab_layout
 import java.util.Locale

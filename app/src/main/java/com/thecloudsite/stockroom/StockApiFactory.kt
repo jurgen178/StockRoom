@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.thecloudsite.stockroom.utils.checkBaseUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory

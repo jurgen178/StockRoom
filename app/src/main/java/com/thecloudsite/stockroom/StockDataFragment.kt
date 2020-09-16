@@ -65,6 +65,16 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Assets
+import com.thecloudsite.stockroom.database.Event
+import com.thecloudsite.stockroom.database.Events
+import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
+import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
+import com.thecloudsite.stockroom.utils.epsilon
+import com.thecloudsite.stockroom.utils.getAssetChange
 import kotlinx.android.synthetic.main.fragment_stockdata.addAssetsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.addEventsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputEditText

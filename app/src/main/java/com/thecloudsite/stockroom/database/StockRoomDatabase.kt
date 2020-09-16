@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.database
 
 import android.content.Context
 import android.graphics.Color
@@ -24,6 +24,14 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.thecloudsite.stockroom.OnlineMarketData
+import com.thecloudsite.stockroom.R.raw
+import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.StockItemJson
+import com.thecloudsite.stockroom.StockMarketDataApiFactory
+import com.thecloudsite.stockroom.StockMarketDataRepository
+import com.thecloudsite.stockroom.utils.getRawTextFile
+import com.thecloudsite.stockroom.utils.isOnline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -192,16 +200,16 @@ abstract class StockRoomDatabase : RoomDatabase() {
         }
       } else {
         // if offline, preset with json
-        val jsonText = context.resources.getRawTextFile(R.raw.example_stocks)
+        val jsonText = context.resources.getRawTextFile(raw.example_stocks)
         importExampleJSON(stockRoomDao, jsonText)
       }
 
       // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
       stockRoomDao.updateNotes(
-          symbol = "AAPL", notes = context.getString(R.string.example_List_delete_all)
+          symbol = "AAPL", notes = context.getString(string.example_List_delete_all)
       )
       stockRoomDao.updateNotes(
-          symbol = "AMZN", notes = context.getString(R.string.example_List_note)
+          symbol = "AMZN", notes = context.getString(string.example_List_note)
       )
 
 /*

@@ -23,6 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.database.StockDBdata
 import kotlinx.android.synthetic.main.groupview_item.view.groupItemName
 import kotlinx.android.synthetic.main.groupview_item.view.textViewGroupDelete
 

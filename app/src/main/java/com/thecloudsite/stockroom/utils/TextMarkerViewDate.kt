@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.utils
 
 import android.content.Context
 import android.widget.TextView
@@ -23,6 +23,9 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.R.layout
+import com.thecloudsite.stockroom.StockDataEntry
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -32,7 +35,7 @@ class TextMarkerViewCandleChart(
   context: Context,
   private val dateTimeFormatter: DateTimeFormatter,
   private val stockDataEntries: List<StockDataEntry>
-) : MarkerView(context, R.layout.text_marker_layout) {
+) : MarkerView(context, layout.text_marker_layout) {
   private var tvContent = findViewById<TextView>(R.id.tvContent)
   private val offsetPoint by lazy {
     MPPointF(-(width / 2).toFloat(), -height.toFloat())
@@ -79,7 +82,7 @@ class TextMarkerViewLineChart(
   context: Context,
   private val dateTimeFormatter: DateTimeFormatter,
   private val stockDataEntries: List<StockDataEntry>
-) : MarkerView(context, R.layout.text_marker_layout) {
+) : MarkerView(context, layout.text_marker_layout) {
   private var tvContent = findViewById<TextView>(R.id.tvContent)
   private val offsetPoint by lazy {
     MPPointF(-(width / 2).toFloat(), -height.toFloat())

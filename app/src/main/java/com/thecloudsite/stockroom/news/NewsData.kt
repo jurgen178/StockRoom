@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.news
 
 import kotlinx.coroutines.Deferred
 import org.simpleframework.xml.Element

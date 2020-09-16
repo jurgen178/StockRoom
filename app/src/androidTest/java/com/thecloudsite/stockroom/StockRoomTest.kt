@@ -25,6 +25,11 @@ import org.junit.runner.RunWith
 import java.text.NumberFormat
 import java.util.Locale
 import com.google.gson.Gson
+import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.database.Event
+import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.validateDouble
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter

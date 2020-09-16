@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.utils.getAssetChange
 import kotlinx.android.synthetic.main.summarylist_item.view.summaryListItemLayout
 import java.text.DecimalFormat
 

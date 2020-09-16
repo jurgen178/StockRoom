@@ -26,6 +26,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.database.Asset
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetDelete
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetItemsLayout
 import java.text.DecimalFormat

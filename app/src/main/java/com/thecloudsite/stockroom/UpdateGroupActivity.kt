@@ -28,6 +28,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.larswerkman.holocolorpicker.ColorPicker
 import com.larswerkman.holocolorpicker.SVBar
+import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.database.StockDBdata
 import kotlinx.android.synthetic.main.activity_updategroup.addGroupButton
 import kotlinx.android.synthetic.main.activity_updategroup.addPredefinedGroupsButton
 import kotlinx.android.synthetic.main.activity_updategroup.deleteAllGroupButton

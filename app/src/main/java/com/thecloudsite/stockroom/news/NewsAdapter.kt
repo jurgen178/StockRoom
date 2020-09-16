@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.news
 
 import android.content.Context
 import android.text.method.LinkMovementMethod
@@ -24,6 +24,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.R.id
+import com.thecloudsite.stockroom.R.layout
+import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -79,7 +84,7 @@ data class NewsData(
 
 class NewsAdapter(
   private val context: Context
-) : RecyclerView.Adapter<NewsAdapter.BaseViewHolder<*>>() {
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
     abstract fun bind(item: T)
@@ -92,19 +97,19 @@ class NewsAdapter(
     override fun bind(item: NewsData) {
     }
 
-    val yahooNewsItemTitle: TextView = itemView.findViewById(R.id.yahooNewsItemTitle)
-    val yahooNewsItemDate: TextView = itemView.findViewById(R.id.yahooNewsItemDate)
-    val yahooNewsItemLink: TextView = itemView.findViewById(R.id.yahooNewsItemLink)
-    val yahooNewsItemText: TextView = itemView.findViewById(R.id.yahooNewsItemText)
+    val yahooNewsItemTitle: TextView = itemView.findViewById(id.yahooNewsItemTitle)
+    val yahooNewsItemDate: TextView = itemView.findViewById(id.yahooNewsItemDate)
+    val yahooNewsItemLink: TextView = itemView.findViewById(id.yahooNewsItemLink)
+    val yahooNewsItemText: TextView = itemView.findViewById(id.yahooNewsItemText)
   }
 
   class GoogleNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
     override fun bind(item: NewsData) {
     }
 
-    val googleNewsItemTitle: TextView = itemView.findViewById(R.id.googleNewsItemTitle)
-    val googleNewsItemDate: TextView = itemView.findViewById(R.id.googleNewsItemDate)
-    val googleNewsItemPreviewText: TextView = itemView.findViewById(R.id.googleNewsItemPreviewText)
+    val googleNewsItemTitle: TextView = itemView.findViewById(id.googleNewsItemTitle)
+    val googleNewsItemDate: TextView = itemView.findViewById(id.googleNewsItemDate)
+    val googleNewsItemPreviewText: TextView = itemView.findViewById(id.googleNewsItemPreviewText)
   }
 
   override fun onCreateViewHolder(
@@ -114,12 +119,12 @@ class NewsAdapter(
     return when (viewType) {
       news_type_yahoo -> {
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.yahoonewsview_item, parent, false)
+            .inflate(layout.yahoonewsview_item, parent, false)
         YahooNewsViewHolder(view)
       }
       news_type_google -> {
         val view = LayoutInflater.from(context)
-            .inflate(R.layout.googlenewsview_item, parent, false)
+            .inflate(layout.googlenewsview_item, parent, false)
         GoogleNewsViewHolder(view)
       }
       else -> throw IllegalArgumentException("Invalid view type")
@@ -131,7 +136,7 @@ class NewsAdapter(
     val dateStr = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
     val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
 
-    return context.getString(R.string.news_date_time, dateStr, timeStr)
+    return context.getString(string.news_date_time, dateStr, timeStr)
   }
 
   //-----------onCreateViewHolder: bind view with data model---------
@@ -156,7 +161,7 @@ class NewsAdapter(
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         holder.yahooNewsItemLink.setLinkTextColor(
-            context.getColor(R.color.material_on_background_emphasis_medium)
+            context.getColor(color.material_on_background_emphasis_medium)
         )
         holder.yahooNewsItemText.text =
           HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)

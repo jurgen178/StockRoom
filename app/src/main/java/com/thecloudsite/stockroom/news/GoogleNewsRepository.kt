@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.news
 
 class GoogleNewsRepository : NewsRepository({ GoogleNewsApiFactory.newsApi }, news_type_google)

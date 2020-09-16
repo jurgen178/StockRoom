@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.list
 
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +23,10 @@ import androidx.annotation.RawRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import com.thecloudsite.stockroom.MainActivity.Companion
+import com.thecloudsite.stockroom.R.layout
+import com.thecloudsite.stockroom.R.raw
+import com.thecloudsite.stockroom.StockRoomViewModel
 import kotlinx.android.synthetic.main.activity_list.debugswitch
 import kotlinx.android.synthetic.main.activity_list.realtimeswitch
 import kotlinx.android.synthetic.main.activity_list.webview
@@ -54,7 +58,7 @@ class ListActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_list)
+    setContentView(layout.activity_list)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     val sharedPreferences =
@@ -69,9 +73,9 @@ class ListActivity : AppCompatActivity() {
     }
 
     // Only valid for the current App run.
-    realtimeswitch.isChecked = MainActivity.realtimeOverride
+    realtimeswitch.isChecked = Companion.realtimeOverride
     realtimeswitch.setOnCheckedChangeListener { _, isChecked ->
-      MainActivity.realtimeOverride = isChecked
+      Companion.realtimeOverride = isChecked
     }
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
@@ -231,7 +235,7 @@ class ListActivity : AppCompatActivity() {
     }
 
   private fun updateHtmlText() {
-    var htmlText = resources.getRawTextFile(R.raw.list)
+    var htmlText = resources.getRawTextFile(raw.list)
 
     htmlText = htmlText.replace("<!-- stock_table_name -->", "stock_table ($stockTableRowsCount)")
     htmlText = htmlText.replace("<!-- stock_table -->", stockTableRows.toString())

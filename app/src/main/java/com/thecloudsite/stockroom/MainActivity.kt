@@ -41,6 +41,16 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.StockDataFragment.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
+import com.thecloudsite.stockroom.database.Events
+import com.thecloudsite.stockroom.list.ListAdapter
+import com.thecloudsite.stockroom.list.ListFragment
+import com.thecloudsite.stockroom.list.SortMode
+import com.thecloudsite.stockroom.news.GoogleNewsApiFactory
+import com.thecloudsite.stockroom.news.YahooNewsApiFactory
+import com.thecloudsite.stockroom.notification.NotificationChannelFactory
+import com.thecloudsite.stockroom.notification.NotificationFactory
+import com.thecloudsite.stockroom.utils.isOnline
+import com.thecloudsite.stockroom.utils.isValidSymbol
 import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
 import kotlinx.android.synthetic.main.activity_main.viewpager
 import java.text.DecimalFormat

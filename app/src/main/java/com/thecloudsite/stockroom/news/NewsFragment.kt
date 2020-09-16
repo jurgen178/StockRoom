@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.news
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +25,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.R.layout
+import com.thecloudsite.stockroom.StockRoomViewModel
 import kotlinx.android.synthetic.main.fragment_news.newsRecyclerview
 import kotlinx.android.synthetic.main.fragment_news.swipeRefreshLayout
 import java.util.Locale
@@ -60,7 +63,7 @@ class NewsFragment : Fragment() {
     googleNewsQuery = symbol
 
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_news, container, false)
+    return inflater.inflate(layout.fragment_news, container, false)
   }
 
   override fun onViewCreated(

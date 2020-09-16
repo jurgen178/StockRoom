@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
+import com.thecloudsite.stockroom.list.ListActivity
 import kotlinx.android.synthetic.main.activity_add.button_add
 import kotlinx.android.synthetic.main.activity_add.importButton
 

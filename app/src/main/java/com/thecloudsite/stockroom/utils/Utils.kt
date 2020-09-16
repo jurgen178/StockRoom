@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.utils
 
 import android.content.Context
 import android.content.res.Resources
@@ -24,6 +24,12 @@ import android.text.SpannableStringBuilder
 import androidx.annotation.RawRes
 import androidx.core.text.bold
 import androidx.core.text.color
+import com.thecloudsite.stockroom.DividendCycle.Annual
+import com.thecloudsite.stockroom.DividendCycle.Monthly
+import com.thecloudsite.stockroom.DividendCycle.Quarterly
+import com.thecloudsite.stockroom.DividendCycle.SemiAnnual
+import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.database.Asset
 import java.text.DecimalFormat
 import java.util.Locale
 
@@ -42,18 +48,18 @@ enum class DividendCycle(val value: Int) {
 
 fun dividendSelectionToCycle(selection: Int): Int {
   return when (selection) {
-    0 -> DividendCycle.Monthly.value
-    2 -> DividendCycle.SemiAnnual.value
-    3 -> DividendCycle.Annual.value
-    else -> DividendCycle.Quarterly.value
+    0 -> Monthly.value
+    2 -> SemiAnnual.value
+    3 -> Annual.value
+    else -> Quarterly.value
   }
 }
 
 fun dividendCycleToSelection(cycle: Int): Int {
   return when (cycle) {
-    DividendCycle.Monthly.value -> 0
-    DividendCycle.SemiAnnual.value -> 2
-    DividendCycle.Annual.value -> 3
+    Monthly.value -> 0
+    SemiAnnual.value -> 2
+    Annual.value -> 3
     else -> 1
   }
 }
@@ -140,13 +146,13 @@ fun getAssetChange(
 
       val assetChangeColor = when {
         capital > asset -> {
-          context.getColor(R.color.green)
+          context.getColor(color.green)
         }
         capital < asset -> {
-          context.getColor(R.color.red)
+          context.getColor(color.red)
         }
         else -> {
-          context.getColor(R.color.material_on_background_emphasis_medium)
+          context.getColor(color.material_on_background_emphasis_medium)
         }
       }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.list
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -22,6 +22,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R.id
+import com.thecloudsite.stockroom.R.layout
+import com.thecloudsite.stockroom.list.ListAdapter.DebugDataViewHolder
 
 data class DebugData(
   val timeStamp: String,
@@ -30,21 +33,21 @@ data class DebugData(
 
 class ListAdapter internal constructor(
   context: Context
-) : RecyclerView.Adapter<ListAdapter.DebugDataViewHolder>() {
+) : RecyclerView.Adapter<DebugDataViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = listOf<DebugData>()
 
   class DebugDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val debugItemTimeStamp: TextView = itemView.findViewById(R.id.debugItemTimeStamp)
-    val debugItemData: TextView = itemView.findViewById(R.id.debugItemData)
+    val debugItemTimeStamp: TextView = itemView.findViewById(id.debugItemTimeStamp)
+    val debugItemData: TextView = itemView.findViewById(id.debugItemData)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): DebugDataViewHolder {
-    val itemView = inflater.inflate(R.layout.debug_item, parent, false)
+    val itemView = inflater.inflate(layout.debug_item, parent, false)
     return DebugDataViewHolder(itemView)
   }
 

@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.news
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.thecloudsite.stockroom.Result
+import com.thecloudsite.stockroom.Result.Error
+import com.thecloudsite.stockroom.Result.Success
+import com.thecloudsite.stockroom.updateCounter
 import retrofit2.Response
 import java.io.IOException
 import java.time.LocalDateTime
@@ -34,14 +38,13 @@ open class NewsRepository(
     call: suspend () -> Response<T>,
     errorMessage: String
   ): T? {
-
     val result: Result<T> = safeApiResult(call, errorMessage)
     var data: T? = null
 
     when (result) {
-      is Result.Success ->
+      is Success ->
         data = result.data
-      is Result.Error -> {
+      is Error -> {
         Log.d(
             "NewsRepository safeApiCall failed", "$errorMessage & Exception - ${result.exception}"
         )
@@ -56,9 +59,9 @@ open class NewsRepository(
     errorMessage: String
   ): Result<T> {
     val response = call.invoke()
-    if (response.isSuccessful) return Result.Success(response.body()!!)
+    if (response.isSuccessful) return Success(response.body()!!)
 
-    return Result.Error(
+    return Error(
         IOException("Error Occurred during getting safe Api result, Custom ERROR - $errorMessage")
     )
   }

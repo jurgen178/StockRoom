@@ -27,6 +27,8 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.utils.epsilon
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
