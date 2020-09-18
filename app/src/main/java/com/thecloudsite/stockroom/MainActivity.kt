@@ -50,7 +50,6 @@ import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
 import kotlinx.android.synthetic.main.activity_main.viewpager
-import kotlinx.android.synthetic.main.activity_stock.stockViewpager
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset

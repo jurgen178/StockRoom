@@ -19,17 +19,13 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.drawable.GradientDrawable
-import android.opengl.Visibility
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.text.bold
 import androidx.core.text.italic
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.CandleStickChart
@@ -43,17 +39,10 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
-import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
-import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
 import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle.MEDIUM
-import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -61,11 +50,11 @@ class StockRoomChartAdapter internal constructor(
   val context: Context,
   private val clickListenerGroup: (StockItem, View) -> Unit,
   private val clickListenerSummary: (StockItem) -> Unit,
-  private val stockViewRange: StockViewRange,
-  private val stockViewMode: StockViewMode
 ) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
+  private var stockViewRange: StockViewRange = StockViewRange.OneDay
+  private var stockViewMode: StockViewMode = StockViewMode.Line
   private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
 
   class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -119,10 +108,10 @@ class StockRoomChartAdapter internal constructor(
 
         setupCandleStickChart(holder.candleStickChart)
 
-        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.stockDBdata.symbol]
+        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.onlineMarketData.symbol]
         loadCandleStickChart(
             holder.candleStickChart,
-            current.stockDBdata.symbol,
+            current.onlineMarketData.symbol,
             stockDataEntries,
             stockViewRange
         )
@@ -132,10 +121,10 @@ class StockRoomChartAdapter internal constructor(
 
         setupLineChart(holder.lineChart)
 
-        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.stockDBdata.symbol]
+        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.onlineMarketData.symbol]
         loadLineChart(
             holder.lineChart,
-            current.stockDBdata.symbol,
+            current.onlineMarketData.symbol,
             stockDataEntries,
             stockViewRange
         )
@@ -227,6 +216,7 @@ class StockRoomChartAdapter internal constructor(
 
   private fun setupCandleStickChart(candleStickChart: CandleStickChart) {
     candleStickChart.isDoubleTapToZoomEnabled = false
+    candleStickChart.setTouchEnabled(false)
 
     candleStickChart.xAxis.setDrawLabels(false)
     candleStickChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -242,7 +232,6 @@ class StockRoomChartAdapter internal constructor(
     candleStickChart.axisLeft.setDrawAxisLine(false)
     candleStickChart.axisLeft.isEnabled = false
 
-    candleStickChart.extraBottomOffset = 8f
     candleStickChart.legend.isEnabled = false
     candleStickChart.description = null
     candleStickChart.setNoDataText("")
@@ -279,11 +268,19 @@ class StockRoomChartAdapter internal constructor(
     val candleData = CandleData(series)
     candleStickChart.data = candleData
 
+    val digits = if (candleData.yMax < 1.0) {
+      4
+    } else {
+      2
+    }
+    candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+
     candleStickChart.invalidate()
   }
 
   private fun setupLineChart(lineChart: LineChart) {
     lineChart.isDoubleTapToZoomEnabled = false
+    lineChart.setTouchEnabled(false)
 
     lineChart.xAxis.setDrawLabels(false)
     lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -299,7 +296,6 @@ class StockRoomChartAdapter internal constructor(
     lineChart.axisLeft.setDrawAxisLine(false)
     lineChart.axisLeft.isEnabled = false
 
-    lineChart.extraBottomOffset = 8f
     lineChart.legend.isEnabled = false
     lineChart.description = null
     lineChart.setNoDataText("")
@@ -333,6 +329,13 @@ class StockRoomChartAdapter internal constructor(
     val lineData = LineData(series)
     lineChart.data = lineData
 
+    val digits = if (lineData.yMax < 1.0) {
+      4
+    } else {
+      2
+    }
+    lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+
     lineChart.invalidate()
   }
 
@@ -348,8 +351,15 @@ class StockRoomChartAdapter internal constructor(
     //}
   }
 
-  internal fun setChartItem(stockChartData: StockChartData) {
+  internal fun setChartItem(
+    stockChartData: StockChartData,
+    stockViewRange: StockViewRange,
+    stockViewMode: StockViewMode
+  ) {
     chartDataItems[stockChartData.symbol] = stockChartData.stockDataEntries
+
+    this.stockViewRange = stockViewRange
+    this.stockViewMode = stockViewMode
 
     notifyDataSetChanged()
   }

@@ -614,9 +614,9 @@ class StockDataFragment : Fragment() {
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { data ->
-      stockDataEntries = data[symbol]
+      stockDataEntries = data.stockDataEntries
       setupCharts(stockViewRange, stockViewMode)
-      loadCharts(symbol, stockViewRange, stockViewMode)
+      loadCharts(data.symbol, stockViewRange, stockViewMode)
     })
 
     textViewSymbol.text = symbol
