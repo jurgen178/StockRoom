@@ -19,6 +19,20 @@
         app:icon="@drawable/ic_action_postmarket"
         />
 
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:key="use_chart_overlay_symbol"
+        app:title="@string/use_chart_overlay_symbol"
+        app:summary="@string/use_chart_overlay_symbol_desc"
+        app:icon="@drawable/ic_action_multiline_chart"
+        />
+    <EditTextPreference
+        app:dependency="use_chart_overlay_symbol"
+        app:key="chart_overlay_symbol"
+        app:title="@string/chart_overlay_symbol_title"
+        app:defaultValue="^GSPC"
+        app:useSimpleSummaryProvider="true" />
+
     <Preference
         app:key="update_groups"
         app:summary="@string/update_groups_desc"

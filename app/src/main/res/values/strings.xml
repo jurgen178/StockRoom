@@ -289,4 +289,7 @@ limitations under the License. -->
   <string name="dividend_updated">Dividend updated.</string>
   <string name="realtime">Always use Realtime</string>
   <string name="linegraph">Line graph</string>
+  <string name="use_chart_overlay_symbol">Additional stock chart in the chart display</string>
+  <string name="use_chart_overlay_symbol_desc">Adds an additional stock chart of another symbol to the chart display.</string>
+  <string name="chart_overlay_symbol_title">Additional stock symbol</string>
 </resources>

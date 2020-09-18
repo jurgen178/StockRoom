@@ -31,7 +31,8 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
     interval: String,
     range: String
   ) {
-    _data.value = StockChartData(symbol = symbol, stockDataEntries = getYahooChartData(symbol, interval, range))
+    _data.value =
+      StockChartData(symbol = symbol, stockDataEntries = getYahooChartData(symbol, interval, range))
   }
 
   private suspend fun getYahooChartData(

@@ -143,3 +143,24 @@ object StockChartDataApiFactory {
 
   var yahooApi: YahooApiChartData? = null
 }
+
+/*
+https://query1.finance.yahoo.com/v7/finance/download/TSLA?events=split&interval=1d&period1=1598572800&period2=1600453099
+
+This returns TSLA.csv containing:
+
+Date,Stock Splits
+2020-08-31,5:1
+You can also set the start date to 0 to get a full history of splits.
+
+https://query1.finance.yahoo.com/v7/finance/download/AAPL?events=split&interval=1d&period1=0&period2=1600453099
+
+This returns AAPL.csv containing:
+
+Date,Stock Splits
+2000-06-21,2:1
+2005-02-28,2:1
+2020-08-31,4:1
+1987-06-16,2:1
+2014-06-09,7:1
+ */

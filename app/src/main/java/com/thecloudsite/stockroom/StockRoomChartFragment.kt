@@ -65,15 +65,26 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     set(value) {
     }
 
-  private val settingChartRefStockDefault = "^GSPC"
-  private val settingChartRefStock = "ChartRefStock"
-  private var chartRefStock: String
+  private val settingChartOverlaySymbolDefault = "^GSPC"
+  private val settingOverlaySymbol = "chart_overlay_symbol"
+  private var chartOverlaySymbol: String
     get() {
       val sharedPref =
         PreferenceManager.getDefaultSharedPreferences(activity)
-            ?: return settingChartRefStockDefault
-      return sharedPref.getString(settingChartRefStock, settingChartRefStockDefault)
-          ?: return settingChartRefStockDefault
+            ?: return settingChartOverlaySymbolDefault
+      return sharedPref.getString(settingOverlaySymbol, settingChartOverlaySymbolDefault)
+          ?: return settingChartOverlaySymbolDefault
+    }
+    set(value) {
+    }
+
+  private val settingUseChartOverlaySymbol = "use_chart_overlay_symbol"
+  private var useChartOverlaySymbol: Boolean
+    get() {
+      val sharedPref =
+        PreferenceManager.getDefaultSharedPreferences(activity)
+            ?: return false
+      return sharedPref.getBoolean(settingUseChartOverlaySymbol, false)
     }
     set(value) {
     }
@@ -108,9 +119,16 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItemSet ->
-        symbolList = mutableListOf()
+        val emptyList = symbolList.isEmpty()
         stockItemSet.stockItems.forEach { stockItem ->
-          symbolList.add(stockItem.stockDBdata.symbol)
+          if (!symbolList.contains(stockItem.stockDBdata.symbol)) {
+            symbolList.add(stockItem.stockDBdata.symbol)
+
+            // onlineChartTask runs first (emptyList==true) and no update needed
+            if (!emptyList) {
+              stockChartDataViewModel.getChartData(stockItem.stockDBdata.symbol, stockViewRange)
+            }
+          }
         }
 
         adapter.setStockItems(stockItemSet)
@@ -120,7 +138,14 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
-      adapter.setChartItem(stockChartData, chartRefStock, stockViewRange, stockViewMode)
+      val overlaySymbol =
+        if (useChartOverlaySymbol) {
+          chartOverlaySymbol
+        } else {
+
+          ""
+        }
+      adapter.setChartItem(stockChartData, overlaySymbol, stockViewRange, stockViewMode)
     })
   }
 
@@ -148,7 +173,9 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
   private val onlineChartTask = object : Runnable {
     override fun run() {
-      stockChartDataViewModel.getChartData(chartRefStock, stockViewRange)
+      if (useChartOverlaySymbol) {
+        stockChartDataViewModel.getChartData(chartOverlaySymbol, stockViewRange)
+      }
       symbolList.forEach { symbol ->
         stockChartDataViewModel.getChartData(symbol, stockViewRange)
       }
