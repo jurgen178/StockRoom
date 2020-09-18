@@ -383,7 +383,7 @@ data class OnlineMarketData(
       name = "regularMarketChangePercent"
   ) var marketChangePercent: Double = 0.0,
 
-  // Ignore
+    // Ignore
   @Transient
   var postMarketData: Boolean = false,
 
@@ -544,6 +544,11 @@ data class YahooChartQuoteEntries(
 //  var volume: MutableList<Double> = mutableListOf()
 )
 
+data class StockChartData(
+  var symbol: String,
+  var stockDataEntries: List<StockDataEntry>?
+)
+
 class StockDataEntry(
   var dateTimePoint: Long,
   x: Double,
@@ -552,7 +557,8 @@ class StockDataEntry(
   open: Double,
   close: Double
 ) {
-  var candleEntry: CandleEntry = CandleEntry(x.toFloat(), high.toFloat(), low.toFloat(), open.toFloat(), close.toFloat())
+  var candleEntry: CandleEntry =
+    CandleEntry(x.toFloat(), high.toFloat(), low.toFloat(), open.toFloat(), close.toFloat())
 }
 
 class DataPoint(

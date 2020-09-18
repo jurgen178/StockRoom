@@ -27,19 +27,53 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
   private val stockChartDataRepository: StockChartDataRepository =
     StockChartDataRepository { StockChartDataApiFactory.yahooApi }
 
-  val data: LiveData<List<StockDataEntry>>
+  val chartData: LiveData<StockChartData>
 
   init {
-    data = stockChartDataRepository.data
+    chartData = stockChartDataRepository.chartData
   }
 
-  fun getChartData(
+  private fun getChartData(
     symbol: String,
     interval: String,
     range: String
   ) {
     viewModelScope.launch {
       stockChartDataRepository.getChartData(symbol, interval, range)
+    }
+  }
+
+  fun getChartData(
+    symbol: String,
+    stockViewRange: StockViewRange
+  ) {
+    // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
+    // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
+    when (stockViewRange) {
+      StockViewRange.OneDay -> {
+        getChartData(symbol, "5m", "1d")
+      }
+      StockViewRange.FiveDays -> {
+        getChartData(symbol, "15m", "5d")
+      }
+      StockViewRange.OneMonth -> {
+        getChartData(symbol, "90m", "1mo")
+      }
+      StockViewRange.ThreeMonth -> {
+        getChartData(symbol, "1d", "3mo")
+      }
+      StockViewRange.YTD -> {
+        getChartData(symbol, "1d", "ytd")
+      }
+      StockViewRange.OneYear -> {
+        getChartData(symbol, "1d", "1y")
+      }
+      StockViewRange.FiveYears -> {
+        getChartData(symbol, "1d", "5y")
+      }
+      StockViewRange.Max -> {
+        getChartData(symbol, "1d", "max")
+      }
     }
   }
 }

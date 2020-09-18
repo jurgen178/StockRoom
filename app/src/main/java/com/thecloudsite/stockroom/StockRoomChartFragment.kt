@@ -19,6 +19,8 @@ package com.thecloudsite.stockroom
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -27,6 +29,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.layout
@@ -35,23 +38,42 @@ import com.thecloudsite.stockroom.database.Group
 
 // https://stackoverflow.com/questions/55372259/how-to-use-tablayout-with-viewpager2-in-android
 
-enum class SortMode(val value: Int) {
-  ByName(0),
-  ByAssets(1),
-  ByProfit(2),
-  ByChange(3),
-  ByDividend(4),
-  ByGroup(5),
-  ByUnsorted(6),
-}
-
-class StockRoomListFragment : Fragment() {
+class StockRoomChartFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
+  private lateinit var stockChartDataViewModel: StockChartDataViewModel
 
   companion object {
-    fun newInstance() = StockRoomListFragment()
+    fun newInstance() = StockRoomChartFragment()
   }
+
+  lateinit var onlineChartHandler: Handler
+  var symbolList: MutableList<String> = mutableListOf()
+
+  // Settings.
+  private val settingStockViewRange = "SettingStockViewRange"
+  private var stockViewRange: StockViewRange
+    get() {
+      val sharedPref =
+        PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewRange.OneDay
+      return StockViewRange.values()[sharedPref.getInt(
+          settingStockViewRange, StockViewRange.OneDay.value
+      )]
+    }
+    set(value) {
+    }
+
+  private val settingStockViewMode = "SettingStockViewMode"
+  private var stockViewMode: StockViewMode
+    get() {
+      val sharedPref =
+        PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewMode.Line
+      return StockViewMode.values()[sharedPref.getInt(
+          settingStockViewMode, StockViewMode.Line.value
+      )]
+    }
+    set(value) {
+    }
 
   private fun clickListenerGroup(
     stockItem: StockItem,
@@ -111,7 +133,13 @@ class StockRoomListFragment : Fragment() {
     val clickListenerGroup =
       { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
     val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
-    val adapter = StockRoomListAdapter(requireContext(), clickListenerGroup, clickListenerSummary)
+    val adapter = StockRoomChartAdapter(
+        requireContext(),
+        clickListenerGroup,
+        clickListenerSummary,
+        stockViewRange,
+        stockViewMode
+    )
 
     val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
 
@@ -135,9 +163,20 @@ class StockRoomListFragment : Fragment() {
     stockRoomViewModel.resetAlerts()
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let {
-        adapter.setStockItems(it)
+      items?.let { stockItemSet ->
+        symbolList = mutableListOf()
+        stockItemSet.stockItems.forEach { stockItem ->
+          symbolList.add(stockItem.stockDBdata.symbol)
+        }
+
+        adapter.setStockItems(stockItemSet)
       }
+    })
+
+    stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
+
+    stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
+      adapter.setChartItem(stockChartData)
     })
   }
 
@@ -146,11 +185,41 @@ class StockRoomListFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+
+    // Setup chart data update every 5min/24h.
+    onlineChartHandler = Handler(Looper.getMainLooper())
+
     return inflater.inflate(layout.fragment_list, container, false)
+  }
+
+  override fun onPause() {
+    onlineChartHandler.removeCallbacks(onlineChartTask)
+    super.onPause()
   }
 
   override fun onResume() {
     super.onResume()
+    onlineChartHandler.post(onlineChartTask)
     stockRoomViewModel.runOnlineTaskNow()
+  }
+
+  private val onlineChartTask = object : Runnable {
+    override fun run() {
+      symbolList.forEach {symbol ->
+        stockChartDataViewModel.getChartData(symbol, stockViewRange)
+      }
+
+      val onlineChartTimerDelay: Long =
+        if (stockViewRange == StockViewRange.OneDay
+            || stockViewRange == StockViewRange.FiveDays
+        ) {
+          // Update daily and 5-day chart every 5min
+          5 * 60 * 1000L
+        } else {
+          // Update other charts every day
+          24 * 60 * 60 * 1000L
+        }
+      onlineChartHandler.postDelayed(this, onlineChartTimerDelay)
+    }
   }
 }

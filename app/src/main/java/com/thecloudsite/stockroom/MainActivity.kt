@@ -39,12 +39,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import com.thecloudsite.stockroom.StockDataFragment.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.list.ListAdapter
-import com.thecloudsite.stockroom.list.ListFragment
-import com.thecloudsite.stockroom.list.SortMode
 import com.thecloudsite.stockroom.news.GoogleNewsApiFactory
 import com.thecloudsite.stockroom.news.YahooNewsApiFactory
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
@@ -53,6 +50,7 @@ import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
 import kotlinx.android.synthetic.main.activity_main.viewpager
+import kotlinx.android.synthetic.main.activity_stock.stockViewpager
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -87,6 +85,8 @@ class MainActivity : AppCompatActivity() {
     private const val GOOGLENEWS_BASEURL = "googleNewsBaseUrl"
     private const val USER_MSG_TITLE = "userMsgTitle"
     private const val USER_MSG = "userMsg"
+
+    const val onlineDataTimerDelay: Long = 2000L
     var realtimeOverride: Boolean = false
   }
 
@@ -174,9 +174,12 @@ class MainActivity : AppCompatActivity() {
       override fun createFragment(position: Int): Fragment {
         return when (position) {
           0 -> {
-            ListFragment.newInstance()
+            StockRoomChartFragment.newInstance()
           }
           1 -> {
+            StockRoomListFragment.newInstance()
+          }
+          2 -> {
             SummaryListFragment.newInstance()
           }
           else -> {
@@ -186,9 +189,11 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun getItemCount(): Int {
-        return 3
+        return 4
       }
     }
+
+    viewpager.setCurrentItem(1, false)
 
     // Update the menu when portfolio data changed.
     SharedRepository.portfoliosLiveData.observe(this, Observer {

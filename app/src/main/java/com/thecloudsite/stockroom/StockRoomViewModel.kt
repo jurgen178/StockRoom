@@ -36,7 +36,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.thecloudsite.stockroom.DividendCycle.Quarterly
-import com.thecloudsite.stockroom.StockDataFragment.Companion.onlineDataTimerDelay
+import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend
@@ -47,7 +47,6 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDatabase
 import com.thecloudsite.stockroom.list.DebugData
-import com.thecloudsite.stockroom.list.SortMode
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import com.thecloudsite.stockroom.utils.validateDouble

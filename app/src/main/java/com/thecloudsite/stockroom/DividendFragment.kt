@@ -42,6 +42,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.DividendCycle.Quarterly
 import com.thecloudsite.stockroom.DividendType.Announced
 import com.thecloudsite.stockroom.DividendType.Received
+import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
@@ -97,7 +98,6 @@ class DividendFragment : Fragment() {
 
   companion object {
     fun newInstance() = DividendFragment()
-    const val onlineDataTimerDelay: Long = 2000L
   }
 
   lateinit var onlineDataHandler: Handler

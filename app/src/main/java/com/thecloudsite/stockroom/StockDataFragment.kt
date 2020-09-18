@@ -65,6 +65,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Event
@@ -194,7 +195,6 @@ class StockDataFragment : Fragment() {
 
   companion object {
     fun newInstance() = StockDataFragment()
-    const val onlineDataTimerDelay: Long = 2000L
   }
 
   private lateinit var stockDBdata: StockDBdata
@@ -613,8 +613,8 @@ class StockDataFragment : Fragment() {
 
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
-    stockChartDataViewModel.data.observe(viewLifecycleOwner, Observer { data ->
-      stockDataEntries = data
+    stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { data ->
+      stockDataEntries = data[symbol]
       setupCharts(stockViewRange, stockViewMode)
       loadCharts(symbol, stockViewRange, stockViewMode)
     })
@@ -1641,34 +1641,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun getData(stockViewRange: StockViewRange) {
-    // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
-    // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
-    when (stockViewRange) {
-      StockViewRange.OneDay -> {
-        stockChartDataViewModel.getChartData(symbol, "5m", "1d")
-      }
-      StockViewRange.FiveDays -> {
-        stockChartDataViewModel.getChartData(symbol, "15m", "5d")
-      }
-      StockViewRange.OneMonth -> {
-        stockChartDataViewModel.getChartData(symbol, "90m", "1mo")
-      }
-      StockViewRange.ThreeMonth -> {
-        stockChartDataViewModel.getChartData(symbol, "1d", "3mo")
-      }
-      StockViewRange.YTD -> {
-        stockChartDataViewModel.getChartData(symbol, "1d", "ytd")
-      }
-      StockViewRange.OneYear -> {
-        stockChartDataViewModel.getChartData(symbol, "1d", "1y")
-      }
-      StockViewRange.FiveYears -> {
-        stockChartDataViewModel.getChartData(symbol, "1d", "5y")
-      }
-      StockViewRange.Max -> {
-        stockChartDataViewModel.getChartData(symbol, "1d", "max")
-      }
-    }
+    stockChartDataViewModel.getChartData(symbol, stockViewRange)
   }
 
   private fun setupCharts(
@@ -1688,16 +1661,16 @@ class StockDataFragment : Fragment() {
   }
 
   private fun loadCharts(
-    ticker: String,
+    symbol: String,
     stockViewRange: StockViewRange,
     stockViewMode: StockViewMode
   ) {
     when (stockViewMode) {
       StockViewMode.Line -> {
-        loadLineChart(ticker, stockViewRange)
+        loadLineChart(symbol, stockViewRange)
       }
       StockViewMode.Candle -> {
-        loadCandleStickChart(ticker, stockViewRange)
+        loadCandleStickChart(symbol, stockViewRange)
       }
     }
   }
@@ -1808,13 +1781,20 @@ class StockDataFragment : Fragment() {
     val candleStickChart
         : CandleStickChart = view?.findViewById(R.id.candleStickChart)!!
     candleStickChart.isDoubleTapToZoomEnabled = false
+
+    candleStickChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+    candleStickChart.xAxis.setDrawAxisLine(true)
+    candleStickChart.xAxis.setDrawGridLines(false)
+
+    candleStickChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+    candleStickChart.axisRight.setDrawAxisLine(true)
+    candleStickChart.axisRight.setDrawGridLines(true)
+    candleStickChart.axisRight.isEnabled = true
+
     candleStickChart.axisLeft.setDrawGridLines(false)
     candleStickChart.axisLeft.setDrawAxisLine(false)
     candleStickChart.axisLeft.isEnabled = false
-    candleStickChart.axisRight.setDrawGridLines(false)
-    candleStickChart.axisRight.setDrawAxisLine(true)
-    candleStickChart.axisRight.isEnabled = true
-    candleStickChart.xAxis.setDrawGridLines(false)
+
     candleStickChart.extraBottomOffset = resources.getDimension(R.dimen.graph_bottom_offset)
     candleStickChart.legend.isEnabled = false
     candleStickChart.description = null
@@ -1822,16 +1802,14 @@ class StockDataFragment : Fragment() {
   }
 
   private fun loadCandleStickChart(
-    ticker: String,
+    symbol: String,
     stockViewRange: StockViewRange
   ) {
     val candleStickChart: CandleStickChart = view?.findViewById(R.id.candleStickChart)!!
     if (stockDataEntries == null || stockDataEntries!!.isEmpty()) {
-      //candleStickChart.setNoDataText(""))
       candleStickChart.invalidate()
       return
     }
-    candleStickChart.setNoDataText("")
 
     candleStickChart.candleData?.clearValues()
 
@@ -1839,7 +1817,7 @@ class StockDataFragment : Fragment() {
     stockDataEntries!!.forEach { stockDataEntry ->
       candleEntries.add(stockDataEntry.candleEntry)
     }
-    val series = CandleDataSet(candleEntries, ticker)
+    val series = CandleDataSet(candleEntries, symbol)
     series.color = Color.rgb(0, 0, 255)
     series.shadowColor = Color.rgb(255, 255, 0)
     series.shadowWidth = 1f
@@ -1868,23 +1846,13 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    val xAxis: XAxis = candleStickChart.xAxis
-    val yAxis: YAxis = candleStickChart.axisRight
-
-    xAxis.valueFormatter = xAxisFormatter
+    candleStickChart.xAxis.valueFormatter = xAxisFormatter
     val digits = if (candleData.yMax < 1.0) {
       4
     } else {
       2
     }
-    yAxis.valueFormatter = DefaultValueFormatter(digits)
-
-    xAxis.position = XAxis.XAxisPosition.BOTTOM
-    yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-    xAxis.setDrawAxisLine(true)
-    yAxis.setDrawAxisLine(true)
-    xAxis.setDrawGridLines(false)
-    yAxis.setDrawGridLines(true)
+    candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
 
     candleStickChart.invalidate()
   }
@@ -1892,13 +1860,19 @@ class StockDataFragment : Fragment() {
   private fun setupLineChart() {
     val lineChart: LineChart = view?.findViewById(R.id.lineChart)!!
     lineChart.isDoubleTapToZoomEnabled = false
-    lineChart.axisLeft.setDrawGridLines(false)
+
+    lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+    lineChart.xAxis.setDrawAxisLine(true)
+    lineChart.xAxis.setDrawGridLines(false)
+
+    lineChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+    lineChart.axisRight.setDrawAxisLine(true)
+    lineChart.axisRight.setDrawGridLines(true)
+    lineChart.axisRight.isEnabled = true
+
     lineChart.axisLeft.setDrawAxisLine(false)
     lineChart.axisLeft.isEnabled = false
-    lineChart.axisRight.setDrawGridLines(false)
-    lineChart.axisRight.setDrawAxisLine(true)
-    lineChart.axisRight.isEnabled = true
-    lineChart.xAxis.setDrawGridLines(false)
+
     lineChart.extraBottomOffset = resources.getDimension(R.dimen.graph_bottom_offset)
     lineChart.legend.isEnabled = false
     lineChart.description = null
@@ -1906,7 +1880,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun loadLineChart(
-    ticker: String,
+    symbol: String,
     stockViewRange: StockViewRange
   ) {
     val lineChart: LineChart = view?.findViewById(R.id.lineChart)!!
@@ -1922,7 +1896,7 @@ class StockDataFragment : Fragment() {
       dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
     }
 
-    val series = LineDataSet(dataPoints as List<Entry>?, ticker)
+    val series = LineDataSet(dataPoints as List<Entry>?, symbol)
 
     series.setDrawHorizontalHighlightIndicator(false)
     series.setDrawValues(false)
@@ -1931,8 +1905,6 @@ class StockDataFragment : Fragment() {
 
     val lineData = LineData(series)
     lineChart.data = lineData
-    val xAxis: XAxis = lineChart.xAxis
-    val yAxis: YAxis = lineChart.axisRight
 
     when (stockViewRange) {
       StockViewRange.OneDay -> {
@@ -1949,20 +1921,13 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    xAxis.valueFormatter = xAxisFormatter
+    lineChart.xAxis.valueFormatter = xAxisFormatter
     val digits = if (lineData.yMax < 1.0) {
       4
     } else {
       2
     }
-    yAxis.valueFormatter = DefaultValueFormatter(digits)
-
-    xAxis.position = XAxis.XAxisPosition.BOTTOM
-    yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-    xAxis.setDrawAxisLine(true)
-    yAxis.setDrawAxisLine(true)
-    xAxis.setDrawGridLines(false)
-    yAxis.setDrawGridLines(true)
+    lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
 
     lineChart.invalidate()
   }

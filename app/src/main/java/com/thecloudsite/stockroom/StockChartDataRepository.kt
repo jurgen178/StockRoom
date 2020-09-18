@@ -22,8 +22,8 @@ import androidx.lifecycle.MutableLiveData
 
 class StockChartDataRepository(private val api: () -> YahooApiChartData?) : BaseRepository() {
 
-  private val _data = MutableLiveData<List<StockDataEntry>>()
-  val data: LiveData<List<StockDataEntry>>
+  private val _data = MutableLiveData<StockChartData>()
+  val chartData: LiveData<StockChartData>
     get() = _data
 
   suspend fun getChartData(
@@ -31,11 +31,11 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
     interval: String,
     range: String
   ) {
-    _data.value = getYahooChartData(symbol, interval, range)
+    _data.value = StockChartData(symbol = symbol, stockDataEntries = getYahooChartData(symbol, interval, range))
   }
 
   private suspend fun getYahooChartData(
-    stock: String,
+    symbol: String,
     interval: String,
     range: String
   ): List<StockDataEntry>? {
@@ -47,7 +47,7 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
       safeApiCall(
           call = {
             updateCounter()
-            api.getYahooChartDataAsync(stock, interval, range)
+            api.getYahooChartDataAsync(symbol, interval, range)
                 .await()
           },
           errorMessage = "Error getting finance data."

@@ -17,7 +17,10 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.GradientDrawable
+import android.opengl.Visibility
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +32,19 @@ import androidx.core.text.italic
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.charts.CandleStickChart
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.CandleData
+import com.github.mikephil.charting.data.CandleDataSet
+import com.github.mikephil.charting.data.CandleEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
+import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
+import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
 import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
@@ -41,22 +57,16 @@ import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
-fun setBackgroundColor(
-  view: View,
-  color: Int
-) {
-  // Keep the corner radii and only change the background color.
-  val gradientDrawable = view.background as GradientDrawable
-  gradientDrawable.setColor(color)
-  view.background = gradientDrawable
-}
-
-class StockRoomListAdapter internal constructor(
+class StockRoomChartAdapter internal constructor(
   val context: Context,
   private val clickListenerGroup: (StockItem, View) -> Unit,
-  private val clickListenerSummary: (StockItem) -> Unit
-) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
+  private val clickListenerSummary: (StockItem) -> Unit,
+  private val stockViewRange: StockViewRange,
+  private val stockViewMode: StockViewMode
+) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
   private val inflater: LayoutInflater = LayoutInflater.from(context)
+
+  private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
 
   class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindGroup(
@@ -79,17 +89,18 @@ class StockRoomListAdapter internal constructor(
     val itemViewMarketPrice: TextView = itemView.findViewById(R.id.textViewMarketPrice)
     val itemViewChange: TextView = itemView.findViewById(R.id.textViewChange)
     val itemViewChangePercent: TextView = itemView.findViewById(R.id.textViewChangePercent)
-    val itemViewAssets: TextView = itemView.findViewById(R.id.textViewAssets)
     val itemTextViewGroup: TextView = itemView.findViewById(R.id.itemview_group)
     val itemSummary: ConstraintLayout = itemView.findViewById(R.id.item_summary1)
     val itemRedGreen: ConstraintLayout = itemView.findViewById(R.id.item_summary2)
+    val candleStickChart: CandleStickChart = itemView.findViewById(R.id.candleStickChart)
+    val lineChart: LineChart = itemView.findViewById(R.id.lineChart)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroomlist_item, parent, false)
+    val itemView = inflater.inflate(R.layout.stockroomchart_item, parent, false)
     return StockRoomViewHolder(itemView)
   }
 
@@ -101,6 +112,34 @@ class StockRoomListAdapter internal constructor(
     if (current != null) {
       holder.bindGroup(current, clickListenerGroup)
       holder.bindSummary(current, clickListenerSummary)
+
+      if (stockViewMode == StockViewMode.Candle) {
+        holder.candleStickChart.visibility = View.VISIBLE
+        holder.lineChart.visibility = View.GONE
+
+        setupCandleStickChart(holder.candleStickChart)
+
+        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.stockDBdata.symbol]
+        loadCandleStickChart(
+            holder.candleStickChart,
+            current.stockDBdata.symbol,
+            stockDataEntries,
+            stockViewRange
+        )
+      } else {
+        holder.candleStickChart.visibility = View.GONE
+        holder.lineChart.visibility = View.VISIBLE
+
+        setupLineChart(holder.lineChart)
+
+        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.stockDBdata.symbol]
+        loadLineChart(
+            holder.lineChart,
+            current.stockDBdata.symbol,
+            stockDataEntries,
+            stockViewRange
+        )
+      }
 
       holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
@@ -138,14 +177,11 @@ class StockRoomListAdapter internal constructor(
         holder.itemViewMarketPrice.text = ""
         holder.itemViewChange.text = ""
         holder.itemViewChangePercent.text = ""
-        holder.itemViewAssets.text = ""
       }
 
       val shares = current.assets.sumByDouble {
         it.shares
       }
-
-      val assets = SpannableStringBuilder()
 
       var asset: Double = 0.0
       var capital: Double = 0.0
@@ -159,44 +195,6 @@ class StockRoomListAdapter internal constructor(
           capital = current.assets.sumByDouble {
             it.shares * current.onlineMarketData.marketPrice
           }
-
-          assets.append(
-              "${
-                DecimalFormat(
-                    "0.00"
-                ).format(asset)
-              } ${
-                if (capital >= asset) {
-                  "+"
-                } else {
-                  "-"
-                }
-              } ${
-                DecimalFormat("0.00").format(
-                    (capital - asset).absoluteValue
-                )
-              } = "
-          )
-
-          assets.bold { append(DecimalFormat("0.00").format(capital)) }
-
-          val capitalPercent = (capital - asset) * 100.0 / asset
-          assets.append(
-              " (${
-                if (capitalPercent > 0.0) {
-                  "+"
-                } else {
-                  ""
-                }
-              }${DecimalFormat("0.00").format(capitalPercent)}%)"
-          )
-
-        } else {
-          assets.append(
-              DecimalFormat(
-                  "0.00"
-              ).format(asset)
-          )
         }
       }
 
@@ -211,69 +209,6 @@ class StockRoomListAdapter internal constructor(
           holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.backgroundListColor))
         }
       }
-
-      if (current.onlineMarketData.annualDividendRate > 0.0) {
-        assets.append(
-            "\n${context.getString(R.string.dividend_in_list)} ${
-              DecimalFormat(
-                  "0.00"
-              ).format(
-                  current.onlineMarketData.annualDividendRate
-              )
-            } (${
-              DecimalFormat("0.00").format(
-                  current.onlineMarketData.annualDividendYield * 100.0
-              )
-            }%)"
-        )
-      }
-
-      if (current.stockDBdata.alertAbove > 0.0) {
-        assets.append(
-            "\n${context.getString(R.string.alert_above_in_list)} ${
-              DecimalFormat(
-                  "0.00##"
-              ).format(current.stockDBdata.alertAbove)
-            }"
-        )
-      }
-      if (current.stockDBdata.alertBelow > 0.0) {
-        assets.append(
-            "\n${context.getString(R.string.alert_below_in_list)} ${
-              DecimalFormat(
-                  "0.00##"
-              ).format(current.stockDBdata.alertBelow)
-            }"
-        )
-      }
-      if (current.events.isNotEmpty()) {
-        val count = current.events.size
-        val eventStr = context.resources.getQuantityString(R.plurals.events_in_list, count, count)
-
-        assets.append("\n$eventStr")
-        current.events.forEach {
-          val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
-          val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-          assets.append(
-              "\n${
-                context.getString(
-                    R.string.event_datetime_format, it.title, datetime
-                )
-              }"
-          )
-        }
-      }
-      if (current.stockDBdata.notes.isNotEmpty()) {
-        assets.append(
-            "\n${
-              context.getString(
-                  R.string.notes_in_list
-              )
-            } ${current.stockDBdata.notes}"
-        )
-      }
-
-      holder.itemViewAssets.text = assets
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {
@@ -290,6 +225,117 @@ class StockRoomListAdapter internal constructor(
     }
   }
 
+  private fun setupCandleStickChart(candleStickChart: CandleStickChart) {
+    candleStickChart.isDoubleTapToZoomEnabled = false
+
+    candleStickChart.xAxis.setDrawLabels(false)
+    candleStickChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+    candleStickChart.xAxis.setDrawAxisLine(true)
+    candleStickChart.xAxis.setDrawGridLines(false)
+
+    candleStickChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+    candleStickChart.axisRight.setDrawAxisLine(true)
+    candleStickChart.axisRight.setDrawGridLines(true)
+    candleStickChart.axisRight.isEnabled = true
+
+    candleStickChart.axisLeft.setDrawGridLines(false)
+    candleStickChart.axisLeft.setDrawAxisLine(false)
+    candleStickChart.axisLeft.isEnabled = false
+
+    candleStickChart.extraBottomOffset = 8f
+    candleStickChart.legend.isEnabled = false
+    candleStickChart.description = null
+    candleStickChart.setNoDataText("")
+  }
+
+  private fun loadCandleStickChart(
+    candleStickChart: CandleStickChart,
+    symbol: String,
+    stockDataEntries: List<StockDataEntry>?,
+    stockViewRange: StockViewRange
+  ) {
+    if (stockDataEntries == null || stockDataEntries.isEmpty()) {
+      candleStickChart.invalidate()
+      return
+    }
+
+    candleStickChart.candleData?.clearValues()
+
+    val candleEntries: MutableList<CandleEntry> = mutableListOf()
+    stockDataEntries.forEach { stockDataEntry ->
+      candleEntries.add(stockDataEntry.candleEntry)
+    }
+    val series = CandleDataSet(candleEntries, symbol)
+    series.color = Color.rgb(0, 0, 255)
+    series.shadowColor = Color.rgb(255, 255, 0)
+    series.shadowWidth = 1f
+    series.decreasingColor = Color.rgb(255, 0, 0)
+    series.decreasingPaintStyle = Paint.Style.FILL
+    series.increasingColor = Color.rgb(0, 255, 0)
+    series.increasingPaintStyle = Paint.Style.FILL
+    series.neutralColor = Color.LTGRAY
+    series.setDrawValues(false)
+
+    val candleData = CandleData(series)
+    candleStickChart.data = candleData
+
+    candleStickChart.invalidate()
+  }
+
+  private fun setupLineChart(lineChart: LineChart) {
+    lineChart.isDoubleTapToZoomEnabled = false
+
+    lineChart.xAxis.setDrawLabels(false)
+    lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+    lineChart.xAxis.setDrawGridLines(false)
+    lineChart.xAxis.setDrawAxisLine(true)
+
+    lineChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+    lineChart.axisRight.setDrawAxisLine(true)
+    lineChart.axisRight.setDrawGridLines(true)
+    lineChart.axisRight.isEnabled = true
+
+    lineChart.axisLeft.setDrawGridLines(false)
+    lineChart.axisLeft.setDrawAxisLine(false)
+    lineChart.axisLeft.isEnabled = false
+
+    lineChart.extraBottomOffset = 8f
+    lineChart.legend.isEnabled = false
+    lineChart.description = null
+    lineChart.setNoDataText("")
+  }
+
+  private fun loadLineChart(
+    lineChart: LineChart,
+    symbol: String,
+    stockDataEntries: List<StockDataEntry>?,
+    stockViewRange: StockViewRange
+  ) {
+    if (stockDataEntries == null || stockDataEntries!!.isEmpty()) {
+      lineChart.invalidate()
+      return
+    }
+
+    lineChart.lineData?.clearValues()
+
+    val dataPoints = ArrayList<DataPoint>()
+    stockDataEntries.forEach { stockDataEntry ->
+      dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
+    }
+
+    val series = LineDataSet(dataPoints as List<Entry>?, symbol)
+
+    series.setDrawHorizontalHighlightIndicator(false)
+    series.setDrawValues(false)
+    series.setDrawFilled(true)
+    series.setDrawCircles(false)
+
+    val lineData = LineData(series)
+    lineChart.data = lineData
+
+    lineChart.invalidate()
+  }
+
   internal fun setStockItems(stockItemSet: StockItemSet) {
     // Using allDataReady the list is updated only if all data sources are ready
     // which can take a few seconds because of the slow online data.
@@ -301,22 +347,10 @@ class StockRoomListAdapter internal constructor(
     notifyDataSetChanged()
     //}
   }
-}
 
-// https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#3
+  internal fun setChartItem(stockChartData: StockChartData) {
+    chartDataItems[stockChartData.symbol] = stockChartData.stockDataEntries
 
-class StockRoomDiffCallback : DiffUtil.ItemCallback<StockItem>() {
-  override fun areItemsTheSame(
-    oldItem: StockItem,
-    newItem: StockItem
-  ): Boolean {
-    return oldItem.onlineMarketData.symbol == newItem.onlineMarketData.symbol
-  }
-
-  override fun areContentsTheSame(
-    oldItem: StockItem,
-    newItem: StockItem
-  ): Boolean {
-    return oldItem == newItem
+    notifyDataSetChanged()
   }
 }
