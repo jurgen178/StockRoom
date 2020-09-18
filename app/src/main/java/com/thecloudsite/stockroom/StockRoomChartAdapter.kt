@@ -39,6 +39,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.thecloudsite.stockroom.database.Group
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
 import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
@@ -53,6 +56,7 @@ class StockRoomChartAdapter internal constructor(
 ) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
+  private var chartRefStock: String = ""
   private var stockViewRange: StockViewRange = StockViewRange.OneDay
   private var stockViewMode: StockViewMode = StockViewMode.Line
   private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
@@ -108,7 +112,8 @@ class StockRoomChartAdapter internal constructor(
 
         setupCandleStickChart(holder.candleStickChart)
 
-        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.onlineMarketData.symbol]
+        val stockDataEntries: List<StockDataEntry>? =
+          chartDataItems[current.onlineMarketData.symbol]
         loadCandleStickChart(
             holder.candleStickChart,
             current.onlineMarketData.symbol,
@@ -121,9 +126,14 @@ class StockRoomChartAdapter internal constructor(
 
         setupLineChart(holder.lineChart)
 
-        val stockDataEntries: List<StockDataEntry>? = chartDataItems[current.onlineMarketData.symbol]
+        val stockDataEntriesRef: List<StockDataEntry>? =
+          chartDataItems[chartRefStock]
+        val stockDataEntries: List<StockDataEntry>? =
+          chartDataItems[current.onlineMarketData.symbol]
         loadLineChart(
             holder.lineChart,
+            chartRefStock,
+            stockDataEntriesRef,
             current.onlineMarketData.symbol,
             stockDataEntries,
             stockViewRange
@@ -250,11 +260,34 @@ class StockRoomChartAdapter internal constructor(
 
     candleStickChart.candleData?.clearValues()
 
+    val candleEntriesRef: MutableList<CandleEntry> = mutableListOf()
     val candleEntries: MutableList<CandleEntry> = mutableListOf()
     stockDataEntries.forEach { stockDataEntry ->
+      val candleEntryRef: CandleEntry =
+        CandleEntry(
+            stockDataEntry.candleEntry.x,
+            stockDataEntry.candleEntry.high / 2,
+            stockDataEntry.candleEntry.low / 2,
+            stockDataEntry.candleEntry.open / 2,
+            stockDataEntry.candleEntry.close / 2
+        )
+
+      candleEntriesRef.add(candleEntryRef)
       candleEntries.add(stockDataEntry.candleEntry)
     }
-    val series = CandleDataSet(candleEntries, symbol)
+
+    val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbol)
+    seriesRef.color = Color.LTGRAY
+    seriesRef.shadowColor = Color.LTGRAY
+    seriesRef.shadowWidth = 1f
+    seriesRef.decreasingColor = Color.LTGRAY
+    seriesRef.decreasingPaintStyle = Paint.Style.FILL
+    seriesRef.increasingColor = Color.LTGRAY
+    seriesRef.increasingPaintStyle = Paint.Style.FILL
+    seriesRef.neutralColor = Color.LTGRAY
+    seriesRef.setDrawValues(false)
+
+    val series: CandleDataSet = CandleDataSet(candleEntries, symbol)
     series.color = Color.rgb(0, 0, 255)
     series.shadowColor = Color.rgb(255, 255, 0)
     series.shadowWidth = 1f
@@ -265,7 +298,23 @@ class StockRoomChartAdapter internal constructor(
     series.neutralColor = Color.LTGRAY
     series.setDrawValues(false)
 
-    val candleData = CandleData(series)
+    val seriesList: MutableList<ICandleDataSet> = mutableListOf()
+    seriesList.add(seriesRef)
+    seriesList.add(series)
+
+    // https://github.com/PhilJay/MPAndroidChart/wiki/Setting-Data
+    // use the interface ILineDataSet
+
+    // use the interface ILineDataSet
+//    val dataSets: List<ILineDataSet> = ArrayList<ILineDataSet>()
+//    dataSets.add(setComp1)
+//    dataSets.add(setComp2)
+//
+//    val data = LineData(dataSets)
+//    mLineChart.setData(data)
+//    mLineChart.invalidate() // refresh
+
+    val candleData = CandleData(seriesList)
     candleStickChart.data = candleData
 
     val digits = if (candleData.yMax < 1.0) {
@@ -303,6 +352,8 @@ class StockRoomChartAdapter internal constructor(
 
   private fun loadLineChart(
     lineChart: LineChart,
+    symbolRef: String,
+    stockDataEntriesRef: List<StockDataEntry>?,
     symbol: String,
     stockDataEntries: List<StockDataEntry>?,
     stockViewRange: StockViewRange
@@ -314,19 +365,56 @@ class StockRoomChartAdapter internal constructor(
 
     lineChart.lineData?.clearValues()
 
+    val seriesList: MutableList<ILineDataSet> = mutableListOf()
+
+    // Get the chart data.
     val dataPoints = ArrayList<DataPoint>()
+    var maxY: Float = 0f
     stockDataEntries.forEach { stockDataEntry ->
+      maxY = maxOf(maxY, stockDataEntry.candleEntry.y)
       dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
     }
 
     val series = LineDataSet(dataPoints as List<Entry>?, symbol)
-
     series.setDrawHorizontalHighlightIndicator(false)
     series.setDrawValues(false)
     series.setDrawFilled(true)
     series.setDrawCircles(false)
 
-    val lineData = LineData(series)
+    seriesList.add(series)
+
+    // Get the ref chart data.
+    if (symbolRef.isNotEmpty() && stockDataEntriesRef != null) {
+      val dataPointsRef = ArrayList<DataPoint>()
+      var maxRefY: Float = 0f
+      stockDataEntriesRef.forEach { stockDataEntry ->
+        maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
+      }
+
+      // Scale ref data to stock data.
+      if (maxRefY > 0f) {
+        stockDataEntriesRef.forEach { stockDataEntry ->
+          val dataPointRef: DataPoint =
+            DataPoint(
+                stockDataEntry.candleEntry.x,
+                stockDataEntry.candleEntry.y * maxY / maxRefY
+            )
+
+          dataPointsRef.add(dataPointRef)
+        }
+      }
+
+      val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbol)
+      seriesRef.setDrawHorizontalHighlightIndicator(false)
+      seriesRef.setDrawValues(false)
+      seriesRef.setDrawFilled(true)
+      seriesRef.setDrawCircles(false)
+      seriesRef.color = Color.LTGRAY
+
+      seriesList.add(seriesRef)
+    }
+
+    val lineData = LineData(seriesList)
     lineChart.data = lineData
 
     val digits = if (lineData.yMax < 1.0) {
@@ -353,11 +441,13 @@ class StockRoomChartAdapter internal constructor(
 
   internal fun setChartItem(
     stockChartData: StockChartData,
+    chartRefStock: String,
     stockViewRange: StockViewRange,
     stockViewMode: StockViewMode
   ) {
     chartDataItems[stockChartData.symbol] = stockChartData.stockDataEntries
 
+    this.chartRefStock = chartRefStock
     this.stockViewRange = stockViewRange
     this.stockViewMode = stockViewMode
 

@@ -65,6 +65,19 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     set(value) {
     }
 
+  private val settingChartRefStockDefault = "^GSPC"
+  private val settingChartRefStock = "ChartRefStock"
+  private var chartRefStock: String
+    get() {
+      val sharedPref =
+        PreferenceManager.getDefaultSharedPreferences(activity)
+            ?: return settingChartRefStockDefault
+      return sharedPref.getString(settingChartRefStock, settingChartRefStockDefault)
+          ?: return settingChartRefStockDefault
+    }
+    set(value) {
+    }
+
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
@@ -107,7 +120,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
-      adapter.setChartItem(stockChartData, stockViewRange, stockViewMode)
+      adapter.setChartItem(stockChartData, chartRefStock, stockViewRange, stockViewMode)
     })
   }
 
@@ -135,7 +148,8 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
   private val onlineChartTask = object : Runnable {
     override fun run() {
-      symbolList.forEach {symbol ->
+      stockChartDataViewModel.getChartData(chartRefStock, stockViewRange)
+      symbolList.forEach { symbol ->
         stockChartDataViewModel.getChartData(symbol, stockViewRange)
       }
 
