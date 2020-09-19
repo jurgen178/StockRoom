@@ -105,7 +105,7 @@ class StockRoomListAdapter internal constructor(
       holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
       holder.itemViewSymbol.text = current.onlineMarketData.symbol
-      holder.itemViewName.text = current.onlineMarketData.name
+      holder.itemViewName.text = getName(current.onlineMarketData)
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {

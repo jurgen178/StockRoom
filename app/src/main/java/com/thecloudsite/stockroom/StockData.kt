@@ -364,13 +364,25 @@ Now, as @Yago notes, you can append chart/ and you can also append options/
 
  */
 
+fun getName(onlineMarketData: OnlineMarketData): String {
+  return if (onlineMarketData.name1.isNotEmpty()) {
+    onlineMarketData.name1
+  } else {
+    onlineMarketData.name2
+  }
+}
+
 // Data Model
 @JsonClass(generateAdapter = true)
 data class OnlineMarketData(
   val symbol: String,
   @field:Json(
       name = "longName"
-  ) val name: String = "",  // displayName is not available for "GlaxoSmithKline plc", but longName
+  ) val name1: String = "",  // displayName is not available for "GlaxoSmithKline plc", but longName
+
+  @field:Json(
+      name = "shortName"
+  ) val name2: String = "",  // ^GSPC only has shortName
 
     // Market values will be set with the post market values when the aftermarket option is set.
   @field:Json(

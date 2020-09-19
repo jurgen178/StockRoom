@@ -53,21 +53,8 @@ class TextMarkerViewCandleChart(
               stockDataEntries[index].dateTimePoint, 0, ZoneOffset.UTC
           )
               .format(dateTimeFormatter)
-/*
-        val price = when (index) {
-          0 -> AppPreferences.DECIMAL_FORMAT.format(e.open)
-          stockDataEntries.size - 1 -> AppPreferences.DECIMAL_FORMAT.format(e.close)
-          else -> if (e.low != e.high) {
-            "${AppPreferences.DECIMAL_FORMAT.format(e.low)}..${AppPreferences.DECIMAL_FORMAT.format(
-                e.high
-            )}"
-          } else {
-            AppPreferences.DECIMAL_FORMAT.format(e.high)
-          }
-        }
-      */
-        val price =e.close
-          tvContent.text = "${DecimalFormat("0.00##").format(price)}\n$date"
+        val price = e.close
+        tvContent.text = "${DecimalFormat("0.00##").format(price)}\n$date"
       } else {
         tvContent.text = ""
       }
@@ -100,7 +87,6 @@ class TextMarkerViewLineChart(
               stockDataEntries[index].dateTimePoint, 0, ZoneOffset.UTC
           )
               .format(dateTimeFormatter)
-        //val price = AppPreferences.DECIMAL_FORMAT.format(e.y)
         val price = e.y
         tvContent.text = "${DecimalFormat("0.00##").format(price)}\n$date"
       } else {

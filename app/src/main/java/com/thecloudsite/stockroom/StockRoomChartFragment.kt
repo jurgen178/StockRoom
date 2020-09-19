@@ -120,6 +120,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItemSet ->
         val emptyList = symbolList.isEmpty()
+
         stockItemSet.stockItems.forEach { stockItem ->
           if (!symbolList.contains(stockItem.stockDBdata.symbol)) {
             symbolList.add(stockItem.stockDBdata.symbol)
@@ -142,10 +143,10 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
         if (useChartOverlaySymbol) {
           chartOverlaySymbol
         } else {
-
           ""
         }
-      adapter.setChartItem(stockChartData, overlaySymbol, stockViewRange, stockViewMode)
+
+      adapter.updateChartItem(stockChartData, overlaySymbol, stockViewRange, stockViewMode)
     })
   }
 
@@ -173,9 +174,12 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
   private val onlineChartTask = object : Runnable {
     override fun run() {
+      // Refresh the charts.
+      // getChartData triggers stockChartDataViewModel.chartData.observe
       if (useChartOverlaySymbol) {
         stockChartDataViewModel.getChartData(chartOverlaySymbol, stockViewRange)
       }
+
       symbolList.forEach { symbol ->
         stockChartDataViewModel.getChartData(symbol, stockViewRange)
       }
@@ -190,6 +194,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
           // Update other charts every day
           24 * 60 * 60 * 1000L
         }
+
       onlineChartHandler.postDelayed(this, onlineChartTimerDelay)
     }
   }

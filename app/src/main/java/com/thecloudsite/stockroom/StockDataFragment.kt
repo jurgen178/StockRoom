@@ -1531,7 +1531,7 @@ class StockDataFragment : Fragment() {
     val marketChange = SpannableStringBuilder()
 
     if (onlineMarketData != null) {
-      name = onlineMarketData.name
+      name = getName(onlineMarketData)
 
       val marketPriceStr = DecimalFormat("0.00##").format(onlineMarketData.marketPrice)
       val marketChangeStr = "${

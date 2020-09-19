@@ -45,7 +45,6 @@ import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
 import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
 import java.text.DecimalFormat
-import kotlin.Float.Companion
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -116,13 +115,13 @@ class StockRoomChartAdapter internal constructor(
           chartDataItems[chartOverlaySymbol]
         val stockDataEntries: List<StockDataEntry>? =
           chartDataItems[current.onlineMarketData.symbol]
+
         loadCandleStickChart(
             holder.candleStickChart,
             chartOverlaySymbol,
             stockDataEntriesRef,
             current.onlineMarketData.symbol,
-            stockDataEntries,
-            stockViewRange
+            stockDataEntries
         )
       } else {
         holder.candleStickChart.visibility = View.GONE
@@ -134,20 +133,20 @@ class StockRoomChartAdapter internal constructor(
           chartDataItems[chartOverlaySymbol]
         val stockDataEntries: List<StockDataEntry>? =
           chartDataItems[current.onlineMarketData.symbol]
+
         loadLineChart(
             holder.lineChart,
             chartOverlaySymbol,
             stockDataEntriesRef,
             current.onlineMarketData.symbol,
-            stockDataEntries,
-            stockViewRange
+            stockDataEntries
         )
       }
 
       holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
       holder.itemViewSymbol.text = current.onlineMarketData.symbol
-      holder.itemViewName.text = current.onlineMarketData.name
+      holder.itemViewName.text = getName(current.onlineMarketData)
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
@@ -218,13 +217,6 @@ class StockRoomChartAdapter internal constructor(
         color = context.getColor(R.color.backgroundListColor)
       }
       setBackgroundColor(holder.itemTextViewGroup, color)
-
-      /*
-      // Keep the corner radii and only change the background color.
-      val gradientDrawable = holder.itemLinearLayoutGroup.background as GradientDrawable
-      gradientDrawable.setColor(color)
-      holder.itemLinearLayoutGroup.background = gradientDrawable
-      */
     }
   }
 
@@ -256,8 +248,7 @@ class StockRoomChartAdapter internal constructor(
     symbolRef: String,
     stockDataEntriesRef: List<StockDataEntry>?,
     symbol: String,
-    stockDataEntries: List<StockDataEntry>?,
-    stockViewRange: StockViewRange
+    stockDataEntries: List<StockDataEntry>?
   ) {
     if (stockDataEntries == null || stockDataEntries.isEmpty()) {
       candleStickChart.invalidate()
@@ -373,10 +364,9 @@ class StockRoomChartAdapter internal constructor(
     symbolRef: String,
     stockDataEntriesRef: List<StockDataEntry>?,
     symbol: String,
-    stockDataEntries: List<StockDataEntry>?,
-    stockViewRange: StockViewRange
+    stockDataEntries: List<StockDataEntry>?
   ) {
-    if (stockDataEntries == null || stockDataEntries!!.isEmpty()) {
+    if (stockDataEntries == null || stockDataEntries.isEmpty()) {
       lineChart.invalidate()
       return
     }
@@ -466,7 +456,7 @@ class StockRoomChartAdapter internal constructor(
     //}
   }
 
-  internal fun setChartItem(
+  internal fun updateChartItem(
     stockChartData: StockChartData,
     chartOverlaySymbol: String,
     stockViewRange: StockViewRange,

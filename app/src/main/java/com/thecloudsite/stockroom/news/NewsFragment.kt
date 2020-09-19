@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.StockRoomViewModel
+import com.thecloudsite.stockroom.getName
 import kotlinx.android.synthetic.main.fragment_news.newsRecyclerview
 import kotlinx.android.synthetic.main.fragment_news.swipeRefreshLayout
 import java.util.Locale
@@ -97,7 +98,11 @@ class NewsFragment : Fragment() {
         val onlineMarketData = onlineMarketDataList.find { onlineMarketDataItem ->
           onlineMarketDataItem.symbol == symbol
         }
-        googleNewsQuery = onlineMarketData?.name ?: symbol
+        googleNewsQuery = if (onlineMarketData != null) {
+          getName(onlineMarketData)
+        } else {
+          symbol
+        }
         //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}, ${onlineMarketData.name}"
         //newsQuery = "${onlineMarketData.fullExchangeName}: ${onlineMarketData.symbol}"
 
