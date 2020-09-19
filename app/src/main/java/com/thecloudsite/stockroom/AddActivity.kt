@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
+import com.thecloudsite.stockroom.invaders.InvadersActivity
 import com.thecloudsite.stockroom.list.ListActivity
 import kotlinx.android.synthetic.main.activity_add.button_add
 import kotlinx.android.synthetic.main.activity_add.importButton
@@ -67,7 +68,8 @@ class AddActivity : AppCompatActivity() {
       if (TextUtils.isEmpty(addView.text)) {
         setResult(Activity.RESULT_CANCELED, replyIntent)
       } else {
-        val symbol = addView.text.toString().trim()
+        val symbol = addView.text.toString()
+            .trim()
 
         // https://convertcodes.com/unicode-converter-encode-decode-utf/
         if (symbol == "\u0064\u0065\u0062\u0075\u0067") {

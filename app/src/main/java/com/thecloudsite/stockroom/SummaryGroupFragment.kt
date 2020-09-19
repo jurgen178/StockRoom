@@ -16,13 +16,19 @@
 
 package com.thecloudsite.stockroom
 
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnContextClickListener
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import androidx.core.text.bold
 import androidx.core.text.underline
@@ -36,6 +42,9 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
+import com.github.mikephil.charting.listener.OnChartGestureListener
+import com.thecloudsite.stockroom.invaders.InvadersActivity
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 import java.text.DecimalFormat
 
@@ -93,6 +102,65 @@ class SummaryGroupFragment : Fragment() {
     stockRoomViewModel.allGroupTable.observe(viewLifecycleOwner, Observer { groups ->
       summaryGroupAdapter.addGroups(groups)
     })
+
+    view.summaryPieChart.onChartGestureListener = object: OnChartGestureListener {
+      override fun onChartGestureStart(
+        me: MotionEvent?,
+        lastPerformedGesture: ChartGesture?
+      ) {
+      }
+
+      override fun onChartGestureEnd(
+        me: MotionEvent?,
+        lastPerformedGesture: ChartGesture?
+      ) {
+      }
+
+      override fun onChartLongPressed(me: MotionEvent?) {
+        AlertDialog.Builder(context)
+            // https://convertcodes.com/unicode-converter-encode-decode-utf/
+            .setTitle(
+                "The Aliens are coming"
+            )
+            .setMessage(
+                "Get them"
+            )
+            .setNegativeButton("Later") { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton("Now") { dialog, _ ->
+              val intent = Intent (activity, InvadersActivity::class.java)
+              activity?.startActivity(intent)
+              dialog.dismiss() }
+            .show()
+      }
+
+      override fun onChartDoubleTapped(me: MotionEvent?) {
+      }
+
+      override fun onChartSingleTapped(me: MotionEvent?) {
+      }
+
+      override fun onChartFling(
+        me1: MotionEvent?,
+        me2: MotionEvent?,
+        velocityX: Float,
+        velocityY: Float
+      ) {
+      }
+
+      override fun onChartScale(
+        me: MotionEvent?,
+        scaleX: Float,
+        scaleY: Float
+      ) {
+      }
+
+      override fun onChartTranslate(
+        me: MotionEvent?,
+        dX: Float,
+        dY: Float
+      ) {
+      }
+    }
   }
 
   override fun onResume() {
@@ -218,3 +286,4 @@ class SummaryGroupFragment : Fragment() {
     view.summaryPieChart.invalidate()
   }
 }
+
