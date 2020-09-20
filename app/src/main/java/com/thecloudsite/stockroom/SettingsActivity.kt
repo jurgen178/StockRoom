@@ -240,12 +240,22 @@ class SettingsActivity : AppCompatActivity(),
                 .show()
           }
           if (versionClickCounter == 20) {
-            versionClickCounter = 0
             AlertDialog.Builder(requireContext())
                 // https://convertcodes.com/unicode-converter-encode-decode-utf/
                 .setTitle("\u004c\u006f\u006f\u006b")
                 .setMessage(
                     "\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074"
+                )
+                .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+                .show()
+          }
+          if (versionClickCounter == 30) {
+            versionClickCounter = 0
+            AlertDialog.Builder(requireContext())
+                // https://convertcodes.com/unicode-converter-encode-decode-utf/
+                .setTitle("\u0054\u0068\u0065\u0020\u0063\u0068\u0061\u0072\u0074")
+                .setMessage(
+                    "\u006e\u0065\u0065\u0064\u0073\u0020\u0061\u0020\u0073\u0065\u0063\u006f\u006e\u0064\u0020\u006c\u006f\u006f\u006b\u002e"
                 )
                 .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                 .show()
