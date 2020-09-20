@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.View.OnContextClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.thecloudsite.stockroom.invaders.InvadersActivity
+import kotlinx.android.synthetic.main.fragment_summarygroup.view.imageView
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 import java.text.DecimalFormat
 
@@ -103,7 +105,7 @@ class SummaryGroupFragment : Fragment() {
       summaryGroupAdapter.addGroups(groups)
     })
 
-    view.summaryPieChart.onChartGestureListener = object: OnChartGestureListener {
+    view.summaryPieChart.onChartGestureListener = object : OnChartGestureListener {
       override fun onChartGestureStart(
         me: MotionEvent?,
         lastPerformedGesture: ChartGesture?
@@ -117,20 +119,8 @@ class SummaryGroupFragment : Fragment() {
       }
 
       override fun onChartLongPressed(me: MotionEvent?) {
-        AlertDialog.Builder(context)
-            // https://convertcodes.com/unicode-converter-encode-decode-utf/
-            .setTitle(
-                "The Aliens are coming"
-            )
-            .setMessage(
-                "Get them"
-            )
-            .setNegativeButton("Later") { dialog, _ -> dialog.dismiss() }
-            .setPositiveButton("Now") { dialog, _ ->
-              val intent = Intent (activity, InvadersActivity::class.java)
-              activity?.startActivity(intent)
-              dialog.dismiss() }
-            .show()
+        view.summaryPieChart.visibility = View.GONE
+        view.imageView.visibility = View.VISIBLE
       }
 
       override fun onChartDoubleTapped(me: MotionEvent?) {
@@ -161,6 +151,36 @@ class SummaryGroupFragment : Fragment() {
       ) {
       }
     }
+
+    view.imageView.setOnClickListener(object : OnClickListener {
+      override fun onClick(p0: View?) {
+        AlertDialog.Builder(context)
+            // https://convertcodes.com/unicode-converter-encode-decode-utf/
+            .setTitle(
+                "\u0054\u0068\u0065\u0020\u0041\u006c\u0069\u0065\u006e\u0073\u0020\u0061\u0072\u0065\u0020\u0063\u006f\u006d\u0069\u006e\u0067"
+            )
+            .setMessage(
+                "\u0047\u0065\u0074\u0020\u0074\u0068\u0065\u006d"
+            )
+            .setNegativeButton("\u004c\u0061\u0074\u0065\u0072") { dialog, _ ->
+              dialog.dismiss()
+              view.summaryPieChart.visibility = View.VISIBLE
+              view.imageView.visibility = View.GONE
+            }
+            .setPositiveButton("\u004e\u006f\u0077") { dialog, _ ->
+              val intent = Intent(activity, InvadersActivity::class.java)
+              activity?.startActivity(intent)
+              dialog.dismiss()
+              view.summaryPieChart.visibility = View.VISIBLE
+              view.imageView.visibility = View.GONE
+            }
+            .setOnCancelListener {
+              view.summaryPieChart.visibility = View.VISIBLE
+              view.imageView.visibility = View.GONE
+            }
+            .show()
+      }
+    })
   }
 
   override fun onResume() {

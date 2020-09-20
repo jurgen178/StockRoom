@@ -7,7 +7,7 @@ import android.view.SurfaceView
 import android.util.Log
 import android.view.MotionEvent
 import com.thecloudsite.stockroom.R
-import com.thecloudsite.stockroom.invaders.SoundPlayer.Companion
+//import com.thecloudsite.stockroom.invaders.SoundPlayer.Companion
 
 class InvadersView(context: Context, private val size: Point)
     : SurfaceView(context), // SurfaceView is a View, therefore setContentView can be called on this
@@ -17,7 +17,7 @@ class InvadersView(context: Context, private val size: Point)
     var fps: Long = 0
 
     // For making a noise
-    private val soundPlayer = SoundPlayer(context)
+    //private val soundPlayer = SoundPlayer(context)
 
     // This is our thread
     private val gameThread = Thread(this) // OS will call run
@@ -281,7 +281,7 @@ class InvadersView(context: Context, private val size: Point)
 
                 if (motionEvent.y < size.y - size.y / 8 && playerShip.canAction1) {
                     playerShip.action1 = true
-                    soundPlayer.playSound(Companion.shootID)
+                    //soundPlayer.playSound(Companion.shootID)
                 }
             }
 
