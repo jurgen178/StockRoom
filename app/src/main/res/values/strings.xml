@@ -128,6 +128,7 @@ limitations under the License. -->
   <string name="export_list">Export portfolio</string>
   <string name="export_list_desc">Export portfolio to a .json file.</string>
   <string name="export_select_file">Select a file</string>
+  <string name="import_select_file">Select a file</string>
   <string name="delete_stock">Are you sure to delete the stock \'%1$s\' ?</string>
   <string name="delete">Delete</string>
   <string name="delete_all_title">Delete all</string>

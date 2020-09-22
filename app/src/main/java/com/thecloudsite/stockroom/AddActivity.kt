@@ -23,6 +23,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.EditText
+import androidx.core.net.toFile
 import androidx.lifecycle.ViewModelProvider
 import com.thecloudsite.stockroom.invaders.InvadersActivity
 import com.thecloudsite.stockroom.list.ListActivity
@@ -85,11 +86,23 @@ class AddActivity : AppCompatActivity() {
     }
 
     importButton.setOnClickListener {
+      // match importList()
+      val mimeTypes = arrayOf(
+          "application/json",
+          "text/csv",
+          "text/comma-separated-values",
+          "application/octet-stream",
+          "text/plain"
+      )
+
       val intent = Intent()
-          .setType("*/*")
-          .setAction(Intent.ACTION_OPEN_DOCUMENT)
+      intent.type = "*/*"
+      intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+      intent.action = Intent.ACTION_OPEN_DOCUMENT
+
       startActivityForResult(
-          Intent.createChooser(intent, "Select a file"), importListActivityRequestCode
+          Intent.createChooser(intent, getString(R.string.import_select_file)),
+          importListActivityRequestCode
       )
     }
 
@@ -114,15 +127,16 @@ class AddActivity : AppCompatActivity() {
   override fun onActivityResult(
     requestCode: Int,
     resultCode: Int,
-    data: Intent?
+    resultData: Intent?
   ) {
-    super.onActivityResult(requestCode, resultCode, data)
+    super.onActivityResult(requestCode, resultCode, resultData)
 
     if (resultCode == Activity.RESULT_OK) {
       if (requestCode == importListActivityRequestCode) {
-        if (data != null && data.data is Uri) {
-          val importListUri = data.data!!
-          stockRoomViewModel.importList(applicationContext, importListUri)
+        resultData?.data?.also { uri ->
+
+          // Perform operations on the document using its URI.
+          stockRoomViewModel.importList(applicationContext, uri)
           finish()
         }
       }

@@ -1458,23 +1458,27 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun importList(
     context: Context,
-    importListUri: Uri
+    uri: Uri
   ) {
     try {
-      context.contentResolver.openInputStream(importListUri)
+      context.contentResolver.openInputStream(uri)
           ?.use { inputStream ->
             BufferedReader(InputStreamReader(inputStream)).use { reader ->
               val text: String = reader.readText()
-              val fileName: String = importListUri.toString()
 
-              when {
-                fileName.endsWith(suffix = ".json", ignoreCase = true) -> {
+              // https://developer.android.com/training/secure-file-sharing/retrieve-info
+              val type = context.contentResolver.getType(uri)
+
+              when (type) {
+                "application/json" -> {
                   importJSON(context, text)
                 }
-                fileName.endsWith(suffix = ".csv", ignoreCase = true) -> {
+                "text/csv",
+                "text/comma-separated-values",
+                "application/octet-stream" -> {
                   importCSV(context, text)
                 }
-                else -> {
+                "text/plain" -> {
                   importText(context, text)
                 }
               }

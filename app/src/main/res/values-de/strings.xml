@@ -125,6 +125,7 @@ limitations under the License. -->
   <string name="export_list">Aktienliste Exportieren</string>
   <string name="export_list_desc">Aktienliste ihres Portfolios in eine .JSON-Datei exportieren.</string>
   <string name="export_select_file">Wählen Sie eine Datei aus</string>
+  <string name="import_select_file">Wählen Sie eine Datei aus</string>
   <string name="delete_stock">Sind Sie sicher dass sie die Aktie \'%1$s\' entfernen möchten?</string>
   <string name="delete">Entfernen</string>
   <string name="delete_all_title">Alle Daten entfernen</string>
