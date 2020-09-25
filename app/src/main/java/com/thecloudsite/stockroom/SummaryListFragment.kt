@@ -27,6 +27,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.roundToInt
 
 class SummaryListFragment : Fragment() {
 
@@ -64,6 +65,7 @@ class SummaryListFragment : Fragment() {
     val summaryList = view.findViewById<RecyclerView>(R.id.summaryList)
     summaryList.adapter = summaryListAdapter
 
+    /*
     // Set column number depending on orientation and size.
     val spanCountsPortrait = arrayOf(
         // small, standard, large, larger
@@ -116,11 +118,36 @@ class SummaryListFragment : Fragment() {
       }
     }
 
+    // screenWidthDp Pixel 3a
+    // vertical: 462 392 352 320
+    // portrait: 901 759 676 609
+
+    // screenWidthDp Surface Duo
+    // vertical:         540
+    // portrait:
+
     val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
       spanCountsPortrait[y][x]
     } else {
       spanCountsLandscape[y][x]
     }
+   */
+
+//    5, 4, 4, 3,    // 540
+
+//    4, 3, 3, 3,    // 462
+//    3, 3, 3, 2,    // 392
+//    3, 3, 2, 2,    // 352
+//    3, 3, 2, 2,    // 320
+
+//    7, 6, 6, 5,    // 901
+//    6, 5, 5, 4,    // 759
+//    6, 5, 4, 4,    // 676
+//    5, 4, 4, 4,    // 609
+
+    val scale = 155
+    val spanCount =
+      (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
     summaryList.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
