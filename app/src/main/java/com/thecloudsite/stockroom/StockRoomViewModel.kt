@@ -1470,7 +1470,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               val type = context.contentResolver.getType(uri)
 
               when (type) {
-                "application/json" -> {
+                "application/json", "text/x-json" -> {
                   importJSON(context, text)
                 }
                 "text/csv",
@@ -1481,6 +1481,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 "text/plain" -> {
                   importText(context, text)
                 }
+                else -> {
+                  val msg = getApplication<Application>().getString(
+                      R.string.import_mimetype_error, type
+                  )
+                  throw IllegalArgumentException(msg)
+                }
               }
             }
           }
@@ -1490,11 +1496,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           Toast.LENGTH_LONG
       )
           .show()
-      Log.d("Import JSON error", "Exception: $e")
-      logDebug("Import JSON Exception: $e")
+      Log.d("Import error", "Exception: $e")
+      logDebug("Import Exception: $e")
     }
-
-    //updateAll()
   }
 
   private fun getAllDBdata(): List<StockItem> {
@@ -1609,7 +1613,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     } catch (e: Exception) {
       //Toast.makeText(
-      //    context, getApplication<Application>().getString(R.string.import_error), Toast.LENGTH_LONG
+      //    context, getApplication<Application>().getString(R.string.export_error), Toast.LENGTH_LONG
       //)
       //    .show()
       Log.d("Export JSON error", "Exception: $e")

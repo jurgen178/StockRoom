@@ -27,6 +27,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.Integer.max
+import java.lang.Integer.min
 import kotlin.math.roundToInt
 
 class SummaryListFragment : Fragment() {
@@ -149,7 +151,7 @@ class SummaryListFragment : Fragment() {
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    summaryList.layoutManager = GridLayoutManager(requireContext(), spanCount)
+    summaryList.layoutManager = GridLayoutManager(requireContext(), min(max(spanCount, 2), 20))
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItemSet ->

@@ -122,6 +122,7 @@ limitations under the License. -->
   <string name="button_import">Import</string>
   <string name="import_list_desc">Import stock list from a .txt, .csv or .json file.</string>
   <string name="import_error">The selected file could not be imported.\n%1$s</string>
+  <string name="import_mimetype_error">The mime type \'%1$s\' is not supported.</string>
   <string name="import_csv_column_error">The selected file could not be imported. The column \'%1$s\' is missing.</string>
   <string name="import_msg">%1$s stocks imported.</string>
   <string name="export_msg">Your portfolio with %1$d stocks was exported to a .json file.</string>
