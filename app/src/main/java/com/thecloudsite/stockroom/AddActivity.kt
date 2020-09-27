@@ -88,10 +88,17 @@ class AddActivity : AppCompatActivity() {
     importButton.setOnClickListener {
       // match importList()
       val mimeTypes = arrayOf(
+          
+          // .json
           "application/json",
+          "text/x-json",
+
+          // .csv
           "text/csv",
           "text/comma-separated-values",
           "application/octet-stream",
+
+          // .txt
           "text/plain"
       )
 
