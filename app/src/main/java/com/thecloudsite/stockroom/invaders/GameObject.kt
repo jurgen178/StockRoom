@@ -3,8 +3,9 @@ package com.thecloudsite.stockroom.invaders
 import android.graphics.Canvas
 import android.graphics.RectF
 
-class GameObject(val moveComp: IMoveComponent,
-                    val graphicsComp: IGraphicsComponent,
+class GameObject(
+    private val moveComp: IMoveComponent,
+                    private val graphicsComp: IGraphicsComponent,
                     var position: RectF) {
     // This data is accessible using ClassName.propertyName
     companion object {

@@ -1467,9 +1467,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               val text: String = reader.readText()
 
               // https://developer.android.com/training/secure-file-sharing/retrieve-info
-              val type = context.contentResolver.getType(uri)
 
-              when (type) {
+              when (val type = context.contentResolver.getType(uri)) {
                 "application/json", "text/x-json" -> {
                   importJSON(context, text)
                 }

@@ -1,6 +1,6 @@
 package com.thecloudsite.stockroom.invaders
 
-class CollisionAABB(val player: GameObject, val protagonists: ArrayList<GameObject>, val neutral: ArrayList<GameObject>, val antagonist: ArrayList<GameObject>) :
+class CollisionAABB(private val player: GameObject, private val protagonists: ArrayList<GameObject>, private val neutral: ArrayList<GameObject>, private val antagonist: ArrayList<GameObject>) :
     ICollisionHandler {
     override fun update(gameStatus: GameStatus) {
 

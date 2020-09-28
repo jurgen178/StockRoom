@@ -14,7 +14,7 @@ class InvadersView(context: Context, private val size: Point)
     Runnable { // Implements the Runnable interface
 
     // This variable tracks the game frame rate
-    var fps: Long = 0
+    private var fps: Long = 0
 
     // For making a noise
     //private val soundPlayer = SoundPlayer(context)
@@ -42,8 +42,8 @@ class InvadersView(context: Context, private val size: Point)
     // The players ship
     private val playerWidth = size.x / 20f
     private val playerHeight = size.y / 20f
-    var bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.playership)
-    var bitmapScaled = Bitmap.createScaledBitmap(bitmap, playerWidth.toInt(), playerHeight.toInt(),false)
+    private var bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.playership)
+    private var bitmapScaled: Bitmap = Bitmap.createScaledBitmap(bitmap, playerWidth.toInt(), playerHeight.toInt(),false)
     val position = RectF(size.x / 2f,size.y.toFloat() - playerHeight,size.x / 2f + playerWidth, size.y.toFloat())
     private var playerShip: GameObject = GameObject(
         CombatantMoveComp(size, 500, 20, 450, friendlyGameObjs), PlayerGraphicsComp(bitmapScaled), position)
@@ -51,7 +51,7 @@ class InvadersView(context: Context, private val size: Point)
     private val ai : IEnemyController = EnemyAI(size, enemyGameObjs, playerShip)
     private val collision : ICollisionHandler = CollisionAABB(playerShip, friendlyGameObjs, neutralGameObjs, enemyGameObjs)
 
-    var gameStatus = GameStatus(0, 3, 1)
+    private var gameStatus = GameStatus(0, 3, 1)
 
     // To remember the high score
     private val prefs: SharedPreferences = context.getSharedPreferences(
@@ -69,19 +69,19 @@ class InvadersView(context: Context, private val size: Point)
         val padding = size.x / 60f
         val topBuffer = size.y / 6f
 
-        var bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.invader1)
-        var bitmapScaled = Bitmap.createScaledBitmap(bitmap, width.toInt(), height.toInt(),false)
+        val bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.invader1)
+        val bitmapScaled = Bitmap.createScaledBitmap(bitmap, width.toInt(), height.toInt(),false)
 
         // Here we will initialize the game objects
         for (column in 0..7) {
             for (row in 0..6) {
-                var position = RectF(
+                val position = RectF(
                     column * (width + padding),
                     topBuffer + row * (height + padding),
                     column * (width + padding) + width,
                     topBuffer + row * (height + padding) + height
                 )
-                var invader = GameObject(
+                val invader = GameObject(
                     CombatantMoveComp(size, 8000, 1000, 150 + gameStatus.wave * 10, kludgeEnemyBullets), PlayerGraphicsComp(bitmapScaled), position)
                 invader.moving = GameObject.right // Invaders start moving to the right
                 enemyGameObjs.add(invader)
@@ -97,13 +97,13 @@ class InvadersView(context: Context, private val size: Point)
         for(shelterNumber in 1..3) {
             for (column in 0..20) {
                 for (row in 0..10) {
-                    var position = RectF(
+                    val position = RectF(
                         shelterNumber * leftOffset + column * shelterWidth,
                         topOffset + row * shelterHeight,
                         shelterNumber * leftOffset + column * shelterWidth + shelterWidth,
                         topOffset + row * shelterHeight + shelterHeight
                     )
-                    var shelterPiece = GameObject(
+                    val shelterPiece = GameObject(
                         StationaryMoveComp(), RectGraphicsComp(32, 128, 255), position)
                     neutralGameObjs.add(shelterPiece)
                 }

@@ -18,14 +18,11 @@ package com.thecloudsite.stockroom
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.EditText
-import androidx.core.net.toFile
 import androidx.lifecycle.ViewModelProvider
-import com.thecloudsite.stockroom.invaders.InvadersActivity
 import com.thecloudsite.stockroom.list.ListActivity
 import kotlinx.android.synthetic.main.activity_add.button_add
 import kotlinx.android.synthetic.main.activity_add.importButton
