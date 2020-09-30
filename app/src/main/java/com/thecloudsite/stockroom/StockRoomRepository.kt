@@ -200,12 +200,18 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
     stockRoomDao.addEvent(event)
   }
 
+//  @Suppress("RedundantSuspendModifier")
+//  @WorkerThread
+//  suspend fun deleteEvent(event: Event) {
+//    stockRoomDao.deleteEvent(
+//        symbol = event.symbol, title = event.title, note = event.note, datetime = event.datetime
+//    )
+//  }
+
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun deleteEvent(event: Event) {
-    stockRoomDao.deleteEvent(
-        symbol = event.symbol, title = event.title, note = event.note, datetime = event.datetime
-    )
+    stockRoomDao.deleteEvent(event)
   }
 
   @Suppress("RedundantSuspendModifier")

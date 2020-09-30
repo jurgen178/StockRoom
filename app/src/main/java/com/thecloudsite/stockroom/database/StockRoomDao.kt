@@ -295,7 +295,7 @@ interface StockRoomDao {
     assetNew: Asset
   ) {
     // delete the exact asset including the id because duplicate entries are valid
-    // events and dividends delete entries without matching the id to remove all duplicates
+    // dividends delete entries without matching the id to remove all duplicates
     deleteAsset(assetOld)
     addAsset(assetNew)
   }
@@ -333,15 +333,19 @@ interface StockRoomDao {
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getEvents(symbol: String): Events
 
-  @Query(
-      "DELETE FROM event_table WHERE symbol = :symbol AND title = :title AND note = :note AND datetime = :datetime"
-  )
-  fun deleteEvent(
-    symbol: String,
-    title: String,
-    note: String,
-    datetime: Long
-  )
+  // id must match to delete the entry
+  @Delete
+  fun deleteEvent(event: Event)
+
+//  @Query(
+//      "DELETE FROM event_table WHERE symbol = :symbol AND title = :title AND note = :note AND datetime = :datetime"
+//  )
+//  fun deleteEvent(
+//    symbol: String,
+//    title: String,
+//    note: String,
+//    datetime: Long
+//  )
 
   @Query("DELETE FROM event_table WHERE symbol = :symbol")
   fun deleteEvents(symbol: String)
@@ -351,12 +355,15 @@ interface StockRoomDao {
     eventOld: Event,
     eventNew: Event
   ) {
-    deleteEvent(
-        eventOld.symbol,
-        eventOld.title,
-        eventOld.note,
-        eventOld.datetime
-    )
+    // delete the exact event including the id because duplicate entries are valid
+    // dividends delete entries without matching the id to remove all duplicates
+    deleteEvent(eventOld)
+//    deleteEvent(
+//        eventOld.symbol,
+//        eventOld.title,
+//        eventOld.note,
+//        eventOld.datetime
+//    )
     addEvent(eventNew)
   }
 

@@ -257,6 +257,18 @@ class StockDataFragment : Fragment() {
     addSharesView.text = DecimalFormat("0.####").format(asset.shares)
     val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
     addPriceView.text = DecimalFormat("0.00##").format(asset.price)
+
+    val localDateTime = if (asset.date == 0L) {
+      LocalDateTime.now()
+    } else {
+      LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+    }
+    val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
+    // month is starting from zero
+    datePickerAssetDateView.updateDate(
+        localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
+    )
+
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
@@ -299,12 +311,20 @@ class StockDataFragment : Fragment() {
                   .show()
               valid = false
             }
+
             if (valid) {
               // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-              val assetnew =
-                Asset(symbol = symbol, shares = shares, price = price, date = asset.date)
-              if (asset.shares != assetnew.shares || asset.price != assetnew.price) {
-                stockRoomViewModel.updateAsset2(asset, assetnew)
+              val localDateTimeNew: LocalDateTime = LocalDateTime.of(
+                  datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
+                  datePickerAssetDateView.dayOfMonth, 0, 0
+              )
+              val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
+
+              val assetNew =
+                Asset(symbol = symbol, shares = shares, price = price, date = date)
+              if (asset.shares != assetNew.shares || asset.price != assetNew.price || asset.date != assetNew.date) {
+                // Each asset has an id. Delete the asset with that id and then add assetNew.
+                stockRoomViewModel.updateAsset2(asset, assetNew)
                 val count: Int = when {
                   shares == 1.0 -> {
                     1
@@ -435,23 +455,23 @@ class StockDataFragment : Fragment() {
           // Add () to avoid cast exception.
           val title = (textInputEditEventTitleView.text).toString()
               .trim()
-          val note = (textInputEditEventNoteView.text).toString()
-
-          val datetime: LocalDateTime = LocalDateTime.of(
-              datePickerEventDateView.year, datePickerEventDateView.month + 1,
-              datePickerEventDateView.dayOfMonth, datePickerEventTimeView.hour,
-              datePickerEventTimeView.minute
-          )
-          val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
           if (title.isEmpty()) {
             Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
                 .show()
-          } else
-            if (event.title != title || event.note != note || event.datetime != seconds) {
-              stockRoomViewModel.updateEvent2(
-                  event,
-                  Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
-              )
+          } else {
+            val note = (textInputEditEventNoteView.text).toString()
+
+            val datetime: LocalDateTime = LocalDateTime.of(
+                datePickerEventDateView.year, datePickerEventDateView.month + 1,
+                datePickerEventDateView.dayOfMonth, datePickerEventTimeView.hour,
+                datePickerEventTimeView.minute
+            )
+            val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
+            val eventNew =
+              Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
+            if (event.title != eventNew.title || event.note != eventNew.note || event.datetime != eventNew.datetime) {
+              // Each event has an id. Delete the event with that id and then add eventNew.
+              stockRoomViewModel.updateEvent2(event, eventNew)
 
               Toast.makeText(
                   requireContext(), getString(
@@ -464,6 +484,7 @@ class StockDataFragment : Fragment() {
               )
                   .show()
             }
+          }
           hideSoftInputFromWindow()
         }
         .setNegativeButton(
@@ -1102,6 +1123,8 @@ class StockDataFragment : Fragment() {
       addUpdateSharesHeadlineView.text = getString(R.string.add_asset)
       val addSharesView = dialogView.findViewById<TextView>(R.id.addShares)
       val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
+      val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
+
       builder.setView(dialogView)
           // Add action buttons
           .setPositiveButton(
@@ -1145,8 +1168,15 @@ class StockDataFragment : Fragment() {
                 valid = false
               }
               if (valid) {
-                val date = LocalDateTime.now()
-                    .toEpochSecond(ZoneOffset.UTC)
+                val localDateTime: LocalDateTime = LocalDateTime.of(
+                    datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
+                    datePickerAssetDateView.dayOfMonth, 0, 0
+                )
+                val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+
+                //val date = LocalDateTime.now()
+                //    .toEpochSecond(ZoneOffset.UTC)
+
                 stockRoomViewModel.addAsset(
                     Asset(symbol = symbol, shares = shares, price = price, date = date)
                 )
@@ -1294,15 +1324,18 @@ class StockDataFragment : Fragment() {
             // Add () to avoid cast exception.
             val title = (textInputEditEventTitleView.text).toString()
                 .trim()
-            val note = (textInputEditEventNoteView.text).toString()
-            val datetime: LocalDateTime = LocalDateTime.of(
-                datePickerEventDateView.year, datePickerEventDateView.month + 1,
-                datePickerEventDateView.dayOfMonth, datePickerEventTimeView.hour,
-                datePickerEventTimeView.minute
-            )
-            val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
             // add new event
-            if (title.isNotEmpty()) {
+            if (title.isEmpty()) {
+              Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
+                  .show()
+            } else {
+              val note = (textInputEditEventNoteView.text).toString()
+              val datetime: LocalDateTime = LocalDateTime.of(
+                  datePickerEventDateView.year, datePickerEventDateView.month + 1,
+                  datePickerEventDateView.dayOfMonth, datePickerEventTimeView.hour,
+                  datePickerEventTimeView.minute
+              )
+              val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
               stockRoomViewModel.addEvent(
                   Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
               )
@@ -1315,9 +1348,6 @@ class StockDataFragment : Fragment() {
               )
               ), Toast.LENGTH_LONG
               )
-                  .show()
-            } else {
-              Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
                   .show()
             }
           }
