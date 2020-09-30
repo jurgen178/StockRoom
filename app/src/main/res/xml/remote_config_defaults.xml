@@ -3,11 +3,11 @@
 <defaultsMap>
   <entry>
     <key>stockMarketDataBaseUrl</key>
-    <value>https://query1.finance.yahoo.com/v7/finance/</value>
+    <value>https://query2.finance.yahoo.com/v7/finance/</value>
   </entry>
   <entry>
     <key>stockChartDataBaseUrl</key>
-    <value>https://query1.finance.yahoo.com/v8/finance/</value>
+    <value>https://query2.finance.yahoo.com/v8/finance/</value>
   </entry>
   <entry>
     <key>yahooNewsBaseUrl</key>

@@ -29,7 +29,7 @@ object StockMarketDataApiFactory {
   // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
-  private var defaultBaseUrl = "https://query1.finance.yahoo.com/v7/finance/"
+  private var defaultBaseUrl = "https://query2.finance.yahoo.com/v7/finance/"
   private var baseUrl = ""
 
   //Creating Auth Interceptor to add api_key query in front of all the requests.
@@ -89,7 +89,7 @@ object StockChartDataApiFactory {
   // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
   // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
 
-  private var defaultBaseUrl = "https://query1.finance.yahoo.com/v8/finance/"
+  private var defaultBaseUrl = "https://query2.finance.yahoo.com/v8/finance/"
   private var baseUrl = ""
 
   //Creating Auth Interceptor to add api_key query in front of all the requests.
