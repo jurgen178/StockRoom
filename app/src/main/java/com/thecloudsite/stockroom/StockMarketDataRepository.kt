@@ -30,6 +30,7 @@ data class StockItemSet
   var stockItems: MutableList<StockItem> = mutableListOf()
 )
 
+// Data from the DB and online data fields.
 data class StockItem
 (
   var onlineMarketData: OnlineMarketData,

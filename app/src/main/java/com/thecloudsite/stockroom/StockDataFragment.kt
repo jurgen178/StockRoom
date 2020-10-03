@@ -123,6 +123,7 @@ import java.time.format.FormatStyle
 import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.SHORT
 import java.util.Locale
+import kotlin.math.roundToInt
 
 enum class StockViewRange(val value: Int) {
   OneDay(0),
@@ -559,22 +560,14 @@ class StockDataFragment : Fragment() {
     val onlineDataAdapter = OnlineDataAdapter(requireContext())
     onlineDataView.adapter = onlineDataAdapter
 
-    val portrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-    val largeFont1 = resources.configuration.fontScale >= 1.15 // 0.85, 1, 1.15, 1.3
-    val largeDisplay1 = resources.configuration.densityDpi >= 440 // 374, 440, 490, 540
-    val largeFont2 = resources.configuration.fontScale >= 1.0 // 0.85, 1, 1.15, 1.3
-    val largeDisplay2 = resources.configuration.densityDpi >= 540 // 374, 440, 490, 540
-    val large = largeFont1 && largeDisplay1 || largeFont2 && largeDisplay2
-    val spanCount = if (large) {
-      if (portrait) {
-        1
-      } else {
-        2
-      }
-    } else {
-      2
-    }
-    onlineDataView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+    // Set column number depending on screen width.
+    val scale = 300
+    val spanCount =
+      (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
+
+    onlineDataView.layoutManager = GridLayoutManager(requireContext(),
+        Integer.min(Integer.max(spanCount, 1), 10)
+    )
 
     var timeInSeconds5minUpdate = LocalDateTime.now()
         .toEpochSecond(ZoneOffset.UTC)

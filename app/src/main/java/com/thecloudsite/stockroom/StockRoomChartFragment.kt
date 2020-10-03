@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.roundToInt
 
 class StockRoomChartFragment : StockRoomBaseFragment() {
 
@@ -108,14 +109,14 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
     recyclerView.adapter = adapter
 
-    // Set column number depending on orientation.
-    val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-      1
-    } else {
-      2
-    }
+    // Set column number depending on screen width.
+    val scale = 481
+    val spanCount =
+      (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    recyclerView.layoutManager = GridLayoutManager(context, spanCount)
+    recyclerView.layoutManager = GridLayoutManager(context,
+        Integer.min(Integer.max(spanCount, 1), 10)
+    )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItemSet ->

@@ -120,12 +120,12 @@ class SummaryListFragment : Fragment() {
     }
 
     // screenWidthDp Pixel 3a
-    // vertical: 462 392 352 320
-    // portrait: 901 759 676 609
+    // portrait:  462 392 352 320
+    // landscape: 901 759 676 609
 
     // screenWidthDp Surface Duo
-    // vertical:         540
-    // portrait:
+    // portrait:  847     540
+    // landscape:
 
     val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
       spanCountsPortrait[y][x]
@@ -146,7 +146,8 @@ class SummaryListFragment : Fragment() {
 //    6, 5, 4, 4,    // 676
 //    5, 4, 4, 4,    // 609
 
-    val scale = 155
+    // Set column number depending on screen width.
+    val scale = 156
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 

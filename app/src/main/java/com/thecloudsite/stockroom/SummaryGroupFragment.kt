@@ -45,6 +45,7 @@ import com.thecloudsite.stockroom.invaders.InvadersActivity
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.imageView
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 class SummaryGroupFragment : Fragment() {
 
@@ -82,14 +83,14 @@ class SummaryGroupFragment : Fragment() {
     val summaryGroup = view.findViewById<RecyclerView>(R.id.summaryGroup)
     summaryGroup.adapter = summaryGroupAdapter
 
-    // Set column number depending on orientation.
-    val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-      1
-    } else {
-      2
-    }
+    // Set column number depending on screen width.
+    val scale = 481
+    val spanCount =
+      (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    summaryGroup.layoutManager = GridLayoutManager(requireContext(), spanCount)
+    summaryGroup.layoutManager = GridLayoutManager(requireContext(),
+        Integer.min(Integer.max(spanCount, 1), 10)
+    )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItemSet ->
