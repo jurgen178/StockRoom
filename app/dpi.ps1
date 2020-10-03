@@ -42,7 +42,7 @@ function getScale($data) {
         }
         if($minScale -ne 0 -and $maxScale -eq 1001 -and -not $test)
         {
-            $maxScale = $_
+            $maxScale = $_ - 1
         }
     }
 
@@ -77,7 +77,7 @@ $data1 = @(
 $scale = getScale $data1
 $scale
 #printScale($scale) grid
-printScale $data1 155 grid
+#printScale $data1 155 grid
 
 <#
 3, 2, 2, 2,    // 847

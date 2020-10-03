@@ -561,7 +561,7 @@ class StockDataFragment : Fragment() {
     onlineDataView.adapter = onlineDataAdapter
 
     // Set column number depending on screen width.
-    val scale = 300
+    val scale = 299
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
