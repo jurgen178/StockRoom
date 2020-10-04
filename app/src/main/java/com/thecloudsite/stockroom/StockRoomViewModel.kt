@@ -97,16 +97,16 @@ data class StockItemJson
 (
   var symbol: String,
   val portfolio: String,
-  val data: String,
-  val groupColor: Int,
-  val groupName: String,
-  val notes: String,
-  var dividendNotes: String,
-  val alertAbove: Double,
-  val alertBelow: Double,
-  var assets: List<AssetJson>,
-  var events: List<EventJson>,
-  var dividends: List<DividendJson>
+  val data: String?,
+  val groupColor: Int?,
+  val groupName: String?,
+  val notes: String?,
+  var dividendNotes: String?,
+  val alertAbove: Double?,
+  val alertBelow: Double?,
+  var assets: List<AssetJson>?,
+  var events: List<EventJson>?,
+  var dividends: List<DividendJson>?
 )
 
 object SharedHandler {
@@ -1534,9 +1534,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  fun exportList(
+  fun exportJSON(
     context: Context,
-    exportListUri: Uri
+    exportJsonUri: Uri
   ) {
     // Gets the groups to resolve the group name
     // Group name is stored per entry and not as one list to simplify the json structure.
@@ -1553,39 +1553,99 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         group.color == stockItem.stockDBdata.groupColor
       }?.name ?: ""
 
-      StockItemJson(symbol = stockItem.stockDBdata.symbol,
+      // Convert empty or 0 values to null to exclude them from serialized to JSON.
+      val dataValue = if (stockItem.stockDBdata.data.isNotEmpty()) {
+        stockItem.stockDBdata.data
+      } else {
+        null
+      }
+      val groupColorValue = if (stockItem.stockDBdata.groupColor != 0) {
+        stockItem.stockDBdata.groupColor
+      } else {
+        null
+      }
+      val groupNameValue = if (groupName.isNotEmpty()) {
+        groupName
+      } else {
+        null
+      }
+      val notesValue = if (stockItem.stockDBdata.notes.isNotEmpty()) {
+        stockItem.stockDBdata.notes
+      } else {
+        null
+      }
+      val dividendNotesValue = if (stockItem.stockDBdata.dividendNotes.isNotEmpty()) {
+        stockItem.stockDBdata.dividendNotes
+      } else {
+        null
+      }
+      val alertAbove = validateDouble(stockItem.stockDBdata.alertAbove)
+      val alertAboveValue = if (alertAbove != 0.0) {
+        alertAbove
+      } else {
+        null
+      }
+      val alertBelow = validateDouble(stockItem.stockDBdata.alertBelow)
+      val alertBelowValue = if (alertBelow != 0.0) {
+        alertBelow
+      } else {
+        null
+      }
+      val assetsValue = if (stockItem.assets.isEmpty()) {
+        null
+      } else {
+        stockItem.assets.map { asset ->
+          AssetJson(
+              shares = validateDouble(asset.shares),
+              price = validateDouble(asset.price),
+              date = asset.date
+              //commission = asset.commission,
+              //type = asset.type
+          )
+        }
+      }
+
+      val eventsValue = if (stockItem.events.isEmpty()) {
+        null
+      } else {
+        stockItem.events.map { event ->
+          EventJson(
+              type = event.type, title = event.title, note = event.note,
+              datetime = event.datetime
+          )
+        }
+      }
+
+      val dividendsValue = if (stockItem.dividends.isEmpty()) {
+        null
+      } else {
+        stockItem.dividends.map { dividend ->
+          DividendJson(
+              amount = validateDouble(dividend.amount),
+              exdate = dividend.exdate,
+              paydate = dividend.paydate,
+              type = dividend.type,
+              cycle = dividend.cycle
+          )
+        }
+      }
+
+      StockItemJson(
+          symbol = stockItem.stockDBdata.symbol,
+          // Empty portfolio is the default portfolio, don't exclude from the export with a null value.
+          // Otherwise importing would set the current portfolio to missing portfolio json entries.
           portfolio = stockItem.stockDBdata.portfolio,
-          data = stockItem.stockDBdata.data,
-          groupColor = stockItem.stockDBdata.groupColor,
-          groupName = groupName,
-          alertAbove = validateDouble(stockItem.stockDBdata.alertAbove),
-          alertBelow = validateDouble(stockItem.stockDBdata.alertBelow),
-          notes = stockItem.stockDBdata.notes,
-          dividendNotes = stockItem.stockDBdata.dividendNotes,
-          assets = stockItem.assets.map { asset ->
-            AssetJson(
-                shares = validateDouble(asset.shares),
-                price = validateDouble(asset.price),
-                date = asset.date
-                //commission = asset.commission,
-                //type = asset.type
-            )
-          },
-          events = stockItem.events.map { event ->
-            EventJson(
-                type = event.type, title = event.title, note = event.note,
-                datetime = event.datetime
-            )
-          },
-          dividends = stockItem.dividends.map { dividend ->
-            DividendJson(
-                amount = validateDouble(dividend.amount),
-                exdate = dividend.exdate,
-                paydate = dividend.paydate,
-                type = dividend.type,
-                cycle = dividend.cycle
-            )
-          }
+
+          data = dataValue,
+          groupColor = groupColorValue,
+          groupName = groupNameValue,
+          alertAbove = alertAboveValue,
+          alertBelow = alertBelowValue,
+          notes = notesValue,
+          dividendNotes = dividendNotesValue,
+          assets = assetsValue,
+          events = eventsValue,
+          dividends = dividendsValue
       )
     }
 
@@ -1597,7 +1657,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     // Write the json string.
     try {
-      context.contentResolver.openOutputStream(exportListUri)
+      context.contentResolver.openOutputStream(exportJsonUri)
           ?.use { output ->
             output as FileOutputStream
             output.channel.truncate(0)

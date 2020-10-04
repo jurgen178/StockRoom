@@ -106,8 +106,8 @@ class SettingsActivity : AppCompatActivity(),
       if (resultCodeShort == exportListActivityRequestCode) {
         if (data != null && data.data is Uri) {
 
-          val exportListUri = data.data!!
-          stockRoomViewModel.exportList(applicationContext, exportListUri)
+          val exportJsonUri = data.data!!
+          stockRoomViewModel.exportJSON(applicationContext, exportJsonUri)
           finish()
         }
       }

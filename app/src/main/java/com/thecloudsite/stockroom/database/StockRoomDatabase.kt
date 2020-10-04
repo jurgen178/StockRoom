@@ -114,24 +114,28 @@ abstract class StockRoomDatabase : RoomDatabase() {
             )
         )
 
-        stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets.map { asset ->
-          Asset(
-              symbol = symbol,
-              shares = asset.shares ?: 0.0,
-              price = asset.price ?: 0.0,
-              date = asset.date ?: 0L
-          )
-        })
+        if(stockItemJson.assets != null) {
+          stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets!!.map { asset ->
+            Asset(
+                symbol = symbol,
+                shares = asset.shares ?: 0.0,
+                price = asset.price ?: 0.0,
+                date = asset.date ?: 0L
+            )
+          })
+        }
 
-        stockRoomDao.updateEvents(symbol = symbol, events = stockItemJson.events.map { event ->
-          Event(
-              symbol = symbol,
-              type = event.type ?: 0,
-              title = event.title ?: "",
-              note = event.note ?: "",
-              datetime = event.datetime ?: 0L
-          )
-        })
+        if(stockItemJson.events != null) {
+          stockRoomDao.updateEvents(symbol = symbol, events = stockItemJson.events!!.map { event ->
+            Event(
+                symbol = symbol,
+                type = event.type ?: 0,
+                title = event.title ?: "",
+                note = event.note ?: "",
+                datetime = event.datetime ?: 0L
+            )
+          })
+        }
       }
     }
 
