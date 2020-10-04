@@ -84,7 +84,7 @@ class SummaryGroupFragment : Fragment() {
     summaryGroup.adapter = summaryGroupAdapter
 
     // Set column number depending on screen width.
-    val scale = 481
+    val scale = 494
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 

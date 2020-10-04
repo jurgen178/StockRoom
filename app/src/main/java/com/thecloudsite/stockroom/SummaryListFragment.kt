@@ -120,12 +120,14 @@ class SummaryListFragment : Fragment() {
     }
 
     // screenWidthDp Pixel 3a
+    // font: 0.85, 1, 1.15, 1.3
     // portrait:  462 392 352 320
     // landscape: 901 759 676 609
 
     // screenWidthDp Surface Duo
-    // portrait:  847     540
-    // landscape:
+    // font: 0.85, 1, 1.15, 1.3
+    // portrait:   635 540 469 415
+    // landscape:  847 720 626 553
 
     val spanCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
       spanCountsPortrait[y][x]
