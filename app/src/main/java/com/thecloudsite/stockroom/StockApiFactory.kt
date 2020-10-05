@@ -21,6 +21,7 @@ import com.thecloudsite.stockroom.utils.checkBaseUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 // https://android.jlelse.eu/android-networking-in-2019-retrofit-with-kotlins-coroutines-aefe82c4d777
 
@@ -82,6 +83,48 @@ object StockMarketDataApiFactory {
   }
 
   var yahooApi: YahooApiMarketData? = null
+}
+
+object StockRawMarketDataApiFactory {
+  // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+  // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+
+  private var defaultBaseUrl = "https://query2.finance.yahoo.com/v7/finance/"
+  private var baseUrl = ""
+
+  //OkhttpClient for building http request url
+  private val yahooClient = OkHttpClient().newBuilder()
+//      .addInterceptor(authInterceptor)
+      .build()
+
+  private fun retrofit(): Retrofit = Retrofit.Builder()
+      .client(yahooClient)
+      .baseUrl(baseUrl)
+      .addConverterFactory(ScalarsConverterFactory.create())
+      .addCallAdapterFactory(CoroutineCallAdapterFactory())
+      .build()
+
+  fun update(_baseUrl: String) {
+    if (baseUrl != _baseUrl) {
+      if (_baseUrl.isBlank()) {
+        baseUrl = ""
+        yahooApi = null
+      } else {
+        baseUrl = checkBaseUrl(_baseUrl)
+        yahooApi = try {
+          retrofit().create(YahooApiRawMarketData::class.java)
+        } catch (e: Exception) {
+          null
+        }
+      }
+    }
+  }
+
+  init {
+    update(defaultBaseUrl)
+  }
+
+  var yahooApi: YahooApiRawMarketData? = null
 }
 
 object StockChartDataApiFactory {

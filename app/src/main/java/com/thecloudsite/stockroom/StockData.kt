@@ -501,6 +501,15 @@ interface YahooApiMarketData {
   ): Deferred<Response<YahooResponse>>
 }
 
+interface YahooApiRawMarketData {
+  @GET("quote?format=json")
+  fun getStockDataAsync(
+    @Query(
+        value = "symbols"
+    ) symbols: String
+  ): Deferred<Response<String>>
+}
+
 interface YahooApiChartData {
   // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
   // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo

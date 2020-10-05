@@ -17,13 +17,28 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.MEDIUM
 
 data class OnlineData(
   val desc: String,
@@ -37,9 +52,49 @@ class OnlineDataAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
 
+  private var symbol = ""
+
   class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val itemViewOnlineDataDesc: TextView = itemView.findViewById(R.id.textViewOnlineDataDesc)
     val itemViewOnlineData: TextView = itemView.findViewById(R.id.textViewOnlineData)
+  }
+
+  private fun processJsonObject(jsonObj: JsonObject) {
+    for (keyStr in jsonObj.keySet()) {
+      val keyvalue = jsonObj[keyStr]
+
+//      "quoteResponse": {
+//        "result": [{
+//        "language": "en-US",
+//        "region": "US",
+//        "quoteType": "EQUITY",
+
+      val value = keyvalue.toString()
+      if (value.matches("\\d{10}".toRegex())
+      ) {
+        val datetime = value.toLong()
+        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+        val dateTimeStr =
+          "${datetime} (${
+            localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+          } ${
+            localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+          })"
+
+        jsonObj.remove(keyStr)
+        jsonObj.add(keyStr, JsonPrimitive(dateTimeStr))
+      }
+
+      if (keyvalue is JsonArray) {
+        for (jsonElement in keyvalue.iterator()) {
+          processJsonObject(jsonElement.asJsonObject)
+        }
+      }
+
+      if (keyvalue is JsonObject) {
+        processJsonObject(keyvalue)
+      }
+    }
   }
 
   override fun onCreateViewHolder(
@@ -47,6 +102,48 @@ class OnlineDataAdapter internal constructor(
     viewType: Int
   ): OnlineDataViewHolder {
     val itemView = inflater.inflate(R.layout.onlinedataview_item, parent, false)
+
+    itemView.setOnLongClickListener {
+
+      // Get Raw data from the server.
+      val stockRawMarketDataRepository: StockRawMarketDataRepository =
+        StockRawMarketDataRepository { StockRawMarketDataApiFactory.yahooApi }
+
+      var onlineRawJsonData: String
+      runBlocking {
+        withContext(Dispatchers.IO) {
+          onlineRawJsonData = stockRawMarketDataRepository.getStockRawData(symbol)
+        }
+      }
+
+      // Convert the data.
+      var onlineJsonData = onlineRawJsonData
+      try {
+        val parser = JsonParser()
+        val jsonObj = parser.parse(onlineRawJsonData).asJsonObject.deepCopy()
+
+        processJsonObject(jsonObj)
+
+        val gson: Gson = GsonBuilder()
+            .setPrettyPrinting()
+            .create()
+        onlineJsonData = gson.toJson(jsonObj)
+      } catch (e: Exception) {
+        Log.d("Convert json data failed", e.toString())
+      }
+
+      // Display the data.
+      android.app.AlertDialog.Builder(context)
+          .setTitle(context.getString(R.string.data_provider_details, symbol))
+          .setMessage(onlineJsonData)
+          .setPositiveButton(R.string.ok) { _, _ ->
+          }
+          .show()
+
+      // Return true to indicate the click was handled
+      true
+    }
+
     return OnlineDataViewHolder(itemView)
   }
 
@@ -63,19 +160,25 @@ class OnlineDataAdapter internal constructor(
   private fun formatInt(value: Long): String {
     return when {
       value >= 1000000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000000.0)}${context.getString(
-            R.string.trillion_abbr
-        )}"
+        "${DecimalFormat("0.##").format(value / 1000000000000.0)}${
+          context.getString(
+              R.string.trillion_abbr
+          )
+        }"
       }
       value >= 1000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000.0)}${context.getString(
-            R.string.billion_abbr
-        )}"
+        "${DecimalFormat("0.##").format(value / 1000000000.0)}${
+          context.getString(
+              R.string.billion_abbr
+          )
+        }"
       }
       value >= 1000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000.0)}${context.getString(
-            R.string.million_abbr
-        )}"
+        "${DecimalFormat("0.##").format(value / 1000000.0)}${
+          context.getString(
+              R.string.million_abbr
+          )
+        }"
       }
       else -> {
         DecimalFormat("0.##").format(value)
@@ -85,6 +188,8 @@ class OnlineDataAdapter internal constructor(
 
   fun updateData(onlineMarketData: OnlineMarketData) {
     data.clear()
+
+    symbol = onlineMarketData.symbol
 
     val separatorChar: Char = DecimalFormatSymbols.getInstance()
         .decimalSeparator

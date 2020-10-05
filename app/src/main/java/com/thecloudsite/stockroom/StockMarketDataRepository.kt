@@ -213,3 +213,35 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
     return OnlineMarketData(symbol = symbol)
   }
 }
+
+class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?) : BaseRepository() {
+
+  private val _data = MutableLiveData<List<OnlineMarketData>>()
+  val onlineMarketDataList: LiveData<List<OnlineMarketData>>
+    get() = _data
+
+  suspend fun getStockRawData(symbol: String): String {
+    val api: YahooApiRawMarketData? = api()
+
+    if (symbol.isNotEmpty() && api != null) {
+
+      val quoteResponse: String? = try {
+        safeApiCall(
+            call = {
+              updateCounter()
+              api.getStockDataAsync(symbol)
+                  .await()
+            },
+            errorMessage = "Error getting finance data."
+        )
+      } catch (e: Exception) {
+        Log.d("StockRawMarketDataRepository.getStockRawData($symbol) failed", "Exception=$e")
+        null
+      }
+
+      return quoteResponse ?: ""
+    }
+
+    return ""
+  }
+}

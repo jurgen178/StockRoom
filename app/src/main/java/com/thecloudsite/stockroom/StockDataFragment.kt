@@ -121,6 +121,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.format.FormatStyle.LONG
+import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -565,7 +566,8 @@ class StockDataFragment : Fragment() {
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    onlineDataView.layoutManager = GridLayoutManager(requireContext(),
+    onlineDataView.layoutManager = GridLayoutManager(
+        requireContext(),
         Integer.min(Integer.max(spanCount, 1), 10)
     )
 
