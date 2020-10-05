@@ -95,9 +95,23 @@ class OnlineDataAdapter internal constructor(
       val valueString = value.toString()
 
       // Add date-time to time values.
-      if (valueString.matches("\\d{10}".toRegex())
+      if (key.contains("time", true) && valueString.matches("^\\d+$".toRegex())
       ) {
         val datetime = valueString.toLong()
+        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+        val dateTimeStr =
+          "$valueString <i>(${
+            localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+          } ${
+            localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+          })</i>"
+
+        element.setValue(JsonPrimitive(dateTimeStr))
+      }
+
+      if(key == "firstTradeDateMilliseconds" && valueString.matches("^\\d+$".toRegex()))
+      {
+        val datetime = valueString.toLong() / 1000
         val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
         val dateTimeStr =
           "$valueString <i>(${
@@ -118,7 +132,7 @@ class OnlineDataAdapter internal constructor(
         element.setValue(JsonPrimitive("<b>$valueString</b>"))
       }
 
-      // MarketCap
+      // Add MarketCap size abbreviation.
       if(key == "marketCap")
       {
         val formattedMarketCap = formatInt(valueString.toLong())
@@ -189,9 +203,10 @@ class OnlineDataAdapter internal constructor(
           onlineJsonData += gson.toJson(jsonObjUnsorted)
         } catch (e: Exception) {
           Log.d("Convert json data failed", e.toString())
+          onlineJsonData = onlineRawJsonData
         }
 
-        // Unescape control chars.
+        // Unescape.
         onlineJsonData = onlineJsonData.replace(" ", "&nbsp;")
             .replace("\\u003c", "<")
             .replace("\\u003e", ">")
