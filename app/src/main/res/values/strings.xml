@@ -294,5 +294,7 @@ limitations under the License. -->
   <string name="use_chart_overlay_symbol">Additional stock chart in the chart display</string>
   <string name="use_chart_overlay_symbol_desc">Adds an additional stock chart of another symbol to the chart display.</string>
   <string name="chart_overlay_symbol_title">Additional stock symbol</string>
-  <string name="data_provider_details">Data provider details for %1$s</string>
+  <string name="data_provider_details">Data for %1$s</string>
+  <string name="data_provider_details_sorted">[Sorted]</string>
+  <string name="data_provider_details_unsorted">[Unsorted]</string>
 </resources>

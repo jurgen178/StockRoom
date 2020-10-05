@@ -291,5 +291,7 @@ limitations under the License. -->
   <string name="use_chart_overlay_symbol">Vergleichskurve in der Chart-Darstellung</string>
   <string name="use_chart_overlay_symbol_desc">Stellt einen zusätzlichen Verlauf eines anderen Aktienwerts zum Vergleich in der Chart-Darstellung dar.</string>
   <string name="chart_overlay_symbol_title">Zu verwendendes Aktienkürzel</string>
-  <string name="data_provider_details">Datendetails für %1$s</string>
+  <string name="data_provider_details">Datensatz für %1$s</string>
+  <string name="data_provider_details_sorted">[Sortiert]</string>
+  <string name="data_provider_details_unsorted">[Unsortiert]</string>
 </resources>

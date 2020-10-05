@@ -17,11 +17,15 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
+import android.text.style.AbsoluteSizeSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
+import androidx.core.text.toSpannable
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -54,45 +58,84 @@ class OnlineDataAdapter internal constructor(
 
   private var symbol = ""
 
+  private var detailViewClickCounter = 0;
+
   class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val itemViewOnlineDataDesc: TextView = itemView.findViewById(R.id.textViewOnlineDataDesc)
     val itemViewOnlineData: TextView = itemView.findViewById(R.id.textViewOnlineData)
   }
 
-  private fun processJsonObject(jsonObj: JsonObject) {
-    for (keyStr in jsonObj.keySet()) {
-      val keyvalue = jsonObj[keyStr]
+  private fun processJsonObject(jsonObj: JsonObject, sorted: Boolean) {
 
-//      "quoteResponse": {
-//        "result": [{
-//        "language": "en-US",
-//        "region": "US",
-//        "quoteType": "EQUITY",
+    // Sort json elements.
+    if(sorted) {
+      val sortedMap = sortedMapOf<String, JsonElement?>()
+      val jsonObjCopy = jsonObj.deepCopy()
 
-      val value = keyvalue.toString()
-      if (value.matches("\\d{10}".toRegex())
+      // Remove all items.
+      jsonObjCopy.entrySet()
+          .forEach { element ->
+            val key = element.key
+            val value = element.value
+            sortedMap[key] = value
+            jsonObj.remove(key)
+          }
+
+      // Add back the items sorted.
+      sortedMap.forEach { (key, jsonElement) ->
+        jsonObj.add(key, jsonElement)
+      }
+    }
+
+    // Enumerate all json objects.
+    jsonObj.entrySet().forEach { element ->
+
+      val key = element.key
+      val value = element.value
+      val valueString = value.toString()
+
+      // Add date-time to time values.
+      if (valueString.matches("\\d{10}".toRegex())
       ) {
-        val datetime = value.toLong()
+        val datetime = valueString.toLong()
         val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
         val dateTimeStr =
-          "${datetime} (${
+          "$valueString <i>(${
             localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
           } ${
             localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-          })"
+          })</i>"
 
-        jsonObj.remove(keyStr)
-        jsonObj.add(keyStr, JsonPrimitive(dateTimeStr))
+        element.setValue(JsonPrimitive(dateTimeStr))
       }
 
-      if (keyvalue is JsonArray) {
-        for (jsonElement in keyvalue.iterator()) {
-          processJsonObject(jsonElement.asJsonObject)
+      // Price/Change in bold
+      if(key.endsWith("MarketPrice")
+          || key.endsWith("MarketChange")
+          || key.endsWith("MarketChangePercent")
+          )
+      {
+        element.setValue(JsonPrimitive("<b>$valueString</b>"))
+      }
+
+      // MarketCap
+      if(key == "marketCap")
+      {
+        val formattedMarketCap = formatInt(valueString.toLong())
+        val marketCap = "$valueString <i>($formattedMarketCap)</i>"
+        element.setValue(JsonPrimitive(marketCap))
+      }
+
+      // Recursion for json array.
+      if (value is JsonArray) {
+        for (jsonElement in value.iterator()) {
+          processJsonObject(jsonElement.asJsonObject, sorted)
         }
       }
 
-      if (keyvalue is JsonObject) {
-        processJsonObject(keyvalue)
+      // Recursion for json object.
+      if (value is JsonObject) {
+        processJsonObject(value, sorted)
       }
     }
   }
@@ -103,42 +146,71 @@ class OnlineDataAdapter internal constructor(
   ): OnlineDataViewHolder {
     val itemView = inflater.inflate(R.layout.onlinedataview_item, parent, false)
 
-    itemView.setOnLongClickListener {
+    itemView.setOnClickListener {
 
-      // Get Raw data from the server.
-      val stockRawMarketDataRepository: StockRawMarketDataRepository =
-        StockRawMarketDataRepository { StockRawMarketDataApiFactory.yahooApi }
+      detailViewClickCounter++
 
-      var onlineRawJsonData: String
-      runBlocking {
-        withContext(Dispatchers.IO) {
-          onlineRawJsonData = stockRawMarketDataRepository.getStockRawData(symbol)
-        }
-      }
+      if(detailViewClickCounter > 4) {
+        detailViewClickCounter = 0
 
-      // Convert the data.
-      var onlineJsonData = onlineRawJsonData
-      try {
-        val parser = JsonParser()
-        val jsonObj = parser.parse(onlineRawJsonData).asJsonObject.deepCopy()
+        // Get Raw data from the server.
+        val stockRawMarketDataRepository: StockRawMarketDataRepository =
+          StockRawMarketDataRepository { StockRawMarketDataApiFactory.yahooApi }
 
-        processJsonObject(jsonObj)
-
-        val gson: Gson = GsonBuilder()
-            .setPrettyPrinting()
-            .create()
-        onlineJsonData = gson.toJson(jsonObj)
-      } catch (e: Exception) {
-        Log.d("Convert json data failed", e.toString())
-      }
-
-      // Display the data.
-      android.app.AlertDialog.Builder(context)
-          .setTitle(context.getString(R.string.data_provider_details, symbol))
-          .setMessage(onlineJsonData)
-          .setPositiveButton(R.string.ok) { _, _ ->
+        var onlineRawJsonData: String
+        runBlocking {
+          withContext(Dispatchers.IO) {
+            onlineRawJsonData = stockRawMarketDataRepository.getStockRawData(symbol)
           }
-          .show()
+        }
+
+        // Convert the data.
+        var onlineJsonData = onlineRawJsonData
+        try {
+          onlineJsonData = ""
+
+          val gson: Gson = GsonBuilder()
+              .setPrettyPrinting()
+              .create()
+
+          val parser = JsonParser()
+          val jsonObj = parser.parse(onlineRawJsonData).asJsonObject
+
+          // Add sorted json data.
+          val jsonObjSorted = jsonObj.deepCopy()
+          processJsonObject(jsonObjSorted, true)
+          onlineJsonData += "<b>${context.getString(R.string.data_provider_details_sorted)}</b>\n"
+          onlineJsonData += gson.toJson(jsonObjSorted)
+
+          // Add unsorted json data.
+          val jsonObjUnsorted = jsonObj.deepCopy()
+          processJsonObject(jsonObjUnsorted, false)
+          onlineJsonData += "\n\n<b>${context.getString(R.string.data_provider_details_unsorted)}</b>\n"
+          onlineJsonData += gson.toJson(jsonObjUnsorted)
+        } catch (e: Exception) {
+          Log.d("Convert json data failed", e.toString())
+        }
+
+        // Unescape control chars.
+        onlineJsonData = onlineJsonData.replace(" ", "&nbsp;")
+            .replace("\\u003c", "<")
+            .replace("\\u003e", ">")
+            .replace("\n", "<br>")
+
+        // Convert to html spannable string.
+        val htmlText = HtmlCompat.fromHtml(onlineJsonData, HtmlCompat.FROM_HTML_MODE_LEGACY).toSpannable()
+
+        // Set small font.
+        htmlText.setSpan(AbsoluteSizeSpan(12, true), 0, htmlText.length, SPAN_INCLUSIVE_INCLUSIVE)
+
+        // Display the data.
+        android.app.AlertDialog.Builder(context)
+            .setTitle(context.getString(R.string.data_provider_details, symbol))
+            .setMessage(htmlText)
+            .setPositiveButton(R.string.ok) { _, _ ->
+            }
+            .show()
+      }
 
       // Return true to indicate the click was handled
       true
