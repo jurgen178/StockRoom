@@ -103,9 +103,23 @@ class ListActivity : AppCompatActivity() {
         stockTableRows.append("<td>${getColorStr(stockItem.groupColor)}</td>")
         stockTableRows.append("<td>${stockItem.notes}</td>")
         stockTableRows.append("<td>${stockItem.dividendNotes}</td>")
-        stockTableRows.append("<td>${DecimalFormat("0.00##").format(stockItem.alertAbove)}</td>")
         stockTableRows.append(
-            "<td>${DecimalFormat("0.00##").format(stockItem.alertBelow)}</td>"
+            "<td>${
+              if (stockItem.alertAbove != 0.0) {
+                DecimalFormat("0.00##").format(stockItem.alertAbove)
+              } else {
+                ""
+              }
+            }</td>"
+        )
+        stockTableRows.append(
+            "<td>${
+              if (stockItem.alertBelow != 0.0) {
+                DecimalFormat("0.00##").format(stockItem.alertBelow)
+              } else {
+                ""
+              }
+            }</td>"
         )
         stockTableRows.append("</tr>")
       }
@@ -204,7 +218,7 @@ class ListActivity : AppCompatActivity() {
         }"
       dateTimeStr
     } else {
-      "0"
+      ""
     }
   }
 
@@ -219,13 +233,13 @@ class ListActivity : AppCompatActivity() {
         }"
       dateTimeStr
     } else {
-      "0"
+      ""
     }
   }
 
   private fun getColorStr(color: Int): String =
     if (color == 0) {
-      "$color"
+      ""
     } else {
       val hexStr = "0x${color.toHexString()}"
       val colorCode = hexStr.replace("0xff", "#")

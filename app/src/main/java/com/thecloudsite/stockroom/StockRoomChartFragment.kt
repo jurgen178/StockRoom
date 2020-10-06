@@ -16,7 +16,6 @@
 
 package com.thecloudsite.stockroom
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper

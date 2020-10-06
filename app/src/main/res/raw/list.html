@@ -35,30 +35,49 @@
         }
 
         th {
-            background-color: lightgray;
+            color:floralwhite;
+            background-color: darkred;
         }
 
-        .stock_table,
-        .group_table,
-        .asset_table,
-        .event_table,
+        .stock_table
+        {
+            background-color: lightskyblue;
+            color: black;
+        }
+        .group_table
+        {
+            background-color: lightcoral;
+            color: black;
+        }
+        .asset_table
+        {
+            background-color: lightgoldenrodyellow;
+            color: black;
+        }
+        .event_table
+        {
+            background-color: lightseagreen;
+            color: black;
+        }
         .dividend_table {
-            background-color: #F0F0FF;
+            background-color: orange;
             color: black;
         }
 
         .table_name {
-            background-color: #F0F0FF;
             font-size: x-large;
             padding-bottom: 10px;
             border: #F0F0FF;
+        }
+        td{
+            background-color: #F0F0FF;
         }
     </style>
 
     <div class="tables">
         <table class="stock_table border">
             <tr>
-                <th colspan="8" align="left" class="table_name">
+                <th colspan="8" align="left" class="stock_table table_name">
                     <!-- stock_table_name -->
                 </th>
             </tr>
@@ -73,13 +92,25 @@
                 <th>alertBelow</th>
             </tr>
             <!-- stock_table -->
+            <!-- 
+            <tr>
+                <td>symbol</td>
+                <td>portfolio</td>
+                <td>data</td>
+                <td>groupColor</td>
+                <td>notes</td>
+                <td>dividendNotes</td>
+                <td>alertAbove</td>
+                <td>alertBelow</td>
+            </tr>
+            -->
         </table>
 
         <br />
 
         <table class="group_table border">
             <tr>
-                <th colspan="2" align="left" class="table_name">
+                <th colspan="2" align="left" class="group_table table_name">
                     <!-- group_table_name -->
                 </th>
             </tr>
@@ -94,7 +125,7 @@
 
         <table class="asset_table border">
             <tr>
-                <th colspan="5" align="left" class="table_name">
+                <th colspan="5" align="left" class="asset_table table_name">
                     <!-- asset_table_name -->
                 </th>
             </tr>
@@ -112,7 +143,7 @@
 
         <table class="event_table border">
             <tr>
-                <th colspan="6" align="left" class="table_name">
+                <th colspan="6" align="left" class="event_table table_name">
                     <!-- event_table_name -->
                 </th>
             </tr>
@@ -131,7 +162,7 @@
 
         <table class="dividend_table border">
             <tr>
-                <th colspan="7" align="left" class="table_name">
+                <th colspan="7" align="left" class="dividend_table table_name">
                     <!-- dividend_table_name -->
                 </th>
             </tr>

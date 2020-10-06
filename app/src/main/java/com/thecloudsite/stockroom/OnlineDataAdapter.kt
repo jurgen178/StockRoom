@@ -59,7 +59,7 @@ class OnlineDataAdapter internal constructor(
 
   private var symbol = ""
 
-  private var detailViewClickCounter = 0;
+  private var detailViewClickCounter = 0
 
   class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val itemViewOnlineDataDesc: TextView = itemView.findViewById(R.id.textViewOnlineDataDesc)
@@ -184,10 +184,8 @@ class OnlineDataAdapter internal constructor(
           }
 
           // Convert the data.
-          var onlineJsonData = onlineRawJsonData
+          var onlineJsonData = ""
           try {
-            onlineJsonData = ""
-
             val gson: Gson = GsonBuilder()
                 .setPrettyPrinting()
                 .create()

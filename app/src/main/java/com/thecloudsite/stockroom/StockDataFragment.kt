@@ -17,7 +17,6 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -119,7 +118,6 @@ import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
@@ -479,7 +477,7 @@ class StockDataFragment : Fragment() {
                   requireContext(), getString(
                   R.string.event_updated, title, datetime.format(
                   DateTimeFormatter.ofLocalizedDateTime(
-                      FormatStyle.MEDIUM
+                      MEDIUM
                   )
               )
               ), Toast.LENGTH_LONG
@@ -502,7 +500,7 @@ class StockDataFragment : Fragment() {
     val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
     val datetime = localDateTime.format(
         DateTimeFormatter.ofLocalizedDateTime(
-            FormatStyle.MEDIUM
+            MEDIUM
         )
     )
     android.app.AlertDialog.Builder(requireContext())
@@ -1338,7 +1336,7 @@ class StockDataFragment : Fragment() {
                   requireContext(), getString(
                   R.string.event_added, title, datetime.format(
                   DateTimeFormatter.ofLocalizedDateTime(
-                      FormatStyle.MEDIUM
+                      MEDIUM
                   )
               )
               ), Toast.LENGTH_LONG
