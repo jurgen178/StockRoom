@@ -34,6 +34,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
+import com.thecloudsite.stockroom.utils.isOnline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -87,6 +88,8 @@ class OnlineDataAdapter internal constructor(
       }
     }
 
+    val gmtOffSetMilliseconds = jsonObj["gmtOffSetMilliseconds"]?.asLong ?: 0L
+
     // Enumerate all json objects.
     jsonObj.entrySet().forEach { element ->
 
@@ -98,27 +101,28 @@ class OnlineDataAdapter internal constructor(
       if (key.contains("time", true) && valueString.matches("^\\d+$".toRegex())
       ) {
         val datetime = valueString.toLong()
-        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+        val gmtOffSet = gmtOffSetMilliseconds / 1000
+        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime + gmtOffSet, 0, ZoneOffset.UTC)
         val dateTimeStr =
-          "$valueString <i>(${
+          "#$valueString <i>(${
             localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
           } ${
             localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-          })</i>"
+          })</i>#"
 
         element.setValue(JsonPrimitive(dateTimeStr))
       }
 
       if(key == "firstTradeDateMilliseconds" && valueString.matches("^\\d+$".toRegex()))
       {
-        val datetime = valueString.toLong() / 1000
-        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+        val datetimeMilliseconds = valueString.toLong()
+        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond((datetimeMilliseconds + gmtOffSetMilliseconds) / 1000, 0, ZoneOffset.UTC)
         val dateTimeStr =
-          "$valueString <i>(${
+          "#$valueString <i>(${
             localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
           } ${
             localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-          })</i>"
+          })</i>#"
 
         element.setValue(JsonPrimitive(dateTimeStr))
       }
@@ -129,14 +133,14 @@ class OnlineDataAdapter internal constructor(
           || key.endsWith("MarketChangePercent")
           )
       {
-        element.setValue(JsonPrimitive("<b>$valueString</b>"))
+        element.setValue(JsonPrimitive("#<b>$valueString</b>#"))
       }
 
       // Add MarketCap size abbreviation.
       if(key == "marketCap")
       {
         val formattedMarketCap = formatInt(valueString.toLong())
-        val marketCap = "$valueString <i>($formattedMarketCap)</i>"
+        val marketCap = "#$valueString <i>($formattedMarketCap)</i>#"
         element.setValue(JsonPrimitive(marketCap))
       }
 
@@ -162,73 +166,82 @@ class OnlineDataAdapter internal constructor(
 
     itemView.setOnClickListener {
 
-      detailViewClickCounter++
+      if(isOnline(context)) {
+        detailViewClickCounter++
 
-      if(detailViewClickCounter > 4) {
-        detailViewClickCounter = 0
+        if (detailViewClickCounter > 4) {
+          detailViewClickCounter = 0
 
-        // Get Raw data from the server.
-        val stockRawMarketDataRepository: StockRawMarketDataRepository =
-          StockRawMarketDataRepository { StockRawMarketDataApiFactory.yahooApi }
+          // Get Raw data from the server.
+          val stockRawMarketDataRepository: StockRawMarketDataRepository =
+            StockRawMarketDataRepository { StockRawMarketDataApiFactory.yahooApi }
 
-        var onlineRawJsonData: String
-        runBlocking {
-          withContext(Dispatchers.IO) {
-            onlineRawJsonData = stockRawMarketDataRepository.getStockRawData(symbol)
-          }
-        }
-
-        // Convert the data.
-        var onlineJsonData = onlineRawJsonData
-        try {
-          onlineJsonData = ""
-
-          val gson: Gson = GsonBuilder()
-              .setPrettyPrinting()
-              .create()
-
-          val parser = JsonParser()
-          val jsonObj = parser.parse(onlineRawJsonData).asJsonObject
-
-          // Add sorted json data.
-          val jsonObjSorted = jsonObj.deepCopy()
-          processJsonObject(jsonObjSorted, true)
-          onlineJsonData += "<b>${context.getString(R.string.data_provider_details_sorted)}</b>\n"
-          onlineJsonData += gson.toJson(jsonObjSorted)
-
-          // Add unsorted json data.
-          val jsonObjUnsorted = jsonObj.deepCopy()
-          processJsonObject(jsonObjUnsorted, false)
-          onlineJsonData += "\n\n<b>${context.getString(R.string.data_provider_details_unsorted)}</b>\n"
-          onlineJsonData += gson.toJson(jsonObjUnsorted)
-        } catch (e: Exception) {
-          Log.d("Convert json data failed", e.toString())
-          onlineJsonData = onlineRawJsonData
-        }
-
-        // Unescape.
-        onlineJsonData = onlineJsonData.replace(" ", "&nbsp;")
-            .replace("\\u003c", "<")
-            .replace("\\u003e", ">")
-            .replace("\n", "<br>")
-
-        // Convert to html spannable string.
-        val htmlText = HtmlCompat.fromHtml(onlineJsonData, HtmlCompat.FROM_HTML_MODE_LEGACY).toSpannable()
-
-        // Set small font.
-        htmlText.setSpan(AbsoluteSizeSpan(12, true), 0, htmlText.length, SPAN_INCLUSIVE_INCLUSIVE)
-
-        // Display the data.
-        android.app.AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.data_provider_details, symbol))
-            .setMessage(htmlText)
-            .setPositiveButton(R.string.ok) { _, _ ->
+          val onlineRawJsonData: String
+          runBlocking {
+            withContext(Dispatchers.IO) {
+              onlineRawJsonData = stockRawMarketDataRepository.getStockRawData(symbol)
             }
-            .show()
-      }
+          }
 
-      // Return true to indicate the click was handled
-      true
+          // Convert the data.
+          var onlineJsonData = onlineRawJsonData
+          try {
+            onlineJsonData = ""
+
+            val gson: Gson = GsonBuilder()
+                .setPrettyPrinting()
+                .create()
+
+            val parser = JsonParser()
+            val jsonObj = parser.parse(onlineRawJsonData).asJsonObject
+
+            // Add sorted json data.
+            val jsonObjSorted = jsonObj.deepCopy()
+            processJsonObject(jsonObjSorted, true)
+            onlineJsonData += "<b>${context.getString(R.string.data_provider_details_sorted)}</b>\n"
+            // Android supports only color and face attribute, no style attr.
+            // No space within the attr because they get replaced with &nbsp; and invalidate the attr.
+            onlineJsonData += "<font color='grey'face='monospace'>${gson.toJson(jsonObjSorted)}</font>"
+
+            // Add unsorted json data.
+            val jsonObjUnsorted = jsonObj.deepCopy()
+            processJsonObject(jsonObjUnsorted, false)
+            onlineJsonData += "\n\n<b>${
+              context.getString(
+                  R.string.data_provider_details_unsorted
+              )
+            }</b>\n"
+            onlineJsonData += "<font color='grey'face='monospace'>${gson.toJson(jsonObjUnsorted)}</font>"
+          } catch (e: Exception) {
+            Log.d("Convert json data failed", e.toString())
+            onlineJsonData = onlineRawJsonData
+          }
+
+          // Un-escape.
+          onlineJsonData = onlineJsonData.replace(" ", "&nbsp;")
+              .replace("\\u003c", "<")
+              .replace("\\u003e", ">")
+              .replace("\n", "<br>")
+              .replace("\"#", "")
+              .replace("#\"", "")
+              .replace("<font&nbsp;", "<font ")
+
+          // Convert to html spannable string.
+          val htmlText = HtmlCompat.fromHtml(onlineJsonData, HtmlCompat.FROM_HTML_MODE_LEGACY)
+              .toSpannable()
+
+          // Set small font.
+          htmlText.setSpan(AbsoluteSizeSpan(10, true), 0, htmlText.length, SPAN_INCLUSIVE_INCLUSIVE)
+
+          // Display the data.
+          android.app.AlertDialog.Builder(context)
+              .setTitle(context.getString(R.string.data_provider_details, symbol))
+              .setMessage(htmlText)
+              .setPositiveButton(R.string.ok) { _, _ ->
+              }
+              .show()
+        }
+      }
     }
 
     return OnlineDataViewHolder(itemView)
