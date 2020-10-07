@@ -403,7 +403,8 @@ interface StockRoomDao {
         type = dividend.type,
         cycle = dividend.cycle,
         paydate = dividend.paydate,
-        exdate = dividend.exdate
+        exdate = dividend.exdate,
+        note = dividend.note
     )
     addDividend(dividend)
   }
@@ -419,7 +420,8 @@ interface StockRoomDao {
         type = dividendOld.type,
         cycle = dividendOld.cycle,
         paydate = dividendOld.paydate,
-        exdate = dividendOld.exdate
+        exdate = dividendOld.exdate,
+        note = dividendOld.note
     )
     addDividend(dividendNew)
   }
@@ -432,7 +434,7 @@ interface StockRoomDao {
 //  fun deleteDividend(dividend: Dividend)
 
   @Query(
-      "DELETE FROM dividend_table WHERE symbol = :symbol AND amount = :amount AND type = :type AND cycle = :cycle AND paydate = :paydate AND exdate = :exdate"
+      "DELETE FROM dividend_table WHERE symbol = :symbol AND amount = :amount AND type = :type AND cycle = :cycle AND paydate = :paydate AND exdate = :exdate AND note = :note"
   )
   fun deleteDividend(
     symbol: String,
@@ -440,7 +442,8 @@ interface StockRoomDao {
     type: Int,
     cycle: Int,
     paydate: Long,
-    exdate: Long
+    exdate: Long,
+    note: String
   )
 
   @Query("DELETE FROM dividend_table WHERE symbol = :symbol")

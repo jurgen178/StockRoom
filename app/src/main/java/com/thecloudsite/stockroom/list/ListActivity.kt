@@ -23,6 +23,7 @@ import androidx.annotation.RawRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import androidx.room.ColumnInfo
 import com.thecloudsite.stockroom.MainActivity.Companion
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.raw
@@ -153,7 +154,11 @@ class ListActivity : AppCompatActivity() {
         assetTableRows.append("<td>${assetItem.symbol}</td>")
         assetTableRows.append("<td>${DecimalFormat("0.####").format(assetItem.shares)}</td>")
         assetTableRows.append("<td>${assetItem.price}</td>")
-        assetTableRows.append("<td>${getDateTimeStr(assetItem.date)}</td>")
+        assetTableRows.append("<td>${assetItem.note}</td>")
+        assetTableRows.append("<td>${getDateTimeStr(assetItem.buyDate)}</td>")
+        assetTableRows.append("<td>${getDateTimeStr(assetItem.sellDate)}</td>")
+        assetTableRows.append("<td>${assetItem.commissionRel}</td>")
+        assetTableRows.append("<td>${assetItem.commissionAbs}</td>")
         assetTableRows.append("</tr>")
       }
 
@@ -193,6 +198,7 @@ class ListActivity : AppCompatActivity() {
         dividendTableRows.append("<td>${dividendItem.cycle}</td>")
         dividendTableRows.append("<td>${getDateStr(dividendItem.paydate)}</td>")
         dividendTableRows.append("<td>${getDateStr(dividendItem.exdate)}</td>")
+        dividendTableRows.append("<td>${dividendItem.note}</td>")
         dividendTableRows.append("</tr>")
       }
 

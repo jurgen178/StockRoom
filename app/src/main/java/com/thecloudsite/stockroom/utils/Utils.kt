@@ -100,13 +100,13 @@ fun getAssetChange(
   context: Context
 ): SpannableStringBuilder {
   val shares = assets.sumByDouble {
-    it.shares
+    if (it.sellDate == 0L) it.shares else 0.0
   }
 
   val asset: Double =
     if (shares > 0.0) {
       assets.sumByDouble {
-        it.shares * it.price
+        if (it.sellDate == 0L) it.shares * it.price else 0.0
       }
     } else {
       0.0
@@ -117,7 +117,7 @@ fun getAssetChange(
 
     if (shares > 0.0) {
       val capital = assets.sumByDouble {
-        it.shares * marketPrice
+        if (it.sellDate == 0L) it.shares * marketPrice else 0.0
       }
 
       val change = capital - asset
