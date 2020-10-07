@@ -179,7 +179,8 @@ class DividendFragment : Fragment() {
                         type = Received.value,
                         cycle = cycle,
                         paydate = seconds,
-                        exdate = 0L
+                        exdate = 0L,
+                        note = ""
                     )
                 )
 
@@ -328,7 +329,8 @@ class DividendFragment : Fragment() {
                     type = Announced.value,
                     cycle = cycle,
                     paydate = seconds,
-                    exdate = secondsEx
+                    exdate = secondsEx,
+                    note = ""
                 )
             )
 
@@ -550,7 +552,8 @@ class DividendFragment : Fragment() {
                     type = Received.value,
                     cycle = cycle,
                     paydate = seconds,
-                    exdate = 0L
+                    exdate = 0L,
+                    note  = ""
                 )
                 stockRoomViewModel.updateDividend(dividend)
 
@@ -640,7 +643,8 @@ class DividendFragment : Fragment() {
                 type = Announced.value,
                 cycle = cycle,
                 paydate = seconds,
-                exdate = secondsEx
+                exdate = secondsEx,
+                note = ""
             )
             stockRoomViewModel.updateDividend(dividend)
 
@@ -783,7 +787,7 @@ class DividendFragment : Fragment() {
 
     if (data.assets != null) {
       val shares = data.assets?.assets?.sumByDouble {
-        it.shares
+        if (it.sellDate == 0L) it.shares else 0.0
       } ?: 0.0
 
       if (shares > 0.0) {

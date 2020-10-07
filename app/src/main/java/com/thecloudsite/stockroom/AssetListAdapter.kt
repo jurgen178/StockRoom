@@ -157,15 +157,15 @@ class AssetListAdapter internal constructor(
 
     // Sort assets in the list by date.
     assetList.addAll(assets.sortedBy { asset ->
-      asset.date
+      asset.buyDate
     })
 
     val sharesTotal = assetList.sumByDouble {
-      it.shares
+      if (it.sellDate == 0L) it.shares else 0.0
     }
 
     val assetTotal = assetList.sumByDouble {
-      it.shares * it.price
+      if (it.sellDate == 0L) it.shares * it.price else 0.0
     }
 
     // Summary

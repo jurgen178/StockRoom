@@ -59,9 +59,22 @@ data class Asset(
   val symbol: String,
   var shares: Double,
   var price: Double,
-  var date: Long = 0L,
-  var commission: Double = 0.0,
-  var type: Int = 0
+  var type: Int = 0,
+  var note: String = "",
+  @ColumnInfo(name = "buy_date") var buyDate: Long = 0L,
+  @ColumnInfo(name = "sell_date") var sellDate: Long = 0L,
+  @ColumnInfo(name = "commission_rel") var commissionRel: Double = 0.0,
+  @ColumnInfo(name = "commission_abs") var commissionAbs: Double = 0.0
+)
+
+data class Assets(
+  @Embedded
+  val stockDBdata: StockDBdata,
+  @Relation(
+      parentColumn = "symbol",
+      entityColumn = "symbol"
+  )
+  val assets: List<Asset>
 )
 
 @Entity(
@@ -76,16 +89,6 @@ data class Event(
   val datetime: Long
 )
 
-data class Assets(
-  @Embedded
-  val stockDBdata: StockDBdata,
-  @Relation(
-      parentColumn = "symbol",
-      entityColumn = "symbol"
-  )
-  val assets: List<Asset>
-)
-
 data class Events(
   @Embedded
   val stockDBdata: StockDBdata,
@@ -94,16 +97,6 @@ data class Events(
       entityColumn = "symbol"
   )
   val events: List<Event>
-)
-
-data class Dividends(
-  @Embedded
-  val stockDBdata: StockDBdata,
-  @Relation(
-      parentColumn = "symbol",
-      entityColumn = "symbol"
-  )
-  val dividends: List<Dividend>
 )
 
 @Entity(
@@ -123,5 +116,16 @@ data class Dividend(
   val type: Int,
   val cycle: Int,
   val paydate: Long,
-  val exdate: Long
+  val exdate: Long,
+  val note: String = ""
+)
+
+data class Dividends(
+  @Embedded
+  val stockDBdata: StockDBdata,
+  @Relation(
+      parentColumn = "symbol",
+      entityColumn = "symbol"
+  )
+  val dividends: List<Dividend>
 )

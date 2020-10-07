@@ -182,7 +182,7 @@ class StockRoomChartAdapter internal constructor(
       }
 
       val shares = current.assets.sumByDouble {
-        it.shares
+        if (it.sellDate == 0L) it.shares else 0.0
       }
 
       var asset: Double = 0.0
@@ -190,12 +190,12 @@ class StockRoomChartAdapter internal constructor(
 
       if (shares > 0.0) {
         asset = current.assets.sumByDouble {
-          it.shares * it.price
+          if (it.sellDate == 0L) it.shares * it.price else 0.0
         }
 
         if (current.onlineMarketData.marketPrice > 0.0) {
           capital = current.assets.sumByDouble {
-            it.shares * current.onlineMarketData.marketPrice
+            if (it.sellDate == 0L) it.shares * current.onlineMarketData.marketPrice else 0.0
           }
         }
       }

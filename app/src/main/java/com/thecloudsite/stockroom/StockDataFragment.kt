@@ -258,10 +258,10 @@ class StockDataFragment : Fragment() {
     val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
     addPriceView.text = DecimalFormat("0.00##").format(asset.price)
 
-    val localDateTime = if (asset.date == 0L) {
+    val localDateTime = if (asset.buyDate == 0L) {
       LocalDateTime.now()
     } else {
-      LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+      LocalDateTime.ofEpochSecond(asset.buyDate, 0, ZoneOffset.UTC)
     }
     val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
     // month is starting from zero
@@ -318,11 +318,11 @@ class StockDataFragment : Fragment() {
                   datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
                   datePickerAssetDateView.dayOfMonth, 0, 0
               )
-              val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
+              val buyDate = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
 
               val assetNew =
-                Asset(symbol = symbol, shares = shares, price = price, date = date)
-              if (asset.shares != assetNew.shares || asset.price != assetNew.price || asset.date != assetNew.date) {
+                Asset(symbol = symbol, shares = shares, price = price, buyDate = buyDate)
+              if (asset.shares != assetNew.shares || asset.price != assetNew.price || asset.buyDate != assetNew.buyDate) {
                 // Each asset has an id. Delete the asset with that id and then add assetNew.
                 stockRoomViewModel.updateAsset2(asset, assetNew)
                 val count: Int = when {
@@ -1019,7 +1019,9 @@ class StockDataFragment : Fragment() {
 
     splitAssetsButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val totalShares = assets?.assets?.sumByDouble { it.shares }
+      val totalShares = assets?.assets?.sumByDouble {
+        if (it.sellDate == 0L) it.shares else 0.0
+      }
           ?: 0.0
 
       if (totalShares == 0.0) {
@@ -1063,10 +1065,12 @@ class StockDataFragment : Fragment() {
                   var minShares = Double.MAX_VALUE
                   var minPrice = Double.MAX_VALUE
                   assets.assets.forEach { asset ->
-                    asset.shares *= splitRatio
-                    asset.price /= splitRatio
-                    minShares = min(asset.shares, minShares)
-                    minPrice = min(asset.price, minPrice)
+                    if (asset.sellDate == 0L) {
+                      asset.shares *= splitRatio
+                      asset.price /= splitRatio
+                      minShares = min(asset.shares, minShares)
+                      minPrice = min(asset.price, minPrice)
+                    }
                   }
 
                   if (minShares >= 0.1 && minPrice >= 0.01) {
@@ -1165,13 +1169,13 @@ class StockDataFragment : Fragment() {
                     datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
                     datePickerAssetDateView.dayOfMonth, 0, 0
                 )
-                val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+                val buyDate = localDateTime.toEpochSecond(ZoneOffset.UTC)
 
                 //val date = LocalDateTime.now()
                 //    .toEpochSecond(ZoneOffset.UTC)
 
                 stockRoomViewModel.addAsset(
-                    Asset(symbol = symbol, shares = shares, price = price, date = date)
+                    Asset(symbol = symbol, shares = shares, price = price, buyDate = buyDate, sellDate = 0L)
                 )
                 val count: Int = when {
                   shares == 1.0 -> {
@@ -1212,7 +1216,9 @@ class StockDataFragment : Fragment() {
 
     removeAssetButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val totalShares = assets?.assets?.sumByDouble { it.shares }
+      val totalShares = assets?.assets?.sumByDouble {
+        if (it.sellDate == 0L) it.shares else 0.0
+      }
           ?: 0.0
 
       if (totalShares == 0.0) {
@@ -1250,7 +1256,7 @@ class StockDataFragment : Fragment() {
                 if (valid) {
                   // Avoid wrong data due to rounding errors.
                   val totalPaidPrice = assets?.assets?.sumByDouble {
-                    it.shares * it.price
+                    if (it.sellDate == 0L) it.shares * it.price else 0.0
                   } ?: 0.0
                   val averagePrice = totalPaidPrice / totalShares
 
@@ -1267,7 +1273,9 @@ class StockDataFragment : Fragment() {
                     val shareAdjustment: Double = newTotal / totalPaidPrice
 
                     assets?.assets?.forEach { asset ->
-                      asset.shares *= shareAdjustment
+                      if (asset.sellDate == 0L) {
+                        asset.shares *= shareAdjustment
+                      }
                     }
                     stockRoomViewModel.updateAssets(
                         symbol = symbol, assets = assets?.assets!!
@@ -1585,12 +1593,12 @@ class StockDataFragment : Fragment() {
     assets: List<Asset>
   ): String {
     val sharesTotal = assets.sumByDouble {
-      it.shares
+      if (it.sellDate == 0L) it.shares else 0.0
     }
 
     if (sharesTotal > 0.0) {
       val assetTotal = assets.sumByDouble {
-        it.shares * it.price
+        if (it.sellDate == 0L) it.shares * it.price else 0.0
       }
 
       return getString(

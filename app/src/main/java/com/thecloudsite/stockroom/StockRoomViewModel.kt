@@ -31,6 +31,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import androidx.room.ColumnInfo
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
@@ -73,24 +74,28 @@ import kotlin.coroutines.CoroutineContext
 data class AssetJson(
   var shares: Double,
   val price: Double,
-  val date: Long
-    // val commission: Double,
-    // val type: Int
+  val type: Int?,
+  var note: String?,
+  var buyDate: Long?,
+  var sellDate: Long?,
+  var commissionRel: Double?,
+  var commissionAbs: Double?
 )
 
 data class EventJson(
-  val type: Int,
   val title: String,
   val note: String,
-  val datetime: Long
+  val datetime: Long,
+  val type: Int?
 )
 
 data class DividendJson(
   var amount: Double,
-  val type: Int,
   val cycle: Int,
   val paydate: Long,
-  val exdate: Long
+  val exdate: Long,
+  val type: Int?,
+  val note: String?
 )
 
 data class StockItemJson
@@ -870,18 +875,26 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         SortMode.ByAssets -> {
           stockItemSet.stockItems.sortedByDescending { item ->
             if (item.onlineMarketData.marketPrice > 0.0) {
-              item.assets.sumByDouble { it.shares * (item.onlineMarketData.marketPrice) }
+              item.assets.sumByDouble {
+                if (it.sellDate == 0L) it.shares * item.onlineMarketData.marketPrice else 0.0
+              }
             } else {
-              item.assets.sumByDouble { it.shares * it.price }
+              item.assets.sumByDouble {
+                if (it.sellDate == 0L) it.shares * it.price else 0.0
+              }
             }
           }
         }
         SortMode.ByProfit -> {
           stockItemSet.stockItems.sortedByDescending { item ->
             if (item.onlineMarketData.marketPrice > 0.0) {
-              item.assets.sumByDouble { it.shares * (item.onlineMarketData.marketPrice - it.price) }
+              item.assets.sumByDouble {
+                if (it.sellDate == 0L) it.shares * (item.onlineMarketData.marketPrice - it.price) else 0.0
+              }
             } else {
-              item.assets.sumByDouble { it.shares * it.price }
+              item.assets.sumByDouble {
+                if (it.sellDate == 0L) it.shares * it.price else 0.0
+              }
             }
           }
         }
@@ -1043,22 +1056,43 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 assets.add(
                     Asset(
                         symbol = symbol,
-                        shares = shares,
-                        price = price,
-                        date = if (assetsObj.has("date")) {
-                          assetsObj.getLong("date")
-                        } else {
-                          0L
-                        },
-                        commission = if (assetsObj.has("commission")) {
-                          assetsObj.getDouble("commission")
-                        } else {
-                          0.0
-                        },
                         type = if (assetsObj.has("type")) {
                           assetsObj.getInt("type")
                         } else {
                           0
+                        },
+                        shares = shares,
+                        price = price,
+                        note = if (assetsObj.has("note")) {
+                          assetsObj.getString("note")
+                        } else {
+                          ""
+                        },
+                        buyDate = when {
+                          assetsObj.has("date") -> {
+                            assetsObj.getLong("date")
+                          }
+                          assetsObj.has("buyDate") -> {
+                            assetsObj.getLong("buyDate")
+                          }
+                          else -> {
+                            0L
+                          }
+                        },
+                        sellDate = if (assetsObj.has("sellDate")) {
+                          assetsObj.getLong("sellDate")
+                        } else {
+                          0L
+                        },
+                        commissionRel = if (assetsObj.has("commissionRel")) {
+                          assetsObj.getDouble("commissionRel")
+                        } else {
+                          0.0
+                        },
+                        commissionAbs = if (assetsObj.has("commissionAbs")) {
+                          assetsObj.getDouble("commissionAbs")
+                        } else {
+                          0.0
                         }
                     )
                 )
@@ -1176,7 +1210,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                       dividendsObj.getLong("exdate")
                     } else {
                       0L
-                    }
+                    },
+                    note = if (dividendsObj.has("note")) {
+                      dividendsObj.getString("note")
+                    } else {
+                      ""
+                    },
                 )
 
                 updateDividend(dividend)
@@ -1598,9 +1637,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           AssetJson(
               shares = validateDouble(asset.shares),
               price = validateDouble(asset.price),
-              date = asset.date
-              //commission = asset.commission,
-              //type = asset.type
+              type = if (asset.type != 0) asset.type else null,
+              note = if (asset.note.isNotEmpty()) asset.note else null,
+              buyDate = if (asset.buyDate != 0L) asset.buyDate else null,
+              sellDate = if (asset.sellDate != 0L) asset.sellDate else null,
+              commissionRel = if (asset.commissionRel != 0.0) asset.commissionRel else null,
+              commissionAbs = if (asset.commissionAbs != 0.0) asset.commissionAbs else null,
           )
         }
       }
@@ -1610,8 +1652,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       } else {
         stockItem.events.map { event ->
           EventJson(
-              type = event.type, title = event.title, note = event.note,
-              datetime = event.datetime
+              title = event.title,
+              note = event.note,
+              datetime = event.datetime,
+              type = if (event.type != 0) event.type else null
           )
         }
       }
@@ -1624,8 +1668,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               amount = validateDouble(dividend.amount),
               exdate = dividend.exdate,
               paydate = dividend.paydate,
-              type = dividend.type,
-              cycle = dividend.cycle
+              cycle = dividend.cycle,
+              type = if(dividend.type != 0) dividend.type else null,
+              note = if (dividend.note.isNotEmpty()) dividend.note else null
           )
         }
       }
@@ -1940,12 +1985,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     symbol: String,
     shares: Double,
     price: Double,
-    date: Long
+    buyDate: Long,
+    sellDate: Long
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.addAsset(
           Asset(
-              symbol = symbol.toUpperCase(Locale.ROOT), shares = shares, price = price, date = date
+              symbol = symbol.toUpperCase(Locale.ROOT),
+              shares = shares,
+              price = price,
+              buyDate = buyDate,
+              sellDate = sellDate
           )
       )
     }
