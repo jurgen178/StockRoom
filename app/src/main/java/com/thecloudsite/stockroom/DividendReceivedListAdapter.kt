@@ -185,7 +185,7 @@ class DividendReceivedListAdapter internal constructor(
     if (data != null) {
       marketValue = if (data!!.assets != null) {
         val totalShares = data!!.assets?.assets?.sumByDouble {
-          if (it.sellDate == 0L) it.shares else 0.0
+          it.shares
         } ?: 0.0
 
         if (totalShares > 0.0) {

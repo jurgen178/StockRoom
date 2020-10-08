@@ -219,7 +219,7 @@ class SummaryGroupFragment : Fragment() {
     var totalAssets = 0.0
     stockItems.forEach { stockItem ->
       val shares: Double = stockItem.assets.sumByDouble { asset ->
-        if (asset.sellDate == 0L) asset.shares else 0.0
+        asset.shares
       }
       val assets = shares * stockItem.onlineMarketData.marketPrice
       totalAssets += assets

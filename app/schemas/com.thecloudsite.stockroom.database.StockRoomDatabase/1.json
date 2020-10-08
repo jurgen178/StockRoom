@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4011d5c6fd2e06049624b6a87761c509",
+    "identityHash": "68c229bb441ec9bbd1807aecc435c4a8",
     "entities": [
       {
         "tableName": "stock_table",
@@ -94,7 +94,7 @@
       },
       {
         "tableName": "asset_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `shares` REAL NOT NULL, `price` REAL NOT NULL, `date` INTEGER NOT NULL, `commission` REAL NOT NULL, `type` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `shares` REAL NOT NULL, `price` REAL NOT NULL, `date` INTEGER NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL, `commission` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -127,15 +127,21 @@
             "notNull": true
           },
           {
-            "fieldPath": "commission",
-            "columnName": "commission",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
             "fieldPath": "type",
             "columnName": "type",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "commission",
+            "columnName": "commission",
+            "affinity": "REAL",
             "notNull": true
           }
         ],
@@ -150,7 +156,7 @@
       },
       {
         "tableName": "event_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `type` INTEGER NOT NULL, `title` TEXT NOT NULL, `note` TEXT NOT NULL, `datetime` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `title` TEXT NOT NULL, `datetime` INTEGER NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -165,20 +171,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "type",
-            "columnName": "type",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "title",
             "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "note",
-            "columnName": "note",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -186,6 +180,18 @@
             "fieldPath": "datetime",
             "columnName": "datetime",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -200,7 +206,7 @@
       },
       {
         "tableName": "dividend_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `amount` REAL NOT NULL, `type` INTEGER NOT NULL, `cycle` INTEGER NOT NULL, `paydate` INTEGER NOT NULL, `exdate` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `amount` REAL NOT NULL, `cycle` INTEGER NOT NULL, `paydate` INTEGER NOT NULL, `type` INTEGER NOT NULL, `exdate` INTEGER NOT NULL, `note` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -221,12 +227,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "type",
-            "columnName": "type",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "cycle",
             "columnName": "cycle",
             "affinity": "INTEGER",
@@ -239,9 +239,21 @@
             "notNull": true
           },
           {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "exdate",
             "columnName": "exdate",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -258,7 +270,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4011d5c6fd2e06049624b6a87761c509')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '68c229bb441ec9bbd1807aecc435c4a8')"
     ]
   }
 }

@@ -158,23 +158,19 @@ class StockRoomTest {
         Asset(
             symbol = "s1",
             shares = 11.0,
-            price = 12.0,
-            date = 0L
+            price = 12.0
         ), Asset(
         symbol = "s2",
         shares = 21.0,
-        price = 22.0,
-        date = 0L
+        price = 22.0
     ), Asset(
         symbol = "s2",
         shares = 211.0,
-        price = 222.0,
-        date = 0L
+        price = 222.0
     ), Asset(
         symbol = "s3",
         shares = 21.0,
-        price = 22.0,
-        date = 0L
+        price = 22.0
     )
     )
 
@@ -328,8 +324,7 @@ class StockRoomTest {
             val asset = Asset(
                 symbol = symbol,
                 shares = shares,
-                price = price,
-                date = 0L
+                price = price
             )
 
             if (assetItems.containsKey(symbol)) {
@@ -437,24 +432,26 @@ var events: List<Event>
   data class AssetJson(
     var shares: Double,
     val price: Double,
-    val date: Long
-    // val commission: Double,
-    // val type: Int
+    val type: Int,
+    var note: String,
+    var date: Long,
+    var commissionDouble
   )
 
   data class EventJson(
-    val type: Int,
     val title: String,
-    val note: String,
-    val datetime: Long
+    val datetime: Long,
+    val note: String?,
+    val type: Int?
   )
 
   data class DividendJson(
     var amount: Double,
-    val type: Int,
     val cycle: Int,
     val paydate: Long,
-    val exdate: Long
+    val exdate: Long?,
+    val type: Int?,
+    val note: String?
   )
 
   @Test
@@ -469,7 +466,7 @@ var events: List<Event>
                 symbol = "s1", groupColor = 123, alertAbove = 11.0, alertBelow = 12.0,
                 notes = "notes1"
             ),
-            listOf(Asset(symbol = "s1", shares = 1.0, price = 2.0, date = 0L)),
+            listOf(Asset(symbol = "s1", shares = 1.0, price = 2.0)),
             listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
             listOf(
                 Dividend(
@@ -485,7 +482,7 @@ var events: List<Event>
                 symbol = "s2", groupColor = 223, alertAbove = 21.0, alertBelow = 22.0,
                 notes = "notes2"
             ),
-            listOf(Asset(symbol = "s2", shares = 3.0, price = 4.0, date = 0L)),
+            listOf(Asset(symbol = "s2", shares = 3.0, price = 4.0)),
             listOf(Event(symbol = "s2", type = 2, title = "ti2", note = "te2", datetime = 2L)),
             listOf(
                 Dividend(
@@ -506,7 +503,13 @@ var events: List<Event>
           notes = stockItem.stockDBdata.notes,
           dividendNotes = stockItem.stockDBdata.dividendNotes,
           assets = stockItem.assets.map { asset ->
-            AssetJson(shares = asset.shares, price = asset.price, date = asset.date)//, commission = asset.commission, type = asset.type)
+            AssetJson(shares = asset.shares,
+                price = asset.price,
+                note = asset.note,
+                date = asset.date,
+                type = asset.type,
+                commission = asset.commission
+            )
           },
           events = stockItem.events.map { event ->
             EventJson(
@@ -519,7 +522,8 @@ var events: List<Event>
                 exdate = dividend.exdate,
                 paydate = dividend.paydate,
                 type = dividend.type,
-                cycle = dividend.cycle
+                cycle = dividend.cycle,
+                note = ""
             )
           }
       )

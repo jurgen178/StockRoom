@@ -154,11 +154,10 @@ class ListActivity : AppCompatActivity() {
         assetTableRows.append("<td>${assetItem.symbol}</td>")
         assetTableRows.append("<td>${DecimalFormat("0.####").format(assetItem.shares)}</td>")
         assetTableRows.append("<td>${assetItem.price}</td>")
+        assetTableRows.append("<td>${assetItem.type}</td>")
         assetTableRows.append("<td>${assetItem.note}</td>")
-        assetTableRows.append("<td>${getDateTimeStr(assetItem.buyDate)}</td>")
-        assetTableRows.append("<td>${getDateTimeStr(assetItem.sellDate)}</td>")
-        assetTableRows.append("<td>${assetItem.commissionRel}</td>")
-        assetTableRows.append("<td>${assetItem.commissionAbs}</td>")
+        assetTableRows.append("<td>${getDateTimeStr(assetItem.date)}</td>")
+        assetTableRows.append("<td>${assetItem.commission}</td>")
         assetTableRows.append("</tr>")
       }
 

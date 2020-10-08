@@ -362,7 +362,8 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
         type = dividend.type,
         cycle = dividend.cycle,
         paydate = dividend.paydate,
-        exdate = dividend.exdate
+        exdate = dividend.exdate,
+        note = dividend.note
     )
   }
 

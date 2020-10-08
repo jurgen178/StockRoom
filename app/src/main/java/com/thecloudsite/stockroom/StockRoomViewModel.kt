@@ -76,16 +76,14 @@ data class AssetJson(
   val price: Double,
   val type: Int?,
   var note: String?,
-  var buyDate: Long?,
-  var sellDate: Long?,
-  var commissionRel: Double?,
-  var commissionAbs: Double?
+  var date: Long?,
+  var commission: Double?
 )
 
 data class EventJson(
   val title: String,
-  val note: String,
   val datetime: Long,
+  val note: String?,
   val type: Int?
 )
 
@@ -93,7 +91,7 @@ data class DividendJson(
   var amount: Double,
   val cycle: Int,
   val paydate: Long,
-  val exdate: Long,
+  val exdate: Long?,
   val type: Int?,
   val note: String?
 )
@@ -876,11 +874,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           stockItemSet.stockItems.sortedByDescending { item ->
             if (item.onlineMarketData.marketPrice > 0.0) {
               item.assets.sumByDouble {
-                if (it.sellDate == 0L) it.shares * item.onlineMarketData.marketPrice else 0.0
+                it.shares * item.onlineMarketData.marketPrice
               }
             } else {
               item.assets.sumByDouble {
-                if (it.sellDate == 0L) it.shares * it.price else 0.0
+                it.shares * it.price
               }
             }
           }
@@ -889,11 +887,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           stockItemSet.stockItems.sortedByDescending { item ->
             if (item.onlineMarketData.marketPrice > 0.0) {
               item.assets.sumByDouble {
-                if (it.sellDate == 0L) it.shares * (item.onlineMarketData.marketPrice - it.price) else 0.0
+                it.shares * (item.onlineMarketData.marketPrice - it.price)
               }
             } else {
               item.assets.sumByDouble {
-                if (it.sellDate == 0L) it.shares * it.price else 0.0
+                it.shares * it.price
               }
             }
           }
@@ -1068,29 +1066,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         } else {
                           ""
                         },
-                        buyDate = when {
-                          assetsObj.has("date") -> {
-                            assetsObj.getLong("date")
-                          }
-                          assetsObj.has("buyDate") -> {
-                            assetsObj.getLong("buyDate")
-                          }
-                          else -> {
-                            0L
-                          }
-                        },
-                        sellDate = if (assetsObj.has("sellDate")) {
-                          assetsObj.getLong("sellDate")
+                        date = if (assetsObj.has("date")) {
+                          assetsObj.getLong("date")
                         } else {
                           0L
                         },
-                        commissionRel = if (assetsObj.has("commissionRel")) {
-                          assetsObj.getDouble("commissionRel")
-                        } else {
-                          0.0
-                        },
-                        commissionAbs = if (assetsObj.has("commissionAbs")) {
-                          assetsObj.getDouble("commissionAbs")
+                        commission = if (assetsObj.has("commission")) {
+                          assetsObj.getDouble("commission")
                         } else {
                           0.0
                         }
@@ -1190,11 +1172,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
             if (dividendsObj.has("amount") && dividendsObj.has("paydate")) {
               val amount = dividendsObj.getDouble("amount")
+              val paydate = dividendsObj.getLong("paydate")
 
-              if (amount > 0.0) {
+              if (amount > 0.0 && paydate > 0L) {
                 val dividend = Dividend(
                     symbol = symbol,
                     amount = amount,
+                    paydate = paydate,
                     type = if (dividendsObj.has("type")) {
                       dividendsObj.getInt("type")
                     } else {
@@ -1205,7 +1189,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     } else {
                       Quarterly.value
                     },
-                    paydate = dividendsObj.getLong("paydate"),
                     exdate = if (dividendsObj.has("exdate")) {
                       dividendsObj.getLong("exdate")
                     } else {
@@ -1639,10 +1622,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               price = validateDouble(asset.price),
               type = if (asset.type != 0) asset.type else null,
               note = if (asset.note.isNotEmpty()) asset.note else null,
-              buyDate = if (asset.buyDate != 0L) asset.buyDate else null,
-              sellDate = if (asset.sellDate != 0L) asset.sellDate else null,
-              commissionRel = if (asset.commissionRel != 0.0) asset.commissionRel else null,
-              commissionAbs = if (asset.commissionAbs != 0.0) asset.commissionAbs else null,
+              date = if (asset.date != 0L) asset.date else null,
+              commission = if (asset.commission != 0.0) asset.commission else null,
           )
         }
       }
@@ -1653,7 +1634,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItem.events.map { event ->
           EventJson(
               title = event.title,
-              note = event.note,
+              note = if (event.note.isNotEmpty()) event.note else null,
               datetime = event.datetime,
               type = if (event.type != 0) event.type else null
           )
@@ -1666,10 +1647,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItem.dividends.map { dividend ->
           DividendJson(
               amount = validateDouble(dividend.amount),
-              exdate = dividend.exdate,
               paydate = dividend.paydate,
               cycle = dividend.cycle,
-              type = if(dividend.type != 0) dividend.type else null,
+              exdate = if(dividend.exdate != 0L) dividend.exdate else null,
+              type = if (dividend.type != 0) dividend.type else null,
               note = if (dividend.note.isNotEmpty()) dividend.note else null
           )
         }
@@ -1985,8 +1966,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     symbol: String,
     shares: Double,
     price: Double,
-    buyDate: Long,
-    sellDate: Long
+    date: Long
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.addAsset(
@@ -1994,8 +1974,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               symbol = symbol.toUpperCase(Locale.ROOT),
               shares = shares,
               price = price,
-              buyDate = buyDate,
-              sellDate = sellDate
+              date = date
           )
       )
     }

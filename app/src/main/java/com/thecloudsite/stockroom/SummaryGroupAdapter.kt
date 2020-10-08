@@ -176,10 +176,8 @@ class SummaryGroupAdapter internal constructor(
       var price = 0.0
 
       stockItem.assets.forEach { asset ->
-        if (asset.sellDate == 0L) {
-          price += asset.shares * asset.price
-          shares += asset.shares
-        }
+        price += asset.shares * asset.price
+        shares += asset.shares
       }
 
       totalPurchasePrice += price

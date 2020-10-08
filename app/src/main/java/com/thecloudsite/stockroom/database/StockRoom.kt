@@ -61,10 +61,8 @@ data class Asset(
   var price: Double,
   var type: Int = 0,
   var note: String = "",
-  @ColumnInfo(name = "buy_date") var buyDate: Long = 0L,
-  @ColumnInfo(name = "sell_date") var sellDate: Long = 0L,
-  @ColumnInfo(name = "commission_rel") var commissionRel: Double = 0.0,
-  @ColumnInfo(name = "commission_abs") var commissionAbs: Double = 0.0
+  var date: Long = 0L,
+  var commission: Double = 0.0
 )
 
 data class Assets(
@@ -83,10 +81,10 @@ data class Assets(
 data class Event(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
-  val type: Int,
   val title: String,
-  val note: String,
-  val datetime: Long
+  val datetime: Long,
+  val type: Int = 0,
+  val note: String = ""
 )
 
 data class Events(
@@ -113,10 +111,10 @@ data class Dividend(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   var symbol: String,
   var amount: Double,
-  val type: Int,
   val cycle: Int,
   val paydate: Long,
-  val exdate: Long,
+  val type: Int = 0,
+  val exdate: Long = 0L,
   val note: String = ""
 )
 

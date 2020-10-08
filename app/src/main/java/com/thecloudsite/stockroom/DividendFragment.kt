@@ -787,7 +787,7 @@ class DividendFragment : Fragment() {
 
     if (data.assets != null) {
       val shares = data.assets?.assets?.sumByDouble {
-        if (it.sellDate == 0L) it.shares else 0.0
+        it.shares
       } ?: 0.0
 
       if (shares > 0.0) {

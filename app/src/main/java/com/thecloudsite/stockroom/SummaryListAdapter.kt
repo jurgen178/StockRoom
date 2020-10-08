@@ -81,13 +81,13 @@ class SummaryListAdapter internal constructor(
     setBackgroundColor(holder.summaryListItemGroup, color)
 
     val shares = current.assets.sumByDouble {
-      if (it.sellDate == 0L) it.shares else 0.0
+      it.shares
     }
 
     var asset: Double = 0.0
     if (shares > 0.0) {
       asset = current.assets.sumByDouble {
-        if (it.sellDate == 0L) it.shares * it.price else 0.0
+        it.shares * it.price
       }
     }
 
@@ -122,7 +122,7 @@ class SummaryListAdapter internal constructor(
 
       if (shares > 0.0) {
         capital = current.assets.sumByDouble {
-          if (it.sellDate == 0L) it.shares * current.onlineMarketData.marketPrice else 0.0
+          it.shares * current.onlineMarketData.marketPrice
         }
 
         holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
