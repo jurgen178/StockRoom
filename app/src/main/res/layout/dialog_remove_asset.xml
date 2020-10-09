@@ -7,8 +7,20 @@
     android:padding="8dp"
     >
 
-  <TextView
-      android:id="@+id/addUpdateSharesHeadline"
+  <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scrollbars="vertical"
+      >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        >
+
+    <TextView
+      android:id="@+id/removeUpdateSharesHeadline"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
@@ -16,6 +28,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      android:text="@string/delete_asset"
       />
 
   <TextView
@@ -36,11 +49,11 @@
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="@+id/guideline1"
-      app:layout_constraintTop_toBottomOf="@+id/addUpdateSharesHeadline"
+      app:layout_constraintTop_toBottomOf="@+id/removeUpdateSharesHeadline"
       app:endIconMode="clear_text"
       >
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/addShares"
+        android:id="@+id/removeShares"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/design_default_color_background"
@@ -60,7 +73,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
-      android:text="@string/price"
+      android:text="@string/remove_price"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
       app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +91,7 @@
       app:endIconMode="clear_text"
       >
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/addPrice"
+        android:id="@+id/removePrice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/design_default_color_background"
@@ -92,13 +105,43 @@
         />
   </com.google.android.material.textfield.TextInputLayout>
 
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:text="@string/notes"
+      app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
+      app:layout_constraintEnd_toStartOf="@+id/guideline1"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/textInputLayout3"
+      app:layout_constraintHorizontal_bias="0.0"
+      />
+  <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/textInputLayout3"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline1"
+      app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+      app:endIconMode="clear_text"
+      >
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/removeNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_background"
+        android:inputType="textMultiLine"
+        />
+  </com.google.android.material.textfield.TextInputLayout>
+
   <com.thecloudsite.stockroom.CustomDatePicker
       android:id="@+id/datePickerAssetDate"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
       android:datePickerMode="calendar"
-      app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+      app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -107,5 +150,9 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
