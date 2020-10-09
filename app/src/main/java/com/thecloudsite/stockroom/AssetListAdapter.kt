@@ -28,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.obsoleteAssetType
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetDelete
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetItemsLayout
 import java.text.DecimalFormat
@@ -139,11 +140,17 @@ class AssetListAdapter internal constructor(
         holder.bindDelete(null, current, clickListenerDelete)
 
         holder.itemViewShares.text = DecimalFormat("0.####").format(current.shares)
-        if (current.shares < 0.0) {
+
+        // Removed and obsolete entries are colored light gray.
+        if (current.shares < 0.0 || (current.type and obsoleteAssetType != 0)) {
           holder.itemViewShares.setTextColor(Color.LTGRAY)
+          holder.itemViewPrice.setTextColor(Color.LTGRAY)
+          holder.itemViewTotal.setTextColor(Color.LTGRAY)
         } else {
           if (defaultTextColor != null) {
             holder.itemViewShares.setTextColor(defaultTextColor!!)
+            holder.itemViewPrice.setTextColor(defaultTextColor!!)
+            holder.itemViewTotal.setTextColor(defaultTextColor!!)
           }
         }
 
@@ -182,7 +189,7 @@ class AssetListAdapter internal constructor(
       asset.date
     })
 
-    val (totalShares, totalPrice) = getAssets(assetList)
+    val (totalShares, totalPrice) = getAssets(assetList, obsoleteAssetType)
 
 //    val totalShares = assetList.sumByDouble {
 //      it.shares

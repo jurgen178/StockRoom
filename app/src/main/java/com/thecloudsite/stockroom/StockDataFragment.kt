@@ -1311,6 +1311,18 @@ class StockDataFragment : Fragment() {
                       .show()
                   valid = false
                 }
+                // Send msg and adjust if more shares than owned are removed.
+                if (shares > totalShares) {
+                  Toast.makeText(
+                      requireContext(), getString(
+                      R.string.removed_shares_exceed_existing,
+                      DecimalFormat("0.####").format(shares),
+                      DecimalFormat("0.####").format(totalShares)
+                  ), Toast.LENGTH_LONG
+                  )
+                      .show()
+                  shares = totalShares
+                }
                 if (valid) {
                   val localDateTime: LocalDateTime = LocalDateTime.of(
                       datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
@@ -1760,15 +1772,18 @@ class StockDataFragment : Fragment() {
 
   private fun updateAssetChange(data: AssetsLiveData) {
     if (data.assets != null && data.onlineMarketData != null) {
-      val purchasePrice = updatePurchasePrice(data.assets?.assets!!)
-      if (purchasePrice.isNotEmpty()) {
-        textViewAssetChange.text =
-          getAssetChange(
-              data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, requireActivity()
-          )
 
-        textViewPurchasePrice.text = purchasePrice
+      val purchasePrice = updatePurchasePrice(data.assets?.assets!!)
+
+      textViewAssetChange.text = if (purchasePrice.isNotEmpty()) {
+        getAssetChange(
+            data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, requireActivity()
+        )
+      } else {
+        ""
       }
+
+      textViewPurchasePrice.text = purchasePrice
     }
   }
 

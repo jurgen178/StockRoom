@@ -88,7 +88,8 @@ class SummaryGroupFragment : Fragment() {
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    summaryGroup.layoutManager = GridLayoutManager(requireContext(),
+    summaryGroup.layoutManager = GridLayoutManager(
+        requireContext(),
         Integer.min(Integer.max(spanCount, 1), 10)
     )
 
@@ -238,7 +239,12 @@ class SummaryGroupFragment : Fragment() {
     }
 
     if (totalAssets > 0.0) {
-      val sortedAssetList = assetList.sortedByDescending { item -> item.assets }
+      val sortedAssetList = assetList.filter { assetSummary ->
+        assetSummary.assets != 0.0
+      }
+          .sortedByDescending { assetSummary ->
+            assetSummary.assets
+          }
 
       // Display first 10 values from asset high to low.
       val n = 10

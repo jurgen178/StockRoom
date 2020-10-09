@@ -1624,44 +1624,53 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       val assetsValue = if (stockItem.assets.isEmpty()) {
         null
       } else {
-        stockItem.assets.map { asset ->
-          AssetJson(
-              shares = validateDouble(asset.shares),
-              price = validateDouble(asset.price),
-              type = if (asset.type != 0) asset.type else null,
-              note = if (asset.note.isNotEmpty()) asset.note else null,
-              date = if (asset.date != 0L) asset.date else null,
-              commission = if (asset.commission != 0.0) asset.commission else null,
-          )
+        stockItem.assets.sortedBy { item ->
+          item.date
         }
+            .map { asset ->
+              AssetJson(
+                  shares = validateDouble(asset.shares),
+                  price = validateDouble(asset.price),
+                  type = if (asset.type != 0) asset.type else null,
+                  note = if (asset.note.isNotEmpty()) asset.note else null,
+                  date = if (asset.date != 0L) asset.date else null,
+                  commission = if (asset.commission != 0.0) asset.commission else null,
+              )
+            }
       }
 
       val eventsValue = if (stockItem.events.isEmpty()) {
         null
       } else {
-        stockItem.events.map { event ->
-          EventJson(
-              title = event.title,
-              note = if (event.note.isNotEmpty()) event.note else null,
-              datetime = event.datetime,
-              type = if (event.type != 0) event.type else null
-          )
+        stockItem.events.sortedBy { item ->
+          item.datetime
         }
+            .map { event ->
+              EventJson(
+                  title = event.title,
+                  note = if (event.note.isNotEmpty()) event.note else null,
+                  datetime = event.datetime,
+                  type = if (event.type != 0) event.type else null
+              )
+            }
       }
 
       val dividendsValue = if (stockItem.dividends.isEmpty()) {
         null
       } else {
-        stockItem.dividends.map { dividend ->
-          DividendJson(
-              amount = validateDouble(dividend.amount),
-              paydate = dividend.paydate,
-              cycle = dividend.cycle,
-              exdate = if (dividend.exdate != 0L) dividend.exdate else null,
-              type = if (dividend.type != 0) dividend.type else null,
-              note = if (dividend.note.isNotEmpty()) dividend.note else null
-          )
+        stockItem.dividends.sortedBy { item ->
+          item.paydate
         }
+            .map { dividend ->
+              DividendJson(
+                  amount = validateDouble(dividend.amount),
+                  paydate = dividend.paydate,
+                  cycle = dividend.cycle,
+                  exdate = if (dividend.exdate != 0L) dividend.exdate else null,
+                  type = if (dividend.type != 0) dividend.type else null,
+                  note = if (dividend.note.isNotEmpty()) dividend.note else null
+              )
+            }
       }
 
       StockItemJson(

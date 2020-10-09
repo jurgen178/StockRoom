@@ -36,6 +36,9 @@ import java.util.Locale
 // Rounding error
 const val epsilon = 0.000001
 
+// asset.type
+const val obsoleteAssetType: Int = 0x0001
+
 /*
 enum class DividendCycle(val value: Int) {
   Monthly(12),
@@ -170,6 +173,62 @@ fun getAssetChange(
   }
 
   return SpannableStringBuilder()
+}
+
+fun getAssets(
+  assetList: List<Asset>?,
+  tagObsoleteAssetType: Int = 0
+): Pair<Double, Double> {
+
+  var totalShares: Double = 0.0
+  var totalPrice: Double = 0.0
+
+  if (assetList != null) {
+    val assetListSorted = assetList.sortedBy { asset ->
+      asset.date
+    }
+
+    if (tagObsoleteAssetType != 0) {
+      assetListSorted.forEach { asset ->
+        asset.type = asset.type and tagObsoleteAssetType.inv()
+      }
+    }
+
+    for (i in assetListSorted.indices) {
+
+      val asset = assetListSorted[i]
+
+      // added shares
+      if (asset.shares > 0.0) {
+        totalShares += asset.shares
+        totalPrice += asset.shares * asset.price
+      } else
+      // removed shares
+        if (asset.shares < 0.0) {
+          // removed all?
+          if (-asset.shares >= (totalShares - com.thecloudsite.stockroom.utils.epsilon)) {
+            // reset if more removed than owned
+            totalShares = 0.0
+            totalPrice = 0.0
+
+            if (tagObsoleteAssetType != 0) {
+              for (j in i downTo 0) {
+                assetListSorted[j].type = assetListSorted[j].type or tagObsoleteAssetType
+              }
+            }
+          } else {
+            // adjust the total price for the removed shares
+            if (totalShares > com.thecloudsite.stockroom.utils.epsilon) {
+              val averageSharePrice = totalPrice / totalShares
+              totalShares += asset.shares
+              totalPrice = totalShares * averageSharePrice
+            }
+          }
+        }
+    }
+  }
+
+  return Pair(totalShares, totalPrice)
 }
 
 fun isOnline(context: Context): Boolean {

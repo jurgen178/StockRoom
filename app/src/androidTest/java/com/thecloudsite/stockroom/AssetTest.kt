@@ -27,7 +27,7 @@ class AssetTest {
 
   // Rounding error
   private val epsilon = 0.000001
-  private val assetDisabledEntry
+  private val obsoleteAssetType
       : Int = 0x0001
 
   @Test
@@ -35,20 +35,20 @@ class AssetTest {
   fun assetAddRemove() {
     fun getAssets(
       assetList: List<Asset>?,
-      tagEntries: Boolean = false
+      tagObsoleteAssetType: Int = 0
     ): Pair<Double, Double> {
 
       var totalShares: Double = 0.0
       var totalPrice: Double = 0.0
 
       if (assetList != null) {
-        val assetListSorted = assetList.sortedBy { item ->
-          item.date
+        val assetListSorted = assetList.sortedBy { asset ->
+          asset.date
         }
 
-        if (tagEntries) {
+        if (tagObsoleteAssetType != 0) {
           assetListSorted.forEach { asset ->
-            asset.type = asset.type and assetDisabledEntry.inv()
+            asset.type = asset.type and tagObsoleteAssetType.inv()
           }
         }
 
@@ -69,9 +69,9 @@ class AssetTest {
                 totalShares = 0.0
                 totalPrice = 0.0
 
-                if (tagEntries) {
+                if (tagObsoleteAssetType != 0) {
                   for (j in i downTo 0) {
-                    assetListSorted[j].type = assetListSorted[j].type or assetDisabledEntry
+                    assetListSorted[j].type = assetListSorted[j].type or tagObsoleteAssetType
                   }
                 }
               } else {
@@ -210,7 +210,7 @@ class AssetTest {
             shares = -50.0,
             price = 0.0,
             date = 5,
-            type = assetDisabledEntry
+            type = obsoleteAssetType
         ),
         Asset(
             symbol = "s1",
@@ -219,13 +219,13 @@ class AssetTest {
             date = 1
         )
     )
-    val (totalShares5, totalPrice5) = getAssets(assetList5, true)
+    val (totalShares5, totalPrice5) = getAssets(assetList5, obsoleteAssetType)
     assertEquals(50.0, totalShares5, epsilon)
     assertEquals(1000.0, totalPrice5, epsilon)
-    assertEquals(0xff00 or assetDisabledEntry, assetList5[0].type)
-    assertEquals(assetDisabledEntry, assetList5[1].type)
+    assertEquals(0xff00 or obsoleteAssetType, assetList5[0].type)
+    assertEquals(obsoleteAssetType, assetList5[1].type)
     assertEquals(0, assetList5[2].type)
     assertEquals(0, assetList5[3].type)
-    assertEquals(assetDisabledEntry, assetList5[4].type)
+    assertEquals(obsoleteAssetType, assetList5[4].type)
   }
 }
