@@ -47,7 +47,7 @@ class UpdateGroupActivity : AppCompatActivity() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.add_group, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_group, null)
 
     val addUpdateGroupsHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateGroupsHeadline)
@@ -173,7 +173,7 @@ class UpdateGroupActivity : AppCompatActivity() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.add_group, null)
+      val dialogView = inflater.inflate(R.layout.dialog_add_group, null)
       val addUpdateGroupsHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateGroupsHeadline)
       addUpdateGroupsHeadlineView.text = getString(R.string.add_group)

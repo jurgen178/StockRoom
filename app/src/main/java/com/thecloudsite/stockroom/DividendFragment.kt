@@ -112,7 +112,7 @@ class DividendFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.add_dividend, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
     dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
     dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
     val addUpdateDividendHeadlineView =
@@ -258,7 +258,7 @@ class DividendFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.add_dividend, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
     val addUpdateDividendHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
     addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
@@ -495,7 +495,7 @@ class DividendFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.add_dividend, null)
+      val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
       dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
       dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
       val addUpdateDividendHeadlineView =
@@ -588,7 +588,7 @@ class DividendFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.add_dividend, null)
+      val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
       val addUpdateDividendHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
       addUpdateDividendHeadlineView.text = getString(R.string.add_dividend)
@@ -701,7 +701,7 @@ class DividendFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.add_note, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_note, null)
     val textInputEditNoteView =
       dialogView.findViewById<TextView>(R.id.textInputEditNote)
 

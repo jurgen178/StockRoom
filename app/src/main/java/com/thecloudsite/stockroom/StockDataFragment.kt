@@ -249,7 +249,7 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.add_asset, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_asset, null)
 
     val addUpdateSharesHeadlineView =
       dialogView.findViewById<TextView>(R.id.addUpdateSharesHeadline)
@@ -264,6 +264,9 @@ class StockDataFragment : Fragment() {
 
     val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
     addPriceView.text = DecimalFormat("0.00##").format(asset.price)
+
+    val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
+    addNoteView.text = asset.note
 
     val localDateTime = if (asset.date == 0L) {
       LocalDateTime.now()
@@ -330,9 +333,16 @@ class StockDataFragment : Fragment() {
               )
               val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
 
+              val noteText = (addNoteView.text).toString()
+                  .trim()
+
               val assetNew =
-                Asset(symbol = symbol, shares = shares, price = price, date = date)
-              if (asset.shares != assetNew.shares || asset.price != assetNew.price || asset.date != assetNew.date) {
+                Asset(symbol = symbol, shares = shares, price = price, date = date, note = noteText)
+              if (asset.shares != assetNew.shares
+                  || asset.price != assetNew.price
+                  || asset.date != assetNew.date
+                  || asset.note != assetNew.note)
+              {
                 // Each asset has an id. Delete the asset with that id and then add assetNew.
                 stockRoomViewModel.updateAsset2(asset, assetNew)
 
@@ -462,7 +472,7 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.add_event, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_event, null)
 
     val eventHeadlineView = dialogView.findViewById<TextView>(R.id.eventHeadline)
     eventHeadlineView.text = getString(R.string.update_event)
@@ -843,7 +853,7 @@ class StockDataFragment : Fragment() {
 
           // Inflate and set the layout for the dialog
           // Pass null as the parent view because its going in the dialog layout
-          val dialogView = inflater.inflate(R.layout.add_portfolio, null)
+          val dialogView = inflater.inflate(R.layout.dialog_add_portfolio, null)
 
           val portfolioHeaderView =
             dialogView.findViewById<TextView>(R.id.portfolioHeader)
@@ -1071,7 +1081,7 @@ class StockDataFragment : Fragment() {
         // Get the layout inflater
         val inflater = LayoutInflater.from(requireContext())
 
-        val dialogView = inflater.inflate(R.layout.split_asset, null)
+        val dialogView = inflater.inflate(R.layout.dialog_split_asset, null)
         val splitRatioView = dialogView.findViewById<TextView>(R.id.splitRatio)
 
         builder.setView(dialogView)
@@ -1153,12 +1163,13 @@ class StockDataFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.add_asset, null)
+      val dialogView = inflater.inflate(R.layout.dialog_add_asset, null)
       val addUpdateSharesHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateSharesHeadline)
       addUpdateSharesHeadlineView.text = getString(R.string.add_asset)
       val addSharesView = dialogView.findViewById<TextView>(R.id.addShares)
       val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
+      val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
       val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
 
       builder.setView(dialogView)
@@ -1210,11 +1221,14 @@ class StockDataFragment : Fragment() {
                 )
                 val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
 
+                val noteText = (addNoteView.text).toString()
+                    .trim()
+
                 //val date = LocalDateTime.now()
                 //    .toEpochSecond(ZoneOffset.UTC)
 
                 stockRoomViewModel.addAsset(
-                    Asset(symbol = symbol, shares = shares, price = price, date = date)
+                    Asset(symbol = symbol, shares = shares, price = price, date = date, note = noteText)
                 )
                 val count: Int = when {
                   shares == 1.0 -> {
@@ -1275,9 +1289,10 @@ class StockDataFragment : Fragment() {
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        val dialogView = inflater.inflate(R.layout.remove_asset, null)
+        val dialogView = inflater.inflate(R.layout.dialog_remove_asset, null)
         val removeSharesView = dialogView.findViewById<TextView>(R.id.removeShares)
         val removePriceView = dialogView.findViewById<TextView>(R.id.removePrice)
+        val removeNoteView = dialogView.findViewById<TextView>(R.id.removeNote)
         val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
 
         builder.setView(dialogView)
@@ -1333,12 +1348,15 @@ class StockDataFragment : Fragment() {
                   )
                   val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
 
+                  val noteText = (removeNoteView.text).toString()
+                      .trim()
+
                   //val date = LocalDateTime.now()
                   //    .toEpochSecond(ZoneOffset.UTC)
 
                   // Add negative shares for removed asset.
                   stockRoomViewModel.addAsset(
-                      Asset(symbol = symbol, shares = -shares, price = price, date = date)
+                      Asset(symbol = symbol, shares = -shares, price = price, date = date, note = noteText)
                   )
                   val count: Int = when {
                     shares == 1.0 -> {
@@ -1396,7 +1414,7 @@ class StockDataFragment : Fragment() {
         // Get the layout inflater
         val inflater = LayoutInflater.from(requireContext())
 
-        val dialogView = inflater.inflate(R.layout.remove_asset, null)
+        val dialogView = inflater.inflate(R.layout.dialog_remove_asset, null)
         val removeSharesView = dialogView.findViewById<TextView>(R.id.removeShares)
 
         builder.setView(dialogView)
@@ -1471,7 +1489,7 @@ class StockDataFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.add_event, null)
+      val dialogView = inflater.inflate(R.layout.dialog_add_event, null)
       val eventHeadlineView = dialogView.findViewById<TextView>(R.id.eventHeadline)
       eventHeadlineView.text = getString(R.string.add_event)
       val textInputEditEventTitleView =
@@ -1677,7 +1695,7 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.add_note, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_note, null)
     val textInputEditNoteView =
       dialogView.findViewById<TextView>(R.id.textInputEditNote)
 
