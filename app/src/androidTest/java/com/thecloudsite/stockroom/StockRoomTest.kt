@@ -432,10 +432,10 @@ var events: List<Event>
   data class AssetJson(
     var shares: Double,
     val price: Double,
-    val type: Int,
-    var note: String,
-    var date: Long,
-    var commissionDouble
+    val type: Int?,
+    var note: String?,
+    var date: Long?,
+    var commission: Double?
   )
 
   data class EventJson(

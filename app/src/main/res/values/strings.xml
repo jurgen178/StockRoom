@@ -29,11 +29,23 @@ limitations under the License. -->
     <item quantity="one">%1$s stock for %2$s was updated in the portfolio.</item>
     <item quantity="other">%1$s stocks for %2$s were updated in the portfolio.</item>
   </plurals>
+  <plurals name="asset_removed">
+    <item quantity="one">%1$s stock was deleted in the portfolio.</item>
+    <item quantity="other">%1$s stocks were deleted in the portfolio.</item>
+  </plurals>
   <plurals name="delete_asset_msg">
     <item quantity="one">%1$s stock for %2$s was deleted from the portfolio..</item>
     <item quantity="other">%1$s stocks for %2$s were deleted from the portfolio.</item>
   </plurals>
+  <plurals name="delete_removed_asset_msg">
+    <item quantity="one">%1$s stock for %2$s was deleted from the portfolio..</item>
+    <item quantity="other">%1$s stocks for %2$s were deleted from the portfolio.</item>
+  </plurals>
   <plurals name="delete_asset_confirm">
+    <item quantity="one">Are you sure you want to delete the %1$s share at the purchase price of %2$s from your portfolio?</item>
+    <item quantity="other">Are you sure you want to delete the %1$s shares at the purchase price of %2$s from your portfolio?</item>
+  </plurals>
+  <plurals name="delete_removed_asset_confirm">
     <item quantity="one">Are you sure you want to delete the %1$s share at the purchase price of %2$s from your portfolio?</item>
     <item quantity="other">Are you sure you want to delete the %1$s shares at the purchase price of %2$s from your portfolio?</item>
   </plurals>
@@ -297,4 +309,5 @@ limitations under the License. -->
   <string name="data_provider_details">Data for %1$s</string>
   <string name="data_provider_details_sorted">[Sorted]</string>
   <string name="data_provider_details_unsorted">[Unsorted]</string>
+  <string name="remove_price">Optional sell price</string>
 </resources>

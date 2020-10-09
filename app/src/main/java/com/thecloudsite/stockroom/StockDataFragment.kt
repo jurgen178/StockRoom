@@ -73,8 +73,8 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
 import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
-import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssetChange
+import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_stockdata.addAssetsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.addEventsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputEditText
@@ -122,6 +122,7 @@ import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 import java.util.Locale
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 enum class StockViewRange(val value: Int) {
@@ -254,7 +255,13 @@ class StockDataFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateSharesHeadline)
     addUpdateSharesHeadlineView.text = getString(R.string.update_asset)
     val addSharesView = dialogView.findViewById<TextView>(R.id.addShares)
-    addSharesView.text = DecimalFormat("0.####").format(asset.shares)
+    addSharesView.text = DecimalFormat("0.####").format(asset.shares.absoluteValue)
+//    if (asset.shares < 0) {
+//      addSharesView.inputType = TYPE_CLASS_NUMBER or
+//          TYPE_NUMBER_FLAG_DECIMAL or
+//          TYPE_NUMBER_FLAG_SIGNED
+//    }
+
     val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
     addPriceView.text = DecimalFormat("0.00##").format(asset.price)
 
@@ -285,28 +292,31 @@ class StockDataFragment : Fragment() {
             var valid = true
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-              price = numberFormat.parse(priceText)!!
+              shares = numberFormat.parse(sharesText)!!
                   .toDouble()
+              if (asset.shares < 0.0) {
+                shares = -shares
+              }
             } catch (e: Exception) {
               valid = false
             }
-            if (price <= 0.0) {
+            if (shares == 0.0) {
               Toast.makeText(
-                  requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+                  requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
               )
                   .show()
               valid = false
             }
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-              shares = numberFormat.parse(sharesText)!!
+              price = numberFormat.parse(priceText)!!
                   .toDouble()
             } catch (e: Exception) {
               valid = false
             }
-            if (shares <= 0.0) {
+            if (asset.shares > 0 && price <= 0.0) {
               Toast.makeText(
-                  requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
+                  requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
               )
                   .show()
               valid = false
@@ -325,22 +335,31 @@ class StockDataFragment : Fragment() {
               if (asset.shares != assetNew.shares || asset.price != assetNew.price || asset.date != assetNew.date) {
                 // Each asset has an id. Delete the asset with that id and then add assetNew.
                 stockRoomViewModel.updateAsset2(asset, assetNew)
+
+                var pluralstr: String = ""
+                val sharesAbs = shares.absoluteValue
                 val count: Int = when {
-                  shares == 1.0 -> {
+                  sharesAbs == 1.0 -> {
                     1
                   }
-                  shares > 1.0 -> {
-                    shares.toInt() + 1
+                  sharesAbs > 1.0 -> {
+                    sharesAbs.toInt() + 1
                   }
                   else -> {
                     0
                   }
                 }
 
-                val pluralstr = resources.getQuantityString(
-                    R.plurals.asset_updated, count, DecimalFormat("0.####").format(shares),
-                    DecimalFormat("0.00##").format(price)
-                )
+                pluralstr = if (asset.shares > 0.0) {
+                  resources.getQuantityString(
+                      R.plurals.asset_updated, count, DecimalFormat("0.####").format(sharesAbs),
+                      DecimalFormat("0.00##").format(price)
+                  )
+                } else {
+                  resources.getQuantityString(
+                      R.plurals.asset_removed, count, DecimalFormat("0.####").format(sharesAbs)
+                  )
+                }
 
                 Toast.makeText(
                     requireContext(), pluralstr, Toast.LENGTH_LONG
@@ -398,18 +417,32 @@ class StockDataFragment : Fragment() {
       android.app.AlertDialog.Builder(requireContext())
           .setTitle(R.string.delete_asset)
           .setMessage(
-              resources.getQuantityString(
-                  R.plurals.delete_asset_confirm, count,
-                  DecimalFormat("0.####").format(asset.shares),
-                  DecimalFormat("0.00##").format(asset.price)
-              )
+              if (asset.shares > 0) {
+                resources.getQuantityString(
+                    R.plurals.delete_asset_confirm, count,
+                    DecimalFormat("0.####").format(asset.shares),
+                    DecimalFormat("0.00##").format(asset.price)
+                )
+              } else {
+                resources.getQuantityString(
+                    R.plurals.delete_removed_asset_confirm, count,
+                    DecimalFormat("0.####").format(asset.shares.absoluteValue)
+                )
+              }
           )
           .setPositiveButton(R.string.delete) { _, _ ->
             stockRoomViewModel.deleteAsset(asset)
-            val pluralstr = resources.getQuantityString(
-                R.plurals.delete_asset_msg, count, DecimalFormat("0.####").format(asset.shares),
-                DecimalFormat("0.00##").format(asset.price)
-            )
+            val pluralstr = if (asset.shares > 0) {
+              resources.getQuantityString(
+                  R.plurals.delete_asset_msg, count, DecimalFormat("0.####").format(asset.shares),
+                  DecimalFormat("0.00##").format(asset.price)
+              )
+            } else {
+              resources.getQuantityString(
+                  R.plurals.delete_removed_asset_msg, count,
+                  DecimalFormat("0.####").format(asset.shares.absoluteValue)
+              )
+            }
 
             Toast.makeText(
                 requireContext(), pluralstr, Toast.LENGTH_LONG
@@ -1019,10 +1052,12 @@ class StockDataFragment : Fragment() {
 
     splitAssetsButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val totalShares = assets?.assets?.sumByDouble {
-        it.shares
-      }
-          ?: 0.0
+      val (totalShares, totalPrice) = getAssets(assets?.assets)
+
+//      val totalShares = assets?.assets?.sumByDouble {
+//        it.shares
+//      }
+//          ?: 0.0
 
       if (totalShares == 0.0) {
         Toast.makeText(
@@ -1066,9 +1101,13 @@ class StockDataFragment : Fragment() {
                   var minPrice = Double.MAX_VALUE
                   assets.assets.forEach { asset ->
                     asset.shares *= splitRatio
-                    asset.price /= splitRatio
-                    minShares = min(asset.shares, minShares)
-                    minPrice = min(asset.price, minPrice)
+                    if (asset.price > 0) {
+                      asset.price /= splitRatio
+                    }
+                    if (asset.shares > 0) {
+                      minShares = min(asset.shares, minShares)
+                      minPrice = min(asset.price, minPrice)
+                    }
                   }
 
                   if (minShares >= 0.1 && minPrice >= 0.01) {
@@ -1214,6 +1253,118 @@ class StockDataFragment : Fragment() {
 
     removeAssetButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
+      val (totalShares, totalPrice) = getAssets(assets?.assets)
+
+//      val totalShares = assets?.assets?.sumByDouble {
+//        it.shares
+//      }
+//          ?: 0.0
+
+      if (totalShares == 0.0) {
+        Toast.makeText(
+            requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
+        )
+            .show()
+      } else {
+        val builder = AlertDialog.Builder(requireContext())
+        // Get the layout inflater
+        val inflater = LayoutInflater.from(requireContext())
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        val dialogView = inflater.inflate(R.layout.remove_asset, null)
+        val removeSharesView = dialogView.findViewById<TextView>(R.id.removeShares)
+        val removePriceView = dialogView.findViewById<TextView>(R.id.removePrice)
+        val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
+
+        builder.setView(dialogView)
+            // Add action buttons
+            .setPositiveButton(
+                R.string.delete
+            ) { _, _ ->
+              // Add () to avoid cast exception.
+              val sharesText = (removeSharesView.text).toString()
+                  .trim()
+              val priceText = (removePriceView.text).toString()
+                  .trim()
+              if (sharesText.isNotEmpty()) {
+                var price = 0.0
+                var shares = 0.0
+                var valid = true
+                try {
+                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                  price = numberFormat.parse(priceText)!!
+                      .toDouble()
+                } catch (e: Exception) {
+                }
+                try {
+                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                  shares = numberFormat.parse(sharesText)!!
+                      .toDouble()
+                } catch (e: Exception) {
+                  valid = false
+                }
+                if (shares <= 0.0) {
+                  Toast.makeText(
+                      requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
+                  )
+                      .show()
+                  valid = false
+                }
+                if (valid) {
+                  val localDateTime: LocalDateTime = LocalDateTime.of(
+                      datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
+                      datePickerAssetDateView.dayOfMonth, 0, 0
+                  )
+                  val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+
+                  //val date = LocalDateTime.now()
+                  //    .toEpochSecond(ZoneOffset.UTC)
+
+                  // Add negative shares for removed asset.
+                  stockRoomViewModel.addAsset(
+                      Asset(symbol = symbol, shares = -shares, price = price, date = date)
+                  )
+                  val count: Int = when {
+                    shares == 1.0 -> {
+                      1
+                    }
+                    shares > 1.0 -> {
+                      shares.toInt() + 1
+                    }
+                    else -> {
+                      0
+                    }
+                  }
+
+                  val pluralstr = resources.getQuantityString(
+                      R.plurals.asset_removed, count, DecimalFormat("0.####").format(shares)
+                  )
+
+                  Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
+                      .show()
+                }
+                hideSoftInputFromWindow()
+              } else {
+                Toast.makeText(
+                    requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
+                )
+                    .show()
+              }
+            }
+            .setNegativeButton(
+                R.string.cancel
+            ) { _, _ ->
+            }
+        builder
+            .create()
+            .show()
+      }
+    }
+
+/*
+    removeAssetButton.setOnClickListener {
+      val assets = stockRoomViewModel.getAssetsSync(symbol)
       val totalShares = assets?.assets?.sumByDouble {
         it.shares
       }
@@ -1295,7 +1446,7 @@ class StockDataFragment : Fragment() {
             .show()
       }
     }
-
+*/
     addEventsButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
@@ -1588,17 +1739,19 @@ class StockDataFragment : Fragment() {
   private fun updatePurchasePrice(
     assets: List<Asset>
   ): String {
-    val sharesTotal = assets.sumByDouble {
-      it.shares
-    }
+    val (totalShares, totalPrice) = getAssets(assets)
 
-    if (sharesTotal > 0.0) {
-      val assetTotal = assets.sumByDouble {
-        it.shares * it.price
-      }
+//    val totalShares = assets.sumByDouble {
+//      it.shares
+//    }
+
+    if (totalPrice > 0.0) {
+//      val assetTotal = assets.sumByDouble {
+//        it.shares * it.price
+//      }
 
       return getString(
-          R.string.bought_for, DecimalFormat("0.00##").format(assetTotal / sharesTotal)
+          R.string.bought_for, DecimalFormat("0.00##").format(totalPrice / totalShares)
       )
     }
 

@@ -48,6 +48,7 @@ import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
 import com.thecloudsite.stockroom.utils.dividendCycleToSelection
 import com.thecloudsite.stockroom.utils.dividendSelectionToCycle
+import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendAnnouncedButton
 import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButton
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNotesTextView
@@ -786,9 +787,11 @@ class DividendFragment : Fragment() {
     }
 
     if (data.assets != null) {
-      val shares = data.assets?.assets?.sumByDouble {
-        it.shares
-      } ?: 0.0
+      val (shares, asset) = getAssets(data.assets?.assets)
+
+//      val shares = data.assets?.assets?.sumByDouble {
+//        it.shares
+//      } ?: 0.0
 
       if (shares > 0.0) {
         val totalDividend = shares * data.onlineMarketData?.annualDividendRate!!

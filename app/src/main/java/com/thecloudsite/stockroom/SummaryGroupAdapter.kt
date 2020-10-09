@@ -29,6 +29,7 @@ import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.utils.epsilon
+import com.thecloudsite.stockroom.utils.getAssets
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -172,13 +173,7 @@ class SummaryGroupAdapter internal constructor(
       }
 
     stockItemsSelected.forEach { stockItem ->
-      var shares = 0.0
-      var price = 0.0
-
-      stockItem.assets.forEach { asset ->
-        price += asset.shares * asset.price
-        shares += asset.shares
-      }
+      val (shares, price) = getAssets(stockItem.assets)
 
       totalPurchasePrice += price
       totalShares += shares

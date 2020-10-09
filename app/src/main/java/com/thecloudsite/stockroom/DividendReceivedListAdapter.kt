@@ -28,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.dividend_received_view_item.view.dividendReceivedLinearLayout
 import kotlinx.android.synthetic.main.dividend_received_view_item.view.textViewDividendReceivedDelete
 import java.text.DecimalFormat
@@ -184,9 +185,11 @@ class DividendReceivedListAdapter internal constructor(
   internal fun updateData() {
     if (data != null) {
       marketValue = if (data!!.assets != null) {
-        val totalShares = data!!.assets?.assets?.sumByDouble {
-          it.shares
-        } ?: 0.0
+        val (totalShares, totalPrice) = getAssets(data!!.assets?.assets)
+
+//        val totalShares = data!!.assets?.assets?.sumByDouble {
+//          it.shares
+//        } ?: 0.0
 
         if (totalShares > 0.0) {
           val marketPrice: Double = data!!.onlineMarketData?.marketPrice ?: 0.0

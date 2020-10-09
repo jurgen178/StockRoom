@@ -41,6 +41,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.thecloudsite.stockroom.invaders.InvadersActivity
+import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.imageView
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 import java.text.DecimalFormat
@@ -218,10 +219,12 @@ class SummaryGroupFragment : Fragment() {
     val assetList: MutableList<AssetSummary> = mutableListOf()
     var totalAssets = 0.0
     stockItems.forEach { stockItem ->
-      val shares: Double = stockItem.assets.sumByDouble { asset ->
-        asset.shares
-      }
-      val assets = shares * stockItem.onlineMarketData.marketPrice
+      val (totalShares, totalPric) = getAssets(stockItem.assets)
+
+//      val totalShares: Double = stockItem.assets.sumByDouble { asset ->
+//        asset.shares
+//      }
+      val assets = totalShares * stockItem.onlineMarketData.marketPrice
       totalAssets += assets
       val color = if (stockItem.stockDBdata.groupColor != 0) {
         stockItem.stockDBdata.groupColor

@@ -48,6 +48,7 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDatabase
 import com.thecloudsite.stockroom.list.DebugData
+import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import com.thecloudsite.stockroom.utils.validateDouble
@@ -70,6 +71,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.absoluteValue
 
 data class AssetJson(
   var shares: Double,
@@ -872,27 +874,33 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByAssets -> {
           stockItemSet.stockItems.sortedByDescending { item ->
+            val (totalShares, totalPrice) = getAssets(item.assets)
             if (item.onlineMarketData.marketPrice > 0.0) {
-              item.assets.sumByDouble {
-                it.shares * item.onlineMarketData.marketPrice
-              }
+              totalShares * item.onlineMarketData.marketPrice
+//              item.assets.sumByDouble {
+//                it.shares * item.onlineMarketData.marketPrice
+//              }
             } else {
-              item.assets.sumByDouble {
-                it.shares * it.price
-              }
+              totalPrice
+//              item.assets.sumByDouble {
+//                it.shares * it.price
+//              }
             }
           }
         }
         SortMode.ByProfit -> {
           stockItemSet.stockItems.sortedByDescending { item ->
+            val (totalShares, totalPrice) = getAssets(item.assets)
             if (item.onlineMarketData.marketPrice > 0.0) {
-              item.assets.sumByDouble {
-                it.shares * (item.onlineMarketData.marketPrice - it.price)
-              }
+              totalShares * item.onlineMarketData.marketPrice - totalPrice
+//              item.assets.sumByDouble {
+//                it.shares * (item.onlineMarketData.marketPrice - it.price)
+//              }
             } else {
-              item.assets.sumByDouble {
-                it.shares * it.price
-              }
+              totalPrice
+//              item.assets.sumByDouble {
+//                it.shares * it.price
+//              }
             }
           }
         }
@@ -1049,8 +1057,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             val assetsObj: JSONObject = assetsObjArray[j] as JSONObject
             if (assetsObj.has("shares") && assetsObj.has("price")) {
               val shares = assetsObj.getDouble("shares")
-              val price = assetsObj.getDouble("price")
-              if (shares > 0.0 && price > 0.0) {
+              val price = assetsObj.getDouble("price").absoluteValue
+              if (shares > 0.0 && price > 0.0 || shares < 0.0) {
                 assets.add(
                     Asset(
                         symbol = symbol,
@@ -1649,7 +1657,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               amount = validateDouble(dividend.amount),
               paydate = dividend.paydate,
               cycle = dividend.cycle,
-              exdate = if(dividend.exdate != 0L) dividend.exdate else null,
+              exdate = if (dividend.exdate != 0L) dividend.exdate else null,
               type = if (dividend.type != 0) dividend.type else null,
               note = if (dividend.note.isNotEmpty()) dividend.note else null
           )

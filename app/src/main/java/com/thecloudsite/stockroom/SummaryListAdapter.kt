@@ -25,6 +25,7 @@ import android.widget.TextView
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssetChange
+import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.summarylist_item.view.summaryListItemLayout
 import java.text.DecimalFormat
 
@@ -80,16 +81,18 @@ class SummaryListAdapter internal constructor(
     }
     setBackgroundColor(holder.summaryListItemGroup, color)
 
-    val shares = current.assets.sumByDouble {
-      it.shares
-    }
+    val (shares, asset) = getAssets(current.assets)
 
-    var asset: Double = 0.0
-    if (shares > 0.0) {
-      asset = current.assets.sumByDouble {
-        it.shares * it.price
-      }
-    }
+//    val shares = current.assets.sumByDouble {
+//      it.shares
+//    }
+//
+//    var asset: Double = 0.0
+//    if (shares > 0.0) {
+//      asset = current.assets.sumByDouble {
+//        it.shares * it.price
+//      }
+//    }
 
     if (current.onlineMarketData.marketPrice > 0.0) {
       val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
@@ -121,9 +124,10 @@ class SummaryListAdapter internal constructor(
       var capital: Double = 0.0
 
       if (shares > 0.0) {
-        capital = current.assets.sumByDouble {
-          it.shares * current.onlineMarketData.marketPrice
-        }
+        capital = shares * current.onlineMarketData.marketPrice
+//        capital = current.assets.sumByDouble {
+//          it.shares * current.onlineMarketData.marketPrice
+//        }
 
         holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
       } else {

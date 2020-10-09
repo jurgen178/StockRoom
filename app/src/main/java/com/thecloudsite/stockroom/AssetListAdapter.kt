@@ -27,9 +27,11 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetDelete
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetItemsLayout
 import java.text.DecimalFormat
+import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -41,6 +43,7 @@ class AssetListAdapter internal constructor(
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var assetList = mutableListOf<Asset>()
+  private var defaultTextColor: Int? = null
 
   class AssetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
@@ -81,6 +84,10 @@ class AssetListAdapter internal constructor(
     position: Int
   ) {
     val current: Asset = assetList[position]
+
+    if (defaultTextColor == null) {
+      defaultTextColor = holder.itemViewShares.currentTextColor
+    }
 
     // First entry is headline.
     if (position == 0) {
@@ -127,12 +134,27 @@ class AssetListAdapter internal constructor(
         val background = TypedValue()
         holder.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
       } else {
+        // Asset items
         holder.bindUpdate(current, clickListenerUpdate)
         holder.bindDelete(null, current, clickListenerDelete)
 
         holder.itemViewShares.text = DecimalFormat("0.####").format(current.shares)
-        holder.itemViewPrice.text = DecimalFormat("0.00##").format(current.price)
-        holder.itemViewTotal.text = DecimalFormat("0.00").format(current.shares * current.price)
+        if (current.shares < 0.0) {
+          holder.itemViewShares.setTextColor(Color.LTGRAY)
+        } else {
+          if (defaultTextColor != null) {
+            holder.itemViewShares.setTextColor(defaultTextColor!!)
+          }
+        }
+
+        if (current.price != 0.0) {
+          holder.itemViewPrice.text = DecimalFormat("0.00##").format(current.price)
+          holder.itemViewTotal.text =
+            DecimalFormat("0.00").format(current.shares.absoluteValue * current.price)
+        } else {
+          holder.itemViewPrice.text = ""
+          holder.itemViewTotal.text = ""
+        }
 
         holder.itemViewDelete.visibility = View.VISIBLE
         holder.assetSummaryView.visibility = View.GONE
@@ -160,13 +182,15 @@ class AssetListAdapter internal constructor(
       asset.date
     })
 
-    val sharesTotal = assetList.sumByDouble {
-      it.shares
-    }
+    val (totalShares, totalPrice) = getAssets(assetList)
 
-    val assetTotal = assetList.sumByDouble {
-      it.shares * it.price
-    }
+//    val totalShares = assetList.sumByDouble {
+//      it.shares
+//    }
+//
+//    val totalPrice = assetList.sumByDouble {
+//      it.shares * it.price
+//    }
 
     // Summary
     val symbol: String = assets.firstOrNull()?.symbol ?: ""
@@ -174,8 +198,8 @@ class AssetListAdapter internal constructor(
         Asset(
             id = null,
             symbol = symbol,
-            shares = sharesTotal,
-            price = assetTotal
+            shares = totalShares,
+            price = totalPrice
         )
     )
 

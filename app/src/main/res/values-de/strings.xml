@@ -26,13 +26,25 @@ limitations under the License. -->
     <item quantity="one">%1$s Aktie zum Kaufpreis von %2$s wurden im Aktienbestand aktualisiert.</item>
     <item quantity="other">%1$s Aktien zum Kaufpreis von %2$s wurden im Aktienbestand aktualisiert.</item>
   </plurals>
+  <plurals name="asset_removed">
+    <item quantity="one">%1$s Aktie wurden im Aktienbestand entfernt.</item>
+    <item quantity="other">%1$s Aktien wurden im Aktienbestand entfernt.</item>
+  </plurals>
   <plurals name="delete_asset_msg">
     <item quantity="one">%1$s Aktie zum Kaufpreis von %2$s wurden aus Ihrem Aktienbestand entfernt.</item>
     <item quantity="other">%1$s Aktien zum Kaufpreis von %2$s wurden aus Ihrem Aktienbestand entfernt.</item>
   </plurals>
+  <plurals name="delete_removed_asset_msg">
+    <item quantity="one">Das Entfernen der %1$s Aktie wurde rückgängig gemacht.</item>
+    <item quantity="other">Das Entfernen der %1$s Aktien wurde rückgängig gemacht.</item>
+  </plurals>
   <plurals name="delete_asset_confirm">
     <item quantity="one">Sind Sie sicher, dass Sie die %1$s Aktie zum Kaufpreis von %2$s aus Ihrem Aktienbestand entfernen möchten?</item>
     <item quantity="other">Sind Sie sicher, dass Sie die %1$s Aktien zum Kaufpreis von %2$s aus Ihrem Aktienbestand entfernen möchten?</item>
+  </plurals>
+  <plurals name="delete_removed_asset_confirm">
+    <item quantity="one">Sind Sie sicher, dass Sie das Entfernen der %1$s Aktie aus Ihrem Aktienbestand rückgängig machen möchten?</item>
+    <item quantity="other">Sind Sie sicher, dass Sie das Entfernen der %1$s Aktien aus Ihrem Aktienbestand rückgängig machen möchten?</item>
   </plurals>
 
   <!-- string-array -->
@@ -294,4 +306,5 @@ limitations under the License. -->
   <string name="data_provider_details">Datensatz für %1$s</string>
   <string name="data_provider_details_sorted">[Sortiert]</string>
   <string name="data_provider_details_unsorted">[Unsortiert]</string>
+  <string name="remove_price">Optionaler Verkaufspreis</string>
 </resources>

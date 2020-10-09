@@ -99,26 +99,30 @@ fun getAssetChange(
   marketPrice: Double,
   context: Context
 ): SpannableStringBuilder {
-  val shares = assets.sumByDouble {
-    it.shares
-  }
 
-  val asset: Double =
-    if (shares > 0.0) {
-      assets.sumByDouble {
-        it.shares * it.price
-      }
-    } else {
-      0.0
-    }
+  val (shares, asset) = getAssets(assets)
+
+//  val shares = assets.sumByDouble {
+//    it.shares
+//  }
+
+//  val asset: Double =
+//    if (shares > 0.0) {
+//      assets.sumByDouble {
+//        it.shares * it.price
+//      }
+//    } else {
+//      0.0
+//    }
 
   if (marketPrice > 0.0) {
     var changeStr: String = ""
 
     if (shares > 0.0) {
-      val capital = assets.sumByDouble {
-        it.shares * marketPrice
-      }
+      val capital = shares * marketPrice
+//      val capital = assets.sumByDouble {
+//        it.shares * marketPrice
+//      }
 
       val change = capital - asset
       changeStr += "${
@@ -203,4 +207,40 @@ fun checkBaseUrl(baseUrl: String): String {
   } else {
     baseUrl
   }
+}
+
+fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
+
+  var totalShares: Double = 0.0
+  var totalPrice: Double = 0.0
+
+  assetList?.sortedBy { item ->
+    item.date
+  }
+      ?.forEach { asset ->
+
+        // added shares
+        if (asset.shares > 0.0) {
+          totalShares += asset.shares
+          totalPrice += asset.shares * asset.price
+        } else
+        // removed shares
+          if (asset.shares < 0.0) {
+            // removed all?
+            if (-asset.shares >= (totalShares + epsilon)) {
+              // reset if more removed than owned
+              totalShares = 0.0
+              totalPrice = 0.0
+            } else {
+              // adjust the total price for the removed shares
+              if (totalShares > epsilon) {
+                val averageSharePrice = totalPrice / totalShares
+                totalShares += asset.shares
+                totalPrice = totalShares * averageSharePrice
+              }
+            }
+          }
+      }
+
+  return Pair(totalShares, totalPrice)
 }

@@ -41,6 +41,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
 import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
@@ -181,22 +182,24 @@ class StockRoomChartAdapter internal constructor(
         holder.itemViewChangePercent.text = ""
       }
 
-      val shares = current.assets.sumByDouble {
-        it.shares
-      }
+      val (shares, asset) = getAssets(current.assets)
+//      val shares = current.assets.sumByDouble {
+//        it.shares
+//      }
 
-      var asset: Double = 0.0
+//      var asset: Double = 0.0
       var capital: Double = 0.0
 
       if (shares > 0.0) {
-        asset = current.assets.sumByDouble {
-          it.shares * it.price
-        }
+//        asset = current.assets.sumByDouble {
+//          it.shares * it.price
+//        }
 
         if (current.onlineMarketData.marketPrice > 0.0) {
-          capital = current.assets.sumByDouble {
-            it.shares * current.onlineMarketData.marketPrice
-          }
+          capital = shares * current.onlineMarketData.marketPrice
+//          capital = current.assets.sumByDouble {
+//            it.shares * current.onlineMarketData.marketPrice
+//          }
         }
       }
 
