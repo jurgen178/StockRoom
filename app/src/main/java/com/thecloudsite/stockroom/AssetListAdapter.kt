@@ -139,8 +139,6 @@ class AssetListAdapter internal constructor(
         holder.bindUpdate(current, clickListenerUpdate)
         holder.bindDelete(null, current, clickListenerDelete)
 
-        holder.itemViewShares.text = DecimalFormat("0.####").format(current.shares)
-
         // Removed and obsolete entries are colored light gray.
         if (current.shares < 0.0 || (current.type and obsoleteAssetType != 0)) {
           holder.itemViewShares.setTextColor(Color.LTGRAY)
@@ -153,6 +151,8 @@ class AssetListAdapter internal constructor(
             holder.itemViewTotal.setTextColor(defaultTextColor!!)
           }
         }
+
+        holder.itemViewShares.text = DecimalFormat("0.####").format(current.shares)
 
         if (current.price != 0.0) {
           holder.itemViewPrice.text = DecimalFormat("0.00##").format(current.price)
