@@ -563,6 +563,7 @@ class DividendFragment : Fragment() {
                 )
                     .show()
               }
+
               hideSoftInputFromWindow()
             } else {
               Toast.makeText(

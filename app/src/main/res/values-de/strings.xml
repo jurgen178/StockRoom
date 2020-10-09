@@ -30,6 +30,10 @@ limitations under the License. -->
     <item quantity="one">%1$s Aktie wurden im Aktienbestand entfernt.</item>
     <item quantity="other">%1$s Aktien wurden im Aktienbestand entfernt.</item>
   </plurals>
+  <plurals name="asset_removed_updated">
+    <item quantity="one">Aktienbestand wurde mit %1$s entfernten Aktie aktualisiert.</item>
+    <item quantity="other">Aktienbestand wurde mit %1$s entfernten Aktien aktualisiert.</item>
+  </plurals>
   <plurals name="delete_asset_msg">
     <item quantity="one">%1$s Aktie zum Kaufpreis von %2$s wurden aus Ihrem Aktienbestand entfernt.</item>
     <item quantity="other">%1$s Aktien zum Kaufpreis von %2$s wurden aus Ihrem Aktienbestand entfernt.</item>

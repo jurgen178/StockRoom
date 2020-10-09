@@ -357,7 +357,7 @@ class StockDataFragment : Fragment() {
                   )
                 } else {
                   resources.getQuantityString(
-                      R.plurals.asset_removed, count, DecimalFormat("0.####").format(sharesAbs)
+                      R.plurals.asset_removed_updated, count, DecimalFormat("0.####").format(sharesAbs)
                   )
                 }
 
@@ -367,6 +367,7 @@ class StockDataFragment : Fragment() {
                     .show()
               }
             }
+
             hideSoftInputFromWindow()
           } else {
             Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
@@ -518,6 +519,7 @@ class StockDataFragment : Fragment() {
                   .show()
             }
           }
+
           hideSoftInputFromWindow()
         }
         .setNegativeButton(
@@ -1234,6 +1236,7 @@ class StockDataFragment : Fragment() {
                 Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
                     .show()
               }
+
               hideSoftInputFromWindow()
             } else {
               Toast.makeText(
@@ -1356,6 +1359,7 @@ class StockDataFragment : Fragment() {
                   Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
                       .show()
                 }
+
                 hideSoftInputFromWindow()
               } else {
                 Toast.makeText(
@@ -1441,6 +1445,7 @@ class StockDataFragment : Fragment() {
                     )
                   }
                 }
+
                 hideSoftInputFromWindow()
               } else {
                 Toast.makeText(
