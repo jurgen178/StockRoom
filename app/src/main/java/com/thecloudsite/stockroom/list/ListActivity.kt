@@ -23,7 +23,6 @@ import androidx.annotation.RawRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
-import androidx.room.ColumnInfo
 import com.thecloudsite.stockroom.MainActivity.Companion
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.raw

@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.utils.getAssets
@@ -159,7 +158,7 @@ class AssetListAdapter internal constructor(
           holder.assetSummaryTextView.text = SpannableStringBuilder()
               .append("${context.getString(R.string.summary_capital_gain)} ")
               .append(capitalGainLossText)
-              .append("${context.getString(R.string.asset_summary_text)}")
+              .append(context.getString(R.string.asset_summary_text))
         } else {
           holder.assetSummaryTextView.text = context.getString(R.string.asset_summary_text)
         }

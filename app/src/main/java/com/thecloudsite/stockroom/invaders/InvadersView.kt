@@ -1,5 +1,6 @@
 package com.thecloudsite.stockroom.invaders
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.*
@@ -260,6 +261,7 @@ class InvadersView(context: Context, private val size: Point)
 
     // The SurfaceView class implements onTouchListener
     // So we can override this method and detect screen touches.
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(motionEvent: MotionEvent): Boolean {
         when (motionEvent.action and MotionEvent.ACTION_MASK) {
 

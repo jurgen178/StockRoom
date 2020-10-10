@@ -207,7 +207,7 @@ fun getAssets(
       // removed shares
         if (asset.shares < 0.0) {
           // removed all?
-          if (-asset.shares >= (totalShares - com.thecloudsite.stockroom.utils.epsilon)) {
+          if (-asset.shares >= (totalShares - epsilon)) {
             // reset if more removed than owned
             totalShares = 0.0
             totalPrice = 0.0
@@ -219,7 +219,7 @@ fun getAssets(
             }
           } else {
             // adjust the total price for the removed shares
-            if (totalShares > com.thecloudsite.stockroom.utils.epsilon) {
+            if (totalShares > epsilon) {
               val averageSharePrice = totalPrice / totalShares
               totalShares += asset.shares
               totalPrice = totalShares * averageSharePrice
@@ -251,11 +251,11 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Double {
         }
         totalShares += asset.shares
 
-        if ((totalShares <= -com.thecloudsite.stockroom.utils.epsilon)) {
+        if ((totalShares <= -epsilon)) {
           // Error, more shares sold than owned
           return Double.NEGATIVE_INFINITY
         }
-        if ((totalShares < com.thecloudsite.stockroom.utils.epsilon)) {
+        if ((totalShares < epsilon)) {
           // reset if more removed than owned
           totalGain += totalSold - totalBought
         }

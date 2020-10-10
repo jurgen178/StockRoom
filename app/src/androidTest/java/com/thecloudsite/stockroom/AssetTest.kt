@@ -17,11 +17,10 @@
 package com.thecloudsite.stockroom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.thecloudsite.stockroom.database.Asset
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.thecloudsite.stockroom.database.Asset
-import kotlin.math.absoluteValue
 
 @RunWith(AndroidJUnit4::class)
 class AssetTest {
