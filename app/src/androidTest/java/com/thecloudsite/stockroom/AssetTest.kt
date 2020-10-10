@@ -21,6 +21,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import com.thecloudsite.stockroom.database.Asset
+import kotlin.math.absoluteValue
 
 @RunWith(AndroidJUnit4::class)
 class AssetTest {
@@ -227,5 +228,116 @@ class AssetTest {
     assertEquals(0, assetList5[2].type)
     assertEquals(0, assetList5[3].type)
     assertEquals(obsoleteAssetType, assetList5[4].type)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun assetCapitalGain() {
+    fun getAssetsCapitalGain(assetList: List<Asset>?): Double {
+
+      var totalShares: Double = 0.0
+      var totalGain: Double = 0.0
+      var totalBought: Double = 0.0
+      var totalSold: Double = 0.0
+
+      assetList?.sortedBy { asset ->
+        asset.date
+      }
+          ?.forEach { asset ->
+            if (asset.shares > 0.0) {
+              totalBought += asset.shares * asset.price
+            }
+            if (asset.shares < 0.0) {
+              totalSold += -asset.shares * asset.price
+            }
+            totalShares += asset.shares
+
+            if ((totalShares <= -com.thecloudsite.stockroom.utils.epsilon)) {
+              // Error, more shares sold than owned
+              return Double.NEGATIVE_INFINITY
+            }
+            if ((totalShares < com.thecloudsite.stockroom.utils.epsilon)) {
+              // reset if more removed than owned
+              totalGain += totalSold - totalBought
+            }
+          }
+
+      return totalGain
+    }
+
+    val assetList1 = listOf(
+        Asset(
+            symbol = "s1",
+            shares = 10.0,
+            price = 20.0,
+            date = 1
+        ),
+        Asset(
+            symbol = "s1",
+            shares = 20.0,
+            price = 50.0,
+            date = 2
+        ),
+        Asset(
+            symbol = "s1",
+            shares = -30.0,
+            price = 100.0,
+            date = 3
+        ),
+        Asset(
+            symbol = "s1",
+            shares = 100.0,
+            price = 20.0,
+            date = 4
+        ),
+        Asset(
+            symbol = "s1",
+            shares = -50.0,
+            price = 0.0,
+            date = 5
+        )
+    )
+    val totalGain1 = getAssetsCapitalGain(assetList1)
+    assertEquals(1800.0, totalGain1, epsilon)
+
+    val assetList2 = listOf(
+        Asset(
+            symbol = "s1",
+            shares = 0.0,
+            price = 0.0,
+            date = 1
+        ),
+        Asset(
+            symbol = "s1",
+            shares = -20.0,
+            price = 50.0,
+            date = 2
+        ),
+        Asset(
+            symbol = "s1",
+            shares = 20.0,
+            price = 2.0,
+            date = 3
+        )
+    )
+    val totalGain2 = getAssetsCapitalGain(assetList2)
+    assertEquals(Double.NEGATIVE_INFINITY, totalGain2, epsilon)
+
+    val assetList3 = listOf(
+        Asset(
+            symbol = "s1",
+            shares = 20.0,
+            price = 30.0,
+            date = 1
+        ),
+        Asset(
+            symbol = "s1",
+            shares = -20.0,
+            price = 10.0,
+            date = 2
+        )
+    )
+    val totalGain3 = getAssetsCapitalGain(assetList3)
+    assertEquals(-400.0, totalGain3, epsilon)
   }
 }

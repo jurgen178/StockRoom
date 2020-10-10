@@ -30,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
+import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -172,11 +174,28 @@ class SummaryGroupAdapter internal constructor(
         all || it.stockDBdata.groupColor == color
       }
 
+    var capitalGain = 0.0
+    var capitalLoss = 0.0
+
     stockItemsSelected.forEach { stockItem ->
       val (shares, price) = getAssets(stockItem.assets)
 
       totalPurchasePrice += price
       totalShares += shares
+
+      val capitalGainLoss = getAssetsCapitalGain(stockItem.assets)
+      when {
+        capitalGainLoss == Double.NEGATIVE_INFINITY -> {
+          capitalGain = 0.0
+          capitalLoss = 0.0
+        }
+        capitalGainLoss > 0.0 -> {
+          capitalGain += capitalGainLoss
+        }
+        else -> {
+          capitalLoss += -capitalGainLoss
+        }
+      }
 
       stockItem.dividends.forEach { dividend ->
         if (dividend.type == DividendType.Received.value) {
@@ -215,6 +234,8 @@ class SummaryGroupAdapter internal constructor(
       }
     }
 
+    val capitalGainLoss = getCapitalGainLossText(capitalGain, capitalLoss, context)
+
     val stockAssets = stockItemsSelected.filter {
       it.assets.isNotEmpty()
     }
@@ -238,7 +259,9 @@ class SummaryGroupAdapter internal constructor(
         .bold { append("${totalNotes}\n") }
         .append("${context.getString(R.string.summary_number_of_stocks)} ")
         .bold { append("${DecimalFormat("0.####").format(totalShares)}\n\n") }
-        .append("${context.getString(R.string.summary_total_purchase_price)} ")
+        .append("${context.getString(R.string.summary_capital_gain)} ")
+        .append(capitalGainLoss)
+        .append("\n${context.getString(R.string.summary_total_purchase_price)} ")
         .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
         .append("${context.getString(R.string.summary_total_assets)} ")
         .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }

@@ -18,6 +18,7 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.graphics.Color
+import android.text.SpannableStringBuilder
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -25,9 +26,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
+import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import com.thecloudsite.stockroom.utils.obsoleteAssetType
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetDelete
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetItemsLayout
@@ -44,6 +48,7 @@ class AssetListAdapter internal constructor(
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var assetList = mutableListOf<Asset>()
+  private var assetsCopy = listOf<Asset>()
   private var defaultTextColor: Int? = null
 
   class AssetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -67,6 +72,7 @@ class AssetListAdapter internal constructor(
     val itemViewTotal: TextView = itemView.findViewById(R.id.textViewAssetTotal)
     val itemViewDelete: TextView = itemView.findViewById(R.id.textViewAssetDelete)
     val assetSummaryView: LinearLayout = itemView.findViewById(R.id.assetSummaryView)
+    val assetSummaryTextView: TextView = itemView.findViewById(R.id.assetSummaryTextView)
     val itemViewLayout: ConstraintLayout = itemView.findViewById(R.id.textViewAssetLayout)
     val textViewAssetItemsLayout: LinearLayout =
       itemView.findViewById(R.id.textViewAssetItemsLayout)
@@ -130,6 +136,34 @@ class AssetListAdapter internal constructor(
         }
 
         holder.assetSummaryView.visibility = View.VISIBLE
+
+        if (assetsCopy.isNotEmpty()) {
+          var capitalGain = 0.0
+          var capitalLoss = 0.0
+
+          val capitalGainLoss = getAssetsCapitalGain(assetsCopy)
+          when {
+            capitalGainLoss == Double.NEGATIVE_INFINITY -> {
+              capitalGain = 0.0
+              capitalLoss = 0.0
+            }
+            capitalGainLoss > 0.0 -> {
+              capitalGain += capitalGainLoss
+            }
+            else -> {
+              capitalLoss += -capitalGainLoss
+            }
+          }
+
+          val capitalGainLossText = getCapitalGainLossText(capitalGain, capitalLoss, context)
+          holder.assetSummaryTextView.text = SpannableStringBuilder()
+              .append("${context.getString(R.string.summary_capital_gain)} ")
+              .append(capitalGainLossText)
+              .append("${context.getString(R.string.asset_summary_text)}")
+        } else {
+          holder.assetSummaryTextView.text = context.getString(R.string.asset_summary_text)
+        }
+
         holder.itemViewLayout.setBackgroundColor(Color.YELLOW)
 
         val background = TypedValue()
@@ -175,6 +209,8 @@ class AssetListAdapter internal constructor(
   }
 
   internal fun updateAssets(assets: List<Asset>) {
+    assetsCopy = assets
+
     // Headline placeholder
     assetList = mutableListOf(
         Asset(

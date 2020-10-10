@@ -338,11 +338,12 @@ class StockDataFragment : Fragment() {
 
               val assetNew =
                 Asset(symbol = symbol, shares = shares, price = price, date = date, note = noteText)
+
               if (asset.shares != assetNew.shares
                   || asset.price != assetNew.price
                   || asset.date != assetNew.date
-                  || asset.note != assetNew.note)
-              {
+                  || asset.note != assetNew.note
+              ) {
                 // Each asset has an id. Delete the asset with that id and then add assetNew.
                 stockRoomViewModel.updateAsset2(asset, assetNew)
 
@@ -367,7 +368,8 @@ class StockDataFragment : Fragment() {
                   )
                 } else {
                   resources.getQuantityString(
-                      R.plurals.asset_removed_updated, count, DecimalFormat("0.####").format(sharesAbs)
+                      R.plurals.asset_removed_updated, count,
+                      DecimalFormat("0.####").format(sharesAbs)
                   )
                 }
 
@@ -1228,7 +1230,13 @@ class StockDataFragment : Fragment() {
                 //    .toEpochSecond(ZoneOffset.UTC)
 
                 stockRoomViewModel.addAsset(
-                    Asset(symbol = symbol, shares = shares, price = price, date = date, note = noteText)
+                    Asset(
+                        symbol = symbol,
+                        shares = shares,
+                        price = price,
+                        date = date,
+                        note = noteText
+                    )
                 )
                 val count: Int = when {
                   shares == 1.0 -> {
@@ -1356,7 +1364,13 @@ class StockDataFragment : Fragment() {
 
                   // Add negative shares for removed asset.
                   stockRoomViewModel.addAsset(
-                      Asset(symbol = symbol, shares = -shares, price = price, date = date, note = noteText)
+                      Asset(
+                          symbol = symbol,
+                          shares = -shares,
+                          price = price,
+                          date = date,
+                          note = noteText
+                      )
                   )
                   val count: Int = when {
                     shares == 1.0 -> {

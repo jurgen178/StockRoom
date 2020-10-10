@@ -167,7 +167,7 @@ limitations under the License. -->
   <string name="invalid_split_entry">Das Aktiensplitverhältnis muss größer als 0 und kleiner oder gleich 20 sein.</string>
   <string name="split_min_price">Das Aktiensplitverhältnis würde in einen zu kleinen Preis resultieren.</string>
   <string name="split_min_shares">Das Aktiensplitverhältnis würde in einer zu kleinen Aktienanzahl resultieren.</string>
-  <string name="asset_summary_text">Gesamtaktienbestand</string>
+  <string name="asset_summary_text">Gesamtaktienbestand:</string>
   <string name="title_activity_add">Aktien hinzufügen</string>
   <string name="title_activity_stockdata">Aktiendetails</string>
   <string name="add_stock">Aktie \'%1$s\' wurde hinzugefügt.</string>
@@ -195,6 +195,7 @@ limitations under the License. -->
   <string name="summary_events">Ereignisse</string>
   <string name="summary_note">Anmerkungen</string>
   <string name="summary_number_of_stocks">Anzahl Aktien</string>
+  <string name="summary_capital_gain">Ausgeführter Kapitalgewinn</string>
   <string name="summary_total_purchase_price">Gesamtkaufpreis</string>
   <string name="summary_total_assets">Gesamtbestand</string>
   <string name="summary_gain">Gewinn</string>

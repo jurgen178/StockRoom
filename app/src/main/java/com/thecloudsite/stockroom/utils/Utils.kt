@@ -28,6 +28,7 @@ import com.thecloudsite.stockroom.DividendCycle.Annual
 import com.thecloudsite.stockroom.DividendCycle.Monthly
 import com.thecloudsite.stockroom.DividendCycle.Quarterly
 import com.thecloudsite.stockroom.DividendCycle.SemiAnnual
+import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.database.Asset
 import java.text.DecimalFormat
@@ -229,6 +230,69 @@ fun getAssets(
   }
 
   return Pair(totalShares, totalPrice)
+}
+
+fun getAssetsCapitalGain(assetList: List<Asset>?): Double {
+
+  var totalShares: Double = 0.0
+  var totalGain: Double = 0.0
+  var totalBought: Double = 0.0
+  var totalSold: Double = 0.0
+
+  assetList?.sortedBy { asset ->
+    asset.date
+  }
+      ?.forEach { asset ->
+        if (asset.shares > 0.0) {
+          totalBought += asset.shares * asset.price
+        }
+        if (asset.shares < 0.0) {
+          totalSold += -asset.shares * asset.price
+        }
+        totalShares += asset.shares
+
+        if ((totalShares <= -com.thecloudsite.stockroom.utils.epsilon)) {
+          // Error, more shares sold than owned
+          return Double.NEGATIVE_INFINITY
+        }
+        if ((totalShares < com.thecloudsite.stockroom.utils.epsilon)) {
+          // reset if more removed than owned
+          totalGain += totalSold - totalBought
+        }
+      }
+
+  return totalGain
+}
+
+fun getCapitalGainLossText(
+  capitalGain: Double,
+  capitalLoss: Double,
+  context: Context
+): SpannableStringBuilder {
+  return when {
+    capitalGain > capitalLoss -> {
+      SpannableStringBuilder()
+          .color(
+              context.getColor(R.color.green)
+          ) {
+            bold {
+              append(
+                  "${DecimalFormat("0.00").format(capitalGain - capitalLoss)}\n"
+              )
+            }
+          }
+    }
+    capitalGain < capitalLoss -> {
+      SpannableStringBuilder().color(context.getColor(R.color.red)) {
+        bold { append("${DecimalFormat("0.00").format(capitalGain - capitalLoss)}\n") }
+      }
+    }
+    else -> {
+      SpannableStringBuilder().bold {
+        append("0.00\n")
+      }
+    }
+  }
 }
 
 fun isOnline(context: Context): Boolean {

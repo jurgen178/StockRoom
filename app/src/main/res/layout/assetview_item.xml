@@ -36,12 +36,12 @@ limitations under the License. -->
         android:layout_marginEnd="4dp"
         android:background="?android:attr/listDivider"
         />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textSize="11sp"
-          android:text="@string/asset_summary_text"
-          />
+    <TextView
+        android:id="@+id/assetSummaryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        />
   </LinearLayout>
 
   <androidx.constraintlayout.widget.ConstraintLayout
