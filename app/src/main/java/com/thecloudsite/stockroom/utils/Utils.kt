@@ -251,13 +251,15 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Double {
         }
         totalShares += asset.shares
 
-        if ((totalShares <= -epsilon)) {
+        if ((totalShares <= -com.thecloudsite.stockroom.utils.epsilon)) {
           // Error, more shares sold than owned
           return Double.NEGATIVE_INFINITY
         }
-        if ((totalShares < epsilon)) {
-          // reset if more removed than owned
+        if ((totalShares < com.thecloudsite.stockroom.utils.epsilon)) {
+          // reset if all shares are sold
           totalGain += totalSold - totalBought
+          totalSold = 0.0
+          totalBought = 0.0
         }
       }
 

@@ -256,8 +256,10 @@ class AssetTest {
               return Double.NEGATIVE_INFINITY
             }
             if ((totalShares < com.thecloudsite.stockroom.utils.epsilon)) {
-              // reset if more removed than owned
+              // reset if all shares are sold
               totalGain += totalSold - totalBought
+              totalSold = 0.0
+              totalBought = 0.0
             }
           }
 
@@ -334,9 +336,27 @@ class AssetTest {
             shares = -20.0,
             price = 10.0,
             date = 2
+        ),
+        Asset(
+            symbol = "s1",
+            shares = 2.0,
+            price = 3.0,
+            date = 3
+        ),
+        Asset(
+            symbol = "s1",
+            shares = -2.0,
+            price = 5.0,
+            date = 4
+        ),
+        Asset(
+            symbol = "s1",
+            shares = 2.0,
+            price = 5.0,
+            date = 5
         )
     )
     val totalGain3 = getAssetsCapitalGain(assetList3)
-    assertEquals(-400.0, totalGain3, epsilon)
+    assertEquals(-400.0 + 4.0, totalGain3, epsilon)
   }
 }
