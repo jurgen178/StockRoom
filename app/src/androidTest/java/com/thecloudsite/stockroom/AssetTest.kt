@@ -253,9 +253,10 @@ class AssetTest {
 
             if ((totalShares <= -com.thecloudsite.stockroom.utils.epsilon)) {
               // Error, more shares sold than owned
-              return Double.NEGATIVE_INFINITY
+              return 0.0
             }
-            if ((totalShares < com.thecloudsite.stockroom.utils.epsilon)) {
+            if (totalShares < com.thecloudsite.stockroom.utils.epsilon) {
+              // totalShares are 0: -epsilon < totalShares < epsilon
               // reset if all shares are sold
               totalGain += totalSold - totalBought
               totalSold = 0.0
@@ -322,7 +323,7 @@ class AssetTest {
         )
     )
     val totalGain2 = getAssetsCapitalGain(assetList2)
-    assertEquals(Double.NEGATIVE_INFINITY, totalGain2, epsilon)
+    assertEquals(0.0, totalGain2, epsilon)
 
     val assetList3 = listOf(
         Asset(
@@ -336,7 +337,7 @@ class AssetTest {
             shares = -20.0,
             price = 10.0,
             date = 2
-        ),
+        ),  // 400.0 loss
         Asset(
             symbol = "s1",
             shares = 2.0,
@@ -348,7 +349,7 @@ class AssetTest {
             shares = -2.0,
             price = 5.0,
             date = 4
-        ),
+        ),  // 4.0 gain
         Asset(
             symbol = "s1",
             shares = 2.0,

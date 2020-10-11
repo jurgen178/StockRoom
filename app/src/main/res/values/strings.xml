@@ -201,9 +201,7 @@ limitations under the License. -->
   <string name="summary_capital_gain">Executed Capital Gain</string>
   <string name="summary_total_purchase_price">Total purchase price</string>
   <string name="summary_total_assets">Total assets</string>
-  <string name="summary_gain">Gain</string>
-  <string name="summary_loss">Loss</string>
-  <string name="summary_gain_loss">Gain - Loss</string>
+  <string name="summary_gain_loss">Gain</string>
   <string name="summary_dividend_assets">Assets with dividend</string>
   <string name="summary_no_dividend_assets">Assets without dividend</string>
   <string name="summary_dividend_per_year">Dividend per year</string>

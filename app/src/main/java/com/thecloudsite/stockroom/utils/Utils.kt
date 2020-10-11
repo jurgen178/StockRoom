@@ -232,66 +232,105 @@ fun getAssets(
   return Pair(totalShares, totalPrice)
 }
 
-fun getAssetsCapitalGain(assetList: List<Asset>?): Double {
+fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
 
   var totalShares: Double = 0.0
   var totalGain: Double = 0.0
-  var totalBought: Double = 0.0
-  var totalSold: Double = 0.0
+  var totalLoss: Double = 0.0
+  var bought: Double = 0.0
+  var sold: Double = 0.0
 
   assetList?.sortedBy { asset ->
     asset.date
   }
       ?.forEach { asset ->
         if (asset.shares > 0.0) {
-          totalBought += asset.shares * asset.price
+          bought += asset.shares * asset.price
         }
         if (asset.shares < 0.0) {
-          totalSold += -asset.shares * asset.price
+          sold += -asset.shares * asset.price
         }
         totalShares += asset.shares
 
-        if ((totalShares <= -com.thecloudsite.stockroom.utils.epsilon)) {
+        if ((totalShares <= -epsilon)) {
           // Error, more shares sold than owned
-          return Double.NEGATIVE_INFINITY
+          return Pair(0.0, 0.0)
         }
-        if ((totalShares < com.thecloudsite.stockroom.utils.epsilon)) {
+        if (totalShares < epsilon) {
+          // totalShares are 0: -epsilon < totalShares < epsilon
           // reset if all shares are sold
-          totalGain += totalSold - totalBought
-          totalSold = 0.0
-          totalBought = 0.0
+          val gain = sold - bought
+          if (gain > 0.0) {
+            totalGain += gain
+          } else
+            if (gain < 0.0) {
+              totalLoss -= gain
+            }
+          sold = 0.0
+          bought = 0.0
         }
       }
 
-  return totalGain
+  return Pair(totalGain, totalLoss)
 }
 
 fun getCapitalGainLossText(
+  context: Context,
   capitalGain: Double,
   capitalLoss: Double,
-  context: Context
+  capitalTotalOptional: Double = 0.0,
+  formatConcat: String = " - ",
+  formatEnd: String = ""
 ): SpannableStringBuilder {
+
+  // optional total with no rounding errors
+  val capitalTotal =
+    if (capitalTotalOptional == 0.0) {
+      capitalGain - capitalLoss
+    } else {
+      capitalTotalOptional
+    }
+
   return when {
-    capitalGain > capitalLoss -> {
+    capitalLoss == 0.0 && capitalGain > 0.0 -> {
+      SpannableStringBuilder().color(context.getColor(R.color.green)) {
+        bold { append("${DecimalFormat("0.00").format(capitalGain)}$formatEnd") }
+      }
+    }
+    capitalGain == 0.0 && capitalLoss > 0.0 -> {
+      SpannableStringBuilder().color(context.getColor(R.color.red)) {
+        bold { append("${DecimalFormat("0.00").format(-capitalLoss)}$formatEnd") }
+      }
+    }
+    capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain > capitalLoss -> {
       SpannableStringBuilder()
-          .color(
-              context.getColor(R.color.green)
-          ) {
-            bold {
-              append(
-                  "${DecimalFormat("0.00").format(capitalGain - capitalLoss)}\n"
-              )
-            }
+          .color(context.getColor(R.color.green)) {
+            bold { append("${DecimalFormat("0.00").format(capitalGain)}$formatEnd") }
+          }
+          .color(context.getColor(R.color.red)) {
+            bold { append("$formatConcat${DecimalFormat("0.00").format(capitalLoss)}$formatEnd") }
+          }
+          .append(" = ")
+          .color(context.getColor(R.color.green)) {
+            bold { append("${DecimalFormat("0.00").format(capitalTotal)}$formatEnd") }
           }
     }
-    capitalGain < capitalLoss -> {
-      SpannableStringBuilder().color(context.getColor(R.color.red)) {
-        bold { append("${DecimalFormat("0.00").format(capitalGain - capitalLoss)}\n") }
-      }
+    capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain < capitalLoss -> {
+      SpannableStringBuilder()
+          .color(context.getColor(R.color.green)) {
+            bold { append("${DecimalFormat("0.00").format(capitalGain)}$formatEnd") }
+          }
+          .color(context.getColor(R.color.red)) {
+            bold { append("$formatConcat${DecimalFormat("0.00").format(capitalLoss)}$formatEnd") }
+          }
+          .append(" = ")
+          .color(context.getColor(R.color.red)) {
+            bold { append("${DecimalFormat("0.00").format(capitalTotal)}$formatEnd") }
+          }
     }
     else -> {
       SpannableStringBuilder().bold {
-        append("0.00\n")
+        append("0.00$formatEnd")
       }
     }
   }

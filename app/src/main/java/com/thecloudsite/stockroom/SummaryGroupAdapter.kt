@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
@@ -183,17 +182,18 @@ class SummaryGroupAdapter internal constructor(
       totalPurchasePrice += price
       totalShares += shares
 
-      val capitalGainLoss = getAssetsCapitalGain(stockItem.assets)
+      val (gain, loss) = getAssetsCapitalGain(stockItem.assets)
+      // Merge gain and loss of the individual stock to one gain/loss to prevent
+      // having individual loss/gain reported in the summary.
+      val capitalGainLoss = gain - loss
       when {
-        capitalGainLoss == Double.NEGATIVE_INFINITY -> {
-          capitalGain = 0.0
-          capitalLoss = 0.0
-        }
         capitalGainLoss > 0.0 -> {
           capitalGain += capitalGainLoss
         }
-        else -> {
+        capitalGainLoss < 0.0 -> {
           capitalLoss += -capitalGainLoss
+        }
+        else -> {
         }
       }
 
@@ -234,7 +234,7 @@ class SummaryGroupAdapter internal constructor(
       }
     }
 
-    val capitalGainLoss = getCapitalGainLossText(capitalGain, capitalLoss, context)
+    val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
 
     val stockAssets = stockItemsSelected.filter {
       it.assets.isNotEmpty()
@@ -252,15 +252,15 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_stocks_with_assets)} ")
         .bold { append("${stockAssets.size}\n") }
         .append("${context.getString(R.string.summary_alerts)} ")
-        .bold { append("${totalAlerts}\n") }
+        .bold { append("$totalAlerts\n") }
         .append("${context.getString(R.string.summary_events)} ")
-        .bold { append("${stockEvents}\n") }
+        .bold { append("$stockEvents\n") }
         .append("${context.getString(R.string.summary_note)} ")
-        .bold { append("${totalNotes}\n") }
+        .bold { append("$totalNotes\n") }
         .append("${context.getString(R.string.summary_number_of_stocks)} ")
         .bold { append("${DecimalFormat("0.####").format(totalShares)}\n\n") }
         .append("${context.getString(R.string.summary_capital_gain)} ")
-        .append(capitalGainLoss)
+        .append(capitalGainLossText)
         .append("\n${context.getString(R.string.summary_total_purchase_price)} ")
         .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
         .append("${context.getString(R.string.summary_total_assets)} ")
@@ -280,34 +280,23 @@ class SummaryGroupAdapter internal constructor(
       0.0
     }
 
+    // Possible rounding error
     val gain = if (totalGain > 0.0) {
-      SpannableStringBuilder()
-          .color(
-              context.getColor(R.color.green)
-          ) { bold { append("${DecimalFormat("0.00").format(totalGain)}\n") } }
+      totalGain
     } else {
-      SpannableStringBuilder().bold {
-        append("${DecimalFormat("0.00").format(totalGain)}\n")
-      }
+      0.0
     }
 
-    // To minimize rounding errors
     val totalLoss = if (totalAssets > 0.0) {
       totalGain - (totalAssets - totalPurchasePrice)
     } else {
       0.0
     }
 
-    // Possible rounding error
     val loss = if (totalLoss > epsilon) {
-      SpannableStringBuilder()
-          .color(
-              context.getColor(R.color.red)
-          ) { bold { append("${DecimalFormat("0.00").format(totalLoss)}\n") } }
+      totalLoss
     } else {
-      SpannableStringBuilder().bold {
-        append("0.00\n")
-      }
+      0.0
     }
 
     val total = if (totalAssets > 0.0) {
@@ -315,39 +304,12 @@ class SummaryGroupAdapter internal constructor(
     } else {
       0.0
     }
-    val gainloss = when {
-      total > 0.0 -> {
-        SpannableStringBuilder()
-            .color(
-                context.getColor(R.color.green)
-            ) {
-              bold {
-                append(
-                    "${DecimalFormat("0.00").format(total)}\n"
-                )
-              }
-            }
-      }
-      total < 0.0 -> {
-        SpannableStringBuilder().color(context.getColor(R.color.red)) {
-          bold { append("${DecimalFormat("0.00").format(total)}\n") }
-        }
-      }
-      else -> {
-        SpannableStringBuilder().bold {
-          append("0.00\n")
-        }
-      }
-    }
+
+    val gainLossText = getCapitalGainLossText(context, gain, loss, total, "-", "\n")
 
     val summaryGroup1 = SpannableStringBuilder()
-        .append("${context.getString(R.string.summary_gain)} ")
-        .append(gain)
-        //.color(Color.GREEN, { bold { append("${DecimalFormat("0.00").format(totalGain)}\n") } })
-        .append("${context.getString(R.string.summary_loss)} ")
-        .append(loss)
         .append("${context.getString(R.string.summary_gain_loss)} ")
-        .append(gainloss)
+        .append(gainLossText)
         .append("\n")
         .append("${context.getString(R.string.summary_dividend_assets)} ")
         .bold {
