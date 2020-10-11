@@ -192,7 +192,7 @@ class DividendFragment : Fragment() {
               }
             }
 
-            hideSoftInputFromWindow()
+            //hideSoftInputFromWindow()
           } else {
             Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
                 .show()
@@ -341,7 +341,7 @@ class DividendFragment : Fragment() {
                 .show()
           }
 
-          hideSoftInputFromWindow()
+          //hideSoftInputFromWindow()
         }
         .setNegativeButton(
             R.string.cancel
@@ -564,7 +564,7 @@ class DividendFragment : Fragment() {
                     .show()
               }
 
-              hideSoftInputFromWindow()
+              //hideSoftInputFromWindow()
             } else {
               Toast.makeText(
                   requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
@@ -655,7 +655,7 @@ class DividendFragment : Fragment() {
             )
                 .show()
 
-            hideSoftInputFromWindow()
+            //hideSoftInputFromWindow()
           }
           .setNegativeButton(
               R.string.cancel

@@ -79,6 +79,7 @@ dependencies {
   implementation 'com.google.firebase:firebase-perf:19.0.9'
   // Add the Realtime Database SDK
   implementation 'com.google.firebase:firebase-database-ktx:19.5.0'
+  implementation 'androidx.cardview:cardview:1.0.0'
   // Add the dependencies for FirebaseUI
   //implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
   // Add Firebase Authentication to your app and Google Play services
@@ -149,6 +150,9 @@ dependencies {
 
   // Color picker
   implementation 'com.larswerkman:HoloColorPicker:1.5'
+
+  // Timeline
+  implementation 'com.github.sangcomz:StickyTimeLine:v0.0.17'
 
   // Testing
   testImplementation 'junit:junit:4.13'

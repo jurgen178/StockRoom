@@ -531,7 +531,7 @@ class StockDataFragment : Fragment() {
             }
           }
 
-          hideSoftInputFromWindow()
+          //hideSoftInputFromWindow()
         }
         .setNegativeButton(
             R.string.cancel
@@ -1138,7 +1138,7 @@ class StockDataFragment : Fragment() {
                         .show()
                   }
 
-                  hideSoftInputFromWindow()
+                  //hideSoftInputFromWindow()
                 } else {
                   Toast.makeText(
                       requireContext(), getString(R.string.invalid_split_entry), Toast.LENGTH_LONG

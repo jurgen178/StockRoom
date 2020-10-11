@@ -181,14 +181,17 @@ class MainActivity : AppCompatActivity() {
           2 -> {
             SummaryListFragment.newInstance()
           }
-          else -> {
+          3 -> {
             SummaryGroupFragment.newInstance()
+          }
+          else -> {
+            TimelineFragment.newInstance()
           }
         }
       }
 
       override fun getItemCount(): Int {
-        return 4
+        return 5
       }
     }
 

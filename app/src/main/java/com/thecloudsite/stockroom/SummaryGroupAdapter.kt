@@ -176,6 +176,9 @@ class SummaryGroupAdapter internal constructor(
     var capitalGain = 0.0
     var capitalLoss = 0.0
 
+    val boughtHashSet = hashSetOf<String>()
+    val soldHashSet = hashSetOf<String>()
+
     stockItemsSelected.forEach { stockItem ->
       val (shares, price) = getAssets(stockItem.assets)
 
@@ -194,6 +197,14 @@ class SummaryGroupAdapter internal constructor(
           capitalLoss += -capitalGainLoss
         }
         else -> {
+        }
+      }
+
+      stockItem.assets.forEach { asset ->
+        if (asset.shares > 0.0) {
+          boughtHashSet.add("${asset.symbol} ${asset.date}")
+        } else {
+          soldHashSet.add("${asset.symbol} ${asset.date}")
         }
       }
 
@@ -234,7 +245,10 @@ class SummaryGroupAdapter internal constructor(
       }
     }
 
-    val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
+    val capitalGainLossText =
+      getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
+
+    val boughtSoldText = "${boughtHashSet.size}/${soldHashSet.size}"
 
     val stockAssets = stockItemsSelected.filter {
       it.assets.isNotEmpty()
@@ -253,6 +267,8 @@ class SummaryGroupAdapter internal constructor(
         .bold { append("${stockAssets.size}\n") }
         .append("${context.getString(R.string.summary_alerts)} ")
         .bold { append("$totalAlerts\n") }
+        .append("${context.getString(R.string.summary_bought_sold)} ")
+        .bold { append("$boughtSoldText\n") }
         .append("${context.getString(R.string.summary_events)} ")
         .bold { append("$stockEvents\n") }
         .append("${context.getString(R.string.summary_note)} ")
