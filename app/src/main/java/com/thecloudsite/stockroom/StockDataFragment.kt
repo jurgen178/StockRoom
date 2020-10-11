@@ -284,105 +284,104 @@ class StockDataFragment : Fragment() {
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          // Add () to avoid cast exception.
           val sharesText = (addSharesView.text).toString()
               .trim()
+          var shares = 0.0
+
+          try {
+            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+            shares = numberFormat.parse(sharesText)!!
+                .toDouble()
+            if (asset.shares < 0.0) {
+              shares = -shares
+            }
+          } catch (e: Exception) {
+            Toast.makeText(
+                requireContext(), getString(R.string.asset_share_not_empty), Toast.LENGTH_LONG
+            )
+                .show()
+            return@setPositiveButton
+          }
+          if (shares == 0.0) {
+            Toast.makeText(
+                requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
+            )
+                .show()
+            return@setPositiveButton
+          }
+
           val priceText = (addPriceView.text).toString()
               .trim()
-          if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
-            var price = 0.0
-            var shares = 0.0
-            var valid = true
-            try {
-              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-              shares = numberFormat.parse(sharesText)!!
-                  .toDouble()
-              if (asset.shares < 0.0) {
-                shares = -shares
+          var price = 0.0
+          try {
+            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+            price = numberFormat.parse(priceText)!!
+                .toDouble()
+          } catch (e: Exception) {
+            Toast.makeText(
+                requireContext(), getString(R.string.asset_price_not_empty), Toast.LENGTH_LONG
+            )
+                .show()
+            return@setPositiveButton
+          }
+          if (price <= 0.0) {
+            Toast.makeText(
+                requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+            )
+                .show()
+            return@setPositiveButton
+          }
+
+          // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+          val localDateTimeNew: LocalDateTime = LocalDateTime.of(
+              datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
+              datePickerAssetDateView.dayOfMonth, 0, 0
+          )
+          val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
+
+          val noteText = (addNoteView.text).toString()
+              .trim()
+
+          val assetNew =
+            Asset(symbol = symbol, shares = shares, price = price, date = date, note = noteText)
+
+          if (asset.shares != assetNew.shares
+              || asset.price != assetNew.price
+              || asset.date != assetNew.date
+              || asset.note != assetNew.note
+          ) {
+            // Each asset has an id. Delete the asset with that id and then add assetNew.
+            stockRoomViewModel.updateAsset2(asset, assetNew)
+
+            var pluralstr: String = ""
+            val sharesAbs = shares.absoluteValue
+            val count: Int = when {
+              sharesAbs == 1.0 -> {
+                1
               }
-            } catch (e: Exception) {
-              valid = false
-            }
-            if (shares == 0.0) {
-              Toast.makeText(
-                  requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
-              )
-                  .show()
-              valid = false
-            }
-            try {
-              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-              price = numberFormat.parse(priceText)!!
-                  .toDouble()
-            } catch (e: Exception) {
-              valid = false
-            }
-            if (asset.shares > 0 && price <= 0.0) {
-              Toast.makeText(
-                  requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
-              )
-                  .show()
-              valid = false
-            }
-
-            if (valid) {
-              // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-              val localDateTimeNew: LocalDateTime = LocalDateTime.of(
-                  datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
-                  datePickerAssetDateView.dayOfMonth, 0, 0
-              )
-              val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
-
-              val noteText = (addNoteView.text).toString()
-                  .trim()
-
-              val assetNew =
-                Asset(symbol = symbol, shares = shares, price = price, date = date, note = noteText)
-
-              if (asset.shares != assetNew.shares
-                  || asset.price != assetNew.price
-                  || asset.date != assetNew.date
-                  || asset.note != assetNew.note
-              ) {
-                // Each asset has an id. Delete the asset with that id and then add assetNew.
-                stockRoomViewModel.updateAsset2(asset, assetNew)
-
-                var pluralstr: String = ""
-                val sharesAbs = shares.absoluteValue
-                val count: Int = when {
-                  sharesAbs == 1.0 -> {
-                    1
-                  }
-                  sharesAbs > 1.0 -> {
-                    sharesAbs.toInt() + 1
-                  }
-                  else -> {
-                    0
-                  }
-                }
-
-                pluralstr = if (asset.shares > 0.0) {
-                  resources.getQuantityString(
-                      R.plurals.asset_updated, count, DecimalFormat("0.####").format(sharesAbs),
-                      DecimalFormat("0.00##").format(price)
-                  )
-                } else {
-                  resources.getQuantityString(
-                      R.plurals.asset_removed_updated, count,
-                      DecimalFormat("0.####").format(sharesAbs)
-                  )
-                }
-
-                Toast.makeText(
-                    requireContext(), pluralstr, Toast.LENGTH_LONG
-                )
-                    .show()
+              sharesAbs > 1.0 -> {
+                sharesAbs.toInt() + 1
+              }
+              else -> {
+                0
               }
             }
 
-            hideSoftInputFromWindow()
-          } else {
-            Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
+            pluralstr = if (asset.shares > 0.0) {
+              resources.getQuantityString(
+                  R.plurals.asset_updated, count, DecimalFormat("0.####").format(sharesAbs),
+                  DecimalFormat("0.00##").format(price)
+              )
+            } else {
+              resources.getQuantityString(
+                  R.plurals.asset_removed_updated, count,
+                  DecimalFormat("0.####").format(sharesAbs)
+              )
+            }
+
+            Toast.makeText(
+                requireContext(), pluralstr, Toast.LENGTH_LONG
+            )
                 .show()
           }
         }
@@ -1182,90 +1181,90 @@ class StockDataFragment : Fragment() {
             // Add () to avoid cast exception.
             val sharesText = (addSharesView.text).toString()
                 .trim()
-            val priceText = (addPriceView.text).toString()
-                .trim()
-            if (priceText.isNotEmpty() && sharesText.isNotEmpty()) {
-              var price = 0.0
-              var shares = 0.0
-              var valid = true
-              try {
-                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                price = numberFormat.parse(priceText)!!
-                    .toDouble()
-              } catch (e: Exception) {
-                valid = false
-              }
-              if (price <= 0.0) {
-                Toast.makeText(
-                    requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
-                )
-                    .show()
-                valid = false
-              }
-              try {
-                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                shares = numberFormat.parse(sharesText)!!
-                    .toDouble()
-              } catch (e: Exception) {
-                valid = false
-              }
-              if (shares <= 0.0) {
-                Toast.makeText(
-                    requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
-                )
-                    .show()
-                valid = false
-              }
-              if (valid) {
-                val localDateTime: LocalDateTime = LocalDateTime.of(
-                    datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
-                    datePickerAssetDateView.dayOfMonth, 0, 0
-                )
-                val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+            var shares = 0.0
 
-                val noteText = (addNoteView.text).toString()
-                    .trim()
-
-                //val date = LocalDateTime.now()
-                //    .toEpochSecond(ZoneOffset.UTC)
-
-                stockRoomViewModel.addAsset(
-                    Asset(
-                        symbol = symbol,
-                        shares = shares,
-                        price = price,
-                        date = date,
-                        note = noteText
-                    )
-                )
-                val count: Int = when {
-                  shares == 1.0 -> {
-                    1
-                  }
-                  shares > 1.0 -> {
-                    shares.toInt() + 1
-                  }
-                  else -> {
-                    0
-                  }
-                }
-
-                val pluralstr = resources.getQuantityString(
-                    R.plurals.asset_added, count, DecimalFormat("0.####").format(shares),
-                    DecimalFormat("0.00##").format(price)
-                )
-
-                Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
-                    .show()
-              }
-
-              hideSoftInputFromWindow()
-            } else {
+            try {
+              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+              shares = numberFormat.parse(sharesText)!!
+                  .toDouble()
+            } catch (e: Exception) {
               Toast.makeText(
-                  requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
+                  requireContext(), getString(R.string.asset_share_not_empty), Toast.LENGTH_LONG
               )
                   .show()
+              return@setPositiveButton
             }
+            if (shares <= 0.0) {
+              Toast.makeText(
+                  requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
+              )
+                  .show()
+              return@setPositiveButton
+            }
+
+            val priceText = (addPriceView.text).toString()
+                .trim()
+            var price = 0.0
+            try {
+              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+              price = numberFormat.parse(priceText)!!
+                  .toDouble()
+            } catch (e: Exception) {
+              Toast.makeText(
+                  requireContext(), getString(R.string.asset_price_not_empty), Toast.LENGTH_LONG
+              )
+                  .show()
+              return@setPositiveButton
+            }
+            if (price <= 0.0) {
+              Toast.makeText(
+                  requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+              )
+                  .show()
+              return@setPositiveButton
+            }
+
+            val localDateTime: LocalDateTime = LocalDateTime.of(
+                datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
+                datePickerAssetDateView.dayOfMonth, 0, 0
+            )
+            val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+
+            val noteText = (addNoteView.text).toString()
+                .trim()
+
+            //val date = LocalDateTime.now()
+            //    .toEpochSecond(ZoneOffset.UTC)
+
+            stockRoomViewModel.addAsset(
+                Asset(
+                    symbol = symbol,
+                    shares = shares,
+                    price = price,
+                    date = date,
+                    note = noteText
+                )
+            )
+            val count: Int = when {
+              shares == 1.0 -> {
+                1
+              }
+              shares > 1.0 -> {
+                shares.toInt() + 1
+              }
+              else -> {
+                0
+              }
+            }
+
+            val pluralstr = resources.getQuantityString(
+                R.plurals.asset_added, count, DecimalFormat("0.####").format(shares),
+                DecimalFormat("0.00##").format(price)
+            )
+            Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
+                .show()
+
+            //hideSoftInputFromWindow()
           }
           .setNegativeButton(
               R.string.cancel
@@ -1308,97 +1307,103 @@ class StockDataFragment : Fragment() {
             .setPositiveButton(
                 R.string.delete
             ) { _, _ ->
-              // Add () to avoid cast exception.
               val sharesText = (removeSharesView.text).toString()
                   .trim()
-              val priceText = (removePriceView.text).toString()
-                  .trim()
-              if (sharesText.isNotEmpty()) {
-                var price = 0.0
-                var shares = 0.0
-                var valid = true
-                try {
-                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                  price = numberFormat.parse(priceText)!!
-                      .toDouble()
-                } catch (e: Exception) {
-                }
-                try {
-                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                  shares = numberFormat.parse(sharesText)!!
-                      .toDouble()
-                } catch (e: Exception) {
-                  valid = false
-                }
-                if (shares <= 0.0) {
-                  Toast.makeText(
-                      requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
-                  )
-                      .show()
-                  valid = false
-                }
-                // Send msg and adjust if more shares than owned are removed.
-                if (shares > totalShares) {
-                  Toast.makeText(
-                      requireContext(), getString(
-                      R.string.removed_shares_exceed_existing,
-                      DecimalFormat("0.####").format(shares),
-                      DecimalFormat("0.####").format(totalShares)
-                  ), Toast.LENGTH_LONG
-                  )
-                      .show()
-                  shares = totalShares
-                }
-                if (valid) {
-                  val localDateTime: LocalDateTime = LocalDateTime.of(
-                      datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
-                      datePickerAssetDateView.dayOfMonth, 0, 0
-                  )
-                  val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+              var shares = 0.0
 
-                  val noteText = (removeNoteView.text).toString()
-                      .trim()
-
-                  //val date = LocalDateTime.now()
-                  //    .toEpochSecond(ZoneOffset.UTC)
-
-                  // Add negative shares for removed asset.
-                  stockRoomViewModel.addAsset(
-                      Asset(
-                          symbol = symbol,
-                          shares = -shares,
-                          price = price,
-                          date = date,
-                          note = noteText
-                      )
-                  )
-                  val count: Int = when {
-                    shares == 1.0 -> {
-                      1
-                    }
-                    shares > 1.0 -> {
-                      shares.toInt() + 1
-                    }
-                    else -> {
-                      0
-                    }
-                  }
-
-                  val pluralstr = resources.getQuantityString(
-                      R.plurals.asset_removed, count, DecimalFormat("0.####").format(shares)
-                  )
-
-                  Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
-                      .show()
-                }
-
-                hideSoftInputFromWindow()
-              } else {
+              try {
+                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                shares = numberFormat.parse(sharesText)!!
+                    .toDouble()
+              } catch (e: Exception) {
                 Toast.makeText(
-                    requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
+                    requireContext(), getString(R.string.asset_share_not_empty), Toast.LENGTH_LONG
                 )
                     .show()
+                return@setPositiveButton
               }
+              if (shares <= 0.0) {
+                Toast.makeText(
+                    requireContext(), getString(R.string.shares_not_zero), Toast.LENGTH_LONG
+                )
+                    .show()
+                return@setPositiveButton
+              }
+
+              val priceText = (removePriceView.text).toString()
+                  .trim()
+              var price = 0.0
+              try {
+                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                price = numberFormat.parse(priceText)!!
+                    .toDouble()
+              } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(), getString(R.string.asset_price_not_empty), Toast.LENGTH_LONG
+                )
+                    .show()
+                return@setPositiveButton
+              }
+              if (price <= 0.0) {
+                Toast.makeText(
+                    requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+                )
+                    .show()
+                return@setPositiveButton
+              }
+
+              // Send msg and adjust if more shares than owned are removed.
+              if (shares > totalShares) {
+                Toast.makeText(
+                    requireContext(), getString(
+                    R.string.removed_shares_exceed_existing,
+                    DecimalFormat("0.####").format(shares),
+                    DecimalFormat("0.####").format(totalShares)
+                ), Toast.LENGTH_LONG
+                )
+                    .show()
+                shares = totalShares
+              }
+
+              val localDateTime: LocalDateTime = LocalDateTime.of(
+                  datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
+                  datePickerAssetDateView.dayOfMonth, 0, 0
+              )
+              val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+
+              val noteText = (removeNoteView.text).toString()
+                  .trim()
+
+              //val date = LocalDateTime.now()
+              //    .toEpochSecond(ZoneOffset.UTC)
+
+              // Add negative shares for removed asset.
+              stockRoomViewModel.addAsset(
+                  Asset(
+                      symbol = symbol,
+                      shares = -shares,
+                      price = price,
+                      date = date,
+                      note = noteText
+                  )
+              )
+              val count: Int = when {
+                shares == 1.0 -> {
+                  1
+                }
+                shares > 1.0 -> {
+                  shares.toInt() + 1
+                }
+                else -> {
+                  0
+                }
+              }
+
+              val pluralstr = resources.getQuantityString(
+                  R.plurals.asset_removed, count, DecimalFormat("0.####").format(shares)
+              )
+              Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
+                  .show()
             }
             .setNegativeButton(
                 R.string.cancel
@@ -1496,6 +1501,7 @@ class StockDataFragment : Fragment() {
       }
     }
 */
+
     addEventsButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater

@@ -170,6 +170,8 @@ limitations under the License. -->
   <string name="invalid_split_entry">The stock split ratio must be greater than 0 and less or equal than 20.</string>
   <string name="split_min_price">Stock split ratio would result in a too small price.</string>
   <string name="split_min_shares">Stock split ratio would result in a too small amount of shares.</string>
+  <string name="asset_share_not_empty">Enter a number of stocks.</string>
+  <string name="asset_price_not_empty">Enter a price for the stock.</string>
   <string name="asset_summary_text">Total assets:</string>
   <string name="title_activity_add">Add stocks</string>
   <string name="title_activity_stockdata">Stock details</string>
@@ -313,5 +315,5 @@ limitations under the License. -->
   <string name="data_provider_details">Data for %1$s</string>
   <string name="data_provider_details_sorted">[Sorted]</string>
   <string name="data_provider_details_unsorted">[Unsorted]</string>
-  <string name="remove_price">Optional sell price</string>
+  <string name="remove_price">Sell price</string>
 </resources>
