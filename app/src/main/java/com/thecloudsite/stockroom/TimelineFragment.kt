@@ -26,8 +26,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.database.Asset
-import xyz.sangcomz.stickytimelineview.RecyclerSectionItemDecoration
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
+import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -137,8 +137,8 @@ class TimelineFragment : Fragment() {
     })
   }
 
-  private fun getSectionCallback(timelineElementList: List<TimelineElement>): RecyclerSectionItemDecoration.SectionCallback {
-    return object : RecyclerSectionItemDecoration.SectionCallback {
+  private fun getSectionCallback(timelineElementList: List<TimelineElement>): SectionCallback {
+    return object : SectionCallback {
       // In your data, implement a method to determine if this is a section.
       override fun isSection(position: Int): Boolean =
         if (position > 0 && position < timelineElementList.size) {

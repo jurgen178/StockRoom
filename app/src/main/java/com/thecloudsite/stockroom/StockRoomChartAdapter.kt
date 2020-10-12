@@ -106,42 +106,44 @@ class StockRoomChartAdapter internal constructor(
       holder.bindGroup(current, clickListenerGroup)
       holder.bindSummary(current, clickListenerSummary)
 
-      if (stockViewMode == StockViewMode.Candle) {
-        holder.candleStickChart.visibility = View.VISIBLE
-        holder.lineChart.visibility = View.GONE
+      val stockDataEntriesRef: List<StockDataEntry>? =
+        chartDataItems[chartOverlaySymbol]
+      val stockDataEntries: List<StockDataEntry>? =
+        chartDataItems[current.onlineMarketData.symbol]
 
-        setupCandleStickChart(holder.candleStickChart)
+      if (stockDataEntriesRef != null
+          && stockDataEntriesRef.isNotEmpty()
+          && stockDataEntries != null
+          && stockDataEntries.isNotEmpty()
+      ) {
+        if (stockViewMode == StockViewMode.Candle) {
+          holder.candleStickChart.visibility = View.VISIBLE
+          holder.lineChart.visibility = View.GONE
 
-        val stockDataEntriesRef: List<StockDataEntry>? =
-          chartDataItems[chartOverlaySymbol]
-        val stockDataEntries: List<StockDataEntry>? =
-          chartDataItems[current.onlineMarketData.symbol]
+          setupCandleStickChart(holder.candleStickChart)
+          loadCandleStickChart(
+              holder.candleStickChart,
+              chartOverlaySymbol,
+              stockDataEntriesRef,
+              current.onlineMarketData.symbol,
+              stockDataEntries
+          )
+        } else {
+          holder.candleStickChart.visibility = View.GONE
+          holder.lineChart.visibility = View.VISIBLE
 
-        loadCandleStickChart(
-            holder.candleStickChart,
-            chartOverlaySymbol,
-            stockDataEntriesRef,
-            current.onlineMarketData.symbol,
-            stockDataEntries
-        )
+          setupLineChart(holder.lineChart)
+          loadLineChart(
+              holder.lineChart,
+              chartOverlaySymbol,
+              stockDataEntriesRef,
+              current.onlineMarketData.symbol,
+              stockDataEntries
+          )
+        }
       } else {
         holder.candleStickChart.visibility = View.GONE
-        holder.lineChart.visibility = View.VISIBLE
-
-        setupLineChart(holder.lineChart)
-
-        val stockDataEntriesRef: List<StockDataEntry>? =
-          chartDataItems[chartOverlaySymbol]
-        val stockDataEntries: List<StockDataEntry>? =
-          chartDataItems[current.onlineMarketData.symbol]
-
-        loadLineChart(
-            holder.lineChart,
-            chartOverlaySymbol,
-            stockDataEntriesRef,
-            current.onlineMarketData.symbol,
-            stockDataEntries
-        )
+        holder.lineChart.visibility = View.GONE
       }
 
       holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))

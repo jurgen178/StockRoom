@@ -17,14 +17,12 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.StockDBdata
 import kotlinx.android.synthetic.main.timeline_item.view.timelineCardView
 import java.text.DecimalFormat
 import java.time.LocalDateTime

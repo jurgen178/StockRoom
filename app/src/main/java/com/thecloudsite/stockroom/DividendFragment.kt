@@ -191,8 +191,6 @@ class DividendFragment : Fragment() {
                     .show()
               }
             }
-
-            //hideSoftInputFromWindow()
           } else {
             Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
                 .show()
@@ -340,8 +338,6 @@ class DividendFragment : Fragment() {
             )
                 .show()
           }
-
-          //hideSoftInputFromWindow()
         }
         .setNegativeButton(
             R.string.cancel
@@ -563,8 +559,6 @@ class DividendFragment : Fragment() {
                 )
                     .show()
               }
-
-              //hideSoftInputFromWindow()
             } else {
               Toast.makeText(
                   requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
@@ -654,8 +648,6 @@ class DividendFragment : Fragment() {
                 requireContext(), getString(R.string.dividend_added), Toast.LENGTH_LONG
             )
                 .show()
-
-            //hideSoftInputFromWindow()
           }
           .setNegativeButton(
               R.string.cancel
@@ -684,14 +676,6 @@ class DividendFragment : Fragment() {
     super.onResume()
     onlineDataHandler.post(onlineDataTask)
     stockRoomViewModel.runOnlineTaskNow()
-  }
-
-  private fun hideSoftInputFromWindow() {
-    val view = activity?.currentFocus
-    if (view is TextView) {
-      val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-      imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
   }
 
   private fun updateDividendNotes() {
