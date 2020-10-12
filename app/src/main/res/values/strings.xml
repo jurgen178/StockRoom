@@ -317,7 +317,7 @@ limitations under the License. -->
   <string name="data_provider_details_sorted">[Sorted]</string>
   <string name="data_provider_details_unsorted">[Unsorted]</string>
   <string name="remove_price">Sell price</string>
-  <string name="timeline_bought">Bought on %1$s, %2$s@%3$s (%4$s)</string>
-  <string name="timeline_sold">Sold on %1$s, %2$s@%3$s (%4$s)</string>
+  <string name="timeline_bought">%1$s@%2$s (%3$s), Bought am %4$s.</string>
+  <string name="timeline_sold">%1$s@%2$s (%3$s), Sold am %4$s.</string>
   <string name="timeline_unknown_date">Date not specified</string>
 </resources>

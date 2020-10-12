@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,9 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
+// Bug in xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
+// updating the data shifts the cardview to the right
+
 class TimelineFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
@@ -42,18 +46,12 @@ class TimelineFragment : Fragment() {
     fun newInstance() = TimelineFragment()
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setHasOptionsMenu(false)
-  }
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
 
-    // Inflate the layout for this fragment
     return inflater.inflate(R.layout.fragment_timeline, container, false)
   }
 
@@ -63,7 +61,7 @@ class TimelineFragment : Fragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val recyclerView: TimeLineRecyclerView = view.findViewById(R.id.recycler_view)
+    val recyclerView: TimeLineRecyclerView = view.findViewById(R.id.timeline_recycler_view)
 
     // Currently only LinearLayoutManager is supported.
     recyclerView.layoutManager = LinearLayoutManager(
@@ -71,6 +69,15 @@ class TimelineFragment : Fragment() {
         LinearLayoutManager.VERTICAL,
         false
     )
+
+    // Set Adapter
+    val clickListenerCardItem =
+      { timelineElement: TimelineElement -> clickListenerCardItem(timelineElement) }
+    val timelineAdapter = TimelineAdapter(
+        requireContext(),
+        clickListenerCardItem)
+
+    recyclerView.adapter = timelineAdapter
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
@@ -80,6 +87,7 @@ class TimelineFragment : Fragment() {
       val hashMap: HashMap<String, HashMap<String, MutableList<Asset>>> = hashMapOf()
       val unknownDate = getString(R.string.timeline_unknown_date)
 
+      // map the list of assets to date map that maps to a symbol map with each matching asset
       assets.forEach { asset ->
         val date = if (asset.date > 0) {
           val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
@@ -103,24 +111,28 @@ class TimelineFragment : Fragment() {
 
       val assetList: MutableList<TimelineElement> = mutableListOf()
 
+      // Copy the new structured data-symbol map to timeline elements.
       hashMap.toSortedMap()
           .forEach { (date, symbolMap) ->
-            symbolMap.forEach { (symbol, list) ->
-              assetList.add(TimelineElement(date, symbol, list))
-            }
+            // sort by first date entry in the asset list
+            symbolMap.toList()
+                .sortedBy {
+                  if (it.second.isNotEmpty()) {
+                    // sort the date list
+                    it.second.minByOrNull { asset ->
+                      asset.date
+                    }!!.date
+                  } else {
+                    0
+                  }
+                }
+                .forEach { (symbol, list) ->
+                  assetList.add(TimelineElement(date, symbol, list))
+                }
           }
 
+      timelineAdapter.updateData(assetList)
       recyclerView.addItemDecoration(getSectionCallback(assetList))
-
-      //Set Adapter
-      recyclerView.adapter = TimelineAdapter(
-          requireContext(),
-          layoutInflater,
-          assetList,
-          R.layout.timeline_item
-      )
-
-      stockRoomViewModel.allAssetTable.removeObservers(viewLifecycleOwner)
     })
   }
 
@@ -134,5 +146,12 @@ class TimelineFragment : Fragment() {
       override fun getSectionHeader(position: Int): SectionInfo? =
         SectionInfo(timelineElementList[position].date, "")
     }
+  }
+
+  private fun clickListenerCardItem(timelineElement: TimelineElement) {
+    val intent = Intent(context, StockDataActivity::class.java)
+    intent.putExtra("symbol", timelineElement.symbol)
+    stockRoomViewModel.runOnlineTaskNow()
+    startActivity(intent)
   }
 }

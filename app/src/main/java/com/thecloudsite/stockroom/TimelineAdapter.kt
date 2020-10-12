@@ -24,35 +24,45 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.StockDBdata
+import kotlinx.android.synthetic.main.timeline_item.view.timelineCardView
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle.MEDIUM
 
 data class TimelineElement(
   val date: String,
-  val header: String,
+  val symbol: String,
   val assets: List<Asset>,
 )
 
 class TimelineAdapter(
   private val context: Context,
-  private val layoutInflater: LayoutInflater,
-  private val timelineElementList: List<TimelineElement>,
-  @param:LayoutRes private val rowLayout: Int
+  private val clickListenerCardItem: (TimelineElement) -> Unit
 ) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>() {
+
+  private val inflater: LayoutInflater = LayoutInflater.from(context)
+  private var timelineElementList: List<TimelineElement> = listOf()
+
+  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    fun bind(
+      timelineElement: TimelineElement,
+      clickListener: (TimelineElement) -> Unit
+    ) {
+      itemView.timelineCardView.setOnClickListener { clickListener(timelineElement) }
+    }
+
+    val header: TextView = view.findViewById<View>(R.id.timeline_header) as TextView
+    val details: TextView = view.findViewById<View>(R.id.timeline_details) as TextView
+  }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val v = layoutInflater.inflate(
-        rowLayout,
-        parent,
-        false
-    )
-    return ViewHolder(v)
+    val itemView = inflater.inflate(R.layout.timeline_item, parent, false)
+    return ViewHolder(itemView)
   }
 
   override fun onBindViewHolder(
@@ -61,7 +71,8 @@ class TimelineAdapter(
   ) {
     val timelineElement = timelineElementList[position]
 
-    holder.header.text = timelineElement.header
+    holder.bind(timelineElement, clickListenerCardItem)
+    holder.header.text = timelineElement.symbol
 
     var stockTransactions = ""
     var skipFirstline = true
@@ -72,9 +83,9 @@ class TimelineAdapter(
         .forEach { asset ->
           val date = if (asset.date > 0) {
             val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
-            localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+            localDateTime.format(DateTimeFormatter.ofPattern("d"))
           } else {
-            ""
+            "-"
           }
 
           if (!skipFirstline) {
@@ -86,18 +97,18 @@ class TimelineAdapter(
           stockTransactions += if (asset.shares > 0.0) {
             context.getString(
                 R.string.timeline_bought,
-                date,
                 DecimalFormat("0.####").format(asset.shares),
                 DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(asset.shares * asset.price)
+                DecimalFormat("0.00").format(asset.shares * asset.price),
+                date
             )
           } else {
             context.getString(
                 R.string.timeline_sold,
-                date,
                 DecimalFormat("0.####").format(-asset.shares),
                 DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(-asset.shares * asset.price)
+                DecimalFormat("0.00").format(-asset.shares * asset.price),
+                date
             )
           }
         }
@@ -105,10 +116,10 @@ class TimelineAdapter(
     holder.details.text = stockTransactions
   }
 
-  override fun getItemCount(): Int = timelineElementList.size
-
-  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val header: TextView = view.findViewById<View>(R.id.timeline_header) as TextView
-    val details: TextView = view.findViewById<View>(R.id.timeline_details) as TextView
+  fun updateData(timeline: List<TimelineElement>) {
+    timelineElementList = timeline
+    notifyDataSetChanged()
   }
+
+  override fun getItemCount(): Int = timelineElementList.size
 }
