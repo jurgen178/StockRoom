@@ -75,7 +75,8 @@ class TimelineFragment : Fragment() {
       { timelineElement: TimelineElement -> clickListenerCardItem(timelineElement) }
     val timelineAdapter = TimelineAdapter(
         requireContext(),
-        clickListenerCardItem)
+        clickListenerCardItem
+    )
 
     recyclerView.adapter = timelineAdapter
 
@@ -138,13 +139,21 @@ class TimelineFragment : Fragment() {
 
   private fun getSectionCallback(timelineElementList: List<TimelineElement>): RecyclerSectionItemDecoration.SectionCallback {
     return object : RecyclerSectionItemDecoration.SectionCallback {
-      //In your data, implement a method to determine if this is a section.
+      // In your data, implement a method to determine if this is a section.
       override fun isSection(position: Int): Boolean =
-        timelineElementList[position].date != timelineElementList[position - 1].date
+        if (position > 0 && position < timelineElementList.size) {
+          timelineElementList[position].date != timelineElementList[position - 1].date
+        } else {
+          false
+        }
 
-      //Implement a method that returns a SectionHeader.
+      // Implement a method that returns a SectionHeader.
       override fun getSectionHeader(position: Int): SectionInfo? =
-        SectionInfo(timelineElementList[position].date, "")
+        if (position >= 0 && position < timelineElementList.size) {
+          SectionInfo(timelineElementList[position].date, "")
+        } else {
+          null
+        }
     }
   }
 

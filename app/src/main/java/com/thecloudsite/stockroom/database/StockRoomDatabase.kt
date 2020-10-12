@@ -154,20 +154,21 @@ abstract class StockRoomDatabase : RoomDatabase() {
           val symbol: String,
           val asset: Double,
           val gain: Double,
+          val date: Long,
           val color: Int
         )
 
         val assets: List<AssetPreset> = listOf(
-            AssetPreset("AAPL", 6500.0, 5240.0, Color.BLUE),
-            AssetPreset("AMZN", 6500.0, 280.0, Color.MAGENTA),
-            AssetPreset("GE", 3700.0, 2470.0, Color.BLACK),
-            AssetPreset("BA", 5500.0, -640.0, Color.GREEN),
-            AssetPreset("CVX", 4500.0, -508.0, Color.rgb(0, 191, 255)),
-            AssetPreset("ANY", 8000.0, 6490.0, Color.YELLOW),
-            AssetPreset("MSFT", 5200.0, 1450.0, Color.rgb(173, 216, 230)),
-            AssetPreset("QCOM", 4200.0, 240.0, Color.rgb(0, 191, 255)),
-            AssetPreset("RM", 3600.0, 1110.0, Color.RED),
-            AssetPreset("TSLA", 7000.0, 2060.0, Color.rgb(72, 209, 204)),
+            AssetPreset("AAPL", 6500.0, 5240.0, 1601683200, Color.BLUE),
+            AssetPreset("AMZN", 6500.0, 280.0, 1601683200, Color.MAGENTA),
+            AssetPreset("GE", 3700.0, 2470.0, 1601683200, Color.BLACK),
+            AssetPreset("BA", 5500.0, -640.0, 1601683200, Color.GREEN),
+            AssetPreset("CVX", 4500.0, -508.0, 1601683200, Color.rgb(0, 191, 255)),
+            AssetPreset("ANY", 8000.0, 6490.0, 1601683200, Color.YELLOW),
+            AssetPreset("MSFT", 5200.0, 1450.0, 1601683200, Color.rgb(173, 216, 230)),
+            AssetPreset("QCOM", 4200.0, 240.0, 1601683200, Color.rgb(0, 191, 255)),
+            AssetPreset("RM", 3600.0, 1110.0, 1601683200, Color.RED),
+            AssetPreset("TSLA", 7000.0, 2060.0, 1601683200, Color.rgb(72, 209, 204)),
         )
 
         val symbols = assets.map { asset ->
@@ -198,7 +199,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
             val price2 = assetvalue / shares
 
             stockRoomDao.addAsset(
-                Asset(symbol = asset.symbol, shares = shares, price = price2)
+                Asset(symbol = asset.symbol, shares = shares, price = price2, date = asset.date)
             )
           }
         }

@@ -5,7 +5,8 @@
     "assets": [
       {
         "price": 3000.0,
-        "shares": 1.0
+        "shares": 1.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -20,7 +21,8 @@
     "assets": [
       {
         "price": 1.0,
-        "shares": 2800.0
+        "shares": 2800.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -35,7 +37,8 @@
     "assets": [
       {
         "price": 200.0,
-        "shares": 30.0
+        "shares": 30.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -50,7 +53,8 @@
     "assets": [
       {
         "price": 150.0,
-        "shares": 20.0
+        "shares": 20.0,
+        "date": 1601683200
       }
     ],
     "events": [
@@ -72,7 +76,8 @@
     "assets": [
       {
         "price": 1.0,
-        "shares": 300.0
+        "shares": 300.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -87,7 +92,8 @@
     "assets": [
       {
         "price": 200.0,
-        "shares": 25.0
+        "shares": 25.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -102,7 +108,8 @@
     "assets": [
       {
         "price": 150.0,
-        "shares": 25.0
+        "shares": 25.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -117,7 +124,8 @@
     "assets": [
       {
         "price": 100.0,
-        "shares": 40.0
+        "shares": 40.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -132,7 +140,8 @@
     "assets": [
       {
         "price": 12.0,
-        "shares": 90.0
+        "shares": 90.0,
+        "date": 1601683200
       }
     ],
     "events": [],
@@ -147,7 +156,8 @@
     "assets": [
       {
         "price": 10.0,
-        "shares": 100.0
+        "shares": 100.0,
+        "date": 1601683200
       }
     ],
     "events": [],
