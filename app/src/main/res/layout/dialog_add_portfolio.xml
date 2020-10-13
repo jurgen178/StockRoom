@@ -48,11 +48,11 @@
         />
   </com.google.android.material.textfield.TextInputLayout>
 
-  <androidx.constraintlayout.widget.Guideline
+  <androidx.constraintlayout.widget.Barrier
       android:id="@+id/guideline1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:orientation="vertical"
+      app:barrierDirection="start"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
