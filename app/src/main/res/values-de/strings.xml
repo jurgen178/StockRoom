@@ -79,7 +79,6 @@ limitations under the License. -->
   <string name="general_header">Allgemein</string>
   <string name="display_header">Anzeige</string>
   <string name="feedback_header">Rückmeldung</string>
-  <string name="group_header">Gruppe</string>
   <string name="menu_sync">Aktualisieren</string>
   <string name="menu_sort">Sortieren</string>
 
@@ -223,6 +222,8 @@ limitations under the License. -->
   <string name="delete_all_groups_msg">Alle Gruppen wurden aus der Gruppenliste entfernt.</string>
   <string name="group_color">Gruppenfarbe</string>
   <string name="group_name_text">Gruppenname</string>
+  <string name="group_header">Gruppe</string>
+  <string name="group_all_header">Gruppenliste</string>
   <string name="group_color_in_use">Die Gruppenfarbe wird bereits verwendet. Wählen Sie eine andere Farbe aus.</string>
   <string name="group_name_in_use">Der Gruppenname \'%1$s\' wird bereits verwendet. Wählen Sie einen anderen Namen aus.</string>
   <string name="group_name_not_empty">Geben Sie einen Gruppenname ein.</string>

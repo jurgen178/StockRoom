@@ -82,7 +82,6 @@ limitations under the License. -->
   <string name="general_header">General</string>
   <string name="display_header">Display</string>
   <string name="feedback_header">Feedback</string>
-  <string name="group_header">Group</string>
   <string name="menu_sync">Update</string>
   <string name="menu_sort">Sort</string>
 
@@ -226,6 +225,8 @@ limitations under the License. -->
   <string name="delete_all_groups_msg">All groups have been deleted.</string>
   <string name="group_color">Group color</string>
   <string name="group_name_text">Group name</string>
+  <string name="group_header">Group</string>
+  <string name="group_all_header">Group list</string>
   <string name="group_color_in_use">This group color is already in use. Choose another color.</string>
   <string name="group_name_in_use">The group name \'%1$s\' is already in use. Choose another name.</string>
   <string name="group_name_not_empty">Enter a group name.</string>
