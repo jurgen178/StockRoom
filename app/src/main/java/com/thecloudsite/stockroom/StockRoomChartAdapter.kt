@@ -184,23 +184,23 @@ class StockRoomChartAdapter internal constructor(
         holder.itemViewChangePercent.text = ""
       }
 
-      val (shares, asset) = getAssets(current.assets)
-//      val shares = current.assets.sumByDouble {
-//        it.shares
+      val (amount, asset) = getAssets(current.assets)
+//      val amount = current.assets.sumByDouble {
+//        it.amount
 //      }
 
 //      var asset: Double = 0.0
       var capital: Double = 0.0
 
-      if (shares > 0.0) {
+      if (amount > 0.0) {
 //        asset = current.assets.sumByDouble {
-//          it.shares * it.price
+//          it.amount * it.price
 //        }
 
         if (current.onlineMarketData.marketPrice > 0.0) {
-          capital = shares * current.onlineMarketData.marketPrice
+          capital = amount * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
-//            it.shares * current.onlineMarketData.marketPrice
+//            it.amount * current.onlineMarketData.marketPrice
 //          }
         }
       }

@@ -23,25 +23,31 @@
 
   <TextView
       android:id="@+id/summaryListItemSymbol"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="4dp"
       android:layout_marginEnd="2dp"
+      android:layout_marginStart="4dp"
       android:textStyle="bold"
-      app:layout_constraintStart_toEndOf="@+id/guideline1"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintVertical_bias="0.0"
       app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
+      app:layout_constraintEnd_toStartOf="@+id/guideline2"
+      app:layout_constraintBottom_toTopOf="@+id/guideline3"
       />
-
   <TextView
       android:id="@+id/summaryListItemMarketPrice"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="2dp"
       android:layout_marginEnd="2dp"
+      android:gravity="end"
       app:layout_constraintHorizontal_bias="1.0"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/summaryListItemSymbol"
+      app:layout_constraintVertical_bias="0.0"
       app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toTopOf="@+id/guideline3"
       />
 
   <TextView
@@ -50,10 +56,10 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="4dp"
       android:layout_marginEnd="2dp"
-      android:textSize="11sp"
+      android:textSize="12sp"
+      app:layout_constraintTop_toBottomOf="@+id/guideline3"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="1.0"
-      app:layout_constraintTop_toBottomOf="@+id/summaryListItemMarketPrice"
       />
   <TextView
       android:id="@+id/summaryListItemCapital"
@@ -61,11 +67,11 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="4dp"
       android:layout_marginEnd="2dp"
-      android:textSize="11sp"
+      android:textSize="12sp"
       android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintTop_toBottomOf="@+id/summaryListItemMarketChange"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
+      app:layout_constraintEnd_toEndOf="parent"
       />
 
   <TextView
@@ -76,13 +82,13 @@
       android:layout_marginStart="4dp"
       android:layout_marginBottom="2dp"
       android:gravity="end"
-      android:textSize="11sp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="1.0"
-      app:layout_constraintStart_toEndOf="@+id/guideline1"
-      app:layout_constraintTop_toBottomOf="@+id/summaryListItemCapital"
+      android:textSize="12sp"
       app:layout_constraintVertical_bias="1.0"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintTop_toBottomOf="@+id/summaryListItemCapital"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
       />
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline1"
@@ -90,6 +96,19 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       app:layout_constraintGuide_begin="12dp"
+      />
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.55"
+      />
+  <androidx.constraintlayout.widget.Barrier
+      android:id="@+id/guideline3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:barrierDirection="top"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -241,30 +241,30 @@ class StockRoomDaoTest {
   fun getAssets() {
     val stockDBdata1 = StockDBdata("symbol1")
     stockRoomDao.insert(stockDBdata1)
-    val asset1 = Asset(symbol = "symbol1", shares = 10.0, price = 123.0, date = 0L)
+    val asset1 = Asset(symbol = "symbol1", amount = 10.0, price = 123.0, date = 0L)
     stockRoomDao.addAsset(asset1)
     stockRoomDao.addAsset(asset1)
-    val asset2 = Asset(symbol = "symbol1", shares = 20.0, price = 223.0, date = 0L)
+    val asset2 = Asset(symbol = "symbol1", amount = 20.0, price = 223.0, date = 0L)
     stockRoomDao.addAsset(asset2)
-    val asset3 = Asset(symbol = "symbol2", shares = 30.0, price = 323.0, date = 0L)
+    val asset3 = Asset(symbol = "symbol2", amount = 30.0, price = 323.0, date = 0L)
     stockRoomDao.addAsset(asset3)
     val stockDBdata2 = StockDBdata("symbol2")
     stockRoomDao.insert(stockDBdata2)
 
     val assets1 = stockRoomDao.getAssets("symbol1")
     assertEquals(assets1.assets.size, 3)
-    assertEquals(assets1.assets[0].shares, asset1.shares)
+    assertEquals(assets1.assets[0].amount, asset1.amount)
     assertEquals(assets1.assets[0].price, asset1.price)
-    assertEquals(assets1.assets[2].shares, asset2.shares)
+    assertEquals(assets1.assets[2].amount, asset2.amount)
     assertEquals(assets1.assets[2].price, asset2.price)
 
-    stockRoomDao.deleteAsset(symbol = asset1.symbol, shares = asset1.shares, price = asset1.price)
+    stockRoomDao.deleteAsset(symbol = asset1.symbol, amount = asset1.amount, price = asset1.price)
     val assetsDel1 = stockRoomDao.getAssets("symbol1")
     assertEquals(assetsDel1.assets.size, 1)
 
     val assets2 = stockRoomDao.getAssets("symbol2")
     assertEquals(assets2.assets.size, 1)
-    assertEquals(assets2.assets[0].shares, asset3.shares)
+    assertEquals(assets2.assets[0].amount, asset3.amount)
     assertEquals(assets2.assets[0].price, asset3.price)
 
     stockRoomDao.deleteAssets("symbol1")
@@ -278,7 +278,7 @@ class StockRoomDaoTest {
     val stockDBdata1 = StockDBdata("symbol1")
     stockRoomDao.insert(stockDBdata1)
 
-    stockRoomDao.addAsset(Asset(symbol = "symbol1", shares = 10.0, price = 123.0, date = 0L))
+    stockRoomDao.addAsset(Asset(symbol = "symbol1", amount = 10.0, price = 123.0, date = 0L))
     val assets1 = stockRoomDao.getAssets("symbol1")
     assertEquals(1, assets1.assets.size)
 
@@ -304,8 +304,8 @@ class StockRoomDaoTest {
     stockRoomDao.insert(stockDBdata1)
 
     val assets: MutableList<Asset> = mutableListOf()
-    assets.add(Asset(symbol = "symbol1", shares = 10.0, price = 123.0, date = 0L))
-    assets.add(Asset(symbol = "symbol1", shares = 20.0, price = 223.0, date = 0L))
+    assets.add(Asset(symbol = "symbol1", amount = 10.0, price = 123.0, date = 0L))
+    assets.add(Asset(symbol = "symbol1", amount = 20.0, price = 223.0, date = 0L))
     //assets.add(Asset(symbol = "symbol2", shares = 30.0, price = 323.0))
 
     // Update = delete + add

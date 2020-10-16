@@ -771,14 +771,14 @@ class DividendFragment : Fragment() {
     }
 
     if (data.assets != null) {
-      val (shares, asset) = getAssets(data.assets?.assets)
+      val (amount, asset) = getAssets(data.assets?.assets)
 
-//      val shares = data.assets?.assets?.sumByDouble {
-//        it.shares
+//      val amount = data.assets?.assets?.sumByDouble {
+//        it.amount
 //      } ?: 0.0
 
-      if (shares > 0.0) {
-        val totalDividend = shares * data.onlineMarketData?.annualDividendRate!!
+      if (amount > 0.0) {
+        val totalDividend = amount * data.onlineMarketData?.annualDividendRate!!
         dividend
             .append("\n${getString(R.string.quarterlyDividend)}")
             .bold {

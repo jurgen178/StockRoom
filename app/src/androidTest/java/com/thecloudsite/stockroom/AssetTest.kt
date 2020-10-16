@@ -21,6 +21,17 @@ import com.thecloudsite.stockroom.database.Asset
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
+enum class AssetType(val value: Int) {
+  Stock(0),
+  CallOption(1),
+  PutOption(2),
+  UnknownOption(3),
+}
 
 @RunWith(AndroidJUnit4::class)
 class AssetTest {
@@ -32,13 +43,104 @@ class AssetTest {
 
   @Test
   @Throws(Exception::class)
+  fun optionFormat() {
+
+    //    The OCC option symbol consists of four parts:
+    //
+    //    Root symbol of the underlying stock or ETF, padded with spaces to 6 characters
+    //    Expiration date, 6 digits in the format yymmdd
+    //    Option type, either P or C, for put or call
+    //    Strike price, as the price x 1000, front padded with 0s to 8 digits
+
+    data class StockOptionData(
+      var sharesPerOption: Int = 0,
+      var expirationDate: Long = 0,
+      var strikePrice: Double = 0.0,
+      var type: Int = AssetType.UnknownOption.value
+    )
+
+    fun parseStockOption(symbol: String): StockOptionData {
+
+      val stockOption = StockOptionData()
+
+      // named groups are not yet supported
+      val match = "([A-Z.]+)(7?)\\s*(\\d+)([A-Z])(\\d+)".toRegex()
+          .matchEntire(symbol.toUpperCase())
+
+      if (match != null && match.groups.size == 6) {
+        val sym = match.groups[1]?.value
+
+        stockOption.sharesPerOption = if (match.groups[2]?.value == "7") {
+          10
+        } else {
+          100
+        }
+
+        val dateStr = match.groups[3]?.value
+        try {
+          stockOption.expirationDate =
+            LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
+                .atStartOfDay(ZoneOffset.UTC)
+                .toEpochSecond()
+        } catch (e: Exception) {
+        }
+
+        when (match.groups[4]?.value.toString()) {
+          "C" -> {
+            stockOption.type = AssetType.CallOption.value
+          }
+          "P" -> {
+            stockOption.type = AssetType.PutOption.value
+          }
+        }
+
+        stockOption.strikePrice = match.groups[5]?.value?.toInt()
+            ?.div(1000.0) ?: 0.0
+      }
+
+      return stockOption
+    }
+
+    fun getDate(date: Long): String {
+      val localDateTime = LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.UTC)
+      return localDateTime.format(DateTimeFormatter.ofPattern("yyMMdd"))
+    }
+
+    // 100 per order
+    val option1 = parseStockOption("QQQ230120C00295000")
+    assertEquals(100, option1.sharesPerOption)
+    assertEquals("230120", getDate(option1.expirationDate))
+    assertEquals(295.0, option1.strikePrice, epsilon)
+    assertEquals("C", option1.type)
+
+    // represents a mini call option (10 shares) on AAPL, with a strike price of $470, expiring on Nov 1, 2013
+    val miniOption = parseStockOption("AAPL7 131101P00470000")
+    assertEquals(10, miniOption.sharesPerOption)
+    assertEquals("131101", getDate(miniOption.expirationDate))
+    assertEquals(470.0, miniOption.strikePrice, epsilon)
+    assertEquals("P", miniOption.type)
+
+    // the standard call option (100 shares), with the same strike and expiration date
+    val option2 = parseStockOption("AAPL  131101C00470000")
+    assertEquals(100, option2.sharesPerOption)
+    assertEquals("131101", getDate(option2.expirationDate))
+    assertEquals(470.0, option2.strikePrice, epsilon)
+    assertEquals("C", option2.type)
+
+    for (i in 0..10000) {
+      val option1 = parseStockOption("QQQ230120C00295000")
+    }
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun assetAddRemove() {
     fun getAssets(
       assetList: List<Asset>?,
       tagObsoleteAssetType: Int = 0
     ): Pair<Double, Double> {
 
-      var totalShares: Double = 0.0
+      var totalAmount: Double = 0.0
       var totalPrice: Double = 0.0
 
       if (assetList != null) {
@@ -57,16 +159,16 @@ class AssetTest {
           val asset = assetListSorted[i]
 
           // added shares
-          if (asset.shares > 0.0) {
-            totalShares += asset.shares
-            totalPrice += asset.shares * asset.price
+          if (asset.amount > 0.0) {
+            totalAmount += asset.amount
+            totalPrice += asset.amount * asset.price
           } else
           // removed shares
-            if (asset.shares < 0.0) {
+            if (asset.amount < 0.0) {
               // removed all?
-              if (-asset.shares >= (totalShares - com.thecloudsite.stockroom.utils.epsilon)) {
+              if (-asset.amount >= (totalAmount - com.thecloudsite.stockroom.utils.epsilon)) {
                 // reset if more removed than owned
-                totalShares = 0.0
+                totalAmount = 0.0
                 totalPrice = 0.0
 
                 if (tagObsoleteAssetType != 0) {
@@ -76,47 +178,47 @@ class AssetTest {
                 }
               } else {
                 // adjust the total price for the removed shares
-                if (totalShares > com.thecloudsite.stockroom.utils.epsilon) {
-                  val averageSharePrice = totalPrice / totalShares
-                  totalShares += asset.shares
-                  totalPrice = totalShares * averageSharePrice
+                if (totalAmount > com.thecloudsite.stockroom.utils.epsilon) {
+                  val averageSharePrice = totalPrice / totalAmount
+                  totalAmount += asset.amount
+                  totalPrice = totalAmount * averageSharePrice
                 }
               }
             }
         }
       }
 
-      return Pair(totalShares, totalPrice)
+      return Pair(totalAmount, totalPrice)
     }
 
     val assetList1 = listOf(
         Asset(
             symbol = "s1",
-            shares = 10.0,
+            amount = 10.0,
             price = 20.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            shares = 20.0,
+            amount = 20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            shares = -10.0,
+            amount = -10.0,
             price = 0.0,
             date = 3
         ),
         Asset(
             symbol = "s1",
-            shares = 100.0,
+            amount = 100.0,
             price = 20.0,
             date = 4
         ),
         Asset(
             symbol = "s1",
-            shares = -50.0,
+            amount = -50.0,
             price = 0.0,
             date = 5
         )
@@ -128,19 +230,19 @@ class AssetTest {
     val assetList2 = listOf(
         Asset(
             symbol = "s1",
-            shares = 0.0,
+            amount = 0.0,
             price = 0.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            shares = -20.0,
+            amount = -20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            shares = 20.0,
+            amount = 20.0,
             price = 2.0,
             date = 3
         )
@@ -152,13 +254,13 @@ class AssetTest {
     val assetList3 = listOf(
         Asset(
             symbol = "s1",
-            shares = 20.0,
+            amount = 20.0,
             price = 20.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            shares = -20.0,
+            amount = -20.0,
             price = 50.0,
             date = 2
         )
@@ -170,13 +272,13 @@ class AssetTest {
     val assetList4 = listOf(
         Asset(
             symbol = "s1",
-            shares = 0.0,
+            amount = 0.0,
             price = 0.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            shares = -epsilon / 2,
+            amount = -epsilon / 2,
             price = 50.0,
             date = 2
         )
@@ -188,33 +290,33 @@ class AssetTest {
     val assetList5 = listOf(
         Asset(
             symbol = "s1",
-            shares = -30.0,
+            amount = -30.0,
             price = 0.0,
             date = 3,
             type = 0xff00
         ),
         Asset(
             symbol = "s1",
-            shares = 20.0,
+            amount = 20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            shares = 100.0,
+            amount = 100.0,
             price = 20.0,
             date = 4
         ),
         Asset(
             symbol = "s1",
-            shares = -50.0,
+            amount = -50.0,
             price = 0.0,
             date = 5,
             type = obsoleteAssetType
         ),
         Asset(
             symbol = "s1",
-            shares = 10.0,
+            amount = 10.0,
             price = 20.0,
             date = 1
         )
@@ -234,7 +336,7 @@ class AssetTest {
   fun assetCapitalGain() {
     fun getAssetsCapitalGain(assetList: List<Asset>?): Double {
 
-      var totalShares: Double = 0.0
+      var totalAmount: Double = 0.0
       var totalGain: Double = 0.0
       var totalBought: Double = 0.0
       var totalSold: Double = 0.0
@@ -243,19 +345,19 @@ class AssetTest {
         asset.date
       }
           ?.forEach { asset ->
-            if (asset.shares > 0.0) {
-              totalBought += asset.shares * asset.price
+            if (asset.amount > 0.0) {
+              totalBought += asset.amount * asset.price
             }
-            if (asset.shares < 0.0) {
-              totalSold += -asset.shares * asset.price
+            if (asset.amount < 0.0) {
+              totalSold += -asset.amount * asset.price
             }
-            totalShares += asset.shares
+            totalAmount += asset.amount
 
-            if ((totalShares <= -com.thecloudsite.stockroom.utils.epsilon)) {
+            if ((totalAmount <= -com.thecloudsite.stockroom.utils.epsilon)) {
               // Error, more shares sold than owned
               return 0.0
             }
-            if (totalShares < com.thecloudsite.stockroom.utils.epsilon) {
+            if (totalAmount < com.thecloudsite.stockroom.utils.epsilon) {
               // totalShares are 0: -epsilon < totalShares < epsilon
               // reset if all shares are sold
               totalGain += totalSold - totalBought
@@ -270,31 +372,31 @@ class AssetTest {
     val assetList1 = listOf(
         Asset(
             symbol = "s1",
-            shares = 10.0,
+            amount = 10.0,
             price = 20.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            shares = 20.0,
+            amount = 20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            shares = -30.0,
+            amount = -30.0,
             price = 100.0,
             date = 3
         ),
         Asset(
             symbol = "s1",
-            shares = 100.0,
+            amount = 100.0,
             price = 20.0,
             date = 4
         ),
         Asset(
             symbol = "s1",
-            shares = -50.0,
+            amount = -50.0,
             price = 0.0,
             date = 5
         )
@@ -305,19 +407,19 @@ class AssetTest {
     val assetList2 = listOf(
         Asset(
             symbol = "s1",
-            shares = 0.0,
+            amount = 0.0,
             price = 0.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            shares = -20.0,
+            amount = -20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            shares = 20.0,
+            amount = 20.0,
             price = 2.0,
             date = 3
         )
@@ -328,31 +430,31 @@ class AssetTest {
     val assetList3 = listOf(
         Asset(
             symbol = "s1",
-            shares = 20.0,
+            amount = 20.0,
             price = 30.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            shares = -20.0,
+            amount = -20.0,
             price = 10.0,
             date = 2
         ),  // 400.0 loss
         Asset(
             symbol = "s1",
-            shares = 2.0,
+            amount = 2.0,
             price = 3.0,
             date = 3
         ),
         Asset(
             symbol = "s1",
-            shares = -2.0,
+            amount = -2.0,
             price = 5.0,
             date = 4
         ),  // 4.0 gain
         Asset(
             symbol = "s1",
-            shares = 2.0,
+            amount = 2.0,
             price = 5.0,
             date = 5
         )

@@ -51,17 +51,26 @@ data class Group(
   var name: String
 )
 
+enum class AssetType(val value: Int) {
+  Stock(0),
+  CallOption(1),
+  PutOption(2),
+  UnknownOption(3),
+}
+
 @Entity(
     tableName = "asset_table"
 )
 data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
-  var shares: Double,
+  var amount: Double,
   var price: Double,
   var type: Int = 0,
   var note: String = "",
   var date: Long = 0L,
+  var sharesPerAmount: Int = 1,
+  var expirationDate: Long = 0L,
   var commission: Double = 0.0
 )
 

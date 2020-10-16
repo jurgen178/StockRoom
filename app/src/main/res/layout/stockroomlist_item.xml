@@ -127,4 +127,11 @@
       app:layout_constraintGuide_percent="0.75"
       />
 
+  <androidx.constraintlayout.widget.Barrier
+      android:id="@+id/guideline3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:barrierDirection="top"
+      />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

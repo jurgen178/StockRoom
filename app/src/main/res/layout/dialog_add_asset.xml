@@ -20,7 +20,7 @@
         >
 
   <TextView
-      android:id="@+id/addUpdateSharesHeadline"
+      android:id="@+id/addUpdateAmountHeadline"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
@@ -34,7 +34,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
-      android:text="@string/number_of_shares"
+      android:text="@string/number_of_stock"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
       app:layout_constraintStart_toStartOf="parent"
@@ -48,11 +48,11 @@
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="@+id/guideline1"
-      app:layout_constraintTop_toBottomOf="@+id/addUpdateSharesHeadline"
+      app:layout_constraintTop_toBottomOf="@+id/addUpdateAmountHeadline"
       app:endIconMode="clear_text"
       >
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/addShares"
+        android:id="@+id/addAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/design_default_color_background"

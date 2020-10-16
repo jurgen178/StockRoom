@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "68c229bb441ec9bbd1807aecc435c4a8",
+    "identityHash": "74526c8d3d5ead6f9fc38f8405e90551",
     "entities": [
       {
         "tableName": "stock_table",
@@ -94,7 +94,7 @@
       },
       {
         "tableName": "asset_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `shares` REAL NOT NULL, `price` REAL NOT NULL, `date` INTEGER NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL, `commission` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `amount` REAL NOT NULL, `price` REAL NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL, `date` INTEGER NOT NULL, `sharesPerAmount` INTEGER NOT NULL, `expirationDate` INTEGER NOT NULL, `commission` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -109,8 +109,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "shares",
-            "columnName": "shares",
+            "fieldPath": "amount",
+            "columnName": "amount",
             "affinity": "REAL",
             "notNull": true
           },
@@ -118,12 +118,6 @@
             "fieldPath": "price",
             "columnName": "price",
             "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "date",
-            "columnName": "date",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -136,6 +130,24 @@
             "fieldPath": "note",
             "columnName": "note",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sharesPerAmount",
+            "columnName": "sharesPerAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expirationDate",
+            "columnName": "expirationDate",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -270,7 +282,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '68c229bb441ec9bbd1807aecc435c4a8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '74526c8d3d5ead6f9fc38f8405e90551')"
     ]
   }
 }

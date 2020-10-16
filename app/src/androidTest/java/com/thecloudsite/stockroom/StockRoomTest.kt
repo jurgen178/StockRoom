@@ -157,19 +157,19 @@ class StockRoomTest {
     val assetList = listOf(
         Asset(
             symbol = "s1",
-            shares = 11.0,
+            amount = 11.0,
             price = 12.0
         ), Asset(
         symbol = "s2",
-        shares = 21.0,
+        amount = 21.0,
         price = 22.0
     ), Asset(
         symbol = "s2",
-        shares = 211.0,
+        amount = 211.0,
         price = 222.0
     ), Asset(
         symbol = "s3",
-        shares = 21.0,
+        amount = 21.0,
         price = 22.0
     )
     )
@@ -317,13 +317,13 @@ class StockRoomTest {
     rows.drop(1)
         .forEach { row ->
           val symbol = row[symbolColumn].toUpperCase()
-          val shares = csvStrToDouble(row[sharesColumn])
+          val amount = csvStrToDouble(row[sharesColumn])
           val price = csvStrToDouble(row[priceColumn])
 
           if (symbol.isNotEmpty()) {
             val asset = Asset(
                 symbol = symbol,
-                shares = shares,
+                amount = amount,
                 price = price
             )
 
@@ -430,7 +430,7 @@ var events: List<Event>
   )
 
   data class AssetJson(
-    var shares: Double,
+    var amount: Double,
     val price: Double,
     val type: Int?,
     var note: String?,
@@ -466,7 +466,7 @@ var events: List<Event>
                 symbol = "s1", groupColor = 123, alertAbove = 11.0, alertBelow = 12.0,
                 notes = "notes1"
             ),
-            listOf(Asset(symbol = "s1", shares = 1.0, price = 2.0)),
+            listOf(Asset(symbol = "s1", amount = 1.0, price = 2.0)),
             listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
             listOf(
                 Dividend(
@@ -482,7 +482,7 @@ var events: List<Event>
                 symbol = "s2", groupColor = 223, alertAbove = 21.0, alertBelow = 22.0,
                 notes = "notes2"
             ),
-            listOf(Asset(symbol = "s2", shares = 3.0, price = 4.0)),
+            listOf(Asset(symbol = "s2", amount = 3.0, price = 4.0)),
             listOf(Event(symbol = "s2", type = 2, title = "ti2", note = "te2", datetime = 2L)),
             listOf(
                 Dividend(
@@ -503,7 +503,7 @@ var events: List<Event>
           notes = stockItem.stockDBdata.notes,
           dividendNotes = stockItem.stockDBdata.dividendNotes,
           assets = stockItem.assets.map { asset ->
-            AssetJson(shares = asset.shares,
+            AssetJson(amount = asset.amount,
                 price = asset.price,
                 note = asset.note,
                 date = asset.date,

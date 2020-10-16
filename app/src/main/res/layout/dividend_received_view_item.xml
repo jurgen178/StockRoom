@@ -39,7 +39,7 @@ limitations under the License. -->
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textSize="11sp"
+          android:textSize="12sp"
           android:text="@string/dividend_received_summary_text"
           />
   </LinearLayout>

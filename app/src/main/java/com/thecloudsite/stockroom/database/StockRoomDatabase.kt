@@ -118,7 +118,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
           stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets!!.map { asset ->
             Asset(
                 symbol = symbol,
-                shares = asset.shares ?: 0.0,
+                amount = asset.amount ?: 0.0,
                 price = asset.price ?: 0.0,
                 date = asset.date ?: 0L
             )
@@ -194,12 +194,12 @@ abstract class StockRoomDatabase : RoomDatabase() {
             val gainvalue = asset.gain + ((0..1000).random() - 500).toDouble() / 100
 
             val price = data.marketPrice * (1 - gainvalue / assetvalue)
-            val shares = ((assetvalue - gainvalue) / price).roundToInt()
+            val amount = ((assetvalue - gainvalue) / price).roundToInt()
                 .toDouble()
-            val price2 = assetvalue / shares
+            val price2 = assetvalue / amount
 
             stockRoomDao.addAsset(
-                Asset(symbol = asset.symbol, shares = shares, price = price2, date = asset.date)
+                Asset(symbol = asset.symbol, amount = amount, price = price2, date = asset.date)
             )
           }
         }

@@ -31,7 +31,11 @@ import com.thecloudsite.stockroom.DividendCycle.SemiAnnual
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.AssetType
 import java.text.DecimalFormat
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 // Rounding error
@@ -39,6 +43,13 @@ const val epsilon = 0.000001
 
 // asset.type
 const val obsoleteAssetType: Int = 0x0001
+
+data class StockOptionData(
+  var sharesPerOption: Int = 0,
+  var expirationDate: Long = 0,
+  var strikePrice: Double = 0.0,
+  var type: Int = AssetType.UnknownOption.value
+)
 
 /*
 enum class DividendCycle(val value: Int) {
@@ -104,16 +115,16 @@ fun getAssetChange(
   context: Context
 ): SpannableStringBuilder {
 
-  val (shares, asset) = getAssets(assets)
+  val (amount, asset) = getAssets(assets)
 
-//  val shares = assets.sumByDouble {
-//    it.shares
+//  val amount = assets.sumByDouble {
+//    it.amount
 //  }
 
 //  val asset: Double =
-//    if (shares > 0.0) {
+//    if (amount > 0.0) {
 //      assets.sumByDouble {
-//        it.shares * it.price
+//        it.amount * it.price
 //      }
 //    } else {
 //      0.0
@@ -122,10 +133,10 @@ fun getAssetChange(
   if (marketPrice > 0.0) {
     var changeStr: String = ""
 
-    if (shares > 0.0) {
-      val capital = shares * marketPrice
+    if (amount > 0.0) {
+      val capital = amount * marketPrice
 //      val capital = assets.sumByDouble {
-//        it.shares * marketPrice
+//        it.amount * marketPrice
 //      }
 
       val change = capital - asset
@@ -181,7 +192,7 @@ fun getAssets(
   tagObsoleteAssetType: Int = 0
 ): Pair<Double, Double> {
 
-  var totalShares: Double = 0.0
+  var totalAmount: Double = 0.0
   var totalPrice: Double = 0.0
 
   if (assetList != null) {
@@ -200,16 +211,16 @@ fun getAssets(
       val asset = assetListSorted[i]
 
       // added shares
-      if (asset.shares > 0.0) {
-        totalShares += asset.shares
-        totalPrice += asset.shares * asset.price
+      if (asset.amount > 0.0) {
+        totalAmount += asset.amount
+        totalPrice += asset.amount * asset.price
       } else
       // removed shares
-        if (asset.shares < 0.0) {
+        if (asset.amount < 0.0) {
           // removed all?
-          if (-asset.shares >= (totalShares - epsilon)) {
+          if (-asset.amount >= (totalAmount - epsilon)) {
             // reset if more removed than owned
-            totalShares = 0.0
+            totalAmount = 0.0
             totalPrice = 0.0
 
             if (tagObsoleteAssetType != 0) {
@@ -219,22 +230,22 @@ fun getAssets(
             }
           } else {
             // adjust the total price for the removed shares
-            if (totalShares > epsilon) {
-              val averageSharePrice = totalPrice / totalShares
-              totalShares += asset.shares
-              totalPrice = totalShares * averageSharePrice
+            if (totalAmount > epsilon) {
+              val averageSharePrice = totalPrice / totalAmount
+              totalAmount += asset.amount
+              totalPrice = totalAmount * averageSharePrice
             }
           }
         }
     }
   }
 
-  return Pair(totalShares, totalPrice)
+  return Pair(totalAmount, totalPrice)
 }
 
 fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
 
-  var totalShares: Double = 0.0
+  var totalAmount: Double = 0.0
   var totalGain: Double = 0.0
   var totalLoss: Double = 0.0
   var bought: Double = 0.0
@@ -244,19 +255,19 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
     asset.date
   }
       ?.forEach { asset ->
-        if (asset.shares > 0.0) {
-          bought += asset.shares * asset.price
+        if (asset.amount > 0.0) {
+          bought += asset.amount * asset.price
         }
-        if (asset.shares < 0.0) {
-          sold += -asset.shares * asset.price
+        if (asset.amount < 0.0) {
+          sold += -asset.amount * asset.price
         }
-        totalShares += asset.shares
+        totalAmount += asset.amount
 
-        if ((totalShares <= -epsilon)) {
+        if ((totalAmount <= -epsilon)) {
           // Error, more shares sold than owned
           return Pair(0.0, 0.0)
         }
-        if (totalShares < epsilon) {
+        if (totalAmount < epsilon) {
           // totalShares are 0: -epsilon < totalShares < epsilon
           // reset if all shares are sold
           val gain = sold - bought
@@ -336,6 +347,48 @@ fun getCapitalGainLossText(
   }
 }
 
+fun parseStockOption(symbol: String): StockOptionData {
+
+  val stockOption = StockOptionData()
+
+  // named groups are not yet supported
+  val match = "([A-Z.]+)(7?)\\s*(\\d+)([A-Z])(\\d+)".toRegex()
+      .matchEntire(symbol.toUpperCase())
+
+  if (match != null && match.groups.size == 6) {
+    val sym = match.groups[1]?.value
+
+    stockOption.sharesPerOption = if (match.groups[2]?.value == "7") {
+      10
+    } else {
+      100
+    }
+
+    val dateStr = match.groups[3]?.value
+    try {
+      stockOption.expirationDate =
+        LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
+            .atStartOfDay(ZoneOffset.UTC)
+            .toEpochSecond()
+    } catch (e: Exception) {
+    }
+
+    when (match.groups[4]?.value.toString()) {
+      "C" -> {
+        stockOption.type = AssetType.CallOption.value
+      }
+      "P" -> {
+        stockOption.type = AssetType.PutOption.value
+      }
+    }
+
+    stockOption.strikePrice = match.groups[5]?.value?.toInt()
+        ?.div(1000.0) ?: 0.0
+  }
+
+  return stockOption
+}
+
 fun isOnline(context: Context): Boolean {
   val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
   val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
@@ -375,7 +428,7 @@ fun checkUrl(url: String): String {
 
 fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
 
-  var totalShares: Double = 0.0
+  var totalAmount: Double = 0.0
   var totalPrice: Double = 0.0
 
   assetList?.sortedBy { item ->
@@ -384,27 +437,27 @@ fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
       ?.forEach { asset ->
 
         // added shares
-        if (asset.shares > 0.0) {
-          totalShares += asset.shares
-          totalPrice += asset.shares * asset.price
+        if (asset.amount > 0.0) {
+          totalAmount += asset.amount
+          totalPrice += asset.amount * asset.price
         } else
         // removed shares
-          if (asset.shares < 0.0) {
+          if (asset.amount < 0.0) {
             // removed all?
-            if (-asset.shares >= (totalShares + epsilon)) {
+            if (-asset.amount >= (totalAmount + epsilon)) {
               // reset if more removed than owned
-              totalShares = 0.0
+              totalAmount = 0.0
               totalPrice = 0.0
             } else {
               // adjust the total price for the removed shares
-              if (totalShares > epsilon) {
-                val averageSharePrice = totalPrice / totalShares
-                totalShares += asset.shares
-                totalPrice = totalShares * averageSharePrice
+              if (totalAmount > epsilon) {
+                val averageSharePrice = totalPrice / totalAmount
+                totalAmount += asset.amount
+                totalPrice = totalAmount * averageSharePrice
               }
             }
           }
       }
 
-  return Pair(totalShares, totalPrice)
+  return Pair(totalAmount, totalPrice)
 }

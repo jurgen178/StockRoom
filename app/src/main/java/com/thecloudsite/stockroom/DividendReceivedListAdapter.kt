@@ -185,15 +185,15 @@ class DividendReceivedListAdapter internal constructor(
   internal fun updateData() {
     if (data != null) {
       marketValue = if (data!!.assets != null) {
-        val (totalShares, totalPrice) = getAssets(data!!.assets?.assets)
+        val (totalAmount, totalPrice) = getAssets(data!!.assets?.assets)
 
-//        val totalShares = data!!.assets?.assets?.sumByDouble {
+//        val totalAmount = data!!.assets?.assets?.sumByDouble {
 //          it.shares
 //        } ?: 0.0
 
-        if (totalShares > 0.0) {
+        if (totalAmount > 0.0) {
           val marketPrice: Double = data!!.onlineMarketData?.marketPrice ?: 0.0
-          totalShares * marketPrice
+          totalAmount * marketPrice
         } else {
           0.0
         }

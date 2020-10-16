@@ -81,16 +81,16 @@ class SummaryListAdapter internal constructor(
     }
     setBackgroundColor(holder.summaryListItemGroup, color)
 
-    val (shares, asset) = getAssets(current.assets)
+    val (amount, asset) = getAssets(current.assets)
 
-//    val shares = current.assets.sumByDouble {
-//      it.shares
+//    val amount = current.assets.sumByDouble {
+//      it.amount
 //    }
 //
 //    var asset: Double = 0.0
-//    if (shares > 0.0) {
+//    if (amount > 0.0) {
 //      asset = current.assets.sumByDouble {
-//        it.shares * it.price
+//        it.amount * it.price
 //      }
 //    }
 
@@ -123,15 +123,15 @@ class SummaryListAdapter internal constructor(
 
       var capital: Double = 0.0
 
-      if (shares > 0.0) {
-        capital = shares * current.onlineMarketData.marketPrice
+      if (amount > 0.0) {
+        capital = amount * current.onlineMarketData.marketPrice
 //        capital = current.assets.sumByDouble {
-//          it.shares * current.onlineMarketData.marketPrice
+//          it.amount * current.onlineMarketData.marketPrice
 //        }
 
         holder.summaryListItemCapital.text = DecimalFormat("0.00").format(capital)
       } else {
-        // Don't own any shares of this stock.
+        // Don't own any amount of this stock.
         holder.summaryListItemCapital.text = ""
       }
 
