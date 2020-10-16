@@ -33,6 +33,8 @@ import retrofit2.http.Query
 
 // https://finance.yahoo.com/quotes/GOOG,MAPP,API,v3,Json,not
 
+// https://api.nyse.com/docs/
+
 /*
 {
     "quoteResponse": {

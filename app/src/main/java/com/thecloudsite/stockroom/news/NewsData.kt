@@ -80,7 +80,6 @@ import retrofit2.http.Query
 </item>
 <item> */
 
-
 // https://feeds.finance.yahoo.com/rss/2.0/headline?s=msft
 
 /*
@@ -154,10 +153,32 @@ interface YahooNewsApi : NewsApi {
 }
 
 interface GoogleNewsApi : NewsApi {
-  @GET("rss/search/")
+  @GET("rss/search")
   override fun getNewsDataAsync(
     @Query(
         value = "q"
+    ) newsQuery: String
+  ): Deferred<Response<NewsResponse>>
+}
+
+// https://finance.yahoo.com/rss/topstories
+// https://finance.yahoo.com/news/rssindex
+// https://news.google.com/news/rss/headlines/section/topic/BUSINESS
+
+interface YahooAllNewsApi : NewsApi {
+  @GET("news/rssindex")
+  override fun getNewsDataAsync(
+    @Query(
+        value = ""
+    ) newsQuery: String
+  ): Deferred<Response<NewsResponse>>
+}
+
+interface GoogleAllNewsApi : NewsApi {
+  @GET("news/rss/headlines/section/topic/BUSINESS")
+  override fun getNewsDataAsync(
+    @Query(
+        value = ""
     ) newsQuery: String
   ): Deferred<Response<NewsResponse>>
 }

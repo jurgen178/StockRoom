@@ -365,11 +365,11 @@ fun isOnline(context: Context): Boolean {
    */
 }
 
-fun checkBaseUrl(baseUrl: String): String {
-  return if (!baseUrl.startsWith("http://") && !baseUrl.startsWith("https://")) {
-    "https://${baseUrl}"
+fun checkUrl(url: String): String {
+  return if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    "https://${url}"
   } else {
-    baseUrl
+    url
   }
 }
 

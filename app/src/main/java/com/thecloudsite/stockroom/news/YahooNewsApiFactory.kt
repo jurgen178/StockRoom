@@ -17,36 +17,51 @@
 package com.thecloudsite.stockroom.news
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.thecloudsite.stockroom.utils.checkBaseUrl
+import com.thecloudsite.stockroom.utils.checkUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 // https://feeds.finance.yahoo.com/rss/2.0/headline?s=msft
+// https://finance.yahoo.com/news/rssindex
+// https://finance.yahoo.com/rss/topfinstories
 
-object YahooNewsApiFactory {
+// https://observablehq.com/@stroked/yahoofinance
+// https://github.com/topics/yahoo-finance-api
 
-  private var defaultBaseUrl = "https://feeds.finance.yahoo.com/"
-  private var baseUrl = ""
+open class YahooNewsBaseApiFactory
+{
+  var url = ""
 
   // https://futurestud.io/tutorials/retrofit-how-to-integrate-xml-converter
-  private fun retrofit(): Retrofit = Retrofit.Builder()
+  fun retrofit(): Retrofit = Retrofit.Builder()
       .client(
           OkHttpClient().newBuilder()
               .build()
       )
-      .baseUrl(baseUrl)
+      .baseUrl(url)
       .addConverterFactory(SimpleXmlConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
       .build()
+}
 
-  fun update(_baseUrl: String) {
-    if (baseUrl != _baseUrl) {
-      if (_baseUrl.isBlank()) {
-        baseUrl = ""
+object YahooNewsApiFactory : YahooNewsBaseApiFactory() {
+
+  var newsApi: YahooNewsApi? = null
+
+  private var defaultUrl = "https://feeds.finance.yahoo.com/"
+
+  init {
+    update(defaultUrl)
+  }
+
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
         newsApi = null
       } else {
-        baseUrl = checkBaseUrl(_baseUrl)
+        url = checkUrl(_url)
         newsApi = try {
           retrofit().create(YahooNewsApi::class.java)
         } catch (e: Exception) {
@@ -55,10 +70,34 @@ object YahooNewsApiFactory {
       }
     }
   }
+}
+
+// https://finance.yahoo.com/rss/topstories
+// https://finance.yahoo.com/news/rssindex
+
+object YahooAllNewsApiFactory : YahooNewsBaseApiFactory() {
+
+  var newsApi: YahooAllNewsApi? = null
+
+  private var defaultUrl = "https://finance.yahoo.com/"
 
   init {
-    update(defaultBaseUrl)
+    update(defaultUrl)
   }
 
-  var newsApi: YahooNewsApi? = null
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
+        newsApi = null
+      } else {
+        url = checkUrl(_url)
+        newsApi = try {
+          retrofit().create(YahooAllNewsApi::class.java)
+        } catch (e: Exception) {
+          null
+        }
+      }
+    }
+  }
 }

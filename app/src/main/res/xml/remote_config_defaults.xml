@@ -2,20 +2,30 @@
 <!-- START xml_defaults -->
 <defaultsMap>
   <entry>
-    <key>stockMarketDataBaseUrl</key>
+    <key>stockMarketDataUrl</key>
     <value>https://query2.finance.yahoo.com/v7/finance/</value>
   </entry>
   <entry>
-    <key>stockChartDataBaseUrl</key>
+    <key>stockChartDataUrl</key>
     <value>https://query2.finance.yahoo.com/v8/finance/</value>
   </entry>
+<!--
   <entry>
-    <key>yahooNewsBaseUrl</key>
-    <value>https://feeds.finance.yahoo.com/</value>
+    <key>yahooNewsUrl</key>
+    <value>https://feeds.finance.yahoo.com/rss/2.0/headline/</value>
   </entry>
   <entry>
-    <key>googleNewsBaseUrl</key>
+    <key>googleNewsUrl</key>
     <value>https://news.google.com/</value>
   </entry>
+  <entry>
+    <key>yahooAllNewsUrl</key>
+    <value>https://finance.yahoo.com/news/rssindex/</value>
+  </entry>
+  <entry>
+    <key>googleAllNewsUrl</key>
+    <value>https://news.google.com/news/rss/headlines/section/topic/BUSINESS/</value>
+  </entry>
+-->
 </defaultsMap>
 <!-- END xml_defaults -->

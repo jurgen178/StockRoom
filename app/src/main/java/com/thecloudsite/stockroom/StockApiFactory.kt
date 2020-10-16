@@ -17,7 +17,7 @@
 package com.thecloudsite.stockroom
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.thecloudsite.stockroom.utils.checkBaseUrl
+import com.thecloudsite.stockroom.utils.checkUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -30,8 +30,8 @@ object StockMarketDataApiFactory {
   // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
-  private var defaultBaseUrl = "https://query2.finance.yahoo.com/v7/finance/"
-  private var baseUrl = ""
+  private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
+  private var url = ""
 
   //Creating Auth Interceptor to add api_key query in front of all the requests.
 /*
@@ -57,18 +57,18 @@ object StockMarketDataApiFactory {
 
   private fun retrofit(): Retrofit = Retrofit.Builder()
       .client(yahooClient)
-      .baseUrl(baseUrl)
+      .baseUrl(url)
       .addConverterFactory(MoshiConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
       .build()
 
-  fun update(_baseUrl: String) {
-    if (baseUrl != _baseUrl) {
-      if (_baseUrl.isBlank()) {
-        baseUrl = ""
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
         yahooApi = null
       } else {
-        baseUrl = checkBaseUrl(_baseUrl)
+        url = checkUrl(_url)
         yahooApi = try {
           retrofit().create(YahooApiMarketData::class.java)
         } catch (e: Exception) {
@@ -79,7 +79,7 @@ object StockMarketDataApiFactory {
   }
 
   init {
-    update(defaultBaseUrl)
+    update(defaultUrl)
   }
 
   var yahooApi: YahooApiMarketData? = null
@@ -89,8 +89,8 @@ object StockRawMarketDataApiFactory {
   // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
-  private var defaultBaseUrl = "https://query2.finance.yahoo.com/v7/finance/"
-  private var baseUrl = ""
+  private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
+  private var url = ""
 
   //OkhttpClient for building http request url
   private val yahooClient = OkHttpClient().newBuilder()
@@ -99,18 +99,18 @@ object StockRawMarketDataApiFactory {
 
   private fun retrofit(): Retrofit = Retrofit.Builder()
       .client(yahooClient)
-      .baseUrl(baseUrl)
+      .baseUrl(url)
       .addConverterFactory(ScalarsConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
       .build()
 
-  fun update(_baseUrl: String) {
-    if (baseUrl != _baseUrl) {
-      if (_baseUrl.isBlank()) {
-        baseUrl = ""
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
         yahooApi = null
       } else {
-        baseUrl = checkBaseUrl(_baseUrl)
+        url = checkUrl(_url)
         yahooApi = try {
           retrofit().create(YahooApiRawMarketData::class.java)
         } catch (e: Exception) {
@@ -121,7 +121,7 @@ object StockRawMarketDataApiFactory {
   }
 
   init {
-    update(defaultBaseUrl)
+    update(defaultUrl)
   }
 
   var yahooApi: YahooApiRawMarketData? = null
@@ -132,8 +132,8 @@ object StockChartDataApiFactory {
   // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
   // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
 
-  private var defaultBaseUrl = "https://query2.finance.yahoo.com/v8/finance/"
-  private var baseUrl = ""
+  private var defaultUrl = "https://query2.finance.yahoo.com/v8/finance/"
+  private var url = ""
 
   //Creating Auth Interceptor to add api_key query in front of all the requests.
 /*
@@ -159,18 +159,18 @@ object StockChartDataApiFactory {
 
   private fun retrofit(): Retrofit = Retrofit.Builder()
       .client(yahooClient)
-      .baseUrl(baseUrl)
+      .baseUrl(url)
       .addConverterFactory(MoshiConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
       .build()
 
-  fun update(_baseUrl: String) {
-    if (baseUrl != _baseUrl) {
-      if (_baseUrl.isBlank()) {
-        baseUrl = ""
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
         yahooApi = null
       } else {
-        baseUrl = checkBaseUrl(_baseUrl)
+        url = checkUrl(_url)
         yahooApi = try {
           retrofit().create(YahooApiChartData::class.java)
         } catch (e: Exception) {
@@ -181,7 +181,7 @@ object StockChartDataApiFactory {
   }
 
   init {
-    update(defaultBaseUrl)
+    update(defaultUrl)
   }
 
   var yahooApi: YahooApiChartData? = null

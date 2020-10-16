@@ -42,7 +42,10 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.list.ListAdapter
+import com.thecloudsite.stockroom.news.AllNewsFragment
+import com.thecloudsite.stockroom.news.GoogleAllNewsApiFactory
 import com.thecloudsite.stockroom.news.GoogleNewsApiFactory
+import com.thecloudsite.stockroom.news.YahooAllNewsApiFactory
 import com.thecloudsite.stockroom.news.YahooNewsApiFactory
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
@@ -78,10 +81,12 @@ class MainActivity : AppCompatActivity() {
   companion object {
 
     // Remote Config keys
-    private const val STOCKMARKETDATA_BASEURL = "stockMarketDataBaseUrl"
-    private const val STOCKCHARTDATA_BASEURL = "stockChartDataBaseUrl"
-    private const val YAHOONEWS_BASEURL = "yahooNewsBaseUrl"
-    private const val GOOGLENEWS_BASEURL = "googleNewsBaseUrl"
+    private const val STOCKMARKETDATA_URL = "stockMarketDataUrl"
+    private const val STOCKCHARTDATA_URL = "stockChartDataUrl"
+//    private const val YAHOONEWS_URL = "yahooNewsUrl"
+//    private const val YAHOOALLNEWS_URL = "yahooAllNewsUrl"
+//    private const val GOOGLENEWS_URL = "googleNewsUrl"
+//    private const val GOOGLEALLNEWS_URL = "googleAllNewsUrl"
     private const val USER_MSG_TITLE = "userMsgTitle"
     private const val USER_MSG = "userMsg"
 
@@ -184,6 +189,9 @@ class MainActivity : AppCompatActivity() {
           3 -> {
             SummaryGroupFragment.newInstance()
           }
+          4 -> {
+            AllNewsFragment.newInstance()
+          }
           else -> {
             TimelineFragment.newInstance()
           }
@@ -191,7 +199,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun getItemCount(): Int {
-        return 5
+        return 6
       }
     }
 
@@ -265,21 +273,29 @@ class MainActivity : AppCompatActivity() {
             stockRoomViewModel.logDebug("Config activated.")
 
             // Update configuration
-            val marketDataBaseUrl = remoteConfig[STOCKMARKETDATA_BASEURL].asString()
-            StockMarketDataApiFactory.update(marketDataBaseUrl)
-            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$marketDataBaseUrl]")
+            val marketDataUrl = remoteConfig[STOCKMARKETDATA_URL].asString()
+            StockMarketDataApiFactory.update(marketDataUrl)
+            //stockRoomViewModel.logDebug("Remote Config [url=$marketDataUrl]")
 
-            val chartDataBaseUrl = remoteConfig[STOCKCHARTDATA_BASEURL].asString()
-            StockChartDataApiFactory.update(chartDataBaseUrl)
-            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$chartDataBaseUrl]")
+            val chartDataUrl = remoteConfig[STOCKCHARTDATA_URL].asString()
+            StockChartDataApiFactory.update(chartDataUrl)
+            //stockRoomViewModel.logDebug("Remote Config [url=$chartDataUrl]")
 
-            val yahooNewsBaseUrl = remoteConfig[YAHOONEWS_BASEURL].asString()
-            YahooNewsApiFactory.update(yahooNewsBaseUrl)
-            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$yahooNewsBaseUrl]")
-
-            val googleNewsBaseUrl = remoteConfig[GOOGLENEWS_BASEURL].asString()
-            GoogleNewsApiFactory.update(googleNewsBaseUrl)
-            //stockRoomViewModel.logDebug("Remote Config [baseUrl=$googleNewsBaseUrl]")
+//            val yahooNewsUrl = remoteConfig[YAHOONEWS_URL].asString()
+//            YahooNewsApiFactory.update(yahooNewsUrl)
+//            //stockRoomViewModel.logDebug("Remote Config [url=$yahooNewsUrl]")
+//
+//            val yahooAllNewsUrl = remoteConfig[YAHOOALLNEWS_URL].asString()
+//            YahooAllNewsApiFactory.update(yahooAllNewsUrl)
+//            //stockRoomViewModel.logDebug("Remote Config [url=$yahooNewsUrl]")
+//
+//            val googleNewsUrl = remoteConfig[GOOGLENEWS_URL].asString()
+//            GoogleNewsApiFactory.update(googleNewsUrl)
+//            //stockRoomViewModel.logDebug("Remote Config [url=$googleNewsUrl]")
+//
+//            val googleAllNewsUrl = remoteConfig[GOOGLEALLNEWS_URL].asString()
+//            GoogleAllNewsApiFactory.update(googleAllNewsUrl)
+//            //stockRoomViewModel.logDebug("Remote Config [url=$googleNewsUrl]")
 
             val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
             val userMsg = remoteConfig[USER_MSG].asString()

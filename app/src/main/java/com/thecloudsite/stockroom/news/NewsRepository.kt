@@ -59,10 +59,11 @@ open class NewsRepository(
     errorMessage: String
   ): Result<T> {
     val response = call.invoke()
-    if (response.isSuccessful) return Success(response.body()!!)
+    if (response.isSuccessful)
+      return Success(response.body()!!)
 
     return Error(
-        IOException("Error Occurred during getting safe Api result, Custom ERROR - $errorMessage")
+        IOException("Error occurred during getting safe Api result, Custom ERROR - $errorMessage")
     )
   }
 
