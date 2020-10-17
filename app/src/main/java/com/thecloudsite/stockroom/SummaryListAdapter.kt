@@ -136,7 +136,7 @@ class SummaryListAdapter internal constructor(
       }
 
       holder.summaryListItemAssetChange.text =
-        getAssetChange(current.assets, current.onlineMarketData.marketPrice, context)
+        getAssetChange(current.assets, current.onlineMarketData.marketPrice, context).second
     } else {
       // offline
       holder.summaryListItemMarketPrice.text = ""

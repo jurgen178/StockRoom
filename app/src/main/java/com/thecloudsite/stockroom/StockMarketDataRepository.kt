@@ -216,9 +216,9 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
 class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?) : BaseRepository() {
 
-  private val _data = MutableLiveData<List<OnlineMarketData>>()
-  val onlineMarketDataList: LiveData<List<OnlineMarketData>>
-    get() = _data
+//  private val _data = MutableLiveData<List<OnlineMarketData>>()
+//  val onlineMarketDataList: LiveData<List<OnlineMarketData>>
+//    get() = _data
 
   suspend fun getStockRawData(symbol: String): String {
     val api: YahooApiRawMarketData? = api()

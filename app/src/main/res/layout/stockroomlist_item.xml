@@ -29,10 +29,10 @@
       android:paddingStart="4dp"
       android:paddingEnd="4dp"
       android:paddingBottom="4dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/guideline2"
-      app:layout_constraintStart_toStartOf="@+id/guideline"
       app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline"
+      app:layout_constraintEnd_toStartOf="@+id/guideline2"
+      app:layout_constraintBottom_toBottomOf="parent"
       >
     <TextView
         android:id="@+id/textViewSymbol"
@@ -50,10 +50,10 @@
         android:layout_marginStart="6dp"
         android:singleLine="false"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewSymbol"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewSymbol"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewSymbol"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewSymbol"
         />
     <TextView
         android:id="@+id/textViewAssets"
@@ -61,12 +61,12 @@
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:minLines="3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSymbol"
         app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSymbol"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
@@ -78,10 +78,10 @@
       android:paddingStart="4dp"
       android:paddingEnd="4dp"
       android:paddingBottom="4dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/guideline2"
       app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
       >
 
     <TextView
@@ -125,13 +125,6 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       app:layout_constraintGuide_percent="0.75"
-      />
-
-  <androidx.constraintlayout.widget.Barrier
-      android:id="@+id/guideline3"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      app:barrierDirection="top"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

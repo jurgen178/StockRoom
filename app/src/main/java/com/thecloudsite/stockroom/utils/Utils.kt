@@ -112,8 +112,9 @@ fun Resources.getRawTextFile(@RawRes id: Int) =
 fun getAssetChange(
   assets: List<Asset>,
   marketPrice: Double,
-  context: Context
-): SpannableStringBuilder {
+  context: Context,
+  bold: Boolean = true
+): Triple<String, SpannableStringBuilder, Int> {
 
   val (quantity, asset) = getAssets(assets)
 
@@ -175,16 +176,23 @@ fun getAssetChange(
         }
       }
 
-      val assetChange = SpannableStringBuilder()
-          .color(assetChangeColor) {
-            bold { append(changeStr) }
-          }
+      val assetChange = if (bold) {
+        SpannableStringBuilder()
+            .color(assetChangeColor) {
+              bold { append(changeStr) }
+            }
+      } else {
+        SpannableStringBuilder()
+            .color(assetChangeColor) {
+              append(changeStr)
+            }
+      }
 
-      return assetChange
+      return Triple(changeStr, assetChange, assetChangeColor)
     }
   }
 
-  return SpannableStringBuilder()
+  return Triple("", SpannableStringBuilder(), context.getColor(R.color.backgroundListColor))
 }
 
 fun getAssets(
@@ -268,7 +276,7 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
           return Pair(0.0, 0.0)
         }
         if (totalQuantity < epsilon) {
-          // totalShares are 0: -epsilon < totalShares < epsilon
+          // totalQuantity is 0: -epsilon < totalQuantity < epsilon
           // reset if all shares are sold
           val gain = sold - bought
           if (gain > 0.0) {

@@ -511,6 +511,9 @@ var events: List<Event>
                 note = asset.note,
                 date = asset.date,
                 type = asset.type,
+                sharesPerQuantity = asset.sharesPerQuantity,
+                expirationDate = asset.expirationDate,
+                premium = asset.premium,
                 commission = asset.commission
             )
           },

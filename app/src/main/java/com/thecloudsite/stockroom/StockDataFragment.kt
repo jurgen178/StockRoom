@@ -1702,13 +1702,13 @@ class StockDataFragment : Fragment() {
     updateStockViewRange(stockViewRange)
   }
 
-  private fun hideSoftInputFromWindow() {
-    val view = activity?.currentFocus
-    if (view is TextView) {
-      val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-      imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-  }
+//  private fun hideSoftInputFromWindow() {
+//    val view = activity?.currentFocus
+//    if (view is TextView) {
+//      val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//      imm.hideSoftInputFromWindow(view.windowToken, 0)
+//    }
+//  }
 
   private fun updateNotes() {
     val builder = AlertDialog.Builder(requireContext())
@@ -1823,7 +1823,7 @@ class StockDataFragment : Fragment() {
       textViewAssetChange.text = if (purchasePrice.isNotEmpty()) {
         getAssetChange(
             data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, requireActivity()
-        )
+        ).second
       } else {
         ""
       }

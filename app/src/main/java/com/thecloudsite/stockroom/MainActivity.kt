@@ -43,10 +43,6 @@ import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.list.ListAdapter
 import com.thecloudsite.stockroom.news.AllNewsFragment
-import com.thecloudsite.stockroom.news.GoogleAllNewsApiFactory
-import com.thecloudsite.stockroom.news.GoogleNewsApiFactory
-import com.thecloudsite.stockroom.news.YahooAllNewsApiFactory
-import com.thecloudsite.stockroom.news.YahooNewsApiFactory
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
 import com.thecloudsite.stockroom.utils.isOnline
@@ -187,9 +183,12 @@ class MainActivity : AppCompatActivity() {
             SummaryListFragment.newInstance()
           }
           3 -> {
-            SummaryGroupFragment.newInstance()
+            StockRoomDetailListFragment.newInstance()
           }
           4 -> {
+            SummaryGroupFragment.newInstance()
+          }
+          5 -> {
             AllNewsFragment.newInstance()
           }
           else -> {
@@ -199,7 +198,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun getItemCount(): Int {
-        return 6
+        return 7
       }
     }
 
