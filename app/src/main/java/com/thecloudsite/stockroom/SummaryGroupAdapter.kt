@@ -180,10 +180,10 @@ class SummaryGroupAdapter internal constructor(
     val soldHashSet = hashSetOf<String>()
 
     stockItemsSelected.forEach { stockItem ->
-      val (amount, price) = getAssets(stockItem.assets)
+      val (quantity, price) = getAssets(stockItem.assets)
 
       totalPurchasePrice += price
-      totalQuantity += amount
+      totalQuantity += quantity
 
       val (gain, loss) = getAssetsCapitalGain(stockItem.assets)
       // Merge gain and loss of the individual stock to one gain/loss to prevent
@@ -228,7 +228,7 @@ class SummaryGroupAdapter internal constructor(
       }
 
       if (stockItem.onlineMarketData.marketPrice > 0.0) {
-        val assetsPrice = amount * stockItem.onlineMarketData.marketPrice
+        val assetsPrice = quantity * stockItem.onlineMarketData.marketPrice
         val gainLoss = assetsPrice - price
         if (gainLoss > 0.0) {
           totalGain += gainLoss
@@ -240,7 +240,7 @@ class SummaryGroupAdapter internal constructor(
 
         if (stockItem.onlineMarketData.annualDividendRate > 0.0) {
           totalDividendAssets += assetsPrice
-          totalDividend += amount * stockItem.onlineMarketData.annualDividendRate
+          totalDividend += quantity * stockItem.onlineMarketData.annualDividendRate
         }
       }
     }

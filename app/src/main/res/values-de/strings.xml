@@ -148,7 +148,7 @@ limitations under the License. -->
   <string name="delete_all_confirm">Sind Sie sich sicher?</string>
   <string name="delete_all_desc">Entfernt alle Aktien und die dazugehörigen Daten.</string>
   <string name="quantity_not_zero">Die Anzahl darf nicht 0 sein.</string>
-  <string name="removed_amount_exceed_existing">Sie entfernen mehr Aktien als sie besitzen. Die Anzahl wird von %1$s auf %2$s korrigiert.</string>
+  <string name="removed_quantity_exceed_existing">Sie entfernen mehr Aktien als sie besitzen. Die Anzahl wird von %1$s auf %2$s korrigiert.</string>
   <string name="price_not_zero">Der Preis darf nicht 0 sein.</string>
   <string name="add_asset">Zum Aktienbestand hinzufügen</string>
   <string name="remove_asset">Vom Aktienbestand entfernen</string>

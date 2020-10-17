@@ -264,10 +264,10 @@ interface StockRoomDao {
   fun getAssets(symbol: String): Assets
 //    fun getAllAssets(): LiveData<List<Assets>> = getAllAssets1().getDistinct()
 
-  @Query("DELETE FROM asset_table WHERE symbol = :symbol AND quantity = :amount AND price = :price")
+  @Query("DELETE FROM asset_table WHERE symbol = :symbol AND quantity = :quantity AND price = :price")
   fun deleteAsset(
     symbol: String,
-    amount: Double,
+    quantity: Double,
     price: Double
   )
 
@@ -282,7 +282,7 @@ interface StockRoomDao {
   ) {
     deleteAsset(
         assetOld.symbol,
-        assetOld.amount,
+        assetOld.quantity,
         assetOld.price
     )
     addAsset(assetNew)

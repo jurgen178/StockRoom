@@ -2018,7 +2018,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun addAsset(
     symbol: String,
-    amount: Double,
+    quantity: Double,
     price: Double,
     date: Long
   ) = scope.launch {
@@ -2026,7 +2026,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       repository.addAsset(
           Asset(
               symbol = symbol.toUpperCase(Locale.ROOT),
-              quantity = amount,
+              quantity = quantity,
               price = price,
               date = date
           )

@@ -158,6 +158,7 @@ class ListActivity : AppCompatActivity() {
         assetTableRows.append("<td>${getDateTimeStr(assetItem.date)}</td>")
         assetTableRows.append("<td>${assetItem.sharesPerQuantity}</td>")
         assetTableRows.append("<td>${getDateStr(assetItem.expirationDate)}</td>")
+        assetTableRows.append("<td>${assetItem.premium}</td>")
         assetTableRows.append("<td>${assetItem.commission}</td>")
         assetTableRows.append("</tr>")
       }

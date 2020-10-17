@@ -258,7 +258,7 @@ class StockRoomDaoTest {
     assertEquals(assets1.assets[2].quantity, asset2.quantity)
     assertEquals(assets1.assets[2].price, asset2.price)
 
-    stockRoomDao.deleteAsset(symbol = asset1.symbol, amount = asset1.quantity, price = asset1.price)
+    stockRoomDao.deleteAsset(symbol = asset1.symbol, quantity = asset1.quantity, price = asset1.price)
     val assetsDel1 = stockRoomDao.getAssets("symbol1")
     assertEquals(assetsDel1.assets.size, 1)
 

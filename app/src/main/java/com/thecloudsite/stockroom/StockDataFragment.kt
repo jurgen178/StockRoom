@@ -284,16 +284,16 @@ class StockDataFragment : Fragment() {
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val amountText = (addQuantityView.text).toString()
+          val quantityText = (addQuantityView.text).toString()
               .trim()
-          var amount = 0.0
+          var quantity = 0.0
 
           try {
             val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-            amount = numberFormat.parse(amountText)!!
+            quantity = numberFormat.parse(quantityText)!!
                 .toDouble()
             if (asset.quantity < 0.0) {
-              amount = -amount
+              quantity = -quantity
             }
           } catch (e: Exception) {
             Toast.makeText(
@@ -302,7 +302,7 @@ class StockDataFragment : Fragment() {
                 .show()
             return@setPositiveButton
           }
-          if (amount == 0.0) {
+          if (quantity == 0.0) {
             Toast.makeText(
                 requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
             )
@@ -343,7 +343,7 @@ class StockDataFragment : Fragment() {
               .trim()
 
           val assetNew =
-            Asset(symbol = symbol, quantity = amount, price = price, date = date, note = noteText)
+            Asset(symbol = symbol, quantity = quantity, price = price, date = date, note = noteText)
 
           if (asset.quantity != assetNew.quantity
               || asset.price != assetNew.price
@@ -354,13 +354,13 @@ class StockDataFragment : Fragment() {
             stockRoomViewModel.updateAsset2(asset, assetNew)
 
             var pluralstr: String = ""
-            val amountAbs = amount.absoluteValue
+            val quantityAbs = quantity.absoluteValue
             val count: Int = when {
-              amountAbs == 1.0 -> {
+              quantityAbs == 1.0 -> {
                 1
               }
-              amountAbs > 1.0 -> {
-                amountAbs.toInt() + 1
+              quantityAbs > 1.0 -> {
+                quantityAbs.toInt() + 1
               }
               else -> {
                 0
@@ -369,13 +369,13 @@ class StockDataFragment : Fragment() {
 
             pluralstr = if (asset.quantity > 0.0) {
               resources.getQuantityString(
-                  R.plurals.asset_updated, count, DecimalFormat("0.####").format(amountAbs),
+                  R.plurals.asset_updated, count, DecimalFormat("0.####").format(quantityAbs),
                   DecimalFormat("0.00##").format(price)
               )
             } else {
               resources.getQuantityString(
                   R.plurals.asset_removed_updated, count,
-                  DecimalFormat("0.####").format(amountAbs)
+                  DecimalFormat("0.####").format(quantityAbs)
               )
             }
 
@@ -1067,14 +1067,14 @@ class StockDataFragment : Fragment() {
 
     splitAssetsButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val (totalAmount, totalPrice) = getAssets(assets?.assets)
+      val (totalQuantity, totalPrice) = getAssets(assets?.assets)
 
-//      val totalAmount = assets?.assets?.sumByDouble {
+//      val totalQuantity = assets?.assets?.sumByDouble {
 //        it.shares
 //      }
 //          ?: 0.0
 
-      if (totalAmount == 0.0) {
+      if (totalQuantity == 0.0) {
         Toast.makeText(
             requireContext(), getString(R.string.no_total_quantity), Toast.LENGTH_LONG
         )
@@ -1112,7 +1112,7 @@ class StockDataFragment : Fragment() {
                 }
 
                 if (valid && assets?.assets != null) {
-                  var minAmount = Double.MAX_VALUE
+                  var minQuantity = Double.MAX_VALUE
                   var minPrice = Double.MAX_VALUE
                   assets.assets.forEach { asset ->
                     asset.quantity *= splitRatio
@@ -1120,18 +1120,18 @@ class StockDataFragment : Fragment() {
                       asset.price /= splitRatio
                     }
                     if (asset.quantity > 0) {
-                      minAmount = min(asset.quantity, minAmount)
+                      minQuantity = min(asset.quantity, minQuantity)
                       minPrice = min(asset.price, minPrice)
                     }
                   }
 
-                  if (minAmount >= 0.1 && minPrice >= 0.01) {
+                  if (minQuantity >= 0.1 && minPrice >= 0.01) {
                     stockRoomViewModel.updateAssets(
                         symbol = symbol, assets = assets.assets
                     )
                   } else {
                     Toast.makeText(
-                        requireContext(), if (minAmount >= 0.1) {
+                        requireContext(), if (minQuantity >= 0.1) {
                       getString(R.string.split_min_price)
                     } else {
                       getString(R.string.split_min_quantity)
@@ -1167,10 +1167,10 @@ class StockDataFragment : Fragment() {
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
       val dialogView = inflater.inflate(R.layout.dialog_add_asset, null)
-      val addUpdateAmountHeadlineView =
+      val addUpdateQuantityHeadlineView =
         dialogView.findViewById<TextView>(R.id.addUpdateQuantityHeadline)
-      addUpdateAmountHeadlineView.text = getString(R.string.add_asset)
-      val addAmountView = dialogView.findViewById<TextView>(R.id.addQuantity)
+      addUpdateQuantityHeadlineView.text = getString(R.string.add_asset)
+      val addQuantityView = dialogView.findViewById<TextView>(R.id.addQuantity)
       val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
       val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
       val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
@@ -1181,13 +1181,13 @@ class StockDataFragment : Fragment() {
               R.string.add
           ) { _, _ ->
             // Add () to avoid cast exception.
-            val amountText = (addAmountView.text).toString()
+            val quantitytText = (addQuantityView.text).toString()
                 .trim()
-            var amount = 0.0
+            var quantity = 0.0
 
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-              amount = numberFormat.parse(amountText)!!
+              quantity = numberFormat.parse(quantitytText)!!
                   .toDouble()
             } catch (e: Exception) {
               Toast.makeText(
@@ -1196,7 +1196,7 @@ class StockDataFragment : Fragment() {
                   .show()
               return@setPositiveButton
             }
-            if (amount <= 0.0) {
+            if (quantity <= 0.0) {
               Toast.makeText(
                   requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
               )
@@ -1241,18 +1241,18 @@ class StockDataFragment : Fragment() {
             stockRoomViewModel.addAsset(
                 Asset(
                     symbol = symbol,
-                    quantity = amount,
+                    quantity = quantity,
                     price = price,
                     date = date,
                     note = noteText
                 )
             )
             val count: Int = when {
-              amount == 1.0 -> {
+              quantity == 1.0 -> {
                 1
               }
-              amount > 1.0 -> {
-                amount.toInt() + 1
+              quantity > 1.0 -> {
+                quantity.toInt() + 1
               }
               else -> {
                 0
@@ -1260,7 +1260,7 @@ class StockDataFragment : Fragment() {
             }
 
             val pluralstr = resources.getQuantityString(
-                R.plurals.asset_added, count, DecimalFormat("0.####").format(amount),
+                R.plurals.asset_added, count, DecimalFormat("0.####").format(quantity),
                 DecimalFormat("0.00##").format(price)
             )
             Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
@@ -1279,14 +1279,14 @@ class StockDataFragment : Fragment() {
 
     removeAssetButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val (totalAmount, totalPrice) = getAssets(assets?.assets)
+      val (totalQuantity, totalPrice) = getAssets(assets?.assets)
 
-//      val totalAmount = assets?.assets?.sumByDouble {
+//      val totalQuantity = assets?.assets?.sumByDouble {
 //        it.shares
 //      }
 //          ?: 0.0
 
-      if (totalAmount == 0.0) {
+      if (totalQuantity == 0.0) {
         Toast.makeText(
             requireContext(), getString(R.string.no_total_quantity), Toast.LENGTH_LONG
         )
@@ -1299,7 +1299,7 @@ class StockDataFragment : Fragment() {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         val dialogView = inflater.inflate(R.layout.dialog_remove_asset, null)
-        val removeAmountView = dialogView.findViewById<TextView>(R.id.removeQuantity)
+        val removeQuantityView = dialogView.findViewById<TextView>(R.id.removeQuantity)
         val removePriceView = dialogView.findViewById<TextView>(R.id.removePrice)
         val removeNoteView = dialogView.findViewById<TextView>(R.id.removeNote)
         val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
@@ -1309,13 +1309,13 @@ class StockDataFragment : Fragment() {
             .setPositiveButton(
                 R.string.delete
             ) { _, _ ->
-              val amountText = (removeAmountView.text).toString()
+              val quantityText = (removeQuantityView.text).toString()
                   .trim()
-              var amount = 0.0
+              var quantity = 0.0
 
               try {
                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                amount = numberFormat.parse(amountText)!!
+                quantity = numberFormat.parse(quantityText)!!
                     .toDouble()
               } catch (e: Exception) {
                 Toast.makeText(
@@ -1324,7 +1324,7 @@ class StockDataFragment : Fragment() {
                     .show()
                 return@setPositiveButton
               }
-              if (amount <= 0.0) {
+              if (quantity <= 0.0) {
                 Toast.makeText(
                     requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
                 )
@@ -1355,16 +1355,16 @@ class StockDataFragment : Fragment() {
               }
 
               // Send msg and adjust if more shares than owned are removed.
-              if (amount > totalAmount) {
+              if (quantity > totalQuantity) {
                 Toast.makeText(
                     requireContext(), getString(
-                    R.string.removed_amount_exceed_existing,
-                    DecimalFormat("0.####").format(amount),
-                    DecimalFormat("0.####").format(totalAmount)
+                    R.string.removed_quantity_exceed_existing,
+                    DecimalFormat("0.####").format(quantity),
+                    DecimalFormat("0.####").format(totalQuantity)
                 ), Toast.LENGTH_LONG
                 )
                     .show()
-                amount = totalAmount
+                quantity = totalQuantity
               }
 
               val localDateTime: LocalDateTime = LocalDateTime.of(
@@ -1383,18 +1383,18 @@ class StockDataFragment : Fragment() {
               stockRoomViewModel.addAsset(
                   Asset(
                       symbol = symbol,
-                      quantity = -amount,
+                      quantity = -quantity,
                       price = price,
                       date = date,
                       note = noteText
                   )
               )
               val count: Int = when {
-                amount == 1.0 -> {
+                quantity == 1.0 -> {
                   1
                 }
-                amount > 1.0 -> {
-                  amount.toInt() + 1
+                quantity > 1.0 -> {
+                  quantity.toInt() + 1
                 }
                 else -> {
                   0
@@ -1402,7 +1402,7 @@ class StockDataFragment : Fragment() {
               }
 
               val pluralstr = resources.getQuantityString(
-                  R.plurals.asset_removed, count, DecimalFormat("0.####").format(amount)
+                  R.plurals.asset_removed, count, DecimalFormat("0.####").format(quantity)
               )
               Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
                   .show()
@@ -1796,9 +1796,9 @@ class StockDataFragment : Fragment() {
   private fun updatePurchasePrice(
     assets: List<Asset>
   ): String {
-    val (totalAmount, totalPrice) = getAssets(assets)
+    val (totalQuantity, totalPrice) = getAssets(assets)
 
-//    val totalAmount = assets.sumByDouble {
+//    val totalQuantity = assets.sumByDouble {
 //      it.shares
 //    }
 
@@ -1808,7 +1808,7 @@ class StockDataFragment : Fragment() {
 //      }
 
       return getString(
-          R.string.bought_for, DecimalFormat("0.00##").format(totalPrice / totalAmount)
+          R.string.bought_for, DecimalFormat("0.00##").format(totalPrice / totalQuantity)
       )
     }
 
