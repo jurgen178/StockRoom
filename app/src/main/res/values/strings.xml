@@ -260,6 +260,7 @@ limitations under the License. -->
   <string name="onlinedata_marketState">Market state</string>
   <string name="json_default_filename">Portfolio %1$s</string>
   <string name="news_headline">News for %1$s</string>
+  <string name="all_news_headline">Latest Finance News</string>
   <string name="news_date_time">%1$s at %2$s</string>
   <string name="data_headline">Overview</string>
   <string name="donate">Donate</string>

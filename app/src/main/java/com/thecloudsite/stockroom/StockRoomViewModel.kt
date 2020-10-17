@@ -50,7 +50,6 @@ import com.thecloudsite.stockroom.list.DebugData
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
-import com.thecloudsite.stockroom.utils.parseStockOption
 import com.thecloudsite.stockroom.utils.validateDouble
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -2006,25 +2005,27 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun addAsset(asset: Asset) = scope.launch {
 
-    val stockOptionData = parseStockOption(asset.symbol)
-    if (stockOptionData.expirationDate == 0L && stockOptionData.strikePrice == 0.0) {
-      repository.addAsset(asset)
-    } else {
-      repository.addAsset(
-          Asset(
-              symbol = asset.symbol,
-              quantity = asset.quantity,
-              price = stockOptionData.strikePrice,
-              type = asset.type,
-              note = asset.note,
-              date = asset.date,
-              sharesPerQuantity = stockOptionData.sharesPerOption,
-              expirationDate = stockOptionData.expirationDate,
-              commission = asset.commission,
+    repository.addAsset(asset)
 
-              )
-      )
-    }
+//    val stockOptionData = parseStockOption(asset.symbol)
+//    if (stockOptionData.expirationDate == 0L && stockOptionData.strikePrice == 0.0) {
+//      repository.addAsset(asset)
+//    } else {
+//      repository.addAsset(
+//          Asset(
+//              symbol = asset.symbol,
+//              quantity = asset.quantity,
+//              price = stockOptionData.strikePrice,
+//              type = asset.type,
+//              note = asset.note,
+//              date = asset.date,
+//              sharesPerQuantity = stockOptionData.sharesPerOption,
+//              expirationDate = stockOptionData.expirationDate,
+//              premium = asset.premium,
+//              commission = asset.commission,
+//              )
+//      )
+//    }
   }
 
   fun addEvent(event: Event) = scope.launch {

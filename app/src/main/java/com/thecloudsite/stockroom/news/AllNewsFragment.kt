@@ -64,7 +64,7 @@ class AllNewsFragment : Fragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    newsAdapter = NewsAdapter(requireContext())
+    newsAdapter = NewsAdapter(requireContext(), getString(R.string.all_news_headline))
     newsRecyclerview.adapter = newsAdapter
     newsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
 
@@ -75,7 +75,7 @@ class AllNewsFragment : Fragment() {
       newsAdapter.updateData(data)
 
       // Stop observing now. News needs to be updated manually.
-      //yahooAllNewsViewModel.data.removeObservers(viewLifecycleOwner)
+      yahooAllNewsViewModel.data.removeObservers(viewLifecycleOwner)
     })
 
     googleAllNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->

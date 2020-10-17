@@ -31,7 +31,6 @@
           android:layout_height="wrap_content"
           android:layout_weight="0.7"
           android:textSize="13sp"
-          style="@style/stock_item_text"
           />
 
       <TextView
@@ -41,7 +40,6 @@
           android:layout_weight="0.3"
           android:gravity="end"
           android:textSize="13sp"
-          style="@style/stock_item_text"
           />
 
     </LinearLayout>

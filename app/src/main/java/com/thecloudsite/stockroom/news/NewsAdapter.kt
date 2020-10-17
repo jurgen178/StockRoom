@@ -35,8 +35,9 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
 import java.time.format.FormatStyle.MEDIUM
 
-const val news_type_yahoo: Int = 0
-const val news_type_google: Int = 1
+const val news_type_headline: Int = 0
+const val news_type_yahoo: Int = 1
+const val news_type_google: Int = 2
 
 val excludeUrlList = arrayListOf(
     "newsdaemon.com",
@@ -85,16 +86,34 @@ data class NewsData(
 )
 
 class NewsAdapter(
-  private val context: Context
+  private val context: Context,
+  headline: String = "",
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
     abstract fun bind(item: T)
   }
 
-  private var newsDataList = listOf<NewsData>()
+  private var newsDataList = if (headline.isNotEmpty()) {
+    // Add headline to news list.
+    listOf<NewsData>(
+        // News is sorted by time, date=Long.MAX_VALUE is top entry.
+        NewsData(
+            headline, "", Long.MAX_VALUE, "", news_type_headline
+        )
+    )
+  } else {
+    listOf<NewsData>()
+  }
 
   // https://medium.com/@ivancse.58/android-and-kotlin-recyclerview-with-multiple-view-types-65285a254393
+  class NewsHeadlineViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+    override fun bind(item: NewsData) {
+    }
+
+    val newsHeadline: TextView = itemView.findViewById(id.newsHeadline)
+  }
+
   class YahooNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
     override fun bind(item: NewsData) {
     }
@@ -118,7 +137,13 @@ class NewsAdapter(
     parent: ViewGroup,
     viewType: Int
   ): BaseViewHolder<*> {
+
     return when (viewType) {
+      news_type_headline -> {
+        val view = LayoutInflater.from(context)
+            .inflate(layout.newsheadline_item, parent, false)
+        NewsHeadlineViewHolder(view)
+      }
       news_type_yahoo -> {
         val view = LayoutInflater.from(context)
             .inflate(layout.yahoonewsview_item, parent, false)
@@ -146,8 +171,17 @@ class NewsAdapter(
     holder: BaseViewHolder<*>,
     position: Int
   ) {
+
     val element: NewsData = newsDataList[position]
+
     when (holder) {
+
+      is NewsHeadlineViewHolder -> {
+        holder.bind(element)
+
+        val current: NewsData = newsDataList[position]
+        holder.newsHeadline.text = current.title
+      }
 
       is YahooNewsViewHolder -> {
         holder.bind(element)
@@ -185,7 +219,9 @@ class NewsAdapter(
         // Make links clickable.
         holder.googleNewsItemPreviewText.movementMethod = LinkMovementMethod.getInstance()
       }
-      else -> throw IllegalArgumentException()
+      else -> {
+        throw IllegalArgumentException()
+      }
     }
   }
 

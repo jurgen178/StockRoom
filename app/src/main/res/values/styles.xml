@@ -22,12 +22,16 @@ limitations under the License. -->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="stock_item_text">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
-    </style>
+  <style name="stock_item_text">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+  </style>
 
-    <style name="stock_item">
+  <style name="news_headline_text">
+    <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+  </style>
+
+  <style name="stock_item">
         <item name="android:padding">4dp</item>
     </style>
 
