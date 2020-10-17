@@ -435,7 +435,7 @@ var events: List<Event>
     val type: Int?,
     var note: String?,
     var date: Long?,
-    var sharesPerAmount: Int?,
+    var sharesPerQuantity: Int?,
     var expirationDate: Long?,
     var premium: Double?,
     var commission: Double?

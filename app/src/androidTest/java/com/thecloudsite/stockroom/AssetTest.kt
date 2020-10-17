@@ -336,7 +336,7 @@ class AssetTest {
   fun assetCapitalGain() {
     fun getAssetsCapitalGain(assetList: List<Asset>?): Double {
 
-      var totalAmount: Double = 0.0
+      var totalQuantity: Double = 0.0
       var totalGain: Double = 0.0
       var totalBought: Double = 0.0
       var totalSold: Double = 0.0
@@ -351,13 +351,13 @@ class AssetTest {
             if (asset.quantity < 0.0) {
               totalSold += -asset.quantity * asset.price
             }
-            totalAmount += asset.quantity
+            totalQuantity += asset.quantity
 
-            if ((totalAmount <= -com.thecloudsite.stockroom.utils.epsilon)) {
+            if ((totalQuantity <= -com.thecloudsite.stockroom.utils.epsilon)) {
               // Error, more shares sold than owned
               return 0.0
             }
-            if (totalAmount < com.thecloudsite.stockroom.utils.epsilon) {
+            if (totalQuantity < com.thecloudsite.stockroom.utils.epsilon) {
               // totalShares are 0: -epsilon < totalShares < epsilon
               // reset if all shares are sold
               totalGain += totalSold - totalBought

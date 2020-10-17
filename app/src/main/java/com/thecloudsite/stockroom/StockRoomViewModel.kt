@@ -79,7 +79,7 @@ data class AssetJson(
   val type: Int?,
   var note: String?,
   var date: Long?,
-  var sharesPerAmount: Int?,
+  var sharesPerQuantity: Int?,
   var expirationDate: Long?,
   var premium: Double?,
   var commission: Double?
@@ -1077,11 +1077,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 assets.add(
                     Asset(
                         symbol = symbol,
-                        type = if (assetsObj.has("type")) {
-                          assetsObj.getInt("type")
-                        } else {
-                          0
-                        },
                         quantity = quantity,
                         price = price,
                         note = if (assetsObj.has("note")) {
@@ -1089,10 +1084,30 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         } else {
                           ""
                         },
+                        type = if (assetsObj.has("type")) {
+                          assetsObj.getInt("type")
+                        } else {
+                          0
+                        },
                         date = if (assetsObj.has("date")) {
                           assetsObj.getLong("date")
                         } else {
                           0L
+                        },
+                        sharesPerQuantity = if (assetsObj.has("sharesPerQuantity")) {
+                          assetsObj.getInt("sharesPerQuantity")
+                        } else {
+                          1
+                        },
+                        expirationDate = if (assetsObj.has("expirationDate")) {
+                          assetsObj.getLong("expirationDate")
+                        } else {
+                          0L
+                        },
+                        premium = if (assetsObj.has("premium")) {
+                          assetsObj.getDouble("premium")
+                        } else {
+                          0.0
                         },
                         commission = if (assetsObj.has("commission")) {
                           assetsObj.getDouble("commission")
@@ -1649,7 +1664,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   type = if (asset.type != 0) asset.type else null,
                   note = if (asset.note.isNotEmpty()) asset.note else null,
                   date = if (asset.date != 0L) asset.date else null,
-                  sharesPerAmount = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
+                  sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
                   expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
                   premium = if (asset.premium != 0.0) asset.premium else null,
                   commission = if (asset.commission != 0.0) asset.commission else null,
