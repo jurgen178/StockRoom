@@ -64,13 +64,14 @@ enum class AssetType(val value: Int) {
 data class Asset(
   @PrimaryKey(autoGenerate = true) var id: Long? = null,
   val symbol: String,
-  var amount: Double,
+  var quantity: Double,
   var price: Double,
   var type: Int = 0,
   var note: String = "",
   var date: Long = 0L,
-  var sharesPerAmount: Int = 1,
+  var sharesPerQuantity: Int = 1,
   var expirationDate: Long = 0L,
+  var premium: Double = 0.0,
   var commission: Double = 0.0
 )
 

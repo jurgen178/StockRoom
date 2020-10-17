@@ -142,9 +142,9 @@ class StockRoomListAdapter internal constructor(
         holder.itemViewAssets.text = ""
       }
 
-      val (amount, asset) = getAssets(current.assets)
-//      val amount = current.assets.sumByDouble {
-//        it.amount
+      val (quantity, asset) = getAssets(current.assets)
+//      val quantity = current.assets.sumByDouble {
+//        it.quantity
 //      }
 
       val assets = SpannableStringBuilder()
@@ -152,15 +152,15 @@ class StockRoomListAdapter internal constructor(
 //      var asset: Double = 0.0
       var capital: Double = 0.0
 
-      if (amount > 0.0) {
+      if (quantity > 0.0) {
 //        asset = current.assets.sumByDouble {
-//          it.amount * it.price
+//          it.quantity * it.price
 //        }
 
         if (current.onlineMarketData.marketPrice > 0.0) {
-          capital = amount * current.onlineMarketData.marketPrice
+          capital = quantity * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
-//            it.amount * current.onlineMarketData.marketPrice
+//            it.quantity * current.onlineMarketData.marketPrice
 //          }
 
           assets.append(

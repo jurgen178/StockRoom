@@ -140,7 +140,7 @@ class AssetTest {
       tagObsoleteAssetType: Int = 0
     ): Pair<Double, Double> {
 
-      var totalAmount: Double = 0.0
+      var totalQuantity: Double = 0.0
       var totalPrice: Double = 0.0
 
       if (assetList != null) {
@@ -159,16 +159,16 @@ class AssetTest {
           val asset = assetListSorted[i]
 
           // added shares
-          if (asset.amount > 0.0) {
-            totalAmount += asset.amount
-            totalPrice += asset.amount * asset.price
+          if (asset.quantity > 0.0) {
+            totalQuantity += asset.quantity
+            totalPrice += asset.quantity * asset.price
           } else
           // removed shares
-            if (asset.amount < 0.0) {
+            if (asset.quantity < 0.0) {
               // removed all?
-              if (-asset.amount >= (totalAmount - com.thecloudsite.stockroom.utils.epsilon)) {
+              if (-asset.quantity >= (totalQuantity - com.thecloudsite.stockroom.utils.epsilon)) {
                 // reset if more removed than owned
-                totalAmount = 0.0
+                totalQuantity = 0.0
                 totalPrice = 0.0
 
                 if (tagObsoleteAssetType != 0) {
@@ -178,47 +178,47 @@ class AssetTest {
                 }
               } else {
                 // adjust the total price for the removed shares
-                if (totalAmount > com.thecloudsite.stockroom.utils.epsilon) {
-                  val averageSharePrice = totalPrice / totalAmount
-                  totalAmount += asset.amount
-                  totalPrice = totalAmount * averageSharePrice
+                if (totalQuantity > com.thecloudsite.stockroom.utils.epsilon) {
+                  val averageSharePrice = totalPrice / totalQuantity
+                  totalQuantity += asset.quantity
+                  totalPrice = totalQuantity * averageSharePrice
                 }
               }
             }
         }
       }
 
-      return Pair(totalAmount, totalPrice)
+      return Pair(totalQuantity, totalPrice)
     }
 
     val assetList1 = listOf(
         Asset(
             symbol = "s1",
-            amount = 10.0,
+            quantity = 10.0,
             price = 20.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            amount = 20.0,
+            quantity = 20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            amount = -10.0,
+            quantity = -10.0,
             price = 0.0,
             date = 3
         ),
         Asset(
             symbol = "s1",
-            amount = 100.0,
+            quantity = 100.0,
             price = 20.0,
             date = 4
         ),
         Asset(
             symbol = "s1",
-            amount = -50.0,
+            quantity = -50.0,
             price = 0.0,
             date = 5
         )
@@ -230,19 +230,19 @@ class AssetTest {
     val assetList2 = listOf(
         Asset(
             symbol = "s1",
-            amount = 0.0,
+            quantity = 0.0,
             price = 0.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            amount = -20.0,
+            quantity = -20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            amount = 20.0,
+            quantity = 20.0,
             price = 2.0,
             date = 3
         )
@@ -254,13 +254,13 @@ class AssetTest {
     val assetList3 = listOf(
         Asset(
             symbol = "s1",
-            amount = 20.0,
+            quantity = 20.0,
             price = 20.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            amount = -20.0,
+            quantity = -20.0,
             price = 50.0,
             date = 2
         )
@@ -272,13 +272,13 @@ class AssetTest {
     val assetList4 = listOf(
         Asset(
             symbol = "s1",
-            amount = 0.0,
+            quantity = 0.0,
             price = 0.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            amount = -epsilon / 2,
+            quantity = -epsilon / 2,
             price = 50.0,
             date = 2
         )
@@ -290,33 +290,33 @@ class AssetTest {
     val assetList5 = listOf(
         Asset(
             symbol = "s1",
-            amount = -30.0,
+            quantity = -30.0,
             price = 0.0,
             date = 3,
             type = 0xff00
         ),
         Asset(
             symbol = "s1",
-            amount = 20.0,
+            quantity = 20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            amount = 100.0,
+            quantity = 100.0,
             price = 20.0,
             date = 4
         ),
         Asset(
             symbol = "s1",
-            amount = -50.0,
+            quantity = -50.0,
             price = 0.0,
             date = 5,
             type = obsoleteAssetType
         ),
         Asset(
             symbol = "s1",
-            amount = 10.0,
+            quantity = 10.0,
             price = 20.0,
             date = 1
         )
@@ -345,13 +345,13 @@ class AssetTest {
         asset.date
       }
           ?.forEach { asset ->
-            if (asset.amount > 0.0) {
-              totalBought += asset.amount * asset.price
+            if (asset.quantity > 0.0) {
+              totalBought += asset.quantity * asset.price
             }
-            if (asset.amount < 0.0) {
-              totalSold += -asset.amount * asset.price
+            if (asset.quantity < 0.0) {
+              totalSold += -asset.quantity * asset.price
             }
-            totalAmount += asset.amount
+            totalAmount += asset.quantity
 
             if ((totalAmount <= -com.thecloudsite.stockroom.utils.epsilon)) {
               // Error, more shares sold than owned
@@ -372,31 +372,31 @@ class AssetTest {
     val assetList1 = listOf(
         Asset(
             symbol = "s1",
-            amount = 10.0,
+            quantity = 10.0,
             price = 20.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            amount = 20.0,
+            quantity = 20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            amount = -30.0,
+            quantity = -30.0,
             price = 100.0,
             date = 3
         ),
         Asset(
             symbol = "s1",
-            amount = 100.0,
+            quantity = 100.0,
             price = 20.0,
             date = 4
         ),
         Asset(
             symbol = "s1",
-            amount = -50.0,
+            quantity = -50.0,
             price = 0.0,
             date = 5
         )
@@ -407,19 +407,19 @@ class AssetTest {
     val assetList2 = listOf(
         Asset(
             symbol = "s1",
-            amount = 0.0,
+            quantity = 0.0,
             price = 0.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            amount = -20.0,
+            quantity = -20.0,
             price = 50.0,
             date = 2
         ),
         Asset(
             symbol = "s1",
-            amount = 20.0,
+            quantity = 20.0,
             price = 2.0,
             date = 3
         )
@@ -430,31 +430,31 @@ class AssetTest {
     val assetList3 = listOf(
         Asset(
             symbol = "s1",
-            amount = 20.0,
+            quantity = 20.0,
             price = 30.0,
             date = 1
         ),
         Asset(
             symbol = "s1",
-            amount = -20.0,
+            quantity = -20.0,
             price = 10.0,
             date = 2
         ),  // 400.0 loss
         Asset(
             symbol = "s1",
-            amount = 2.0,
+            quantity = 2.0,
             price = 3.0,
             date = 3
         ),
         Asset(
             symbol = "s1",
-            amount = -2.0,
+            quantity = -2.0,
             price = 5.0,
             date = 4
         ),  // 4.0 gain
         Asset(
             symbol = "s1",
-            amount = 2.0,
+            quantity = 2.0,
             price = 5.0,
             date = 5
         )

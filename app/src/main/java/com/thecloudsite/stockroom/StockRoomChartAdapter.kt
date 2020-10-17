@@ -106,16 +106,15 @@ class StockRoomChartAdapter internal constructor(
       holder.bindGroup(current, clickListenerGroup)
       holder.bindSummary(current, clickListenerSummary)
 
-      val stockDataEntriesRef: List<StockDataEntry>? =
-        chartDataItems[chartOverlaySymbol]
       val stockDataEntries: List<StockDataEntry>? =
         chartDataItems[current.onlineMarketData.symbol]
 
-      if (stockDataEntriesRef != null
-          && stockDataEntriesRef.isNotEmpty()
-          && stockDataEntries != null
+      if (stockDataEntries != null
           && stockDataEntries.isNotEmpty()
       ) {
+        val stockDataEntriesRef: List<StockDataEntry>? =
+          chartDataItems[chartOverlaySymbol]
+
         if (stockViewMode == StockViewMode.Candle) {
           holder.candleStickChart.visibility = View.VISIBLE
           holder.lineChart.visibility = View.GONE
@@ -184,23 +183,23 @@ class StockRoomChartAdapter internal constructor(
         holder.itemViewChangePercent.text = ""
       }
 
-      val (amount, asset) = getAssets(current.assets)
-//      val amount = current.assets.sumByDouble {
-//        it.amount
+      val (quantity, asset) = getAssets(current.assets)
+//      val quantity = current.assets.sumByDouble {
+//        it.quantity
 //      }
 
 //      var asset: Double = 0.0
       var capital: Double = 0.0
 
-      if (amount > 0.0) {
+      if (quantity > 0.0) {
 //        asset = current.assets.sumByDouble {
-//          it.amount * it.price
+//          it.quantity * it.price
 //        }
 
         if (current.onlineMarketData.marketPrice > 0.0) {
-          capital = amount * current.onlineMarketData.marketPrice
+          capital = quantity * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
-//            it.amount * current.onlineMarketData.marketPrice
+//            it.quantity * current.onlineMarketData.marketPrice
 //          }
         }
       }
@@ -255,12 +254,12 @@ class StockRoomChartAdapter internal constructor(
     symbol: String,
     stockDataEntries: List<StockDataEntry>?
   ) {
+    candleStickChart.candleData?.clearValues()
+
     if (stockDataEntries == null || stockDataEntries.isEmpty()) {
       candleStickChart.invalidate()
       return
     }
-
-    candleStickChart.candleData?.clearValues()
 
     val seriesList: MutableList<ICandleDataSet> = mutableListOf()
 
@@ -371,12 +370,12 @@ class StockRoomChartAdapter internal constructor(
     symbol: String,
     stockDataEntries: List<StockDataEntry>?
   ) {
+    lineChart.lineData?.clearValues()
+
     if (stockDataEntries == null || stockDataEntries.isEmpty()) {
       lineChart.invalidate()
       return
     }
-
-    lineChart.lineData?.clearValues()
 
     val seriesList: MutableList<ILineDataSet> = mutableListOf()
 

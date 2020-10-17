@@ -20,7 +20,7 @@
         >
 
   <TextView
-      android:id="@+id/addUpdateAmountHeadline"
+      android:id="@+id/addUpdateQuantityHeadline"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
@@ -48,11 +48,11 @@
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="@+id/guideline1"
-      app:layout_constraintTop_toBottomOf="@+id/addUpdateAmountHeadline"
+      app:layout_constraintTop_toBottomOf="@+id/addUpdateQuantityHeadline"
       app:endIconMode="clear_text"
       >
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/addAmount"
+        android:id="@+id/addQuantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/design_default_color_background"

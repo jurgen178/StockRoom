@@ -74,11 +74,14 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.math.absoluteValue
 
 data class AssetJson(
-  var amount: Double,
+  var quantity: Double,
   val price: Double,
   val type: Int?,
   var note: String?,
   var date: Long?,
+  var sharesPerAmount: Int?,
+  var expirationDate: Long?,
+  var premium: Double?,
   var commission: Double?
 )
 
@@ -874,9 +877,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByAssets -> {
           stockItemSet.stockItems.sortedByDescending { item ->
-            val (totalAmount, totalPrice) = getAssets(item.assets)
+            val (totalQuantity, totalPrice) = getAssets(item.assets)
             if (item.onlineMarketData.marketPrice > 0.0) {
-              totalAmount * item.onlineMarketData.marketPrice
+              totalQuantity * item.onlineMarketData.marketPrice
 //              item.assets.sumByDouble {
 //                it.shares * item.onlineMarketData.marketPrice
 //              }
@@ -890,9 +893,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByProfit -> {
           stockItemSet.stockItems.sortedByDescending { item ->
-            val (totalAmount, totalPrice) = getAssets(item.assets)
+            val (totalQuantity, totalPrice) = getAssets(item.assets)
             if (item.onlineMarketData.marketPrice > 0.0) {
-              totalAmount * item.onlineMarketData.marketPrice - totalPrice
+              totalQuantity * item.onlineMarketData.marketPrice - totalPrice
 //              item.assets.sumByDouble {
 //                it.shares * (item.onlineMarketData.marketPrice - it.price)
 //              }
@@ -1056,18 +1059,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           for (j in 0 until assetsObjArray.length()) {
             val assetsObj: JSONObject = assetsObjArray[j] as JSONObject
 
-            val amount = if (assetsObj.has("amount")) {
-              assetsObj.getDouble("amount")
-            } else
-              if (assetsObj.has("shares")) {
+            val quantity = when {
+              assetsObj.has("quantity") -> {
+                assetsObj.getDouble("quantity")
+              }
+              assetsObj.has("shares") -> {
                 assetsObj.getDouble("shares")
-              } else {
+              }
+              else -> {
                 null
               }
+            }
 
-            if (amount != null && assetsObj.has("price")) {
+            if (quantity != null && assetsObj.has("price")) {
               val price = assetsObj.getDouble("price").absoluteValue
-              if (amount > 0.0 && price > 0.0 || amount < 0.0) {
+              if (quantity > 0.0 && price > 0.0 || quantity < 0.0) {
                 assets.add(
                     Asset(
                         symbol = symbol,
@@ -1076,7 +1082,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         } else {
                           0
                         },
-                        amount = amount,
+                        quantity = quantity,
                         price = price,
                         note = if (assetsObj.has("note")) {
                           assetsObj.getString("note")
@@ -1113,13 +1119,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             for (j in 0 until holdings.length()) {
               val holdingObj: JSONObject = holdings[j] as JSONObject
               if (holdingObj.has("shares") && holdingObj.has("price")) {
-                val amount = holdingObj.getDouble("shares")
+                val shares = holdingObj.getDouble("shares")
                 val price = holdingObj.getDouble("price")
-                if (amount > 0.0 && price > 0.0) {
+                if (shares > 0.0 && price > 0.0) {
                   assets.add(
                       Asset(
                           symbol = symbol,
-                          amount = amount,
+                          quantity = shares,
                           price = price
                       )
                   )
@@ -1419,7 +1425,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             if (shares > 0.0 && price > 0.0) {
               val asset = Asset(
                   symbol = symbol,
-                  amount = shares,
+                  quantity = shares,
                   price = price
               )
 
@@ -1638,11 +1644,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
             .map { asset ->
               AssetJson(
-                  amount = validateDouble(asset.amount),
+                  quantity = validateDouble(asset.quantity),
                   price = validateDouble(asset.price),
                   type = if (asset.type != 0) asset.type else null,
                   note = if (asset.note.isNotEmpty()) asset.note else null,
                   date = if (asset.date != 0L) asset.date else null,
+                  sharesPerAmount = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
+                  expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
+                  premium = if (asset.premium != 0.0) asset.premium else null,
                   commission = if (asset.commission != 0.0) asset.commission else null,
               )
             }
@@ -1983,22 +1992,23 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   fun addAsset(asset: Asset) = scope.launch {
 
     val stockOptionData = parseStockOption(asset.symbol)
-    if(stockOptionData.expirationDate == 0L && stockOptionData.strikePrice == 0.0) {
+    if (stockOptionData.expirationDate == 0L && stockOptionData.strikePrice == 0.0) {
       repository.addAsset(asset)
-    }
-    else{
-      repository.addAsset(Asset(
-          symbol = asset.symbol,
-          amount = asset.amount,
-          price = stockOptionData.strikePrice,
-          type = asset.type,
-          note = asset.note,
-          date = asset.date,
-          sharesPerAmount = stockOptionData.sharesPerOption,
-          expirationDate = stockOptionData.expirationDate,
-          commission = asset.commission,
+    } else {
+      repository.addAsset(
+          Asset(
+              symbol = asset.symbol,
+              quantity = asset.quantity,
+              price = stockOptionData.strikePrice,
+              type = asset.type,
+              note = asset.note,
+              date = asset.date,
+              sharesPerQuantity = stockOptionData.sharesPerOption,
+              expirationDate = stockOptionData.expirationDate,
+              commission = asset.commission,
 
-      ))
+              )
+      )
     }
   }
 
@@ -2016,7 +2026,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       repository.addAsset(
           Asset(
               symbol = symbol.toUpperCase(Locale.ROOT),
-              amount = amount,
+              quantity = amount,
               price = price,
               date = date
           )

@@ -124,10 +124,10 @@ limitations under the License. -->
   <string name="invalid_number">Ungültige Eingabe</string>
   <string name="number_of_stock">Anzahl</string>
   <string name="price">Kaufpreis</string>
-  <string name="amount">Aktien</string>
+  <string name="quantity">Anzahl</string>
   <string name="value">Wert</string>
-  <string name="no_total_amount">Kaufen Sie zuerst einige Aktien.</string>
-  <string name="remove_amount_exceeds_total_amount">Die Anzahl muss kleiner als die Gesamtanzahl sein.</string>
+  <string name="no_total_quantity">Kaufen Sie zuerst einige Aktien.</string>
+  <string name="remove_quantity_exceeds_total_quantity">Die Anzahl muss kleiner als die Gesamtanzahl sein.</string>
   <string name="dividend_in_list">Dividende:</string>
   <string name="standard_group">Nicht zugeordnet</string>
   <string name="import_section_header">Importieren</string>
@@ -147,7 +147,7 @@ limitations under the License. -->
   <string name="delete_all_title">Alle Daten entfernen</string>
   <string name="delete_all_confirm">Sind Sie sich sicher?</string>
   <string name="delete_all_desc">Entfernt alle Aktien und die dazugehörigen Daten.</string>
-  <string name="amount_not_zero">Die Anzahl darf nicht 0 sein.</string>
+  <string name="quantity_not_zero">Die Anzahl darf nicht 0 sein.</string>
   <string name="removed_amount_exceed_existing">Sie entfernen mehr Aktien als sie besitzen. Die Anzahl wird von %1$s auf %2$s korrigiert.</string>
   <string name="price_not_zero">Der Preis darf nicht 0 sein.</string>
   <string name="add_asset">Zum Aktienbestand hinzufügen</string>
@@ -165,7 +165,7 @@ limitations under the License. -->
   <string name="split_ratio">Aktiensplit\nVerhältnis 1:n</string>
   <string name="invalid_split_entry">Das Aktiensplitverhältnis muss größer als 0 und kleiner oder gleich 20 sein.</string>
   <string name="split_min_price">Das Aktiensplitverhältnis würde in einen zu kleinen Preis resultieren.</string>
-  <string name="split_min_amount">Das Aktiensplitverhältnis würde in einer zu kleinen Aktienanzahl resultieren.</string>
+  <string name="split_min_quantity">Das Aktiensplitverhältnis würde in einer zu kleinen Aktienanzahl resultieren.</string>
   <string name="asset_share_not_empty">Geben Sie eine Aktienanzahl ein.</string>
   <string name="asset_price_not_empty">Geben Sie einen Preis ein.</string>
   <string name="asset_summary_text">Gesamtaktienbestand:</string>

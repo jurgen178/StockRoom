@@ -264,7 +264,7 @@ interface StockRoomDao {
   fun getAssets(symbol: String): Assets
 //    fun getAllAssets(): LiveData<List<Assets>> = getAllAssets1().getDistinct()
 
-  @Query("DELETE FROM asset_table WHERE symbol = :symbol AND amount = :amount AND price = :price")
+  @Query("DELETE FROM asset_table WHERE symbol = :symbol AND quantity = :amount AND price = :price")
   fun deleteAsset(
     symbol: String,
     amount: Double,
@@ -307,7 +307,7 @@ interface StockRoomDao {
   ) {
     deleteAssets(symbol)
     assets.forEach { asset ->
-      if ((asset.amount > epsilon && asset.price > epsilon) || (asset.amount < epsilon && asset.price >= 0.0)) {
+      if ((asset.quantity > epsilon && asset.price > epsilon) || (asset.quantity < epsilon && asset.price >= 0.0)) {
         addAsset(asset)
       }
     }

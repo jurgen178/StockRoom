@@ -5,7 +5,7 @@
     "assets": [
       {
         "price": 3000.0,
-        "amount": 1.0,
+        "quantity": 1.0,
         "date": 1601683200
       }
     ],
@@ -21,7 +21,7 @@
     "assets": [
       {
         "price": 1.0,
-        "amount": 2800.0,
+        "quantity": 2800.0,
         "date": 1601683200
       }
     ],
@@ -37,7 +37,7 @@
     "assets": [
       {
         "price": 200.0,
-        "amount": 30.0,
+        "quantity": 30.0,
         "date": 1601683200
       }
     ],
@@ -53,7 +53,7 @@
     "assets": [
       {
         "price": 150.0,
-        "amount": 20.0,
+        "quantity": 20.0,
         "date": 1601683200
       }
     ],
@@ -76,7 +76,7 @@
     "assets": [
       {
         "price": 1.0,
-        "amount": 300.0,
+        "quantity": 300.0,
         "date": 1601683200
       }
     ],
@@ -92,7 +92,7 @@
     "assets": [
       {
         "price": 200.0,
-        "amount": 25.0,
+        "quantity": 25.0,
         "date": 1601683200
       }
     ],
@@ -108,7 +108,7 @@
     "assets": [
       {
         "price": 150.0,
-        "amount": 25.0,
+        "quantity": 25.0,
         "date": 1601683200
       }
     ],
@@ -124,7 +124,7 @@
     "assets": [
       {
         "price": 100.0,
-        "amount": 40.0,
+        "quantity": 40.0,
         "date": 1601683200
       }
     ],
@@ -140,7 +140,7 @@
     "assets": [
       {
         "price": 12.0,
-        "amount": 90.0,
+        "quantity": 90.0,
         "date": 1601683200
       }
     ],
@@ -156,7 +156,7 @@
     "assets": [
       {
         "price": 10.0,
-        "amount": 100.0,
+        "quantity": 100.0,
         "date": 1601683200
       }
     ],

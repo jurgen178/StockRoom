@@ -157,7 +157,7 @@ class SummaryGroupAdapter internal constructor(
     var totalAssets = 0.0
     var totalGain = 0.0
     //var totalLoss = 0.0
-    var totalAmount = 0.0
+    var totalQuantity = 0.0
     var totalDividendAssets = 0.0
     var totalDividend = 0.0
     var totalDividendPayed = 0.0
@@ -183,7 +183,7 @@ class SummaryGroupAdapter internal constructor(
       val (amount, price) = getAssets(stockItem.assets)
 
       totalPurchasePrice += price
-      totalAmount += amount
+      totalQuantity += amount
 
       val (gain, loss) = getAssetsCapitalGain(stockItem.assets)
       // Merge gain and loss of the individual stock to one gain/loss to prevent
@@ -201,7 +201,7 @@ class SummaryGroupAdapter internal constructor(
       }
 
       stockItem.assets.forEach { asset ->
-        if (asset.amount > 0.0) {
+        if (asset.quantity > 0.0) {
           boughtHashSet.add("${asset.symbol} ${asset.date}")
         } else {
           soldHashSet.add("${asset.symbol} ${asset.date}")
@@ -274,7 +274,7 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_note)} ")
         .bold { append("$totalNotes\n") }
         .append("${context.getString(R.string.summary_number_of_stocks)} ")
-        .bold { append("${DecimalFormat("0.####").format(totalAmount)}\n\n") }
+        .bold { append("${DecimalFormat("0.####").format(totalQuantity)}\n\n") }
         .append("${context.getString(R.string.summary_capital_gain)} ")
         .append(capitalGainLossText)
         .append("\n${context.getString(R.string.summary_total_purchase_price)} ")

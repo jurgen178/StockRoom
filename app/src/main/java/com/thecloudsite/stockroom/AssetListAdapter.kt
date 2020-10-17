@@ -66,7 +66,7 @@ class AssetListAdapter internal constructor(
       itemView.textViewAssetDelete.setOnClickListener { clickListenerDelete(symbol, asset) }
     }
 
-    val itemViewAmount: TextView = itemView.findViewById(R.id.textViewAssetAmount)
+    val itemViewQuantity: TextView = itemView.findViewById(R.id.textViewAssetQuantity)
     val itemViewPrice: TextView = itemView.findViewById(R.id.textViewAssetPrice)
     val itemViewTotal: TextView = itemView.findViewById(R.id.textViewAssetTotal)
     val itemViewDelete: TextView = itemView.findViewById(R.id.textViewAssetDelete)
@@ -92,12 +92,12 @@ class AssetListAdapter internal constructor(
     val current: Asset = assetList[position]
 
     if (defaultTextColor == null) {
-      defaultTextColor = holder.itemViewAmount.currentTextColor
+      defaultTextColor = holder.itemViewQuantity.currentTextColor
     }
 
     // First entry is headline.
     if (position == 0) {
-      holder.itemViewAmount.text = context.getString(R.string.amount)
+      holder.itemViewQuantity.text = context.getString(R.string.quantity)
       holder.itemViewPrice.text = context.getString(R.string.price)
       holder.itemViewTotal.text = context.getString(R.string.value)
       holder.itemViewDelete.visibility = View.GONE
@@ -112,16 +112,16 @@ class AssetListAdapter internal constructor(
         // handler for delete all
         holder.bindDelete(current.symbol, null, clickListenerDelete)
 
-        val isSum = current.amount > 0.0 && current.price > 0.0
+        val isSum = current.quantity > 0.0 && current.price > 0.0
 
-        holder.itemViewAmount.text = if (isSum) {
-          DecimalFormat("0.####").format(current.amount)
+        holder.itemViewQuantity.text = if (isSum) {
+          DecimalFormat("0.####").format(current.quantity)
         } else {
           ""
         }
 
         holder.itemViewPrice.text = if (isSum) {
-          DecimalFormat("0.00##").format(current.price / current.amount)
+          DecimalFormat("0.00##").format(current.price / current.quantity)
         } else {
           ""
         }
@@ -157,24 +157,24 @@ class AssetListAdapter internal constructor(
         holder.bindDelete(null, current, clickListenerDelete)
 
         // Removed and obsolete entries are colored light gray.
-        if (current.amount < 0.0 || (current.type and obsoleteAssetType != 0)) {
-          holder.itemViewAmount.setTextColor(Color.LTGRAY)
+        if (current.quantity < 0.0 || (current.type and obsoleteAssetType != 0)) {
+          holder.itemViewQuantity.setTextColor(Color.LTGRAY)
           holder.itemViewPrice.setTextColor(Color.LTGRAY)
           holder.itemViewTotal.setTextColor(Color.LTGRAY)
         } else {
           if (defaultTextColor != null) {
-            holder.itemViewAmount.setTextColor(defaultTextColor!!)
+            holder.itemViewQuantity.setTextColor(defaultTextColor!!)
             holder.itemViewPrice.setTextColor(defaultTextColor!!)
             holder.itemViewTotal.setTextColor(defaultTextColor!!)
           }
         }
 
-        holder.itemViewAmount.text = DecimalFormat("0.####").format(current.amount)
+        holder.itemViewQuantity.text = DecimalFormat("0.####").format(current.quantity)
 
         if (current.price != 0.0) {
           holder.itemViewPrice.text = DecimalFormat("0.00##").format(current.price)
           holder.itemViewTotal.text =
-            DecimalFormat("0.00").format(current.amount.absoluteValue * current.price)
+            DecimalFormat("0.00").format(current.quantity.absoluteValue * current.price)
         } else {
           holder.itemViewPrice.text = ""
           holder.itemViewTotal.text = ""
@@ -198,7 +198,7 @@ class AssetListAdapter internal constructor(
     assetList = mutableListOf(
         Asset(
             symbol = "",
-            amount = 0.0,
+            quantity = 0.0,
             price = 0.0
         )
     )
@@ -208,9 +208,9 @@ class AssetListAdapter internal constructor(
       asset.date
     })
 
-    val (totalAmount, totalPrice) = getAssets(assetList, obsoleteAssetType)
+    val (totalQuantity, totalPrice) = getAssets(assetList, obsoleteAssetType)
 
-//    val totalAmount = assetList.sumByDouble {
+//    val totalQuantity = assetList.sumByDouble {
 //      it.shares
 //    }
 //
@@ -224,7 +224,7 @@ class AssetListAdapter internal constructor(
         Asset(
             id = null,
             symbol = symbol,
-            amount = totalAmount,
+            quantity = totalQuantity,
             price = totalPrice
         )
     )

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "74526c8d3d5ead6f9fc38f8405e90551",
+    "identityHash": "316db99359e9fcf4ed6b624b9ac69efd",
     "entities": [
       {
         "tableName": "stock_table",
@@ -94,7 +94,7 @@
       },
       {
         "tableName": "asset_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `amount` REAL NOT NULL, `price` REAL NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL, `date` INTEGER NOT NULL, `sharesPerAmount` INTEGER NOT NULL, `expirationDate` INTEGER NOT NULL, `commission` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `quantity` REAL NOT NULL, `price` REAL NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL, `date` INTEGER NOT NULL, `sharesPerQuantity` INTEGER NOT NULL, `expirationDate` INTEGER NOT NULL, `premium` REAL NOT NULL, `commission` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -109,8 +109,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "amount",
-            "columnName": "amount",
+            "fieldPath": "quantity",
+            "columnName": "quantity",
             "affinity": "REAL",
             "notNull": true
           },
@@ -139,8 +139,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "sharesPerAmount",
-            "columnName": "sharesPerAmount",
+            "fieldPath": "sharesPerQuantity",
+            "columnName": "sharesPerQuantity",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -148,6 +148,12 @@
             "fieldPath": "expirationDate",
             "columnName": "expirationDate",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "premium",
+            "columnName": "premium",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -282,7 +288,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '74526c8d3d5ead6f9fc38f8405e90551')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '316db99359e9fcf4ed6b624b9ac69efd')"
     ]
   }
 }

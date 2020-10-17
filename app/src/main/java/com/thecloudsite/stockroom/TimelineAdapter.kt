@@ -92,20 +92,20 @@ class TimelineAdapter(
             skipFirstline = false
           }
 
-          stockTransactions += if (asset.amount > 0.0) {
+          stockTransactions += if (asset.quantity > 0.0) {
             context.getString(
                 R.string.timeline_bought,
-                DecimalFormat("0.####").format(asset.amount),
+                DecimalFormat("0.####").format(asset.quantity),
                 DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(asset.amount * asset.price),
+                DecimalFormat("0.00").format(asset.quantity * asset.price),
                 date
             )
           } else {
             context.getString(
                 R.string.timeline_sold,
-                DecimalFormat("0.####").format(-asset.amount),
+                DecimalFormat("0.####").format(-asset.quantity),
                 DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(-asset.amount * asset.price),
+                DecimalFormat("0.00").format(-asset.quantity * asset.price),
                 date
             )
           }

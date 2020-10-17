@@ -115,16 +115,16 @@ fun getAssetChange(
   context: Context
 ): SpannableStringBuilder {
 
-  val (amount, asset) = getAssets(assets)
+  val (quantity, asset) = getAssets(assets)
 
-//  val amount = assets.sumByDouble {
-//    it.amount
+//  val quantity = assets.sumByDouble {
+//    it.quantity
 //  }
 
 //  val asset: Double =
-//    if (amount > 0.0) {
+//    if (quantity > 0.0) {
 //      assets.sumByDouble {
-//        it.amount * it.price
+//        it.quantity * it.price
 //      }
 //    } else {
 //      0.0
@@ -133,10 +133,10 @@ fun getAssetChange(
   if (marketPrice > 0.0) {
     var changeStr: String = ""
 
-    if (amount > 0.0) {
-      val capital = amount * marketPrice
+    if (quantity > 0.0) {
+      val capital = quantity * marketPrice
 //      val capital = assets.sumByDouble {
-//        it.amount * marketPrice
+//        it.quantity * marketPrice
 //      }
 
       val change = capital - asset
@@ -192,7 +192,7 @@ fun getAssets(
   tagObsoleteAssetType: Int = 0
 ): Pair<Double, Double> {
 
-  var totalAmount: Double = 0.0
+  var totalQuantity: Double = 0.0
   var totalPrice: Double = 0.0
 
   if (assetList != null) {
@@ -211,16 +211,16 @@ fun getAssets(
       val asset = assetListSorted[i]
 
       // added shares
-      if (asset.amount > 0.0) {
-        totalAmount += asset.amount
-        totalPrice += asset.amount * asset.price
+      if (asset.quantity > 0.0) {
+        totalQuantity += asset.quantity
+        totalPrice += asset.quantity * asset.price
       } else
       // removed shares
-        if (asset.amount < 0.0) {
+        if (asset.quantity < 0.0) {
           // removed all?
-          if (-asset.amount >= (totalAmount - epsilon)) {
+          if (-asset.quantity >= (totalQuantity - epsilon)) {
             // reset if more removed than owned
-            totalAmount = 0.0
+            totalQuantity = 0.0
             totalPrice = 0.0
 
             if (tagObsoleteAssetType != 0) {
@@ -230,22 +230,22 @@ fun getAssets(
             }
           } else {
             // adjust the total price for the removed shares
-            if (totalAmount > epsilon) {
-              val averageSharePrice = totalPrice / totalAmount
-              totalAmount += asset.amount
-              totalPrice = totalAmount * averageSharePrice
+            if (totalQuantity > epsilon) {
+              val averageSharePrice = totalPrice / totalQuantity
+              totalQuantity += asset.quantity
+              totalPrice = totalQuantity * averageSharePrice
             }
           }
         }
     }
   }
 
-  return Pair(totalAmount, totalPrice)
+  return Pair(totalQuantity, totalPrice)
 }
 
 fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
 
-  var totalAmount: Double = 0.0
+  var totalQuantity: Double = 0.0
   var totalGain: Double = 0.0
   var totalLoss: Double = 0.0
   var bought: Double = 0.0
@@ -255,19 +255,19 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
     asset.date
   }
       ?.forEach { asset ->
-        if (asset.amount > 0.0) {
-          bought += asset.amount * asset.price
+        if (asset.quantity > 0.0) {
+          bought += asset.quantity * asset.price
         }
-        if (asset.amount < 0.0) {
-          sold += -asset.amount * asset.price
+        if (asset.quantity < 0.0) {
+          sold += -asset.quantity * asset.price
         }
-        totalAmount += asset.amount
+        totalQuantity += asset.quantity
 
-        if ((totalAmount <= -epsilon)) {
+        if ((totalQuantity <= -epsilon)) {
           // Error, more shares sold than owned
           return Pair(0.0, 0.0)
         }
-        if (totalAmount < epsilon) {
+        if (totalQuantity < epsilon) {
           // totalShares are 0: -epsilon < totalShares < epsilon
           // reset if all shares are sold
           val gain = sold - bought
@@ -428,7 +428,7 @@ fun checkUrl(url: String): String {
 
 fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
 
-  var totalAmount: Double = 0.0
+  var totalQuantity: Double = 0.0
   var totalPrice: Double = 0.0
 
   assetList?.sortedBy { item ->
@@ -437,27 +437,27 @@ fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
       ?.forEach { asset ->
 
         // added shares
-        if (asset.amount > 0.0) {
-          totalAmount += asset.amount
-          totalPrice += asset.amount * asset.price
+        if (asset.quantity > 0.0) {
+          totalQuantity += asset.quantity
+          totalPrice += asset.quantity * asset.price
         } else
         // removed shares
-          if (asset.amount < 0.0) {
+          if (asset.quantity < 0.0) {
             // removed all?
-            if (-asset.amount >= (totalAmount + epsilon)) {
+            if (-asset.quantity >= (totalQuantity + epsilon)) {
               // reset if more removed than owned
-              totalAmount = 0.0
+              totalQuantity = 0.0
               totalPrice = 0.0
             } else {
               // adjust the total price for the removed shares
-              if (totalAmount > epsilon) {
-                val averageSharePrice = totalPrice / totalAmount
-                totalAmount += asset.amount
-                totalPrice = totalAmount * averageSharePrice
+              if (totalQuantity > epsilon) {
+                val averageSharePrice = totalPrice / totalQuantity
+                totalQuantity += asset.quantity
+                totalPrice = totalQuantity * averageSharePrice
               }
             }
           }
       }
 
-  return Pair(totalAmount, totalPrice)
+  return Pair(totalQuantity, totalPrice)
 }
