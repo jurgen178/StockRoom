@@ -37,8 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
   </androidx.constraintlayout.widget.ConstraintLayout>
@@ -57,8 +57,8 @@
         android:layout_height="wrap_content"
         android:textSize="12sp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
   </androidx.constraintlayout.widget.ConstraintLayout>
@@ -80,8 +80,8 @@
         android:textSize="12sp"
         android:layout_marginEnd="2dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
   </androidx.constraintlayout.widget.ConstraintLayout>

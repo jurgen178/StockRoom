@@ -82,14 +82,7 @@ class ListActivity : AppCompatActivity() {
 
     stockRoomViewModel.allGroupTable.observe(this, Observer { items ->
 
-//      groupTableRowsCount = items.size
-//
-//      items.forEach { groupItem ->
-//        groupTableRows.append("<tr>")
-//        groupTableRows.append("<td>${getColorStr(groupItem.color)}</td>")
-//        groupTableRows.append("<td>${groupItem.name}</td>")
-//        groupTableRows.append("</tr>")
-//      }
+      listDBAdapter.updateGroup(items)
 
       stockRoomViewModel.allGroupTable.removeObservers(this)
     })
@@ -98,28 +91,6 @@ class ListActivity : AppCompatActivity() {
 
       listDBAdapter.updateAsset(items)
 
-//      assetTableRowsCount = items.size
-//
-//      items.forEach { assetItem ->
-//        assetTableRows.append("<tr>")
-//        assetTableRows.append("<td>${assetItem.id}</td>")
-//        assetTableRows.append("<td>${assetItem.symbol}</td>")
-//        assetTableRows.append("<td>${DecimalFormat("0.####").format(assetItem.quantity)}</td>")
-//        assetTableRows.append("<td>${assetItem.price}</td>")
-//        assetTableRows.append("<td>${assetItem.type}</td>")
-//        assetTableRows.append("<td>${assetItem.note}</td>")
-//        assetTableRows.append("<td>${getDateTimeStr(assetItem.date)}</td>")
-//        assetTableRows.append("<td>${assetItem.sharesPerQuantity}</td>")
-//        assetTableRows.append("<td>${getDateStr(assetItem.expirationDate)}</td>")
-//        assetTableRows.append(
-//            "<td>${if (assetItem.premium != 0.0) assetItem.premium else ""}</td>"
-//        )
-//        assetTableRows.append(
-//            "<td>${if (assetItem.commission != 0.0) assetItem.commission else ""}</td>"
-//        )
-//        assetTableRows.append("</tr>")
-//      }
-
       stockRoomViewModel.allAssetTable.removeObservers(this)
     })
 
@@ -127,40 +98,12 @@ class ListActivity : AppCompatActivity() {
 
       listDBAdapter.updateEvent(items)
 
-//      eventTableRowsCount = items.size
-//
-//      items.forEach { eventItem ->
-//        eventTableRows.append("<tr>")
-//        eventTableRows.append("<td>${eventItem.id}</td>")
-//        eventTableRows.append("<td>${eventItem.symbol}</td>")
-//        eventTableRows.append("<td>${eventItem.type}</td>")
-//        eventTableRows.append("<td>${eventItem.title}</td>")
-//        eventTableRows.append("<td>${eventItem.note}</td>")
-//        eventTableRows.append("<td>${getDateTimeStr(eventItem.datetime)}</td>")
-//        eventTableRows.append("</tr>")
-//      }
-
       stockRoomViewModel.allEventTable.removeObservers(this)
     })
 
     stockRoomViewModel.allDividendTable.observe(this, Observer { items ->
 
       listDBAdapter.updateDividend(items)
-
-//      dividendTableRowsCount = items.size
-//
-//      items.forEach { dividendItem ->
-//        dividendTableRows.append("<tr>")
-//        dividendTableRows.append("<td>${dividendItem.id}</td>")
-//        dividendTableRows.append("<td>${dividendItem.symbol}</td>")
-//        dividendTableRows.append("<td>${DecimalFormat("0.00##").format(dividendItem.amount)}</td>")
-//        dividendTableRows.append("<td>${dividendItem.type}</td>")
-//        dividendTableRows.append("<td>${dividendItem.cycle}</td>")
-//        dividendTableRows.append("<td>${getDateStr(dividendItem.paydate)}</td>")
-//        dividendTableRows.append("<td>${getDateStr(dividendItem.exdate)}</td>")
-//        dividendTableRows.append("<td>${dividendItem.note}</td>")
-//        dividendTableRows.append("</tr>")
-//      }
 
       stockRoomViewModel.allDividendTable.removeObservers(this)
     })

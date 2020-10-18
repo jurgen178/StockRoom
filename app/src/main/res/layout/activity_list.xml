@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_margin="4dp"
     >
@@ -13,14 +13,12 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="24dp"
       android:layout_marginBottom="24dp"
-      android:layout_marginStart="69dp"
       android:layout_marginEnd="16dp"
       android:text="System"
       android:textColor="@color/colorAccent"
       android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
       />
 
   <Switch
@@ -28,12 +26,10 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="14dp"
-      android:layout_marginStart="69dp"
       android:textSize="16sp"
       android:text="Debug log"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/sectionHeaderTextView"
+      app:layout_constraintStart_toStartOf="@id/guideline1"
       />
 
   <Switch
@@ -41,11 +37,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="14dp"
-      android:layout_marginStart="69dp"
       android:textSize="16sp"
       android:text="@string/realtime"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintStart_toStartOf="@id/guideline1"
       app:layout_constraintTop_toBottomOf="@+id/debugswitch"
       />
 
@@ -61,27 +55,34 @@
       android:id="@+id/dbHeaderTextView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="24dp"
+      android:layout_marginTop="4dp"
       android:layout_marginBottom="24dp"
-      android:layout_marginStart="69dp"
       android:layout_marginEnd="16dp"
       android:text="Data base"
       android:textColor="@color/colorAccent"
       android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/divider1"
       />
 
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/listDBRecyclerview"
+  <HorizontalScrollView
+      android:fillViewport="true"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       app:layout_constraintTop_toBottomOf="@+id/dbHeaderTextView"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
-      />
+      >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listDBRecyclerview"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
+
+  </HorizontalScrollView>
 
   <!--
     <WebView
@@ -95,5 +96,13 @@
         app:layout_constraintTop_toBottomOf="@+id/dbHeaderTextView"
         />
   -->
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="100dp"
+      />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
