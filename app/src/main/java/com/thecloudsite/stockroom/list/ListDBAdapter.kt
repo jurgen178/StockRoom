@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.backgroundColor
 import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.id
@@ -447,7 +448,7 @@ class ListDBAdapter(
     return if (datetime != 0L) {
       val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
       val dateTimeStr =
-        "${datetime}</br>${
+        "${datetime}\n${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         }"
       dateTimeStr
@@ -460,9 +461,9 @@ class ListDBAdapter(
     return if (datetime != 0L) {
       val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
       val dateTimeStr =
-        "${datetime}</br>${
+        "${datetime}\n${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        }&nbsp;${
+        } ${
           localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
         }"
       dateTimeStr
@@ -478,9 +479,11 @@ class ListDBAdapter(
       val hexStr = "0x${color.toHexString()}"
       val colorCode = hexStr.replace("0xff", "#")
       SpannableStringBuilder()
-          .append("$color")
-          .color(color) {
-            append("   ")
+          .append("$color\n")
+          .backgroundColor(Color.WHITE) {
+            color(color) {
+              append("▐█████▌\n")
+            }
           }
           .append(colorCode)
     }
@@ -520,19 +523,21 @@ class ListDBAdapter(
         )
     )
 
-    this.dbDataMap["0_StockDBdata"]?.addAll(data.take(2).map { stockDBdata ->
-      DBData(
-          viewType = db_stockdbdata_type,
-          symbol = stockDBdata.symbol,
-          portfolio = stockDBdata.portfolio,
-          data = stockDBdata.data,
-          groupColor = stockDBdata.groupColor,
-          notes = stockDBdata.notes,
-          dividendNotes = stockDBdata.dividendNotes,
-          alertAbove = stockDBdata.alertAbove,
-          alertBelow = stockDBdata.alertBelow
-      )
-    })
+    this.dbDataMap["0_StockDBdata"]?.addAll(
+        data.take(2)
+            .map { stockDBdata ->
+              DBData(
+                  viewType = db_stockdbdata_type,
+                  symbol = stockDBdata.symbol,
+                  portfolio = stockDBdata.portfolio,
+                  data = stockDBdata.data,
+                  groupColor = stockDBdata.groupColor,
+                  notes = stockDBdata.notes,
+                  dividendNotes = stockDBdata.dividendNotes,
+                  alertAbove = stockDBdata.alertAbove,
+                  alertBelow = stockDBdata.alertBelow
+              )
+            })
 
     updateList()
   }
@@ -550,7 +555,7 @@ class ListDBAdapter(
         )
     )
 
-    this.dbDataMap["1_Group"]?.addAll(data.take(2).map { group ->
+    this.dbDataMap["1_Group"]?.addAll(data.map { group ->
       DBData(
           viewType = db_group_type,
           color = group.color,
@@ -574,22 +579,24 @@ class ListDBAdapter(
         )
     )
 
-    this.dbDataMap["2_Asset"]?.addAll(data.take(2).map { asset ->
-      DBData(
-          viewType = db_asset_type,
-          id = asset.id,
-          symbol = asset.symbol,
-          quantity = asset.quantity,
-          price = asset.price,
-          type = asset.type,
-          note = asset.note,
-          date = asset.date,
-          sharesPerQuantity = asset.sharesPerQuantity,
-          expirationDate = asset.expirationDate,
-          premium = asset.premium,
-          commission = asset.commission
-      )
-    })
+    this.dbDataMap["2_Asset"]?.addAll(
+        data.take(2)
+            .map { asset ->
+              DBData(
+                  viewType = db_asset_type,
+                  id = asset.id,
+                  symbol = asset.symbol,
+                  quantity = asset.quantity,
+                  price = asset.price,
+                  type = asset.type,
+                  note = asset.note,
+                  date = asset.date,
+                  sharesPerQuantity = asset.sharesPerQuantity,
+                  expirationDate = asset.expirationDate,
+                  premium = asset.premium,
+                  commission = asset.commission
+              )
+            })
 
     updateList()
   }
@@ -607,17 +614,19 @@ class ListDBAdapter(
         )
     )
 
-    this.dbDataMap["3_Event"]?.addAll(data.take(2).map { event ->
-      DBData(
-          viewType = db_event_type,
-          id = event.id,
-          symbol = event.symbol,
-          title = event.title,
-          datetime = event.datetime,
-          type = event.type,
-          note = event.note
-      )
-    })
+    this.dbDataMap["3_Event"]?.addAll(
+        data.take(2)
+            .map { event ->
+              DBData(
+                  viewType = db_event_type,
+                  id = event.id,
+                  symbol = event.symbol,
+                  title = event.title,
+                  datetime = event.datetime,
+                  type = event.type,
+                  note = event.note
+              )
+            })
 
     updateList()
   }
@@ -635,19 +644,21 @@ class ListDBAdapter(
         )
     )
 
-    this.dbDataMap["4_Dividend"]?.addAll(data.take(2).map { dividend ->
-      DBData(
-          viewType = db_dividend_type,
-          id = dividend.id,
-          symbol = dividend.symbol,
-          amount = dividend.amount,
-          cycle = dividend.cycle,
-          paydate = dividend.paydate,
-          type = dividend.type,
-          exdate = dividend.exdate,
-          note = dividend.note
-      )
-    })
+    this.dbDataMap["4_Dividend"]?.addAll(
+        data.take(2)
+            .map { dividend ->
+              DBData(
+                  viewType = db_dividend_type,
+                  id = dividend.id,
+                  symbol = dividend.symbol,
+                  amount = dividend.amount,
+                  cycle = dividend.cycle,
+                  paydate = dividend.paydate,
+                  type = dividend.type,
+                  exdate = dividend.exdate,
+                  note = dividend.note
+              )
+            })
 
     updateList()
   }
