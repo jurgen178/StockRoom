@@ -245,6 +245,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   init {
     val stockRoomDao = StockRoomDatabase.getDatabase(application, viewModelScope)
         .stockRoomDao()
+
     repository = StockRoomRepository(stockRoomDao)
     allProperties = repository.allProperties
     allAssets = repository.allAssets
@@ -259,12 +260,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allStockItems = getMediatorData()
 
     // This setting requires the app to be restarted.
+    // Initialize the setting only once at start.
     if (SharedRepository.displayedViewsList.isEmpty()) {
-      SharedRepository.displayedViewsList =
-        displayedViews?.toMutableList()
-            ?.sortedBy { fragment ->
-              fragment
-            } as MutableList<String>
+
+      if (displayedViews != null && displayedViews!!.isNotEmpty()) {
+        SharedRepository.displayedViewsList =
+          displayedViews?.toMutableList()
+              ?.sortedBy { fragment ->
+                fragment
+              }?.toMutableList()!!
+      }
 
       if (SharedRepository.displayedViewsList.isEmpty()) {
         SharedRepository.displayedViewsList.add("1_StockRoomListFragment")

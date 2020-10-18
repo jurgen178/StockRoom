@@ -159,7 +159,18 @@ class SettingsActivity : AppCompatActivity(),
             .setMessage(getString(R.string.displayed_views_dialog_message))
             .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
             .show()
-        //SharedRepository.displayedViews = sharedPreferences.getStringSet(key, displayedViewsDefaultSet)
+
+        val displayedViews = sharedPreferences.getStringSet(key, displayedViewsDefaultSet)
+
+        // Check if all displays are removed and select a default display.
+        if (displayedViews == null || displayedViews.isEmpty()) {
+          val defaultSet: MutableSet<String> = mutableSetOf<String>(
+              "1_StockRoomListFragment",
+          )
+          sharedPreferences.edit()
+              .putStringSet(key, defaultSet)
+              .apply()
+        }
       }
     }
   }

@@ -322,8 +322,8 @@ limitations under the License. -->
   <string name="timeline_bought">%1$s@%2$s (%3$s), Bought am %4$s.</string>
   <string name="timeline_sold">%1$s@%2$s (%3$s), Sold am %4$s.</string>
   <string name="timeline_unknown_date">Date not specified</string>
-  <string name="displayed_views">Angezeigte</string>
-  <string name="displayed_views_summary">123</string>
-  <string name="displayed_views_dialog_message">a</string>
-  <string name="displayed_views_dialog_title">b</string>
+  <string name="displayed_views">Displayed views</string>
+  <string name="displayed_views_summary">Select what is on display.</string>
+  <string name="displayed_views_dialog_title">Settings change</string>
+  <string name="displayed_views_dialog_message">You need to restart the app for this setting.</string>
 </resources>

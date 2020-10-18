@@ -7,7 +7,7 @@
     <item>Einzeilig</item>
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
-    <item>Zeitlinie</item>
+    <item>Zeitachse</item>
   </string-array>
   <string-array name="displayed_views_entries_values">
     <item>0_StockRoomChartFragment</item>

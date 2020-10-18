@@ -4,50 +4,52 @@
   <PreferenceCategory app:title="@string/display_header">
 
     <SwitchPreferenceCompat
-        app:defaultValue="true"
         app:key="notifications"
         app:title="@string/enable_notifications"
         app:summary="@string/enable_notifications_desc"
+        app:defaultValue="true"
         app:icon="@drawable/ic_action_notification"
         />
 
     <SwitchPreferenceCompat
-        app:defaultValue="true"
         app:key="postmarket"
         app:title="@string/use_postmarket"
         app:summary="@string/use_postmarket_desc"
+        app:defaultValue="true"
         app:icon="@drawable/ic_action_postmarket"
         />
 
     <SwitchPreferenceCompat
-        app:defaultValue="false"
         app:key="use_chart_overlay_symbol"
         app:title="@string/use_chart_overlay_symbol"
         app:summary="@string/use_chart_overlay_symbol_desc"
+        app:defaultValue="false"
         app:icon="@drawable/ic_action_multiline_chart"
         />
     <EditTextPreference
-        app:dependency="use_chart_overlay_symbol"
         app:key="chart_overlay_symbol"
         app:title="@string/chart_overlay_symbol_title"
+        app:dependency="use_chart_overlay_symbol"
         app:defaultValue="^GSPC"
         app:useSimpleSummaryProvider="true" />
 
     <Preference
         app:key="update_groups"
-        app:summary="@string/update_groups_desc"
         app:title="@string/update_groups_title"
+        app:summary="@string/update_groups_desc"
         app:icon="@drawable/ic_action_grouplist"
         />
 
     <MultiSelectListPreference
+        app:key="displayed_views"
+        app:title="@string/displayed_views"
+        app:summary="@string/displayed_views_summary"
         app:defaultValue="@array/displayed_views_entries_defaults"
         app:dialogTitle="@string/displayed_views"
         app:entries="@array/displayed_views_entries"
         app:entryValues="@array/displayed_views_entries_values"
-        app:key="displayed_views"
-        app:summary="@string/displayed_views_summary"
-        app:title="@string/displayed_views" />
+        app:icon="@drawable/ic_action_display_views"
+        />
 
   </PreferenceCategory>
 
@@ -55,31 +57,31 @@
 
     <Preference
         app:key="export_list"
-        app:summary="@string/export_list_desc"
         app:title="@string/export_list"
+        app:summary="@string/export_list_desc"
         app:icon="@drawable/ic_action_export"
         />
 
 <!--
     <Preference
         app:key="export_cloud"
-        app:summary="@string/export_cloud_desc"
         app:title="@string/export_cloud"
+        app:summary="@string/export_cloud_desc"
         app:icon="@drawable/ic_action_export"
         />
 -->
 
     <Preference
         app:key="reset_portfolios"
-        app:summary="@string/reset_portfolios_desc"
         app:title="@string/reset_portfolios_title"
+        app:summary="@string/reset_portfolios_desc"
         app:icon="@drawable/ic_action_reset_portfolios"
         />
 
     <Preference
         app:key="delete_all"
-        app:summary="@string/delete_all_desc"
         app:title="@string/delete_all_title"
+        app:summary="@string/delete_all_desc"
         app:icon="@drawable/ic_action_delete_all"
         />
 
