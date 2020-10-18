@@ -237,8 +237,9 @@ class ListDBAdapter(
 
         val data: DBData = dbDataList[position]
 
+        holder.db_stockdbdata_layout.setBackgroundColor(Color.rgb(0, 148, 255))
+
         if (data.isHeader) {
-          holder.db_stockdbdata_layout.setBackgroundColor(Color.BLUE)
           holder.db_stockdbdata_symbol.text = "symbol"
           holder.db_stockdbdata_portfolio.text = "portfolio"
           holder.db_stockdbdata_data.text = "data"
@@ -248,7 +249,6 @@ class ListDBAdapter(
           holder.db_stockdbdata_alertAbove.text = "alertAbove"
           holder.db_stockdbdata_alertBelow.text = "alertBelow"
         } else {
-          holder.db_stockdbdata_layout.setBackgroundColor(Color.BLUE)
           holder.db_stockdbdata_symbol.text = data.symbol
           holder.db_stockdbdata_portfolio.text = data.portfolio
           holder.db_stockdbdata_data.text = data.data
@@ -273,12 +273,12 @@ class ListDBAdapter(
 
         val data: DBData = dbDataList[position]
 
+        holder.db_group_layout.setBackgroundColor(Color.rgb(255, 127, 182))
+
         if (data.isHeader) {
-          holder.db_group_layout.setBackgroundColor(Color.CYAN)
           holder.db_group_color.text = "color"
           holder.db_group_name.text = "name"
         } else {
-          holder.db_group_layout.setBackgroundColor(Color.CYAN)
           holder.db_group_color.text = getColorStr(data.color)
           holder.db_group_name.text = data.name
         }
@@ -299,8 +299,9 @@ class ListDBAdapter(
 
         val data: DBData = dbDataList[position]
 
+        holder.db_asset_layout.setBackgroundColor(Color.rgb(255, 106, 0))
+
         if (data.isHeader) {
-          holder.db_asset_layout.setBackgroundColor(Color.GREEN)
           holder.db_asset_id.text = "id"
           holder.db_asset_symbol.text = "symbol"
           holder.db_asset_quantity.text = "quantity"
@@ -313,7 +314,6 @@ class ListDBAdapter(
           holder.db_asset_premium.text = "premium"
           holder.db_asset_commission.text = "commission"
         } else {
-          holder.db_asset_layout.setBackgroundColor(Color.GREEN)
           holder.db_asset_id.text = data.id?.toString() ?: ""
           holder.db_asset_symbol.text = data.symbol
           holder.db_asset_quantity.text = DecimalFormat("0.####").format(data.quantity)
@@ -356,8 +356,9 @@ class ListDBAdapter(
 
         val data: DBData = dbDataList[position]
 
+        holder.db_event_layout.setBackgroundColor(Color.rgb(127, 255, 197))
+
         if (data.isHeader) {
-          holder.db_event_layout.setBackgroundColor(Color.RED)
           holder.db_event_id.text = "id"
           holder.db_event_symbol.text = "symbol"
           holder.db_event_title.text = "title"
@@ -365,7 +366,6 @@ class ListDBAdapter(
           holder.db_event_type.text = "type"
           holder.db_event_note.text = "note"
         } else {
-          holder.db_event_layout.setBackgroundColor(Color.RED)
           holder.db_event_id.text = data.id?.toString() ?: ""
           holder.db_event_symbol.text = data.symbol
           holder.db_event_title.text = data.title
@@ -394,7 +394,7 @@ class ListDBAdapter(
 
         val data: DBData = dbDataList[position]
 
-        holder.db_dividend_layout.setBackgroundColor(Color.MAGENTA)
+        holder.db_dividend_layout.setBackgroundColor(Color.rgb(255, 233, 127))
 
         if (data.isHeader) {
           holder.db_dividend_id.text = "id"
@@ -515,7 +515,7 @@ class ListDBAdapter(
     this.dbDataMap["0_StockDBdata"] = mutableListOf(
         DBData(
             viewType = db_type_headline,
-            title = "StockDBdata (${data.size})"
+            title = "\nStockDBdata (${data.size})"
         ),
         DBData(
             viewType = db_stockdbdata_type,
@@ -547,7 +547,7 @@ class ListDBAdapter(
     this.dbDataMap["1_Group"] = mutableListOf(
         DBData(
             viewType = db_type_headline,
-            title = "Group (${data.size})"
+            title = "\nGroup (${data.size})"
         ),
         DBData(
             viewType = db_group_type,
@@ -571,7 +571,7 @@ class ListDBAdapter(
     this.dbDataMap["2_Asset"] = mutableListOf(
         DBData(
             viewType = db_type_headline,
-            title = "Asset (${data.size})"
+            title = "\nAsset (${data.size})"
         ),
         DBData(
             viewType = db_asset_type,
@@ -606,7 +606,7 @@ class ListDBAdapter(
     this.dbDataMap["3_Event"] = mutableListOf(
         DBData(
             viewType = db_type_headline,
-            title = "Event (${data.size})"
+            title = "\nEvent (${data.size})"
         ),
         DBData(
             viewType = db_event_type,
@@ -636,7 +636,7 @@ class ListDBAdapter(
     this.dbDataMap["4_Dividend"] = mutableListOf(
         DBData(
             viewType = db_type_headline,
-            title = "Dividend (${data.size})"
+            title = "\nDividend (${data.size})"
         ),
         DBData(
             viewType = db_dividend_type,
