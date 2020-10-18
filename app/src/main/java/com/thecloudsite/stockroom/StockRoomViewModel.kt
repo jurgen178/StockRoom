@@ -120,6 +120,13 @@ object SharedHandler {
   val deleteStockHandler = MutableLiveData<String>()
 }
 
+val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf<String>(
+    "0_StockRoomChartFragment",
+    "1_StockRoomListFragment",
+    "2_SummaryListFragment",
+    "4_SummaryGroupFragment"
+)
+
 object SharedRepository {
   val alertsData = MutableLiveData<List<AlertData>>()
   val alerts: LiveData<List<AlertData>>
@@ -130,6 +137,7 @@ object SharedRepository {
   val debugData: LiveData<List<DebugData>>
     get() = debugLiveData
 
+  var displayedViewsList: MutableList<String> = mutableListOf()
   var postMarket: Boolean = true
   var notifications: Boolean = true
 
@@ -197,6 +205,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private val sharedPreferences =
     PreferenceManager.getDefaultSharedPreferences(application /* Activity context */)
 
+  private var displayedViews: MutableSet<String>? =
+    sharedPreferences.getStringSet("displayed_views", displayedViewsDefaultSet)
   private var postMarket: Boolean = sharedPreferences.getBoolean("postmarket", true)
   private var notifications: Boolean = sharedPreferences.getBoolean("notifications", true)
 
@@ -247,6 +257,19 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList
     allStockItems = getMediatorData()
+
+    // This setting requires the app to be restarted.
+    if (SharedRepository.displayedViewsList.isEmpty()) {
+      SharedRepository.displayedViewsList =
+        displayedViews?.toMutableList()
+            ?.sortedBy { fragment ->
+              fragment
+            } as MutableList<String>
+
+      if (SharedRepository.displayedViewsList.isEmpty()) {
+        SharedRepository.displayedViewsList.add("1_StockRoomListFragment")
+      }
+    }
 
     // sharedPreferences.getBoolean("postmarket", true) doesn't work here anymore?
     SharedRepository.postMarket = postMarket

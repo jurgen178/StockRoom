@@ -146,11 +146,21 @@ class SettingsActivity : AppCompatActivity(),
     sharedPreferences: SharedPreferences,
     key: String
   ) {
-    if (key == "postmarket") {
-      SharedRepository.postMarket = sharedPreferences.getBoolean(key, true)
-    }
-    if (key == "notifications") {
-      SharedRepository.notifications = sharedPreferences.getBoolean(key, true)
+    when (key) {
+      "postmarket" -> {
+        SharedRepository.postMarket = sharedPreferences.getBoolean(key, true)
+      }
+      "notifications" -> {
+        SharedRepository.notifications = sharedPreferences.getBoolean(key, true)
+      }
+      "displayed_views" -> {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.displayed_views_dialog_title))
+            .setMessage(getString(R.string.displayed_views_dialog_message))
+            .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+            .show()
+        //SharedRepository.displayedViews = sharedPreferences.getStringSet(key, displayedViewsDefaultSet)
+      }
     }
   }
 

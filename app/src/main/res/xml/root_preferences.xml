@@ -40,6 +40,15 @@
         app:icon="@drawable/ic_action_grouplist"
         />
 
+    <MultiSelectListPreference
+        app:defaultValue="@array/displayed_views_entries_defaults"
+        app:dialogTitle="@string/displayed_views"
+        app:entries="@array/displayed_views_entries"
+        app:entryValues="@array/displayed_views_entries_values"
+        app:key="displayed_views"
+        app:summary="@string/displayed_views_summary"
+        app:title="@string/displayed_views" />
+
   </PreferenceCategory>
 
   <PreferenceCategory app:title="@string/general_header">

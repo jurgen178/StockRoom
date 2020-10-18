@@ -79,7 +79,8 @@ class MainActivity : AppCompatActivity() {
     // Remote Config keys
     private const val STOCKMARKETDATA_URL = "stockMarketDataUrl"
     private const val STOCKCHARTDATA_URL = "stockChartDataUrl"
-//    private const val YAHOONEWS_URL = "yahooNewsUrl"
+
+    //    private const val YAHOONEWS_URL = "yahooNewsUrl"
 //    private const val YAHOOALLNEWS_URL = "yahooAllNewsUrl"
 //    private const val GOOGLENEWS_URL = "googleNewsUrl"
 //    private const val GOOGLEALLNEWS_URL = "googleAllNewsUrl"
@@ -172,37 +173,47 @@ class MainActivity : AppCompatActivity() {
 
     viewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
-        return when (position) {
-          0 -> {
+
+        return when (SharedRepository.displayedViewsList[position]) {
+          "0_StockRoomChartFragment" -> {
             StockRoomChartFragment.newInstance()
           }
-          1 -> {
+          "1_StockRoomListFragment" -> {
             StockRoomListFragment.newInstance()
           }
-          2 -> {
+          "2_SummaryListFragment" -> {
             SummaryListFragment.newInstance()
           }
-          3 -> {
+          "3_StockRoomDetailListFragment" -> {
             StockRoomDetailListFragment.newInstance()
           }
-          4 -> {
+          "4_SummaryGroupFragment" -> {
             SummaryGroupFragment.newInstance()
           }
-          5 -> {
+          "5_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          else -> {
+          "6_TimelineFragment" -> {
             TimelineFragment.newInstance()
+          }
+          else -> {
+            StockRoomListFragment.newInstance()
           }
         }
       }
 
       override fun getItemCount(): Int {
-        return 7
+        return SharedRepository.displayedViewsList.size
       }
     }
 
-    viewpager.setCurrentItem(1, false)
+    viewpager.setCurrentItem(
+        if (SharedRepository.displayedViewsList.contains("0_StockRoomChartFragment")) {
+          1
+        } else {
+          0
+        }, false
+    )
 
     // Update the menu when portfolio data changed.
     SharedRepository.portfoliosLiveData.observe(this, Observer {

@@ -51,6 +51,7 @@ class StockRoomDetailListAdapter internal constructor(
     val itemViewSymbol: TextView = itemView.findViewById(R.id.detaillist_textViewSymbol)
     val itemViewChange: TextView = itemView.findViewById(R.id.detaillist_textViewChange)
     val itemViewMarketPrice: TextView = itemView.findViewById(R.id.detaillist_textViewMarketPrice)
+    val itemViewMarketPriceLayout: ConstraintLayout = itemView.findViewById(R.id.detaillist_textViewMarketPriceLayout)
     val itemTextViewGroup: TextView = itemView.findViewById(R.id.detaillist_itemview_group)
     val itemSummary: ConstraintLayout = itemView.findViewById(R.id.detaillist_item_layout)
   }
@@ -101,7 +102,7 @@ class StockRoomDetailListAdapter internal constructor(
 
       val assetChange = getAssetChange(current.assets, current.onlineMarketData.marketPrice, context, false)
       holder.itemViewChange.text = assetChange.first
-      holder.itemViewMarketPrice.setBackgroundColor(assetChange.third)
+      holder.itemViewMarketPriceLayout.setBackgroundColor(assetChange.third)
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {

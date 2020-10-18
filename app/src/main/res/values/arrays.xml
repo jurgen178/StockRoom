@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="displayed_views_entries">
+    <item>Chart</item>
+    <item>List</item>
+    <item>Tile</item>
+    <item>Single line</item>
+    <item>Summary</item>
+    <item>News</item>
+    <item>Timeline</item>
+  </string-array>
+  <string-array name="displayed_views_entries_values">
+    <item>0_StockRoomChartFragment</item>
+    <item>1_StockRoomListFragment</item>
+    <item>2_SummaryListFragment</item>
+    <item>3_StockRoomDetailListFragment</item>
+    <item>4_SummaryGroupFragment</item>
+    <item>5_AllNewsFragment</item>
+    <item>6_TimelineFragment</item>
+  </string-array>
+  <string-array name="displayed_views_entries_defaults">
+    <item>0_StockRoomChartFragment</item>
+    <item>1_StockRoomListFragment</item>
+    <item>2_SummaryListFragment</item>
+    <item>4_SummaryGroupFragment</item>
+  </string-array>
+</resources>
