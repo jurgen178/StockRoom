@@ -41,7 +41,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
-import com.thecloudsite.stockroom.list.ListAdapter
+import com.thecloudsite.stockroom.list.ListLogAdapter
 import com.thecloudsite.stockroom.news.AllNewsFragment
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
@@ -81,9 +81,9 @@ class MainActivity : AppCompatActivity() {
     private const val STOCKCHARTDATA_URL = "stockChartDataUrl"
 
     //    private const val YAHOONEWS_URL = "yahooNewsUrl"
-//    private const val YAHOOALLNEWS_URL = "yahooAllNewsUrl"
-//    private const val GOOGLENEWS_URL = "googleNewsUrl"
-//    private const val GOOGLEALLNEWS_URL = "googleAllNewsUrl"
+    //    private const val YAHOOALLNEWS_URL = "yahooAllNewsUrl"
+    //    private const val GOOGLENEWS_URL = "googleNewsUrl"
+    //    private const val GOOGLEALLNEWS_URL = "googleAllNewsUrl"
     private const val USER_MSG_TITLE = "userMsgTitle"
     private const val USER_MSG = "userMsg"
 
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     // Setup the notification channel.
     NotificationChannelFactory(this)
 
-    val debugListAdapter = ListAdapter(this)
+    val debugListAdapter = ListLogAdapter(this)
     val debugList = findViewById<RecyclerView>(R.id.recyclerViewDebug)
     debugList.adapter = debugListAdapter
     val linearLayoutManager = LinearLayoutManager(this)
@@ -208,8 +208,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     viewpager.setCurrentItem(
-        if (SharedRepository.displayedViewsList.contains("0_StockRoomChartFragment")) {
-          1
+        if (SharedRepository.displayedViewsList.contains("1_StockRoomListFragment")) {
+          SharedRepository.displayedViewsList.indexOf("1_StockRoomListFragment")
         } else {
           0
         }, false

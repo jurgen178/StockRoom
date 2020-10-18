@@ -31,6 +31,20 @@ limitations under the License. -->
     <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
   </style>
 
+  <style name="db_layout_style">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">1dp</item>
+    <item name="android:layout_marginStart">1dp</item>
+    <item name="android:layout_marginEnd">1dp</item>
+    <item name="android:layout_marginBottom">2dp</item>
+  </style>
+
+  <style name="db_item_style">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+
   <style name="stock_item">
         <item name="android:padding">4dp</item>
     </style>

@@ -24,14 +24,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.layout
-import com.thecloudsite.stockroom.list.ListAdapter.DebugDataViewHolder
+import com.thecloudsite.stockroom.list.ListLogAdapter.DebugDataViewHolder
 
 data class DebugData(
   val timeStamp: String,
   val data: String
 )
 
-class ListAdapter internal constructor(
+class ListLogAdapter internal constructor(
   context: Context
 ) : RecyclerView.Adapter<DebugDataViewHolder>() {
 

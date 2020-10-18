@@ -73,15 +73,27 @@
       app:layout_constraintTop_toBottomOf="@+id/divider1"
       />
 
-  <WebView
-      android:id="@+id/webview"
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/listDBRecyclerview"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_marginTop="20dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/dbHeaderTextView"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
       />
+
+  <!--
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dbHeaderTextView"
+        />
+  -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
