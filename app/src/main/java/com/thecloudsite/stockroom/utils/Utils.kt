@@ -28,6 +28,7 @@ import com.thecloudsite.stockroom.DividendCycle.Annual
 import com.thecloudsite.stockroom.DividendCycle.Monthly
 import com.thecloudsite.stockroom.DividendCycle.Quarterly
 import com.thecloudsite.stockroom.DividendCycle.SemiAnnual
+import com.thecloudsite.stockroom.OnlineMarketData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.database.Asset
@@ -107,6 +108,22 @@ fun validateDouble(value: Double): Double {
 fun Resources.getRawTextFile(@RawRes id: Int) =
   openRawResource(id).bufferedReader()
       .use { it.readText() }
+
+fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, String> {
+  val marketPrice = if (onlineMarketData.marketPrice > 5.0) {
+    DecimalFormat("0.00").format(onlineMarketData.marketPrice)
+  } else {
+    DecimalFormat("0.00##").format(onlineMarketData.marketPrice)
+  }
+  val change = DecimalFormat("0.00##").format(onlineMarketData.marketChange)
+  val changePercent = "(${
+    DecimalFormat("0.00").format(
+        onlineMarketData.marketChangePercent
+    )
+  }%)"
+
+  return Triple(marketPrice, change, changePercent)
+}
 
 // Gets the colored change string "asset (%change)"
 fun getAssetChange(

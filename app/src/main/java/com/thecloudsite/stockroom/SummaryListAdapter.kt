@@ -26,6 +26,7 @@ import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.summarylist_item.view.summaryListItemLayout
 import java.text.DecimalFormat
 
@@ -95,29 +96,17 @@ class SummaryListAdapter internal constructor(
 //    }
 
     if (current.onlineMarketData.marketPrice > 0.0) {
-      val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
-        DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
-      } else {
-        DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
-      }
+      val marketValues = getMarketValues(current.onlineMarketData)
 
-      val marketChange = "${
-        DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
-      } (${
-        DecimalFormat(
-            "0.00"
-        ).format(
-            current.onlineMarketData.marketChangePercent
-        )
-      }%)"
+      val marketChange = "${marketValues.second} (${marketValues.third}%)"
 
       if (current.onlineMarketData.postMarketData) {
         holder.summaryListItemMarketPrice.text = SpannableStringBuilder()
-            .italic { append(marketPrice) }
+            .italic { append(marketValues.first) }
         holder.summaryListItemMarketChange.text = SpannableStringBuilder()
             .italic { append(marketChange) }
       } else {
-        holder.summaryListItemMarketPrice.text = marketPrice
+        holder.summaryListItemMarketPrice.text = marketValues.first
         holder.summaryListItemMarketChange.text = marketChange
       }
 

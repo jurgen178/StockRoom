@@ -27,17 +27,16 @@ import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssetChange
-import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomdetaillist_item.view.detaillist_item_layout
-import kotlinx.android.synthetic.main.stockroomdetaillist_item.view.detaillist_itemview_group
 import java.text.DecimalFormat
-
-// https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
 class StockRoomDetailListAdapter internal constructor(
   val context: Context,
   private val clickListenerSummary: (StockItem) -> Unit
-) : ListAdapter<StockItem, StockRoomDetailListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
+) : ListAdapter<StockItem, StockRoomDetailListAdapter.StockRoomViewHolder>(
+    StockRoomDiffCallback()
+) {
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
   class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -51,7 +50,8 @@ class StockRoomDetailListAdapter internal constructor(
     val itemViewSymbol: TextView = itemView.findViewById(R.id.detaillist_textViewSymbol)
     val itemViewChange: TextView = itemView.findViewById(R.id.detaillist_textViewChange)
     val itemViewMarketPrice: TextView = itemView.findViewById(R.id.detaillist_textViewMarketPrice)
-    val itemViewMarketPriceLayout: ConstraintLayout = itemView.findViewById(R.id.detaillist_textViewMarketPriceLayout)
+    val itemViewMarketPriceLayout: ConstraintLayout =
+      itemView.findViewById(R.id.detaillist_textViewMarketPriceLayout)
     val itemTextViewGroup: TextView = itemView.findViewById(R.id.detaillist_itemview_group)
     val itemSummary: ConstraintLayout = itemView.findViewById(R.id.detaillist_item_layout)
   }
@@ -77,19 +77,9 @@ class StockRoomDetailListAdapter internal constructor(
       holder.itemViewSymbol.text = current.onlineMarketData.symbol
 
       if (current.onlineMarketData.marketPrice > 0.0) {
-        val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
-          DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
-        } else {
-          DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
-        }
-        val change = DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
-        val changePercent = "(${
-          DecimalFormat("0.00").format(
-              current.onlineMarketData.marketChangePercent
-          )
-        }%)"
+        val marketValues = getMarketValues(current.onlineMarketData)
+        val marketPriceStr = "${marketValues.first} ${marketValues.second} ${marketValues.third}"
 
-        val marketPriceStr = "$marketPrice $change $changePercent"
         if (current.onlineMarketData.postMarketData) {
           holder.itemViewMarketPrice.text = SpannableStringBuilder()
               .italic { append(marketPriceStr) }
@@ -100,7 +90,8 @@ class StockRoomDetailListAdapter internal constructor(
         holder.itemViewMarketPrice.text = ""
       }
 
-      val assetChange = getAssetChange(current.assets, current.onlineMarketData.marketPrice, context, false)
+      val assetChange =
+        getAssetChange(current.assets, current.onlineMarketData.marketPrice, context, false)
       holder.itemViewChange.text = assetChange.first
       holder.itemViewMarketPriceLayout.setBackgroundColor(assetChange.third)
 

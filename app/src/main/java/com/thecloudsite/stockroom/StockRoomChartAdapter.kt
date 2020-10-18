@@ -42,10 +42,10 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
 import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
-import java.text.DecimalFormat
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -151,31 +151,21 @@ class StockRoomChartAdapter internal constructor(
       holder.itemViewName.text = getName(current.onlineMarketData)
 
       if (current.onlineMarketData.marketPrice > 0.0) {
-        val marketPrice = if (current.onlineMarketData.marketPrice > 5.0) {
-          DecimalFormat("0.00").format(current.onlineMarketData.marketPrice)
-        } else {
-          DecimalFormat("0.00##").format(current.onlineMarketData.marketPrice)
-        }
-        val change = DecimalFormat("0.00##").format(current.onlineMarketData.marketChange)
-        val changePercent = "(${
-          DecimalFormat("0.00").format(
-              current.onlineMarketData.marketChangePercent
-          )
-        }%)"
+        val marketValues = getMarketValues(current.onlineMarketData)
 
         if (current.onlineMarketData.postMarketData) {
           holder.itemViewMarketPrice.text = SpannableStringBuilder()
-              .italic { append(marketPrice) }
+              .italic { append(marketValues.first) }
 
           holder.itemViewChange.text = SpannableStringBuilder()
-              .italic { append(change) }
+              .italic { append(marketValues.second) }
 
           holder.itemViewChangePercent.text = SpannableStringBuilder()
-              .italic { append(changePercent) }
+              .italic { append(marketValues.third) }
         } else {
-          holder.itemViewMarketPrice.text = marketPrice
-          holder.itemViewChange.text = change
-          holder.itemViewChangePercent.text = changePercent
+          holder.itemViewMarketPrice.text = marketValues.first
+          holder.itemViewChange.text = marketValues.second
+          holder.itemViewChangePercent.text = marketValues.third
         }
       } else {
         holder.itemViewMarketPrice.text = ""
