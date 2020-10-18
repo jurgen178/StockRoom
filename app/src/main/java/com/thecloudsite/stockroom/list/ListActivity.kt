@@ -96,6 +96,8 @@ class ListActivity : AppCompatActivity() {
 
     stockRoomViewModel.allAssetTable.observe(this, Observer { items ->
 
+      listDBAdapter.updateAsset(items)
+
 //      assetTableRowsCount = items.size
 //
 //      items.forEach { assetItem ->
@@ -123,6 +125,8 @@ class ListActivity : AppCompatActivity() {
 
     stockRoomViewModel.allEventTable.observe(this, Observer { items ->
 
+      listDBAdapter.updateEvent(items)
+
 //      eventTableRowsCount = items.size
 //
 //      items.forEach { eventItem ->
@@ -140,6 +144,8 @@ class ListActivity : AppCompatActivity() {
     })
 
     stockRoomViewModel.allDividendTable.observe(this, Observer { items ->
+
+      listDBAdapter.updateDividend(items)
 
 //      dividendTableRowsCount = items.size
 //
