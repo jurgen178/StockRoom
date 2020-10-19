@@ -17,6 +17,13 @@
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline1"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
   <TextView
       android:id="@+id/db_group_name"
       style="@style/db_item_style"

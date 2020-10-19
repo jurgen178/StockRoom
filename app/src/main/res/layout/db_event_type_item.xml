@@ -17,12 +17,26 @@
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline1"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
   <TextView
       android:id="@+id/db_event_symbol"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintEnd_toStartOf="@id/guideline2"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline2"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
@@ -35,6 +49,13 @@
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline3"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
   <TextView
       android:id="@+id/db_event_datetime"
       style="@style/db_item_style"
@@ -44,12 +65,26 @@
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline4"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
   <TextView
       android:id="@+id/db_event_type"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline4"
       app:layout_constraintEnd_toStartOf="@id/guideline5"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline5"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 

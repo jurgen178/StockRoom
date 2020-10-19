@@ -75,6 +75,7 @@ import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
 import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.fragment_stockdata.addAssetsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.addEventsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputEditText
@@ -1768,22 +1769,14 @@ class StockDataFragment : Fragment() {
     if (onlineMarketData != null) {
       name = getName(onlineMarketData)
 
-      val marketPriceStr = DecimalFormat("0.00##").format(onlineMarketData.marketPrice)
-      val marketChangeStr = "${
-        DecimalFormat("0.00##").format(
-            onlineMarketData.marketChange
-        )
-      } (${
-        DecimalFormat(
-            "0.00##"
-        ).format(onlineMarketData.marketChangePercent)
-      }%)"
+      val marketValues = getMarketValues(onlineMarketData)
+      val marketChangeStr = "${marketValues.second} ${marketValues.third}"
 
       if (onlineMarketData.postMarketData) {
-        marketPrice.italic { append(marketPriceStr) }
+        marketPrice.italic { append(marketValues.first) }
         marketChange.italic { append(marketChangeStr) }
       } else {
-        marketPrice.append(marketPriceStr)
+        marketPrice.append(marketValues.first)
         marketChange.append(marketChangeStr)
       }
     }

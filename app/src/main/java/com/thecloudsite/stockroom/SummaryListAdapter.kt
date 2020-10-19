@@ -98,7 +98,7 @@ class SummaryListAdapter internal constructor(
     if (current.onlineMarketData.marketPrice > 0.0) {
       val marketValues = getMarketValues(current.onlineMarketData)
 
-      val marketChange = "${marketValues.second} (${marketValues.third}%)"
+      val marketChange = "${marketValues.second} ${marketValues.third}"
 
       if (current.onlineMarketData.postMarketData) {
         holder.summaryListItemMarketPrice.text = SpannableStringBuilder()

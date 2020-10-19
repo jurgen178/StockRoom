@@ -43,7 +43,19 @@ limitations under the License. -->
   <style name="db_item_style">
     <item name="android:layout_width">0dp</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_margin">1dp</item>
+    <item name="android:layout_marginTop">2dp</item>
+    <item name="android:layout_marginStart">4dp</item>
+    <item name="android:layout_marginEnd">2dp</item>
+    <item name="android:layout_marginBottom">2dp</item>
+    <!--
+        <item name="android:background">@drawable/border</item>
+    -->
+  </style>
+
+  <style name="db_item_vertical_line">
+    <item name="android:layout_width">1dp</item>
+    <item name="android:layout_height">0dp</item>
+    <item name="android:background">#FF000000</item>
   </style>
 
   <style name="stock_item">

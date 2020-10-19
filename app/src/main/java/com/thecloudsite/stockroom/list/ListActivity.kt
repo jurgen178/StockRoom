@@ -50,7 +50,7 @@ class ListActivity : AppCompatActivity() {
           .apply()
     }
 
-    // Only valid for the current App run.
+    // Only valid for the current App run. Will be reset the next time the app starts.
     realtimeswitch.isChecked = Companion.realtimeOverride
     realtimeswitch.setOnCheckedChangeListener { _, isChecked ->
       Companion.realtimeOverride = isChecked
