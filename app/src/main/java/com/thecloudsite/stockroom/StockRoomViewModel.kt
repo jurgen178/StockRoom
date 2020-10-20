@@ -1693,8 +1693,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   date = if (asset.date != 0L) asset.date else null,
                   sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
                   expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
-                  premium = if (asset.premium != 0.0) asset.premium else null,
-                  commission = if (asset.commission != 0.0) asset.commission else null,
+                  premium = if (asset.premium != 0.0) validateDouble(asset.premium) else null,
+                  commission = if (asset.commission != 0.0) validateDouble(asset.commission) else null,
               )
             }
       }
@@ -1708,9 +1708,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             .map { event ->
               EventJson(
                   title = event.title,
-                  note = if (event.note.isNotEmpty()) event.note else null,
                   datetime = event.datetime,
-                  type = if (event.type != 0) event.type else null
+                  type = if (event.type != 0) event.type else null,
+                  note = if (event.note.isNotEmpty()) event.note else null
               )
             }
       }
@@ -1724,10 +1724,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             .map { dividend ->
               DividendJson(
                   amount = validateDouble(dividend.amount),
-                  paydate = dividend.paydate,
                   cycle = dividend.cycle,
-                  exdate = if (dividend.exdate != 0L) dividend.exdate else null,
+                  paydate = dividend.paydate,
                   type = if (dividend.type != 0) dividend.type else null,
+                  exdate = if (dividend.exdate != 0L) dividend.exdate else null,
                   note = if (dividend.note.isNotEmpty()) dividend.note else null
               )
             }
@@ -1742,10 +1742,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           data = dataValue,
           groupColor = groupColorValue,
           groupName = groupNameValue,
-          alertAbove = alertAboveValue,
-          alertBelow = alertBelowValue,
           notes = notesValue,
           dividendNotes = dividendNotesValue,
+          alertAbove = alertAboveValue,
+          alertBelow = alertBelowValue,
           assets = assetsValue,
           events = eventsValue,
           dividends = dividendsValue
