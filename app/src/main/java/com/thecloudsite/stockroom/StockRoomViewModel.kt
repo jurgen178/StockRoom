@@ -127,6 +127,17 @@ val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf<String>(
     "4_SummaryGroupFragment"
 )
 
+val displayedViewsSet: MutableSet<String> = mutableSetOf<String>(
+    "0_StockRoomChartFragment",
+    "1_StockRoomListFragment",
+    "2_SummaryListFragment",
+    "3_StockRoomDetailListFragment",
+    "4_StockRoomSmallListFragment",
+    "5_SummaryGroupFragment",
+    "6_AllNewsFragment",
+    "7_TimelineFragment"
+)
+
 object SharedRepository {
   val alertsData = MutableLiveData<List<AlertData>>()
   val alerts: LiveData<List<AlertData>>
@@ -266,14 +277,22 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       if (displayedViews != null && displayedViews!!.isNotEmpty()) {
         SharedRepository.displayedViewsList =
           displayedViews?.toMutableList()
+              ?.filter { fragment ->
+                displayedViewsSet.contains(fragment)
+              }
               ?.sortedBy { fragment ->
                 fragment
-              }?.toMutableList()!!
+              }
+              ?.toMutableList()!!
       }
 
       if (SharedRepository.displayedViewsList.isEmpty()) {
         SharedRepository.displayedViewsList.add("1_StockRoomListFragment")
       }
+
+      sharedPreferences.edit()
+          .putStringSet("displayed_views", SharedRepository.displayedViewsList.toSet())
+          .apply()
     }
 
     // sharedPreferences.getBoolean("postmarket", true) doesn't work here anymore?
@@ -1694,7 +1713,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
                   expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
                   premium = if (asset.premium != 0.0) validateDouble(asset.premium) else null,
-                  commission = if (asset.commission != 0.0) validateDouble(asset.commission) else null,
+                  commission = if (asset.commission != 0.0) validateDouble(
+                      asset.commission
+                  ) else null,
               )
             }
       }
