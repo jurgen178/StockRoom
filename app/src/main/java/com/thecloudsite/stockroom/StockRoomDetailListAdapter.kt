@@ -27,6 +27,7 @@ import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssetChange
+import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomdetaillist_item.view.detaillist_item_layout
 import java.text.DecimalFormat
@@ -92,8 +93,17 @@ class StockRoomDetailListAdapter internal constructor(
 
       val assetChange =
         getAssetChange(current.assets, current.onlineMarketData.marketPrice, context, false)
-      holder.itemViewChange.text = assetChange.first
-      holder.itemViewMarketPriceLayout.setBackgroundColor(assetChange.third)
+      holder.itemViewChange.text = assetChange.second
+
+      // In one-line view set the background color to the market change instead of the asset change.
+      holder.itemViewMarketPriceLayout.setBackgroundColor(
+          getChangeColor(current.onlineMarketData.marketChange, context)
+      )
+
+//      // Set the background color to the market change.
+//      holder.itemViewMarketPriceLayout.setBackgroundColor(
+//          getChangeColor(assetChange.third, context)
+//      )
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {

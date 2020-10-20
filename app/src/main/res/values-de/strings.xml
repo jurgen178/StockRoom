@@ -84,8 +84,8 @@ limitations under the License. -->
 
   <string name="hint_add_stock">Aktienkürzel</string>
   <string name="button_add">Hinzufügen</string>
-  <string name="sort_name">Nach Namen sortieren</string>
   <string name="sort_change">Nach Änderung sortieren</string>
+  <string name="sort_name">Nach Namen sortieren</string>
   <string name="sort_group">Nach Gruppe sortieren</string>
   <string name="sort_group_unsorted">Nach Einfügedatum sortiert</string>
   <string name="sort_assets">Nach Bestand sortieren</string>

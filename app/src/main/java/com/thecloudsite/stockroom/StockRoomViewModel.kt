@@ -897,6 +897,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ): List<StockItem> =
     if (stockItemSet != null) {
       when (sortMode) {
+        SortMode.ByChange -> {
+          stockItemSet.stockItems.sortedByDescending { item ->
+            item.onlineMarketData.marketChangePercent
+          }
+        }
         SortMode.ByName -> {
           stockItemSet.stockItems.sortedBy { item ->
             item.stockDBdata.symbol
@@ -932,11 +937,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //                it.shares * it.price
 //              }
             }
-          }
-        }
-        SortMode.ByChange -> {
-          stockItemSet.stockItems.sortedByDescending { item ->
-            item.onlineMarketData.marketChangePercent
           }
         }
         SortMode.ByDividend -> {

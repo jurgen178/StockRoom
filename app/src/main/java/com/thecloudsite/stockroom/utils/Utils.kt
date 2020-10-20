@@ -125,6 +125,21 @@ fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, 
   return Triple(marketPrice, change, changePercent)
 }
 
+fun getChangeColor(
+  change: Double,
+  context: Context
+): Int = when {
+  change > 0.0 -> {
+    context.getColor(color.green)
+  }
+  change < 0.0 -> {
+    context.getColor(color.red)
+  }
+  else -> {
+    context.getColor(R.color.backgroundListColor)
+  }
+}
+
 // Gets the colored change string "asset (%change)"
 fun getAssetChange(
   assets: List<Asset>,
@@ -181,17 +196,7 @@ fun getAssetChange(
         }
       }${DecimalFormat("0.00").format(changePercent)}%)"
 
-      val assetChangeColor = when {
-        capital > asset -> {
-          context.getColor(color.green)
-        }
-        capital < asset -> {
-          context.getColor(color.red)
-        }
-        else -> {
-          context.getColor(color.material_on_background_emphasis_medium)
-        }
-      }
+      val assetChangeColor = getChangeColor(capital - asset, context)
 
       val assetChange = if (bold) {
         SpannableStringBuilder()

@@ -30,10 +30,10 @@ import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.Group
 
 enum class SortMode(val value: Int) {
-  ByName(0),
-  ByAssets(1),
-  ByProfit(2),
-  ByChange(3),
+  ByChange(0),
+  ByName(1),
+  ByAssets(2),
+  ByProfit(3),
   ByDividend(4),
   ByGroup(5),
   ByUnsorted(6),
