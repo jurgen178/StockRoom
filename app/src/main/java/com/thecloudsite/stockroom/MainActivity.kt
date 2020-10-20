@@ -187,13 +187,16 @@ class MainActivity : AppCompatActivity() {
           "3_StockRoomDetailListFragment" -> {
             StockRoomDetailListFragment.newInstance()
           }
-          "4_SummaryGroupFragment" -> {
+          "4_StockRoomSmallListFragment" -> {
+            StockRoomSmallListFragment.newInstance()
+          }
+          "5_SummaryGroupFragment" -> {
             SummaryGroupFragment.newInstance()
           }
-          "5_AllNewsFragment" -> {
+          "6_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "6_TimelineFragment" -> {
+          "7_TimelineFragment" -> {
             TimelineFragment.newInstance()
           }
           else -> {

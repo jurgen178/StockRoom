@@ -26,15 +26,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroomdetaillist_item.view.detaillist_item_layout
+import kotlinx.android.synthetic.main.stockroomsmalllist_item.view.smalllist_item_layout
 
-class StockRoomDetailListAdapter internal constructor(
+class StockRoomSmallListAdapter internal constructor(
   val context: Context,
   private val clickListenerSummary: (StockItem) -> Unit
-) : ListAdapter<StockItem, StockRoomDetailListAdapter.StockRoomViewHolder>(
+) : ListAdapter<StockItem, StockRoomSmallListAdapter.StockRoomViewHolder>(
     StockRoomDiffCallback()
 ) {
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -44,23 +43,22 @@ class StockRoomDetailListAdapter internal constructor(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      itemView.detaillist_item_layout.setOnClickListener { clickListener(stockItem) }
+      itemView.smalllist_item_layout.setOnClickListener { clickListener(stockItem) }
     }
 
-    val itemViewSymbol: TextView = itemView.findViewById(R.id.detaillist_textViewSymbol)
-    val itemViewChange: TextView = itemView.findViewById(R.id.detaillist_textViewChange)
-    val itemViewMarketPrice: TextView = itemView.findViewById(R.id.detaillist_textViewMarketPrice)
+    val itemViewSymbol: TextView = itemView.findViewById(R.id.smalllist_textViewSymbol)
+    val itemViewMarketPrice: TextView = itemView.findViewById(R.id.smalllist_textViewMarketPrice)
     val itemViewMarketPriceLayout: ConstraintLayout =
-      itemView.findViewById(R.id.detaillist_textViewMarketPriceLayout)
-    val itemTextViewGroup: TextView = itemView.findViewById(R.id.detaillist_itemview_group)
-    val itemSummary: ConstraintLayout = itemView.findViewById(R.id.detaillist_item_layout)
+      itemView.findViewById(R.id.smalllist_textViewMarketPriceLayout)
+    val itemTextViewGroup: TextView = itemView.findViewById(R.id.smalllist_itemview_group)
+    val itemSummary: ConstraintLayout = itemView.findViewById(R.id.smalllist_item_layout)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroomdetaillist_item, parent, false)
+    val itemView = inflater.inflate(R.layout.stockroomsmalllist_item, parent, false)
     return StockRoomViewHolder(itemView)
   }
 
@@ -90,19 +88,10 @@ class StockRoomDetailListAdapter internal constructor(
         holder.itemViewMarketPrice.text = ""
       }
 
-      val assetChange =
-        getAssetChange(current.assets, current.onlineMarketData.marketPrice, context, false)
-      holder.itemViewChange.text = assetChange.second
-
       // In one-line view set the background color to the market change instead of the asset change.
       holder.itemViewMarketPriceLayout.setBackgroundColor(
           getChangeColor(current.onlineMarketData.marketChange, context)
       )
-
-//      // Set the background color to the market change.
-//      holder.itemViewMarketPriceLayout.setBackgroundColor(
-//          getChangeColor(assetChange.third, context)
-//      )
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {

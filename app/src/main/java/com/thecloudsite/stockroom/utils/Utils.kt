@@ -383,7 +383,7 @@ fun parseStockOption(symbol: String): StockOptionData {
 
   // named groups are not yet supported
   val match = "([A-Z.]+)(7?)\\s*(\\d+)([A-Z])(\\d+)".toRegex()
-      .matchEntire(symbol.toUpperCase())
+      .matchEntire(symbol.toUpperCase(Locale.ROOT))
 
   if (match != null && match.groups.size == 6) {
     val sym = match.groups[1]?.value
