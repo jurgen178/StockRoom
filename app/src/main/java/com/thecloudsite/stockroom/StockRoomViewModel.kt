@@ -152,7 +152,7 @@ object SharedRepository {
   var postMarket: Boolean = true
   var notifications: Boolean = true
 
-  var selectedStock: String = ""
+  var selectedSymbol: String = ""
   var selectedPortfolio = MutableLiveData("")
   val selectedPortfolioLiveData: LiveData<String>
     get() = selectedPortfolio
@@ -1995,35 +1995,40 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private suspend fun getStockData(): Pair<MarketState, String> {
-    // When the stock data activity is selected, query only the selected stock.
-    val symbols: List<String> = if (SharedRepository.selectedStock.isNotEmpty()) {
-      listOf(SharedRepository.selectedStock)
+    // When the stock data activity is selected, query only the selected symbol.
+    val selectedSymbol = SharedRepository.selectedSymbol
+
+    val symbols: List<String> = if (selectedSymbol.isNotEmpty()) {
+      listOf(selectedSymbol)
     } else {
-      // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
-      repository.getStockSymbols()
-          .filter { symbol ->
-            if (portfolioSymbols.isNotEmpty()) {
-              portfolioSymbols.contains(symbol)
-            } else {
-              false
-            }
-          }
+//      // Get all stocks from the DB.
+//      repository.getStockSymbols()
+//          .filter { symbol ->
+//            if (portfolioSymbols.isNotEmpty()) {
+//              portfolioSymbols.contains(symbol)
+//            } else {
+//              false
+//            }
+//          }
+      val portfolioSymbolsCopy = portfolioSymbols
+      portfolioSymbolsCopy.toList()
     }
 
-    val stocks = symbols.take(5)
+    val symbollistStr = symbols.take(5)
         .joinToString(",")
+
     when {
       symbols.size > 5 -> {
-        logDebugAsync("Query ${symbols.size} stocks: ${stocks},...")
+        logDebugAsync("Query ${symbols.size} stocks: ${symbollistStr},...")
       }
       symbols.size == 1 -> {
-        logDebugAsync("Query 1 stock: $stocks")
+        logDebugAsync("Query 1 stock: $symbollistStr")
       }
       symbols.isEmpty() -> {
         logDebugAsync("No stocks to query.")
       }
       else -> {
-        logDebugAsync("Query ${symbols.size} stocks: $stocks")
+        logDebugAsync("Query ${symbols.size} stocks: $symbollistStr")
       }
     }
 

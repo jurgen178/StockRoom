@@ -42,7 +42,7 @@ class StockDataActivity : AppCompatActivity() {
     symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
 
     // Query only this symbol when this activity is on.
-    SharedRepository.selectedStock = symbol
+    SharedRepository.selectedSymbol = symbol
 
     stockViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
@@ -88,7 +88,7 @@ class StockDataActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    SharedRepository.selectedStock = ""
+    SharedRepository.selectedSymbol = ""
     super.onPause()
   }
 
