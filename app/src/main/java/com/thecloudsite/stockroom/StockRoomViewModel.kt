@@ -152,6 +152,7 @@ object SharedRepository {
   var postMarket: Boolean = true
   var notifications: Boolean = true
 
+  var selectedStock: String = ""
   var selectedPortfolio = MutableLiveData("")
   val selectedPortfolioLiveData: LiveData<String>
     get() = selectedPortfolio
@@ -189,6 +190,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
 
+  // Get the DB data first, then enable the online query.
+  // There are no symbols from DB to query if online task runs at start and would result in
+  // an error with a delay for the next online task.
+  private var dbDataValid = false
+
   private var portfolioSymbols: HashSet<String> = HashSet()
 
   private val dataStore = StockItemSet()
@@ -198,7 +204,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   private val allMediatorData = MediatorLiveData<StockItemSet>()
 
-  //private var dbDataValid = false
   //private var assetDataValid = false
   //private var eventDataValid = false
   //private var dividendDataValid = false
@@ -319,7 +324,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           60 * 1000L
         }
         MarketState.PREPRE, MarketState.POSTPOST -> {
-          15 * 60 * 1000L
+          10* 1000L //15 * 60 * 1000L
         }
         MarketState.CLOSED -> {
           60 * 60 * 1000L
@@ -328,6 +333,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
           maxOf(2 * 60 * 1000L, prevOnlineDataDelay * 2)
           // 10 * 1000L
+        }
+        MarketState.NO_SYMBOL -> {
+          60 * 1000L
         }
         MarketState.UNKNOWN -> {
           60 * 1000L
@@ -427,23 +435,27 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   fun runOnlineTask() {
-    synchronized(onlineUpdateTime)
-    {
-      onlineTask()
+    if (dbDataValid) {
+      synchronized(onlineUpdateTime)
+      {
+        onlineTask()
+      }
     }
   }
 
   fun runOnlineTaskNow(msg: String = "") {
-    synchronized(onlineUpdateTime)
-    {
-      if (msg.isNotEmpty()) {
-        logDebug(msg)
-      }
+    if (dbDataValid) {
+      synchronized(onlineUpdateTime)
+      {
+        if (msg.isNotEmpty()) {
+          logDebug(msg)
+        }
 
-      // Reset to run now.
-      onlineUpdateTime = 0
-      nextUpdate = 0
-      onlineTask()
+        // Reset to run now.
+        onlineUpdateTime = 0
+        nextUpdate = 0
+        onlineTask()
+      }
     }
   }
 
@@ -511,6 +523,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataProperties) { value ->
       if (value != null) {
         updateStockDataFromDB(value)
+        // Symbols are ready for the online task.
+        dbDataValid = true
+        //logDebug("runOnlineTaskNow in addSource")
         //if (dataStore.allDataReady) {
         runOnlineTaskNow()
         //}
@@ -576,8 +591,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
     synchronized(dataStore)
     {
-      //dbDataValid = true
-
       val stockDBdataPortfolios: HashSet<String> = hashSetOf("") // add Standard Portfolio
       val usedPortfolioSymbols: HashSet<String> = HashSet()
 
@@ -623,6 +636,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       // only load online data for symbols in the portfolio set
       portfolioSymbols = usedPortfolioSymbols
+      logDebug("portfolioSymbols.size = ${portfolioSymbols.size}")
 
       // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
       dataStore.stockItems.removeIf {
@@ -1981,15 +1995,38 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private suspend fun getStockData(): Pair<MarketState, String> {
-    // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
-    val symbols: List<String> = repository.getStockSymbols()
-        .filter { symbol ->
-          if (portfolioSymbols.isNotEmpty()) {
-            portfolioSymbols.contains(symbol)
-          } else {
-            true
+    // When the stock data activity is selected, query only the selected stock.
+    val symbols: List<String> = if (SharedRepository.selectedStock.isNotEmpty()) {
+      listOf(SharedRepository.selectedStock)
+    } else {
+      // Get all stocks from the DB and filter the list to get only data for symbols of the portfolio.
+      repository.getStockSymbols()
+          .filter { symbol ->
+            if (portfolioSymbols.isNotEmpty()) {
+              portfolioSymbols.contains(symbol)
+            } else {
+              false
+            }
           }
-        }
+    }
+
+    val stocks = symbols.take(5)
+        .joinToString(",")
+    when {
+      symbols.size > 5 -> {
+        logDebugAsync("Query ${symbols.size} stocks: ${stocks},...")
+      }
+      symbols.size == 1 -> {
+        logDebugAsync("Query 1 stock: $stocks")
+      }
+      symbols.isEmpty() -> {
+        logDebugAsync("No stocks to query.")
+      }
+      else -> {
+        logDebugAsync("Query ${symbols.size} stocks: $stocks")
+      }
+    }
+
 //   Log.d("Handlers", "Call stockMarketDataRepository.getStockData()")
 //   logDebugAsync("update online data getStockData")
     return stockMarketDataRepository.getStockData(symbols)

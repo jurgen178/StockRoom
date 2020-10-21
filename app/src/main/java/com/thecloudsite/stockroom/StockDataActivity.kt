@@ -41,6 +41,9 @@ class StockDataActivity : AppCompatActivity() {
     val symbolString = intent.getStringExtra("symbol")
     symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
 
+    // Query only this symbol when this activity is on.
+    SharedRepository.selectedStock = symbol
+
     stockViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
         return when (position) {
@@ -82,6 +85,11 @@ class StockDataActivity : AppCompatActivity() {
         else -> getString(R.string.news_headline, symbol)
       }
     }.attach()
+  }
+
+  override fun onPause() {
+    SharedRepository.selectedStock = ""
+    super.onPause()
   }
 
   override fun onSupportNavigateUp(): Boolean {

@@ -52,6 +52,13 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
     get() = _data
 
   suspend fun getStockData(symbols: List<String>): Pair<MarketState, String> {
+
+    // no _data.value because this is a background thread
+    if (symbols.isEmpty()) {
+      _data.postValue(emptyList())
+      return Pair(MarketState.NO_SYMBOL, "")
+    }
+
     var errorMsg = ""
 
     val api: YahooApiMarketData? = api()

@@ -444,6 +444,7 @@ enum class MarketState(val value: String) {
   POSTPOST("POSTPOST"),
   CLOSED("CLOSED"),
   NO_NETWORK("NO_NETWORK"),
+  NO_SYMBOL("NO_SYMBOL"),
   UNKNOWN("")
 }
 
@@ -463,6 +464,9 @@ fun <K> Enum.Companion.toString(marketState: K): String {
     }
     MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
       "network not available"
+    }
+    MarketState.NO_SYMBOL -> {
+      "no symbol"
     }
     else -> ""
   }
