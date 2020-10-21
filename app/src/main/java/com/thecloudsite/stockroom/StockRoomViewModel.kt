@@ -412,13 +412,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (count > SharedRepository.statsCounterMax) {
           SharedRepository.statsCounterMax = count
         }
+
         SharedRepository.responseCounterStart = responseCounter
-        val lastCounts = SharedRepository.lastStatsCounters.filter { it >= 0 }
-            .joinToString(
-                prefix = "[",
-                separator = ",",
-                postfix = "]"
-            )
+
+        // sum of initial array [-1, -1, -1, -1, -1] is -5
+        val lastCounts = if (SharedRepository.lastStatsCounters.sum() == -5) {
+          ""
+        } else {
+          SharedRepository.lastStatsCounters.filter { it >= 0 }
+              .joinToString(
+                  prefix = "[",
+                  separator = ",",
+                  postfix = "]"
+              )
+        }
         logDebug(
             "Internet access count $count/min $lastCounts[${SharedRepository.statsCounterMax}]"
         )
@@ -429,6 +436,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               SharedRepository.lastStatsCounters[reverseIndex - 1]
           }
         }
+
         SharedRepository.lastStatsCounters[0] = count
       }
     }
