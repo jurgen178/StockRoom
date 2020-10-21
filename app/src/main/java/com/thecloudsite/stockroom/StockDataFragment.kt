@@ -1698,7 +1698,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun onSync() {
-    stockRoomViewModel.runOnlineTaskNow("Schedule to get online data manually.")
+    stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
     updateStockViewRange(stockViewRange)
   }
 

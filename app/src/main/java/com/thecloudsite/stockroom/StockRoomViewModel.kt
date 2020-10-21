@@ -324,7 +324,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           60 * 1000L
         }
         MarketState.PREPRE, MarketState.POSTPOST -> {
-          10* 1000L //15 * 60 * 1000L
+          15 * 60 * 1000L
         }
         MarketState.CLOSED -> {
           60 * 60 * 1000L

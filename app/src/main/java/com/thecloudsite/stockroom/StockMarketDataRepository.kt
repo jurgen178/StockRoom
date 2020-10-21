@@ -41,7 +41,7 @@ data class StockItem
 )
 
 var responseCounter = 0
-@Synchronized fun updateCounter(){
+@Synchronized fun updateCounter() {
   responseCounter++
 }
 
@@ -53,14 +53,14 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
   suspend fun getStockData(symbols: List<String>): Pair<MarketState, String> {
 
-    // no _data.value because this is a background thread
+    // When the app is in the background.
     if (symbols.isEmpty()) {
+      // no _data.value because this is a background thread
       _data.postValue(emptyList())
       return Pair(MarketState.NO_SYMBOL, "")
     }
 
     var errorMsg = ""
-
     val api: YahooApiMarketData? = api()
 
     if (api != null) {
@@ -80,8 +80,8 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
       val onlineMarketDataResultList: List<OnlineMarketData> = quoteResponse?.quoteResponse?.result
           ?: emptyList()
 
-      // no _data.value because this is a background thread
       if (onlineMarketDataResultList.isEmpty()) {
+        // no _data.value because this is a background thread
         _data.postValue(onlineMarketDataResultList)
         return Pair(MarketState.NO_NETWORK, errorMsg)
       }

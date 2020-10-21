@@ -197,7 +197,7 @@ class SummaryGroupFragment : Fragment() {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       R.id.menu_sync -> {
-        stockRoomViewModel.runOnlineTaskNow("Schedule to get online data manually.")
+        stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
         true
       }
       else -> super.onOptionsItemSelected(item)
