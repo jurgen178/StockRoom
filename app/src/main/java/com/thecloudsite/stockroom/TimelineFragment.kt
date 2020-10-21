@@ -160,7 +160,7 @@ class TimelineFragment : Fragment() {
   private fun clickListenerCardItem(timelineElement: TimelineElement) {
     val intent = Intent(context, StockDataActivity::class.java)
     intent.putExtra("symbol", timelineElement.symbol)
-    stockRoomViewModel.runOnlineTaskNow()
+    //stockRoomViewModel.runOnlineTaskNow()
     startActivity(intent)
   }
 }

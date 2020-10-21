@@ -152,6 +152,11 @@ object SharedRepository {
   var postMarket: Boolean = true
   var notifications: Boolean = true
 
+  // Get the DB data first, then enable the online query.
+  // There are no symbols from DB to query if online task runs at start and would result in
+  // an error with a delay for the next online task.
+  var dbDataValid = false
+
   var selectedSymbol: String = ""
   var selectedPortfolio = MutableLiveData("")
   val selectedPortfolioLiveData: LiveData<String>
@@ -189,11 +194,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<StockItemSet>
-
-  // Get the DB data first, then enable the online query.
-  // There are no symbols from DB to query if online task runs at start and would result in
-  // an error with a delay for the next online task.
-  private var dbDataValid = false
 
   private var portfolioSymbols: HashSet<String> = HashSet()
 
@@ -435,7 +435,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   fun runOnlineTask() {
-    if (dbDataValid) {
+    if (SharedRepository.dbDataValid) {
       synchronized(onlineUpdateTime)
       {
         onlineTask()
@@ -444,7 +444,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   fun runOnlineTaskNow(msg: String = "") {
-    if (dbDataValid) {
+    if (SharedRepository.dbDataValid) {
       synchronized(onlineUpdateTime)
       {
         if (msg.isNotEmpty()) {
@@ -524,7 +524,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       if (value != null) {
         updateStockDataFromDB(value)
         // Symbols are ready for the online task.
-        dbDataValid = true
+        SharedRepository.dbDataValid = true
         //logDebug("runOnlineTaskNow in addSource")
         //if (dataStore.allDataReady) {
         runOnlineTaskNow()

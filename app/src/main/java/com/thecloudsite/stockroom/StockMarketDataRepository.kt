@@ -63,7 +63,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
     val api: YahooApiMarketData? = api()
 
-    if (symbols.isNotEmpty() && api != null) {
+    if (api != null) {
       val quoteResponse: YahooResponse? = try {
         safeApiCall(
             call = {
