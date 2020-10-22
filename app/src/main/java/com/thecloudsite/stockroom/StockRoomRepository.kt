@@ -54,6 +54,12 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   // thread, blocking the UI.
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  fun getStockDBLiveData(symbol: String): LiveData<StockDBdata> {
+    return stockRoomDao.getStockDBLiveData(symbol)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   fun getAssetsLiveData(symbol: String): LiveData<Assets> {
     return stockRoomDao.getAssetsLiveData(symbol)
   }

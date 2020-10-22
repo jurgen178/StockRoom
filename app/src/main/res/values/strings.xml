@@ -303,7 +303,6 @@ limitations under the License. -->
   <string name="dividend_exdate">Ex-Dividend</string>
   <string name="totaldividend_payed">Dividend paid</string>
   <string name="totaldividend_payedYTD">Dividend paid YTD</string>
-  <string name="no_dividend_data">No dividend data.</string>
   <string name="reset_portfolios_title">Reset Portfolios</string>
   <string name="reset_portfolios_desc">Reset all Portfolios back to the Standard Portfolio.</string>
   <string name="reset_portfolios_confirm">Are you sure to reset all Portfolios back to the Standard Portfolio?</string>
@@ -326,4 +325,8 @@ limitations under the License. -->
   <string name="displayed_views_summary">Select what is on display.</string>
   <string name="displayed_views_dialog_title">Settings change</string>
   <string name="displayed_views_dialog_message">You need to restart the app for this setting.</string>
+  <string name="annual_dividend_headline">Annual dividend rate</string>
+  <string name="set_annual_dividend_label">New dividend rate</string>
+  <string name="onlineAnnualDividendData">Online data</string>
+  <string name="no_dividend_data">No dividend data.</string>
 </resources>

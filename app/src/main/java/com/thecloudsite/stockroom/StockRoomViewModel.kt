@@ -983,8 +983,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByDividend -> {
           stockItemSet.stockItems.sortedByDescending { item ->
-            // TODO use updated stckdbdata div rate
-            item.onlineMarketData.annualDividendYield
+
+            // Use stockDBdata.annualDividendRate if available.
+            if (item.stockDBdata.annualDividendRate != 0.0) {
+              if (item.onlineMarketData.marketPrice != 0.0) {
+                item.stockDBdata.annualDividendRate / item.onlineMarketData.marketPrice
+              } else {
+                0.0
+              }
+            } else {
+              item.onlineMarketData.annualDividendYield
+            }
           }
         }
         SortMode.ByGroup -> {
@@ -1955,7 +1964,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  private fun updateAnnualDividendRate(
+  fun updateAnnualDividendRate(
     symbol: String,
     annualDividendRate: Double
   ) = scope.launch {
@@ -2205,6 +2214,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     scope.launch {
       repository.updateAssets(symbol = symbol.toUpperCase(Locale.ROOT), assets = assets)
     }
+
+  fun getStockDBLiveData(symbol: String): LiveData<StockDBdata> {
+    return repository.getStockDBLiveData(symbol.toUpperCase(Locale.ROOT))
+  }
 
   fun getAssetsLiveData(symbol: String): LiveData<Assets> {
     return repository.getAssetsLiveData(symbol.toUpperCase(Locale.ROOT))

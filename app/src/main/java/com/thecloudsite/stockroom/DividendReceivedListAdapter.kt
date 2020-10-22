@@ -48,7 +48,7 @@ class DividendReceivedListAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var dividendList = mutableListOf<Dividend>()
 
-  private var data: AssetsLiveData? = null
+  private var data: StockAssetsLiveData? = null
   private var dividends: Dividends? = null
   private var marketValue: Double = 0.0
 
@@ -172,7 +172,7 @@ class DividendReceivedListAdapter internal constructor(
     }
   }
 
-  internal fun updateAssetData(_data: AssetsLiveData) {
+  internal fun updateAssetData(_data: StockAssetsLiveData) {
     data = _data
     updateData()
   }

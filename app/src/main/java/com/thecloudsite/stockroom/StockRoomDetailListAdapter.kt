@@ -99,7 +99,7 @@ class StockRoomDetailListAdapter internal constructor(
         changeText.append("\n")
       }
       holder.itemViewChange.text =
-        changeText.append(getDividendStr(current.onlineMarketData, context))
+        changeText.append(getDividendStr(current, context))
 
       // In one-line view set the background color to the market change instead of the asset change.
       holder.itemViewMarketPriceLayout.setBackgroundColor(

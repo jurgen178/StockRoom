@@ -31,6 +31,7 @@ import com.thecloudsite.stockroom.DividendCycle.SemiAnnual
 import com.thecloudsite.stockroom.OnlineMarketData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
 import java.text.DecimalFormat
@@ -218,20 +219,30 @@ fun getAssetChange(
 }
 
 fun getDividendStr(
-  onlineMarketData: OnlineMarketData,
+  stockItem: StockItem,
   context: Context
 ): String {
-  return if (onlineMarketData.annualDividendRate > 0.0) {
+  var annualDividendRate: Double = 0.0
+  var annualDividendYield: Double = 0.0
+
+  if (stockItem.stockDBdata.annualDividendRate != 0.0) {
+    annualDividendRate = stockItem.stockDBdata.annualDividendRate
+    //val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    annualDividendYield = if (stockItem.onlineMarketData.marketPrice != 0.0) {
+      annualDividendRate / stockItem.onlineMarketData.marketPrice
+    } else {
+      0.0
+    }
+  } else {
+    annualDividendRate = stockItem.onlineMarketData.annualDividendRate
+    annualDividendYield = stockItem.onlineMarketData.annualDividendYield
+  }
+
+  return if (annualDividendRate > 0.0) {
     "${context.getString(R.string.dividend_in_list)} ${
-      DecimalFormat(
-          "0.00##"
-      ).format(
-          onlineMarketData.annualDividendRate
-      )
+      DecimalFormat("0.00##").format(annualDividendRate)
     } (${
-      DecimalFormat("0.0").format(
-          onlineMarketData.annualDividendYield * 100.0
-      )
+      DecimalFormat("0.0").format(annualDividendYield * 100.0)
     }%)"
   } else {
     ""

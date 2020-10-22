@@ -32,6 +32,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
+import androidx.core.text.underline
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -45,6 +46,7 @@ import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.utils.dividendCycleToSelection
 import com.thecloudsite.stockroom.utils.dividendSelectionToCycle
 import com.thecloudsite.stockroom.utils.getAssets
@@ -53,7 +55,9 @@ import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButto
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNotesTextView
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsAnnouncedView
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
-import kotlinx.android.synthetic.main.fragment_dividend.textViewDividend
+import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendEstimate
+import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendOnlineData
+import kotlinx.android.synthetic.main.fragment_dividend.textViewSetAnnualDividend
 import kotlinx.android.synthetic.main.fragment_dividend.updateDividendNotesButton
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -93,8 +97,8 @@ class DividendFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
-  private val assetChange = AssetsLiveData()
-  private val assetChangeLiveData = MediatorLiveData<AssetsLiveData>()
+  private val assetChange = StockAssetsLiveData()
+  private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
 
   companion object {
     fun newInstance() = DividendFragment()
@@ -103,6 +107,7 @@ class DividendFragment : Fragment() {
   lateinit var onlineDataHandler: Handler
 
   private var symbol: String = ""
+  private var annualDividend: Double = 0.0
 
   private fun dividendReceivedItemUpdateClicked(dividend: Dividend) {
     val builder = AlertDialog.Builder(requireContext())
@@ -454,11 +459,24 @@ class DividendFragment : Fragment() {
       }
     })
 
+    val stockDBLiveData: LiveData<StockDBdata> = stockRoomViewModel.getStockDBLiveData(symbol)
+    stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
+      annualDividend = data.annualDividendRate
+    })
+
+    // Use MediatorLiveView to combine the assets, stockDB and online data changes.
+    assetChangeLiveData.addSource(stockDBLiveData) { value ->
+      if (value != null) {
+        assetChange.stockDBdata = value
+        assetChangeLiveData.postValue(assetChange)
+      }
+    }
+
     val assetsLiveData: LiveData<Assets> = stockRoomViewModel.getAssetsLiveData(symbol)
     assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
     })
 
-    // Use MediatorLiveView to combine the assets and online data changes.
+    // Use MediatorLiveView to combine the assets, stockDB and online data changes.
     assetChangeLiveData.addSource(assetsLiveData) { value ->
       if (value != null) {
         assetChange.assets = value
@@ -549,7 +567,7 @@ class DividendFragment : Fragment() {
                     cycle = cycle,
                     paydate = seconds,
                     exdate = 0L,
-                    note  = ""
+                    note = ""
                 )
                 stockRoomViewModel.updateDividend(dividend)
 
@@ -563,6 +581,47 @@ class DividendFragment : Fragment() {
                   requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
               )
                   .show()
+            }
+          }
+          .setNegativeButton(
+              R.string.cancel
+          ) { _, _ ->
+          }
+      builder
+          .create()
+          .show()
+    }
+
+    textViewSetAnnualDividend.setOnClickListener {
+      val builder = AlertDialog.Builder(requireContext())
+      // Get the layout inflater
+      val inflater = LayoutInflater.from(requireContext())
+
+      // Inflate and set the layout for the dialog
+      // Pass null as the parent view because its going in the dialog layout
+      val dialogView = inflater.inflate(R.layout.dialog_set_annual_dividend, null)
+      val setAnnualDividend =
+        dialogView.findViewById<TextView>(R.id.setAnnualDividend)
+
+      setAnnualDividend.text = DecimalFormat("0.00##").format(annualDividend)
+
+      builder.setView(dialogView)
+          // Add action buttons
+          .setPositiveButton(
+              R.string.add
+          ) { _, _ ->
+            // Add () to avoid cast exception.
+            val annualDividendText = (setAnnualDividend.text).toString()
+                .trim()
+            var dividendAmount = 0.0
+            try {
+              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+              dividendAmount = numberFormat.parse(annualDividendText)!!
+                  .toDouble()
+            } catch (e: Exception) {
+            }
+            if (dividendAmount >= 0.0) {
+              stockRoomViewModel.updateAnnualDividendRate(symbol, dividendAmount)
             }
           }
           .setNegativeButton(
@@ -727,17 +786,38 @@ class DividendFragment : Fragment() {
         .show()
   }
 
-  private fun updateAssetChange(data: AssetsLiveData) {
-    if (data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0.0) {
-      textViewDividend.text = getDividend(data)
+  private fun updateAssetChange(data: StockAssetsLiveData) {
+
+    textViewSetAnnualDividend.text =
+      if (data.stockDBdata != null && data.stockDBdata?.annualDividendRate != 0.0) {
+        DecimalFormat("0.00##").format(data.stockDBdata?.annualDividendRate)
+      } else {
+        ""
+      }
+
+    val isOnlineDividendData =
+      data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0.0
+
+    textViewDividendOnlineData.text = if (isOnlineDividendData) {
+      getDividendOnlineData(data)
     } else {
-      textViewDividend.text = getString(R.string.no_dividend_data)
+      getString(R.string.no_dividend_data)
+    }
+
+    textViewDividendEstimate.text = if (annualDividend != 0.0 || isOnlineDividendData) {
+      getDividendEstimate(annualDividend, data)
+    } else {
+      ""
     }
   }
 
-  private fun getDividend(data: AssetsLiveData): SpannableStringBuilder {
+  private fun getDividendOnlineData(data: StockAssetsLiveData): SpannableStringBuilder {
 
     val dividend = SpannableStringBuilder()
+        .underline {
+          append(getString(R.string.onlineAnnualDividendData))
+        }
+        .append("\n")
         .append(getString(R.string.annualDividendRate))
         .bold {
           append(
@@ -770,16 +850,32 @@ class DividendFragment : Fragment() {
           }
     }
 
-    if (data.assets != null) {
-      val (amount, asset) = getAssets(data.assets?.assets)
+    return dividend
+  }
 
-//      val amount = data.assets?.assets?.sumByDouble {
-//        it.amount
+  private fun getDividendEstimate(
+    dividend: Double,
+    data: StockAssetsLiveData
+  ): SpannableStringBuilder {
+
+    val dividendStr = SpannableStringBuilder()
+
+    if (data.assets != null) {
+      val (totalQuantity, asset) = getAssets(data.assets?.assets)
+
+//      val totalQuantity = data.assets?.assets?.sumByDouble {
+//        it.totalQuantity
 //      } ?: 0.0
 
-      if (amount > 0.0) {
-        val totalDividend = amount * data.onlineMarketData?.annualDividendRate!!
+      val dividendRate = if (dividend != 0.0) {
         dividend
+      } else {
+        data.onlineMarketData?.annualDividendRate!!
+      }
+
+      if (totalQuantity > 0.0) {
+        val totalDividend = totalQuantity * dividendRate
+        dividendStr
             .append("\n${getString(R.string.quarterlyDividend)}")
             .bold {
               append(" ${DecimalFormat("0.00").format(totalDividend / 4.0)}")
@@ -796,6 +892,6 @@ class DividendFragment : Fragment() {
       }
     }
 
-    return dividend
+    return dividendStr
   }
 }

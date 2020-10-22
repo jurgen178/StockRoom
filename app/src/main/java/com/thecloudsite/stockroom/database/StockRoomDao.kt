@@ -144,6 +144,10 @@ interface StockRoomDao {
   @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
   fun getStockDBdata(symbol: String): StockDBdata
 
+  @Transaction
+  @Query("SELECT * FROM stock_table WHERE symbol = :symbol")
+  fun getStockDBLiveData(symbol: String): LiveData<StockDBdata>
+
   @Query("SELECT * FROM group_table")
   fun getGroups(): List<Group>
 

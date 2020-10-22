@@ -207,9 +207,10 @@ class StockRoomListAdapter internal constructor(
         }
       }
 
-      if (current.onlineMarketData.annualDividendRate > 0.0) {
+      val dividendStr = getDividendStr(current, context)
+      if (dividendStr.isNotEmpty()) {
         assets.append(
-            "\n${getDividendStr(current.onlineMarketData, context)}"
+            "\n$dividendStr"
         )
       }
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -13,179 +12,199 @@
       android:scrollbars="vertical"
       >
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        >
-
-      <TextView
-          android:id="@+id/textViewName"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="0.7"
-          android:textSize="13sp"
-          />
-
-      <TextView
-          android:id="@+id/textViewChange"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="0.3"
-          android:gravity="end"
-          android:textSize="13sp"
-          />
-
-    </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
-    <View style="@style/Divider"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dividend_header"
-        style="@style/section_header"
-        />
-
-      <androidx.constraintlayout.widget.ConstraintLayout
-          android:id="@+id/textViewAddDividendLayout"
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
           >
+
         <TextView
-            android:id="@+id/textViewAddDividend"
+            android:id="@+id/textViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="add dividend"
+            android:layout_weight="0.7"
             android:textSize="13sp"
-            app:layout_constraintTop_toTopOf="@+id/editTextDividendAdd"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/editTextDividendAdd"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextDividendAdd"
             />
 
-        <EditText
-            android:id="@+id/editTextDividendAdd"
-            android:layout_width="100dp"
+        <TextView
+            android:id="@+id/textViewChange"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_add_stock"
-            android:inputType="numberDecimal"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewAddDividend"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_weight="0.3"
+            android:gravity="end"
+            android:textSize="13sp"
             />
 
-      </androidx.constraintlayout.widget.ConstraintLayout>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+
+        <View style="@style/Divider"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dividend_header"
+            style="@style/section_header"
+            />
+
+        <TextView
+            android:id="@+id/textViewDividendOnlineData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:layout_margin="16dp"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/textViewAddDividendLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+          <TextView
+              android:id="@+id/textViewSetAnnualDividendLabel"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_margin="16dp"
+              android:textSize="13sp"
+              android:text="@string/set_annual_dividend_label"
+              app:layout_constraintTop_toTopOf="@+id/textViewSetAnnualDividend"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toStartOf="@+id/textViewSetAnnualDividend"
+              app:layout_constraintBottom_toBottomOf="@+id/textViewSetAnnualDividend"
+              />
+
+          <TextView
+              android:id="@+id/textViewSetAnnualDividend"
+              android:layout_width="100dp"
+              android:layout_height="wrap_content"
+              android:gravity="end"
+              android:layout_marginStart="16dp"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintStart_toEndOf="@+id/textViewSetAnnualDividendLabel"
+              app:layout_constraintTop_toTopOf="parent"
+              />
+
+          <View
+              android:layout_width="0dp"
+              android:layout_height="1dp"
+              android:layout_marginTop="2dp"
+              android:background="@color/colorPrimary"
+              app:layout_constraintTop_toBottomOf="@id/textViewSetAnnualDividend"
+              app:layout_constraintStart_toStartOf="@+id/textViewSetAnnualDividend"
+              app:layout_constraintEnd_toEndOf="@+id/textViewSetAnnualDividend"
+              />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textViewDividendEstimate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="0dp"
+            />
+
+      </LinearLayout>
+
+      <View style="@style/Divider"/>
 
       <TextView
-        android:id="@+id/textViewDividend"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:layout_margin="16dp"
-        />
-
-    </LinearLayout>
-
-    <View style="@style/Divider"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dividend_received"
-        style="@style/section_header"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="end"
-        >
-
-      <ImageButton
-          android:id="@+id/addDividendReceivedButton"
-          android:src="@drawable/ic_action_add_circle_outline"
-          style="@style/asset_item_imagebutton"
-          android:contentDescription="@string/add_dividend"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/dividend_received"
+          style="@style/section_header"
           />
 
-    </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginTop="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:gravity="end"
+          >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dividendsReceivedView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        />
+        <ImageButton
+            android:id="@+id/addDividendReceivedButton"
+            android:src="@drawable/ic_action_add_circle_outline"
+            style="@style/asset_item_imagebutton"
+            android:contentDescription="@string/add_dividend"
+            />
 
-    <View style="@style/Divider"/>
+      </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dividend_announced"
-        style="@style/section_header"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="end"
-        >
-
-      <ImageButton
-          android:id="@+id/addDividendAnnouncedButton"
-          android:src="@drawable/ic_action_add_circle_outline"
-          style="@style/asset_item_imagebutton"
-          android:contentDescription="@string/add_dividend"
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/dividendsReceivedView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginTop="16dp"
           />
 
-    </LinearLayout>
+      <View style="@style/Divider"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dividendsAnnouncedView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/dividend_announced"
+          style="@style/section_header"
+          />
 
-    <View style="@style/Divider"/>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginTop="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:gravity="end"
+          >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/notes"
-        style="@style/section_header"
-        />
+        <ImageButton
+            android:id="@+id/addDividendAnnouncedButton"
+            android:src="@drawable/ic_action_add_circle_outline"
+            style="@style/asset_item_imagebutton"
+            android:contentDescription="@string/add_dividend"
+            />
+
+      </LinearLayout>
+
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/dividendsAnnouncedView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginTop="16dp"
+          />
+
+      <View style="@style/Divider"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:text="@string/notes"
+          style="@style/section_header"
+          />
 
       <LinearLayout
           android:layout_width="match_parent"
@@ -214,8 +233,8 @@
           android:background="@drawable/note_bg"
           />
 
-  </LinearLayout>
+    </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+  </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

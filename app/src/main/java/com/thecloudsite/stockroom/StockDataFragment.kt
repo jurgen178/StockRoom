@@ -141,8 +141,9 @@ enum class StockViewMode(val value: Int) {
   Candle(1),
 }
 
-data class AssetsLiveData(
+data class StockAssetsLiveData(
   var assets: Assets? = null,
+  var stockDBdata: StockDBdata? = null,
   var onlineMarketData: OnlineMarketData? = null
 )
 
@@ -191,14 +192,14 @@ class StockDataFragment : Fragment() {
   private lateinit var stockChartDataViewModel: StockChartDataViewModel
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
-  private val assetChange = AssetsLiveData()
-  private val assetChangeLiveData = MediatorLiveData<AssetsLiveData>()
+  private val assetChange = StockAssetsLiveData()
+  private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
 
   companion object {
     fun newInstance() = StockDataFragment()
   }
 
-  private lateinit var stockDBdata: StockDBdata
+  private var stockDBdata = StockDBdata(symbol = "")
   private var stockDataEntries: List<StockDataEntry>? = null
   private var symbol: String = ""
 
@@ -738,6 +739,19 @@ class StockDataFragment : Fragment() {
     assetsView.adapter = assetAdapter
     assetsView.layoutManager = LinearLayoutManager(requireContext())
 
+    val stockDBLiveData: LiveData<StockDBdata> = stockRoomViewModel.getStockDBLiveData(symbol)
+    stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
+      stockDBdata = data
+    })
+
+    // Use MediatorLiveView to combine the assets, stockDB and online data changes.
+    assetChangeLiveData.addSource(stockDBLiveData) { value ->
+      if (value != null) {
+        assetChange.stockDBdata = value
+        assetChangeLiveData.postValue(assetChange)
+      }
+    }
+
     // Update the current asset list.
     val assetsLiveData: LiveData<Assets> = stockRoomViewModel.getAssetsLiveData(symbol)
     assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
@@ -787,9 +801,6 @@ class StockDataFragment : Fragment() {
     assetChangeLiveData.observe(viewLifecycleOwner, Observer { item ->
       updateAssetChange(item)
     })
-
-    stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
-    //val notes = stockDBdata.notes
 
     // Portfolio
     val standardPortfolio = getString(R.string.standard_portfolio)
@@ -1807,7 +1818,7 @@ class StockDataFragment : Fragment() {
     return ""
   }
 
-  private fun updateAssetChange(data: AssetsLiveData) {
+  private fun updateAssetChange(data: StockAssetsLiveData) {
     if (data.assets != null && data.onlineMarketData != null) {
 
       val purchasePrice = updatePurchasePrice(data.assets?.assets!!)
