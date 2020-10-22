@@ -217,6 +217,27 @@ fun getAssetChange(
   return Triple("", SpannableStringBuilder(), context.getColor(R.color.backgroundListColor))
 }
 
+fun getDividendStr(
+  onlineMarketData: OnlineMarketData,
+  context: Context
+): String {
+  return if (onlineMarketData.annualDividendRate > 0.0) {
+    "${context.getString(R.string.dividend_in_list)} ${
+      DecimalFormat(
+          "0.00"
+      ).format(
+          onlineMarketData.annualDividendRate
+      )
+    } (${
+      DecimalFormat("0.00").format(
+          onlineMarketData.annualDividendYield * 100.0
+      )
+    }%)"
+  } else {
+    ""
+  }
+}
+
 fun getAssets(
   assetList: List<Asset>?,
   tagObsoleteAssetType: Int = 0

@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
@@ -208,17 +209,7 @@ class StockRoomListAdapter internal constructor(
 
       if (current.onlineMarketData.annualDividendRate > 0.0) {
         assets.append(
-            "\n${context.getString(R.string.dividend_in_list)} ${
-              DecimalFormat(
-                  "0.00"
-              ).format(
-                  current.onlineMarketData.annualDividendRate
-              )
-            } (${
-              DecimalFormat("0.00").format(
-                  current.onlineMarketData.annualDividendYield * 100.0
-              )
-            }%)"
+            "\n${getDividendStr(current.onlineMarketData, context)}"
         )
       }
 

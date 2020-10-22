@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getChangeColor
+import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomdetaillist_item.view.detaillist_item_layout
 
@@ -92,7 +93,13 @@ class StockRoomDetailListAdapter internal constructor(
 
       val assetChange =
         getAssetChange(current.assets, current.onlineMarketData.marketPrice, context, false)
-      holder.itemViewChange.text = assetChange.second
+
+      // Display dividend value if no asset is available.
+      if (assetChange.first.isNotEmpty()) {
+        holder.itemViewChange.text = assetChange.second
+      } else {
+        holder.itemViewChange.text = getDividendStr(current.onlineMarketData, context)
+      }
 
       // In one-line view set the background color to the market change instead of the asset change.
       holder.itemViewMarketPriceLayout.setBackgroundColor(
