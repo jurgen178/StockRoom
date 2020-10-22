@@ -129,9 +129,6 @@ interface StockRoomDao {
       if (stockDBdata.annualDividendRate == 0.0) {
         stockDBdata.annualDividendRate = stockData.annualDividendRate
       }
-      if (stockDBdata.annualDividendYield == 0.0) {
-        stockDBdata.annualDividendYield = stockData.annualDividendYield
-      }
       if (stockDBdata.alertBelow == 0.0) {
         stockDBdata.alertBelow = stockData.alertBelow
       }
@@ -250,12 +247,6 @@ interface StockRoomDao {
   fun updateAnnualDividendRate(
     symbol: String,
     annualDividendRate: Double
-  )
-
-  @Query("UPDATE stock_table SET annual_dividend_yield = :annualDividendYield WHERE symbol = :symbol")
-  fun updateAnnualDividendYield(
-    symbol: String,
-    annualDividendYield: Double
   )
 
   // Assets

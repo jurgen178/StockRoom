@@ -423,7 +423,6 @@ var events: List<Event>
     val notes: String?,
     var dividendNotes: String?,
     val annualDividendRate: Double?,
-    val annualDividendYield: Double?,
     val alertAbove: Double?,
     val alertBelow: Double?,
     var assets: List<AssetJson>?,

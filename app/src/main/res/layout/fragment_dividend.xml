@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -59,7 +61,39 @@
         style="@style/section_header"
         />
 
-    <TextView
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/textViewAddDividendLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          >
+        <TextView
+            android:id="@+id/textViewAddDividend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="add dividend"
+            android:textSize="13sp"
+            app:layout_constraintTop_toTopOf="@+id/editTextDividendAdd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/editTextDividendAdd"
+            app:layout_constraintBottom_toBottomOf="@+id/editTextDividendAdd"
+            />
+
+        <EditText
+            android:id="@+id/editTextDividendAdd"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_add_stock"
+            android:inputType="numberDecimal"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewAddDividend"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <TextView
         android:id="@+id/textViewDividend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

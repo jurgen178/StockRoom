@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7ed08670c43d758c599b5a917223d9db",
+    "identityHash": "7de39d75c43d928bb9f07a669ae428fa",
     "entities": [
       {
         "tableName": "stock_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `dividend_notes` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `annual_dividend_yield` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL, PRIMARY KEY(`symbol`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `dividend_notes` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL, PRIMARY KEY(`symbol`))",
         "fields": [
           {
             "fieldPath": "symbol",
@@ -47,12 +47,6 @@
           {
             "fieldPath": "annualDividendRate",
             "columnName": "annual_dividend_rate",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "annualDividendYield",
-            "columnName": "annual_dividend_yield",
             "affinity": "REAL",
             "notNull": true
           },
@@ -300,7 +294,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ed08670c43d758c599b5a917223d9db')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7de39d75c43d928bb9f07a669ae428fa')"
     ]
   }
 }

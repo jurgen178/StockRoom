@@ -110,7 +110,6 @@ data class StockItemJson
   val notes: String?,
   var dividendNotes: String?,
   val annualDividendRate: Double?,
-  val annualDividendYield: Double?,
   val alertAbove: Double?,
   val alertBelow: Double?,
   var assets: List<AssetJson>?,
@@ -984,6 +983,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
         SortMode.ByDividend -> {
           stockItemSet.stockItems.sortedByDescending { item ->
+            // TODO use updated stckdbdata div rate
             item.onlineMarketData.annualDividendYield
           }
         }
@@ -1373,13 +1373,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
 
-        if (jsonObj.has("annualDividendYield")) {
-          val annualDividendYield = jsonObj.getDouble("annualDividendYield")
-          if (annualDividendYield > 0.0) {
-            updateAnnualDividendYield(symbol, annualDividendYield)
-          }
-        }
-
         if (jsonObj.has("properties")) {
           val properties = jsonObj.getJSONObject("properties")
 
@@ -1729,12 +1722,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       } else {
         null
       }
-      val annualDividendYield = validateDouble(stockItem.stockDBdata.annualDividendYield)
-      val annualDividendYieldValue = if (annualDividendYield != 0.0) {
-        annualDividendYield
-      } else {
-        null
-      }
       val alertAbove = validateDouble(stockItem.stockDBdata.alertAbove)
       val alertAboveValue = if (alertAbove != 0.0) {
         alertAbove
@@ -1816,7 +1803,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           notes = notesValue,
           dividendNotes = dividendNotesValue,
           annualDividendRate = annualDividendRateValue,
-          annualDividendYield = annualDividendYieldValue,
           alertAbove = alertAboveValue,
           alertBelow = alertBelowValue,
           assets = assetsValue,
@@ -1975,15 +1961,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.updateAnnualDividendRate(symbol.toUpperCase(Locale.ROOT), annualDividendRate)
-    }
-  }
-
-  private fun updateAnnualDividendYield(
-    symbol: String,
-    annualDividendYield: Double
-  ) = scope.launch {
-    if (symbol.isNotEmpty()) {
-      repository.updateAnnualDividendYield(symbol.toUpperCase(Locale.ROOT), annualDividendYield)
     }
   }
 

@@ -42,7 +42,6 @@ data class StockDBdata(
   var notes: String = "",
   @ColumnInfo(name = "dividend_notes") var dividendNotes: String = "",
   @ColumnInfo(name = "annual_dividend_rate") var annualDividendRate: Double = 0.0,
-  @ColumnInfo(name = "annual_dividend_yield") var annualDividendYield: Double = 0.0,
   @ColumnInfo(name = "alert_above") var alertAbove: Double = 0.0,
   @ColumnInfo(name = "alert_below") var alertBelow: Double = 0.0
 )
