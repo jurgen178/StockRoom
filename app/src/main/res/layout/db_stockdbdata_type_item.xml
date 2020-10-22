@@ -105,7 +105,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_alertAbove"
+      android:id="@+id/db_stockdbdata_annualDividendRate"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline6"
@@ -121,11 +121,43 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_alertBelow"
+      android:id="@+id/db_stockdbdata_annualDividendYield"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline7"
       app:layout_constraintEnd_toStartOf="@id/guideline8"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline8"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/db_stockdbdata_alertAbove"
+      style="@style/db_item_style"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline8"
+      app:layout_constraintEnd_toStartOf="@id/guideline9"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline9"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/db_stockdbdata_alertBelow"
+      style="@style/db_item_style"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline9"
+      app:layout_constraintEnd_toStartOf="@id/guideline10"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
@@ -191,6 +223,22 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       app:layout_constraintGuide_begin="1100dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline9"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="1200dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline10"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="1300dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

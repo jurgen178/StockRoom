@@ -109,6 +109,8 @@ data class StockItemJson
   val groupName: String?,
   val notes: String?,
   var dividendNotes: String?,
+  val annualDividendRate: Double?,
+  val annualDividendYield: Double?,
   val alertAbove: Double?,
   val alertBelow: Double?,
   var assets: List<AssetJson>?,
@@ -124,7 +126,7 @@ val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf<String>(
     "0_StockRoomChartFragment",
     "1_StockRoomListFragment",
     "2_SummaryListFragment",
-    "4_SummaryGroupFragment"
+    "5_SummaryGroupFragment"
 )
 
 val displayedViewsSet: MutableSet<String> = mutableSetOf<String>(
@@ -1364,6 +1366,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           }
         }
 
+        if (jsonObj.has("annualDividendRate")) {
+          val annualDividendRate = jsonObj.getDouble("annualDividendRate")
+          if (annualDividendRate > 0.0) {
+            updateAnnualDividendRate(symbol, annualDividendRate)
+          }
+        }
+
+        if (jsonObj.has("annualDividendYield")) {
+          val annualDividendYield = jsonObj.getDouble("annualDividendYield")
+          if (annualDividendYield > 0.0) {
+            updateAnnualDividendYield(symbol, annualDividendYield)
+          }
+        }
+
         if (jsonObj.has("properties")) {
           val properties = jsonObj.getJSONObject("properties")
 
@@ -1707,6 +1723,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       } else {
         null
       }
+      val annualDividendRate = validateDouble(stockItem.stockDBdata.annualDividendRate)
+      val annualDividendRateValue = if (annualDividendRate != 0.0) {
+        annualDividendRate
+      } else {
+        null
+      }
+      val annualDividendYield = validateDouble(stockItem.stockDBdata.annualDividendYield)
+      val annualDividendYieldValue = if (annualDividendYield != 0.0) {
+        annualDividendYield
+      } else {
+        null
+      }
       val alertAbove = validateDouble(stockItem.stockDBdata.alertAbove)
       val alertAboveValue = if (alertAbove != 0.0) {
         alertAbove
@@ -1787,6 +1815,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           groupName = groupNameValue,
           notes = notesValue,
           dividendNotes = dividendNotesValue,
+          annualDividendRate = annualDividendRateValue,
+          annualDividendYield = annualDividendYieldValue,
           alertAbove = alertAboveValue,
           alertBelow = alertBelowValue,
           assets = assetsValue,
@@ -1936,6 +1966,24 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.updateDividendNotes(symbol.toUpperCase(Locale.ROOT), notes)
+    }
+  }
+
+  private fun updateAnnualDividendRate(
+    symbol: String,
+    annualDividendRate: Double
+  ) = scope.launch {
+    if (symbol.isNotEmpty()) {
+      repository.updateAnnualDividendRate(symbol.toUpperCase(Locale.ROOT), annualDividendRate)
+    }
+  }
+
+  private fun updateAnnualDividendYield(
+    symbol: String,
+    annualDividendYield: Double
+  ) = scope.launch {
+    if (symbol.isNotEmpty()) {
+      repository.updateAnnualDividendYield(symbol.toUpperCase(Locale.ROOT), annualDividendYield)
     }
   }
 

@@ -224,12 +224,12 @@ fun getDividendStr(
   return if (onlineMarketData.annualDividendRate > 0.0) {
     "${context.getString(R.string.dividend_in_list)} ${
       DecimalFormat(
-          "0.00"
+          "0.00##"
       ).format(
           onlineMarketData.annualDividendRate
       )
     } (${
-      DecimalFormat("0.00").format(
+      DecimalFormat("0.0").format(
           onlineMarketData.annualDividendYield * 100.0
       )
     }%)"

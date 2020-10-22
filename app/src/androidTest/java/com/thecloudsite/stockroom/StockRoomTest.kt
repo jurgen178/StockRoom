@@ -417,16 +417,18 @@ var events: List<Event>
   (
     var symbol: String,
     val portfolio: String,
-    val data: String,
-    val groupColor: Int,
-    val groupName: String,
-    val notes: String,
-    var dividendNotes: String,
-    val alertAbove: Double,
-    val alertBelow: Double,
-    var assets: List<AssetJson>,
-    var events: List<EventJson>,
-    var dividends: List<DividendJson>
+    val data: String?,
+    val groupColor: Int?,
+    val groupName: String?,
+    val notes: String?,
+    var dividendNotes: String?,
+    val annualDividendRate: Double?,
+    val annualDividendYield: Double?,
+    val alertAbove: Double?,
+    val alertBelow: Double?,
+    var assets: List<AssetJson>?,
+    var events: List<EventJson>?,
+    var dividends: List<DividendJson>?
   )
 
   data class AssetJson(

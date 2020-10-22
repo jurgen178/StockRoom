@@ -60,6 +60,8 @@ data class DBData(
   val groupColor: Int = 0,
   val notes: String = "",
   val dividendNotes: String = "",
+  val annualDividendRate: Double = 0.0,
+  val annualDividendYield: Double = 0.0,
   val alertAbove: Double = 0.0,
   val alertBelow: Double = 0.0,
   val color: Int = 0,
@@ -111,6 +113,10 @@ class ListDBAdapter(
     val db_stockdbdata_notes: TextView = itemView.findViewById(id.db_stockdbdata_notes)
     val db_stockdbdata_dividendNotes: TextView =
       itemView.findViewById(id.db_stockdbdata_dividendNotes)
+    val db_stockdbdata_annualDividendRate: TextView =
+      itemView.findViewById(id.db_stockdbdata_annualDividendRate)
+    val db_stockdbdata_annualDividendYield: TextView =
+      itemView.findViewById(id.db_stockdbdata_annualDividendYield)
     val db_stockdbdata_alertAbove: TextView = itemView.findViewById(id.db_stockdbdata_alertAbove)
     val db_stockdbdata_alertBelow: TextView = itemView.findViewById(id.db_stockdbdata_alertBelow)
   }
@@ -246,6 +252,8 @@ class ListDBAdapter(
           holder.db_stockdbdata_groupColor.text = getHeaderStr("groupColor")
           holder.db_stockdbdata_notes.text = getHeaderStr("notes")
           holder.db_stockdbdata_dividendNotes.text = getHeaderStr("dividendNotes")
+          holder.db_stockdbdata_annualDividendRate.text = getHeaderStr("annualDividendRate")
+          holder.db_stockdbdata_annualDividendYield.text = getHeaderStr("annualDividendYiel")
           holder.db_stockdbdata_alertAbove.text = getHeaderStr("alertAbove")
           holder.db_stockdbdata_alertBelow.text = getHeaderStr("alertBelow")
         } else {
@@ -256,6 +264,16 @@ class ListDBAdapter(
           holder.db_stockdbdata_groupColor.text = getColorStr(data.groupColor)
           holder.db_stockdbdata_notes.text = data.notes
           holder.db_stockdbdata_dividendNotes.text = data.dividendNotes
+          holder.db_stockdbdata_annualDividendRate.text = if (data.annualDividendRate != 0.0) {
+            DecimalFormat("0.00##").format(data.annualDividendRate)
+          } else {
+            ""
+          }
+          holder.db_stockdbdata_annualDividendYield.text = if (data.annualDividendYield != 0.0) {
+            DecimalFormat("0.00##").format(data.annualDividendYield)
+          } else {
+            ""
+          }
           holder.db_stockdbdata_alertAbove.text = if (data.alertAbove != 0.0) {
             DecimalFormat("0.00##").format(data.alertAbove)
           } else {
@@ -550,6 +568,8 @@ class ListDBAdapter(
                   groupColor = stockDBdata.groupColor,
                   notes = stockDBdata.notes,
                   dividendNotes = stockDBdata.dividendNotes,
+                  annualDividendRate = stockDBdata.annualDividendRate,
+                  annualDividendYield = stockDBdata.annualDividendYield,
                   alertAbove = stockDBdata.alertAbove,
                   alertBelow = stockDBdata.alertBelow
               )

@@ -147,6 +147,24 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun updateAnnualDividendRate(
+    symbol: String,
+    annualDividendRate: Double
+  ) {
+    stockRoomDao.updateAnnualDividendRate(symbol, annualDividendRate)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
+  suspend fun updateAnnualDividendYield(
+    symbol: String,
+    annualDividendYield: Double
+  ) {
+    stockRoomDao.updateAnnualDividendYield(symbol, annualDividendYield)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun addAsset(asset: Asset) {
     stockRoomDao.addAsset(asset)
   }

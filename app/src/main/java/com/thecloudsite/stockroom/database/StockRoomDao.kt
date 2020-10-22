@@ -111,17 +111,14 @@ interface StockRoomDao {
 
     if (stockData != null) {
       // Keep old values if defaults are used.
-      if (stockDBdata.groupColor == 0) {
-        stockDBdata.groupColor = stockData.groupColor
-      }
-      if (stockDBdata.alertBelow == 0.0) {
-        stockDBdata.alertBelow = stockData.alertBelow
-      }
-      if (stockDBdata.alertAbove == 0.0) {
-        stockDBdata.alertAbove = stockData.alertAbove
+      if (stockDBdata.portfolio.isEmpty()) {
+        stockDBdata.portfolio = stockData.portfolio
       }
       if (stockDBdata.data.isEmpty()) {
         stockDBdata.data = stockData.data
+      }
+      if (stockDBdata.groupColor == 0) {
+        stockDBdata.groupColor = stockData.groupColor
       }
       if (stockDBdata.notes.isEmpty()) {
         stockDBdata.notes = stockData.notes
@@ -129,9 +126,19 @@ interface StockRoomDao {
       if (stockDBdata.dividendNotes.isEmpty()) {
         stockDBdata.dividendNotes = stockData.dividendNotes
       }
-      if (stockDBdata.portfolio.isEmpty()) {
-        stockDBdata.portfolio = stockData.portfolio
+      if (stockDBdata.annualDividendRate == 0.0) {
+        stockDBdata.annualDividendRate = stockData.annualDividendRate
       }
+      if (stockDBdata.annualDividendYield == 0.0) {
+        stockDBdata.annualDividendYield = stockData.annualDividendYield
+      }
+      if (stockDBdata.alertBelow == 0.0) {
+        stockDBdata.alertBelow = stockData.alertBelow
+      }
+      if (stockDBdata.alertAbove == 0.0) {
+        stockDBdata.alertAbove = stockData.alertAbove
+      }
+
     }
 
     insertStockDBdata(stockDBdata)
@@ -239,6 +246,18 @@ interface StockRoomDao {
     notes: String
   )
 
+  @Query("UPDATE stock_table SET annual_dividend_rate = :annualDividendRate WHERE symbol = :symbol")
+  fun updateAnnualDividendRate(
+    symbol: String,
+    annualDividendRate: Double
+  )
+
+  @Query("UPDATE stock_table SET annual_dividend_yield = :annualDividendYield WHERE symbol = :symbol")
+  fun updateAnnualDividendYield(
+    symbol: String,
+    annualDividendYield: Double
+  )
+
   // Assets
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun addAsset(asset: Asset)
@@ -264,7 +283,9 @@ interface StockRoomDao {
   fun getAssets(symbol: String): Assets
 //    fun getAllAssets(): LiveData<List<Assets>> = getAllAssets1().getDistinct()
 
-  @Query("DELETE FROM asset_table WHERE symbol = :symbol AND quantity = :quantity AND price = :price")
+  @Query(
+      "DELETE FROM asset_table WHERE symbol = :symbol AND quantity = :quantity AND price = :price"
+  )
   fun deleteAsset(
     symbol: String,
     quantity: Double,
