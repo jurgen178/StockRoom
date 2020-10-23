@@ -497,6 +497,7 @@ class DividendFragment : Fragment() {
       }
     }
 
+    // online data is not stored in the DB (there is no stockRoomViewModel.getOnlineMarketLiveData(symbol))
     assetChangeLiveData.addSource(stockRoomViewModel.onlineMarketDataList) { value ->
       if (value != null) {
         val onlineMarketData = value.find { data ->

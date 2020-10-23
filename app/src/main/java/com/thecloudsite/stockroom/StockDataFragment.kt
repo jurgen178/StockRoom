@@ -206,6 +206,8 @@ class StockDataFragment : Fragment() {
   private var alertAbove: Double = 0.0
   private var alertBelow: Double = 0.0
 
+  private lateinit var standardPortfolio: String
+
   lateinit var onlineDataHandler: Handler
 
   // Settings.
@@ -594,6 +596,7 @@ class StockDataFragment : Fragment() {
 
     // Setup online data every 2s for regular hours.
     onlineDataHandler = Handler(Looper.getMainLooper())
+    standardPortfolio = getString(R.string.standard_portfolio)
 
     // Inflate the layout for this fragment
     return inflater.inflate(R.layout.fragment_stockdata, container, false)
@@ -726,7 +729,6 @@ class StockDataFragment : Fragment() {
     })
      */
 
-
     updateStockViewRange(stockViewRange)
 
     // Assets
@@ -739,27 +741,6 @@ class StockDataFragment : Fragment() {
     assetsView.adapter = assetAdapter
     assetsView.layoutManager = LinearLayoutManager(requireContext())
 
-    val stockDBLiveData: LiveData<StockDBdata> = stockRoomViewModel.getStockDBLiveData(symbol)
-    stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
-      stockDBdata = data
-    })
-
-    // Use MediatorLiveView to combine the assets, stockDB and online data changes.
-    assetChangeLiveData.addSource(stockDBLiveData) { value ->
-      if (value != null) {
-        assetChange.stockDBdata = value
-        assetChangeLiveData.postValue(assetChange)
-      }
-    }
-
-    // Update the current asset list.
-    val assetsLiveData: LiveData<Assets> = stockRoomViewModel.getAssetsLiveData(symbol)
-    assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
-      if (data != null) {
-        assetAdapter.updateAssets(data.assets)
-      }
-    })
-
     // Events
     val eventClickListenerUpdate =
       { event: Event -> eventItemUpdateClicked(event) }
@@ -770,11 +751,82 @@ class StockDataFragment : Fragment() {
     eventsView.adapter = eventAdapter
     eventsView.layoutManager = LinearLayoutManager(requireContext())
 
+    val stockDBLiveData: LiveData<StockDBdata> = stockRoomViewModel.getStockDBLiveData(symbol)
+    stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
+      stockDBdata = data
+      notesTextView.text = stockDBdata.notes
+
+      // Portfolio
+      textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
+        standardPortfolio
+      } else {
+        stockDBdata.portfolio
+      }
+
+      // Group color
+      // color = 0 is not stored in the DB
+      var color = stockDBdata.groupColor
+      if (color == 0) {
+        color = context?.getColor(R.color.backgroundListColor)!!
+      }
+      setBackgroundColor(textViewGroupColor, color)
+
+      textViewGroup.text = if (stockDBdata.groupColor == 0) {
+        getString(R.string.standard_group)
+      } else {
+        val group = stockRoomViewModel.getGroupSync(stockDBdata.groupColor)
+        if (group.name.isEmpty()) {
+          "Color code=0x${color.toHexString()}"
+        } else {
+          group.name
+        }
+      }
+
+      alertAbove = stockDBdata.alertAbove
+      alertBelow = stockDBdata.alertBelow
+
+      if (alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove) {
+        alertAbove = 0.0
+        alertBelow = 0.0
+      }
+
+      alertAboveInputEditText.setText(
+          if (alertAbove > 0.0) {
+            DecimalFormat("0.00##").format(alertAbove)
+          } else {
+            ""
+          }
+      )
+      alertBelowInputEditText.setText(
+          if (alertBelow > 0.0) {
+            DecimalFormat("0.00##").format(alertBelow)
+          } else {
+            ""
+          }
+      )
+    })
+
+    // Use MediatorLiveView to combine the assets, stockDB and online data changes.
+    assetChangeLiveData.addSource(stockDBLiveData) { value ->
+      if (value != null) {
+        assetChange.stockDBdata = value
+        assetChangeLiveData.postValue(assetChange)
+      }
+    }
+
     // Update the current event list.
     val eventsLiveData: LiveData<Events> = stockRoomViewModel.getEventsLiveData(symbol)
     eventsLiveData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
         eventAdapter.updateEvents(data.events)
+      }
+    })
+
+    // Update the current asset list.
+    val assetsLiveData: LiveData<Assets> = stockRoomViewModel.getAssetsLiveData(symbol)
+    assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
+      if (data != null) {
+        assetAdapter.updateAssets(data.assets)
       }
     })
 
@@ -786,6 +838,7 @@ class StockDataFragment : Fragment() {
       }
     }
 
+    // online data is not stored in the DB (there is no stockRoomViewModel.getOnlineMarketLiveData(symbol))
     assetChangeLiveData.addSource(stockRoomViewModel.onlineMarketDataList) { value ->
       if (value != null) {
         val onlineMarketData = value.find { data ->
@@ -801,14 +854,6 @@ class StockDataFragment : Fragment() {
     assetChangeLiveData.observe(viewLifecycleOwner, Observer { item ->
       updateAssetChange(item)
     })
-
-    // Portfolio
-    val standardPortfolio = getString(R.string.standard_portfolio)
-    textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
-      standardPortfolio
-    } else {
-      stockDBdata.portfolio
-    }
 
     // Setup portfolio menu
     textViewPortfolio.setOnClickListener { view ->
@@ -962,25 +1007,6 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    // Group color
-    // color = 0 is not stored in the DB
-    var color = stockDBdata.groupColor
-    if (color == 0) {
-      color = context?.getColor(R.color.backgroundListColor)!!
-    }
-    setBackgroundColor(textViewGroupColor, color)
-
-    textViewGroup.text = if (stockDBdata.groupColor == 0) {
-      getString(R.string.standard_group)
-    } else {
-      val group = stockRoomViewModel.getGroupSync(stockDBdata.groupColor)
-      if (group.name.isEmpty()) {
-        "Color code=0x${color.toHexString()}"
-      } else {
-        group.name
-      }
-    }
-
     linearLayoutGroup.setOnClickListener { view ->
       val popupMenu = PopupMenu(requireContext(), view)
 
@@ -1018,31 +1044,6 @@ class StockDataFragment : Fragment() {
         true
       }
     }
-
-    alertAbove = stockDBdata.alertAbove
-    alertBelow = stockDBdata.alertBelow
-
-    if (alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove) {
-      alertAbove = 0.0
-      alertBelow = 0.0
-    }
-
-    alertAboveInputEditText.setText(
-        if (alertAbove > 0.0) {
-          DecimalFormat("0.00##").format(alertAbove)
-        } else {
-          ""
-        }
-    )
-    alertBelowInputEditText.setText(
-        if (alertBelow > 0.0) {
-          DecimalFormat("0.00##").format(alertBelow)
-        } else {
-          ""
-        }
-    )
-
-    notesTextView.text = stockDBdata.notes
 
     buttonOneDay.setOnClickListener {
       updateStockViewRange(StockViewRange.OneDay)
