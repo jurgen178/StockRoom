@@ -789,7 +789,7 @@ class DividendFragment : Fragment() {
   private fun updateAssetChange(data: StockAssetsLiveData) {
 
     textViewSetAnnualDividend.text =
-      if (data.stockDBdata != null && data.stockDBdata?.annualDividendRate != 0.0) {
+      if (data.stockDBdata != null && data.stockDBdata?.annualDividendRate!! > 0.0) {
         DecimalFormat("0.00##").format(data.stockDBdata?.annualDividendRate)
       } else {
         ""
@@ -804,7 +804,7 @@ class DividendFragment : Fragment() {
       getString(R.string.no_dividend_data)
     }
 
-    textViewDividendEstimate.text = if (annualDividend != 0.0 || isOnlineDividendData) {
+    textViewDividendEstimate.text = if (annualDividend > 0.0 || isOnlineDividendData) {
       getDividendEstimate(annualDividend, data)
     } else {
       ""
@@ -867,7 +867,7 @@ class DividendFragment : Fragment() {
 //        it.totalQuantity
 //      } ?: 0.0
 
-      val dividendRate = if (dividend != 0.0) {
+      val dividendRate = if (dividend > 0.0) {
         dividend
       } else {
         data.onlineMarketData?.annualDividendRate!!

@@ -985,8 +985,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           stockItemSet.stockItems.sortedByDescending { item ->
 
             // Use stockDBdata.annualDividendRate if available.
-            if (item.stockDBdata.annualDividendRate != 0.0) {
-              if (item.onlineMarketData.marketPrice != 0.0) {
+            if (item.stockDBdata.annualDividendRate > 0.0) {
+              if (item.onlineMarketData.marketPrice > 0.0) {
                 item.stockDBdata.annualDividendRate / item.onlineMarketData.marketPrice
               } else {
                 0.0
@@ -1726,19 +1726,19 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         null
       }
       val annualDividendRate = validateDouble(stockItem.stockDBdata.annualDividendRate)
-      val annualDividendRateValue = if (annualDividendRate != 0.0) {
+      val annualDividendRateValue = if (annualDividendRate > 0.0) {
         annualDividendRate
       } else {
         null
       }
       val alertAbove = validateDouble(stockItem.stockDBdata.alertAbove)
-      val alertAboveValue = if (alertAbove != 0.0) {
+      val alertAboveValue = if (alertAbove > 0.0) {
         alertAbove
       } else {
         null
       }
       val alertBelow = validateDouble(stockItem.stockDBdata.alertBelow)
-      val alertBelowValue = if (alertBelow != 0.0) {
+      val alertBelowValue = if (alertBelow > 0.0) {
         alertBelow
       } else {
         null
@@ -1758,8 +1758,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   date = if (asset.date != 0L) asset.date else null,
                   sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
                   expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
-                  premium = if (asset.premium != 0.0) validateDouble(asset.premium) else null,
-                  commission = if (asset.commission != 0.0) validateDouble(
+                  premium = if (asset.premium > 0.0) validateDouble(asset.premium) else null,
+                  commission = if (asset.commission > 0.0) validateDouble(
                       asset.commission
                   ) else null,
               )

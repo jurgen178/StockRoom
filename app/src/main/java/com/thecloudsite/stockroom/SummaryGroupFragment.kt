@@ -240,7 +240,7 @@ class SummaryGroupFragment : Fragment() {
 
     if (totalAssets > 0.0) {
       val sortedAssetList = assetList.filter { assetSummary ->
-        assetSummary.assets != 0.0
+        assetSummary.assets > 0.0
       }
           .sortedByDescending { assetSummary ->
             assetSummary.assets

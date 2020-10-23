@@ -260,17 +260,17 @@ class ListDBAdapter(
           holder.db_stockdbdata_groupColor.text = getColorStr(data.groupColor)
           holder.db_stockdbdata_notes.text = data.notes
           holder.db_stockdbdata_dividendNotes.text = data.dividendNotes
-          holder.db_stockdbdata_annualDividendRate.text = if (data.annualDividendRate != 0.0) {
+          holder.db_stockdbdata_annualDividendRate.text = if (data.annualDividendRate > 0.0) {
             DecimalFormat("0.00##").format(data.annualDividendRate)
           } else {
             ""
           }
-          holder.db_stockdbdata_alertAbove.text = if (data.alertAbove != 0.0) {
+          holder.db_stockdbdata_alertAbove.text = if (data.alertAbove > 0.0) {
             DecimalFormat("0.00##").format(data.alertAbove)
           } else {
             ""
           }
-          holder.db_stockdbdata_alertBelow.text = if (data.alertBelow != 0.0) {
+          holder.db_stockdbdata_alertBelow.text = if (data.alertBelow > 0.0) {
             DecimalFormat("0.00##").format(data.alertBelow)
           } else {
             ""
@@ -333,9 +333,9 @@ class ListDBAdapter(
           holder.db_asset_date.text = getDateTimeStr(data.date)
           holder.db_asset_sharesPerQuantity.text = "${data.sharesPerQuantity}"
           holder.db_asset_expirationDate.text = getDateStr(data.expirationDate)
-          holder.db_asset_premium.text = if (data.premium != 0.0) data.premium.toString() else ""
+          holder.db_asset_premium.text = if (data.premium > 0.0) data.premium.toString() else ""
           holder.db_asset_commission.text =
-            if (data.commission != 0.0) data.commission.toString() else ""
+            if (data.commission > 0.0) data.commission.toString() else ""
         }
 //      assetTableRowsCount = items.size
 //

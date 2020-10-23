@@ -171,7 +171,7 @@ class AssetListAdapter internal constructor(
 
         holder.itemViewQuantity.text = DecimalFormat("0.####").format(current.quantity)
 
-        if (current.price != 0.0) {
+        if (current.price > 0.0) {
           holder.itemViewPrice.text = DecimalFormat("0.00##").format(current.price)
           holder.itemViewTotal.text =
             DecimalFormat("0.00").format(current.quantity.absoluteValue * current.price)

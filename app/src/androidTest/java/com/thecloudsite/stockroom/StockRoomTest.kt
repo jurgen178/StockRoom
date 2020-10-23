@@ -506,6 +506,7 @@ var events: List<Event>
           alertBelow = stockItem.stockDBdata.alertBelow,
           notes = stockItem.stockDBdata.notes,
           dividendNotes = stockItem.stockDBdata.dividendNotes,
+          annualDividendRate = stockItem.stockDBdata.annualDividendRate,
           assets = stockItem.assets.map { asset ->
             AssetJson(quantity = asset.quantity,
                 price = asset.price,
