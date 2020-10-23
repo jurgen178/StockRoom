@@ -125,6 +125,8 @@ class DividendFragment : Fragment() {
     addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
     addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
+    val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
+    addNoteView.text = dividend.note
     val datePickerDividendDateView =
       dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
     val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
@@ -170,10 +172,14 @@ class DividendFragment : Fragment() {
               )
               val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
+              val noteText = (addNoteView.text).toString()
+                  .trim()
+
               val cycle =
                 dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
 
               if (dividend.amount != dividendAmount
+                  || dividend.note != noteText
                   || dividend.cycle != cycle
                   || dividend.paydate != seconds
               ) {
@@ -186,7 +192,7 @@ class DividendFragment : Fragment() {
                         cycle = cycle,
                         paydate = seconds,
                         exdate = 0L,
-                        note = ""
+                        note = noteText
                     )
                 )
 
@@ -267,6 +273,8 @@ class DividendFragment : Fragment() {
     addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
     addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
+    val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
+    addNoteView.text = dividend.note
 
     val datePickerDividendDateView =
       dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
@@ -318,9 +326,13 @@ class DividendFragment : Fragment() {
           )
           val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
+          val noteText = (addNoteView.text).toString()
+              .trim()
+
           val cycle = dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
 
           if (dividend.amount != dividendAmount
+              || dividend.note != noteText
               || dividend.cycle != cycle
               || dividend.paydate != seconds
               || dividend.exdate != secondsEx
@@ -334,7 +346,7 @@ class DividendFragment : Fragment() {
                     cycle = cycle,
                     paydate = seconds,
                     exdate = secondsEx,
-                    note = ""
+                    note = noteText
                 )
             )
 
@@ -516,6 +528,7 @@ class DividendFragment : Fragment() {
         dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
       addUpdateDividendHeadlineView.text = getString(R.string.add_dividend)
       val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
+      val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
       val datePickerDividendDateView =
         dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
 
@@ -558,6 +571,9 @@ class DividendFragment : Fragment() {
                 )
                 val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
+                val noteText = (addNoteView.text).toString()
+                    .trim()
+
                 val cycle =
                   dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
 
@@ -568,7 +584,7 @@ class DividendFragment : Fragment() {
                     cycle = cycle,
                     paydate = seconds,
                     exdate = 0L,
-                    note = ""
+                    note = noteText
                 )
                 stockRoomViewModel.updateDividend(dividend)
 
@@ -648,6 +664,8 @@ class DividendFragment : Fragment() {
       addUpdateDividendHeadlineView.text = getString(R.string.add_dividend)
       val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
 
+      val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
+
       val datePickerDividendDateView =
         dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
 
@@ -690,6 +708,9 @@ class DividendFragment : Fragment() {
             )
             val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
+            val noteText = (addNoteView.text).toString()
+                .trim()
+
             val cycle =
               dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
 
@@ -700,7 +721,7 @@ class DividendFragment : Fragment() {
                 cycle = cycle,
                 paydate = seconds,
                 exdate = secondsEx,
-                note = ""
+                note = noteText
             )
             stockRoomViewModel.updateDividend(dividend)
 
