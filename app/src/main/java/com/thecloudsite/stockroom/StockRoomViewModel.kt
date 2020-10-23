@@ -985,7 +985,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           stockItemSet.stockItems.sortedByDescending { item ->
 
             // Use stockDBdata.annualDividendRate if available.
-            if (item.stockDBdata.annualDividendRate > 0.0) {
+            // stockDBdata.annualDividendRate can be 0.0
+            if (item.stockDBdata.annualDividendRate >= 0.0) {
               if (item.onlineMarketData.marketPrice > 0.0) {
                 item.stockDBdata.annualDividendRate / item.onlineMarketData.marketPrice
               } else {
@@ -1377,7 +1378,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (jsonObj.has("annualDividendRate")) {
           val annualDividendRate = jsonObj.getDouble("annualDividendRate")
-          if (annualDividendRate > 0.0) {
+          if (annualDividendRate >= 0.0) {
             updateAnnualDividendRate(symbol, annualDividendRate)
           }
         }
@@ -1726,7 +1727,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         null
       }
       val annualDividendRate = validateDouble(stockItem.stockDBdata.annualDividendRate)
-      val annualDividendRateValue = if (annualDividendRate > 0.0) {
+      val annualDividendRateValue = if (annualDividendRate >= 0.0) {
         annualDividendRate
       } else {
         null

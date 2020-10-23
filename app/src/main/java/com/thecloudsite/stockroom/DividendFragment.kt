@@ -55,7 +55,7 @@ import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButto
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNotesTextView
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsAnnouncedView
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
-import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendEstimate
+import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendPayout
 import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendOnlineData
 import kotlinx.android.synthetic.main.fragment_dividend.textViewSetAnnualDividend
 import kotlinx.android.synthetic.main.fragment_dividend.updateDividendNotesButton
@@ -603,7 +603,9 @@ class DividendFragment : Fragment() {
       val setAnnualDividend =
         dialogView.findViewById<TextView>(R.id.setAnnualDividend)
 
-      setAnnualDividend.text = DecimalFormat("0.00##").format(annualDividend)
+      if (annualDividend >= 0.0) {
+        setAnnualDividend.text = DecimalFormat("0.00##").format(annualDividend)
+      }
 
       builder.setView(dialogView)
           // Add action buttons
@@ -613,16 +615,15 @@ class DividendFragment : Fragment() {
             // Add () to avoid cast exception.
             val annualDividendText = (setAnnualDividend.text).toString()
                 .trim()
-            var dividendAmount = 0.0
+            // 0.0 is a valid value
+            var dividendAmount = -1.0
             try {
               val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
               dividendAmount = numberFormat.parse(annualDividendText)!!
                   .toDouble()
             } catch (e: Exception) {
             }
-            if (dividendAmount >= 0.0) {
-              stockRoomViewModel.updateAnnualDividendRate(symbol, dividendAmount)
-            }
+            stockRoomViewModel.updateAnnualDividendRate(symbol, dividendAmount)
           }
           .setNegativeButton(
               R.string.cancel
@@ -789,7 +790,7 @@ class DividendFragment : Fragment() {
   private fun updateAssetChange(data: StockAssetsLiveData) {
 
     textViewSetAnnualDividend.text =
-      if (data.stockDBdata != null && data.stockDBdata?.annualDividendRate!! > 0.0) {
+      if (data.stockDBdata != null && data.stockDBdata?.annualDividendRate!! >= 0.0) {
         DecimalFormat("0.00##").format(data.stockDBdata?.annualDividendRate)
       } else {
         ""
@@ -804,8 +805,8 @@ class DividendFragment : Fragment() {
       getString(R.string.no_dividend_data)
     }
 
-    textViewDividendEstimate.text = if (annualDividend > 0.0 || isOnlineDividendData) {
-      getDividendEstimate(annualDividend, data)
+    textViewDividendPayout.text = if (annualDividend > 0.0 || isOnlineDividendData) {
+      getDividendPayout(annualDividend, data)
     } else {
       ""
     }
@@ -853,7 +854,7 @@ class DividendFragment : Fragment() {
     return dividend
   }
 
-  private fun getDividendEstimate(
+  private fun getDividendPayout(
     dividend: Double,
     data: StockAssetsLiveData
   ): SpannableStringBuilder {
@@ -867,13 +868,13 @@ class DividendFragment : Fragment() {
 //        it.totalQuantity
 //      } ?: 0.0
 
-      val dividendRate = if (dividend > 0.0) {
+      val dividendRate = if (dividend >= 0.0) {
         dividend
       } else {
         data.onlineMarketData?.annualDividendRate!!
       }
 
-      if (totalQuantity > 0.0) {
+      if (dividendRate > 0.0 && totalQuantity > 0.0) {
         val totalDividend = totalQuantity * dividendRate
         dividendStr
             .append("\n${getString(R.string.quarterlyDividend)}")

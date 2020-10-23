@@ -238,7 +238,7 @@ class SummaryGroupAdapter internal constructor(
 
         totalAssets += assetsPrice
 
-        val annualDividendRate = if (stockItem.stockDBdata.annualDividendRate > 0.0) {
+        val annualDividendRate = if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
           stockItem.stockDBdata.annualDividendRate
         } else {
           stockItem.onlineMarketData.annualDividendRate

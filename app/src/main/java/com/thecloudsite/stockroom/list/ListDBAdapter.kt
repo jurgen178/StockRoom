@@ -60,7 +60,7 @@ data class DBData(
   val groupColor: Int = 0,
   val notes: String = "",
   val dividendNotes: String = "",
-  val annualDividendRate: Double = 0.0,
+  val annualDividendRate: Double = -1.0,
   val alertAbove: Double = 0.0,
   val alertBelow: Double = 0.0,
   val color: Int = 0,
@@ -260,7 +260,7 @@ class ListDBAdapter(
           holder.db_stockdbdata_groupColor.text = getColorStr(data.groupColor)
           holder.db_stockdbdata_notes.text = data.notes
           holder.db_stockdbdata_dividendNotes.text = data.dividendNotes
-          holder.db_stockdbdata_annualDividendRate.text = if (data.annualDividendRate > 0.0) {
+          holder.db_stockdbdata_annualDividendRate.text = if (data.annualDividendRate >= 0.0) {
             DecimalFormat("0.00##").format(data.annualDividendRate)
           } else {
             ""

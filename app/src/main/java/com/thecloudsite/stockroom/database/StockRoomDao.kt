@@ -126,7 +126,7 @@ interface StockRoomDao {
       if (stockDBdata.dividendNotes.isEmpty()) {
         stockDBdata.dividendNotes = stockData.dividendNotes
       }
-      if (stockDBdata.annualDividendRate == 0.0) {
+      if (stockDBdata.annualDividendRate == -1.0) {
         stockDBdata.annualDividendRate = stockData.annualDividendRate
       }
       if (stockDBdata.alertBelow == 0.0) {

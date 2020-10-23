@@ -239,7 +239,7 @@ limitations under the License. -->
   <string name="dividend_pay_date">Dividend Pay Date</string>
   <string name="annualDividendYield">Annual dividend yield</string>
   <string name="annualDividendRate">Annual dividend rate</string>
-  <string name="quarterlyDividend">Estimated quarterly dividend</string>
+  <string name="quarterlyDividend">Quarterly dividend</string>
   <string name="monthly">monthly</string>
   <string name="annual">annual</string>
   <string name="onlinedata_regularMarketPreviousClose">Market previous close</string>
@@ -328,5 +328,5 @@ limitations under the License. -->
   <string name="annual_dividend_headline">Annual dividend rate</string>
   <string name="set_annual_dividend_label">New dividend rate</string>
   <string name="onlineAnnualDividendData">Online data</string>
-  <string name="no_dividend_data">No dividend data.</string>
+  <string name="no_dividend_data">No online dividend data.</string>
 </resources>

@@ -225,7 +225,7 @@ fun getDividendStr(
   var annualDividendRate: Double = 0.0
   var annualDividendYield: Double = 0.0
 
-  if (stockItem.stockDBdata.annualDividendRate > 0.0) {
+  if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
     annualDividendRate = stockItem.stockDBdata.annualDividendRate
     //val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     annualDividendYield = if (stockItem.onlineMarketData.marketPrice > 0.0) {
