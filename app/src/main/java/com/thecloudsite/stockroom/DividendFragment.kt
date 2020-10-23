@@ -58,6 +58,7 @@ import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
 import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendPayout
 import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendOnlineData
 import kotlinx.android.synthetic.main.fragment_dividend.textViewSetAnnualDividend
+import kotlinx.android.synthetic.main.fragment_dividend.textViewSetAnnualDividendPercent
 import kotlinx.android.synthetic.main.fragment_dividend.updateDividendNotesButton
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -805,7 +806,18 @@ class DividendFragment : Fragment() {
       getString(R.string.no_dividend_data)
     }
 
-    textViewDividendPayout.text = if (annualDividend > 0.0 || isOnlineDividendData) {
+    textViewSetAnnualDividendPercent.text =
+      if (annualDividend > 0.0 && data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.marketPrice!! > 0.0) {
+        "(${
+          DecimalFormat("0.00##").format(
+              annualDividend / data.onlineMarketData?.marketPrice!! * 100
+          )
+        }%)"
+      } else {
+        ""
+      }
+
+    textViewDividendPayout.text = if (annualDividend >= 0.0 || isOnlineDividendData) {
       getDividendPayout(annualDividend, data)
     } else {
       ""
