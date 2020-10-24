@@ -70,7 +70,7 @@ limitations under the License. -->
 
     <TextView
         android:id="@+id/textViewAssetQuantity"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="16dp"
@@ -82,7 +82,7 @@ limitations under the License. -->
         />
     <TextView
         android:id="@+id/textViewAssetPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -93,7 +93,7 @@ limitations under the License. -->
         />
     <TextView
         android:id="@+id/textViewAssetTotal"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -104,7 +104,7 @@ limitations under the License. -->
         />
     <TextView
         android:id="@+id/textViewAssetDate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -115,7 +115,7 @@ limitations under the License. -->
         />
     <TextView
         android:id="@+id/textViewAssetNote"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -127,7 +127,7 @@ limitations under the License. -->
 
     <TextView
         android:id="@+id/textViewAssetDelete"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guideline6"

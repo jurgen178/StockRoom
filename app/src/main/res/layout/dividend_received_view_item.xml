@@ -69,7 +69,7 @@ limitations under the License. -->
 
     <TextView
         android:id="@+id/textViewDividendReceivedAmount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="16dp"
@@ -81,7 +81,7 @@ limitations under the License. -->
         />
     <TextView
         android:id="@+id/textViewDividendReceivedDate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -92,7 +92,7 @@ limitations under the License. -->
         />
     <TextView
         android:id="@+id/textViewDividendReceivedCycle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -102,7 +102,7 @@ limitations under the License. -->
         />
     <TextView
         android:id="@+id/textViewDividendReceivedNote"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -113,7 +113,7 @@ limitations under the License. -->
 
     <TextView
         android:id="@+id/textViewDividendReceivedDelete"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:drawableStartCompat="@drawable/ic_action_delete2"
         app:drawableTint="@color/colorPrimaryDark"
