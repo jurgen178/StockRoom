@@ -69,10 +69,10 @@ class DividendAnnouncedListAdapter internal constructor(
 
     val textViewDividendAnnouncedAmount: TextView =
       itemView.findViewById(R.id.textViewDividendAnnouncedAmount)
-    val textViewDividendAnnouncedExDate: TextView =
-      itemView.findViewById(R.id.textViewDividendAnnouncedExDate)
     val textViewDividendAnnouncedPayDate: TextView =
       itemView.findViewById(R.id.textViewDividendAnnouncedPayDate)
+    val textViewDividendAnnouncedExDate: TextView =
+      itemView.findViewById(R.id.textViewDividendAnnouncedExDate)
     val textViewDividendAnnouncedCycle: TextView =
       itemView.findViewById(R.id.textViewDividendAnnouncedCycle)
     val textViewDividendAnnouncedNote: TextView =
@@ -102,8 +102,8 @@ class DividendAnnouncedListAdapter internal constructor(
     // First entry is headline.
     if (position == 0) {
       holder.textViewDividendAnnouncedAmount.text = context.getString(R.string.dividend)
-      holder.textViewDividendAnnouncedExDate.text = context.getString(R.string.dividend_exdate)
       holder.textViewDividendAnnouncedPayDate.text = context.getString(R.string.dividend_date)
+      holder.textViewDividendAnnouncedExDate.text = context.getString(R.string.dividend_exdate)
       holder.textViewDividendAnnouncedCycle.text = context.getString(R.string.dividend_cycle)
       holder.textViewDividendAnnouncedNote.text = context.getString(R.string.notes)
       holder.textViewDividendAnnouncedDelete.visibility = View.GONE
@@ -123,14 +123,14 @@ class DividendAnnouncedListAdapter internal constructor(
         ""
       }
 
-      val datetimeEx: LocalDateTime =
-        LocalDateTime.ofEpochSecond(current.exdate, 0, ZoneOffset.UTC)
-      holder.textViewDividendAnnouncedExDate.text =
-        datetimeEx.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
       val datetimePay: LocalDateTime =
         LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
       holder.textViewDividendAnnouncedPayDate.text =
         datetimePay.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+      val datetimeEx: LocalDateTime =
+        LocalDateTime.ofEpochSecond(current.exdate, 0, ZoneOffset.UTC)
+      holder.textViewDividendAnnouncedExDate.text =
+        datetimeEx.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
       holder.textViewDividendAnnouncedCycle.text = dividendCycleStr(current.cycle, context)
       holder.textViewDividendAnnouncedNote.text = current.note
 
@@ -147,7 +147,9 @@ class DividendAnnouncedListAdapter internal constructor(
     // Headline placeholder
     dividendList =
       mutableListOf(
-          Dividend(symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, cycle = 0, note = "")
+          Dividend(
+              symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, cycle = 0, note = ""
+          )
       )
     dividendList.addAll(dividends.dividends.filter { dividend ->
       dividend.type == DividendType.Announced.value

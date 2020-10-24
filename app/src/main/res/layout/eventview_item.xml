@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright 2017 Google Inc.
+<!-- Copyright Stockroom
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -60,7 +60,6 @@ limitations under the License. -->
         android:paddingEnd="4dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -73,7 +72,6 @@ limitations under the License. -->
         android:paddingEnd="4dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -86,8 +84,7 @@ limitations under the License. -->
         android:paddingEnd="4dp"
         app:drawableTint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="parent"
         app:drawableStartCompat="@drawable/ic_action_delete2"
         />
@@ -111,6 +108,13 @@ limitations under the License. -->
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="500dp"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="550dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
