@@ -28,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.utils.dividendCycleStr
 import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.dividend_received_view_item.view.dividendReceivedLinearLayout
 import kotlinx.android.synthetic.main.dividend_received_view_item.view.textViewDividendReceivedDelete
@@ -77,6 +78,10 @@ class DividendReceivedListAdapter internal constructor(
       itemView.findViewById(R.id.textViewDividendReceivedAmount)
     val textViewDividendReceivedDate: TextView =
       itemView.findViewById(R.id.textViewDividendReceivedDate)
+    val textViewDividendReceivedCycle: TextView =
+      itemView.findViewById(R.id.textViewDividendReceivedCycle)
+    val textViewDividendReceivedNote: TextView =
+      itemView.findViewById(R.id.textViewDividendReceivedNote)
     val textViewDividendReceivedDelete: TextView =
       itemView.findViewById(R.id.textViewDividendReceivedDelete)
     val dividendReceivedSummaryView: LinearLayout =
@@ -105,6 +110,8 @@ class DividendReceivedListAdapter internal constructor(
     if (position == 0) {
       holder.textViewDividendReceivedAmount.text = context.getString(R.string.dividend)
       holder.textViewDividendReceivedDate.text = context.getString(R.string.dividend_date)
+      holder.textViewDividendReceivedCycle.text = context.getString(R.string.dividend_cycle)
+      holder.textViewDividendReceivedNote.text = context.getString(R.string.notes)
       holder.textViewDividendReceivedDelete.visibility = View.GONE
       holder.dividendReceivedSummaryView.visibility = View.GONE
       holder.dividendReceivedConstraintLayout.setBackgroundColor(
@@ -121,6 +128,8 @@ class DividendReceivedListAdapter internal constructor(
 
         holder.textViewDividendReceivedAmount.text = DecimalFormat("0.00##").format(current.amount)
         holder.textViewDividendReceivedDate.text = ""
+        holder.textViewDividendReceivedCycle.text = ""
+        holder.textViewDividendReceivedNote.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
         if (dividendList.size <= 2) {
@@ -160,6 +169,8 @@ class DividendReceivedListAdapter internal constructor(
           LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
         holder.textViewDividendReceivedDate.text =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        holder.textViewDividendReceivedCycle.text = dividendCycleStr(current.cycle, context)
+        holder.textViewDividendReceivedNote.text = current.note
 
         holder.textViewDividendReceivedDelete.visibility = View.VISIBLE
         holder.dividendReceivedSummaryView.visibility = View.GONE

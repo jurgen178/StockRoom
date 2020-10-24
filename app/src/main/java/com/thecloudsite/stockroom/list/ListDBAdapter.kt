@@ -327,15 +327,15 @@ class ListDBAdapter(
           holder.db_asset_id.text = data.id?.toString() ?: ""
           holder.db_asset_symbol.text = data.symbol
           holder.db_asset_quantity.text = DecimalFormat("0.####").format(data.quantity)
-          holder.db_asset_price.text = data.price.toString()
+          holder.db_asset_price.text = DecimalFormat("0.####").format(data.price)
           holder.db_asset_type.text = data.type.toString()
           holder.db_asset_note.text = data.note
           holder.db_asset_date.text = getDateTimeStr(data.date)
           holder.db_asset_sharesPerQuantity.text = "${data.sharesPerQuantity}"
           holder.db_asset_expirationDate.text = getDateStr(data.expirationDate)
-          holder.db_asset_premium.text = if (data.premium > 0.0) data.premium.toString() else ""
+          holder.db_asset_premium.text = if (data.premium > 0.0) DecimalFormat("0.####").format(data.premium) else ""
           holder.db_asset_commission.text =
-            if (data.commission > 0.0) data.commission.toString() else ""
+            if (data.commission > 0.0) DecimalFormat("0.####").format(data.commission) else ""
         }
 //      assetTableRowsCount = items.size
 //

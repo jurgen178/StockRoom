@@ -27,6 +27,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.utils.dividendCycleStr
 import kotlinx.android.synthetic.main.dividend_announced_view_item.view.dividendAnnouncedLinearLayout
 import kotlinx.android.synthetic.main.dividend_announced_view_item.view.textViewDividendAnnouncedDelete
 import java.text.DecimalFormat
@@ -72,6 +73,10 @@ class DividendAnnouncedListAdapter internal constructor(
       itemView.findViewById(R.id.textViewDividendAnnouncedExDate)
     val textViewDividendAnnouncedPayDate: TextView =
       itemView.findViewById(R.id.textViewDividendAnnouncedPayDate)
+    val textViewDividendAnnouncedCycle: TextView =
+      itemView.findViewById(R.id.textViewDividendAnnouncedCycle)
+    val textViewDividendAnnouncedNote: TextView =
+      itemView.findViewById(R.id.textViewDividendAnnouncedNote)
     val textViewDividendAnnouncedDelete: TextView =
       itemView.findViewById(R.id.textViewDividendAnnouncedDelete)
     val dividendAnnouncedConstraintLayout: ConstraintLayout =
@@ -99,6 +104,8 @@ class DividendAnnouncedListAdapter internal constructor(
       holder.textViewDividendAnnouncedAmount.text = context.getString(R.string.dividend)
       holder.textViewDividendAnnouncedExDate.text = context.getString(R.string.dividend_exdate)
       holder.textViewDividendAnnouncedPayDate.text = context.getString(R.string.dividend_date)
+      holder.textViewDividendAnnouncedCycle.text = context.getString(R.string.dividend_cycle)
+      holder.textViewDividendAnnouncedNote.text = context.getString(R.string.notes)
       holder.textViewDividendAnnouncedDelete.visibility = View.GONE
       holder.dividendAnnouncedConstraintLayout.setBackgroundColor(
           context.getColor(R.color.backgroundListColor)
@@ -124,6 +131,8 @@ class DividendAnnouncedListAdapter internal constructor(
         LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
       holder.textViewDividendAnnouncedPayDate.text =
         datetimePay.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+      holder.textViewDividendAnnouncedCycle.text = dividendCycleStr(current.cycle, context)
+      holder.textViewDividendAnnouncedNote.text = current.note
 
       holder.textViewDividendAnnouncedDelete.visibility = View.VISIBLE
       holder.dividendAnnouncedConstraintLayout.background = null

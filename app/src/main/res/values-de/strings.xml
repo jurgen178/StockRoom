@@ -326,4 +326,5 @@ limitations under the License. -->
   <string name="set_annual_dividend_label">Neuer Dividendensatz</string>
   <string name="onlineAnnualDividendData">Onlinedaten</string>
   <string name="no_dividend_data">Keine Online-Dividendendaten vorhanden.</string>
+  <string name="date">Datum</string>
 </resources>

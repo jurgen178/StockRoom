@@ -66,10 +66,13 @@ class OnlineDataAdapter internal constructor(
     val itemViewOnlineData: TextView = itemView.findViewById(R.id.textViewOnlineData)
   }
 
-  private fun processJsonObject(jsonObj: JsonObject, sorted: Boolean) {
+  private fun processJsonObject(
+    jsonObj: JsonObject,
+    sorted: Boolean
+  ) {
 
     // Sort json elements.
-    if(sorted) {
+    if (sorted) {
       val sortedMap = sortedMapOf<String, JsonElement?>()
       val jsonObjCopy = jsonObj.deepCopy()
 
@@ -91,71 +94,74 @@ class OnlineDataAdapter internal constructor(
     val gmtOffSetMilliseconds = jsonObj["gmtOffSetMilliseconds"]?.asLong ?: 0L
 
     // Enumerate all json objects.
-    jsonObj.entrySet().forEach { element ->
+    jsonObj.entrySet()
+        .forEach { element ->
 
-      val key = element.key
-      val value = element.value
-      val valueString = value.toString()
+          val key = element.key
+          val value = element.value
+          val valueString = value.toString()
 
-      // Add date-time to time values.
-      if (key.contains("time", true) && valueString.matches("^\\d+$".toRegex())
-      ) {
-        val datetime = valueString.toLong()
-        val gmtOffSet = gmtOffSetMilliseconds / 1000
-        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime + gmtOffSet, 0, ZoneOffset.UTC)
-        val dateTimeStr =
-          "#$valueString <i>(${
-            localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-          } ${
-            localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-          })</i>#"
+          // Add date-time to time values.
+          val dateTimeKey = key.contains("time", true)
+              || key.contains("dividenddate", true)
+          if (dateTimeKey && valueString.matches("^\\d+$".toRegex())
+          ) {
+            val datetime = valueString.toLong()
+            val gmtOffSet = gmtOffSetMilliseconds / 1000
+            val localDateTime: LocalDateTime =
+              LocalDateTime.ofEpochSecond(datetime + gmtOffSet, 0, ZoneOffset.UTC)
+            val dateTimeStr =
+              "#$valueString <i>(${
+                localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+              } ${
+                localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+              })</i>#"
 
-        element.setValue(JsonPrimitive(dateTimeStr))
-      }
+            element.setValue(JsonPrimitive(dateTimeStr))
+          }
 
-      if(key == "firstTradeDateMilliseconds" && valueString.matches("^\\d+$".toRegex()))
-      {
-        val datetimeMilliseconds = valueString.toLong()
-        val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond((datetimeMilliseconds + gmtOffSetMilliseconds) / 1000, 0, ZoneOffset.UTC)
-        val dateTimeStr =
-          "#$valueString <i>(${
-            localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-          } ${
-            localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-          })</i>#"
+          if (key == "firstTradeDateMilliseconds" && valueString.matches("^\\d+$".toRegex())) {
+            val datetimeMilliseconds = valueString.toLong()
+            val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(
+                (datetimeMilliseconds + gmtOffSetMilliseconds) / 1000, 0, ZoneOffset.UTC
+            )
+            val dateTimeStr =
+              "#$valueString <i>(${
+                localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+              } ${
+                localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+              })</i>#"
 
-        element.setValue(JsonPrimitive(dateTimeStr))
-      }
+            element.setValue(JsonPrimitive(dateTimeStr))
+          }
 
-      // Price/Change in bold
-      if(key.endsWith("MarketPrice")
-          || key.endsWith("MarketChange")
-          || key.endsWith("MarketChangePercent")
-          )
-      {
-        element.setValue(JsonPrimitive("#<b>$valueString</b>#"))
-      }
+          // Price/Change in bold
+          if (key.endsWith("MarketPrice")
+              || key.endsWith("MarketChange")
+              || key.endsWith("MarketChangePercent")
+          ) {
+            element.setValue(JsonPrimitive("#<b>$valueString</b>#"))
+          }
 
-      // Add MarketCap size abbreviation.
-      if(key == "marketCap")
-      {
-        val formattedMarketCap = formatInt(valueString.toLong())
-        val marketCap = "#$valueString <i>($formattedMarketCap)</i>#"
-        element.setValue(JsonPrimitive(marketCap))
-      }
+          // Add MarketCap size abbreviation.
+          if (key == "marketCap") {
+            val formattedMarketCap = formatInt(valueString.toLong())
+            val marketCap = "#$valueString <i>($formattedMarketCap)</i>#"
+            element.setValue(JsonPrimitive(marketCap))
+          }
 
-      // Recursion for json array.
-      if (value is JsonArray) {
-        for (jsonElement in value.iterator()) {
-          processJsonObject(jsonElement.asJsonObject, sorted)
+          // Recursion for json array.
+          if (value is JsonArray) {
+            for (jsonElement in value.iterator()) {
+              processJsonObject(jsonElement.asJsonObject, sorted)
+            }
+          }
+
+          // Recursion for json object.
+          if (value is JsonObject) {
+            processJsonObject(value, sorted)
+          }
         }
-      }
-
-      // Recursion for json object.
-      if (value is JsonObject) {
-        processJsonObject(value, sorted)
-      }
-    }
   }
 
   override fun onCreateViewHolder(
@@ -166,7 +172,7 @@ class OnlineDataAdapter internal constructor(
 
     itemView.setOnClickListener {
 
-      if(isOnline(context)) {
+      if (isOnline(context)) {
         detailViewClickCounter++
 
         if (detailViewClickCounter > 4) {
@@ -199,7 +205,11 @@ class OnlineDataAdapter internal constructor(
             onlineJsonData += "<b>${context.getString(R.string.data_provider_details_sorted)}</b>\n"
             // Android supports only color and face attribute, no style attr.
             // No space within the attr because they get replaced with &nbsp; and invalidate the attr.
-            onlineJsonData += "<font color='grey'face='monospace'>${gson.toJson(jsonObjSorted)}</font>"
+            onlineJsonData += "<font color='grey'face='monospace'>${
+              gson.toJson(
+                  jsonObjSorted
+              )
+            }</font>"
 
             // Add unsorted json data.
             val jsonObjUnsorted = jsonObj.deepCopy()
@@ -209,7 +219,11 @@ class OnlineDataAdapter internal constructor(
                   R.string.data_provider_details_unsorted
               )
             }</b>\n"
-            onlineJsonData += "<font color='grey'face='monospace'>${gson.toJson(jsonObjUnsorted)}</font>"
+            onlineJsonData += "<font color='grey'face='monospace'>${
+              gson.toJson(
+                  jsonObjUnsorted
+              )
+            }</font>"
           } catch (e: Exception) {
             Log.d("Convert json data failed", e.toString())
             onlineJsonData = onlineRawJsonData

@@ -30,6 +30,7 @@ import com.thecloudsite.stockroom.DividendCycle.Quarterly
 import com.thecloudsite.stockroom.DividendCycle.SemiAnnual
 import com.thecloudsite.stockroom.OnlineMarketData
 import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
@@ -79,6 +80,16 @@ fun dividendCycleToSelection(cycle: Int): Int {
     Annual.value -> 3
     else -> 1
   }
+}
+
+fun dividendCycleStr(
+  cycle: Int,
+  context: Context
+): String {
+  val stringList = context.resources.getStringArray(array.dividend_cycles)
+  val selection = dividendCycleToSelection(cycle)
+
+  return stringList[selection]
 }
 
 fun isValidSymbol(symbol: String): Boolean {
@@ -189,13 +200,15 @@ fun getAssetChange(
       }"
 
       val changePercent = change * 100.0 / asset
-      changeStr += " (${
-        if (changePercent > 0.0) {
-          "+"
-        } else {
-          ""
-        }
-      }${DecimalFormat("0.00").format(changePercent)}%)"
+      if (changePercent < 10000.0) {
+        changeStr += " (${
+          if (changePercent > 0.0) {
+            "+"
+          } else {
+            ""
+          }
+        }${DecimalFormat("0.00").format(changePercent)}%)"
+      }
 
       val assetChangeColor = getChangeColor(capital - asset, context)
 

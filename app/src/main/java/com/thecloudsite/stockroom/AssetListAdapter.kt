@@ -35,6 +35,10 @@ import com.thecloudsite.stockroom.utils.obsoleteAssetType
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetDelete
 import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetItemsLayout
 import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.MEDIUM
 import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
@@ -69,6 +73,8 @@ class AssetListAdapter internal constructor(
     val itemViewQuantity: TextView = itemView.findViewById(R.id.textViewAssetQuantity)
     val itemViewPrice: TextView = itemView.findViewById(R.id.textViewAssetPrice)
     val itemViewTotal: TextView = itemView.findViewById(R.id.textViewAssetTotal)
+    val itemViewDate: TextView = itemView.findViewById(R.id.textViewAssetDate)
+    val itemViewNote: TextView = itemView.findViewById(R.id.textViewAssetNote)
     val itemViewDelete: TextView = itemView.findViewById(R.id.textViewAssetDelete)
     val assetSummaryView: LinearLayout = itemView.findViewById(R.id.assetSummaryView)
     val assetSummaryTextView: TextView = itemView.findViewById(R.id.assetSummaryTextView)
@@ -100,6 +106,8 @@ class AssetListAdapter internal constructor(
       holder.itemViewQuantity.text = context.getString(R.string.quantity)
       holder.itemViewPrice.text = context.getString(R.string.price)
       holder.itemViewTotal.text = context.getString(R.string.value)
+      holder.itemViewDate.text = context.getString(R.string.date)
+      holder.itemViewNote.text = context.getString(R.string.notes)
       holder.itemViewDelete.visibility = View.GONE
       holder.assetSummaryView.visibility = View.GONE
       holder.itemViewLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
@@ -126,6 +134,8 @@ class AssetListAdapter internal constructor(
           ""
         }
         holder.itemViewTotal.text = DecimalFormat("0.00").format(current.price)
+        holder.itemViewDate.text = ""
+        holder.itemViewNote.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
         if (assetList.size <= 2) {
@@ -161,11 +171,15 @@ class AssetListAdapter internal constructor(
           holder.itemViewQuantity.setTextColor(Color.LTGRAY)
           holder.itemViewPrice.setTextColor(Color.LTGRAY)
           holder.itemViewTotal.setTextColor(Color.LTGRAY)
+          holder.itemViewDate.setTextColor(Color.LTGRAY)
+          holder.itemViewNote.setTextColor(Color.LTGRAY)
         } else {
           if (defaultTextColor != null) {
             holder.itemViewQuantity.setTextColor(defaultTextColor!!)
             holder.itemViewPrice.setTextColor(defaultTextColor!!)
             holder.itemViewTotal.setTextColor(defaultTextColor!!)
+            holder.itemViewDate.setTextColor(defaultTextColor!!)
+            holder.itemViewNote.setTextColor(defaultTextColor!!)
           }
         }
 
@@ -179,6 +193,12 @@ class AssetListAdapter internal constructor(
           holder.itemViewPrice.text = ""
           holder.itemViewTotal.text = ""
         }
+
+        val datetime: LocalDateTime =
+          LocalDateTime.ofEpochSecond(current.date, 0, ZoneOffset.UTC)
+        holder.itemViewDate.text =
+          datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        holder.itemViewNote.text = current.note
 
         holder.itemViewDelete.visibility = View.VISIBLE
         holder.assetSummaryView.visibility = View.GONE

@@ -329,4 +329,5 @@ limitations under the License. -->
   <string name="set_annual_dividend_label">New dividend rate</string>
   <string name="onlineAnnualDividendData">Online data</string>
   <string name="no_dividend_data">No online dividend data.</string>
+  <string name="date">Date</string>
 </resources>

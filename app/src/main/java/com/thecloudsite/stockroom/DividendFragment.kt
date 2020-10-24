@@ -124,7 +124,7 @@ class DividendFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
     addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
+    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
     val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
     addNoteView.text = dividend.note
     val datePickerDividendDateView =
@@ -272,7 +272,7 @@ class DividendFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
     addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat("0.##").format(dividend.amount)
+    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
     val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
     addNoteView.text = dividend.note
 
@@ -820,7 +820,7 @@ class DividendFragment : Fragment() {
       }
 
     val isOnlineDividendData =
-      data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0.0
+      data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0.0
 
     textViewDividendOnlineData.text = if (isOnlineDividendData) {
       getDividendOnlineData(data)
@@ -829,7 +829,7 @@ class DividendFragment : Fragment() {
     }
 
     textViewSetAnnualDividendPercent.text =
-      if (annualDividend > 0.0 && data.assets != null && data.onlineMarketData != null && data.onlineMarketData?.marketPrice!! > 0.0) {
+      if (annualDividend > 0.0 && data.onlineMarketData != null && data.onlineMarketData?.marketPrice!! > 0.0) {
         "(${
           DecimalFormat("0.00##").format(
               annualDividend / data.onlineMarketData?.marketPrice!! * 100

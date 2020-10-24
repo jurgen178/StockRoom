@@ -176,16 +176,17 @@ class StockRoomListAdapter internal constructor(
           assets.bold { append(DecimalFormat("0.00").format(capital)) }
 
           val capitalPercent = (capital - asset) * 100.0 / asset
-          assets.append(
-              " (${
-                if (capitalPercent > 0.0) {
-                  "+"
-                } else {
-                  ""
-                }
-              }${DecimalFormat("0.00").format(capitalPercent)}%)"
-          )
-
+          if (capitalPercent < 10000.0) {
+            assets.append(
+                " (${
+                  if (capitalPercent > 0.0) {
+                    "+"
+                  } else {
+                    ""
+                  }
+                }${DecimalFormat("0.00").format(capitalPercent)}%)"
+            )
+          }
         } else {
           assets.append(
               DecimalFormat(

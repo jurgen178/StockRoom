@@ -258,7 +258,7 @@ class StockDataFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateQuantityHeadline)
     addUpdateQuantityHeadlineView.text = getString(R.string.update_asset)
     val addQuantityView = dialogView.findViewById<TextView>(R.id.addQuantity)
-    addQuantityView.text = DecimalFormat("0.####").format(asset.quantity.absoluteValue)
+    addQuantityView.text = DecimalFormat("0.######").format(asset.quantity.absoluteValue)
 //    if (asset.shares < 0) {
 //      addSharesView.inputType = TYPE_CLASS_NUMBER or
 //          TYPE_NUMBER_FLAG_DECIMAL or
@@ -266,7 +266,7 @@ class StockDataFragment : Fragment() {
 //    }
 
     val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
-    addPriceView.text = DecimalFormat("0.00##").format(asset.price)
+    addPriceView.text = DecimalFormat("0.00####").format(asset.price)
 
     val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
     addNoteView.text = asset.note
