@@ -1,5 +1,6 @@
 package com.thecloudsite.stockroom.invaders
 
+/*
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
@@ -7,6 +8,7 @@ import android.media.AudioAttributes.FLAG_AUDIBILITY_ENFORCED
 import android.media.SoundPool
 import android.util.Log
 import java.io.IOException
+*/
 
 /*
 class SoundPlayer(context: Context) {

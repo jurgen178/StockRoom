@@ -78,7 +78,7 @@ dependencies {
   // Add the dependency for the Performance Monitoring library
   implementation 'com.google.firebase:firebase-perf:19.0.9'
   // Add the Realtime Database SDK
-  implementation 'com.google.firebase:firebase-database-ktx:19.5.0'
+  implementation 'com.google.firebase:firebase-database-ktx:19.5.1'
   implementation 'androidx.cardview:cardview:1.0.0'
   // Add the dependencies for FirebaseUI
   //implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
