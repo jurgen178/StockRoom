@@ -242,7 +242,7 @@ limitations under the License. -->
   <string name="quarterlyDividend">Quarterly dividend</string>
   <string name="monthly">monthly</string>
   <string name="annual">annual</string>
-  <string name="onlinedata_regularMarketPreviousClose">Market previous close</string>
+  <string name="onlinedata_regularMarketPreviousClose">Market prev. close</string>
   <string name="onlinedata_regularMarketOpen">Market open</string>
   <string name="onlinedata_fiftyDayAverage">50 day average</string>
   <string name="onlinedata_twoHundredDayAverage">200 day average</string>
@@ -251,7 +251,7 @@ limitations under the License. -->
   <string name="onlinedata_regularMarketVolume">Market volume</string>
   <string name="onlinedata_marketCap">Market cap.</string>
   <string name="onlinedata_forwardPE">Forward PE</string>
-  <string name="onlinedata_epsTrailingTwelveMonths">EPS trailing 12 month</string>
+  <string name="onlinedata_epsTrailingTwelveMonths">EPS trailing year</string>
   <string name="onlinedata_epsCurrentYear">EPS current year</string>
   <string name="onlinedata_epsForward">EPS forward</string>
   <string name="onlinedata_priceEpsCurrentYear">Price/EPS</string>
