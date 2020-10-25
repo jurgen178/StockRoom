@@ -423,6 +423,7 @@ data class OnlineMarketData(
   var fullExchangeName: String = "",
   var messageBoardId: String = "",
   var financialCurrency: String = "",
+  
   var sharesOutstanding: Long = 0L,
   var fiftyDayAverage: Double = 0.0,
   var twoHundredDayAverage: Double = 0.0,
@@ -432,10 +433,14 @@ data class OnlineMarketData(
   var regularMarketVolume: Long = 0L,
   var regularMarketPreviousClose: Double = 0.0,
   var regularMarketOpen: Double = 0.0,
+
   var forwardPE: Double = 0.0,
   var epsTrailingTwelveMonths: Double = 0.0,
   var epsForward: Double = 0.0,
-  var epsCurrentYear: Double = 0.0
+  var epsCurrentYear: Double = 0.0,
+  var priceEpsCurrentYear: Double = 0.0,
+  var bookValue: Double = 0.0,
+  var priceToBook: Double = 0.0
 )
 
 enum class MarketState(val value: String) {

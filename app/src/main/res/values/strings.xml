@@ -254,6 +254,9 @@ limitations under the License. -->
   <string name="onlinedata_epsTrailingTwelveMonths">EPS trailing 12 month</string>
   <string name="onlinedata_epsCurrentYear">EPS current year</string>
   <string name="onlinedata_epsForward">EPS forward</string>
+  <string name="onlinedata_priceEpsCurrentYear">Price/EPS</string>
+  <string name="onlinedata_bookValue">Book value</string>
+  <string name="onlinedata_priceToBook">Price/Book</string>
   <string name="onlinedata_region">Region</string>
   <string name="onlinedata_language">Language</string>
   <string name="onlinedata_fullExchangeName">Exchange name</string>

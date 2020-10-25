@@ -251,6 +251,9 @@ limitations under the License. -->
   <string name="onlinedata_epsTrailingTwelveMonths">EPS des verg. Jahres</string>
   <string name="onlinedata_epsCurrentYear">Diesjährige EPS</string>
   <string name="onlinedata_epsForward">Zukünftige EPS</string>
+  <string name="onlinedata_priceEpsCurrentYear">Preis/EPS</string>
+  <string name="onlinedata_bookValue">Buchwert</string>
+  <string name="onlinedata_priceToBook">Preis/Buchwert</string>
   <string name="onlinedata_region">Region</string>
   <string name="onlinedata_language">Sprachabkürzung</string>
   <string name="onlinedata_fullExchangeName">Börsenname</string>

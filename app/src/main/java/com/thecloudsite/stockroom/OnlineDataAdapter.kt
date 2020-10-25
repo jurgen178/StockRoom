@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
 import android.text.style.AbsoluteSizeSpan
 import android.util.Log
@@ -25,6 +26,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
+import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.core.text.toSpannable
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -47,7 +50,7 @@ import java.time.format.FormatStyle.MEDIUM
 
 data class OnlineData(
   val desc: String,
-  val text: String
+  val text: SpannableStringBuilder
 )
 
 class OnlineDataAdapter internal constructor(
@@ -298,6 +301,20 @@ class OnlineDataAdapter internal constructor(
     }
   }
 
+  private fun formatDoubleToSpannableString(value: Double): SpannableStringBuilder {
+    // only negative values in red
+    val str = DecimalFormat("0.00").format(value)
+    return if (value < 0.0) {
+      SpannableStringBuilder().bold {
+        color(context.getColor(R.color.red)) {
+          append(str)
+        }
+      }
+    } else {
+      SpannableStringBuilder().bold { append(str) }
+    }
+  }
+
   fun updateData(onlineMarketData: OnlineMarketData) {
     data.clear()
 
@@ -309,55 +326,83 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
-            text = DecimalFormat("0.00##").format(onlineMarketData.regularMarketPreviousClose)
+            text = SpannableStringBuilder().bold {
+              append(
+                  DecimalFormat("0.00##").format(onlineMarketData.regularMarketPreviousClose)
+              )
+            }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketOpen),
-            text = DecimalFormat("0.00##").format(onlineMarketData.regularMarketOpen)
+            text = SpannableStringBuilder().bold {
+              append(
+                  DecimalFormat("0.00##").format(onlineMarketData.regularMarketOpen)
+              )
+            }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_fiftyDayAverage),
-            text = DecimalFormat("0.00").format(onlineMarketData.fiftyDayAverage)
+            text = SpannableStringBuilder().bold {
+              append(
+                  DecimalFormat("0.00").format(onlineMarketData.fiftyDayAverage)
+              )
+            }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
-            text = DecimalFormat("0.00").format(onlineMarketData.twoHundredDayAverage)
+            text = SpannableStringBuilder().bold {
+              append(
+                  DecimalFormat("0.00").format(onlineMarketData.twoHundredDayAverage)
+              )
+            }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
-            text = onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
+            text = SpannableStringBuilder().bold {
+              append(
+                  onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
+              )
+            }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketDayRange),
-            text = onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+            text = SpannableStringBuilder().bold {
+              append(
+                  onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+              )
+            }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketVolume),
-            text = formatInt(onlineMarketData.regularMarketVolume)
+            text = SpannableStringBuilder().bold {
+              append(
+                  formatInt(onlineMarketData.regularMarketVolume)
+              )
+            }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_marketCap),
-            text = formatInt(onlineMarketData.marketCap)
+            text = SpannableStringBuilder().bold { append(formatInt(onlineMarketData.marketCap)) }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_forwardPE),
-            text = DecimalFormat("0.00").format(onlineMarketData.forwardPE)
+            text = formatDoubleToSpannableString(onlineMarketData.forwardPE)
         )
     )
 
@@ -381,56 +426,74 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
-            text = DecimalFormat("0.00").format(onlineMarketData.epsTrailingTwelveMonths)
+            text = formatDoubleToSpannableString(onlineMarketData.epsTrailingTwelveMonths)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_epsCurrentYear),
-            text = DecimalFormat("0.00").format(onlineMarketData.epsCurrentYear)
+            text = formatDoubleToSpannableString(onlineMarketData.epsCurrentYear)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_epsForward),
-            text = DecimalFormat("0.00").format(onlineMarketData.epsForward)
+            text = formatDoubleToSpannableString(onlineMarketData.epsForward)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.getString(R.string.onlinedata_priceEpsCurrentYear),
+            text = formatDoubleToSpannableString(onlineMarketData.priceEpsCurrentYear)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.getString(R.string.onlinedata_bookValue),
+            text = formatDoubleToSpannableString(onlineMarketData.bookValue)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.getString(R.string.onlinedata_priceToBook),
+            text = formatDoubleToSpannableString(onlineMarketData.priceToBook)
         )
     )
 
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_region),
-            text = onlineMarketData.region
+            text = SpannableStringBuilder().bold { append(onlineMarketData.region) }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_language),
-            text = onlineMarketData.language
+            text = SpannableStringBuilder().bold { append(onlineMarketData.language) }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_fullExchangeName),
-            text = onlineMarketData.fullExchangeName
+            text = SpannableStringBuilder().bold { append(onlineMarketData.fullExchangeName) }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_messageBoardId),
-            text = onlineMarketData.messageBoardId
+            text = SpannableStringBuilder().bold { append(onlineMarketData.messageBoardId) }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_financialCurrency),
-            text = onlineMarketData.financialCurrency
+            text = SpannableStringBuilder().bold { append(onlineMarketData.financialCurrency) }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_marketState),
-            text = onlineMarketData.marketState
+            text = SpannableStringBuilder().bold { append(onlineMarketData.marketState) }
         )
     )
 
