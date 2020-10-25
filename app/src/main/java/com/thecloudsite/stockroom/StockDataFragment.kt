@@ -648,14 +648,14 @@ class StockDataFragment : Fragment() {
             if (timeInSecondsNow > timeInSeconds5minUpdate + 5 * 60) {
               timeInSeconds5minUpdate = timeInSecondsNow
               getData(stockViewRange)
-              getStockView(stockViewRange, stockViewMode)
+              loadStockView(stockViewRange, stockViewMode)
             }
           } else {
             // Update other charts every day
             if (timeInSecondsNow > timeInSeconds24hUpdate + 24 * 60 * 60) {
               timeInSeconds24hUpdate = timeInSecondsNow
               getData(stockViewRange)
-              getStockView(stockViewRange, stockViewMode)
+              loadStockView(stockViewRange, stockViewMode)
             }
           }
 
@@ -1870,10 +1870,10 @@ class StockDataFragment : Fragment() {
     //AppPreferences.INSTANCE.stockViewRange = stockViewRange
 
     setupCharts(stockViewRange, stockViewMode)
-    getStockView(stockViewRange, stockViewMode)
+    loadStockView(stockViewRange, stockViewMode)
   }
 
-  private fun getStockView(
+  private fun loadStockView(
     stockViewRange: StockViewRange,
     stockViewMode: StockViewMode
   ) {

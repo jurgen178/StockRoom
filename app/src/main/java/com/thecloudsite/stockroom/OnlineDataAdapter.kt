@@ -326,6 +326,12 @@ class OnlineDataAdapter internal constructor(
     )
     data.add(
         OnlineData(
+            desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
+            text = DecimalFormat("0.00").format(onlineMarketData.twoHundredDayAverage)
+        )
+    )
+    data.add(
+        OnlineData(
             desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
             text = onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
         )
@@ -376,6 +382,12 @@ class OnlineDataAdapter internal constructor(
         OnlineData(
             desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
             text = DecimalFormat("0.00").format(onlineMarketData.epsTrailingTwelveMonths)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.getString(R.string.onlinedata_epsCurrentYear),
+            text = DecimalFormat("0.00").format(onlineMarketData.epsCurrentYear)
         )
     )
     data.add(

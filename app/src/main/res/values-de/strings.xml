@@ -241,13 +241,15 @@ limitations under the License. -->
   <string name="annual">jährlich</string>
   <string name="onlinedata_regularMarketPreviousClose">Vortagswert</string>
   <string name="onlinedata_regularMarketOpen">Eröffnungswert</string>
-  <string name="onlinedata_fiftyDayAverage">50-Tage Durchschnitt</string>
+  <string name="onlinedata_fiftyDayAverage">50-Tage Durchschn.</string>
+  <string name="onlinedata_twoHundredDayAverage">200-Tage Durchschn.</string>
   <string name="onlinedata_fiftyTwoWeekRange">Jahresbereich</string>
   <string name="onlinedata_regularMarketDayRange">Tagesbereich</string>
   <string name="onlinedata_regularMarketVolume">Marktvolumen</string>
   <string name="onlinedata_marketCap">Marktkap.</string>
   <string name="onlinedata_forwardPE">Zukünftiges PE</string>
   <string name="onlinedata_epsTrailingTwelveMonths">EPS des verg. Jahres</string>
+  <string name="onlinedata_epsCurrentYear">Diesjährige EPS</string>
   <string name="onlinedata_epsForward">Zukünftige EPS</string>
   <string name="onlinedata_region">Region</string>
   <string name="onlinedata_language">Sprachabkürzung</string>

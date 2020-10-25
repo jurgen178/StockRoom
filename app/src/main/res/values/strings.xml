@@ -245,12 +245,14 @@ limitations under the License. -->
   <string name="onlinedata_regularMarketPreviousClose">Market previous close</string>
   <string name="onlinedata_regularMarketOpen">Market open</string>
   <string name="onlinedata_fiftyDayAverage">50 day average</string>
+  <string name="onlinedata_twoHundredDayAverage">200 day average</string>
   <string name="onlinedata_fiftyTwoWeekRange">52 week range</string>
   <string name="onlinedata_regularMarketDayRange">Day range</string>
   <string name="onlinedata_regularMarketVolume">Market volume</string>
   <string name="onlinedata_marketCap">Market cap.</string>
   <string name="onlinedata_forwardPE">Forward PE</string>
   <string name="onlinedata_epsTrailingTwelveMonths">EPS trailing 12 month</string>
+  <string name="onlinedata_epsCurrentYear">EPS current year</string>
   <string name="onlinedata_epsForward">EPS forward</string>
   <string name="onlinedata_region">Region</string>
   <string name="onlinedata_language">Language</string>

@@ -24,6 +24,7 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.time.Year
 
 // https://www.google.com/finance?q=msft
 // http://www.google.com/finance?q=INDEXNASDAQ:.IXIC
@@ -425,6 +426,7 @@ data class OnlineMarketData(
   var financialCurrency: String = "",
   var sharesOutstanding: Long = 0L,
   var fiftyDayAverage: Double = 0.0,
+  var twoHundredDayAverage: Double = 0.0,
   var fiftyTwoWeekRange: String = "",
   var marketCap: Long = 0L,
   var regularMarketDayRange: String = "",
@@ -433,7 +435,8 @@ data class OnlineMarketData(
   var regularMarketOpen: Double = 0.0,
   var forwardPE: Double = 0.0,
   var epsTrailingTwelveMonths: Double = 0.0,
-  var epsForward: Double = 0.0
+  var epsForward: Double = 0.0,
+  var epsCurrentYear: Double = 0.0
 )
 
 enum class MarketState(val value: String) {
