@@ -159,18 +159,22 @@ class MainActivity : AppCompatActivity() {
     })
 
     SharedRepository.debugData.observe(this, Observer { debugdatalist ->
-      val s = recyclerViewDebug.canScrollVertically(1)
-      debugListAdapter.updateData(debugdatalist)
-      // Scroll only if last item at the bottom to allow scrolling up without jumping
-      // to the bottom for each update.
-      if (!s) {
-        recyclerViewDebug.adapter?.itemCount?.minus(1)
-            ?.let { recyclerViewDebug.scrollToPosition(it) }
+      if (debugdatalist != null) {
+        val s = recyclerViewDebug.canScrollVertically(1)
+        debugListAdapter.updateData(debugdatalist)
+        // Scroll only if last item at the bottom to allow scrolling up without jumping
+        // to the bottom for each update.
+        if (!s) {
+          recyclerViewDebug.adapter?.itemCount?.minus(1)
+              ?.let { recyclerViewDebug.scrollToPosition(it) }
+        }
       }
     })
 
     SharedHandler.deleteStockHandler.observe(this, Observer { symbol ->
-      stockRoomViewModel.deleteStock(symbol)
+      if (symbol != null) {
+        stockRoomViewModel.deleteStock(symbol)
+      }
     })
 
     viewpager.adapter = object : FragmentStateAdapter(this) {

@@ -474,7 +474,9 @@ class DividendFragment : Fragment() {
 
     val stockDBLiveData: LiveData<StockDBdata> = stockRoomViewModel.getStockDBLiveData(symbol)
     stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
-      annualDividend = data.annualDividendRate
+      if (data != null) {
+        annualDividend = data.annualDividendRate
+      }
     })
 
     // Use MediatorLiveView to combine the assets, stockDB and online data changes.
@@ -511,8 +513,10 @@ class DividendFragment : Fragment() {
     }
 
     assetChangeLiveData.observe(viewLifecycleOwner, Observer { item ->
-      updateAssetChange(item)
-      dividendReceivedListAdapter.updateAssetData(item)
+      if (item != null) {
+        updateAssetChange(item)
+        dividendReceivedListAdapter.updateAssetData(item)
+      }
     })
 
     addDividendReceivedButton.setOnClickListener {

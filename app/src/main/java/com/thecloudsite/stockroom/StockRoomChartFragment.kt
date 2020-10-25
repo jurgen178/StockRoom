@@ -113,7 +113,8 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    recyclerView.layoutManager = GridLayoutManager(context,
+    recyclerView.layoutManager = GridLayoutManager(
+        context,
         Integer.min(Integer.max(spanCount, 1), 10)
     )
 
@@ -139,14 +140,16 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
-      val overlaySymbol =
-        if (useChartOverlaySymbol) {
-          chartOverlaySymbol
-        } else {
-          ""
-        }
+      if (stockChartData != null) {
+        val overlaySymbol =
+          if (useChartOverlaySymbol) {
+            chartOverlaySymbol
+          } else {
+            ""
+          }
 
-      adapter.updateChartItem(stockChartData, overlaySymbol, stockViewRange, stockViewMode)
+        adapter.updateChartItem(stockChartData, overlaySymbol, stockViewRange, stockViewMode)
+      }
     })
   }
 

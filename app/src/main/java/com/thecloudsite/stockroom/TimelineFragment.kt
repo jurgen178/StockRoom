@@ -84,56 +84,57 @@ class TimelineFragment : Fragment() {
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
+      if (assets != null) {
+        val hashMap: HashMap<String, HashMap<String, MutableList<Asset>>> = hashMapOf()
+        val unknownDate = getString(R.string.timeline_unknown_date)
 
-      val hashMap: HashMap<String, HashMap<String, MutableList<Asset>>> = hashMapOf()
-      val unknownDate = getString(R.string.timeline_unknown_date)
-
-      // map the list of assets to date map that maps to a symbol map with each matching asset
-      assets.forEach { asset ->
-        val date = if (asset.date > 0) {
-          val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
-          val yearMonth: YearMonth = YearMonth.from(localDateTime)
-          yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
-        } else {
-          unknownDate
-        }
-
-        if (hashMap[date] == null) {
-          hashMap[date] = hashMapOf()
-        }
-
-        if (hashMap[date]?.get(asset.symbol) == null) {
-          hashMap[date]?.set(asset.symbol, mutableListOf())
-        }
-
-        hashMap[date]?.get(asset.symbol)
-            ?.add(asset)
-      }
-
-      val assetList: MutableList<TimelineElement> = mutableListOf()
-
-      // Copy the new structured data-symbol map to timeline elements.
-      hashMap.toSortedMap()
-          .forEach { (date, symbolMap) ->
-            // sort by first date entry in the asset list
-            symbolMap.toList()
-                .sortedBy {
-                  if (it.second.isNotEmpty()) {
-                    // sort the date list
-                    it.second.minByOrNull { asset ->
-                      asset.date
-                    }!!.date
-                  } else {
-                    0
-                  }
-                }
-                .forEach { (symbol, list) ->
-                  assetList.add(TimelineElement(date, symbol, list))
-                }
+        // map the list of assets to date map that maps to a symbol map with each matching asset
+        assets.forEach { asset ->
+          val date = if (asset.date > 0) {
+            val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+            val yearMonth: YearMonth = YearMonth.from(localDateTime)
+            yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
+          } else {
+            unknownDate
           }
 
-      timelineAdapter.updateData(assetList)
-      recyclerView.addItemDecoration(getSectionCallback(assetList))
+          if (hashMap[date] == null) {
+            hashMap[date] = hashMapOf()
+          }
+
+          if (hashMap[date]?.get(asset.symbol) == null) {
+            hashMap[date]?.set(asset.symbol, mutableListOf())
+          }
+
+          hashMap[date]?.get(asset.symbol)
+              ?.add(asset)
+        }
+
+        val assetList: MutableList<TimelineElement> = mutableListOf()
+
+        // Copy the new structured data-symbol map to timeline elements.
+        hashMap.toSortedMap()
+            .forEach { (date, symbolMap) ->
+              // sort by first date entry in the asset list
+              symbolMap.toList()
+                  .sortedBy {
+                    if (it.second.isNotEmpty()) {
+                      // sort the date list
+                      it.second.minByOrNull { asset ->
+                        asset.date
+                      }!!.date
+                    } else {
+                      0
+                    }
+                  }
+                  .forEach { (symbol, list) ->
+                    assetList.add(TimelineElement(date, symbol, list))
+                  }
+            }
+
+        timelineAdapter.updateData(assetList)
+        recyclerView.addItemDecoration(getSectionCallback(assetList))
+      }
     })
   }
 

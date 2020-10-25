@@ -74,38 +74,43 @@ class ListActivity : AppCompatActivity() {
   */
 
     stockRoomViewModel.allProperties.observe(this, Observer { items ->
+      if (items != null) {
+        listDBAdapter.updateStockDBdata(items)
 
-      listDBAdapter.updateStockDBdata(items)
-
-      stockRoomViewModel.allProperties.removeObservers(this)
+        stockRoomViewModel.allProperties.removeObservers(this)
+      }
     })
 
     stockRoomViewModel.allGroupTable.observe(this, Observer { items ->
+      if (items != null) {
+        listDBAdapter.updateGroup(items)
 
-      listDBAdapter.updateGroup(items)
-
-      stockRoomViewModel.allGroupTable.removeObservers(this)
+        stockRoomViewModel.allGroupTable.removeObservers(this)
+      }
     })
 
     stockRoomViewModel.allAssetTable.observe(this, Observer { items ->
+      if (items != null) {
+        listDBAdapter.updateAsset(items)
 
-      listDBAdapter.updateAsset(items)
-
-      stockRoomViewModel.allAssetTable.removeObservers(this)
+        stockRoomViewModel.allAssetTable.removeObservers(this)
+      }
     })
 
     stockRoomViewModel.allEventTable.observe(this, Observer { items ->
+      if (items != null) {
+        listDBAdapter.updateEvent(items)
 
-      listDBAdapter.updateEvent(items)
-
-      stockRoomViewModel.allEventTable.removeObservers(this)
+        stockRoomViewModel.allEventTable.removeObservers(this)
+      }
     })
 
     stockRoomViewModel.allDividendTable.observe(this, Observer { items ->
+      if (items != null) {
+        listDBAdapter.updateDividend(items)
 
-      listDBAdapter.updateDividend(items)
-
-      stockRoomViewModel.allDividendTable.removeObservers(this)
+        stockRoomViewModel.allDividendTable.removeObservers(this)
+      }
     })
   }
 

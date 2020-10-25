@@ -423,7 +423,7 @@ data class OnlineMarketData(
   var fullExchangeName: String = "",
   var messageBoardId: String = "",
   var financialCurrency: String = "",
-  
+
   var sharesOutstanding: Long = 0L,
   var fiftyDayAverage: Double = 0.0,
   var twoHundredDayAverage: Double = 0.0,

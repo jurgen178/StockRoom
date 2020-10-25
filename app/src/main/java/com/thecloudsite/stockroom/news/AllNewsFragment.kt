@@ -72,17 +72,21 @@ class AllNewsFragment : Fragment() {
     googleAllNewsViewModel = ViewModelProvider(this).get(GoogleAllNewsViewModel::class.java)
 
     yahooAllNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
-      newsAdapter.updateData(data)
+      if (data != null) {
+        newsAdapter.updateData(data)
 
-      // Stop observing now. News needs to be updated manually.
-      yahooAllNewsViewModel.data.removeObservers(viewLifecycleOwner)
+        // Stop observing now. News needs to be updated manually.
+        yahooAllNewsViewModel.data.removeObservers(viewLifecycleOwner)
+      }
     })
 
     googleAllNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
-      newsAdapter.updateData(data)
+      if (data != null) {
+        newsAdapter.updateData(data)
 
-      // Stop observing now. News needs to be updated manually.
-      googleAllNewsViewModel.data.removeObservers(viewLifecycleOwner)
+        // Stop observing now. News needs to be updated manually.
+        googleAllNewsViewModel.data.removeObservers(viewLifecycleOwner)
+      }
     })
 
     // Get the news data.

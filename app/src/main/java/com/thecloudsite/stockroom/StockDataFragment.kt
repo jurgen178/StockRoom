@@ -680,9 +680,11 @@ class StockDataFragment : Fragment() {
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { data ->
-      stockDataEntries = data.stockDataEntries
-      setupCharts(stockViewRange, stockViewMode)
-      loadCharts(data.symbol, stockViewRange, stockViewMode)
+      if (data != null) {
+        stockDataEntries = data.stockDataEntries
+        setupCharts(stockViewRange, stockViewMode)
+        loadCharts(data.symbol, stockViewRange, stockViewMode)
+      }
     })
 
     textViewSymbol.text = symbol
@@ -753,14 +755,16 @@ class StockDataFragment : Fragment() {
 
     val stockDBLiveData: LiveData<StockDBdata> = stockRoomViewModel.getStockDBLiveData(symbol)
     stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
-      stockDBdata = data
-      notesTextView.text = stockDBdata.notes
+      if (data != null) {
+        stockDBdata = data
+        notesTextView.text = stockDBdata.notes
 
-      // Portfolio
-      textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
-        standardPortfolio
-      } else {
-        stockDBdata.portfolio
+        // Portfolio
+        textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
+          standardPortfolio
+        } else {
+          stockDBdata.portfolio
+        }
       }
 
       // Group color
@@ -852,7 +856,9 @@ class StockDataFragment : Fragment() {
     }
 
     assetChangeLiveData.observe(viewLifecycleOwner, Observer { item ->
-      updateAssetChange(item)
+      if (item != null) {
+        updateAssetChange(item)
+      }
     })
 
     // Setup portfolio menu

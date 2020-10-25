@@ -101,7 +101,9 @@ class SummaryGroupFragment : Fragment() {
     })
 
     stockRoomViewModel.allGroupTable.observe(viewLifecycleOwner, Observer { groups ->
-      summaryGroupAdapter.addGroups(groups)
+      if (groups != null) {
+        summaryGroupAdapter.addGroups(groups)
+      }
     })
 
     longPressedCounter = 0

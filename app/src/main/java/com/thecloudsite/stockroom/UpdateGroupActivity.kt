@@ -154,13 +154,17 @@ class UpdateGroupActivity : AppCompatActivity() {
     groupView.layoutManager = LinearLayoutManager(this)
 
     stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
-      updateGroupAdapter.addGroups(groups)
-      groupList = groups
+      if (groups != null) {
+        updateGroupAdapter.addGroups(groups)
+        groupList = groups
+      }
     })
 
     stockRoomViewModel.allProperties.observe(this, Observer { items ->
-      updateGroupAdapter.updateData(items)
-      stockDBdataList = items
+      if (items != null) {
+        updateGroupAdapter.updateData(items)
+        stockDBdataList = items
+      }
     })
 
     //val groups: List<Group> = stockRoomViewModel.getGroupsSync()

@@ -81,10 +81,12 @@ class NewsFragment : Fragment() {
     googleNewsViewModel = ViewModelProvider(this).get(GoogleNewsViewModel::class.java)
 
     yahooNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
-      newsAdapter.updateData(data)
+      if (data != null) {
+        newsAdapter.updateData(data)
 
-      // Stop observing now. News needs to be updated manually.
-      yahooNewsViewModel.data.removeObservers(viewLifecycleOwner)
+        // Stop observing now. News needs to be updated manually.
+        yahooNewsViewModel.data.removeObservers(viewLifecycleOwner)
+      }
     })
 
     yahooNewsViewModel.getNewsData(yahooNewsQuery)
@@ -114,7 +116,9 @@ class NewsFragment : Fragment() {
     })
 
     googleNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
-      newsAdapter.updateData(data)
+      if (data != null) {
+        newsAdapter.updateData(data)
+      }
     })
 
     swipeRefreshLayout.setOnRefreshListener {
