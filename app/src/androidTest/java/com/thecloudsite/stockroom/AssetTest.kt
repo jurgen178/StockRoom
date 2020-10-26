@@ -37,7 +37,7 @@ enum class AssetType(val value: Int) {
 class AssetTest {
 
   // Rounding error
-  private val epsilon = 0.000001
+  private val epsilon = 0.0000001
   private val obsoleteAssetType
       : Int = 0x0001
 

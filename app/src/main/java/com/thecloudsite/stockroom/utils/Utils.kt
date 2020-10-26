@@ -42,7 +42,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 // Rounding error
-const val epsilon = 0.000001
+const val epsilon = 0.0000001
 
 // asset.type
 const val obsoleteAssetType: Int = 0x0001
