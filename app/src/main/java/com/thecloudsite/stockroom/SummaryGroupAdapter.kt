@@ -333,21 +333,21 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_gain_loss)} ")
         .append(gainLossText)
         .append("\n")
-        .append("${context.getString(R.string.summary_dividend_assets)} ")
-        .bold {
-          append(
-              "${
-                DecimalFormat("0.00")
-                    .format(totalDividendAssets)
-              }\n"
-          )
-        }
         .append("${context.getString(R.string.summary_no_dividend_assets)} ")
         .bold {
           append(
               "${
                 DecimalFormat("0.00")
                     .format(totalAssets - totalDividendAssets)
+              }\n"
+          )
+        }
+        .append("${context.getString(R.string.summary_dividend_assets)} ")
+        .bold {
+          append(
+              "${
+                DecimalFormat("0.00")
+                    .format(totalDividendAssets)
               }\n"
           )
         }

@@ -11,6 +11,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scrollbars="vertical"
+      android:fadeScrollbars="false"
       >
 
     <LinearLayout
@@ -350,6 +351,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_margin="16dp"
+          android:fadeScrollbars="false"
           >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/assetsView"
@@ -392,6 +394,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_margin="16dp"
+          android:fadeScrollbars="false"
           >
       <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/eventsView"
