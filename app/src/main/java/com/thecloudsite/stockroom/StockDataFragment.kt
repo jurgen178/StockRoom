@@ -42,6 +42,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.text.underline
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -75,6 +76,7 @@ import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getMarketValues
+import com.thecloudsite.stockroom.utils.openNewTabWindow
 import kotlinx.android.synthetic.main.fragment_stockdata.addAssetsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.addEventsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputEditText
@@ -687,7 +689,43 @@ class StockDataFragment : Fragment() {
       }
     })
 
-    textViewSymbol.text = symbol
+    textViewSymbol.text =
+      SpannableStringBuilder().underline { color(Color.BLUE) { append(symbol) } }
+
+    // Setup community pages menu
+    textViewSymbol.setOnClickListener { viewSymbol ->
+      val popupMenu = PopupMenu(requireContext(), viewSymbol)
+
+      val communityLinkList: Map<String, String> = mapOf(
+          "Yahoo community" to "https://finance.yahoo.com/quote/$symbol/community",
+          "Stocktwits" to "https://stocktwits.com/symbol/$symbol",
+          "Bing" to "https://www.bing.com/search?q=$symbol%20stock",
+          "Google" to "https://www.google.com/search?q=$symbol+stock",
+          "Yahoo" to "https://finance.yahoo.com/quote/$symbol",
+          "Nasqaq" to "https://www.nasdaq.com/market-activity/stocks/$symbol",
+          "Marketbeat" to "https://www.marketbeat.com/stocks/$symbol/",
+      )
+
+      var menuIndex: Int = Menu.FIRST
+
+      val menuHeadlineItem = SpannableStringBuilder()
+          .color(context?.getColor(R.color.colorPrimary)!!) {
+            bold { append(getString(R.string.community_search_links)) }
+          }
+      popupMenu.menu.add(0, menuIndex++, Menu.NONE, menuHeadlineItem)
+
+      communityLinkList.forEach { (name, _) ->
+        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+      }
+
+      popupMenu.show()
+
+      popupMenu.setOnMenuItemClickListener { menuitem ->
+        communityLinkList[menuitem.toString()]?.let { openNewTabWindow(it, requireContext()) }
+
+        true
+      }
+    }
 
 /*
     stockdataLinearLayout.setOnTouchListener(object : OnSwipeTouchListener(requireContext()){
@@ -862,8 +900,8 @@ class StockDataFragment : Fragment() {
     })
 
     // Setup portfolio menu
-    textViewPortfolio.setOnClickListener { view ->
-      val popupMenu = PopupMenu(requireContext(), view)
+    textViewPortfolio.setOnClickListener { viewPortfolio ->
+      val popupMenu = PopupMenu(requireContext(), viewPortfolio)
 
       var menuIndex: Int = Menu.FIRST
 
@@ -1013,8 +1051,8 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    linearLayoutGroup.setOnClickListener { view ->
-      val popupMenu = PopupMenu(requireContext(), view)
+    linearLayoutGroup.setOnClickListener { viewLayout ->
+      val popupMenu = PopupMenu(requireContext(), viewLayout)
 
       var menuIndex: Int = Menu.FIRST
       stockRoomViewModel.getGroupsMenuList(getString(R.string.standard_group))

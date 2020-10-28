@@ -38,6 +38,7 @@ import java.time.format.FormatStyle.MEDIUM
 const val news_type_headline: Int = 0
 const val news_type_yahoo: Int = 1
 const val news_type_google: Int = 2
+const val news_type_nasdaq: Int = 3
 
 val excludeUrlList = arrayListOf(
     "newsdaemon.com",
@@ -133,6 +134,16 @@ class NewsAdapter(
     val googleNewsItemPreviewText: TextView = itemView.findViewById(id.googleNewsItemPreviewText)
   }
 
+  class NasdaqNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+    override fun bind(item: NewsData) {
+    }
+
+    val nasdaqNewsItemTitle: TextView = itemView.findViewById(id.nasdaqNewsItemTitle)
+    val nasdaqNewsItemDate: TextView = itemView.findViewById(id.nasdaqNewsItemDate)
+    val nasdaqNewsItemLink: TextView = itemView.findViewById(id.nasdaqNewsItemLink)
+    val nasdaqNewsItemText: TextView = itemView.findViewById(id.nasdaqNewsItemText)
+  }
+
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
@@ -153,6 +164,11 @@ class NewsAdapter(
         val view = LayoutInflater.from(context)
             .inflate(layout.googlenewsview_item, parent, false)
         GoogleNewsViewHolder(view)
+      }
+      news_type_nasdaq -> {
+        val view = LayoutInflater.from(context)
+            .inflate(layout.nasdaqnewsview_item, parent, false)
+        NasdaqNewsViewHolder(view)
       }
       else -> throw IllegalArgumentException("Invalid view type")
     }
@@ -219,6 +235,29 @@ class NewsAdapter(
         // Make links clickable.
         holder.googleNewsItemPreviewText.movementMethod = LinkMovementMethod.getInstance()
       }
+
+      is NasdaqNewsViewHolder -> {
+        holder.bind(element)
+
+        val current: NewsData = newsDataList[position]
+
+        holder.nasdaqNewsItemTitle.text =
+          HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        holder.nasdaqNewsItemDate.text = getTimeDateStr(current.date)
+
+        holder.nasdaqNewsItemLink.text = HtmlCompat.fromHtml(
+            "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+        holder.nasdaqNewsItemLink.setLinkTextColor(
+            context.getColor(color.material_on_background_emphasis_medium)
+        )
+        holder.nasdaqNewsItemText.text =
+          HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        // Make links clickable.
+        holder.nasdaqNewsItemLink.movementMethod = LinkMovementMethod.getInstance()
+      }
+
       else -> {
         throw IllegalArgumentException()
       }

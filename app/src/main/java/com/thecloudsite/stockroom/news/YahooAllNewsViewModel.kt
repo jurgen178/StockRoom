@@ -17,27 +17,11 @@
 package com.thecloudsite.stockroom.news
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
-class YahooAllNewsViewModel(application: Application) : AndroidViewModel(application) {
-
-  private val newsRepository: YahooAllNewsRepository =
-    YahooAllNewsRepository()
-
-  val data: LiveData<List<NewsData>>
+class YahooAllNewsViewModel(application: Application) : NewsViewModel(application) {
 
   init {
+    newsRepository = YahooAllNewsRepository()
     data = newsRepository.data
-  }
-
-  fun getNewsData(
-    newsQuery: String
-  ) {
-    viewModelScope.launch {
-      newsRepository.getNewsData(newsQuery)
-    }
   }
 }

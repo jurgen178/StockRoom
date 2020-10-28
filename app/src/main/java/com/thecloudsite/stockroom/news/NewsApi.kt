@@ -25,9 +25,13 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+// https://feeds.finance.yahoo.com/rss/2.0/headline?s=msft
 // https://news.google.com/news/rss/headlines/section/topic/BUSINESS
 // https://news.google.com/rss/search?q=msft&hl=en-US&gl=US&ceid=US:en
 // https://news.google.com/rss/search?q=msft&hl=de&gl=DE&ceid=DE:de
+// https://www.nasdaq.com/feed/rssoutbound?symbol=msft
+// https://www.nasdaq.com/feed/rssoutbound
+// http://rss.msn.com/en-us/money?feedoutput=rss
 
 /*
 <rss xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
@@ -152,6 +156,8 @@ interface YahooNewsApi : NewsApi {
   ): Deferred<Response<NewsResponse>>
 }
 
+// https://news.google.com/rss/search?q=msft
+
 interface GoogleNewsApi : NewsApi {
   @GET("rss/search")
   override fun getNewsDataAsync(
@@ -161,9 +167,21 @@ interface GoogleNewsApi : NewsApi {
   ): Deferred<Response<NewsResponse>>
 }
 
+// https://www.nasdaq.com/feed/rssoutbound?symbol=msft
+
+interface NasdaqNewsApi : NewsApi {
+  @GET("feed/rssoutbound")
+  override fun getNewsDataAsync(
+    @Query(
+        value = "symbol"
+    ) newsQuery: String
+  ): Deferred<Response<NewsResponse>>
+}
+
 // https://finance.yahoo.com/rss/topstories
 // https://finance.yahoo.com/news/rssindex
 // https://news.google.com/news/rss/headlines/section/topic/BUSINESS
+// https://www.nasdaq.com/feed/rssoutbound
 
 interface YahooAllNewsApi : NewsApi {
   @GET("news/rssindex")
@@ -176,6 +194,15 @@ interface YahooAllNewsApi : NewsApi {
 
 interface GoogleAllNewsApi : NewsApi {
   @GET("news/rss/headlines/section/topic/BUSINESS")
+  override fun getNewsDataAsync(
+    @Query(
+        value = ""
+    ) newsQuery: String
+  ): Deferred<Response<NewsResponse>>
+}
+
+interface NasdaqAllNewsApi : NewsApi {
+  @GET("feed/rssoutbound")
   override fun getNewsDataAsync(
     @Query(
         value = ""

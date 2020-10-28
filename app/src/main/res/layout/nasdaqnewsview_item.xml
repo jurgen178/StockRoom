@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/news_item_bg"
+    >
+
+  <TextView
+      android:background="@color/colorAccent"
+      android:id="@+id/nasdaqNewsItemTitle"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/nasdaqNewsItemDate"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
+      android:textSize="10sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/nasdaqNewsItemTitle"
+      />
+
+  <TextView
+      android:id="@+id/nasdaqNewsItemText"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="4dp"
+      android:paddingStart="12dp"
+      android:paddingEnd="12dp"
+      android:justificationMode="inter_word"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/nasdaqNewsItemDate"
+      />
+
+  <TextView
+      android:id="@+id/nasdaqNewsItemLink"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
+      android:paddingStart="12dp"
+      android:paddingEnd="12dp"
+      android:textSize="10sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/nasdaqNewsItemText"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

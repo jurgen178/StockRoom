@@ -332,4 +332,5 @@ limitations under the License. -->
   <string name="onlineAnnualDividendData">Onlinedaten</string>
   <string name="no_dividend_data">Keine Online-Dividendendaten vorhanden.</string>
   <string name="date">Datum</string>
+  <string name="community_search_links">Community und Such-Links</string>
 </resources>

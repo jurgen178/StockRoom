@@ -16,12 +16,4 @@
 
 package com.thecloudsite.stockroom.news
 
-import android.app.Application
-
-class GoogleAllNewsViewModel(application: Application) : NewsViewModel(application) {
-
-  init {
-    newsRepository = GoogleAllNewsRepository()
-    data = newsRepository.data
-  }
-}
+class NasdaqNewsRepository : NewsRepository({ NasdaqNewsApiFactory.newsApi }, news_type_nasdaq)

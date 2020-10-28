@@ -17,9 +17,12 @@
 package com.thecloudsite.stockroom.utils
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.net.Uri
+import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.annotation.RawRes
 import androidx.core.text.bold
@@ -63,6 +66,17 @@ enum class DividendCycle(val value: Int) {
 }
 */
 
+fun openNewTabWindow(
+  url: String,
+  context: Context
+) {
+  val uri = Uri.parse(url)
+  val intents = Intent(Intent.ACTION_VIEW, uri)
+  val b = Bundle()
+  b.putBoolean("new_window", true)
+  intents.putExtras(b)
+  context.startActivity(intents)
+}
 
 fun dividendSelectionToCycle(selection: Int): Int {
   return when (selection) {

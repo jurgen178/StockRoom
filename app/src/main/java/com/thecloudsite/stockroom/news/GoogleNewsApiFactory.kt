@@ -16,33 +16,13 @@
 
 package com.thecloudsite.stockroom.news
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.thecloudsite.stockroom.utils.checkUrl
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 // https://news.google.com/news/rss/headlines/section/topic/BUSINESS
 // https://news.google.com/rss/search?q=msft&hl=en-US&gl=US&ceid=US:en
 // https://news.google.com/rss/search?q=msft&hl=de&gl=DE&ceid=DE:de
 
-open class GoogleNewsBaseApiFactory {
-
-  var url = ""
-
-  // https://futurestud.io/tutorials/retrofit-how-to-integrate-xml-converter
-  fun retrofit(): Retrofit = Retrofit.Builder()
-      .client(
-          OkHttpClient().newBuilder()
-              .build()
-      )
-      .baseUrl(url)
-      .addConverterFactory(SimpleXmlConverterFactory.create())
-      .addCallAdapterFactory(CoroutineCallAdapterFactory())
-      .build()
-}
-
-object GoogleNewsApiFactory : GoogleNewsBaseApiFactory() {
+object GoogleNewsApiFactory : NewsApiFactory() {
 
   var newsApi: GoogleNewsApi? = null
 
@@ -71,7 +51,7 @@ object GoogleNewsApiFactory : GoogleNewsBaseApiFactory() {
 
 // https://news.google.com/news/rss/headlines/section/topic/BUSINESS
 
-object GoogleAllNewsApiFactory : GoogleNewsBaseApiFactory() {
+object GoogleAllNewsApiFactory : NewsApiFactory() {
 
   var newsApi: GoogleAllNewsApi? = null
 

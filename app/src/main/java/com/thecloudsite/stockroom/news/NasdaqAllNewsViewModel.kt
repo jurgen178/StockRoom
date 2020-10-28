@@ -18,10 +18,10 @@ package com.thecloudsite.stockroom.news
 
 import android.app.Application
 
-class GoogleAllNewsViewModel(application: Application) : NewsViewModel(application) {
+class NasdaqAllNewsViewModel(application: Application) : NewsViewModel(application) {
 
   init {
-    newsRepository = GoogleAllNewsRepository()
+    newsRepository = NasdaqAllNewsRepository()
     data = newsRepository.data
   }
 }

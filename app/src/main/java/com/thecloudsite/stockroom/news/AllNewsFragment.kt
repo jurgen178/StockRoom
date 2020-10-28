@@ -34,6 +34,7 @@ class AllNewsFragment : Fragment() {
 
   private lateinit var yahooAllNewsViewModel: YahooAllNewsViewModel
   private lateinit var googleAllNewsViewModel: GoogleAllNewsViewModel
+  private lateinit var nasdaqAllNewsViewModel: NasdaqAllNewsViewModel
   private lateinit var newsAdapter: NewsAdapter
 
   companion object {
@@ -42,6 +43,7 @@ class AllNewsFragment : Fragment() {
 
   private var yahooAllNewsQuery = ""
   private var googleAllNewsQuery = ""
+  private var nasdaqAllNewsQuery = ""
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -70,6 +72,7 @@ class AllNewsFragment : Fragment() {
 
     yahooAllNewsViewModel = ViewModelProvider(this).get(YahooAllNewsViewModel::class.java)
     googleAllNewsViewModel = ViewModelProvider(this).get(GoogleAllNewsViewModel::class.java)
+    nasdaqAllNewsViewModel = ViewModelProvider(this).get(NasdaqAllNewsViewModel::class.java)
 
     yahooAllNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
@@ -89,9 +92,19 @@ class AllNewsFragment : Fragment() {
       }
     })
 
+    nasdaqAllNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+      if (data != null) {
+        newsAdapter.updateData(data)
+
+        // Stop observing now. News needs to be updated manually.
+        nasdaqAllNewsViewModel.data.removeObservers(viewLifecycleOwner)
+      }
+    })
+
     // Get the news data.
     yahooAllNewsViewModel.getNewsData(yahooAllNewsQuery)
     googleAllNewsViewModel.getNewsData(googleAllNewsQuery)
+    nasdaqAllNewsViewModel.getNewsData(nasdaqAllNewsQuery)
 
     swipeRefreshLayout.setOnRefreshListener {
       updateData()
@@ -118,6 +131,11 @@ class AllNewsFragment : Fragment() {
     googleAllNewsViewModel.getNewsData(googleAllNewsQuery)
     if (googleAllNewsViewModel.data.value != null) {
       newsAdapter.updateData(googleAllNewsViewModel.data.value!!)
+    }
+
+    nasdaqAllNewsViewModel.getNewsData(nasdaqAllNewsQuery)
+    if (nasdaqAllNewsViewModel.data.value != null) {
+      newsAdapter.updateData(nasdaqAllNewsViewModel.data.value!!)
     }
   }
 }

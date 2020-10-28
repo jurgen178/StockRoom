@@ -38,6 +38,7 @@ class NewsFragment : Fragment() {
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private lateinit var yahooNewsViewModel: YahooNewsViewModel
   private lateinit var googleNewsViewModel: GoogleNewsViewModel
+  private lateinit var nasdaqNewsViewModel: NasdaqNewsViewModel
   private lateinit var newsAdapter: NewsAdapter
 
   companion object {
@@ -47,6 +48,7 @@ class NewsFragment : Fragment() {
   private var symbol: String = ""
   private var yahooNewsQuery = ""
   private var googleNewsQuery = ""
+  private var nasdaqNewsQuery = ""
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -62,6 +64,7 @@ class NewsFragment : Fragment() {
     symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
     yahooNewsQuery = symbol
     googleNewsQuery = symbol
+    nasdaqNewsQuery = symbol
 
     // Inflate the layout for this fragment
     return inflater.inflate(layout.fragment_news, container, false)
@@ -79,6 +82,7 @@ class NewsFragment : Fragment() {
 
     yahooNewsViewModel = ViewModelProvider(this).get(YahooNewsViewModel::class.java)
     googleNewsViewModel = ViewModelProvider(this).get(GoogleNewsViewModel::class.java)
+    nasdaqNewsViewModel = ViewModelProvider(this).get(NasdaqNewsViewModel::class.java)
 
     yahooNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
@@ -121,6 +125,17 @@ class NewsFragment : Fragment() {
       }
     })
 
+    nasdaqNewsViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+      if (data != null) {
+        newsAdapter.updateData(data)
+
+        // Stop observing now. News needs to be updated manually.
+        nasdaqNewsViewModel.data.removeObservers(viewLifecycleOwner)
+      }
+    })
+
+    nasdaqNewsViewModel.getNewsData(nasdaqNewsQuery)
+
     swipeRefreshLayout.setOnRefreshListener {
       updateData()
       swipeRefreshLayout.isRefreshing = false
@@ -146,6 +161,11 @@ class NewsFragment : Fragment() {
     googleNewsViewModel.getNewsData(googleNewsQuery)
     if (googleNewsViewModel.data.value != null) {
       newsAdapter.updateData(googleNewsViewModel.data.value!!)
+    }
+
+    nasdaqNewsViewModel.getNewsData(nasdaqNewsQuery)
+    if (nasdaqNewsViewModel.data.value != null) {
+      newsAdapter.updateData(nasdaqNewsViewModel.data.value!!)
     }
   }
 }

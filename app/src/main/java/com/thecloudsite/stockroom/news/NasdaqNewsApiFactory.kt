@@ -18,18 +18,13 @@ package com.thecloudsite.stockroom.news
 
 import com.thecloudsite.stockroom.utils.checkUrl
 
-// https://feeds.finance.yahoo.com/rss/2.0/headline?s=msft
-// https://finance.yahoo.com/news/rssindex
-// https://finance.yahoo.com/rss/topfinstories
+// https://www.nasdaq.com/feed/rssoutbound?symbol=msft
 
-// https://observablehq.com/@stroked/yahoofinance
-// https://github.com/topics/yahoo-finance-api
+object NasdaqNewsApiFactory : NewsApiFactory() {
 
-object YahooNewsApiFactory : NewsApiFactory() {
+  var newsApi: NasdaqNewsApi? = null
 
-  var newsApi: YahooNewsApi? = null
-
-  private var defaultUrl = "https://feeds.finance.yahoo.com/"
+  private var defaultUrl = "https://www.nasdaq.com/"
 
   init {
     update(defaultUrl)
@@ -43,7 +38,7 @@ object YahooNewsApiFactory : NewsApiFactory() {
       } else {
         url = checkUrl(_url)
         newsApi = try {
-          retrofit().create(YahooNewsApi::class.java)
+          retrofit().create(NasdaqNewsApi::class.java)
         } catch (e: Exception) {
           null
         }
@@ -52,14 +47,13 @@ object YahooNewsApiFactory : NewsApiFactory() {
   }
 }
 
-// https://finance.yahoo.com/rss/topstories
-// https://finance.yahoo.com/news/rssindex
+// https://www.nasdaq.com/feed/rssoutbound
 
-object YahooAllNewsApiFactory : NewsApiFactory() {
+object NasdaqAllNewsApiFactory : NewsApiFactory() {
 
-  var newsApi: YahooAllNewsApi? = null
+  var newsApi: NasdaqAllNewsApi? = null
 
-  private var defaultUrl = "https://finance.yahoo.com/"
+  private var defaultUrl = "https://www.nasdaq.com/"
 
   init {
     update(defaultUrl)
@@ -73,7 +67,7 @@ object YahooAllNewsApiFactory : NewsApiFactory() {
       } else {
         url = checkUrl(_url)
         newsApi = try {
-          retrofit().create(YahooAllNewsApi::class.java)
+          retrofit().create(NasdaqAllNewsApi::class.java)
         } catch (e: Exception) {
           null
         }
