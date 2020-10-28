@@ -20,7 +20,7 @@ import com.thecloudsite.stockroom.utils.checkUrl
 
 // https://www.nasdaq.com/feed/rssoutbound?symbol=msft
 
-object NasdaqNewsApiFactory : NewsApiFactory() {
+object NasdaqNewsApiFactory : NewsApiFactoryHttpHeader() {
 
   var newsApi: NasdaqNewsApi? = null
 
@@ -49,7 +49,7 @@ object NasdaqNewsApiFactory : NewsApiFactory() {
 
 // https://www.nasdaq.com/feed/rssoutbound
 
-object NasdaqAllNewsApiFactory : NewsApiFactory() {
+object NasdaqAllNewsApiFactory : NewsApiFactoryHttpHeader() {
 
   var newsApi: NasdaqAllNewsApi? = null
 

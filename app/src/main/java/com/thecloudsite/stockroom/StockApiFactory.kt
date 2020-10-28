@@ -50,13 +50,13 @@ object StockMarketDataApiFactory {
   }
 */
 
-  //OkhttpClient for building http request url
-  private val yahooClient = OkHttpClient().newBuilder()
-//      .addInterceptor(authInterceptor)
-      .build()
-
+  // building http request url
   private fun retrofit(): Retrofit = Retrofit.Builder()
-      .client(yahooClient)
+      .client(
+          OkHttpClient().newBuilder()
+//      .addInterceptor(authInterceptor)
+              .build()
+      )
       .baseUrl(url)
       .addConverterFactory(MoshiConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
@@ -92,13 +92,13 @@ object StockRawMarketDataApiFactory {
   private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
   private var url = ""
 
-  //OkhttpClient for building http request url
-  private val yahooClient = OkHttpClient().newBuilder()
-//      .addInterceptor(authInterceptor)
-      .build()
-
+  // building http request url
   private fun retrofit(): Retrofit = Retrofit.Builder()
-      .client(yahooClient)
+      .client(
+          OkHttpClient().newBuilder()
+//      .addInterceptor(authInterceptor)
+              .build()
+      )
       .baseUrl(url)
       .addConverterFactory(ScalarsConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
@@ -152,13 +152,13 @@ object StockChartDataApiFactory {
   }
 */
 
-  //OkhttpClient for building http request url
-  private val yahooClient = OkHttpClient().newBuilder()
-//      .addInterceptor(authInterceptor)
-      .build()
-
+  // building http request url
   private fun retrofit(): Retrofit = Retrofit.Builder()
-      .client(yahooClient)
+      .client(
+          OkHttpClient().newBuilder()
+//      .addInterceptor(authInterceptor)
+              .build()
+      )
       .baseUrl(url)
       .addConverterFactory(MoshiConverterFactory.create())
       .addCallAdapterFactory(CoroutineCallAdapterFactory())
