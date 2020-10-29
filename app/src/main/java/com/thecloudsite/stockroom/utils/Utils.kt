@@ -72,9 +72,9 @@ fun openNewTabWindow(
 ) {
   val uri = Uri.parse(url)
   val intents = Intent(Intent.ACTION_VIEW, uri)
-  val b = Bundle()
-  b.putBoolean("new_window", true)
-  intents.putExtras(b)
+//  val b = Bundle()
+//  b.putBoolean("new_window", true)
+//  intents.putExtras(b)
   context.startActivity(intents)
 }
 

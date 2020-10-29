@@ -129,7 +129,7 @@ open class NewsRepository(
             }
       }
     } catch (e: Exception) {
-      Log.d("getOnlineNewsData failed ", "Exception - $e")
+      Log.d("getOnlineNewsData failed", "Exception - $e")
     }
 
     return newsData ?: emptyList()

@@ -31,8 +31,11 @@ open class NewsApiFactoryHttpHeader {
   fun retrofit(): Retrofit = Retrofit.Builder()
       .client(
           OkHttpClient().newBuilder()
+//              .followRedirects(true)
+//              .followSslRedirects(true)
               .addInterceptor { chain ->
-                val newRequest = chain.request()
+                val original = chain.request()
+                val newRequest = original
                     .newBuilder()
 
 //GET /tutorials/other/top-20-mysql-best-practices/ HTTP/1.1
@@ -48,19 +51,29 @@ open class NewsApiFactoryHttpHeader {
 //Pragma: no-cache
 //Cache-Control: no-cache
 
-                    .addHeader("Host", "nasdaq.com")
-                    .addHeader("User-Agent", "Android/30 (Android 30)")
-                    .addHeader("Accept", "application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                    .addHeader("Accept-Language", "en-us,en;q=0.5")
-                    .addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7")
-                    .addHeader("Keep-Alive", "300")
-                    .addHeader("Connection", "keep-alive")
-                    .addHeader("Cookie", "PHPSESSID=r2t5uvjq435r4q7ib3vtdjq120")
-                    .addHeader("Pragma", "no-cache")
-                    .addHeader("Cache-Control", "no-cache")
+                    .addHeader("Host", "www.nasdaq.com")
+                    .addHeader("User-Agent", "Android/10")
+                    .addHeader("Accept", "*/*")
+//                    .addHeader("Accept-Language", "en-us,en;q=0.5")
+//                    .addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7")
+//                    .addHeader("Keep-Alive", "300")
+//                    .addHeader("Connection", "keep-alive")
+//                    .addHeader("Pragma", "no-cache")
+//                    .addHeader("Cache-Control", "no-cache")
+                    //.method(original.method, original.body)
                     .build()
                 chain.proceed(newRequest)
-              }
+
+// original
+// Request{method=GET, url=https://www.nasdaq.com/feed/rssoutbound?symbol=GECC,
+// tags={class retrofit2.Invocation=com.thecloudsite.stockroom.news.NasdaqNewsApi.getNewsDataAsync() [GECC]}}
+
+// newRequest
+// Request{method=GET, url=https://www.nasdaq.com/feed/rssoutbound?symbol=GECC,
+// headers=[Host:www.nasdaq.com, User-Agent:Android/10, Accept:*/*],
+// tags={class retrofit2.Invocation=com.thecloudsite.stockroom.news.NasdaqNewsApi.getNewsDataAsync() [GECC]}}
+
+                  }
               .build()
       )
       .baseUrl(url)
