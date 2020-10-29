@@ -41,7 +41,9 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
@@ -194,17 +196,9 @@ class StockRoomChartAdapter internal constructor(
         }
       }
 
-      when {
-        capital > 0.0 && capital > asset -> {
-          holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.green))
-        }
-        capital > 0.0 && capital < asset -> {
-          holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.red))
-        }
-        else -> {
-          holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-        }
-      }
+      holder.itemRedGreen.setBackgroundColor(
+          getChangeColor(capital, asset, context.getColor(color.backgroundListColor), context)
+      )
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {

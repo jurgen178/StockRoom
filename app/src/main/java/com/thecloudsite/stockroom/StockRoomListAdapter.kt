@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
@@ -196,17 +197,9 @@ class StockRoomListAdapter internal constructor(
         }
       }
 
-      when {
-        capital > 0.0 && capital > asset -> {
-          holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.green))
-        }
-        capital > 0.0 && capital < asset -> {
-          holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.red))
-        }
-        else -> {
-          holder.itemRedGreen.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-        }
-      }
+      holder.itemRedGreen.setBackgroundColor(
+          getChangeColor(capital, asset, context.getColor(R.color.backgroundListColor), context)
+      )
 
       val dividendStr = getDividendStr(current, context)
       if (dividendStr.isNotEmpty()) {

@@ -1870,7 +1870,7 @@ class StockDataFragment : Fragment() {
 
       textViewAssetChange.text = if (purchasePrice.isNotEmpty()) {
         getAssetChange(
-            data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, requireActivity()
+            data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, Color.DKGRAY, requireActivity()
         ).second
       } else {
         ""

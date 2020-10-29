@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
@@ -125,7 +126,9 @@ class SummaryListAdapter internal constructor(
       }
 
       holder.summaryListItemAssetChange.text =
-        getAssetChange(current.assets, current.onlineMarketData.marketPrice, context).second
+        getAssetChange(
+            current.assets, current.onlineMarketData.marketPrice, Color.DKGRAY, context
+        ).second
     } else {
       // offline
       holder.summaryListItemMarketPrice.text = ""

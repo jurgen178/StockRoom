@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
@@ -92,7 +94,9 @@ class StockRoomDetailListAdapter internal constructor(
       }
 
       val assetChange =
-        getAssetChange(current.assets, current.onlineMarketData.marketPrice, context, false)
+        getAssetChange(
+            current.assets, current.onlineMarketData.marketPrice, Color.DKGRAY, context, false
+        )
 
       val changeText = assetChange.second
       val dividendStr = getDividendStr(current, context)
@@ -104,7 +108,11 @@ class StockRoomDetailListAdapter internal constructor(
 
       // In one-line view set the background color to the market change instead of the asset change.
       holder.itemViewMarketPriceLayout.setBackgroundColor(
-          getChangeColor(current.onlineMarketData.marketChange, context)
+          getChangeColor(
+              current.onlineMarketData.marketChange,
+              context.getColor(color.backgroundListColor),
+              context
+          )
       )
 
 //      // Set the background color to the market change.

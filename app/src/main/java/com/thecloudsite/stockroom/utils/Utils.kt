@@ -22,7 +22,6 @@ import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
-import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.annotation.RawRes
 import androidx.core.text.bold
@@ -153,6 +152,7 @@ fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, 
 
 fun getChangeColor(
   change: Double,
+  neutralColor: Int,
   context: Context
 ): Int = when {
   change > 0.0 -> {
@@ -162,7 +162,24 @@ fun getChangeColor(
     context.getColor(color.red)
   }
   else -> {
-    context.getColor(R.color.backgroundListColor)
+    neutralColor
+  }
+}
+
+fun getChangeColor(
+  capital: Double,
+  asset: Double,
+  neutralColor: Int,
+  context: Context
+): Int = when {
+  capital > 0.0 && capital > asset -> {
+    context.getColor(color.green)
+  }
+  capital > 0.0 && capital < asset -> {
+    context.getColor(color.red)
+  }
+  else -> {
+    neutralColor
   }
 }
 
@@ -170,6 +187,7 @@ fun getChangeColor(
 fun getAssetChange(
   assets: List<Asset>,
   marketPrice: Double,
+  neutralColor: Int,
   context: Context,
   bold: Boolean = true
 ): Triple<String, SpannableStringBuilder, Int> {
@@ -224,25 +242,28 @@ fun getAssetChange(
         }${DecimalFormat("0.00").format(changePercent)}%)"
       }
 
-      val assetChangeColor = getChangeColor(capital - asset, context)
+      val assetChangeColor = getChangeColor(capital - asset, neutralColor, context)
 
-      val assetChange = if (bold) {
-        SpannableStringBuilder()
-            .color(assetChangeColor) {
-              bold { append(changeStr) }
-            }
+      val assetText = if (bold) {
+        SpannableStringBuilder().bold { append(changeStr) }
       } else {
-        SpannableStringBuilder()
-            .color(assetChangeColor) {
-              append(changeStr)
-            }
+        SpannableStringBuilder().append(changeStr)
+      }
+
+      val assetChange = SpannableStringBuilder()
+
+      // Omit the neutral color to use the default text color.
+      if (assetChangeColor != neutralColor) {
+        assetChange.color(assetChangeColor) { assetChange.append(assetText) }
+      } else {
+        assetChange.append(assetText)
       }
 
       return Triple(changeStr, assetChange, assetChangeColor)
     }
   }
 
-  return Triple("", SpannableStringBuilder(), context.getColor(R.color.backgroundListColor))
+  return Triple("", SpannableStringBuilder(), neutralColor)
 }
 
 fun getDividendStr(

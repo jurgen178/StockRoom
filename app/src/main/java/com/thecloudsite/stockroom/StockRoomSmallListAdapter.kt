@@ -26,6 +26,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomsmalllist_item.view.smalllist_item_layout
@@ -90,7 +91,11 @@ class StockRoomSmallListAdapter internal constructor(
 
       // In one-line view set the background color to the market change instead of the asset change.
       holder.itemViewMarketPriceLayout.setBackgroundColor(
-          getChangeColor(current.onlineMarketData.marketChange, context)
+          getChangeColor(
+              current.onlineMarketData.marketChange,
+              context.getColor(color.backgroundListColor),
+              context
+          )
       )
 
       var color = current.stockDBdata.groupColor
