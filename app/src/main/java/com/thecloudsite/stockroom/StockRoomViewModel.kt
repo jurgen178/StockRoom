@@ -882,6 +882,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (SharedRepository.alertsData.value!!.find {
               it.symbol == stockItem.stockDBdata.symbol
             } == null) {
+
           val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
 
           if (stockItem.stockDBdata.alertAbove > 0.0 && stockItem.stockDBdata.alertAbove < marketPrice) {

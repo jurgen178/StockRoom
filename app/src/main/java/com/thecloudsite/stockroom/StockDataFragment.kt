@@ -83,6 +83,12 @@ import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputEditText
 import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputLayout
 import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowInputEditText
 import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowInputLayout
+import kotlinx.android.synthetic.main.fragment_stockdata.alertGainAboveLayout
+import kotlinx.android.synthetic.main.fragment_stockdata.alertGainBelowLayout
+import kotlinx.android.synthetic.main.fragment_stockdata.alertGainDivider
+import kotlinx.android.synthetic.main.fragment_stockdata.alertLossAboveLayout
+import kotlinx.android.synthetic.main.fragment_stockdata.alertLossBelowLayout
+import kotlinx.android.synthetic.main.fragment_stockdata.alertLossDivider
 import kotlinx.android.synthetic.main.fragment_stockdata.assetsView
 import kotlinx.android.synthetic.main.fragment_stockdata.buttonFiveDays
 import kotlinx.android.synthetic.main.fragment_stockdata.buttonFiveYears
@@ -856,19 +862,35 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    // Update the current event list.
-    val eventsLiveData: LiveData<Events> = stockRoomViewModel.getEventsLiveData(symbol)
-    eventsLiveData.observe(viewLifecycleOwner, Observer { data ->
-      if (data != null) {
-        eventAdapter.updateEvents(data.events)
-      }
-    })
-
     // Update the current asset list.
     val assetsLiveData: LiveData<Assets> = stockRoomViewModel.getAssetsLiveData(symbol)
     assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
         assetAdapter.updateAssets(data.assets)
+
+        val (totalQuantity, totalPrice) = getAssets(data.assets)
+
+        val visibility = if (totalPrice != 0.0) {
+          View.VISIBLE
+        } else {
+          View.GONE
+        }
+
+        alertGainDivider.visibility = visibility
+        alertGainAboveLayout.visibility = visibility
+        alertGainBelowLayout.visibility = visibility
+
+        alertLossDivider.visibility = visibility
+        alertLossAboveLayout.visibility = visibility
+        alertLossBelowLayout.visibility = visibility
+      }
+    })
+
+    // Update the current event list.
+    val eventsLiveData: LiveData<Events> = stockRoomViewModel.getEventsLiveData(symbol)
+    eventsLiveData.observe(viewLifecycleOwner, Observer { data ->
+      if (data != null) {
+        eventAdapter.updateEvents(data.events)
       }
     })
 
@@ -1870,7 +1892,8 @@ class StockDataFragment : Fragment() {
 
       textViewAssetChange.text = if (purchasePrice.isNotEmpty()) {
         getAssetChange(
-            data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, Color.DKGRAY, requireActivity()
+            data.assets?.assets!!, data.onlineMarketData?.marketPrice!!, Color.DKGRAY,
+            requireActivity()
         ).second
       } else {
         ""
