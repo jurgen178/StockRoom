@@ -857,9 +857,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   data class AlertData(
     var symbol: String,
     var name: String,
-    var alertAbove: Double,
-    var alertBelow: Double,
-    var marketPrice: Double
+
+    var alertAbove: Double = 0.0,
+    var alertBelow: Double = 0.0,
+    var marketPrice: Double = 0.0,
+
+    var alertGainAbove: Double = 0.0,
+    var alertGainBelow: Double = 0.0,
+    var gain: Double = 0.0,
+
+    var alertLossAbove: Double = 0.0,
+    var alertLossBelow: Double = 0.0,
+    var loss: Double = 0.0
   )
 
   private fun processNotifications(stockItemSet: StockItemSet?) {
@@ -873,12 +882,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (SharedRepository.alertsData.value!!.find {
               it.symbol == stockItem.stockDBdata.symbol
             } == null) {
+          val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+
           if (stockItem.stockDBdata.alertAbove > 0.0 && stockItem.stockDBdata.alertAbove < marketPrice) {
             val alertDataAbove = AlertData(
                 symbol = stockItem.stockDBdata.symbol,
                 name = getName(stockItem.onlineMarketData),
+
                 alertAbove = stockItem.stockDBdata.alertAbove,
-                alertBelow = 0.0,
                 marketPrice = marketPrice
             )
             newAlerts.add(alertDataAbove)
@@ -887,7 +898,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               val alertDataBelow = AlertData(
                   symbol = stockItem.stockDBdata.symbol,
                   name = getName(stockItem.onlineMarketData),
-                  alertAbove = 0.0,
+
                   alertBelow = stockItem.stockDBdata.alertBelow,
                   marketPrice = marketPrice
               )

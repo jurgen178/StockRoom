@@ -196,8 +196,17 @@ class StockRoomChartAdapter internal constructor(
         }
       }
 
+//      // set background to asset change
+//      holder.itemRedGreen.setBackgroundColor(
+//          getChangeColor(capital, asset, context.getColor(color.backgroundListColor), context)
+//      )
+      // set background to market change
       holder.itemRedGreen.setBackgroundColor(
-          getChangeColor(capital, asset, context.getColor(color.backgroundListColor), context)
+          getChangeColor(
+              current.onlineMarketData.marketChange,
+              context.getColor(color.backgroundListColor),
+              context
+          )
       )
 
       var color = current.stockDBdata.groupColor

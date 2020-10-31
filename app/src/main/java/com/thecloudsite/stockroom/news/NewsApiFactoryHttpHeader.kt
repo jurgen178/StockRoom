@@ -54,6 +54,7 @@ open class NewsApiFactoryHttpHeader {
                     .addHeader("Host", "www.nasdaq.com")
                     .addHeader("User-Agent", "Android/10")
                     .addHeader("Accept", "*/*")
+                    .addHeader("Accept-Language", "en")
 //                    .addHeader("Accept-Language", "en-us,en;q=0.5")
 //                    .addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7")
 //                    .addHeader("Keep-Alive", "300")

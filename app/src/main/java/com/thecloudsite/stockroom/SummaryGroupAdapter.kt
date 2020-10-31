@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
@@ -367,19 +368,35 @@ class SummaryGroupAdapter internal constructor(
         }
         .append("${context.getString(R.string.totaldividend_payed)} ")
         .bold {
-          append(
-              "${
-                DecimalFormat("0.00")
-                    .format(totalDividendPayed)
-              }\n"
-          )
+          if (totalDividendPayed > 0.0) {
+            color(context.getColor(R.color.green))
+            {
+              append(
+                  "${
+                    DecimalFormat("0.00")
+                        .format(totalDividendPayed)
+                  }\n"
+              )
+            }
+          } else {
+            append("0.00\n")
+          }
         }
         .append("${context.getString(R.string.totaldividend_payedYTD)} ")
         .bold {
-          append(
-              DecimalFormat("0.00")
-                  .format(totalDividendPayedYTD)
-          )
+          if (totalDividendPayedYTD > 0.0) {
+            color(context.getColor(R.color.green))
+            {
+              append(
+                  "${
+                    DecimalFormat("0.00")
+                        .format(totalDividendPayedYTD)
+                  }\n"
+              )
+            }
+          } else {
+            append("0.00\n")
+          }
         }
 
     // summaryGroup1: Gain, loss, dividend

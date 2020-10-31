@@ -25,10 +25,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
@@ -145,7 +147,7 @@ class StockRoomListAdapter internal constructor(
 //      var asset: Double = 0.0
       var capital: Double = 0.0
 
-      if (quantity > 0.0) {
+      if (quantity > 0.0 && asset > 0.0) {
 //        asset = current.assets.sumByDouble {
 //          it.quantity * it.price
 //        }
@@ -161,44 +163,62 @@ class StockRoomListAdapter internal constructor(
                 DecimalFormat(
                     "0.00"
                 ).format(asset)
-              } ${
-                if (capital >= asset) {
-                  "+"
-                } else {
-                  "-"
-                }
-              } ${
-                DecimalFormat("0.00").format(
-                    (capital - asset).absoluteValue
-                )
-              } = "
+              } "
           )
 
-          assets.bold { append(DecimalFormat("0.00").format(capital)) }
+          val assetChange = capital - asset
+          val capitalPercent = assetChange * 100.0 / asset
 
-          val capitalPercent = (capital - asset) * 100.0 / asset
-          if (capitalPercent < 10000.0) {
+          assets.color(
+              getChangeColor(assetChange, context.getColor(R.color.backgroundListColor), context)
+          )
+          {
             assets.append(
-                " (${
-                  if (capitalPercent > 0.0) {
+                "${
+                  if (capital >= asset) {
                     "+"
                   } else {
-                    ""
+                    "-"
                   }
-                }${DecimalFormat("0.00").format(capitalPercent)}%)"
+                } ${
+                  DecimalFormat("0.00").format(
+                      (assetChange).absoluteValue
+                  )
+                }"
+            )
+            assets.append(
+                if (capitalPercent < 10000.0) {
+                  " (${
+                    if (capital >= asset) {
+                      "+"
+                    } else {
+                      ""
+                    }
+                  }${DecimalFormat("0.00").format(capitalPercent)}%)"
+                } else {
+                  DecimalFormat(
+                      "0.00"
+                  ).format(asset)
+                }
             )
           }
-        } else {
-          assets.append(
-              DecimalFormat(
-                  "0.00"
-              ).format(asset)
-          )
+
+          assets.append(" = ")
+          assets.bold { append(DecimalFormat("0.00").format(capital)) }
         }
       }
 
+//      // set background to asset change
+//      holder.itemRedGreen.setBackgroundColor(
+//          getChangeColor(capital, asset, context.getColor(R.color.backgroundListColor), context)
+//      )
+      // set background to market change
       holder.itemRedGreen.setBackgroundColor(
-          getChangeColor(capital, asset, context.getColor(R.color.backgroundListColor), context)
+          getChangeColor(
+              current.onlineMarketData.marketChange,
+              context.getColor(color.backgroundListColor),
+              context
+          )
       )
 
       val dividendStr = getDividendStr(current, context)
@@ -228,7 +248,8 @@ class StockRoomListAdapter internal constructor(
       }
       if (current.events.isNotEmpty()) {
         val count = current.events.size
-        val eventStr = context.resources.getQuantityString(R.plurals.events_in_list, count, count)
+        val eventStr =
+          context.resources.getQuantityString(R.plurals.events_in_list, count, count)
 
         assets.append("\n$eventStr")
         current.events.forEach {

@@ -31,6 +31,7 @@ import retrofit2.http.Query
 // https://news.google.com/rss/search?q=msft&hl=de&gl=DE&ceid=DE:de
 // https://www.nasdaq.com/feed/rssoutbound?symbol=msft
 // https://www.nasdaq.com/feed/rssoutbound
+// https://www.nasdaq.com/feed/nasdaq-original/rss.xml
 // http://rss.msn.com/en-us/money?feedoutput=rss
 
 /*
@@ -203,6 +204,7 @@ interface GoogleAllNewsApi : NewsApi {
 
 interface NasdaqAllNewsApi : NewsApi {
   @GET("feed/rssoutbound")
+  //  @GET("feed/nasdaq-original/rss.xml")
   override fun getNewsDataAsync(
     @Query(
         value = ""
