@@ -511,6 +511,7 @@
 
       </LinearLayout>
 
+<!--
       <View style="@style/Divider"
           android:id="@+id/alertGainDivider"
           android:layout_marginTop="30dp"
@@ -689,6 +690,7 @@
           android:layout_marginStart="16dp"
           android:layout_marginTop="10dp"
           android:layout_marginEnd="16dp"
+          android:layout_marginBottom="16dp"
           android:gravity="center_vertical"
           android:orientation="horizontal"
           android:visibility="gone"
@@ -732,6 +734,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
       </LinearLayout>
+-->
 
       <View style="@style/Divider"/>
 

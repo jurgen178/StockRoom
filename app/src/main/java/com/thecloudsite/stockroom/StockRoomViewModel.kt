@@ -862,13 +862,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     var alertBelow: Double = 0.0,
     var marketPrice: Double = 0.0,
 
-    var alertGainAbove: Double = 0.0,
-    var alertGainBelow: Double = 0.0,
-    var gain: Double = 0.0,
-
-    var alertLossAbove: Double = 0.0,
-    var alertLossBelow: Double = 0.0,
-    var loss: Double = 0.0
+//    var alertGainAbove: Double = 0.0,
+//    var alertGainBelow: Double = 0.0,
+//    var gain: Double = 0.0,
+//
+//    var alertLossAbove: Double = 0.0,
+//    var alertLossBelow: Double = 0.0,
+//    var loss: Double = 0.0,
   )
 
   private fun processNotifications(stockItemSet: StockItemSet?) {
