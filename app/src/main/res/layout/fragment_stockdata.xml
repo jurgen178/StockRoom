@@ -363,46 +363,15 @@
 
       <View style="@style/Divider"/>
 
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/current_events"
-          style="@style/section_header"
-          />
-
-      <LinearLayout
+      <com.thecloudsite.stockroom.PickerKnob
+          android:id="@+id/picker_knob"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_marginTop="16dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="end"
-          >
-
-        <ImageButton
-            android:id="@+id/addEventsButton"
-            android:src="@drawable/ic_action_event_note"
-            style="@style/asset_item_imagebutton"
-            android:contentDescription="@string/add_event"
-            />
-
-      </LinearLayout>
-
-      <HorizontalScrollView
-          android:fillViewport="true"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="16dp"
-          android:fadeScrollbars="false"
-          >
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/eventsView"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          tools:listitem="@layout/eventview_item"
-          />
-    </HorizontalScrollView>
+          app:picker_min_value="0"
+          app:picker_max_value="50"
+          app:picker_text_size="10sp"
+          app:picker_dash_gap="10dp"
+          app:picker_text_color="@android:color/black"/>
 
       <View style="@style/Divider"/>
 
@@ -511,230 +480,273 @@
 
       </LinearLayout>
 
-<!--
-      <View style="@style/Divider"
-          android:id="@+id/alertGainDivider"
-          android:layout_marginTop="30dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginBottom="10dp"
-          android:visibility="gone"
+      <!--
+            <View style="@style/Divider"
+                android:id="@+id/alertGainDivider"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                />
+
+            <LinearLayout
+                android:id="@+id/alertGainAboveLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+              <TextView
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="0.4"
+                  android:text="@string/alert_gain_above"
+                  />
+
+              <ImageView
+                  android:src="@drawable/ic_action_trending_up"
+                  style="@style/alert_item_imagebutton"
+                  android:contentDescription="@string/alert_gain_above"
+                  />
+
+              <com.google.android.material.textfield.TextInputLayout
+                  android:id="@+id/alertGainAboveInputLayout"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical|end"
+                  android:layout_weight="0.6"
+                  app:endIconMode="clear_text"
+                  >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/alertGainAboveInputEditText"
+                    android:background="@color/design_default_color_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789.,"
+                    android:imeOptions="actionDone"
+                    android:maxLength="9"
+                    android:maxLines="1"
+                    android:textAlignment="textEnd"
+                    />
+              </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/alertGainBelowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+              <TextView
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="0.4"
+                  android:text="@string/alert_gain_below"
+                  />
+
+              <ImageView
+                  android:src="@drawable/ic_action_trending_down"
+                  style="@style/alert_item_imagebutton"
+                  android:contentDescription="@string/alert_gain_below"
+                  />
+
+              <com.google.android.material.textfield.TextInputLayout
+                  android:id="@+id/alertGainBelowInputLayout"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical|end"
+                  android:layout_weight="0.6"
+                  app:endIconMode="clear_text"
+                  >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/alertGainBelowInputEditText"
+                    android:background="@color/design_default_color_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789.,"
+                    android:imeOptions="actionDone"
+                    android:maxLength="9"
+                    android:maxLines="1"
+                    android:textAlignment="textEnd"
+                    />
+              </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <View style="@style/Divider"
+                android:id="@+id/alertLossDivider"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                />
+
+            <LinearLayout
+                android:id="@+id/alertLossAboveLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+              <TextView
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="0.4"
+                  android:text="@string/alert_loss_above"
+                  />
+
+              <ImageView
+                  android:src="@drawable/ic_action_trending_up"
+                  style="@style/alert_item_imagebutton"
+                  android:contentDescription="@string/alert_loss_above"
+                  />
+
+              <com.google.android.material.textfield.TextInputLayout
+                  android:id="@+id/alertLossAboveInputLayout"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical|end"
+                  android:layout_weight="0.6"
+                  app:endIconMode="clear_text"
+                  >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/alertLossAboveInputEditText"
+                    android:background="@color/design_default_color_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789.,"
+                    android:imeOptions="actionDone"
+                    android:maxLength="9"
+                    android:maxLines="1"
+                    android:textAlignment="textEnd"
+                    />
+              </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/alertLossBelowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+              <TextView
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="0.4"
+                  android:text="@string/alert_loss_below"
+                  />
+
+              <ImageView
+                  android:src="@drawable/ic_action_trending_down"
+                  style="@style/alert_item_imagebutton"
+                  android:contentDescription="@string/alert_loss_below"
+                  />
+
+              <com.google.android.material.textfield.TextInputLayout
+                  android:id="@+id/alertLossBelowInputLayout"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical|end"
+                  android:layout_weight="0.6"
+                  app:endIconMode="clear_text"
+                  >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/alertLossBelowInputEditText"
+                    android:background="@color/design_default_color_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789.,"
+                    android:imeOptions="actionDone"
+                    android:maxLength="9"
+                    android:maxLines="1"
+                    android:textAlignment="textEnd"
+                    />
+              </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+      -->
+
+      <View style="@style/Divider"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/current_events"
+          style="@style/section_header"
           />
 
       <LinearLayout
-          android:id="@+id/alertGainAboveLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="10dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="center_vertical"
           android:orientation="horizontal"
-          android:visibility="gone"
+          android:layout_marginTop="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:gravity="end"
           >
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.4"
-            android:text="@string/alert_gain_above"
+        <ImageButton
+            android:id="@+id/addEventsButton"
+            android:src="@drawable/ic_action_event_note"
+            style="@style/asset_item_imagebutton"
+            android:contentDescription="@string/add_event"
             />
-
-        <ImageView
-            android:src="@drawable/ic_action_trending_up"
-            style="@style/alert_item_imagebutton"
-            android:contentDescription="@string/alert_gain_above"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertGainAboveInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_weight="0.6"
-            app:endIconMode="clear_text"
-            >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertGainAboveInputEditText"
-              android:background="@color/design_default_color_background"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="end"
-              android:inputType="numberDecimal"
-              android:digits="0123456789.,"
-              android:imeOptions="actionDone"
-              android:maxLength="9"
-              android:maxLines="1"
-              android:textAlignment="textEnd"
-              />
-        </com.google.android.material.textfield.TextInputLayout>
 
       </LinearLayout>
 
-      <LinearLayout
-          android:id="@+id/alertGainBelowLayout"
+      <HorizontalScrollView
+          android:fillViewport="true"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="10dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="center_vertical"
-          android:orientation="horizontal"
-          android:visibility="gone"
+          android:layout_margin="16dp"
+          android:fadeScrollbars="false"
           >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.4"
-            android:text="@string/alert_gain_below"
-            />
-
-        <ImageView
-            android:src="@drawable/ic_action_trending_down"
-            style="@style/alert_item_imagebutton"
-            android:contentDescription="@string/alert_gain_below"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertGainBelowInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_weight="0.6"
-            app:endIconMode="clear_text"
-            >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertGainBelowInputEditText"
-              android:background="@color/design_default_color_background"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="end"
-              android:inputType="numberDecimal"
-              android:digits="0123456789.,"
-              android:imeOptions="actionDone"
-              android:maxLength="9"
-              android:maxLines="1"
-              android:textAlignment="textEnd"
-              />
-        </com.google.android.material.textfield.TextInputLayout>
-
-      </LinearLayout>
-
-      <View style="@style/Divider"
-          android:id="@+id/alertLossDivider"
-          android:layout_marginTop="30dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginBottom="10dp"
-          android:visibility="gone"
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/eventsView"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          tools:listitem="@layout/eventview_item"
           />
-
-      <LinearLayout
-          android:id="@+id/alertLossAboveLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="10dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="center_vertical"
-          android:orientation="horizontal"
-          android:visibility="gone"
-          >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.4"
-            android:text="@string/alert_loss_above"
-            />
-
-        <ImageView
-            android:src="@drawable/ic_action_trending_up"
-            style="@style/alert_item_imagebutton"
-            android:contentDescription="@string/alert_loss_above"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertLossAboveInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_weight="0.6"
-            app:endIconMode="clear_text"
-            >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertLossAboveInputEditText"
-              android:background="@color/design_default_color_background"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="end"
-              android:inputType="numberDecimal"
-              android:digits="0123456789.,"
-              android:imeOptions="actionDone"
-              android:maxLength="9"
-              android:maxLines="1"
-              android:textAlignment="textEnd"
-              />
-        </com.google.android.material.textfield.TextInputLayout>
-
-      </LinearLayout>
-
-      <LinearLayout
-          android:id="@+id/alertLossBelowLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="10dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginBottom="16dp"
-          android:gravity="center_vertical"
-          android:orientation="horizontal"
-          android:visibility="gone"
-          >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.4"
-            android:text="@string/alert_loss_below"
-            />
-
-        <ImageView
-            android:src="@drawable/ic_action_trending_down"
-            style="@style/alert_item_imagebutton"
-            android:contentDescription="@string/alert_loss_below"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertLossBelowInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_weight="0.6"
-            app:endIconMode="clear_text"
-            >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertLossBelowInputEditText"
-              android:background="@color/design_default_color_background"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="end"
-              android:inputType="numberDecimal"
-              android:digits="0123456789.,"
-              android:imeOptions="actionDone"
-              android:maxLength="9"
-              android:maxLines="1"
-              android:textAlignment="textEnd"
-              />
-        </com.google.android.material.textfield.TextInputLayout>
-
-      </LinearLayout>
--->
+    </HorizontalScrollView>
 
       <View style="@style/Divider"/>
 
