@@ -157,7 +157,6 @@ fun getChangeColor(
   context: Context
 ): Int = when {
   change > 0.0 -> {
-
     context.getColor(if (isPostMarket) color.postGreen else color.green)
   }
   change < 0.0 -> {
@@ -171,14 +170,15 @@ fun getChangeColor(
 fun getChangeColor(
   capital: Double,
   asset: Double,
+  isPostMarket: Boolean,
   neutralColor: Int,
   context: Context
 ): Int = when {
   capital > 0.0 && capital > asset -> {
-    context.getColor(color.green)
+    context.getColor(if (isPostMarket) color.postGreen else color.green)
   }
   capital > 0.0 && capital < asset -> {
-    context.getColor(color.red)
+    context.getColor(if (isPostMarket) color.postRed else color.red)
   }
   else -> {
     neutralColor
