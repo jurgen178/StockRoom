@@ -106,7 +106,7 @@ limitations under the License. -->
   <string name="five_year_range">Five years</string>
   <string name="max_range">Max</string>
   <string name="use_postmarket">After hour trading</string>
-  <string name="use_postmarket_desc">Display market values from after hour trading. The values are displayed in italics.</string>
+  <string name="use_postmarket_desc">Display market values from after hour trading. The values are displayed in italics and in darker red and green color.</string>
   <string name="notes">Notes</string>
   <string name="alerts">Alerts</string>
   <string name="alert_above">Stock price above</string>

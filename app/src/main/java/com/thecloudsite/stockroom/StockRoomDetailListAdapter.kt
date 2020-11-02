@@ -95,7 +95,12 @@ class StockRoomDetailListAdapter internal constructor(
 
       val assetChange =
         getAssetChange(
-            current.assets, current.onlineMarketData.marketPrice, Color.DKGRAY, context, false
+            current.assets,
+            current.onlineMarketData.marketPrice,
+            current.onlineMarketData.postMarketData,
+            Color.DKGRAY,
+            context,
+            false
         )
 
       val changeText = assetChange.second
@@ -110,6 +115,7 @@ class StockRoomDetailListAdapter internal constructor(
       holder.itemViewMarketPriceLayout.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
+              current.onlineMarketData.postMarketData,
               context.getColor(color.backgroundListColor),
               context
           )

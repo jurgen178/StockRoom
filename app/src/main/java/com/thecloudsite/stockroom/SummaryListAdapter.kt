@@ -127,7 +127,11 @@ class SummaryListAdapter internal constructor(
 
       holder.summaryListItemAssetChange.text =
         getAssetChange(
-            current.assets, current.onlineMarketData.marketPrice, Color.DKGRAY, context
+            current.assets,
+            current.onlineMarketData.marketPrice,
+            current.onlineMarketData.postMarketData,
+            Color.DKGRAY,
+            context
         ).second
     } else {
       // offline

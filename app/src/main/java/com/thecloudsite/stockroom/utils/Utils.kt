@@ -152,14 +152,16 @@ fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, 
 
 fun getChangeColor(
   change: Double,
+  isPostMarket: Boolean,
   neutralColor: Int,
   context: Context
 ): Int = when {
   change > 0.0 -> {
-    context.getColor(color.green)
+
+    context.getColor(if (isPostMarket) color.postGreen else color.green)
   }
   change < 0.0 -> {
-    context.getColor(color.red)
+    context.getColor(if (isPostMarket) color.postRed else color.red)
   }
   else -> {
     neutralColor
@@ -187,6 +189,7 @@ fun getChangeColor(
 fun getAssetChange(
   assets: List<Asset>,
   marketPrice: Double,
+  isPostMarket: Boolean,
   neutralColor: Int,
   context: Context,
   bold: Boolean = true
@@ -242,7 +245,7 @@ fun getAssetChange(
         }${DecimalFormat("0.00").format(changePercent)}%)"
       }
 
-      val assetChangeColor = getChangeColor(capital - asset, neutralColor, context)
+      val assetChangeColor = getChangeColor(capital - asset, isPostMarket, neutralColor, context)
 
       val assetText = if (bold) {
         SpannableStringBuilder().bold { append(changeStr) }

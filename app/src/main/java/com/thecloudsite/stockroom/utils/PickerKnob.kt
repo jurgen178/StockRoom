@@ -340,6 +340,10 @@ class PickerKnob : View {
   }
 
   override fun onTouchEvent(@NonNull event: MotionEvent): Boolean {
+    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+      parent?.requestDisallowInterceptTouchEvent(true)
+    }
+
     return when (event.action) {
       MotionEvent.ACTION_DOWN -> {
         startTouch(event)

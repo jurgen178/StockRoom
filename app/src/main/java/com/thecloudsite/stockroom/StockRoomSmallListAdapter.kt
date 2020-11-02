@@ -93,6 +93,7 @@ class StockRoomSmallListAdapter internal constructor(
       holder.itemViewMarketPriceLayout.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
+              current.onlineMarketData.postMarketData,
               context.getColor(color.backgroundListColor),
               context
           )

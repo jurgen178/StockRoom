@@ -170,7 +170,12 @@ class StockRoomListAdapter internal constructor(
           val capitalPercent = assetChange * 100.0 / asset
 
           assets.color(
-              getChangeColor(assetChange, context.getColor(R.color.backgroundListColor), context)
+              getChangeColor(
+                  assetChange,
+                  current.onlineMarketData.postMarketData,
+                  context.getColor(R.color.backgroundListColor),
+                  context
+              )
           )
           {
             assets.append(
@@ -216,6 +221,7 @@ class StockRoomListAdapter internal constructor(
       holder.itemRedGreen.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
+              current.onlineMarketData.postMarketData,
               context.getColor(color.backgroundListColor),
               context
           )

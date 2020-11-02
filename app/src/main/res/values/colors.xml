@@ -20,7 +20,9 @@ limitations under the License. -->
     <color name="buttonLabel">#FFFFFF</color>
     <color name="backgroundListColor">#F0F0FF</color>
     <color name="green">#32CD32</color>
+    <color name="postGreen">#2CB22C</color>
     <color name="red">#DC143C</color>
+    <color name="postRed">#C11336</color>
     <color name="black">#000000</color>
     <color name="settingsblue">#33B5E5</color>
 
