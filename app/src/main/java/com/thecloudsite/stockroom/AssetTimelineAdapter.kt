@@ -29,24 +29,24 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-data class TimelineElement(
+data class AssetTimelineElement(
   val date: String,
   val symbol: String,
   val assets: List<Asset>,
 )
 
-class TimelineAdapter(
+class AssetTimelineAdapter(
   private val context: Context,
-  private val clickListenerCardItem: (TimelineElement) -> Unit
-) : RecyclerView.Adapter<TimelineAdapter.ViewHolder>() {
+  private val clickListenerCardItem: (AssetTimelineElement) -> Unit
+) : RecyclerView.Adapter<AssetTimelineAdapter.ViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var timelineElementList: List<TimelineElement> = listOf()
+  private var timelineElementList: List<AssetTimelineElement> = listOf()
 
   class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(
-      timelineElement: TimelineElement,
-      clickListener: (TimelineElement) -> Unit
+      timelineElement: AssetTimelineElement,
+      clickListener: (AssetTimelineElement) -> Unit
     ) {
       itemView.timelineCardView.setOnClickListener { clickListener(timelineElement) }
     }
@@ -94,7 +94,7 @@ class TimelineAdapter(
 
           stockTransactions += if (asset.quantity > 0.0) {
             context.getString(
-                R.string.timeline_bought,
+                R.string.timeline_asset_bought,
                 DecimalFormat("0.####").format(asset.quantity),
                 DecimalFormat("0.00##").format(asset.price),
                 DecimalFormat("0.00").format(asset.quantity * asset.price),
@@ -102,7 +102,7 @@ class TimelineAdapter(
             )
           } else {
             context.getString(
-                R.string.timeline_sold,
+                R.string.timeline_asset_sold,
                 DecimalFormat("0.####").format(-asset.quantity),
                 DecimalFormat("0.00##").format(asset.price),
                 DecimalFormat("0.00").format(-asset.quantity * asset.price),
@@ -114,7 +114,7 @@ class TimelineAdapter(
     holder.details.text = stockTransactions
   }
 
-  fun updateData(timeline: List<TimelineElement>) {
+  fun updateData(timeline: List<AssetTimelineElement>) {
     timelineElementList = timeline
     notifyDataSetChanged()
   }

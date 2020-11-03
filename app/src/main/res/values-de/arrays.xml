@@ -8,7 +8,8 @@
     <item>Kleine Übersicht</item>
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
-    <item>Zeitachse</item>
+    <item>Zeitachse Aktienwerte</item>
+    <item>Zeitachse Ereignisse</item>
   </string-array>
   <string-array name="displayed_views_entries_values">
     <item>0_StockRoomChartFragment</item>
@@ -18,7 +19,8 @@
     <item>4_StockRoomSmallListFragment</item>
     <item>5_SummaryGroupFragment</item>
     <item>6_AllNewsFragment</item>
-    <item>7_TimelineFragment</item>
+    <item>7_AssetTimelineFragment</item>
+    <item>8_EventTimelineFragment</item>
   </string-array>
   <string-array name="displayed_views_entries_defaults">
     <item>0_StockRoomChartFragment</item>

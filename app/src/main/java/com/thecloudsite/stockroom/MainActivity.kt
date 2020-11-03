@@ -202,8 +202,11 @@ class MainActivity : AppCompatActivity() {
           "6_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "7_TimelineFragment" -> {
-            TimelineFragment.newInstance()
+          "7_AssetTimelineFragment" -> {
+            AssetTimelineFragment.newInstance()
+          }
+          "8_EventTimelineFragment" -> {
+            EventTimelineFragment.newInstance()
           }
           else -> {
             StockRoomListFragment.newInstance()

@@ -16,7 +16,6 @@
 
 package com.thecloudsite.stockroom
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Event
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
@@ -33,17 +32,18 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.FULL
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
 // Bug in xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
 // updating the data shifts the cardview to the right
 
-class TimelineFragment : Fragment() {
+class EventTimelineFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   companion object {
-    fun newInstance() = TimelineFragment()
+    fun newInstance() = EventTimelineFragment()
   }
 
   override fun onCreateView(
@@ -71,74 +71,67 @@ class TimelineFragment : Fragment() {
     )
 
     // Set Adapter
-    val clickListenerCardItem =
-      { timelineElement: TimelineElement -> clickListenerCardItem(timelineElement) }
-    val timelineAdapter = TimelineAdapter(
-        requireContext(),
-        clickListenerCardItem
-    )
+    val eventTimelineAdapter = EventTimelineAdapter(requireContext())
 
-    recyclerView.adapter = timelineAdapter
+    recyclerView.adapter = eventTimelineAdapter
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
-    stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
-      if (assets != null) {
-        val hashMap: HashMap<String, HashMap<String, MutableList<Asset>>> = hashMapOf()
-        val unknownDate = getString(R.string.timeline_unknown_date)
+    stockRoomViewModel.allEventTable.observe(viewLifecycleOwner, Observer { events ->
+      if (events != null) {
+        val hashMap: HashMap<String, HashMap<String, MutableList<Event>>> = hashMapOf()
 
-        // map the list of assets to date map that maps to a symbol map with each matching asset
-        assets.forEach { asset ->
-          val date = if (asset.date > 0) {
-            val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+        events.forEach { event ->
+          if (event.datetime > 0) {
+
+            val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
             val yearMonth: YearMonth = YearMonth.from(localDateTime)
-            yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
-          } else {
-            unknownDate
-          }
+            val dateYM = yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
+            val dateFull = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
 
-          if (hashMap[date] == null) {
-            hashMap[date] = hashMapOf()
-          }
+            if (hashMap[dateYM] == null) {
+              hashMap[dateYM] = hashMapOf()
+            }
 
-          if (hashMap[date]?.get(asset.symbol) == null) {
-            hashMap[date]?.set(asset.symbol, mutableListOf())
-          }
+            if (hashMap[dateYM]?.get(dateFull) == null) {
+              hashMap[dateYM]?.set(dateFull, mutableListOf())
+            }
 
-          hashMap[date]?.get(asset.symbol)
-              ?.add(asset)
+            hashMap[dateYM]?.get(dateFull)
+                ?.add(event)
+          }
         }
 
-        val assetList: MutableList<TimelineElement> = mutableListOf()
+        val eventList: MutableList<EventTimelineElement> = mutableListOf()
 
-        // Copy the new structured data-symbol map to timeline elements.
+        // Copy the new structured data-date map to timeline elements.
         hashMap.toSortedMap()
             .forEach { (date, symbolMap) ->
-              // sort by first date entry in the asset list
+              // sort by first date entry in the event list
               symbolMap.toList()
                   .sortedBy {
                     if (it.second.isNotEmpty()) {
                       // sort the date list
-                      it.second.minByOrNull { asset ->
-                        asset.date
-                      }!!.date
+                      it.second.minByOrNull { event ->
+                        event.datetime
+                      }!!.datetime
                     } else {
                       0
                     }
                   }
-                  .forEach { (symbol, list) ->
-                    assetList.add(TimelineElement(date, symbol, list))
+                  .forEach { (eventdate, list) ->
+                    eventList.add(EventTimelineElement(date, eventdate, list))
                   }
             }
 
-        timelineAdapter.updateData(assetList)
-        recyclerView.addItemDecoration(getSectionCallback(assetList))
+        eventTimelineAdapter.updateData(eventList)
+        recyclerView.addItemDecoration(getSectionCallback(eventList))
       }
     })
   }
 
-  private fun getSectionCallback(timelineElementList: List<TimelineElement>): SectionCallback {
+  private fun getSectionCallback(timelineElementList: List<EventTimelineElement>): SectionCallback {
     return object : SectionCallback {
       // In your data, implement a method to determine if this is a section.
       override fun isSection(position: Int): Boolean =
@@ -156,12 +149,5 @@ class TimelineFragment : Fragment() {
           null
         }
     }
-  }
-
-  private fun clickListenerCardItem(timelineElement: TimelineElement) {
-    val intent = Intent(context, StockDataActivity::class.java)
-    intent.putExtra("symbol", timelineElement.symbol)
-    //stockRoomViewModel.runOnlineTaskNow()
-    startActivity(intent)
   }
 }
