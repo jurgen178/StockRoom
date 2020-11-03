@@ -42,7 +42,7 @@ import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle.MEDIUM
+import java.time.format.FormatStyle.SHORT
 import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
@@ -260,7 +260,7 @@ class StockRoomListAdapter internal constructor(
         assets.append("\n$eventStr")
         current.events.forEach {
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
-          val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+          val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
           assets.append(
               "\n${
                 context.getString(

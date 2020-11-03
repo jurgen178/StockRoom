@@ -32,6 +32,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
+import java.time.format.FormatStyle.SHORT
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -100,7 +101,7 @@ class EventListAdapter internal constructor(
       val datetime: LocalDateTime = LocalDateTime.ofEpochSecond(current.datetime, 0, ZoneOffset.UTC)
       holder.textViewEventDateTime.text =
         "${datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        }\n${datetime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+        }\n${datetime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
         }"
 
       val background = TypedValue()

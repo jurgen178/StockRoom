@@ -27,6 +27,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
+import java.time.format.FormatStyle.SHORT
 
 data class EventTimelineElement(
   val date: String,
@@ -71,7 +72,7 @@ class EventTimelineAdapter(
         .forEach { event ->
           if (event.datetime > 0) {
             val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
-            val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+            val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
 
             if (!skipFirstline) {
               events += "\n"
@@ -81,9 +82,9 @@ class EventTimelineAdapter(
 
             events += context.getString(
                 R.string.timeline_event,
+                timeStr,
                 event.title,
-                event.symbol,
-                timeStr
+                event.symbol
             )
           }
         }
