@@ -22,25 +22,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.thecloudsite.stockroom.database.Event
+import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.utils.dividendCycleStr
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 
-data class EventTimelineElement(
+data class DividendTimelineElement(
   val date: String,
   val symbol: String,
-  val events: List<Event>,
+  val dividends: List<Dividend>,
 )
 
-class EventTimelineAdapter(
+class DividendTimelineAdapter(
   private val context: Context
-) : RecyclerView.Adapter<EventTimelineAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<DividendTimelineAdapter.ViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var timelineElementList: List<EventTimelineElement> = listOf()
+  private var timelineElementList: List<DividendTimelineElement> = listOf()
 
   class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val header: TextView = view.findViewById<View>(R.id.timeline_header) as TextView
@@ -51,7 +53,7 @@ class EventTimelineAdapter(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val itemView = inflater.inflate(R.layout.timeline_event_item, parent, false)
+    val itemView = inflater.inflate(R.layout.timeline_dividend_item, parent, false)
     return ViewHolder(itemView)
   }
 
@@ -63,34 +65,35 @@ class EventTimelineAdapter(
 
     holder.header.text = timelineElement.symbol
 
-    var events = ""
+    var dividends = ""
     var skipFirstline = true
 
-    timelineElement.events.sortedBy { event ->
-      event.datetime
+    timelineElement.dividends.sortedBy { dividend ->
+      dividend.paydate
     }
-        .forEach { event ->
-          val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
-          val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
+        .forEach { dividend ->
+          val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
+          val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
 
           if (!skipFirstline) {
-            events += "\n"
+            dividends += "\n"
           } else {
             skipFirstline = false
           }
 
-          events += context.getString(
-              R.string.timeline_event,
+          dividends += context.getString(
+              R.string.timeline_dividend,
               timeStr,
-              event.title,
-              event.symbol
+              dividendCycleStr(dividend.cycle, context),
+              DecimalFormat("0.00").format(dividend.amount),
+              dividend.symbol
           )
         }
 
-    holder.details.text = events
+    holder.details.text = dividends
   }
 
-  fun updateData(timeline: List<EventTimelineElement>) {
+  fun updateData(timeline: List<DividendTimelineElement>) {
     timelineElementList = timeline
     notifyDataSetChanged()
   }

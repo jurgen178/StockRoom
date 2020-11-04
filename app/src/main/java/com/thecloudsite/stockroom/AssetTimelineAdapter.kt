@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.thecloudsite.stockroom.database.Asset
-import kotlinx.android.synthetic.main.timeline_item.view.timelineCardView
+import kotlinx.android.synthetic.main.timeline_asset_item.view.timelineCardView
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -59,7 +59,7 @@ class AssetTimelineAdapter(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val itemView = inflater.inflate(R.layout.timeline_item, parent, false)
+    val itemView = inflater.inflate(R.layout.timeline_asset_item, parent, false)
     return ViewHolder(itemView)
   }
 
@@ -95,18 +95,18 @@ class AssetTimelineAdapter(
           stockTransactions += if (asset.quantity > 0.0) {
             context.getString(
                 R.string.timeline_asset_bought,
+                date,
                 DecimalFormat("0.####").format(asset.quantity),
                 DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(asset.quantity * asset.price),
-                date
+                DecimalFormat("0.00").format(asset.quantity * asset.price)
             )
           } else {
             context.getString(
                 R.string.timeline_asset_sold,
+                date,
                 DecimalFormat("0.####").format(-asset.quantity),
                 DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(-asset.quantity * asset.price),
-                date
+                DecimalFormat("0.00").format(-asset.quantity * asset.price)
             )
           }
         }

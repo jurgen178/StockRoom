@@ -50,11 +50,13 @@ class StockRoomTest {
     val dateMedium = localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
     val dateLong = localDateTime.format(DateTimeFormatter.ofLocalizedDate(LONG))
     val dateFull = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
+    val dateMY = localDateTime.format(DateTimeFormatter.ofPattern("MMMM u"))
 
     assertEquals("01.01.70", dateShort)
     assertEquals("01.01.1970", dateMedium)
     assertEquals("1. Januar 1970", dateLong)
     assertEquals("Donnerstag, 1. Januar 1970", dateFull)
+    assertEquals("Januar 1970", dateMY)
 
     val timeShort = localDateTime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
     val timeMedium = localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))

@@ -10,6 +10,7 @@
     <item>Nachrichten</item>
     <item>Zeitachse Aktienwerte</item>
     <item>Zeitachse Ereignisse</item>
+    <item>Zeitachse Dividenden</item>
   </string-array>
   <string-array name="displayed_views_entries_values">
     <item>0_StockRoomChartFragment</item>
@@ -21,6 +22,7 @@
     <item>6_AllNewsFragment</item>
     <item>7_AssetTimelineFragment</item>
     <item>8_EventTimelineFragment</item>
+    <item>9_DividendTimelineFragment</item>
   </string-array>
   <string-array name="displayed_views_entries_defaults">
     <item>0_StockRoomChartFragment</item>

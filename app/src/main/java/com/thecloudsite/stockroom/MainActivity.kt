@@ -208,6 +208,9 @@ class MainActivity : AppCompatActivity() {
           "8_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
+          "9_DividendTimelineFragment" -> {
+            DividendTimelineFragment.newInstance()
+          }
           else -> {
             StockRoomListFragment.newInstance()
           }

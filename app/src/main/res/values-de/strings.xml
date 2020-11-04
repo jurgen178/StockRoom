@@ -328,9 +328,11 @@ limitations under the License. -->
   <string name="data_provider_details_sorted">[Sortiert]</string>
   <string name="data_provider_details_unsorted">[Unsortiert]</string>
   <string name="remove_price">Verkaufspreis</string>
-  <string name="timeline_asset_bought">%1$s@%2$s (%3$s), Gekauft am %4$s.</string>
-  <string name="timeline_asset_sold">%1$s@%2$s (%3$s), Verkauft am %4$s.</string>
+  <string name="timeline_asset_bought">Gekauft am %1$s, %2$s@%3$s (%4$s)</string>
+  <string name="timeline_asset_sold">Verkauft am %1$s, %2$s@%3$s (%4$s)</string>
   <string name="timeline_event">%1$s - Ereignis \'%2$s\' für Aktie %3$s</string>
+  <string name="timeline_dividend_headline">Dividende %1$s</string>
+  <string name="timeline_dividend">%1$s - %2$s %3$s für Aktie %4$s</string>
   <string name="timeline_unknown_date">Datum nicht angegeben</string>
   <string name="displayed_views">Angezeigte Darstellungen</string>
   <string name="displayed_views_summary">Wählen Sie aus was angezeigt werden soll.</string>
