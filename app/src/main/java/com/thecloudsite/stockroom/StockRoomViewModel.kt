@@ -1363,16 +1363,26 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
         if (jsonObj.has("alertAbove")) {
+          val alertAboveNote = if (jsonObj.has("alertAboveNote")) {
+            jsonObj.getString("alertAboveNote")
+          } else {
+            ""
+          }
           val alertAbove = jsonObj.getDouble("alertAbove")
           if (alertAbove > 0.0) {
-            updateAlertAbove(symbol, alertAbove)
+            updateAlertAbove(symbol, alertAbove, alertAboveNote)
           }
         }
 
         if (jsonObj.has("alertBelow")) {
+          val alertBelowNote = if (jsonObj.has("alertBeloweNote")) {
+            jsonObj.getString("alertBelowNote")
+          } else {
+            ""
+          }
           val alertBelow = jsonObj.getDouble("alertBelow")
           if (alertBelow > 0.0) {
-            updateAlertBelow(symbol, alertBelow)
+            updateAlertBelow(symbol, alertBelow, alertBelowNote)
           }
         }
 
@@ -1403,14 +1413,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           if (properties.has("alertAbove")) {
             val alertAbove = properties.getDouble("alertAbove")
             if (alertAbove > 0.0) {
-              updateAlertAbove(symbol, alertAbove)
+              updateAlertAbove(symbol, alertAbove, "")
             }
           }
 
           if (properties.has("alertBelow")) {
             val alertBelow = properties.getDouble("alertBelow")
             if (alertBelow > 0.0) {
-              updateAlertBelow(symbol, alertBelow)
+              updateAlertBelow(symbol, alertBelow, "")
             }
           }
 
@@ -1918,12 +1928,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // the alert is still valid for some time and gets send multiple times.
   fun updateAlertAboveSync(
     symbol: String,
-    alertAbove: Double
+    alertAbove: Double,
+    alertAboveNote: String
   ) {
     runBlocking {
       withContext(Dispatchers.IO) {
         if (symbol.isNotEmpty()) {
-          repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+          repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote)
         }
       }
     }
@@ -1931,12 +1942,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun updateAlertBelowSync(
     symbol: String,
-    alertBelow: Double
+    alertBelow: Double,
+    alertBelowNote: String
   ) {
     runBlocking {
       withContext(Dispatchers.IO) {
         if (symbol.isNotEmpty()) {
-          repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+          repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote)
         }
       }
     }
@@ -1945,19 +1957,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // Do not use the Sync version of these functions for the import.
   private fun updateAlertAbove(
     symbol: String,
-    alertAbove: Double
+    alertAbove: Double,
+    alertAboveNote: String
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
-      repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove)
+      repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote)
     }
   }
 
   private fun updateAlertBelow(
     symbol: String,
-    alertBelow: Double
+    alertBelow: Double,
+    alertBelowNote: String
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
-      repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow)
+      repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote)
     }
   }
 

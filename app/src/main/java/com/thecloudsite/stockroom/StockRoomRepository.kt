@@ -119,18 +119,20 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @WorkerThread
   suspend fun updateAlertAbove(
     symbol: String,
-    alertAbove: Double
+    alertAbove: Double,
+    alertAboveNote: String
   ) {
-    stockRoomDao.updateAlertAbove(symbol, alertAbove)
+    stockRoomDao.updateAlertAbove(symbol, alertAbove, alertAboveNote)
   }
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
   suspend fun updateAlertBelow(
     symbol: String,
-    alertBelow: Double
+    alertBelow: Double,
+    alertBelowNote: String
   ) {
-    stockRoomDao.updateAlertBelow(symbol, alertBelow)
+    stockRoomDao.updateAlertBelow(symbol, alertBelow, alertBelowNote)
   }
 
   @Suppress("RedundantSuspendModifier")

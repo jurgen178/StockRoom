@@ -566,7 +566,7 @@ class MainActivity : AppCompatActivity() {
         val notification = NotificationFactory(this, title, text, alert.symbol)
         notification.sendNotification()
         // Alert is shown, remove alert.
-        stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0)
+        stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0, "")
 
         stockRoomViewModel.logDebug("Alert '$title'")
         stockRoomViewModel.logDebug("Alert '$text'")
@@ -585,7 +585,7 @@ class MainActivity : AppCompatActivity() {
           val notification = NotificationFactory(this, title, text, alert.symbol)
           notification.sendNotification()
           // Alert is shown, remove alert.
-          stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0)
+          stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0, "")
 
           stockRoomViewModel.logDebug("Alert '$title'")
           stockRoomViewModel.logDebug("Alert '$text'")

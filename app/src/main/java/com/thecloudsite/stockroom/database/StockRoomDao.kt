@@ -132,10 +132,15 @@ interface StockRoomDao {
       if (stockDBdata.alertBelow == 0.0) {
         stockDBdata.alertBelow = stockData.alertBelow
       }
+      if (stockDBdata.alertBelowNote.isEmpty()) {
+        stockDBdata.alertBelowNote = stockData.alertBelowNote
+      }
       if (stockDBdata.alertAbove == 0.0) {
         stockDBdata.alertAbove = stockData.alertAbove
       }
-
+      if (stockDBdata.alertAboveNote.isEmpty()) {
+        stockDBdata.alertAboveNote = stockData.alertAboveNote
+      }
     }
 
     insertStockDBdata(stockDBdata)
@@ -223,16 +228,18 @@ interface StockRoomDao {
     color: Int
   )
 
-  @Query("UPDATE stock_table SET alert_above = :alertAbove WHERE symbol = :symbol")
+  @Query("UPDATE stock_table SET alert_above = :alertAbove, alert_above_note = :alertAboveNote WHERE symbol = :symbol")
   fun updateAlertAbove(
     symbol: String,
-    alertAbove: Double
+    alertAbove: Double,
+    alertAboveNote: String
   )
 
-  @Query("UPDATE stock_table SET alert_below = :alertBelow WHERE symbol = :symbol")
+  @Query("UPDATE stock_table SET alert_below = :alertBelow, alert_below_note = :alertBelowNote WHERE symbol = :symbol")
   fun updateAlertBelow(
     symbol: String,
-    alertBelow: Double
+    alertBelow: Double,
+    alertBelowNote: String
   )
 
   @Query("UPDATE stock_table SET notes = :notes WHERE symbol = :symbol")

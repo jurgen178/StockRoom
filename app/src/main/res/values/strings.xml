@@ -199,8 +199,8 @@ limitations under the License. -->
   <string name="note_added">Note \'%1$s\' added.</string>
   <string name="invalid_entry">Invalid input</string>
   <string name="note_deleted">Note deleted.</string>
-  <string name="alert_event_notification_title">Event \'%1$s\' for stock %2$s</string>
-  <string name="alert_event_notification">Event notification for stock %1$s\nEvent \'%2$s\'\n%3$s</string>
+  <string name="alert_event_notification_title">Event \'%1$s\' for stock \'%2$s\'</string>
+  <string name="alert_event_notification">Event notification for stock \'%1$s\'\nEvent \'%2$s\'\n%3$s</string>
   <string name="summary_stocks">Stocks</string>
   <string name="summary_stocks_with_assets">Stocks with assets</string>
   <string name="summary_bought_sold">Bought/Sold</string>
@@ -333,9 +333,9 @@ limitations under the License. -->
   <string name="remove_price">Sell price</string>
   <string name="timeline_asset_bought">%1$s@%2$s (%3$s), Bought am %4$s.</string>
   <string name="timeline_asset_sold">%1$s@%2$s (%3$s), Sold am %4$s.</string>
-  <string name="timeline_event">%1$s - Event \'%2$s\' for stock %3$s</string>
+  <string name="timeline_event">%1$s - Event \'%2$s\' for stock \'%3$s\'</string>
   <string name="timeline_dividend_headline">Dividend %1$s</string>
-  <string name="timeline_dividend">%1$s - %2$s %3$s for stock %4$s</string>
+  <string name="timeline_dividend">%1$s - %2$s %3$s for stock \'%4$s\'</string>
   <string name="timeline_unknown_date">Date not specified</string>
   <string name="displayed_views">Displayed views</string>
   <string name="displayed_views_summary">Select what is on display.</string>
@@ -347,4 +347,5 @@ limitations under the License. -->
   <string name="no_dividend_data">No online dividend data.</string>
   <string name="date">Date</string>
   <string name="community_search_links">Community and Search links</string>
+  <string name="alert_note">alert</string>
 </resources>

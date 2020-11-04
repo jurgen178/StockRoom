@@ -382,21 +382,24 @@
           style="@style/section_header"
           />
 
-      <LinearLayout
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/alertLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginStart="16dp"
           android:layout_marginTop="10dp"
           android:layout_marginEnd="16dp"
-          android:gravity="center_vertical"
-          android:orientation="horizontal"
           >
 
         <TextView
+            android:id="@+id/textviewAlertAbove"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.4"
+            app:layout_constraintTop_toTopOf="@+id/alertAboveInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/alertAboveInputLayout"
             android:text="@string/alert_above"
             />
 
@@ -404,14 +407,19 @@
             android:src="@drawable/ic_action_trending_up"
             style="@style/alert_item_imagebutton"
             android:contentDescription="@string/alert_above"
+            app:layout_constraintTop_toTopOf="@+id/alertAboveInputLayout"
+            app:layout_constraintStart_toEndOf="@+id/guideline1"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintBottom_toBottomOf="@+id/alertAboveInputLayout"
             />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/alertAboveInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_weight="0.6"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:endIconMode="clear_text"
             >
           <com.google.android.material.textfield.TextInputEditText
@@ -426,6 +434,60 @@
               android:maxLength="9"
               android:maxLines="1"
               android:textAlignment="textEnd"
+              />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.45"
+            />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="10dp"
+          android:layout_marginEnd="16dp"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="0.4"
+            android:text="@string/alert_note"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/alertAboveNoteInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="0.6"
+            app:endIconMode="clear_text"
+            >
+          <com.google.android.material.textfield.TextInputEditText
+              android:id="@+id/alertAboveNoteInputEditText"
+              android:background="@color/design_default_color_background"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:inputType="textMultiLine"
+              android:imeOptions="actionDone"
               />
         </com.google.android.material.textfield.TextInputLayout>
 

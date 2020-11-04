@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7de39d75c43d928bb9f07a669ae428fa",
+    "identityHash": "31d8eb913914b307a923af66323cd1f1",
     "entities": [
       {
         "tableName": "stock_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `dividend_notes` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL, PRIMARY KEY(`symbol`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `notes` TEXT NOT NULL, `dividend_notes` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_above_note` TEXT NOT NULL, `alert_below` REAL NOT NULL, `alert_below_note` TEXT NOT NULL, PRIMARY KEY(`symbol`))",
         "fields": [
           {
             "fieldPath": "symbol",
@@ -57,9 +57,21 @@
             "notNull": true
           },
           {
+            "fieldPath": "alertAboveNote",
+            "columnName": "alert_above_note",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "alertBelow",
             "columnName": "alert_below",
             "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alertBelowNote",
+            "columnName": "alert_below_note",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -294,7 +306,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7de39d75c43d928bb9f07a669ae428fa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '31d8eb913914b307a923af66323cd1f1')"
     ]
   }
 }
