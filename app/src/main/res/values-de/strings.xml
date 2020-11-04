@@ -112,6 +112,7 @@ limitations under the License. -->
   <string name="alert_gain_below">Wenn Gewinn unterschritten</string>
   <string name="alert_loss_above">Wenn Verlust überschritten</string>
   <string name="alert_loss_below">Wenn Verlust unterschritten</string>
+  <string name="alert_note">Anmerkung</string>
   <string name="notes_in_list">Anmerkungen:</string>
   <string name="alert_above_in_list">Benachr. Aktienwert über:</string>
   <string name="alert_below_in_list">Benachr. Aktienwert unter:</string>
@@ -344,5 +345,4 @@ limitations under the License. -->
   <string name="no_dividend_data">Keine Online-Dividendendaten vorhanden.</string>
   <string name="date">Datum</string>
   <string name="community_search_links">Community und Such-Links</string>
-  <string name="alert_note">alert</string>
 </resources>

@@ -84,6 +84,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputLayout
 import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveNoteInputEditText
 import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowInputEditText
 import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowInputLayout
+import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowNoteInputEditText
 import kotlinx.android.synthetic.main.fragment_stockdata.assetsView
 import kotlinx.android.synthetic.main.fragment_stockdata.buttonFiveDays
 import kotlinx.android.synthetic.main.fragment_stockdata.buttonFiveYears
@@ -207,9 +208,7 @@ class StockDataFragment : Fragment() {
   private var symbol: String = ""
 
   private var alertAbove: Double = 0.0
-  private var alertAboveNote: String = ""
   private var alertBelow: Double = 0.0
-  private var alertBelowNote: String = ""
 
   private lateinit var standardPortfolio: String
 
@@ -828,9 +827,7 @@ class StockDataFragment : Fragment() {
       }
 
       alertAbove = stockDBdata.alertAbove
-      alertAboveNote = stockDBdata.alertAboveNote
       alertBelow = stockDBdata.alertBelow
-      alertBelowNote = stockDBdata.alertBelowNote
 
       if (alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove) {
         alertAbove = 0.0
@@ -844,7 +841,7 @@ class StockDataFragment : Fragment() {
             ""
           }
       )
-      alertAboveNoteInputEditText.setText(alertAboveNote)
+      alertAboveNoteInputEditText.setText(stockDBdata.alertAboveNote)
 
       alertBelowInputEditText.setText(
           if (alertBelow > 0.0) {
@@ -853,7 +850,7 @@ class StockDataFragment : Fragment() {
             ""
           }
       )
-      //alertBelowNoteInputEditText.setText(alertBelowNote)
+      alertBelowNoteInputEditText.setText(stockDBdata.alertBelowNote)
     })
 
     // Use MediatorLiveView to combine the assets, stockDB and online data changes.
@@ -1913,13 +1910,14 @@ class StockDataFragment : Fragment() {
     if (!(alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove)) {
 
       // Add () to avoid cast exception.
-      alertAboveNote = (alertAboveNoteInputEditText.text).toString()
+      val alertAboveNote = (alertAboveNoteInputEditText.text).toString()
 
       if (stockDBdata.alertAbove != alertAbove || stockDBdata.alertAboveNote != alertAboveNote) {
         stockRoomViewModel.updateAlertAboveSync(symbol, alertAbove, alertAboveNote)
       }
 
-      //alertBelowNote = (alertBelowNoteInputEditText.text).toString()
+      // Add () to avoid cast exception.
+      val alertBelowNote = (alertBelowNoteInputEditText.text).toString()
 
       if (stockDBdata.alertBelow != alertBelow || stockDBdata.alertBelowNote != alertBelowNote) {
         stockRoomViewModel.updateAlertBelowSync(symbol, alertBelow, alertBelowNote)

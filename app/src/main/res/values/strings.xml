@@ -115,6 +115,7 @@ limitations under the License. -->
   <string name="alert_gain_below">Gain below</string>
   <string name="alert_loss_above">Loss above</string>
   <string name="alert_loss_below">Loss below</string>
+  <string name="alert_note">Note</string>
   <string name="notes_in_list">Notes:</string>
   <string name="alert_above_in_list">Alert if over:</string>
   <string name="alert_below_in_list">Alert if under:</string>
@@ -347,5 +348,4 @@ limitations under the License. -->
   <string name="no_dividend_data">No online dividend data.</string>
   <string name="date">Date</string>
   <string name="community_search_links">Community and Search links</string>
-  <string name="alert_note">alert</string>
 </resources>

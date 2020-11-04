@@ -861,7 +861,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     var name: String,
 
     var alertAbove: Double = 0.0,
+    var alertAboveNote: String = "",
+
     var alertBelow: Double = 0.0,
+    var alertBelowNote: String = "",
+
     var marketPrice: Double = 0.0,
 
 //    var alertGainAbove: Double = 0.0,
@@ -893,6 +897,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 name = getName(stockItem.onlineMarketData),
 
                 alertAbove = stockItem.stockDBdata.alertAbove,
+                alertAboveNote = stockItem.stockDBdata.alertAboveNote,
                 marketPrice = marketPrice
             )
             newAlerts.add(alertDataAbove)
@@ -903,6 +908,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   name = getName(stockItem.onlineMarketData),
 
                   alertBelow = stockItem.stockDBdata.alertBelow,
+                  alertBelowNote = stockItem.stockDBdata.alertBelowNote,
                   marketPrice = marketPrice
               )
               newAlerts.add(alertDataBelow)

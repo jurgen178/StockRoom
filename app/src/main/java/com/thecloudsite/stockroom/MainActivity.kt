@@ -558,11 +558,16 @@ class MainActivity : AppCompatActivity() {
             DecimalFormat("0.00##").format(alert.alertAbove),
             DecimalFormat("0.00##").format(alert.marketPrice)
         )
-        val text = getString(
+
+        var text = getString(
             R.string.alert_above_notification, alert.symbol, alert.name,
             DecimalFormat("0.00##").format(alert.alertAbove),
             DecimalFormat("0.00##").format(alert.marketPrice)
         )
+        if (alert.alertAboveNote.isNotEmpty()) {
+          text += "\n───\n${alert.alertAboveNote}"
+        }
+
         val notification = NotificationFactory(this, title, text, alert.symbol)
         notification.sendNotification()
         // Alert is shown, remove alert.
@@ -577,11 +582,16 @@ class MainActivity : AppCompatActivity() {
               DecimalFormat("0.00##").format(alert.alertBelow),
               DecimalFormat("0.00##").format(alert.marketPrice)
           )
-          val text = getString(
+
+          var text = getString(
               R.string.alert_below_notification, alert.symbol, alert.name,
               DecimalFormat("0.00##").format(alert.alertBelow),
               DecimalFormat("0.00##").format(alert.marketPrice)
           )
+          if (alert.alertBelowNote.isNotEmpty()) {
+            text += "\n───\n${alert.alertBelowNote}"
+          }
+
           val notification = NotificationFactory(this, title, text, alert.symbol)
           notification.sendNotification()
           // Alert is shown, remove alert.
