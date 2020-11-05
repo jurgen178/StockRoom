@@ -105,6 +105,9 @@ import kotlinx.android.synthetic.main.fragment_stockdata.new_total_asset
 import kotlinx.android.synthetic.main.fragment_stockdata.notesTextView
 import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
 import kotlinx.android.synthetic.main.fragment_stockdata.picker_knob
+import kotlinx.android.synthetic.main.fragment_stockdata.price_preview_divider
+import kotlinx.android.synthetic.main.fragment_stockdata.price_preview_layout
+import kotlinx.android.synthetic.main.fragment_stockdata.price_preview_textview
 import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
 import kotlinx.android.synthetic.main.fragment_stockdata.splitAssetsButton
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
@@ -1869,24 +1872,33 @@ class StockDataFragment : Fragment() {
     if (data.assets != null && data.onlineMarketData != null) {
 
       val assets: List<Asset> = data.assets?.assets!!
+      val (totalQuantity, totalPrice) = getAssets(assets)
 
-      picker_knob.visibility = View.VISIBLE
-      picker_knob.onValueChangeListener { value ->
-        new_stock_price.text = DecimalFormat("0.00").format(value)
-        new_total_asset.text = getAssetChange(
-            assets,
-            value,
-            data.onlineMarketData?.postMarketData!!,
-            Color.DKGRAY,
-            requireActivity()
-        ).second
+      if (totalPrice == 0.0) {
+        price_preview_divider.visibility = View.GONE
+        price_preview_textview.visibility = View.GONE
+        price_preview_layout.visibility = View.GONE
+      } else {
+        price_preview_divider.visibility = View.VISIBLE
+        price_preview_textview.visibility = View.VISIBLE
+        price_preview_layout.visibility = View.VISIBLE
+
+        picker_knob.onValueChangeListener { value ->
+          new_stock_price.text = DecimalFormat("0.00").format(value)
+          new_total_asset.text = getAssetChange(
+              assets,
+              value,
+              data.onlineMarketData?.postMarketData!!,
+              Color.DKGRAY,
+              requireActivity()
+          ).second
+        }
+
+        val marketPrice = data.onlineMarketData!!.marketPrice
+        // min, max, start
+        picker_knob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
       }
 
-      val marketPrice = data.onlineMarketData!!.marketPrice
-      // min, max, start
-      picker_knob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
-
-      val (totalQuantity, totalPrice) = getAssets(assets)
       val purchasePrice = if (totalPrice > 0.0) {
         getString(
             R.string.bought_for, DecimalFormat("0.00##").format(totalPrice / totalQuantity)

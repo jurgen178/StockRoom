@@ -361,9 +361,12 @@
             />
       </HorizontalScrollView>
 
-      <View style="@style/Divider"/>
+      <View style="@style/Divider"
+          android:id="@+id/price_preview_divider"
+          />
 
       <TextView
+          android:id="@+id/price_preview_textview"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/price_preview_header"
@@ -371,6 +374,7 @@
           />
 
       <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/price_preview_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_margin="20dp"
@@ -383,7 +387,6 @@
             app:picker_text_size="10sp"
             app:picker_dash_gap="10dp"
             app:picker_text_color="@android:color/black"
-            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
