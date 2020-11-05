@@ -565,7 +565,7 @@ class MainActivity : AppCompatActivity() {
             DecimalFormat("0.00##").format(alert.marketPrice)
         )
         if (alert.alertAboveNote.isNotEmpty()) {
-          text += "\n───\n${alert.alertAboveNote}"
+          text += "\n───\n${alert.alertAboveNote}"  // '─' = \u2500
         }
 
         val notification = NotificationFactory(this, title, text, alert.symbol)

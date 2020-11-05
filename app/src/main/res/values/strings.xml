@@ -348,4 +348,5 @@ limitations under the License. -->
   <string name="no_dividend_data">No online dividend data.</string>
   <string name="date">Date</string>
   <string name="community_search_links">Community and Search links</string>
+  <string name="price_calculator_header">Price calculator</string>
 </resources>
