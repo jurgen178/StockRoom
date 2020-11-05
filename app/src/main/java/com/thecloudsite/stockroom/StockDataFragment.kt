@@ -873,6 +873,10 @@ class StockDataFragment : Fragment() {
       if (data != null) {
         assetAdapter.updateAssets(data.assets)
 
+        // Reset when assets are changed.
+        picker_knob.setValue(0.0, 100.0, 0.0)
+
+
 //        val (totalQuantity, totalPrice) = getAssets(data.assets)
 //
 //        val visibility = if (totalPrice != 0.0) {

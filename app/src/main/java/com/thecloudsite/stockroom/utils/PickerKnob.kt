@@ -235,21 +235,25 @@ class PickerKnob : View {
     valueMax: Double,
     value: Double
   ) {
-    if(startValue == 0.0 || minValueOrig != valueMin || maxValueOrig != valueMax) {
-      minValueOrig = valueMin
-      maxValueOrig = valueMax
+    // value = 0.0 Reset
+    if (value == 0.0) {
+      startValue = 0.0
+    } else
+      if (startValue == 0.0) {
+        minValueOrig = valueMin
+        maxValueOrig = valueMax
 
-      // map the value in minValue..maxValue range to a 0..100 range
-      startValue = (value - minValueOrig) * 100 / (maxValueOrig - minValueOrig)
-      //val newValue = minValueOrig + value / 100 * (maxValueOrig - minValueOrig)
-      valueChangeListener(value)
+        // map the value in minValue..maxValue range to a 0..100 range
+        startValue = (value - minValueOrig) * 100 / (maxValueOrig - minValueOrig)
+        //val newValue = minValueOrig + value / 100 * (maxValueOrig - minValueOrig)
+        valueChangeListener(value)
 
-      //val value = ceil(radius * (knobRotation + Math.PI / 2) / dashGap)
-      knobRotation = startValue * dashGap / radius - Math.PI / 2
-      knobRotation = knobRotation.coerceAtLeast(MIN_ROTATION)
-      knobRotation = knobRotation.coerceAtMost(maxRotation)
-      invalidate()
-    }
+        //val value = ceil(radius * (knobRotation + Math.PI / 2) / dashGap)
+        knobRotation = startValue * dashGap / radius - Math.PI / 2
+        knobRotation = knobRotation.coerceAtLeast(MIN_ROTATION)
+        knobRotation = knobRotation.coerceAtMost(maxRotation)
+        invalidate()
+      }
   }
 
   override fun onMeasure(
