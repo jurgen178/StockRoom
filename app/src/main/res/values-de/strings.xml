@@ -345,5 +345,5 @@ limitations under the License. -->
   <string name="no_dividend_data">Keine Online-Dividendendaten vorhanden.</string>
   <string name="date">Datum</string>
   <string name="community_search_links">Community und Such-Links</string>
-  <string name="price_calculator_header">Gewinnberechnung</string>
+  <string name="price_preview_header">Gewinnvorschau</string>
 </resources>
