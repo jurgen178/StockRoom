@@ -1883,8 +1883,16 @@ class StockDataFragment : Fragment() {
         price_preview_textview.visibility = View.VISIBLE
         price_preview_layout.visibility = View.VISIBLE
 
+        val marketPrice = data.onlineMarketData!!.marketPrice
+
+        // Update the new price and asset.
         picker_knob.onValueChangeListener { value ->
-          new_stock_price.text = DecimalFormat("0.00").format(value)
+          new_stock_price.text = if (marketPrice > 5.0) {
+            DecimalFormat("0.00").format(value)
+          } else {
+            DecimalFormat("0.00##").format(value)
+          }
+
           new_total_asset.text = getAssetChange(
               assets,
               value,
@@ -1894,7 +1902,6 @@ class StockDataFragment : Fragment() {
           ).second
         }
 
-        val marketPrice = data.onlineMarketData!!.marketPrice
         // min, max, start
         picker_knob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
       }

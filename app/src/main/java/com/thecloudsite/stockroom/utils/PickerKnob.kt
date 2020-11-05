@@ -55,15 +55,12 @@ attrs.xml
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <declare-styleable name="PickerKnob">
-    <attr name="picker_min_value" format="integer"/>
-    <attr name="picker_max_value" format="integer"/>
     <attr name="picker_dash_gap" format="dimension"/>
     <attr name="picker_text_size" format="dimension"/>
     <attr name="picker_text_padding" format="dimension"/>
     <attr name="picker_text_color" format="integer"/>
     <attr name="picker_dash_count" format="integer"/>
     <attr name="picker_friction" format="float"/>
-    <attr name="picker_start_value" format="integer"/>
   </declare-styleable>
 </resources>
 */
@@ -102,10 +99,7 @@ class PickerKnob : View {
   /* Track the system time to update knob position  */
   private var currentTime: Long = 0
 
-  /* Minimum value for the knob. This can be set from the XML  */
   private var minValue: Double = 0.0
-
-  /* Maximum value for the knob. This can be set from the XML  */
   private var maxValue: Double = 100.0
 
   private var minValueOrig: Double = 0.0
@@ -241,18 +235,21 @@ class PickerKnob : View {
     valueMax: Double,
     value: Double
   ) {
-    minValueOrig = valueMin
-    maxValueOrig = valueMax
+    if(startValue == 0.0 || minValueOrig != valueMin || maxValueOrig != valueMax) {
+      minValueOrig = valueMin
+      maxValueOrig = valueMax
 
-    startValue = (value - minValueOrig) * 100 / (maxValueOrig - minValueOrig)
-    //val newValue = minValueOrig + value / 100 * (maxValueOrig - minValueOrig)
-    valueChangeListener(value)
+      // map the value in minValue..maxValue range to a 0..100 range
+      startValue = (value - minValueOrig) * 100 / (maxValueOrig - minValueOrig)
+      //val newValue = minValueOrig + value / 100 * (maxValueOrig - minValueOrig)
+      valueChangeListener(value)
 
-    //val value = ceil(radius * (knobRotation + Math.PI / 2) / dashGap)
-    knobRotation = startValue * dashGap / radius - Math.PI / 2
-    knobRotation = knobRotation.coerceAtLeast(MIN_ROTATION)
-    knobRotation = knobRotation.coerceAtMost(maxRotation)
-    invalidate()
+      //val value = ceil(radius * (knobRotation + Math.PI / 2) / dashGap)
+      knobRotation = startValue * dashGap / radius - Math.PI / 2
+      knobRotation = knobRotation.coerceAtLeast(MIN_ROTATION)
+      knobRotation = knobRotation.coerceAtMost(maxRotation)
+      invalidate()
+    }
   }
 
   override fun onMeasure(
@@ -332,14 +329,16 @@ class PickerKnob : View {
       }
 
       if (startPosition % (dashCount + 1) == 0) {
-        val value = getValueAtPosition(startPosition.toDouble())
+        val value = startPosition.toDouble()
+
+        // map the 0..100 range to minValue..maxValue
         val newValue = minValueOrig + value / 100 * (maxValueOrig - minValueOrig)
         val text = DecimalFormat("0.00").format(newValue)
         val textWidth = paint!!.measureText(text)
 
         // Check if text not overlap
         val xStart = max(x - textWidth / 2f, 0f)
-        if (xStart - oldX10 >= textWidth) {
+        if (xStart - oldX10 - 4 > textWidth) {
           paint!!.color = textColor
           canvas.drawText(text, xStart, textSize.toFloat(), paint!!)
           oldX10 = xStart
@@ -495,13 +494,10 @@ class PickerKnob : View {
     invalidate()
 
     val position = radius * (knobRotation + Math.PI / 2) / dashGap
-    val value = getValueAtPosition(position)
-    val newValue = minValueOrig + value / 100 * (maxValueOrig - minValueOrig)
-    valueChangeListener(newValue)
-  }
 
-  private fun getValueAtPosition(position: Double): Double {
-    return minValue + position
+    // // map the 0..100 range to minValue..maxValue
+    val newValue = minValueOrig + position / 100 * (maxValueOrig - minValueOrig)
+    valueChangeListener(newValue)
   }
 
   companion object {

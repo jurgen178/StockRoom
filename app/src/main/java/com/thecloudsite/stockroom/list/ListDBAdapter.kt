@@ -62,7 +62,9 @@ data class DBData(
   val dividendNotes: String = "",
   val annualDividendRate: Double = -1.0,
   val alertAbove: Double = 0.0,
+  val alertAboveNote: String = "",
   val alertBelow: Double = 0.0,
+  val alertBelowNote: String = "",
   val color: Int = 0,
   val name: String = "",
   val quantity: Double = 0.0,
@@ -115,7 +117,9 @@ class ListDBAdapter(
     val db_stockdbdata_annualDividendRate: TextView =
       itemView.findViewById(id.db_stockdbdata_annualDividendRate)
     val db_stockdbdata_alertAbove: TextView = itemView.findViewById(id.db_stockdbdata_alertAbove)
+    val db_stockdbdata_alertAboveNote: TextView = itemView.findViewById(id.db_stockdbdata_alertAboveNote)
     val db_stockdbdata_alertBelow: TextView = itemView.findViewById(id.db_stockdbdata_alertBelow)
+    val db_stockdbdata_alertBelowNote: TextView = itemView.findViewById(id.db_stockdbdata_alertBelowNote)
   }
 
   class GroupViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
@@ -251,7 +255,9 @@ class ListDBAdapter(
           holder.db_stockdbdata_dividendNotes.text = getHeaderStr("dividendNotes")
           holder.db_stockdbdata_annualDividendRate.text = getHeaderStr("annualDividendRate")
           holder.db_stockdbdata_alertAbove.text = getHeaderStr("alertAbove")
+          holder.db_stockdbdata_alertAboveNote.text = getHeaderStr("alertAboveNote")
           holder.db_stockdbdata_alertBelow.text = getHeaderStr("alertBelow")
+          holder.db_stockdbdata_alertBelowNote.text = getHeaderStr("alertBelowNote")
         } else {
           holder.db_stockdbdata_layout.setBackgroundColor(Color.rgb(0, 148, 255))
           holder.db_stockdbdata_symbol.text = data.symbol
@@ -270,11 +276,13 @@ class ListDBAdapter(
           } else {
             ""
           }
+          holder.db_stockdbdata_alertAboveNote.text = data.alertAboveNote
           holder.db_stockdbdata_alertBelow.text = if (data.alertBelow > 0.0) {
             DecimalFormat("0.00##").format(data.alertBelow)
           } else {
             ""
           }
+          holder.db_stockdbdata_alertBelowNote.text = data.alertBelowNote
         }
       }
 
@@ -561,7 +569,9 @@ class ListDBAdapter(
                   dividendNotes = stockDBdata.dividendNotes,
                   annualDividendRate = stockDBdata.annualDividendRate,
                   alertAbove = stockDBdata.alertAbove,
-                  alertBelow = stockDBdata.alertBelow
+                  alertAboveNote = stockDBdata.alertAboveNote,
+                  alertBelow = stockDBdata.alertBelow,
+                  alertBelowNote = stockDBdata.alertBelowNote
               )
             })
 
