@@ -42,24 +42,33 @@ class TextMarkerViewCandleChart(
   }
 
   override fun refreshContent(
-    e: Entry?,
+    entry: Entry?,
     highlight: Highlight?
   ) {
-    if (e is CandleEntry && stockDataEntries.isNotEmpty()) {
-      val index: Int = e.x.toInt()
+    if (entry is CandleEntry && stockDataEntries.isNotEmpty()) {
+      val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =
           LocalDateTime.ofEpochSecond(
               stockDataEntries[index].dateTimePoint, 0, ZoneOffset.UTC
           )
               .format(dateTimeFormatter)
-        val price = e.close
-        tvContent.text = "${DecimalFormat("0.00##").format(price)}\n$date"
+
+        if (entry.high != entry.low) {
+          tvContent.text = "${DecimalFormat("0.00##").format(entry.low)}-${
+            DecimalFormat("0.00##").format(
+                entry.high
+            )
+          }\n$date"
+        } else {
+          tvContent.text = "${DecimalFormat("0.00##").format(entry.high)}\n$date"
+        }
+
       } else {
         tvContent.text = ""
       }
     }
-    super.refreshContent(e, highlight)
+    super.refreshContent(entry, highlight)
   }
 
   override fun getOffset(): MPPointF = offsetPoint
@@ -76,24 +85,25 @@ class TextMarkerViewLineChart(
   }
 
   override fun refreshContent(
-    e: Entry?,
+    entry: Entry?,
     highlight: Highlight?
   ) {
-    if (e is Entry && stockDataEntries.isNotEmpty()) {
-      val index: Int = e.x.toInt()
+    if (entry is Entry && stockDataEntries.isNotEmpty()) {
+      val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =
           LocalDateTime.ofEpochSecond(
               stockDataEntries[index].dateTimePoint, 0, ZoneOffset.UTC
           )
               .format(dateTimeFormatter)
-        val price = e.y
-        tvContent.text = "${DecimalFormat("0.00##").format(price)}\n$date"
+
+        tvContent.text = "${DecimalFormat("0.00##").format(entry.y)}\n$date"
+
       } else {
         tvContent.text = ""
       }
     }
-    super.refreshContent(e, highlight)
+    super.refreshContent(entry, highlight)
   }
 
   override fun getOffset(): MPPointF = offsetPoint
