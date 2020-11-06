@@ -17,11 +17,11 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import java.text.DecimalFormat
@@ -29,7 +29,6 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
-import java.time.format.FormatStyle.SHORT
 
 data class DividendTimelineElement(
   val date: String,

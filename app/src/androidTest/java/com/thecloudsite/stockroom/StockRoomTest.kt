@@ -426,7 +426,9 @@ var events: List<Event>
     var dividendNotes: String?,
     val annualDividendRate: Double?,
     val alertAbove: Double?,
+    val alertAboveNote: String?,
     val alertBelow: Double?,
+    val alertBelowNote: String?,
     var assets: List<AssetJson>?,
     var events: List<EventJson>?,
     var dividends: List<DividendJson>?

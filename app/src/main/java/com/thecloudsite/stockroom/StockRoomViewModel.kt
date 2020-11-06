@@ -111,7 +111,9 @@ data class StockItemJson
   var dividendNotes: String?,
   val annualDividendRate: Double?,
   val alertAbove: Double?,
+  val alertAboveNote: String?,
   val alertBelow: Double?,
+  val alertBelowNote: String?,
   var assets: List<AssetJson>?,
   var events: List<EventJson>?,
   var dividends: List<DividendJson>?
@@ -1127,8 +1129,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val jsonArray = JSONArray(json)
     val size = jsonArray.length()
     for (i in 0 until size) {
-      var groupColor: Int = 0
-      var groupName: String = ""
 
       // get symbol
       val jsonObj: JSONObject = jsonArray[i] as JSONObject
@@ -1354,41 +1354,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
         if (jsonObj.has("groupColor")) {
-          groupColor = jsonObj.getInt("groupColor")
-          if (groupName.isNotEmpty()) {
-            setGroup(symbol = symbol, color = groupColor, name = groupName)
-          }
-        }
+          val groupColor = jsonObj.getInt("groupColor")
 
-        if (jsonObj.has("groupName")) {
-          groupName = jsonObj.getString("groupName")
-              .trim()
-          if (groupColor != 0) {
-            setGroup(symbol = symbol, color = groupColor, name = groupName)
-          }
-        }
-
-        if (jsonObj.has("alertAbove")) {
-          val alertAboveNote = if (jsonObj.has("alertAboveNote")) {
-            jsonObj.getString("alertAboveNote")
-          } else {
-            ""
-          }
-          val alertAbove = jsonObj.getDouble("alertAbove")
-          if (alertAbove > 0.0) {
-            updateAlertAbove(symbol, alertAbove, alertAboveNote)
-          }
-        }
-
-        if (jsonObj.has("alertBelow")) {
-          val alertBelowNote = if (jsonObj.has("alertBeloweNote")) {
-            jsonObj.getString("alertBelowNote")
-          } else {
-            ""
-          }
-          val alertBelow = jsonObj.getDouble("alertBelow")
-          if (alertBelow > 0.0) {
-            updateAlertBelow(symbol, alertBelow, alertBelowNote)
+          // Get matching group name.
+          if (groupColor != 0 && jsonObj.has("groupName")) {
+            val groupName = jsonObj.getString("groupName")
+                .trim()
+            if (groupName.isNotEmpty()) {
+              setGroup(symbol = symbol, color = groupColor, name = groupName)
+            }
           }
         }
 
@@ -1410,6 +1384,30 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           val annualDividendRate = jsonObj.getDouble("annualDividendRate")
           if (annualDividendRate >= 0.0) {
             updateAnnualDividendRate(symbol, annualDividendRate)
+          }
+        }
+
+        if (jsonObj.has("alertAbove")) {
+          val alertAboveNote = if (jsonObj.has("alertAboveNote")) {
+            jsonObj.getString("alertAboveNote")
+          } else {
+            ""
+          }
+          val alertAbove = jsonObj.getDouble("alertAbove")
+          if (alertAbove > 0.0) {
+            updateAlertAbove(symbol, alertAbove, alertAboveNote)
+          }
+        }
+
+        if (jsonObj.has("alertBelow")) {
+          val alertBelowNote = if (jsonObj.has("alertBelowNote")) {
+            jsonObj.getString("alertBelowNote")
+          } else {
+            ""
+          }
+          val alertBelow = jsonObj.getDouble("alertBelow")
+          if (alertBelow > 0.0) {
+            updateAlertBelow(symbol, alertBelow, alertBelowNote)
           }
         }
 
@@ -1768,9 +1766,19 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       } else {
         null
       }
+      val alertAboveNoteValue = if (stockItem.stockDBdata.alertAboveNote.isNotEmpty()) {
+        stockItem.stockDBdata.alertAboveNote
+      } else {
+        null
+      }
       val alertBelow = validateDouble(stockItem.stockDBdata.alertBelow)
       val alertBelowValue = if (alertBelow > 0.0) {
         alertBelow
+      } else {
+        null
+      }
+      val alertBelowNoteValue = if (stockItem.stockDBdata.alertBelowNote.isNotEmpty()) {
+        stockItem.stockDBdata.alertBelowNote
       } else {
         null
       }
@@ -1844,7 +1852,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           dividendNotes = dividendNotesValue,
           annualDividendRate = annualDividendRateValue,
           alertAbove = alertAboveValue,
+          alertAboveNote = alertAboveNoteValue,
           alertBelow = alertBelowValue,
+          alertBelowNote = alertBelowNoteValue,
           assets = assetsValue,
           events = eventsValue,
           dividends = dividendsValue
