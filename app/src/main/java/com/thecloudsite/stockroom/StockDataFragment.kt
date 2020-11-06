@@ -710,8 +710,9 @@ class StockDataFragment : Fragment() {
           "Bing" to "https://www.bing.com/search?q=$symbol%20stock",
           "Google" to "https://www.google.com/search?q=$symbol+stock",
           "Yahoo" to "https://finance.yahoo.com/quote/$symbol",
-          "Nasqaq" to "https://www.nasdaq.com/market-activity/stocks/$symbol",
+          "Nasdaq" to "https://www.nasdaq.com/market-activity/stocks/$symbol",
           "Marketbeat" to "https://www.marketbeat.com/stocks/$symbol/",
+          "TD Ameritrade" to "https://research.tdameritrade.com/grid/public/research/stocks/calendar?symbol=$symbol"
       )
 
       var menuIndex: Int = Menu.FIRST
@@ -814,7 +815,7 @@ class StockDataFragment : Fragment() {
       }
 
       // Group color
-      // color = 0 is not stored in the DB
+      // color = 0 is not valid and not stored in the DB
       var color = stockDBdata.groupColor
       if (color == 0) {
         color = context?.getColor(R.color.backgroundListColor)!!
