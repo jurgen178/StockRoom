@@ -95,8 +95,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    SharedRepository.selectedSymbol = ""
-
     // Setup the notification channel.
     NotificationChannelFactory(this)
 

@@ -92,6 +92,11 @@ class StockDataActivity : AppCompatActivity() {
     super.onPause()
   }
 
+  override fun onResume() {
+    SharedRepository.selectedSymbol = symbol
+    super.onResume()
+  }
+
   override fun onSupportNavigateUp(): Boolean {
     onBackPressed()
     return true
