@@ -25,6 +25,7 @@
         android:layout_margin="16dp"
         app:layout_constraintTop_toTopOf="@id/setAnnualDividendLayout"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
         app:layout_constraintBottom_toBottomOf="@id/setAnnualDividendLayout"
         />
 
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         app:endIconMode="clear_text"
         app:layout_constraintTop_toBottomOf="@id/setAnnualDividendHeadline"
-        app:layout_constraintStart_toEndOf="@id/setAnnualDividendLabel"
+        app:layout_constraintStart_toEndOf="@id/guideline1"
         app:layout_constraintEnd_toEndOf="parent"
         >
         <com.google.android.material.textfield.TextInputEditText
@@ -50,5 +51,13 @@
             android:layout_margin="16dp"
             />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

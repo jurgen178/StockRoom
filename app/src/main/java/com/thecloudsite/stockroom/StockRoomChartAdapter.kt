@@ -175,31 +175,6 @@ class StockRoomChartAdapter internal constructor(
         holder.itemViewChangePercent.text = ""
       }
 
-      val (quantity, asset) = getAssets(current.assets)
-//      val quantity = current.assets.sumByDouble {
-//        it.quantity
-//      }
-
-//      var asset: Double = 0.0
-      var capital: Double = 0.0
-
-      if (quantity > 0.0) {
-//        asset = current.assets.sumByDouble {
-//          it.quantity * it.price
-//        }
-
-        if (current.onlineMarketData.marketPrice > 0.0) {
-          capital = quantity * current.onlineMarketData.marketPrice
-//          capital = current.assets.sumByDouble {
-//            it.quantity * current.onlineMarketData.marketPrice
-//          }
-        }
-      }
-
-//      // set background to asset change
-//      holder.itemRedGreen.setBackgroundColor(
-//          getChangeColor(capital, asset, context.getColor(color.backgroundListColor), context)
-//      )
       // set background to market change
       holder.itemRedGreen.setBackgroundColor(
           getChangeColor(
