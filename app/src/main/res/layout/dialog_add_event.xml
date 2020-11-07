@@ -46,7 +46,7 @@
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/guideline1"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
           app:layout_constraintTop_toBottomOf="@+id/eventHeadline"
           >
         <com.google.android.material.textfield.TextInputEditText
@@ -75,7 +75,7 @@
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/guideline1"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
           app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
           >
         <com.google.android.material.textfield.TextInputEditText

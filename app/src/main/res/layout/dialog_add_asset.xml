@@ -33,7 +33,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/number_of_stock"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
@@ -47,7 +46,7 @@
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/guideline1"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintTop_toBottomOf="@+id/addUpdateQuantityHeadline"
       app:endIconMode="clear_text"
       >
@@ -71,7 +70,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/price"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
@@ -85,7 +83,7 @@
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/guideline1"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
       app:endIconMode="clear_text"
       >
@@ -107,7 +105,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/notes"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
@@ -121,7 +118,7 @@
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/guideline1"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
       app:endIconMode="clear_text"
       >

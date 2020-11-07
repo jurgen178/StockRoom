@@ -33,7 +33,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/group_color"
       app:layout_constraintBottom_toBottomOf="@+id/colorPicker"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
@@ -46,7 +45,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/guideline1"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintTop_toBottomOf="@+id/addUpdateGroupsHeadline"
       />
 
@@ -82,7 +81,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/group_name_text"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"

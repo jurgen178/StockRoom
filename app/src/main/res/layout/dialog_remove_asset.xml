@@ -34,7 +34,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/number_of_stock"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
@@ -72,7 +71,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/remove_price"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
@@ -108,7 +106,6 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:text="@string/notes"
       app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"

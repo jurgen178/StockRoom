@@ -46,7 +46,7 @@
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/guideline1"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
           app:layout_constraintTop_toBottomOf="@+id/addUpdateDividendHeadline"
           >
         <com.google.android.material.textfield.TextInputEditText
@@ -67,7 +67,6 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
           android:text="@string/notes"
           app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
@@ -81,7 +80,7 @@
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/guideline1"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
           app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
           app:endIconMode="clear_text"
           >
@@ -113,14 +112,13 @@
           android:entries="@array/dividend_cycles"
           app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/guideline1"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
           />
 
       <TextView
           android:id="@+id/textViewDividendDate"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
           android:layout_marginTop="16dp"
           android:text="@string/dividend_date"
           app:layout_constraintStart_toStartOf="parent"
@@ -143,7 +141,6 @@
           android:id="@+id/textViewDividendExDate"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
           android:layout_marginTop="16dp"
           android:text="@string/dividend_exdate"
           app:layout_constraintStart_toStartOf="parent"

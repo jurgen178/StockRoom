@@ -340,7 +340,7 @@ limitations under the License. -->
   <string name="displayed_views_dialog_title">Einstellungsänderung</string>
   <string name="displayed_views_dialog_message">Für diese Einstellung muss die App neu gestartet werden.</string>
   <string name="annual_dividend_headline">Jährlicher Dividendensatz</string>
-  <string name="set_annual_dividend_label">Neuer Dividendensatz</string>
+  <string name="set_annual_dividend_label">Neuer jährlicher Dividendensatz</string>
   <string name="onlineAnnualDividendData">Onlinedaten</string>
   <string name="no_dividend_data">Keine Online-Dividendendaten vorhanden.</string>
   <string name="date">Datum</string>

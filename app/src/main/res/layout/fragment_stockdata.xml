@@ -529,7 +529,7 @@
             />
 
         <ImageView
-            android:src="@drawable/ic_action_trending_up"
+            android:src="@drawable/ic_action_trending_down"
             style="@style/alert_item_imagebutton"
             android:contentDescription="@string/alert_below"
             app:layout_constraintTop_toTopOf="@+id/alertBelowInputLayout"
