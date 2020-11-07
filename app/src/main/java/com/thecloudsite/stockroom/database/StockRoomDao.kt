@@ -55,12 +55,16 @@ interface StockRoomDao {
 
   @Transaction
   fun deleteAll() {
+    deleteAllStoreTable()
     deleteAllStockTable()
     deleteAllGroupTable()
     deleteAllAssetTable()
     deleteAllEventTable()
     deleteAllDividendTable()
   }
+
+  @Query("DELETE FROM store_table")
+  fun deleteAllStoreTable()
 
   @Query("DELETE FROM stock_table")
   fun deleteAllStockTable()
@@ -110,6 +114,12 @@ interface StockRoomDao {
 
   @Query("SELECT * FROM store_table")
   fun getAllStoreLiveData(): LiveData<List<StoreData>>
+
+  @Query("DELETE FROM store_table WHERE key = :key")
+  fun deleteStoreData(key: String)
+
+  @Delete
+  fun deleteStoreData(storeData: StoreData)
 
   // StockDBdata
   @Insert(onConflict = OnConflictStrategy.REPLACE)

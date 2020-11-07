@@ -78,7 +78,7 @@ class StockRoomDaoTest {
 
   @Test
   @Throws(Exception::class)
-  fun storeData() {
+  fun addStoreData() {
     val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
 
     val storeData1 = stockRoomDao.getStoreData("key1")
@@ -109,6 +109,84 @@ class StockRoomDaoTest {
     assertEquals("key1", allStoreData[0].key)
     assertEquals("data3", allStoreData[0].data)
     assertEquals(1.3, allStoreData[0].value, epsilon)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun deleteStoreDataByKey() {
+    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+
+    // insert data
+    stockRoomDao.insertStoreData(storeData)
+
+    // get data
+    val storeData2 = stockRoomDao.getStoreData("key1")
+    assertEquals("data1", storeData2.data)
+    assertEquals(1.2, storeData2.value, epsilon)
+
+    // delete data by matching key
+    stockRoomDao.deleteStoreData("key1")
+    val storeData3 = stockRoomDao.getStoreData("key1")
+    assertEquals(null, storeData3)
+
+    // get all data
+    val allStoreData = stockRoomDao.getAllStoreLiveData()
+        .waitForValue()
+    assertEquals(0, allStoreData.size)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun deleteStoreDataByStoreData() {
+    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+
+    // insert data
+    stockRoomDao.insertStoreData(storeData)
+
+    // get data
+    val storeData2 = stockRoomDao.getStoreData("key1")
+    assertEquals("data1", storeData2.data)
+    assertEquals(1.2, storeData2.value, epsilon)
+
+    // try delete non matching data
+    storeData2.data = "notmatching"
+    stockRoomDao.deleteStoreData(storeData2)
+    val storeData3 = stockRoomDao.getStoreData("key1")
+    // expect not deleted
+    assertEquals("notmatching", storeData2.data)
+
+    // delete data matching StoreData
+    stockRoomDao.deleteStoreData(storeData)
+    val storeData4 = stockRoomDao.getStoreData("key1")
+    // expect deleted
+    assertEquals(null, storeData4)
+
+    // get all data
+    val allStoreData = stockRoomDao.getAllStoreLiveData()
+        .waitForValue()
+    assertEquals(0, allStoreData.size)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun deleteAllStoreData() {
+    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+
+    // insert data
+    stockRoomDao.insertStoreData(storeData)
+
+    // get all data
+    val allStoreData1 = stockRoomDao.getAllStoreLiveData()
+        .waitForValue()
+    assertEquals(1, allStoreData1.size)
+
+    // delete all data
+    stockRoomDao.deleteAllStoreTable()
+
+    // get all data
+    val allStoreData2 = stockRoomDao.getAllStoreLiveData()
+        .waitForValue()
+    assertEquals(0, allStoreData2.size)
   }
 
   @Test
