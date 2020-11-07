@@ -207,7 +207,7 @@ limitations under the License. -->
   <string name="summary_bought_sold">Bought/Sold</string>
   <string name="summary_alerts">Alerts</string>
   <string name="summary_events">Events</string>
-  <string name="summary_note">Note</string>
+  <string name="summary_notes">Notes</string>
   <string name="summary_number_of_stocks">Number of stocks</string>
   <string name="summary_capital_gain">Executed Capital Gain</string>
   <string name="summary_total_purchase_price">Total purchase price</string>

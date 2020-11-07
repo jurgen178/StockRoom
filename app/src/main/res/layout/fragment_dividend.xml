@@ -81,22 +81,22 @@
               android:layout_margin="16dp"
               android:textSize="13sp"
               android:text="@string/set_annual_dividend_label"
-              app:layout_constraintTop_toTopOf="@+id/textViewSetAnnualDividend"
+              app:layout_constraintTop_toTopOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintEnd_toStartOf="@+id/textViewSetAnnualDividend"
-              app:layout_constraintBottom_toBottomOf="@+id/textViewSetAnnualDividend"
               />
 
           <TextView
               android:id="@+id/textViewSetAnnualDividend"
-              android:layout_width="60dp"
+              android:layout_width="80dp"
               android:layout_height="wrap_content"
               android:gravity="end"
-              android:layout_marginStart="8dp"
-              android:layout_marginEnd="8dp"
+              android:layout_marginTop="16dp"
+              android:layout_marginStart="40dp"
+              android:layout_marginBottom="16dp"
+              android:layout_marginEnd="16dp"
+              app:layout_constraintTop_toBottomOf="@+id/textViewSetAnnualDividendLabel"
+              app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintStart_toEndOf="@+id/textViewSetAnnualDividendLabel"
-              app:layout_constraintTop_toTopOf="parent"
               />
 
           <TextView
@@ -106,9 +106,9 @@
               android:textSize="13sp"
               android:layout_marginStart="8dp"
               android:layout_marginEnd="8dp"
-              app:layout_constraintTop_toTopOf="@+id/textViewSetAnnualDividendLabel"
+              app:layout_constraintTop_toTopOf="@+id/textViewSetAnnualDividend"
               app:layout_constraintStart_toEndOf="@+id/textViewSetAnnualDividend"
-              app:layout_constraintBottom_toBottomOf="@+id/textViewSetAnnualDividendLabel"
+              app:layout_constraintBottom_toBottomOf="@+id/textViewSetAnnualDividend"
               />
 
           <View

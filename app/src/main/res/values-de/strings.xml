@@ -204,7 +204,7 @@ limitations under the License. -->
   <string name="summary_bought_sold">Gekauft/Verkauft</string>
   <string name="summary_alerts">Benachrichtigungen</string>
   <string name="summary_events">Ereignisse</string>
-  <string name="summary_note">Anmerkungen</string>
+  <string name="summary_notes">Anmerkungen</string>
   <string name="summary_number_of_stocks">Anzahl Aktien</string>
   <string name="summary_capital_gain">Ausgeführter Kapitalgewinn</string>
   <string name="summary_total_purchase_price">Gesamtkaufpreis</string>
