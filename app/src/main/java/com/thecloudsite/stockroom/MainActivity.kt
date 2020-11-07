@@ -423,18 +423,18 @@ class MainActivity : AppCompatActivity() {
     portfolioMenuItem?.isVisible = false
 
     if (SharedRepository.portfolios.value != null) {
+
+      val sortMode = stockRoomViewModel.sortMode()
+      menu?.findItem(R.id.menu_sort_change)?.isChecked = sortMode == SortMode.ByChange
+      menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
+      menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
+      menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
+      menu?.findItem(R.id.menu_sort_dividend)?.isChecked = sortMode == SortMode.ByDividend
+      menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
+      menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
+
       val portfolios = SharedRepository.portfolios.value!!
-
       if (portfolios.size > 1) {
-        val sortMode = stockRoomViewModel.sortMode()
-        menu?.findItem(R.id.menu_sort_change)?.isChecked = sortMode == SortMode.ByChange
-        menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
-        menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
-        menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
-        menu?.findItem(R.id.menu_sort_dividend)?.isChecked = sortMode == SortMode.ByDividend
-        menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
-        menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
-
         portfolioMenuItem?.isVisible = true
         val submenu = portfolioMenuItem?.subMenu
         submenu?.clear()

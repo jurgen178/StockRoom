@@ -33,6 +33,16 @@ import androidx.room.Relation
  * https://developer.android.com/topic/libraries/architecture/room.html
  */
 
+@Entity(tableName = "store_table")
+data class StoreData(
+  @PrimaryKey var key: String,
+  var data: String,
+  var value: Double,
+  var datetime: Long = 0L,
+  val type: Int = 0,
+  val note: String = ""
+)
+
 @Entity(tableName = "stock_table")
 data class StockDBdata(
   @PrimaryKey val symbol: String,

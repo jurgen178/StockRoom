@@ -270,7 +270,7 @@ class PickerKnob : View {
     // Measure Width
     width = when (widthMode) {
       MeasureSpec.EXACTLY -> {
-        //Must be this size
+        // Must be this size
         widthSize
       }
       MeasureSpec.AT_MOST -> {

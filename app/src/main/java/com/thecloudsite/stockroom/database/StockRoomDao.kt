@@ -101,6 +101,16 @@ interface StockRoomDao {
     setGroups(groups)
   }
 
+  // StoreData
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  fun insertStoreData(storeData: StoreData)
+
+  @Query("SELECT * FROM store_table WHERE key = :key")
+  fun getStoreData(key: String): StoreData
+
+  @Query("SELECT * FROM store_table")
+  fun getAllStoreLiveData(): LiveData<List<StoreData>>
+
   // StockDBdata
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertStockDBdata(stockDBdata: StockDBdata)

@@ -45,7 +45,7 @@ import kotlin.math.roundToInt
  * The fact that this has very few comments emphasizes its coolness.
  */
 @Database(
-    entities = [StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class],
+    entities = [StoreData::class, StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class],
     version = 1,
     exportSchema = true
 )

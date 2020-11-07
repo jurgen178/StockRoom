@@ -29,6 +29,7 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDao
 import com.thecloudsite.stockroom.database.StockRoomDatabase
+import com.thecloudsite.stockroom.database.StoreData
 import com.thecloudsite.stockroom.utils.epsilon
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -73,6 +74,41 @@ class StockRoomDaoTest {
   @Throws(IOException::class)
   fun closeDb() {
     db.close()
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun storeData() {
+    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+
+    val storeData1 = stockRoomDao.getStoreData("key1")
+
+    // key does not exist and the result is null
+    assertEquals(null, storeData1)
+
+    // insert data
+    stockRoomDao.insertStoreData(storeData)
+
+    // get data
+    val storeData2 = stockRoomDao.getStoreData("key1")
+    assertEquals("data1", storeData2.data)
+    assertEquals(1.2, storeData2.value, epsilon)
+
+    // update data
+    storeData.data = "data3"
+    storeData.value = 1.3
+    stockRoomDao.insertStoreData(storeData)
+    val storeData3 = stockRoomDao.getStoreData("key1")
+    assertEquals("data3", storeData3.data)
+    assertEquals(1.3, storeData3.value, epsilon)
+
+    // get all data
+    val allStoreData = stockRoomDao.getAllStoreLiveData()
+        .waitForValue()
+    assertEquals(1, allStoreData.size)
+    assertEquals("key1", allStoreData[0].key)
+    assertEquals("data3", allStoreData[0].data)
+    assertEquals(1.3, allStoreData[0].value, epsilon)
   }
 
   @Test
