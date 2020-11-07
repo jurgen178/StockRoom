@@ -107,7 +107,7 @@ limitations under the License. -->
   <string name="max_range">Max</string>
   <string name="use_postmarket">After hour trading</string>
   <string name="use_postmarket_desc">Display market values from after hour trading. The values are displayed in italics and in darker red and green color.</string>
-  <string name="notes">Notes</string>
+  <string name="note">Note</string>
   <string name="alerts">Alerts</string>
   <string name="alert_above">Stock price above</string>
   <string name="alert_below">Stock price below</string>
@@ -116,7 +116,7 @@ limitations under the License. -->
   <string name="alert_loss_above">Loss above</string>
   <string name="alert_loss_below">Loss below</string>
   <string name="alert_note">Note</string>
-  <string name="notes_in_list">Notes:</string>
+  <string name="note_in_list">Note:</string>
   <string name="alert_above_in_list">Alert if over:</string>
   <string name="alert_below_in_list">Alert if under:</string>
   <string name="alert_gain_above_in_list">Alert if gain above:</string>
@@ -132,7 +132,7 @@ limitations under the License. -->
   <string name="enable_notifications">Enable Alerts</string>
   <string name="enable_notifications_desc">Display Alerts if enabled.</string>
   <string name="add">Add</string>
-  <string name="update_notes">Update notes</string>
+  <string name="update_note">Update note</string>
   <string name="invalid_number">Invalid number</string>
   <string name="number_of_stock">Number of shares</string>
   <string name="price">Price</string>
@@ -207,7 +207,7 @@ limitations under the License. -->
   <string name="summary_bought_sold">Bought/Sold</string>
   <string name="summary_alerts">Alerts</string>
   <string name="summary_events">Events</string>
-  <string name="summary_note">Notes</string>
+  <string name="summary_note">Note</string>
   <string name="summary_number_of_stocks">Number of stocks</string>
   <string name="summary_capital_gain">Executed Capital Gain</string>
   <string name="summary_total_purchase_price">Total purchase price</string>

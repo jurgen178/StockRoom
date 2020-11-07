@@ -883,7 +883,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="10dp"
-          android:text="@string/notes"
+          android:text="@string/note"
           style="@style/section_header"
           />
 
@@ -897,16 +897,16 @@
           android:gravity="end"
           >
         <ImageButton
-            android:id="@+id/updateNotesButton"
+            android:id="@+id/updateNoteButton"
             android:src="@drawable/ic_action_note_add"
             style="@style/asset_item_imagebutton"
-            android:tooltipText="@string/update_notes"
-            android:contentDescription="@string/update_notes"
+            android:tooltipText="@string/update_note"
+            android:contentDescription="@string/update_note"
             />
       </LinearLayout>
 
       <TextView
-          android:id="@+id/notesTextView"
+          android:id="@+id/noteTextView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_margin="16dp"

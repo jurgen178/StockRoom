@@ -140,11 +140,11 @@ interface StockRoomDao {
       if (stockDBdata.groupColor == 0) {
         stockDBdata.groupColor = stockData.groupColor
       }
-      if (stockDBdata.notes.isEmpty()) {
-        stockDBdata.notes = stockData.notes
+      if (stockDBdata.note.isEmpty()) {
+        stockDBdata.note = stockData.note
       }
-      if (stockDBdata.dividendNotes.isEmpty()) {
-        stockDBdata.dividendNotes = stockData.dividendNotes
+      if (stockDBdata.dividendNote.isEmpty()) {
+        stockDBdata.dividendNote = stockData.dividendNote
       }
       if (stockDBdata.annualDividendRate == -1.0) {
         stockDBdata.annualDividendRate = stockData.annualDividendRate
@@ -262,16 +262,16 @@ interface StockRoomDao {
     alertBelowNote: String
   )
 
-  @Query("UPDATE stock_table SET notes = :notes WHERE symbol = :symbol")
-  fun updateNotes(
+  @Query("UPDATE stock_table SET note = :note WHERE symbol = :symbol")
+  fun updateNote(
     symbol: String,
-    notes: String
+    note: String
   )
 
-  @Query("UPDATE stock_table SET dividend_notes = :notes WHERE symbol = :symbol")
-  fun updateDividendNotes(
+  @Query("UPDATE stock_table SET dividend_note = :note WHERE symbol = :symbol")
+  fun updateDividendNote(
     symbol: String,
-    notes: String
+    note: String
   )
 
   @Query("UPDATE stock_table SET annual_dividend_rate = :annualDividendRate WHERE symbol = :symbol")

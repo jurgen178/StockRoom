@@ -270,13 +270,13 @@ class StockRoomListAdapter internal constructor(
           )
         }
       }
-      if (current.stockDBdata.notes.isNotEmpty()) {
+      if (current.stockDBdata.note.isNotEmpty()) {
         assets.append(
             "\n${
               context.getString(
-                  R.string.notes_in_list
+                  R.string.note_in_list
               )
-            } ${current.stockDBdata.notes}"
+            } ${current.stockDBdata.note}"
         )
       }
 

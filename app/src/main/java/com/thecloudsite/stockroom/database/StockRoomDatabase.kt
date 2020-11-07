@@ -108,7 +108,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
                 symbol = symbol,
                 // can be null if it is not in the json
                 groupColor = stockItemJson.groupColor ?: 0,
-                notes = stockItemJson.notes ?: "",
+                note = stockItemJson.note ?: "",
                 alertBelow = stockItemJson.alertBelow ?: 0.0,
                 alertAbove = stockItemJson.alertAbove ?: 0.0
             )
@@ -210,11 +210,11 @@ abstract class StockRoomDatabase : RoomDatabase() {
       }
 
       // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
-      stockRoomDao.updateNotes(
-          symbol = "AAPL", notes = context.getString(string.example_List_delete_all)
+      stockRoomDao.updateNote(
+          symbol = "AAPL", note = context.getString(string.example_List_delete_all)
       )
-      stockRoomDao.updateNotes(
-          symbol = "AMZN", notes = context.getString(string.example_List_note)
+      stockRoomDao.updateNote(
+          symbol = "AMZN", note = context.getString(string.example_List_note)
       )
 
 /*

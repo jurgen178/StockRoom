@@ -107,8 +107,8 @@ data class StockItemJson
   val data: String?,
   val groupColor: Int?,
   val groupName: String?,
-  val notes: String?,
-  var dividendNotes: String?,
+  val note: String?,
+  var dividendNote: String?,
   val annualDividendRate: Double?,
   val alertAbove: Double?,
   val alertAboveNote: String?,
@@ -1367,14 +1367,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (jsonObj.has("notes")) {
           val notes = jsonObj.getString("notes")
           if (notes.isNotEmpty()) {
-            updateNotes(symbol, notes)
+            updateNote(symbol, notes)
+          }
+        }
+
+        if (jsonObj.has("note")) {
+          val note = jsonObj.getString("note")
+          if (note.isNotEmpty()) {
+            updateNote(symbol, note)
           }
         }
 
         if (jsonObj.has("dividendNotes")) {
           val dividendNotes = jsonObj.getString("dividendNotes")
           if (dividendNotes.isNotEmpty()) {
-            updateDividendNotes(symbol, dividendNotes)
+            updateDividendNote(symbol, dividendNotes)
+          }
+        }
+
+        if (jsonObj.has("dividendNote")) {
+          val dividendNote = jsonObj.getString("dividendNote")
+          if (dividendNote.isNotEmpty()) {
+            updateDividendNote(symbol, dividendNote)
           }
         }
 
@@ -1429,7 +1443,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           if (properties.has("notes")) {
             val notes = properties.getString("notes")
             if (notes.isNotEmpty()) {
-              updateNotes(symbol, notes)
+              updateNote(symbol, notes)
             }
           }
         }
@@ -1742,13 +1756,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       } else {
         null
       }
-      val notesValue = if (stockItem.stockDBdata.notes.isNotEmpty()) {
-        stockItem.stockDBdata.notes
+      val noteValue = if (stockItem.stockDBdata.note.isNotEmpty()) {
+        stockItem.stockDBdata.note
       } else {
         null
       }
-      val dividendNotesValue = if (stockItem.stockDBdata.dividendNotes.isNotEmpty()) {
-        stockItem.stockDBdata.dividendNotes
+      val dividendNoteValue = if (stockItem.stockDBdata.dividendNote.isNotEmpty()) {
+        stockItem.stockDBdata.dividendNote
       } else {
         null
       }
@@ -1846,8 +1860,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           data = dataValue,
           groupColor = groupColorValue,
           groupName = groupNameValue,
-          notes = notesValue,
-          dividendNotes = dividendNotesValue,
+          note = noteValue,
+          dividendNote = dividendNoteValue,
           annualDividendRate = annualDividendRateValue,
           alertAbove = alertAboveValue,
           alertAboveNote = alertAboveNoteValue,
@@ -1989,21 +2003,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
   }
 
-  fun updateNotes(
+  fun updateNote(
     symbol: String,
-    notes: String
+    note: String
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
-      repository.updateNotes(symbol.toUpperCase(Locale.ROOT), notes)
+      repository.updateNote(symbol.toUpperCase(Locale.ROOT), note)
     }
   }
 
-  fun updateDividendNotes(
+  fun updateDividendNote(
     symbol: String,
-    notes: String
+    note: String
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
-      repository.updateDividendNotes(symbol.toUpperCase(Locale.ROOT), notes)
+      repository.updateDividendNote(symbol.toUpperCase(Locale.ROOT), note)
     }
   }
 

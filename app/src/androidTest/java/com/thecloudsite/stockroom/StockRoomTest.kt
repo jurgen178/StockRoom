@@ -422,8 +422,8 @@ var events: List<Event>
     val data: String?,
     val groupColor: Int?,
     val groupName: String?,
-    val notes: String?,
-    var dividendNotes: String?,
+    val note: String?,
+    var dividendNote: String?,
     val annualDividendRate: Double?,
     val alertAbove: Double?,
     val alertAboveNote: String?,
@@ -472,7 +472,7 @@ var events: List<Event>
             OnlineMarketData(symbol = "s1"),
             StockDBdata(
                 symbol = "s1", groupColor = 123, alertAbove = 11.0, alertBelow = 12.0,
-                notes = "notes1"
+                note = "note1"
             ),
             listOf(Asset(symbol = "s1", quantity = 1.0, price = 2.0)),
             listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
@@ -488,7 +488,7 @@ var events: List<Event>
             OnlineMarketData(symbol = "s2"),
             StockDBdata(
                 symbol = "s2", groupColor = 223, alertAbove = 21.0, alertBelow = 22.0,
-                notes = "notes2"
+                note = "note2"
             ),
             listOf(Asset(symbol = "s2", quantity = 3.0, price = 4.0)),
             listOf(Event(symbol = "s2", type = 2, title = "ti2", note = "te2", datetime = 2L)),
@@ -510,8 +510,8 @@ var events: List<Event>
           alertAboveNote = stockItem.stockDBdata.alertAboveNote,
           alertBelow = stockItem.stockDBdata.alertBelow,
           alertBelowNote = stockItem.stockDBdata.alertBelowNote,
-          notes = stockItem.stockDBdata.notes,
-          dividendNotes = stockItem.stockDBdata.dividendNotes,
+          note = stockItem.stockDBdata.note,
+          dividendNote = stockItem.stockDBdata.dividendNote,
           annualDividendRate = stockItem.stockDBdata.annualDividendRate,
           assets = stockItem.assets.map { asset ->
             AssetJson(quantity = asset.quantity,

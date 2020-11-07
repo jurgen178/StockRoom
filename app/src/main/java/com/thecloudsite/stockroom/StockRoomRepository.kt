@@ -137,20 +137,20 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
-  suspend fun updateNotes(
+  suspend fun updateNote(
     symbol: String,
-    notes: String
+    note: String
   ) {
-    stockRoomDao.updateNotes(symbol, notes)
+    stockRoomDao.updateNote(symbol, note)
   }
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
-  suspend fun updateDividendNotes(
+  suspend fun updateDividendNote(
     symbol: String,
-    notes: String
+    note: String
   ) {
-    stockRoomDao.updateDividendNotes(symbol, notes)
+    stockRoomDao.updateDividendNote(symbol, note)
   }
 
   @Suppress("RedundantSuspendModifier")

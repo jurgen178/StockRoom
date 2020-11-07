@@ -12,7 +12,7 @@
     "events": [],
     "groupColor": -256,
     "groupName": "Die Katze fragen",
-    "notes": "",
+    "note": "",
     "symbol": "AMZN"
   },
   {
@@ -28,7 +28,7 @@
     "events": [],
     "groupColor": -256,
     "groupName": "Die Katze fragen",
-    "notes": "",
+    "note": "",
     "symbol": "ANY"
   },
   {
@@ -44,7 +44,7 @@
     "events": [],
     "groupColor": -256,
     "groupName": "Die Katze fragen",
-    "notes": "",
+    "note": "",
     "symbol": "BA"
   },
   {
@@ -67,7 +67,7 @@
     ],
     "groupColor": -32985,
     "groupName": "Gruppe 5",
-    "notes": "",
+    "note": "",
     "symbol": "DIS"
   },
   {
@@ -83,7 +83,7 @@
     "events": [],
     "groupColor": -16777216,
     "groupName": "Gruppe 4",
-    "notes": "",
+    "note": "",
     "symbol": "GE"
   },
   {
@@ -99,7 +99,7 @@
     "events": [],
     "groupColor": -65536,
     "groupName": "Verkaufen",
-    "notes": "",
+    "note": "",
     "symbol": "IBM"
   },
   {
@@ -115,7 +115,7 @@
     "events": [],
     "groupColor": -16776961,
     "groupName": "Beobachten",
-    "notes": "",
+    "note": "",
     "symbol": "MSFT"
   },
   {
@@ -131,7 +131,7 @@
     "events": [],
     "groupColor": -16711936,
     "groupName": "Kaufen",
-    "notes": "",
+    "note": "",
     "symbol": "QCOM"
   },
   {
@@ -147,7 +147,7 @@
     "events": [],
     "groupColor": -65536,
     "groupName": "Verkaufen",
-    "notes": "",
+    "note": "",
     "symbol": "RM"
   },
   {
@@ -163,7 +163,7 @@
     "events": [],
     "groupColor": -256,
     "groupName": "Die Katze fragen",
-    "notes": "",
+    "note": "",
     "symbol": "T"
   }
 ]

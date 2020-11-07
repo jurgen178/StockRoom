@@ -105,7 +105,7 @@ class DividendAnnouncedListAdapter internal constructor(
       holder.textViewDividendAnnouncedPayDate.text = context.getString(R.string.dividend_date)
       holder.textViewDividendAnnouncedExDate.text = context.getString(R.string.dividend_exdate)
       holder.textViewDividendAnnouncedCycle.text = context.getString(R.string.dividend_cycle)
-      holder.textViewDividendAnnouncedNote.text = context.getString(R.string.notes)
+      holder.textViewDividendAnnouncedNote.text = context.getString(R.string.note)
       holder.textViewDividendAnnouncedDelete.visibility = View.GONE
       holder.dividendAnnouncedConstraintLayout.setBackgroundColor(
           context.getColor(R.color.backgroundListColor)

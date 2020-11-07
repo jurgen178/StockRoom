@@ -104,7 +104,7 @@ limitations under the License. -->
   <string name="max_range">Maximalverlauf</string>
   <string name="use_postmarket">Nachbörsliche Werte</string>
   <string name="use_postmarket_desc">Vor- und nachbörsliche Werte anzeigen. Die Werte werden in kursiver Schrift und in dunklerer roter und grüner Farbe angezeigt.</string>
-  <string name="notes">Anmerkungen</string>
+  <string name="note">Anmerkung</string>
   <string name="alerts">Benachrichtigungen</string>
   <string name="alert_above">Wenn Aktienwert überschritten</string>
   <string name="alert_below">Wenn Aktienwert unterschritten</string>
@@ -113,7 +113,7 @@ limitations under the License. -->
   <string name="alert_loss_above">Wenn Verlust überschritten</string>
   <string name="alert_loss_below">Wenn Verlust unterschritten</string>
   <string name="alert_note">Anmerkung</string>
-  <string name="notes_in_list">Anmerkungen:</string>
+  <string name="note_in_list">Anmerkung:</string>
   <string name="alert_above_in_list">Benachr. Aktienwert über:</string>
   <string name="alert_below_in_list">Benachr. Aktienwert unter:</string>
   <string name="alert_gain_above_in_list">Benachr. Gewinn über:</string>
@@ -129,7 +129,7 @@ limitations under the License. -->
   <string name="enable_notifications">Benachrichtigungen zulassen</string>
   <string name="enable_notifications_desc">Legt fest, ob Benachrichtigungen angezeigt werden.</string>
   <string name="add">Hinzufügen</string>
-  <string name="update_notes">Anmerkungen aktualisieren</string>
+  <string name="update_note">Anmerkung aktualisieren</string>
   <string name="invalid_number">Ungültige Eingabe</string>
   <string name="number_of_stock">Anzahl</string>
   <string name="price">Kaufpreis</string>

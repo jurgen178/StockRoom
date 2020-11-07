@@ -102,7 +102,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.lineChart
 import kotlinx.android.synthetic.main.fragment_stockdata.linearLayoutGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.new_stock_price
 import kotlinx.android.synthetic.main.fragment_stockdata.new_total_asset
-import kotlinx.android.synthetic.main.fragment_stockdata.notesTextView
+import kotlinx.android.synthetic.main.fragment_stockdata.noteTextView
 import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
 import kotlinx.android.synthetic.main.fragment_stockdata.picker_knob
 import kotlinx.android.synthetic.main.fragment_stockdata.price_preview_divider
@@ -120,7 +120,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.textViewPortfolio
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewPurchasePrice
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewRange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewSymbol
-import kotlinx.android.synthetic.main.fragment_stockdata.updateNotesButton
+import kotlinx.android.synthetic.main.fragment_stockdata.updateNoteButton
 import okhttp3.internal.toHexString
 import java.lang.Double.min
 import java.text.DecimalFormat
@@ -804,7 +804,7 @@ class StockDataFragment : Fragment() {
     stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
         stockDBdata = data
-        notesTextView.text = stockDBdata.notes
+        noteTextView.text = stockDBdata.note
 
         // Portfolio
         textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
@@ -1653,11 +1653,11 @@ class StockDataFragment : Fragment() {
           .show()
     }
 
-    updateNotesButton.setOnClickListener {
-      updateNotes()
+    updateNoteButton.setOnClickListener {
+      updateNote()
     }
-    notesTextView.setOnClickListener {
-      updateNotes()
+    noteTextView.setOnClickListener {
+      updateNote()
     }
 
     alertAboveInputEditText.addTextChangedListener(
@@ -1798,7 +1798,7 @@ class StockDataFragment : Fragment() {
 //    }
 //  }
 
-  private fun updateNotes() {
+  private fun updateNote() {
     val builder = AlertDialog.Builder(requireContext())
     // Get the layout inflater
     val inflater = LayoutInflater.from(requireContext())
@@ -1809,7 +1809,7 @@ class StockDataFragment : Fragment() {
     val textInputEditNoteView =
       dialogView.findViewById<TextView>(R.id.textInputEditNote)
 
-    val note = notesTextView.text
+    val note = noteTextView.text
     textInputEditNoteView.text = note
 
     builder.setView(dialogView)
@@ -1821,8 +1821,8 @@ class StockDataFragment : Fragment() {
           val noteText = (textInputEditNoteView.text).toString()
 
           if (noteText != note) {
-            notesTextView.text = noteText
-            stockRoomViewModel.updateNotes(symbol, noteText)
+            noteTextView.text = noteText
+            stockRoomViewModel.updateNote(symbol, noteText)
 
             if (noteText.isEmpty()) {
               Toast.makeText(

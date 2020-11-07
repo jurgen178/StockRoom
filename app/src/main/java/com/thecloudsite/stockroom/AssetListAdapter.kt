@@ -107,7 +107,7 @@ class AssetListAdapter internal constructor(
       holder.itemViewPrice.text = context.getString(R.string.price)
       holder.itemViewTotal.text = context.getString(R.string.value)
       holder.itemViewDate.text = context.getString(R.string.date)
-      holder.itemViewNote.text = context.getString(R.string.notes)
+      holder.itemViewNote.text = context.getString(R.string.note)
       holder.itemViewDelete.visibility = View.GONE
       holder.assetSummaryView.visibility = View.GONE
       holder.itemViewLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))

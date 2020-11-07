@@ -207,7 +207,7 @@ class StockRoomDaoTest {
     val allStockDBdata1 = stockRoomDao.getAllProperties()
         .waitForValue()
     assertEquals(allStockDBdata1[0].symbol, stockDBdata1.symbol)
-    assertEquals(allStockDBdata1[0].notes, "")
+    assertEquals(allStockDBdata1[0].note, "")
     assertEquals(allStockDBdata1[0].alertBelow, 0.0, epsilon)
     assertEquals(allStockDBdata1[0].alertAbove, 0.0, epsilon)
 
@@ -217,7 +217,7 @@ class StockRoomDaoTest {
         .waitForValue()
     assertEquals(allStockDBdata2.size, 1)
     assertEquals(allStockDBdata2[0].symbol, stockDBdata2.symbol)
-    assertEquals(allStockDBdata2[0].notes, stockDBdata2.notes)
+    assertEquals(allStockDBdata2[0].note, stockDBdata2.note)
     assertEquals(allStockDBdata2[0].alertBelow, stockDBdata2.alertBelow, epsilon)
     assertEquals(allStockDBdata2[0].alertAbove, stockDBdata2.alertAbove, epsilon)
 
@@ -226,7 +226,7 @@ class StockRoomDaoTest {
         .waitForValue()
     assertEquals(allStockDBdata3.size, 1)
     assertEquals(allStockDBdata3[0].symbol, stockDBdata2.symbol)
-    assertEquals(allStockDBdata3[0].notes, stockDBdata2.notes)
+    assertEquals(allStockDBdata3[0].note, stockDBdata2.note)
     assertEquals(allStockDBdata3[0].alertBelow, stockDBdata2.alertBelow, epsilon)
     assertEquals(allStockDBdata3[0].alertAbove, 123.0, epsilon)
     assertEquals(allStockDBdata3[0].alertAboveNote, "noteAbove")
@@ -236,17 +236,17 @@ class StockRoomDaoTest {
         .waitForValue()
     assertEquals(allStockDBdata3.size, 1)
     assertEquals(allStockDBdata4[0].symbol, stockDBdata2.symbol)
-    assertEquals(allStockDBdata4[0].notes, stockDBdata2.notes)
+    assertEquals(allStockDBdata4[0].note, stockDBdata2.note)
     assertEquals(allStockDBdata4[0].alertBelow, 10.0, epsilon)
     assertEquals(allStockDBdata4[0].alertBelowNote, "noteBelow")
     assertEquals(allStockDBdata4[0].alertAbove, 123.0, epsilon)
 
-    stockRoomDao.updateNotes("symbol1", "new notes")
+    stockRoomDao.updateNote("symbol1", "new note")
     val allStockDBdata5 = stockRoomDao.getAllProperties()
         .waitForValue()
     assertEquals(allStockDBdata3.size, 1)
     assertEquals(allStockDBdata5[0].symbol, stockDBdata2.symbol)
-    assertEquals(allStockDBdata5[0].notes, "new notes")
+    assertEquals(allStockDBdata5[0].note, "new note")
     assertEquals(allStockDBdata5[0].alertBelow, 10.0, epsilon)
     assertEquals(allStockDBdata5[0].alertAbove, 123.0, epsilon)
   }
@@ -283,7 +283,7 @@ class StockRoomDaoTest {
         groupColor = 123,
         alertBelow = 1.0,
         alertAbove = 2.0,
-        notes = "note"
+        note = "note"
     )
     stockRoomDao.insert(stockDBdata1)
 
@@ -293,7 +293,7 @@ class StockRoomDaoTest {
     assertEquals(123, stockDBdata2.groupColor)
     assertEquals(1.0, stockDBdata2.alertBelow, epsilon)
     assertEquals(2.0, stockDBdata2.alertAbove, epsilon)
-    assertEquals("note", stockDBdata2.notes)
+    assertEquals("note", stockDBdata2.note)
 
     val stockDBdataMatchingSymbol = StockDBdata("symbol1", alertAbove = 10.0)
     stockRoomDao.insert(stockDBdataMatchingSymbol)
@@ -306,13 +306,13 @@ class StockRoomDaoTest {
     assertEquals(stockDBdata4.groupColor, 123)
     assertEquals(stockDBdata4.alertBelow, 1.0, epsilon)
     assertEquals(stockDBdata4.alertAbove, 10.0, epsilon)
-    assertEquals(stockDBdata4.notes, "note")
+    assertEquals(stockDBdata4.note, "note")
 
     val stockDBdata5 = stockRoomDao.getStockDBdata("symbol2")
     assertEquals(stockDBdata5.groupColor, 0)
     assertEquals(stockDBdata5.alertBelow, 0.0, epsilon)
     assertEquals(stockDBdata5.alertAbove, 10.0, epsilon)
-    assertEquals(stockDBdata5.notes, "")
+    assertEquals(stockDBdata5.note, "")
   }
 
   @Test
@@ -325,7 +325,7 @@ class StockRoomDaoTest {
         groupColor = 0,
         alertBelow = 0.0,
         alertAbove = 0.0,
-        notes = ""
+        note = ""
     )
     stockRoomDao.insert(stockDBdata1)
     val stockDBdata2 = StockDBdata(
@@ -335,7 +335,7 @@ class StockRoomDaoTest {
         groupColor = 0,
         alertBelow = 0.0,
         alertAbove = 0.0,
-        notes = ""
+        note = ""
     )
     stockRoomDao.insert(stockDBdata2)
 
@@ -640,7 +640,7 @@ class StockRoomDaoTest {
   @Test
   @Throws(Exception::class)
   fun dividendTest() {
-    val stockDBdata1 = StockDBdata("symbol1", dividendNotes = "dividendNotes1")
+    val stockDBdata1 = StockDBdata("symbol1", dividendNote = "dividendNote1")
     stockRoomDao.insert(stockDBdata1)
 
     stockRoomDao.addDividend(
@@ -650,7 +650,7 @@ class StockRoomDaoTest {
         Dividend(symbol = "symbol1", amount = 12.0, type = 22, cycle = 3, paydate = 22L, exdate = 32L)
     )
 
-    val stockDBdata3 = StockDBdata("symbol3", dividendNotes = "dividendNotes3")
+    val stockDBdata3 = StockDBdata("symbol3", dividendNote = "dividendNote3")
     stockRoomDao.insert(stockDBdata3)
 
     stockRoomDao.addDividend(
@@ -659,7 +659,7 @@ class StockRoomDaoTest {
 
     val dividends = stockRoomDao.getDividends("symbol1")
 
-    assertEquals("dividendNotes1", dividends.stockDBdata.dividendNotes)
+    assertEquals("dividendNote1", dividends.stockDBdata.dividendNote)
     assertEquals(2, dividends.dividends.size)
     assertEquals("symbol1", dividends.dividends[0].symbol)
     assertEquals(11.0, dividends.dividends[0].amount, epsilon)
@@ -691,7 +691,7 @@ class StockRoomDaoTest {
   @Test
   @Throws(Exception::class)
   fun deleteDividendsTest() {
-    val stockDBdata1 = StockDBdata("symbol1", dividendNotes = "dividendNotes1")
+    val stockDBdata1 = StockDBdata("symbol1", dividendNote = "dividendNote1")
     stockRoomDao.insert(stockDBdata1)
 
     stockRoomDao.addDividend(

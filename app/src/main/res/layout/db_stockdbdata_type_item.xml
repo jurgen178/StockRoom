@@ -73,7 +73,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_notes"
+      android:id="@+id/db_stockdbdata_note"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline4"
@@ -89,7 +89,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_dividendNotes"
+      android:id="@+id/db_stockdbdata_dividendNote"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline5"

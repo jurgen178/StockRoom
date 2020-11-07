@@ -111,7 +111,7 @@ class DividendReceivedListAdapter internal constructor(
       holder.textViewDividendReceivedAmount.text = context.getString(R.string.dividend)
       holder.textViewDividendReceivedDate.text = context.getString(R.string.dividend_date)
       holder.textViewDividendReceivedCycle.text = context.getString(R.string.dividend_cycle)
-      holder.textViewDividendReceivedNote.text = context.getString(R.string.notes)
+      holder.textViewDividendReceivedNote.text = context.getString(R.string.note)
       holder.textViewDividendReceivedDelete.visibility = View.GONE
       holder.dividendReceivedSummaryView.visibility = View.GONE
       holder.dividendReceivedConstraintLayout.setBackgroundColor(

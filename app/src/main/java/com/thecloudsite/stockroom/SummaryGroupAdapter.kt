@@ -224,7 +224,7 @@ class SummaryGroupAdapter internal constructor(
       if (stockItem.stockDBdata.alertBelow > 0.0) {
         totalAlerts++
       }
-      if (stockItem.stockDBdata.notes.isNotEmpty()) {
+      if (stockItem.stockDBdata.note.isNotEmpty()) {
         totalNotes++
       }
 

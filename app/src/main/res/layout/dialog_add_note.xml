@@ -20,7 +20,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
         android:textSize="16sp"
-        android:text="@string/notes"
+        android:text="@string/note"
         />
 
     <com.google.android.material.textfield.TextInputLayout
