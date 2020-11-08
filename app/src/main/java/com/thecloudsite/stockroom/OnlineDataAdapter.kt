@@ -399,12 +399,6 @@ class OnlineDataAdapter internal constructor(
             text = SpannableStringBuilder().bold { append(formatInt(onlineMarketData.marketCap)) }
         )
     )
-    data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_forwardPE),
-            text = formatDoubleToSpannableString(onlineMarketData.forwardPE)
-        )
-    )
 
 /*
     data.add(
@@ -443,8 +437,20 @@ class OnlineDataAdapter internal constructor(
     )
     data.add(
         OnlineData(
+            desc = context.getString(R.string.onlinedata_trailingPE),
+            text = formatDoubleToSpannableString(onlineMarketData.trailingPE)
+        )
+    )
+    data.add(
+        OnlineData(
             desc = context.getString(R.string.onlinedata_priceEpsCurrentYear),
             text = formatDoubleToSpannableString(onlineMarketData.priceEpsCurrentYear)
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.getString(R.string.onlinedata_forwardPE),
+            text = formatDoubleToSpannableString(onlineMarketData.forwardPE)
         )
     )
     data.add(

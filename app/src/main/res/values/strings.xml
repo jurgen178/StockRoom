@@ -259,11 +259,12 @@ limitations under the License. -->
   <string name="onlinedata_regularMarketDayRange">Day range</string>
   <string name="onlinedata_regularMarketVolume">Market volume</string>
   <string name="onlinedata_marketCap">Market cap.</string>
+  <string name="onlinedata_trailingPE">Trailing PE</string>
+  <string name="onlinedata_priceEpsCurrentYear">Price/EPS</string>
   <string name="onlinedata_forwardPE">Forward PE</string>
   <string name="onlinedata_epsTrailingTwelveMonths">EPS trailing year</string>
   <string name="onlinedata_epsCurrentYear">EPS current year</string>
   <string name="onlinedata_epsForward">EPS forward</string>
-  <string name="onlinedata_priceEpsCurrentYear">Price/EPS</string>
   <string name="onlinedata_bookValue">Book value</string>
   <string name="onlinedata_priceToBook">Price/Book</string>
   <string name="onlinedata_region">Region</string>
