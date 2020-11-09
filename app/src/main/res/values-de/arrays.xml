@@ -11,23 +11,25 @@
     <item>Zeitachse Aktienwerte</item>
     <item>Zeitachse Ereignisse</item>
     <item>Zeitachse Dividenden</item>
+    <item>Tree map (Test)</item>
   </string-array>
   <string-array name="displayed_views_entries_values">
-    <item>0_StockRoomChartFragment</item>
-    <item>1_StockRoomListFragment</item>
-    <item>2_SummaryListFragment</item>
-    <item>3_StockRoomDetailListFragment</item>
-    <item>4_StockRoomSmallListFragment</item>
-    <item>5_SummaryGroupFragment</item>
-    <item>6_AllNewsFragment</item>
-    <item>7_AssetTimelineFragment</item>
-    <item>8_EventTimelineFragment</item>
-    <item>9_DividendTimelineFragment</item>
+    <item>00_StockRoomChartFragment</item>
+    <item>01_StockRoomListFragment</item>
+    <item>02_SummaryListFragment</item>
+    <item>03_StockRoomDetailListFragment</item>
+    <item>04_StockRoomSmallListFragment</item>
+    <item>05_SummaryGroupFragment</item>
+    <item>06_AllNewsFragment</item>
+    <item>07_AssetTimelineFragment</item>
+    <item>08_EventTimelineFragment</item>
+    <item>09_DividendTimelineFragment</item>
+    <item>10_StockRoomTreemapFragment</item>
   </string-array>
   <string-array name="displayed_views_entries_defaults">
-    <item>0_StockRoomChartFragment</item>
-    <item>1_StockRoomListFragment</item>
-    <item>2_SummaryListFragment</item>
-    <item>4_SummaryGroupFragment</item>
+    <item>00_StockRoomChartFragment</item>
+    <item>01_StockRoomListFragment</item>
+    <item>02_SummaryListFragment</item>
+    <item>04_SummaryGroupFragment</item>
   </string-array>
 </resources>

@@ -188,6 +188,10 @@ class SummaryGroupFragment : Fragment() {
 
       longPressedCounter = 0
     }
+
+    // Rotating device keeps sending alerts.
+    // State changes of the lifecycle trigger the notification.
+    stockRoomViewModel.resetAlerts()
   }
 
   override fun onResume() {

@@ -179,35 +179,38 @@ class MainActivity : AppCompatActivity() {
       override fun createFragment(position: Int): Fragment {
 
         return when (SharedRepository.displayedViewsList[position]) {
-          "0_StockRoomChartFragment" -> {
+          "00_StockRoomChartFragment" -> {
             StockRoomChartFragment.newInstance()
           }
-          "1_StockRoomListFragment" -> {
+          "01_StockRoomListFragment" -> {
             StockRoomListFragment.newInstance()
           }
-          "2_SummaryListFragment" -> {
+          "02_SummaryListFragment" -> {
             SummaryListFragment.newInstance()
           }
-          "3_StockRoomDetailListFragment" -> {
+          "03_StockRoomDetailListFragment" -> {
             StockRoomDetailListFragment.newInstance()
           }
-          "4_StockRoomSmallListFragment" -> {
+          "04_StockRoomSmallListFragment" -> {
             StockRoomSmallListFragment.newInstance()
           }
-          "5_SummaryGroupFragment" -> {
+          "05_SummaryGroupFragment" -> {
             SummaryGroupFragment.newInstance()
           }
-          "6_AllNewsFragment" -> {
+          "06_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "7_AssetTimelineFragment" -> {
+          "07_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "8_EventTimelineFragment" -> {
+          "08_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "9_DividendTimelineFragment" -> {
+          "09_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
+          }
+          "10_StockRoomTreemapFragment" -> {
+            StockRoomTreemapFragment.newInstance()
           }
           else -> {
             StockRoomListFragment.newInstance()
@@ -221,8 +224,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     viewpager.setCurrentItem(
-        if (SharedRepository.displayedViewsList.contains("1_StockRoomListFragment")) {
-          SharedRepository.displayedViewsList.indexOf("1_StockRoomListFragment")
+        if (SharedRepository.displayedViewsList.contains("01_StockRoomListFragment")) {
+          SharedRepository.displayedViewsList.indexOf("01_StockRoomListFragment")
         } else {
           0
         }, false

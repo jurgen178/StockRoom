@@ -455,9 +455,10 @@
             android:text="@string/alert_above"
             />
 
-        <ImageView
-            android:src="@drawable/ic_action_trending_up"
-            style="@style/alert_item_imagebutton"
+        <TextView
+            android:text="▲"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/alert_above"
             app:layout_constraintTop_toTopOf="@+id/alertAboveInputLayout"
             app:layout_constraintStart_toEndOf="@+id/guideline1"
@@ -528,9 +529,10 @@
             android:text="@string/alert_below"
             />
 
-        <ImageView
-            android:src="@drawable/ic_action_trending_down"
-            style="@style/alert_item_imagebutton"
+        <TextView
+            android:text="▼"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/alert_below"
             app:layout_constraintTop_toTopOf="@+id/alertBelowInputLayout"
             app:layout_constraintStart_toEndOf="@+id/guideline1"
