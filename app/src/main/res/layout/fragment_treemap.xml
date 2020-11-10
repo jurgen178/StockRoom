@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-  <com.anychart.AnyChartView
+  <com.thecloudsite.stockroom.treemap.MapLayoutView
       android:id="@+id/treemap_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

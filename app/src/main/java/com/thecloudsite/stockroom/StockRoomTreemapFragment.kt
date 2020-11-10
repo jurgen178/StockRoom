@@ -24,28 +24,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.anychart.AnyChart
-import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.dataentry.TreeDataEntry
-import com.anychart.enums.TreeFillingMethod.AS_TABLE
+import com.thecloudsite.stockroom.treemap.AndroidMapItem
+import com.thecloudsite.stockroom.treemap.TreeModel
 import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_treemap.view.treemap_view
 import okhttp3.internal.toHexString
-
-// https://github.com/AnyChart/AnyChart-Android/blob/master/sample/src/main/java/com/anychart/sample/charts/TreeMapChartActivity.java
-
-private class CustomTreeDataEntry(
-  id: String?,
-  parent: String?,
-  product: String?,
-  value: Int?,
-  color: String?
-) : TreeDataEntry(id, parent, value) {
-  init {
-    setValue("product", product)
-    setValue("fill", color)
-  }
-}
 
 class StockRoomTreemapFragment : Fragment() {
 
@@ -116,10 +99,10 @@ class StockRoomTreemapFragment : Fragment() {
     view: View,
     stockItems: List<StockItem>
   ) {
-    val anyChartView = view.treemap_view
-    val treeMap = AnyChart.treeMap()
-    val data: MutableList<DataEntry> = ArrayList()
+    val treemapView = view.treemap_view
 
+    val rootItem = AndroidMapItem(700005.2, "Stock", 0)
+    val treeModel = TreeModel(rootItem)
     //val listColors = ArrayList<Int>()
 
     data class AssetSummary(
@@ -146,7 +129,7 @@ class StockRoomTreemapFragment : Fragment() {
       )
     }
 
-    data.add(CustomTreeDataEntry("Stock", null, "", 0, ""))
+    //data.add(CustomTreeDataEntry("Stock", null, "", 0, ""))
 
     if (totalAssets > 0.0) {
       val sortedAssetList = assetList.filter { assetSummary ->
@@ -158,17 +141,23 @@ class StockRoomTreemapFragment : Fragment() {
 
       sortedAssetList //.take(n)
           .forEach { assetItem ->
-            data.add(
-                CustomTreeDataEntry(
-                    assetItem.symbol,
-                    "Stock",
-                    assetItem.symbol,
-                    assetItem.assets.toInt(),
-                    getColorStr(assetItem.color)
-                )
-            )
+            treeModel.addChild(TreeModel(AndroidMapItem(assetItem.assets, assetItem.symbol, assetItem.color)))
+
+//            data.add(
+//                CustomTreeDataEntry(
+//                    assetItem.symbol,
+//                    "Stock",
+//                    assetItem.symbol,
+//                    assetItem.assets.toInt(),
+//                    getColorStr(assetItem.color)
+//                )
+//            )
             //listColors.add(getColorStr(assetItem.color))
           }
+
+      treemapView.setTreeModel(treeModel)
+      treemapView.invalidate()
+
 
 //      // Add the sum of the remaining values.
 //      if (sortedAssetList.size == n + 1) {
@@ -199,52 +188,5 @@ class StockRoomTreemapFragment : Fragment() {
 //          listColors.add(Color.GRAY)
 //        }
     }
-
-    treeMap.data(data, AS_TABLE)
-
-//    treeMap.colorScale()
-//        .colors(listColors)
-
-    anyChartView.setChart(treeMap)
-
-//    val pieDataSet = PieDataSet(listPie, "")
-//    pieDataSet.colors = listColors
-//    pieDataSet.valueTextSize = 10f
-//    // pieDataSet.valueFormatter = DefaultValueFormatter(2)
-//    pieDataSet.valueFormatter = object : ValueFormatter() {
-//      override fun getFormattedValue(value: Float) =
-//        DecimalFormat("0.00").format(value)
-//    }
-//
-//    // Line start
-//    pieDataSet.valueLinePart1OffsetPercentage = 80f
-//    // Radial length
-//    pieDataSet.valueLinePart1Length = 0.4f
-//    // Horizontal length
-//    pieDataSet.valueLinePart2Length = .2f
-//    pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-//
-//    val pieData = PieData(pieDataSet)
-//    view.summaryPieChart.data = pieData
-//
-//    //view.summaryPieChart.setUsePercentValues(true)
-//    view.summaryPieChart.isDrawHoleEnabled = true
-//
-//    val centerText = SpannableStringBuilder()
-//        .append("${context?.getString(R.string.summary_total_assets)} ")
-//        .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
-//    view.summaryPieChart.centerText = centerText
-//
-//    view.summaryPieChart.description.isEnabled = false
-//    view.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
-//    view.summaryPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
-//
-//    view.summaryPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
-//
-//    //val legendList: MutableList<LegendEntry> = mutableListOf()
-//    //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
-//    //view.summaryPieChart.legend.setCustom(legendList)
-//
-//    view.summaryPieChart.invalidate()
   }
 }

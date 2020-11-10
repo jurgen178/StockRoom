@@ -708,11 +708,16 @@ class StockDataFragment : Fragment() {
           "Yahoo community" to "https://finance.yahoo.com/quote/$symbol/community",
           "Stocktwits" to "https://stocktwits.com/symbol/$symbol",
           "Bing" to "https://www.bing.com/search?q=$symbol%20stock",
-          "Google" to "https://www.google.com/search?q=$symbol+stock",
+          "Google" to "https://www.google.com/finance?q=$symbol",
           "Yahoo" to "https://finance.yahoo.com/quote/$symbol",
           "Nasdaq" to "https://www.nasdaq.com/market-activity/stocks/$symbol",
-          "Marketbeat" to "https://www.marketbeat.com/stocks/$symbol/",
-          "TD Ameritrade" to "https://research.tdameritrade.com/grid/public/research/stocks/calendar?symbol=$symbol"
+          "CNN Money" to "http://money.cnn.com/quote/quote.html?symb=$symbol",
+          "TheStreet" to "https://www.thestreet.com/quote/$symbol",
+          "FinViz" to "https://finviz.com/quote.ashx?t=$symbol",
+          "MarketBeat" to "https://www.marketbeat.com/stocks/$symbol/",
+          "MarketWatch" to "https://www.marketwatch.com/investing/stock/$symbol/",
+          "TD Ameritrade" to "https://research.tdameritrade.com/grid/public/research/stocks/calendar?symbol=$symbol",
+          "Zacks" to "https://www.zacks.com/stock/quote/$symbol"
       )
 
       var menuIndex: Int = Menu.FIRST
@@ -876,7 +881,6 @@ class StockDataFragment : Fragment() {
 
         // Reset when assets are changed.
         picker_knob.setValue(0.0, 100.0, 0.0)
-
 
 //        val (totalQuantity, totalPrice) = getAssets(data.assets)
 //
