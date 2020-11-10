@@ -65,8 +65,15 @@ public class MapLayoutView extends View {
               if (index != -1) {
                 Mappable mappableItem = mappableItems[index];
                 AndroidMapItem item = (AndroidMapItem) mappableItem;
-                String symbol = item.getLabel();
-                onClickCallback.run(symbol);
+
+                if(!item.getText().isEmpty()) {
+                  // color the clicked tile
+                  item.setColor(Color.GRAY);
+                  v.invalidate();
+
+                  String symbol = item.getLabel();
+                  onClickCallback.run(symbol);
+                }
               }
               //launchFullPhotoActivity(imageUrls);// WE HAVE A CLICK!!
             }

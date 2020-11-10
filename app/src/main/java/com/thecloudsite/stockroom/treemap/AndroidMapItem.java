@@ -25,7 +25,7 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
   private double weight;
   private final String label;
   private final String text;
-  private final Integer color;
+  private Integer color;
 
   public AndroidMapItem(double weight, String label, String text, Integer color) {
     this.label = label;
@@ -37,11 +37,17 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
   public String getLabel() {
     return label;
   }
+
   public String getText() {
     return text;
   }
+
   public Integer getColor() {
     return color;
+  }
+
+  public void setColor(Integer color) {
+    this.color = color;
   }
 
   /* Return an Android RectF that is the size of the bounds rectangle */
