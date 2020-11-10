@@ -194,11 +194,11 @@ class MainActivity : AppCompatActivity() {
           "04_StockRoomSmallListFragment" -> {
             StockRoomSmallListFragment.newInstance()
           }
-          "05_SummaryGroupFragment" -> {
-            SummaryGroupFragment.newInstance()
-          }
-          "06_StockRoomTreemapFragment" -> {
+          "05_StockRoomTreemapFragment" -> {
             StockRoomTreemapFragment.newInstance()
+          }
+          "06_SummaryGroupFragment" -> {
+            SummaryGroupFragment.newInstance()
           }
           "07_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
