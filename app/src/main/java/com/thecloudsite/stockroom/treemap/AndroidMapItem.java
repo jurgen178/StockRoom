@@ -18,18 +18,20 @@ package com.thecloudsite.stockroom.treemap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
 import android.graphics.RectF;
+import org.jetbrains.annotations.NotNull;
 
 public class AndroidMapItem extends MapItem implements AndroidMappable, Comparable<AndroidMapItem> {
   private double weight;
   private final String label;
   private final String text;
+  private final String change;
   private Integer color;
 
-  public AndroidMapItem(double weight, String label, String text, Integer color) {
+  public AndroidMapItem(double weight, String label, String text, String change, Integer color) {
     this.label = label;
     this.text = text;
+    this.change = change;
     this.color = color;
     setSize(weight);
   }
@@ -40,6 +42,10 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
 
   public String getText() {
     return text;
+  }
+
+  public String getChange() {
+    return change;
   }
 
   public Integer getColor() {
@@ -62,7 +68,7 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
   public static <T extends Comparable<? super T>> ArrayList<T> asReverseSortedList(
       Collection<T> collection) {
     ArrayList<T> arrayList = new ArrayList<T>(collection);
-    Collections.sort(arrayList, Collections.reverseOrder());
+    arrayList.sort(Collections.reverseOrder());
     return arrayList;
   }
 
@@ -71,7 +77,7 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
     return Double.compare(weight, otherItem.weight);
   }
 
-  @Override
+  @NotNull @Override
   public String toString() {
     return AndroidMapItem.class.getSimpleName() + "[label=" + label + ",weight=" + weight +
         ",bounds=" + getBounds().toString() +

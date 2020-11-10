@@ -23,7 +23,6 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import androidx.annotation.Nullable;
 
 public class MapLayoutView extends View {
 
@@ -66,7 +65,7 @@ public class MapLayoutView extends View {
                 Mappable mappableItem = mappableItems[index];
                 AndroidMapItem item = (AndroidMapItem) mappableItem;
 
-                if(!item.getText().isEmpty()) {
+                if (!item.getText().isEmpty()) {
                   // color the clicked tile
                   item.setColor(Color.GRAY);
                   v.invalidate();
@@ -136,7 +135,7 @@ public class MapLayoutView extends View {
       AndroidMapItem item = (AndroidMapItem) mappableItem;
       RectF rectF = item.getBoundsRectF();
       drawRectangle(canvas, rectF, item.getColor());
-      drawText(canvas, item.getLabel(), item.getText(), rectF);
+      drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF);
     }
   }
 
@@ -174,11 +173,25 @@ public class MapLayoutView extends View {
     canvas.drawRect(rectF, mRectBorderPaint);
   }
 
-  private void drawText(Canvas canvas, String label, String text, RectF rectF) {
+  private boolean isDarkColor(Integer color) {
+    int r = (color >> 16) & 0xff;
+    int g = (color >> 8) & 0xff;
+    int b = color & 0xff;
+    return r + g + b < 400;
+  }
+
+  private void drawText(Canvas canvas, String label, String text, String change, RectF rectF,
+      Integer color) {
     // Don't draw text for small rectangles
     if (rectF.width() > 40) {
+
+      if (isDarkColor(color)) {
+        mTextPaint.setColor(Color.WHITE);
+      } else {
+        mTextPaint.setColor(Color.BLACK);
+      }
+
       float labelSize = Math.min(Math.max(rectF.width() / 7, 20), 100);
-      float textSize = 0.75f * labelSize;
       mTextPaint.setTextSize((int) labelSize);
 
       float tym = labelSize / 2;
@@ -188,12 +201,22 @@ public class MapLayoutView extends View {
       canvas.drawText(label, xm, ym, mTextPaint);
       ym += tym;
 
+      float textSize = 0.75f * labelSize;
       mTextPaint.setTextSize((int) textSize);
       tym = textSize / 2;
       txm = mTextPaint.measureText(text) / 2;
       xm = rectF.left + rectF.width() / 2 - txm;
       ym += 2 * tym;
       canvas.drawText(text, xm, ym, mTextPaint);
+      ym += tym;
+
+      float changeSize = 0.5f * labelSize;
+      mTextPaint.setTextSize((int) changeSize);
+      tym = changeSize / 2;
+      txm = mTextPaint.measureText(change) / 2;
+      xm = rectF.left + rectF.width() / 2 - txm;
+      ym += 2 * tym;
+      canvas.drawText(change, xm, ym, mTextPaint);
     }
   }
 }

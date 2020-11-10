@@ -7,11 +7,11 @@
     <item>Single line</item>
     <item>Small tile</item>
     <item>Summary</item>
+    <item>Block</item>
     <item>News</item>
     <item>Timeline Assets</item>
     <item>Timeline Events</item>
     <item>Timeline Dividends</item>
-    <item>Tree map (Test)</item>
   </string-array>
   <string-array name="displayed_views_entries_values">
     <item>00_StockRoomChartFragment</item>

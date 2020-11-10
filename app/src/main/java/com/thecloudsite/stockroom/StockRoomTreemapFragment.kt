@@ -17,7 +17,9 @@
 package com.thecloudsite.stockroom
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -27,6 +29,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.thecloudsite.stockroom.treemap.AndroidMapItem
 import com.thecloudsite.stockroom.treemap.TreeModel
+import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_treemap.view.treemap_view
 import okhttp3.internal.toHexString
@@ -105,13 +108,13 @@ class StockRoomTreemapFragment : Fragment() {
 
     // Gets displayed if no items are added to the root item.
     val noAssetsStr = context?.getString(R.string.no_assets)
-    val rootItem = AndroidMapItem(1.0, noAssetsStr, "", 0)
+    val rootItem = AndroidMapItem(1.0, noAssetsStr, "", "", 0)
     val treeModel = TreeModel(rootItem)
-    //val listColors = ArrayList<Int>()
 
     data class AssetSummary(
       val symbol: String,
       val assets: Double,
+      val assetChange: String,
       val color: Int
     )
 
@@ -128,12 +131,24 @@ class StockRoomTreemapFragment : Fragment() {
         context?.getColor(R.color.backgroundListColor)
       }
 
+      val assetChange = getAssetChange(
+          totalQuantity,
+          totalPrice,
+          stockItem.onlineMarketData.marketPrice,
+          stockItem.onlineMarketData.postMarketData,
+          Color.DKGRAY,
+          requireContext()
+      ).first
+
       assetList.add(
-          AssetSummary(stockItem.stockDBdata.symbol, assets, color!!)
+          AssetSummary(
+              stockItem.stockDBdata.symbol,
+              assets,
+              assetChange,
+              color!!
+          )
       )
     }
-
-    //data.add(CustomTreeDataEntry("Stock", null, "", 0, ""))
 
     if (totalAssets > 0.0) {
       val sortedAssetList = assetList.filter { assetSummary ->
@@ -151,20 +166,11 @@ class StockRoomTreemapFragment : Fragment() {
                         assetItem.assets,
                         assetItem.symbol,
                         DecimalFormat("0.00").format(assetItem.assets),
-                        assetItem.color)
+                        assetItem.assetChange,
+                        assetItem.color
+                    )
                 )
             )
-
-//            data.add(
-//                CustomTreeDataEntry(
-//                    assetItem.symbol,
-//                    "Stock",
-//                    assetItem.symbol,
-//                    assetItem.assets.toInt(),
-//                    getColorStr(assetItem.color)
-//                )
-//            )
-            //listColors.add(getColorStr(assetItem.color))
           }
     }
 

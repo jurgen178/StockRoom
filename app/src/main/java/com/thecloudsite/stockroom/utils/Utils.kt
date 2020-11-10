@@ -197,27 +197,33 @@ fun getAssetChange(
 
   val (quantity, asset) = getAssets(assets)
 
-//  val quantity = assets.sumByDouble {
-//    it.quantity
-//  }
+  return getAssetChange(
+      quantity,
+      asset,
+      marketPrice,
+      isPostMarket,
+      neutralColor,
+      context,
+      bold
+  )
+}
 
-//  val asset: Double =
-//    if (quantity > 0.0) {
-//      assets.sumByDouble {
-//        it.quantity * it.price
-//      }
-//    } else {
-//      0.0
-//    }
+// Gets the colored change string "asset (%change)"
+fun getAssetChange(
+  quantity: Double,
+  asset: Double,
+  marketPrice: Double,
+  isPostMarket: Boolean,
+  neutralColor: Int,
+  context: Context,
+  bold: Boolean = true
+): Triple<String, SpannableStringBuilder, Int> {
 
   if (marketPrice > 0.0) {
     var changeStr: String = ""
 
     if (quantity > 0.0) {
       val capital = quantity * marketPrice
-//      val capital = assets.sumByDouble {
-//        it.quantity * marketPrice
-//      }
 
       val change = capital - asset
       changeStr += "${

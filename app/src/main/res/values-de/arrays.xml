@@ -7,11 +7,11 @@
     <item>Einzeilig</item>
     <item>Kleine Übersicht</item>
     <item>Zusammenfassung</item>
+    <item>Blockansicht</item>
     <item>Nachrichten</item>
     <item>Zeitachse Aktienwerte</item>
     <item>Zeitachse Ereignisse</item>
     <item>Zeitachse Dividenden</item>
-    <item>Tree map (Test)</item>
   </string-array>
   <string-array name="displayed_views_entries_values">
     <item>00_StockRoomChartFragment</item>

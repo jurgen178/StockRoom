@@ -8,8 +8,6 @@
 
 package com.thecloudsite.stockroom.treemap;
 
-import java.util.Collections;
-
 /*
  * Abstract class holding utility routines that several
  * implementations of MapLayout use.
