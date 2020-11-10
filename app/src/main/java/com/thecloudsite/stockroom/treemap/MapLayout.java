@@ -14,7 +14,7 @@ package com.thecloudsite.stockroom.treemap;
  * If you write your own algorithm, it should conform
  * to this interface.
  * <p>
- * IMPORTANT: if you want to be able to automatically plug 
+ * IMPORTANT: if you want to be able to automatically plug
  * your algorithm into the various demos and test harnesses
  * included in the treemap package, it should have
  * an empty constructor.

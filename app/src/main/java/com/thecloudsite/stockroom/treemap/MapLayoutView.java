@@ -134,8 +134,9 @@ public class MapLayoutView extends View {
     for (Mappable mappableItem : mappableItems) {
       AndroidMapItem item = (AndroidMapItem) mappableItem;
       RectF rectF = item.getBoundsRectF();
-      drawRectangle(canvas, rectF, item.getColor());
-      drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF);
+      Integer color = item.getColor();
+      drawRectangle(canvas, rectF, color);
+      drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF, color);
     }
   }
 
@@ -195,28 +196,32 @@ public class MapLayoutView extends View {
       mTextPaint.setTextSize((int) labelSize);
 
       float tym = labelSize / 2;
-      float txm = mTextPaint.measureText(label) / 2;
-      float xm = rectF.left + rectF.width() / 2 - txm;
+      float txm = mTextPaint.measureText(label);
+      float xm = rectF.left + rectF.width() / 2 - txm / 2;
       float ym = rectF.top + rectF.height() / 2 - tym;
       canvas.drawText(label, xm, ym, mTextPaint);
       ym += tym;
 
       float textSize = 0.75f * labelSize;
       mTextPaint.setTextSize((int) textSize);
+      txm = mTextPaint.measureText(text);
       tym = textSize / 2;
-      txm = mTextPaint.measureText(text) / 2;
-      xm = rectF.left + rectF.width() / 2 - txm;
+      xm = rectF.left + rectF.width() / 2 - txm / 2;
       ym += 2 * tym;
-      canvas.drawText(text, xm, ym, mTextPaint);
-      ym += tym;
+      if (txm < rectF.width() && ym + tym < rectF.bottom) {
+        canvas.drawText(text, xm, ym, mTextPaint);
+        ym += tym;
+      }
 
       float changeSize = 0.5f * labelSize;
       mTextPaint.setTextSize((int) changeSize);
+      txm = mTextPaint.measureText(change);
       tym = changeSize / 2;
-      txm = mTextPaint.measureText(change) / 2;
-      xm = rectF.left + rectF.width() / 2 - txm;
+      xm = rectF.left + rectF.width() / 2 - txm / 2;
       ym += 2 * tym;
-      canvas.drawText(change, xm, ym, mTextPaint);
+      if (txm < rectF.width() && ym + tym < rectF.bottom) {
+        canvas.drawText(change, xm, ym, mTextPaint);
+      }
     }
   }
 }
