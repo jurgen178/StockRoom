@@ -23,11 +23,13 @@ import android.graphics.RectF;
 
 public class AndroidMapItem extends MapItem implements AndroidMappable, Comparable<AndroidMapItem> {
   private double weight;
-  private String label;
-  private Integer color;
+  private final String label;
+  private final String text;
+  private final Integer color;
 
-  public AndroidMapItem(double weight, String label, Integer color) {
+  public AndroidMapItem(double weight, String label, String text, Integer color) {
     this.label = label;
+    this.text = text;
     this.color = color;
     setSize(weight);
   }
@@ -35,11 +37,14 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
   public String getLabel() {
     return label;
   }
+  public String getText() {
+    return text;
+  }
   public Integer getColor() {
     return color;
   }
 
-  /** Return an Android RectF that is the size of the bounds rectangle */
+  /* Return an Android RectF that is the size of the bounds rectangle */
   public RectF getBoundsRectF() {
     Rect bounds = getBounds();
     return new RectF(Double.valueOf(bounds.x).floatValue(),

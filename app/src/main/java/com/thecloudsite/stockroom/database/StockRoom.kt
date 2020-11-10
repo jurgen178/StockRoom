@@ -22,7 +22,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-/**
+/*
  * A basic class representing an entity that is a row in a one-column database table.
  *
  * @ Entity - You must annotate the class as an entity and supply a table name if not class name.

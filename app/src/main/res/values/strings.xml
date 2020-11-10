@@ -350,4 +350,5 @@ limitations under the License. -->
   <string name="date">Date</string>
   <string name="community_search_links">Community and Search links</string>
   <string name="price_preview_header">Price preview</string>
+  <string name="no_assets">No assets</string>
 </resources>

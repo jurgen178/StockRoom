@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA
  * and Martin Wattenberg, w@bewitched.com
  * All rights reserved.
@@ -8,13 +8,13 @@
 
 package com.thecloudsite.stockroom.treemap;
 
-/**
+/*
  * A simple implementation of the Mappable interface.
  */
 public class MapItem implements Mappable {
   double size;
   Rect bounds;
-  int order = 0;
+  int order;
   int depth;
 
   public void setDepth(int depth) {

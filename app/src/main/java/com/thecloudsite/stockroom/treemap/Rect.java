@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA
  * and Martin Wattenberg, w@bewitched.com
  * All rights reserved.
@@ -8,7 +8,9 @@
 
 package com.thecloudsite.stockroom.treemap;
 
-/**
+import org.jetbrains.annotations.NotNull;
+
+/*
  * A JDK 1.0 - compatible rectangle class that
  * accepts double-valued parameters.
  */
@@ -49,7 +51,7 @@ public class Rect {
     return new Rect(x, y, w, h);
   }
 
-  public String toString() {
+  @NotNull public String toString() {
     return "Rect: x=" + x + ", y=" + y + ", w=" + w + ", h=" + h;
   }
 }

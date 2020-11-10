@@ -1930,7 +1930,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return menuStrings
   }
 
-  /**
+  /*
    * Launching a new coroutine to insert the data in a non-blocking way
    */
   // viewModelScope.launch(Dispatchers.IO) {

@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -29,6 +30,7 @@ import com.thecloudsite.stockroom.treemap.TreeModel
 import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_treemap.view.treemap_view
 import okhttp3.internal.toHexString
+import java.text.DecimalFormat
 
 class StockRoomTreemapFragment : Fragment() {
 
@@ -101,7 +103,9 @@ class StockRoomTreemapFragment : Fragment() {
   ) {
     val treemapView = view.treemap_view
 
-    val rootItem = AndroidMapItem(700005.2, "Stock", 0)
+    // Gets displayed if no items are added to the root item.
+    val noAssetsStr = context?.getString(R.string.no_assets)
+    val rootItem = AndroidMapItem(1.0, noAssetsStr, "", 0)
     val treeModel = TreeModel(rootItem)
     //val listColors = ArrayList<Int>()
 
@@ -141,7 +145,15 @@ class StockRoomTreemapFragment : Fragment() {
 
       sortedAssetList //.take(n)
           .forEach { assetItem ->
-            treeModel.addChild(TreeModel(AndroidMapItem(assetItem.assets, assetItem.symbol, assetItem.color)))
+            treeModel.addChild(
+                TreeModel(
+                    AndroidMapItem(
+                        assetItem.assets,
+                        assetItem.symbol,
+                        DecimalFormat("0.00").format(assetItem.assets),
+                        assetItem.color)
+                )
+            )
 
 //            data.add(
 //                CustomTreeDataEntry(
@@ -154,39 +166,15 @@ class StockRoomTreemapFragment : Fragment() {
 //            )
             //listColors.add(getColorStr(assetItem.color))
           }
-
-      treemapView.setTreeModel(treeModel)
-      treemapView.invalidate()
-
-
-//      // Add the sum of the remaining values.
-//      if (sortedAssetList.size == n + 1) {
-//        val assetItem = sortedAssetList.last()
-//
-//        data.add(
-//            CustomTreeDataEntry(
-//                assetItem.symbol, "Stock", assetItem.symbol, assetItem.assets.toInt()
-//            )
-//        )
-//        //listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
-//        listColors.add(Color.GRAY)
-//      } else
-//        if (sortedAssetList.size > n + 1) {
-//          val otherAssetList = sortedAssetList.drop(n)
-//          val otherAssets = otherAssetList.sumByDouble { assetItem ->
-//            assetItem.assets
-//          }
-//
-//          val symbol = "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
-//          data.add(CustomTreeDataEntry(symbol, "Stock", symbol, otherAssets.toInt()))
-////          listPie.add(
-////              PieEntry(
-////                  otherAssets.toFloat(),
-////                  "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
-////              )
-////          )
-//          listColors.add(Color.GRAY)
-//        }
     }
+
+    treemapView.setTreeModel(treeModel)
+    treemapView.setOnClickCallback { symbol ->
+      val intent = Intent(context, StockDataActivity::class.java)
+      intent.putExtra("symbol", symbol)
+      startActivity(intent)
+    }
+
+    treemapView.invalidate()
   }
 }

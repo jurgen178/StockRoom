@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA
  * and Martin Wattenberg, w@bewitched.com
  * All rights reserved.
@@ -10,7 +10,7 @@ package com.thecloudsite.stockroom.treemap;
 
 import java.util.*;
 
-/**
+/*
  *
  * An implementation of MapModel that represents
  * a hierarchical structure. It currently cannot
@@ -19,12 +19,12 @@ import java.util.*;
  *
  */
 public class TreeModel implements MapModel {
-  private Mappable mapItem;
+  private final Mappable mapItem;
   private Mappable[] childItems;
   private Mappable[] cachedTreeItems; // we assume tree structure doesn't change.
   private MapModel[] cachedLeafModels;
   private TreeModel parent;
-  private Vector children = new Vector();
+  private final Vector<TreeModel> children = new Vector<>();
   private boolean sumsChildren;
 
   public TreeModel() {
@@ -44,7 +44,7 @@ public class TreeModel implements MapModel {
       if (cachedLeafModels != null) {
           return cachedLeafModels;
       }
-    Vector v = new Vector();
+    Vector<TreeModel> v = new Vector<TreeModel>();
     addLeafModels(v);
     int n = v.size();
     MapModel[] m = new MapModel[n];
@@ -53,10 +53,9 @@ public class TreeModel implements MapModel {
     return m;
   }
 
-  private Vector addLeafModels(Vector v) {
+  private void addLeafModels(Vector<TreeModel> v) {
     if (!hasChildren()) {
-      System.err.println("Somehow tried to get child model for leaf!!!");
-      return v;
+      return;
     }
       if (!getChild(0).hasChildren()) {
           v.addElement(this);
@@ -64,7 +63,6 @@ public class TreeModel implements MapModel {
           for (int i = childCount() - 1; i >= 0; i--)
               getChild(i).addLeafModels(v);
       }
-    return v;
   }
 
   public int depth() {
@@ -90,7 +88,7 @@ public class TreeModel implements MapModel {
           return cachedTreeItems;
       }
 
-    Vector v = new Vector();
+    Vector<Mappable> v = new Vector<>();
     addTreeItems(v);
     int n = v.size();
     Mappable[] m = new Mappable[n];
@@ -99,7 +97,7 @@ public class TreeModel implements MapModel {
     return m;
   }
 
-  private void addTreeItems(Vector v) {
+  private void addTreeItems(Vector<Mappable> v) {
       if (!hasChildren()) {
           v.addElement(mapItem);
       } else {
@@ -157,20 +155,10 @@ public class TreeModel implements MapModel {
   }
 
   public TreeModel getChild(int n) {
-    return (TreeModel) children.elementAt(n);
+    return children.elementAt(n);
   }
 
   public boolean hasChildren() {
     return children.size() > 0;
-  }
-
-  public void print() {
-    print("");
-  }
-
-  private void print(String prefix) {
-    System.out.println(prefix + "size=" + mapItem.getSize());
-    for (int i = 0; i < childCount(); i++)
-      getChild(i).print(prefix + "..");
   }
 }

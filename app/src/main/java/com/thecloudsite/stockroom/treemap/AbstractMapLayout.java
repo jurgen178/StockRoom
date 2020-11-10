@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA
  * and Martin Wattenberg, w@bewitched.com
  * All rights reserved.
@@ -10,7 +10,7 @@ package com.thecloudsite.stockroom.treemap;
 
 import java.util.Collections;
 
-/**
+/*
  * Abstract class holding utility routines that several
  * implementations of MapLayout use.
  */
@@ -20,7 +20,7 @@ public abstract class AbstractMapLayout implements MapLayout {
   public static final int VERTICAL = 0, HORIZONTAL = 1;
   public static final int ASCENDING = 0, DESCENDING = 1;
 
-  /** Subclasses implement this method themselves. */
+  /* Subclasses implement this method themselves. */
   public abstract void layout(Mappable[] items, Rect bounds);
 
   public void layout(MapModel model, Rect bounds) {
@@ -40,7 +40,7 @@ public abstract class AbstractMapLayout implements MapLayout {
 
   // For a production system, use a quicksort...
   public Mappable[] sortDescending(Mappable[] items) {
-    if (items.length > 1) {
+    if (items != null && items.length > 1) {
       Mappable[] s = new Mappable[items.length];
       System.arraycopy(items, 0, s, 0, items.length);
       int n = s.length;
@@ -71,33 +71,35 @@ public abstract class AbstractMapLayout implements MapLayout {
   public static void sliceLayout(Mappable[] items, int start, int end, Rect bounds, int orientation,
       int order) {
     double total = totalSize(items, start, end);
-    double a = 0;
-    boolean vertical = orientation == VERTICAL;
+    if (total > 0) {
+      double a = 0;
+      boolean vertical = orientation == VERTICAL;
 
-    for (int i = start; i <= end; i++) {
-      Rect r = new Rect();
-      double b = items[i].getSize() / total;
-      if (vertical) {
-        r.x = bounds.x;
-        r.w = bounds.w;
-        if (order == ASCENDING) {
-          r.y = bounds.y + bounds.h * a;
+      for (int i = start; i <= end; i++) {
+        Rect r = new Rect();
+        double b = items[i].getSize() / total;
+        if (vertical) {
+          r.x = bounds.x;
+          r.w = bounds.w;
+          if (order == ASCENDING) {
+            r.y = bounds.y + bounds.h * a;
+          } else {
+            r.y = bounds.y + bounds.h * (1 - a - b);
+          }
+          r.h = bounds.h * b;
         } else {
-          r.y = bounds.y + bounds.h * (1 - a - b);
+          if (order == ASCENDING) {
+            r.x = bounds.x + bounds.w * a;
+          } else {
+            r.x = bounds.x + bounds.w * (1 - a - b);
+          }
+          r.w = bounds.w * b;
+          r.y = bounds.y;
+          r.h = bounds.h;
         }
-        r.h = bounds.h * b;
-      } else {
-        if (order == ASCENDING) {
-          r.x = bounds.x + bounds.w * a;
-        } else {
-          r.x = bounds.x + bounds.w * (1 - a - b);
-        }
-        r.w = bounds.w * b;
-        r.y = bounds.y;
-        r.h = bounds.h;
+        items[i].setBounds(r);
+        a += b;
       }
-      items[i].setBounds(r);
-      a += b;
     }
   }
 }

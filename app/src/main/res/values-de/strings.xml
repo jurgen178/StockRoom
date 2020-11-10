@@ -347,4 +347,5 @@ limitations under the License. -->
   <string name="date">Datum</string>
   <string name="community_search_links">Community und Such-Links</string>
   <string name="price_preview_header">Gewinnvorschau</string>
+  <string name="no_assets">Keine Aktienbestände</string>
 </resources>

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA
  * and Martin Wattenberg, w@bewitched.com
  * All rights reserved.
@@ -8,21 +8,19 @@
 
 package com.thecloudsite.stockroom.treemap;
 
-import com.thecloudsite.stockroom.treemap.AbstractMapLayout;
-
-/**
+/*
  * "Squarified" treemap layout invented by
  * J.J. van Wijk.
  */
 public class SquarifiedLayout extends AbstractMapLayout {
   public void layout(Mappable[] items, Rect bounds) {
-    if (items.length > 0 && bounds.h > 0 && bounds.w > 0) {
+    if (items != null && items.length > 0 && bounds.h > 0 && bounds.w > 0) {
       layout(sortDescending(items), 0, items.length - 1, bounds);
     }
   }
 
   public void layout(Mappable[] items, int start, int end, Rect bounds) {
-    if (items.length > 0 && bounds.h > 0 && bounds.w > 0) {
+    if (items != null && items.length > 0 && bounds.h > 0 && bounds.w > 0) {
       if (start > end) return;
 
       if (end - start < 2) {

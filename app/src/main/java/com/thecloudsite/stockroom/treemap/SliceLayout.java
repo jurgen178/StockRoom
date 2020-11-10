@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2001 by University of Maryland, College Park, MD 20742, USA
  * and Martin Wattenberg, w@bewitched.com
  * All rights reserved.
@@ -8,12 +8,12 @@
 
 package com.thecloudsite.stockroom.treemap;
 
-/**
+/*
  * The original slice-and-dice layout for treemaps.
  */
 public class SliceLayout extends AbstractMapLayout {
   public static final int BEST = 2, ALTERNATE = 3;
-  private int orientation;
+  private final int orientation;
 
   public SliceLayout() {
     this(ALTERNATE);

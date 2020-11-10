@@ -27,7 +27,7 @@ import com.thecloudsite.stockroom.list.ListActivity
 import kotlinx.android.synthetic.main.activity_add.button_add
 import kotlinx.android.synthetic.main.activity_add.importButton
 
-/**
+/*
  * Activity for entering a new symbol.
  */
 

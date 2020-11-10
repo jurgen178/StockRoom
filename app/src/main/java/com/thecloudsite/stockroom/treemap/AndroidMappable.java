@@ -18,7 +18,7 @@ package com.thecloudsite.stockroom.treemap;
 import android.graphics.RectF;
 
 public interface AndroidMappable extends Mappable {
-  public RectF getBoundsRectF();
+  RectF getBoundsRectF();
 
-  public String getLabel();
+  String getLabel();
 }

@@ -29,7 +29,7 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDao
 
-/**
+/*
  * Abstracted Repository as promoted by the Architecture Guide.
  * https://developer.android.com/topic/libraries/architecture/guide.html
  */
