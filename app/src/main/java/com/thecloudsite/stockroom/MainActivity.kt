@@ -185,8 +185,8 @@ class MainActivity : AppCompatActivity() {
           "01_StockRoomListFragment" -> {
             StockRoomListFragment.newInstance()
           }
-          "02_SummaryListFragment" -> {
-            SummaryListFragment.newInstance()
+          "02_StockRoomTileFragment" -> {
+            StockRoomTileFragment.newInstance()
           }
           "03_StockRoomDetailListFragment" -> {
             StockRoomDetailListFragment.newInstance()
@@ -197,20 +197,20 @@ class MainActivity : AppCompatActivity() {
           "05_SummaryGroupFragment" -> {
             SummaryGroupFragment.newInstance()
           }
-          "06_AllNewsFragment" -> {
+          "06_StockRoomTreemapFragment" -> {
+            StockRoomTreemapFragment.newInstance()
+          }
+          "07_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "07_AssetTimelineFragment" -> {
+          "08_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "08_EventTimelineFragment" -> {
+          "09_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "09_DividendTimelineFragment" -> {
+          "10_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
-          }
-          "10_StockRoomTreemapFragment" -> {
-            StockRoomTreemapFragment.newInstance()
           }
           else -> {
             StockRoomListFragment.newInstance()

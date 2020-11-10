@@ -30,12 +30,12 @@ import java.lang.Integer.max
 import java.lang.Integer.min
 import kotlin.math.roundToInt
 
-class SummaryListFragment : Fragment() {
+class StockRoomTileFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   companion object {
-    fun newInstance() = SummaryListFragment()
+    fun newInstance() = StockRoomTileFragment()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +49,7 @@ class SummaryListFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View? {
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_summarylist, container, false)
+    return inflater.inflate(R.layout.fragment_tile, container, false)
   }
 
   override fun onViewCreated(
@@ -62,9 +62,9 @@ class SummaryListFragment : Fragment() {
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     val clickListenerListItem = { stockItem: StockItem -> clickListenerListItem(stockItem) }
-    val summaryListAdapter = SummaryListAdapter(requireContext(), clickListenerListItem)
-    val summaryList = view.findViewById<RecyclerView>(R.id.summaryList)
-    summaryList.adapter = summaryListAdapter
+    val stockRoomTileAdapter = StockRoomTileAdapter(requireContext(), clickListenerListItem)
+    val stockRoomTile = view.findViewById<RecyclerView>(R.id.stockroomtile)
+    stockRoomTile.adapter = stockRoomTileAdapter
 
     /*
     // Set column number depending on orientation and size.
@@ -153,11 +153,11 @@ class SummaryListFragment : Fragment() {
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    summaryList.layoutManager = GridLayoutManager(requireContext(), min(max(spanCount, 2), 20))
+    stockRoomTile.layoutManager = GridLayoutManager(requireContext(), min(max(spanCount, 2), 20))
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItemSet ->
-        summaryListAdapter.updateData(stockItemSet)
+        stockRoomTileAdapter.updateData(stockItemSet)
       }
     })
   }

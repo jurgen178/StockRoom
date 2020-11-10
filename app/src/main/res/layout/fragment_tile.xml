@@ -8,11 +8,11 @@
     >
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/summaryList"
+      android:id="@+id/stockroomtile"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_margin="4dp"
-      tools:listitem="@layout/summarylist_item"
+      tools:listitem="@layout/stockroomtile_item"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,20 +16,20 @@
   <string-array name="displayed_views_entries_values">
     <item>00_StockRoomChartFragment</item>
     <item>01_StockRoomListFragment</item>
-    <item>02_SummaryListFragment</item>
+    <item>02_StockRoomTileFragment</item>
     <item>03_StockRoomDetailListFragment</item>
     <item>04_StockRoomSmallListFragment</item>
     <item>05_SummaryGroupFragment</item>
-    <item>06_AllNewsFragment</item>
-    <item>07_AssetTimelineFragment</item>
-    <item>08_EventTimelineFragment</item>
-    <item>09_DividendTimelineFragment</item>
-    <item>10_StockRoomTreemapFragment</item>
+    <item>06_StockRoomTreemapFragment</item>
+    <item>07_AllNewsFragment</item>
+    <item>08_AssetTimelineFragment</item>
+    <item>09_EventTimelineFragment</item>
+    <item>10_DividendTimelineFragment</item>
   </string-array>
   <string-array name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>
     <item>01_StockRoomListFragment</item>
-    <item>02_SummaryListFragment</item>
-    <item>04_SummaryGroupFragment</item>
+    <item>02_StockRoomTileFragment</item>
+    <item>05_SummaryGroupFragment</item>
   </string-array>
 </resources>

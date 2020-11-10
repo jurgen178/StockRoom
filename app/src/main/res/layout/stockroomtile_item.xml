@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/summaryListItemLayout"
+    android:id="@+id/stockRoomTileItemLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,7 +10,7 @@
     >
 
   <TextView
-      android:id="@+id/summaryListItemGroup"
+      android:id="@+id/stockRoomTileItemGroup"
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:background="@drawable/group_item_bg"
@@ -22,7 +22,7 @@
       />
 
   <TextView
-      android:id="@+id/summaryListItemSymbol"
+      android:id="@+id/stockRoomTileItemSymbol"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="2dp"
@@ -36,7 +36,7 @@
       app:layout_constraintBottom_toTopOf="@+id/guideline3"
       />
   <TextView
-      android:id="@+id/summaryListItemMarketPrice"
+      android:id="@+id/stockRoomTileItemMarketPrice"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="2dp"
@@ -51,7 +51,7 @@
       />
 
   <TextView
-      android:id="@+id/summaryListItemMarketChange"
+      android:id="@+id/stockRoomTileItemMarketChange"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="4dp"
@@ -63,20 +63,20 @@
       app:layout_constraintHorizontal_bias="1.0"
       />
   <TextView
-      android:id="@+id/summaryListItemCapital"
+      android:id="@+id/stockRoomTileItemCapital"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="4dp"
       android:layout_marginEnd="2dp"
       android:textSize="12sp"
       android:textStyle="bold"
-      app:layout_constraintTop_toBottomOf="@+id/summaryListItemMarketChange"
+      app:layout_constraintTop_toBottomOf="@+id/stockRoomTileItemMarketChange"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintEnd_toEndOf="parent"
       />
 
   <TextView
-      android:id="@+id/summaryListItemAssetChange"
+      android:id="@+id/stockRoomTileItemAssetChange"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="2dp"
@@ -86,7 +86,7 @@
       android:textSize="12sp"
       app:layout_constraintVertical_bias="1.0"
       app:layout_constraintHorizontal_bias="1.0"
-      app:layout_constraintTop_toBottomOf="@+id/summaryListItemCapital"
+      app:layout_constraintTop_toBottomOf="@+id/stockRoomTileItemCapital"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
