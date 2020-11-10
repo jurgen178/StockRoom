@@ -181,7 +181,12 @@ public class MapLayoutView extends View {
     return r + g + b < 400;
   }
 
-  private void drawText(Canvas canvas, String label, String text, String change, RectF rectF,
+  private void drawText(
+      Canvas canvas,
+      String label,
+      String text,
+      String change,
+      RectF rectF,
       Integer color) {
     // Don't draw text for small rectangles
     if (rectF.width() > 40) {
