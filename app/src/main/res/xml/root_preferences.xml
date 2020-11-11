@@ -51,6 +51,14 @@
         app:icon="@drawable/ic_action_display_views"
         />
 
+    <SwitchPreferenceCompat
+        app:key="tab_headlines"
+        app:title="@string/tab_headlines"
+        app:summary="@string/tab_headlines_desc"
+        app:defaultValue="true"
+        app:icon="@drawable/ic_action_tab_headlines"
+        />
+
   </PreferenceCategory>
 
   <PreferenceCategory app:title="@string/general_header">

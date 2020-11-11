@@ -348,4 +348,6 @@ limitations under the License. -->
   <string name="community_search_links">Community und Such-Links</string>
   <string name="price_preview_header">Gewinnvorschau</string>
   <string name="no_assets">Keine Aktienbestände</string>
+  <string name="tab_headlines">Auswahlüberschriften</string>
+  <string name="tab_headlines_desc">Zeigt Überschriften zur schnelleren Auswahl der Darstellungen an.</string>
 </resources>

@@ -31,8 +31,10 @@ public abstract class AbstractMapLayout implements MapLayout {
 
   public static double totalSize(Mappable[] items, int start, int end) {
     double sum = 0;
-    for (int i = start; i <= end; i++)
-      sum += items[i].getSize();
+    if (items != null && items.length > 0 && start < items.length && end < items.length) {
+      for (int i = start; i <= end; i++)
+        sum += items[i].getSize();
+    }
     return sum;
   }
 

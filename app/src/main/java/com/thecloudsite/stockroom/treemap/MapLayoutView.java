@@ -178,7 +178,8 @@ public class MapLayoutView extends View {
     int r = (color >> 16) & 0xff;
     int g = (color >> 8) & 0xff;
     int b = color & 0xff;
-    return r + g + b < 400;
+
+    return r + g + b < 350;
   }
 
   private void drawText(
@@ -191,7 +192,7 @@ public class MapLayoutView extends View {
     // Don't draw text for small rectangles
     if (rectF.width() > 40) {
 
-      if (isDarkColor(color)) {
+      if (color != 0 && isDarkColor(color)) {
         mTextPaint.setColor(Color.WHITE);
       } else {
         mTextPaint.setColor(Color.BLACK);

@@ -34,11 +34,14 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.thecloudsite.stockroom.R.array
+import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.list.ListLogAdapter
@@ -47,6 +50,7 @@ import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
+import kotlinx.android.synthetic.main.activity_main.main_tab_layout
 import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
 import kotlinx.android.synthetic.main.activity_main.viewpager
 import java.text.DecimalFormat
@@ -223,6 +227,21 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
+    // Display the tab layout headers.
+    TabLayoutMediator(main_tab_layout, viewpager) { tab, position ->
+
+      if (position >= 0 && position < SharedRepository.displayedViewsList.size) {
+        // 00_StockRoomChartFragment, 01_StockRoomListFragment, ... 10_DividendTimelineFragment
+        val viewlistEntry = SharedRepository.displayedViewsList[position].subSequence(0, 2)
+            .toString()
+        val index = viewlistEntry.toInt()
+        val headers = this.resources.getStringArray(array.displayed_views_headers)
+        if (index >= 0 && index < headers.size) {
+          tab.text = headers[index]
+        }
+      }
+    }.attach()
+
     viewpager.setCurrentItem(
         if (SharedRepository.displayedViewsList.contains("01_StockRoomListFragment")) {
           SharedRepository.displayedViewsList.indexOf("01_StockRoomListFragment")
@@ -370,10 +389,17 @@ class MainActivity : AppCompatActivity() {
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
     val debug: Boolean = sharedPreferences.getBoolean("list", false)
-    if (debug) {
-      recyclerViewDebug.visibility = View.VISIBLE
+    recyclerViewDebug.visibility = if (debug) {
+      View.VISIBLE
     } else {
-      recyclerViewDebug.visibility = View.GONE
+      View.GONE
+    }
+
+    val tabHeadlines: Boolean = sharedPreferences.getBoolean("tab_headlines", true)
+    main_tab_layout.visibility = if (SharedRepository.displayedViewsList.size > 1 && tabHeadlines) {
+      View.VISIBLE
+    } else {
+      View.GONE
     }
   }
 

@@ -9,9 +9,22 @@
     <item>Blockansicht</item>
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
-    <item>Zeitachse Aktienwerte</item>
+    <item>Zeitachse Kauf/Verkauf</item>
     <item>Zeitachse Ereignisse</item>
     <item>Zeitachse Dividenden</item>
+  </string-array>
+  <string-array name="displayed_views_headers">
+    <item>Diagramme</item>
+    <item>Liste</item>
+    <item>Übersicht</item>
+    <item>Einzeilig</item>
+    <item>Kleine Übersicht</item>
+    <item>Blockansicht</item>
+    <item>Zusammenfassung</item>
+    <item>Nachrichten</item>
+    <item>Kauf/Verkauf</item>
+    <item>Ereignisse</item>
+    <item>Dividenden</item>
   </string-array>
   <string-array name="displayed_views_entries_values">
     <item>00_StockRoomChartFragment</item>

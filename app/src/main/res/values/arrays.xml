@@ -13,6 +13,19 @@
     <item>Timeline Events</item>
     <item>Timeline Dividends</item>
   </string-array>
+  <string-array name="displayed_views_headers">
+    <item>Chart</item>
+    <item>List</item>
+    <item>Tile</item>
+    <item>Single line</item>
+    <item>Small tile</item>
+    <item>Block</item>
+    <item>Summary</item>
+    <item>News</item>
+    <item>Assets</item>
+    <item>Events</item>
+    <item>Dividends</item>
+  </string-array>
   <string-array name="displayed_views_entries_values">
     <item>00_StockRoomChartFragment</item>
     <item>01_StockRoomListFragment</item>

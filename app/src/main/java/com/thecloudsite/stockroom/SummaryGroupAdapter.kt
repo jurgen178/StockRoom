@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
@@ -328,7 +329,12 @@ class SummaryGroupAdapter internal constructor(
       0.0
     }
 
-    val gainLossText = getCapitalGainLossText(context, gain, loss, total, "-", "\n")
+    var gainLossText = getCapitalGainLossText(context, gain, loss, total, "-", "\n")
+
+    // Print the summary gain in larger font.
+    if (all) {
+      gainLossText = SpannableStringBuilder().scale(1.6f) { append(gainLossText) }
+    }
 
     val summaryGroup1 = SpannableStringBuilder()
         .append("${context.getString(R.string.summary_gain_loss)} ")

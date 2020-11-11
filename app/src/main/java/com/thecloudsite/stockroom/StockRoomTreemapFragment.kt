@@ -111,67 +111,38 @@ class StockRoomTreemapFragment : Fragment() {
     val rootItem = AndroidMapItem(1.0, noAssetsStr, "", "", 0)
     val treeModel = TreeModel(rootItem)
 
-    data class AssetSummary(
-      val symbol: String,
-      val assets: Double,
-      val assetChange: String,
-      val color: Int
-    )
-
-    val assetList: MutableList<AssetSummary> = mutableListOf()
-    var totalAssets = 0.0
     stockItems.forEach { stockItem ->
       val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
 
-      val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
-      totalAssets += assets
-      val color = if (stockItem.stockDBdata.groupColor != 0) {
-        stockItem.stockDBdata.groupColor
-      } else {
-        context?.getColor(R.color.backgroundListColor)
-      }
+      if (totalQuantity > 0.0) {
+        val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
+        val color = if (stockItem.stockDBdata.groupColor != 0) {
+          stockItem.stockDBdata.groupColor
+        } else {
+          context?.getColor(R.color.backgroundListColor)
+        }
 
-      val assetChange = getAssetChange(
-          totalQuantity,
-          totalPrice,
-          stockItem.onlineMarketData.marketPrice,
-          stockItem.onlineMarketData.postMarketData,
-          Color.DKGRAY,
-          requireContext()
-      ).first
+        val assetChange = getAssetChange(
+            totalQuantity,
+            totalPrice,
+            stockItem.onlineMarketData.marketPrice,
+            stockItem.onlineMarketData.postMarketData,
+            Color.DKGRAY,
+            requireContext()
+        ).first
 
-      assetList.add(
-          AssetSummary(
-              stockItem.stockDBdata.symbol,
-              assets,
-              assetChange,
-              color!!
-          )
-      )
-    }
-
-    if (totalAssets > 0.0) {
-      val sortedAssetList = assetList.filter { assetSummary ->
-        assetSummary.assets > 0.0
-      }
-          .sortedByDescending { assetSummary ->
-            assetSummary.assets
-          }
-
-      sortedAssetList //.take(n)
-          .forEach { assetItem ->
-            treeModel.addChild(
-                TreeModel(
-                    AndroidMapItem(
-                        assetItem.assets,
-                        assetItem.symbol,
-                        DecimalFormat("0.00").format(assetItem.assets),
-                        assetItem.assetChange,
-                        assetItem.color
-                    )
+        treeModel.addChild(
+            TreeModel(
+                AndroidMapItem(
+                    assets,
+                    stockItem.stockDBdata.symbol,
+                    DecimalFormat("0.00").format(assets),
+                    assetChange,
+                    color
                 )
             )
-          }
+        )
+      }
     }
 
     treemapView.setTreeModel(treeModel)

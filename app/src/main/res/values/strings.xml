@@ -351,4 +351,6 @@ limitations under the License. -->
   <string name="community_search_links">Community and Search links</string>
   <string name="price_preview_header">Price preview</string>
   <string name="no_assets">No assets</string>
+  <string name="tab_headlines">Tab Headlines</string>
+  <string name="tab_headlines_desc">Display tab headlines to select what is on display.</string>
 </resources>
