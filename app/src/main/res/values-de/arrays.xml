@@ -4,7 +4,7 @@
     <item>Diagramme</item>
     <item>Liste</item>
     <item>Übersicht</item>
-    <item>Einzeilig</item>
+    <item>Kleine Liste</item>
     <item>Kleine Übersicht</item>
     <item>Blockansicht</item>
     <item>Zusammenfassung</item>
@@ -17,7 +17,7 @@
     <item>Diagramme</item>
     <item>Liste</item>
     <item>Übersicht</item>
-    <item>Einzeilig</item>
+    <item>Kleine Liste</item>
     <item>Kleine Übersicht</item>
     <item>Blockansicht</item>
     <item>Zusammenfassung</item>
@@ -30,8 +30,8 @@
     <item>00_StockRoomChartFragment</item>
     <item>01_StockRoomListFragment</item>
     <item>02_StockRoomTileFragment</item>
-    <item>03_StockRoomDetailListFragment</item>
-    <item>04_StockRoomSmallListFragment</item>
+    <item>03_StockRoomSmallListFragment</item>
+    <item>04_StockRoomSmallTileFragment</item>
     <item>05_StockRoomTreemapFragment</item>
     <item>06_SummaryGroupFragment</item>
     <item>07_AllNewsFragment</item>

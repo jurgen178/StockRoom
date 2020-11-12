@@ -4,7 +4,7 @@
     <item>Chart</item>
     <item>List</item>
     <item>Tile</item>
-    <item>Single line</item>
+    <item>Small list</item>
     <item>Small tile</item>
     <item>Block</item>
     <item>Summary</item>
@@ -17,7 +17,7 @@
     <item>Chart</item>
     <item>List</item>
     <item>Tile</item>
-    <item>Single line</item>
+    <item>Small list</item>
     <item>Small tile</item>
     <item>Block</item>
     <item>Summary</item>
@@ -30,8 +30,8 @@
     <item>00_StockRoomChartFragment</item>
     <item>01_StockRoomListFragment</item>
     <item>02_StockRoomTileFragment</item>
-    <item>03_StockRoomDetailListFragment</item>
-    <item>04_StockRoomSmallListFragment</item>
+    <item>03_StockRoomSmallListFragment</item>
+    <item>04_StockRoomSmallTileFragment</item>
     <item>05_StockRoomTreemapFragment</item>
     <item>06_SummaryGroupFragment</item>
     <item>07_AllNewsFragment</item>

@@ -192,11 +192,11 @@ class MainActivity : AppCompatActivity() {
           "02_StockRoomTileFragment" -> {
             StockRoomTileFragment.newInstance()
           }
-          "03_StockRoomDetailListFragment" -> {
-            StockRoomDetailListFragment.newInstance()
-          }
-          "04_StockRoomSmallListFragment" -> {
+          "03_StockRoomSmallListFragment" -> {
             StockRoomSmallListFragment.newInstance()
+          }
+          "04_StockRoomSmallTileFragment" -> {
+            StockRoomSmallTileFragment.newInstance()
           }
           "05_StockRoomTreemapFragment" -> {
             StockRoomTreemapFragment.newInstance()

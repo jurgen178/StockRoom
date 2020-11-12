@@ -43,7 +43,7 @@ class StockRoomSmallListFragment : StockRoomBaseFragment() {
     recyclerView.adapter = adapter
 
     // Set column number depending on screen width.
-    val scale = 247
+    val scale = 494
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 

@@ -23,10 +23,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
-class StockRoomDetailListFragment : StockRoomBaseFragment() {
+class StockRoomSmallTileFragment : StockRoomBaseFragment() {
 
   companion object {
-    fun newInstance() = StockRoomDetailListFragment()
+    fun newInstance() = StockRoomSmallTileFragment()
   }
 
   override fun onViewCreated(
@@ -36,14 +36,14 @@ class StockRoomDetailListFragment : StockRoomBaseFragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
-    val adapter = StockRoomDetailListAdapter(requireContext(), clickListenerSummary)
+    val adapter = StockRoomSmallTileAdapter(requireContext(), clickListenerSummary)
 
     val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
 
     recyclerView.adapter = adapter
 
     // Set column number depending on screen width.
-    val scale = 494
+    val scale = 247
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 

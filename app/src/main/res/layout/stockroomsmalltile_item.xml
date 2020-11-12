@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/detaillist_item_layout"
+    android:id="@+id/smalltile_item_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -12,7 +12,7 @@
     >
 
   <TextView
-      android:id="@+id/detaillist_itemview_group"
+      android:id="@+id/smalltile_itemview_group"
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:background="@drawable/group_item_bg"
@@ -25,14 +25,14 @@
 
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="0dp"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintEnd_toStartOf="@+id/guideline2"
       app:layout_constraintBottom_toBottomOf="parent"
       >
     <TextView
-        android:id="@+id/detaillist_textViewSymbol"
+        android:id="@+id/smalltile_textViewSymbol"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -44,36 +44,16 @@
   </androidx.constraintlayout.widget.ConstraintLayout>
 
   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/smalltile_textViewMarketPriceLayout"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline2"
-      app:layout_constraintEnd_toStartOf="@+id/guideline3"
-      app:layout_constraintBottom_toBottomOf="parent"
-      >
-    <TextView
-        android:id="@+id/detaillist_textViewChange"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
-  </androidx.constraintlayout.widget.ConstraintLayout>
-
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/detaillist_textViewMarketPriceLayout"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/guideline3"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
       >
     <TextView
-        android:id="@+id/detaillist_textViewMarketPrice"
+        android:id="@+id/smalltile_textViewMarketPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
@@ -99,15 +79,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.2"
-      />
-
-  <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline3"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.6"
+      app:layout_constraintGuide_percent="0.4"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

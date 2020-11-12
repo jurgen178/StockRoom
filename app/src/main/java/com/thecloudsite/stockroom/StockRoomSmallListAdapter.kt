@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,9 @@ import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getChangeColor
+import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import kotlinx.android.synthetic.main.stockroomsmalllist_item.view.smalllist_item_layout
 
@@ -48,6 +51,7 @@ class StockRoomSmallListAdapter internal constructor(
     }
 
     val itemViewSymbol: TextView = itemView.findViewById(R.id.smalllist_textViewSymbol)
+    val itemViewChange: TextView = itemView.findViewById(R.id.smalllist_textViewChange)
     val itemViewMarketPrice: TextView = itemView.findViewById(R.id.smalllist_textViewMarketPrice)
     val itemViewMarketPriceLayout: ConstraintLayout =
       itemView.findViewById(R.id.smalllist_textViewMarketPriceLayout)
@@ -89,6 +93,24 @@ class StockRoomSmallListAdapter internal constructor(
         holder.itemViewMarketPrice.text = ""
       }
 
+      val assetChange =
+        getAssetChange(
+            current.assets,
+            current.onlineMarketData.marketPrice,
+            current.onlineMarketData.postMarketData,
+            Color.DKGRAY,
+            context,
+            false
+        )
+
+      val changeText = assetChange.second
+      val dividendStr = getDividendStr(current, context)
+      if (assetChange.first.isNotEmpty() && dividendStr.isNotEmpty()) {
+        changeText.append("\n")
+      }
+      holder.itemViewChange.text =
+        changeText.append(dividendStr)
+
       // set the background color to the market change
       holder.itemViewMarketPriceLayout.setBackgroundColor(
           getChangeColor(
@@ -98,6 +120,11 @@ class StockRoomSmallListAdapter internal constructor(
               context
           )
       )
+
+//      // Set the background color to the market change.
+//      holder.itemViewMarketPriceLayout.setBackgroundColor(
+//          getChangeColor(assetChange.third, context)
+//      )
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {

@@ -333,7 +333,7 @@ class SummaryGroupAdapter internal constructor(
 
     // Print the summary gain in larger font.
     if (all) {
-      gainLossText = SpannableStringBuilder().scale(1.6f) { append(gainLossText) }
+      gainLossText = SpannableStringBuilder().scale(1.5f) { append(" ").append(gainLossText) }
     }
 
     val summaryGroup1 = SpannableStringBuilder()
