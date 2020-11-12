@@ -44,7 +44,7 @@ public class TreeModel implements MapModel {
       if (cachedLeafModels != null) {
           return cachedLeafModels;
       }
-    Vector<TreeModel> v = new Vector<TreeModel>();
+    Vector<TreeModel> v = new Vector<>();
     addLeafModels(v);
     int n = v.size();
     MapModel[] m = new MapModel[n];

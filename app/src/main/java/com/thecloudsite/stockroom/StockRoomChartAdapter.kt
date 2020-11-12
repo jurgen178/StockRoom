@@ -42,12 +42,11 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.R.color
-import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
-import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
-import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
+import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary1
+import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary2
+import kotlinx.android.synthetic.main.stockroom_list_item.view.itemview_group
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -95,7 +94,7 @@ class StockRoomChartAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroomchart_item, parent, false)
+    val itemView = inflater.inflate(R.layout.stockroom_chart_item, parent, false)
     return StockRoomViewHolder(itemView)
   }
 

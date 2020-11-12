@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroomtile_item.view.stockRoomTileItemLayout
+import kotlinx.android.synthetic.main.stockroom_tile_item.view.stockRoomTileItemLayout
 import java.text.DecimalFormat
 
 class StockRoomTileAdapter internal constructor(
@@ -63,7 +63,7 @@ class StockRoomTileAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): OnlineDataViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroomtile_item, parent, false)
+    val itemView = inflater.inflate(R.layout.stockroom_tile_item, parent, false)
     return OnlineDataViewHolder(itemView)
   }
 

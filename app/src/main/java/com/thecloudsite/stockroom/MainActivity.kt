@@ -41,7 +41,6 @@ import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.R.array
-import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.list.ListLogAdapter

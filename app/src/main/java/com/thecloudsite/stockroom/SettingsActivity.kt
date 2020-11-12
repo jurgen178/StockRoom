@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -37,7 +36,6 @@ import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import kotlinx.android.synthetic.main.activity_main.main_tab_layout
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM

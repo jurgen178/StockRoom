@@ -45,7 +45,6 @@ public class MapLayoutView extends View {
     super(context, attributeSet);
 
     this.setOnTouchListener(new OnTouchListener() {
-      private int CLICK_ACTION_THRESHOLD = 200;
       private float startX;
       private float startY;
 
@@ -85,6 +84,7 @@ public class MapLayoutView extends View {
       private boolean isAClick(float startX, float endX, float startY, float endY) {
         float differenceX = Math.abs(startX - endX);
         float differenceY = Math.abs(startY - endY);
+        int CLICK_ACTION_THRESHOLD = 200;
         return !(differenceX > CLICK_ACTION_THRESHOLD/* =5 */
             || differenceY > CLICK_ACTION_THRESHOLD);
       }

@@ -67,7 +67,7 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
 
   public static <T extends Comparable<? super T>> ArrayList<T> asReverseSortedList(
       Collection<T> collection) {
-    ArrayList<T> arrayList = new ArrayList<T>(collection);
+    ArrayList<T> arrayList = new ArrayList<>(collection);
     arrayList.sort(Collections.reverseOrder());
     return arrayList;
   }

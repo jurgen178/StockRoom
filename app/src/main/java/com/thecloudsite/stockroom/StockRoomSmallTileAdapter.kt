@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroomsmalltile_item.view.smalltile_item_layout
+import kotlinx.android.synthetic.main.stockroom_smalltile_item.view.smalltile_item_layout
 
 class StockRoomSmallTileAdapter internal constructor(
   val context: Context,
@@ -59,7 +59,7 @@ class StockRoomSmallTileAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroomsmalltile_item, parent, false)
+    val itemView = inflater.inflate(R.layout.stockroom_smalltile_item, parent, false)
     return StockRoomViewHolder(itemView)
   }
 

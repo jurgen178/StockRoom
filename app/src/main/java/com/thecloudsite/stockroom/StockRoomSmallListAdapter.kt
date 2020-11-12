@@ -32,7 +32,7 @@ import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroomsmalllist_item.view.smalllist_item_layout
+import kotlinx.android.synthetic.main.stockroom_smalllist_item.view.smalllist_item_layout
 
 class StockRoomSmallListAdapter internal constructor(
   val context: Context,
@@ -63,7 +63,7 @@ class StockRoomSmallListAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroomsmalllist_item, parent, false)
+    val itemView = inflater.inflate(R.layout.stockroom_smalllist_item, parent, false)
     return StockRoomViewHolder(itemView)
   }
 

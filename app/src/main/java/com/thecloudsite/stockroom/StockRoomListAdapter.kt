@@ -35,9 +35,9 @@ import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary1
-import kotlinx.android.synthetic.main.stockroomlist_item.view.item_summary2
-import kotlinx.android.synthetic.main.stockroomlist_item.view.itemview_group
+import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary1
+import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary2
+import kotlinx.android.synthetic.main.stockroom_list_item.view.itemview_group
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -95,7 +95,7 @@ class StockRoomListAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroomlist_item, parent, false)
+    val itemView = inflater.inflate(R.layout.stockroom_list_item, parent, false)
     return StockRoomViewHolder(itemView)
   }
 

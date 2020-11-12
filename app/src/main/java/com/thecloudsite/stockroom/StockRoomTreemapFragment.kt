@@ -19,7 +19,6 @@ package com.thecloudsite.stockroom
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
