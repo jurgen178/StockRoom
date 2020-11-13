@@ -2248,6 +2248,9 @@ class StockDataFragment : Fragment() {
       stockDataEntries!!.forEach { stockDataEntry ->
         dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
       }
+    } else {
+      // Unlike candle chart, the line chart can be empty, but add one default to look the same as the candle chart.
+      dataPoints.add(DataPoint(0f, 0f))
     }
 
     val series = LineDataSet(dataPoints as List<Entry>?, symbol)
