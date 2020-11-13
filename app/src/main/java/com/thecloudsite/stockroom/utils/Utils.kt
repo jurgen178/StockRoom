@@ -38,6 +38,7 @@ import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
 import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -128,6 +129,22 @@ fun validateDouble(value: Double): Double {
   return if (value.isFinite())
     value else
     0.0
+}
+
+fun enNumberStrToDouble(str: String): Double {
+  var value: Double
+  try {
+    value = str.toDouble()
+    if (value == 0.0) {
+      val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+      value = numberFormat.parse(str)!!
+          .toDouble()
+    }
+  } catch (e: Exception) {
+    value = 0.0
+  }
+
+  return value
 }
 
 fun Resources.getRawTextFile(@RawRes id: Int) =

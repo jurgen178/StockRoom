@@ -34,7 +34,7 @@ import java.time.format.DateTimeFormatter
 class TextMarkerViewCandleChart(
   context: Context,
   private val dateTimeFormatter: DateTimeFormatter,
-  private val stockDataEntries: List<StockDataEntry>
+  private val stockDataEntries: List<StockDataEntry>?
 ) : MarkerView(context, layout.text_marker_layout) {
   private var tvContent = findViewById<TextView>(R.id.tvContent)
   private val offsetPoint by lazy {
@@ -45,7 +45,7 @@ class TextMarkerViewCandleChart(
     entry: Entry?,
     highlight: Highlight?
   ) {
-    if (entry is CandleEntry && stockDataEntries.isNotEmpty()) {
+    if (entry is CandleEntry && stockDataEntries != null && stockDataEntries.isNotEmpty()) {
       val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =
@@ -77,7 +77,7 @@ class TextMarkerViewCandleChart(
 class TextMarkerViewLineChart(
   context: Context,
   private val dateTimeFormatter: DateTimeFormatter,
-  private val stockDataEntries: List<StockDataEntry>
+  private val stockDataEntries: List<StockDataEntry>?
 ) : MarkerView(context, layout.text_marker_layout) {
   private var tvContent = findViewById<TextView>(R.id.tvContent)
   private val offsetPoint by lazy {
@@ -88,7 +88,7 @@ class TextMarkerViewLineChart(
     entry: Entry?,
     highlight: Highlight?
   ) {
-    if (entry is Entry && stockDataEntries.isNotEmpty()) {
+    if (entry is Entry && stockDataEntries != null && stockDataEntries.isNotEmpty()) {
       val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =

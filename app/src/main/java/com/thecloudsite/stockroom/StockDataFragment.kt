@@ -2163,15 +2163,17 @@ class StockDataFragment : Fragment() {
     val candleStickChart: CandleStickChart = view?.findViewById(R.id.candleStickChart)!!
     candleStickChart.candleData?.clearValues()
 
-    if (stockDataEntries == null || stockDataEntries!!.isEmpty()) {
-      candleStickChart.invalidate()
-      return
+    val candleEntries: MutableList<CandleEntry> = mutableListOf()
+
+    if (stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
+      stockDataEntries!!.forEach { stockDataEntry ->
+        candleEntries.add(stockDataEntry.candleEntry)
+      }
+    } else {
+      // Candle view needs at least one entry.
+      candleEntries.add(CandleEntry(0f, 0f, 0f, 0f, 0f))
     }
 
-    val candleEntries: MutableList<CandleEntry> = mutableListOf()
-    stockDataEntries!!.forEach { stockDataEntry ->
-      candleEntries.add(stockDataEntry.candleEntry)
-    }
     val series = CandleDataSet(candleEntries, symbol)
     series.color = Color.rgb(0, 0, 255)
     series.shadowColor = Color.rgb(255, 255, 0)
@@ -2185,22 +2187,6 @@ class StockDataFragment : Fragment() {
 
     val candleData = CandleData(series)
     candleStickChart.data = candleData
-
-    when (stockViewRange) {
-      StockViewRange.OneDay -> {
-        candleStickChart.marker =
-          TextMarkerViewCandleChart(requireContext(), axisTimeFormatter, stockDataEntries!!)
-      }
-      StockViewRange.FiveDays, StockViewRange.OneMonth -> {
-        candleStickChart.marker =
-          TextMarkerViewCandleChart(requireContext(), axisDateTimeFormatter, stockDataEntries!!)
-      }
-      else -> {
-        candleStickChart.marker =
-          TextMarkerViewCandleChart(requireContext(), axisDateFormatter, stockDataEntries!!)
-      }
-    }
-
     candleStickChart.xAxis.valueFormatter = xAxisFormatter
     val digits = if (candleData.yMax < 1.0) {
       4
@@ -2208,6 +2194,21 @@ class StockDataFragment : Fragment() {
       2
     }
     candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+
+    when (stockViewRange) {
+      StockViewRange.OneDay -> {
+        candleStickChart.marker =
+          TextMarkerViewCandleChart(requireContext(), axisTimeFormatter, stockDataEntries)
+      }
+      StockViewRange.FiveDays, StockViewRange.OneMonth -> {
+        candleStickChart.marker =
+          TextMarkerViewCandleChart(requireContext(), axisDateTimeFormatter, stockDataEntries)
+      }
+      else -> {
+        candleStickChart.marker =
+          TextMarkerViewCandleChart(requireContext(), axisDateFormatter, stockDataEntries)
+      }
+    }
 
     candleStickChart.invalidate()
   }
@@ -2242,14 +2243,11 @@ class StockDataFragment : Fragment() {
     lineChart.setNoDataText("")
     lineChart.lineData?.clearValues()
 
-    if (stockDataEntries == null || stockDataEntries!!.isEmpty()) {
-      lineChart.invalidate()
-      return
-    }
-
     val dataPoints = ArrayList<DataPoint>()
-    stockDataEntries!!.forEach { stockDataEntry ->
-      dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
+    if (stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
+      stockDataEntries!!.forEach { stockDataEntry ->
+        dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
+      }
     }
 
     val series = LineDataSet(dataPoints as List<Entry>?, symbol)
@@ -2260,23 +2258,8 @@ class StockDataFragment : Fragment() {
     series.setDrawCircles(false)
 
     val lineData = LineData(series)
+
     lineChart.data = lineData
-
-    when (stockViewRange) {
-      StockViewRange.OneDay -> {
-        lineChart.marker =
-          TextMarkerViewLineChart(requireContext(), axisTimeFormatter, stockDataEntries!!)
-      }
-      StockViewRange.FiveDays, StockViewRange.OneMonth -> {
-        lineChart.marker =
-          TextMarkerViewLineChart(requireContext(), axisDateTimeFormatter, stockDataEntries!!)
-      }
-      else -> {
-        lineChart.marker =
-          TextMarkerViewLineChart(requireContext(), axisDateFormatter, stockDataEntries!!)
-      }
-    }
-
     lineChart.xAxis.valueFormatter = xAxisFormatter
     val digits = if (lineData.yMax < 1.0) {
       4
@@ -2284,6 +2267,21 @@ class StockDataFragment : Fragment() {
       2
     }
     lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+
+    when (stockViewRange) {
+      StockViewRange.OneDay -> {
+        lineChart.marker =
+          TextMarkerViewLineChart(requireContext(), axisTimeFormatter, stockDataEntries)
+      }
+      StockViewRange.FiveDays, StockViewRange.OneMonth -> {
+        lineChart.marker =
+          TextMarkerViewLineChart(requireContext(), axisDateTimeFormatter, stockDataEntries)
+      }
+      else -> {
+        lineChart.marker =
+          TextMarkerViewLineChart(requireContext(), axisDateFormatter, stockDataEntries)
+      }
+    }
 
     lineChart.invalidate()
   }

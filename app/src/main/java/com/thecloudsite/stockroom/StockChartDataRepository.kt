@@ -104,8 +104,11 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
       while (j < size && (values[j] == null || values[j] == 0.0)) {
         j++
       }
-      if (j < size && values[j] != null && values[j] != 0.0) {
-        values[0] = values[j]
+
+      values[0] = if (j < size && values[j] != null && values[j] != 0.0) {
+        values[j]
+      } else {
+        0.0
       }
     }
 
@@ -115,8 +118,11 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
       while (j > 0 && (values[j] == null || values[j] == 0.0)) {
         j--
       }
-      if (j > 0 && values[j] != null && values[j] != 0.0) {
-        values[size - 1] = values[j]
+
+      values[size - 1] = if (j > 0 && values[j] != null && values[j] != 0.0) {
+        values[j]
+      } else {
+        values[0]
       }
     }
 

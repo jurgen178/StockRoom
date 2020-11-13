@@ -29,7 +29,9 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.validateDouble
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -99,7 +101,7 @@ class StockRoomTest {
   @Test
   @Throws(Exception::class)
   fun accessCounterTest() {
-    val lastStatsCounters = IntArray(5){ -1 }
+    val lastStatsCounters = IntArray(5) { -1 }
 
     fun getCounts(): String {
       return lastStatsCounters.filter { it >= 0 }
@@ -240,6 +242,39 @@ class StockRoomTest {
     assertEquals(false, isValidSymbol("a#"))
   }
 
+  private fun enNumberStrToDouble(str: String): Double {
+    var value: Double
+    try {
+      value = str.toDouble()
+      if (value == 0.0) {
+        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+        value = numberFormat.parse(str)!!
+            .toDouble()
+      }
+    } catch (e: Exception) {
+      value = 0.0
+    }
+
+    return value
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun parseNumberString() {
+    assertEquals(1.01, enNumberStrToDouble("1.01"), epsilon)
+
+    val value = enNumberStrToDouble("1.0E-4")
+    assertEquals(0.0001, value, epsilon)
+    assertEquals("1.0E-4", "$value")
+    assertEquals("0,0001", DecimalFormat("0.####").format(value))
+
+    val rangeStr = "1.23 - 4.56"
+    val rangeList = rangeStr.split(" - ")
+    assertEquals(2, rangeList.size)
+    assertEquals("1,23", DecimalFormat("0.00").format(enNumberStrToDouble(rangeList[0])))
+    assertEquals("4,56", DecimalFormat("0.00").format(enNumberStrToDouble(rangeList[1])))
+  }
+
   @Test
   @Throws(Exception::class)
   fun importTextTest() {
@@ -261,7 +296,8 @@ class StockRoomTest {
   }
 
   private fun csvStrToDouble(str: String): Double {
-    val s = str.replace("$", "").replace(",", "")
+    val s = str.replace("$", "")
+        .replace(",", "")
     var value: Double
     try {
       value = s.toDouble()
@@ -514,7 +550,8 @@ var events: List<Event>
           dividendNote = stockItem.stockDBdata.dividendNote,
           annualDividendRate = stockItem.stockDBdata.annualDividendRate,
           assets = stockItem.assets.map { asset ->
-            AssetJson(quantity = asset.quantity,
+            AssetJson(
+                quantity = asset.quantity,
                 price = asset.price,
                 note = asset.note,
                 date = asset.date,

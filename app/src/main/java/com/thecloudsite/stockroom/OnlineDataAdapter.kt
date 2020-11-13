@@ -37,6 +37,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
+import com.thecloudsite.stockroom.utils.enNumberStrToDouble
 import com.thecloudsite.stockroom.utils.isOnline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -315,13 +316,29 @@ class OnlineDataAdapter internal constructor(
     }
   }
 
+  private fun convertRangeStr(rangeStr: String): String {
+
+    // "1.23 - 4.56" = "1,23 - 4,56"
+    // "1.0E-4 - 2.00" = "0,0001 - 2,00"
+
+    val delimiter = " - "
+    val rangeList = rangeStr.split(delimiter)
+
+    if (rangeList.size == 2) {
+      val rangeStr1 = DecimalFormat("0.00##").format(enNumberStrToDouble(rangeList[0]))
+      val rangeStr2 = DecimalFormat("0.00##").format(enNumberStrToDouble(rangeList[1]))
+      return "$rangeStr1$delimiter$rangeStr2"
+    }
+
+    return rangeStr
+  }
+
   fun updateData(onlineMarketData: OnlineMarketData) {
     data.clear()
 
     symbol = onlineMarketData.symbol
 
-    val separatorChar: Char = DecimalFormatSymbols.getInstance()
-        .decimalSeparator
+    // val separatorChar: Char = DecimalFormatSymbols.getInstance().decimalSeparator
 
     data.add(
         OnlineData(
@@ -368,7 +385,8 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
             text = SpannableStringBuilder().bold {
               append(
-                  onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
+                  convertRangeStr(onlineMarketData.fiftyTwoWeekRange)
+                  //onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
               )
             }
         )
@@ -378,7 +396,8 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_regularMarketDayRange),
             text = SpannableStringBuilder().bold {
               append(
-                  onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+                  convertRangeStr(onlineMarketData.regularMarketDayRange)
+                  //onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
               )
             }
         )
