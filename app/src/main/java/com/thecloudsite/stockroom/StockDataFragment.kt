@@ -2169,31 +2169,32 @@ class StockDataFragment : Fragment() {
       stockDataEntries!!.forEach { stockDataEntry ->
         candleEntries.add(stockDataEntry.candleEntry)
       }
-    } else {
-      // Candle view needs at least one entry.
-      candleEntries.add(CandleEntry(0f, 0f, 0f, 0f, 0f))
-    }
 
-    val series = CandleDataSet(candleEntries, symbol)
-    series.color = Color.rgb(0, 0, 255)
-    series.shadowColor = Color.rgb(255, 255, 0)
-    series.shadowWidth = 1f
-    series.decreasingColor = Color.rgb(255, 0, 0)
-    series.decreasingPaintStyle = Paint.Style.FILL
-    series.increasingColor = Color.rgb(0, 255, 0)
-    series.increasingPaintStyle = Paint.Style.FILL
-    series.neutralColor = Color.LTGRAY
-    series.setDrawValues(false)
+      val series = CandleDataSet(candleEntries, symbol)
+      series.color = Color.rgb(0, 0, 255)
+      series.shadowColor = Color.rgb(255, 255, 0)
+      series.shadowWidth = 1f
+      series.decreasingColor = Color.rgb(255, 0, 0)
+      series.decreasingPaintStyle = Paint.Style.FILL
+      series.increasingColor = Color.rgb(0, 255, 0)
+      series.increasingPaintStyle = Paint.Style.FILL
+      series.neutralColor = Color.LTGRAY
+      series.setDrawValues(false)
 
-    val candleData = CandleData(series)
-    candleStickChart.data = candleData
-    candleStickChart.xAxis.valueFormatter = xAxisFormatter
-    val digits = if (candleData.yMax < 1.0) {
-      4
+      val candleData = CandleData(series)
+      candleStickChart.data = candleData
+      candleStickChart.xAxis.valueFormatter = xAxisFormatter
+      val digits = if (candleData.yMax < 1.0) {
+        4
+      } else {
+        2
+      }
+      candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
     } else {
-      2
+      // Unlike the line chart, the candle chart needs at least one entry.
+      // Set the data to null for empty data set.
+      candleStickChart.data = null
     }
-    candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
 
     when (stockViewRange) {
       StockViewRange.OneDay -> {
@@ -2248,9 +2249,6 @@ class StockDataFragment : Fragment() {
       stockDataEntries!!.forEach { stockDataEntry ->
         dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
       }
-    } else {
-      // Unlike candle chart, the line chart can be empty, but add one default to look the same as the empty candle chart.
-      dataPoints.add(DataPoint(0f, 0f))
     }
 
     val series = LineDataSet(dataPoints as List<Entry>?, symbol)
