@@ -36,7 +36,8 @@ class TextMarkerViewCandleChart(
   private val dateTimeFormatter: DateTimeFormatter,
   private val stockDataEntries: List<StockDataEntry>?
 ) : MarkerView(context, layout.text_marker_layout) {
-  private var tvContent = findViewById<TextView>(R.id.tvContent)
+
+  private var textmarker = findViewById<TextView>(R.id.textmarker)
   private val offsetPoint by lazy {
     MPPointF(-(width / 2).toFloat(), -height.toFloat())
   }
@@ -55,19 +56,20 @@ class TextMarkerViewCandleChart(
               .format(dateTimeFormatter)
 
         if (entry.high != entry.low) {
-          tvContent.text = "${DecimalFormat("0.00##").format(entry.low)}-${
+          textmarker.text = "${DecimalFormat("0.00##").format(entry.low)}-${
             DecimalFormat("0.00##").format(
                 entry.high
             )
           }\n$date"
         } else {
-          tvContent.text = "${DecimalFormat("0.00##").format(entry.high)}\n$date"
+          textmarker.text = "${DecimalFormat("0.00##").format(entry.high)}\n$date"
         }
 
       } else {
-        tvContent.text = ""
+        textmarker.text = ""
       }
     }
+
     super.refreshContent(entry, highlight)
   }
 
@@ -79,7 +81,8 @@ class TextMarkerViewLineChart(
   private val dateTimeFormatter: DateTimeFormatter,
   private val stockDataEntries: List<StockDataEntry>?
 ) : MarkerView(context, layout.text_marker_layout) {
-  private var tvContent = findViewById<TextView>(R.id.tvContent)
+
+  private var textmarker = findViewById<TextView>(R.id.textmarker)
   private val offsetPoint by lazy {
     MPPointF(-(width / 2).toFloat(), -height.toFloat())
   }
@@ -97,12 +100,13 @@ class TextMarkerViewLineChart(
           )
               .format(dateTimeFormatter)
 
-        tvContent.text = "${DecimalFormat("0.00##").format(entry.y)}\n$date"
+        textmarker.text = "${DecimalFormat("0.00##").format(entry.y)}\n$date"
 
       } else {
-        tvContent.text = ""
+        textmarker.text = ""
       }
     }
+
     super.refreshContent(entry, highlight)
   }
 
