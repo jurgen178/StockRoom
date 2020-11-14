@@ -120,7 +120,8 @@ class SummaryGroupAdapter internal constructor(
         holder.bind(current)
 
         holder.summaryItemDataDesc.text = current.desc
-        holder.summaryItemData.text = current.text1.append("\n").append(current.text2)
+        holder.summaryItemData.text = current.text1.append("\n")
+            .append(current.text2)
       }
 
       is OnlineDataViewHolder -> {
@@ -396,11 +397,15 @@ class SummaryGroupAdapter internal constructor(
 
     // Print the summary gain in larger font.
     if (all) {
-      gainLossText = SpannableStringBuilder().scale(1.5f) { append(" ").append(gainLossText) }
+      gainLossText = SpannableStringBuilder().scale(1.5f) {
+        append(
+            "${context.getString(R.string.summary_gain_loss)} "
+        ).append(" ")
+            .append(gainLossText)
+      }
     }
 
     val summaryGroup1 = SpannableStringBuilder()
-        .append("${context.getString(R.string.summary_gain_loss)} ")
         .append(gainLossText)
         .append("\n")
         .append("${context.getString(R.string.summary_no_dividend_assets)} ")

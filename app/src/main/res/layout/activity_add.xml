@@ -28,7 +28,8 @@ limitations under the License. -->
         android:hint="@string/hint_add_stock"
         android:inputType="textNoSuggestions"
         android:layout_margin="@dimen/big_padding"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        />
 
     <Button
         android:id="@+id/button_add"
