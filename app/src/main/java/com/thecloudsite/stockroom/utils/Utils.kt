@@ -477,7 +477,7 @@ fun getCapitalGainLossText(
     }
     else -> {
       SpannableStringBuilder().bold {
-        append("0.00$formatEnd")
+        append("${DecimalFormat("0.00").format(0.0)}$formatEnd")
       }
     }
   }

@@ -385,7 +385,7 @@ class SummaryGroupAdapter internal constructor(
               )
             }
           } else {
-            append("0.00\n")
+            append("${DecimalFormat("0.00").format(0.0)}\n")
           }
         }
         .append("${context.getString(R.string.totaldividend_payedYTD)} ")
@@ -401,7 +401,7 @@ class SummaryGroupAdapter internal constructor(
               )
             }
           } else {
-            append("0.00\n")
+            append("${DecimalFormat("0.00").format(0.0)}\n")
           }
         }
 
