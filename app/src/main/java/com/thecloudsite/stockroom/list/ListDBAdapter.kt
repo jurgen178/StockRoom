@@ -116,9 +116,11 @@ class ListDBAdapter(
     val db_stockdbdata_annualDividendRate: TextView =
       itemView.findViewById(id.db_stockdbdata_annualDividendRate)
     val db_stockdbdata_alertAbove: TextView = itemView.findViewById(id.db_stockdbdata_alertAbove)
-    val db_stockdbdata_alertAboveNote: TextView = itemView.findViewById(id.db_stockdbdata_alertAboveNote)
+    val db_stockdbdata_alertAboveNote: TextView =
+      itemView.findViewById(id.db_stockdbdata_alertAboveNote)
     val db_stockdbdata_alertBelow: TextView = itemView.findViewById(id.db_stockdbdata_alertBelow)
-    val db_stockdbdata_alertBelowNote: TextView = itemView.findViewById(id.db_stockdbdata_alertBelowNote)
+    val db_stockdbdata_alertBelowNote: TextView =
+      itemView.findViewById(id.db_stockdbdata_alertBelowNote)
   }
 
   class GroupViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
@@ -228,21 +230,18 @@ class ListDBAdapter(
     position: Int
   ) {
 
-    val element: DBData = dbDataList[position]
+    val data: DBData = dbDataList[position]
 
     when (holder) {
 
       is HeadlineViewHolder -> {
-        holder.bind(element)
+        holder.bind(data)
 
-        val data: DBData = dbDataList[position]
         holder.db_type_headline.text = data.title
       }
 
       is StockDBdataViewHolder -> {
-        holder.bind(element)
-
-        val data: DBData = dbDataList[position]
+        holder.bind(data)
 
         if (data.isHeader) {
           holder.db_stockdbdata_layout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -286,9 +285,7 @@ class ListDBAdapter(
       }
 
       is GroupViewHolder -> {
-        holder.bind(element)
-
-        val data: DBData = dbDataList[position]
+        holder.bind(data)
 
         if (data.isHeader) {
           holder.db_group_layout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -312,9 +309,7 @@ class ListDBAdapter(
       }
 
       is AssetViewHolder -> {
-        holder.bind(element)
-
-        val data: DBData = dbDataList[position]
+        holder.bind(data)
 
         if (data.isHeader) {
           holder.db_asset_layout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -340,7 +335,8 @@ class ListDBAdapter(
           holder.db_asset_date.text = getDateTimeStr(data.date)
           holder.db_asset_sharesPerQuantity.text = "${data.sharesPerQuantity}"
           holder.db_asset_expirationDate.text = getDateStr(data.expirationDate)
-          holder.db_asset_premium.text = if (data.premium > 0.0) DecimalFormat("0.####").format(data.premium) else ""
+          holder.db_asset_premium.text =
+            if (data.premium > 0.0) DecimalFormat("0.####").format(data.premium) else ""
           holder.db_asset_commission.text =
             if (data.commission > 0.0) DecimalFormat("0.####").format(data.commission) else ""
         }
@@ -369,9 +365,7 @@ class ListDBAdapter(
       }
 
       is EventViewHolder -> {
-        holder.bind(element)
-
-        val data: DBData = dbDataList[position]
+        holder.bind(data)
 
         if (data.isHeader) {
           holder.db_event_layout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -407,9 +401,7 @@ class ListDBAdapter(
       }
 
       is DividendViewHolder -> {
-        holder.bind(element)
-
-        val data: DBData = dbDataList[position]
+        holder.bind(data)
 
         if (data.isHeader) {
           holder.db_dividend_layout.setBackgroundColor(Color.rgb(139, 0, 0))

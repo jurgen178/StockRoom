@@ -197,21 +197,18 @@ class NewsAdapter(
     position: Int
   ) {
 
-    val element: NewsData = newsDataList[position]
+    val current: NewsData = newsDataList[position]
 
     when (holder) {
 
       is NewsHeadlineViewHolder -> {
-        holder.bind(element)
+        holder.bind(current)
 
-        val current: NewsData = newsDataList[position]
         holder.newsHeadline.text = current.title
       }
 
       is YahooNewsViewHolder -> {
-        holder.bind(element)
-
-        val current: NewsData = newsDataList[position]
+        holder.bind(current)
 
         holder.yahooNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -231,9 +228,7 @@ class NewsAdapter(
       }
 
       is GoogleNewsViewHolder -> {
-        holder.bind(element)
-
-        val current: NewsData = newsDataList[position]
+        holder.bind(current)
 
         holder.googleNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -246,9 +241,7 @@ class NewsAdapter(
       }
 
       is NasdaqNewsViewHolder -> {
-        holder.bind(element)
-
-        val current: NewsData = newsDataList[position]
+        holder.bind(current)
 
         holder.nasdaqNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)

@@ -19,16 +19,30 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
+import com.thecloudsite.stockroom.news.NewsAdapter.GoogleNewsViewHolder
+import com.thecloudsite.stockroom.news.NewsAdapter.NasdaqNewsViewHolder
+import com.thecloudsite.stockroom.news.NewsAdapter.NewsHeadlineViewHolder
+import com.thecloudsite.stockroom.news.NewsAdapter.YahooNewsViewHolder
+import com.thecloudsite.stockroom.news.NewsData
+import com.thecloudsite.stockroom.news.news_type_google
+import com.thecloudsite.stockroom.news.news_type_headline
+import com.thecloudsite.stockroom.news.news_type_nasdaq
+import com.thecloudsite.stockroom.news.news_type_yahoo
 import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -37,16 +51,20 @@ import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
+const val summarygroup_all_item: Int = 0
+const val summarygroup_item: Int = 1
+
 data class SummaryData(
   val desc: String,
   val text1: SpannableStringBuilder,
   val text2: SpannableStringBuilder,
-  val color: Int
+  val color: Int,
+  val type: Int
 )
 
 class SummaryGroupAdapter internal constructor(
   val context: Context
-) : RecyclerView.Adapter<SummaryGroupAdapter.OnlineDataViewHolder>() {
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
   private val groupStandardName = context.getString(R.string.standard_group)
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -54,7 +72,18 @@ class SummaryGroupAdapter internal constructor(
   private var stockItemsList: List<StockItem> = emptyList()
   private var groupList: List<Group> = emptyList()
 
-  class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class OnlineDataAllViewHolder(itemView: View) : BaseViewHolder<SummaryData>(itemView) {
+    override fun bind(item: SummaryData) {
+    }
+
+    val summaryItemDataDesc: TextView = itemView.findViewById(R.id.summaryItemDataDesc)
+    val summaryItemData: TextView = itemView.findViewById(R.id.summaryItemData)
+  }
+
+  class OnlineDataViewHolder(itemView: View) : BaseViewHolder<SummaryData>(itemView) {
+    override fun bind(item: SummaryData) {
+    }
+
     val summaryItemDataDesc: TextView = itemView.findViewById(R.id.summaryItemDataDesc)
     val summaryItemData1: TextView = itemView.findViewById(R.id.summaryItemData1)
     val summaryItemData2: TextView = itemView.findViewById(R.id.summaryItemData2)
@@ -64,26 +93,54 @@ class SummaryGroupAdapter internal constructor(
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
-  ): OnlineDataViewHolder {
-    val itemView = inflater.inflate(R.layout.summarygroup_item, parent, false)
-    return OnlineDataViewHolder(itemView)
+  ): BaseViewHolder<*> {
+
+    return when (viewType) {
+      summarygroup_all_item -> {
+        val itemView = inflater.inflate(R.layout.summarygroup_all_item, parent, false)
+        OnlineDataAllViewHolder(itemView)
+      }
+      summarygroup_item -> {
+        val itemView = inflater.inflate(R.layout.summarygroup_item, parent, false)
+        OnlineDataViewHolder(itemView)
+      }
+      else -> throw IllegalArgumentException("Invalid view type")
+    }
   }
 
   override fun onBindViewHolder(
-    holder: OnlineDataViewHolder,
+    holder: BaseViewHolder<*>,
     position: Int
   ) {
     val current: SummaryData = data[position]
 
-    var color = current.color
-    if (color == 0) {
-      color = context.getColor(R.color.backgroundListColor)
-    }
-    setBackgroundColor(holder.summaryItemGroup, color)
+    when (holder) {
 
-    holder.summaryItemDataDesc.text = current.desc
-    holder.summaryItemData1.text = current.text1
-    holder.summaryItemData2.text = current.text2
+      is OnlineDataAllViewHolder -> {
+        holder.bind(current)
+
+        holder.summaryItemDataDesc.text = current.desc
+        holder.summaryItemData.text = current.text1.append("\n").append(current.text2)
+      }
+
+      is OnlineDataViewHolder -> {
+        holder.bind(current)
+
+        var color = current.color
+        if (color == 0) {
+          color = context.getColor(R.color.backgroundListColor)
+        }
+        setBackgroundColor(holder.summaryItemGroup, color)
+
+        holder.summaryItemDataDesc.text = current.desc
+        holder.summaryItemData1.text = current.text1
+        holder.summaryItemData2.text = current.text2
+      }
+
+      else -> {
+        throw IllegalArgumentException()
+      }
+    }
   }
 
   fun updateData(stockItems: List<StockItem>) {
@@ -100,7 +157,7 @@ class SummaryGroupAdapter internal constructor(
     } else {
       context.getString(R.string.overview_headline_portfolio, portfolio)
     }
-    data.add(SummaryData(overview, text1, text2, Color.WHITE))
+    data.add(SummaryData(overview, text1, text2, Color.WHITE, summarygroup_all_item))
 
     // Get all groups.
     val groupSet = HashSet<Int>()
@@ -129,7 +186,8 @@ class SummaryGroupAdapter internal constructor(
             val (text1, text2) = getTotal(group.color, false, stockItemsList)
             data.add(
                 SummaryData(
-                    context.getString(R.string.group_name, group.name), text1, text2, group.color
+                    context.getString(R.string.group_name, group.name), text1, text2, group.color,
+                    summarygroup_item
                 )
             )
           }
@@ -137,6 +195,13 @@ class SummaryGroupAdapter internal constructor(
 
     notifyDataSetChanged()
   }
+
+  override fun getItemViewType(position: Int): Int {
+    val element: SummaryData = data[position]
+    return element.type
+  }
+
+  override fun getItemCount() = data.size
 
   // groups is the second data source and gets called after updateData(stockItems: List<StockItem>),
   // run updateData for the color assignment
@@ -146,8 +211,6 @@ class SummaryGroupAdapter internal constructor(
     updateData()
     notifyDataSetChanged()
   }
-
-  override fun getItemCount() = data.size
 
   private fun getTotal(
     color: Int,
