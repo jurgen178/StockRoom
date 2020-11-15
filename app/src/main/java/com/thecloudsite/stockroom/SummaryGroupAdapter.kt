@@ -332,6 +332,20 @@ class SummaryGroupAdapter internal constructor(
           it.events.size
         }
 
+    var totalAssetsStr = SpannableStringBuilder().append(
+        "\n${context.getString(R.string.summary_total_purchase_price)} "
+    )
+        .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
+        .append("${context.getString(R.string.summary_total_assets)} ")
+        .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
+
+    // Print the summary assets in larger font.
+    if (all) {
+      totalAssetsStr = SpannableStringBuilder().scale(1.4f) {
+        append(totalAssetsStr)
+      }
+    }
+
     val summaryGroup2 = SpannableStringBuilder()
         .append("${context.getString(R.string.summary_stocks)} ")
         .bold { append("${stockItemsSelected.size}\n") }
@@ -349,10 +363,7 @@ class SummaryGroupAdapter internal constructor(
         .bold { append("${DecimalFormat("0.####").format(totalQuantity)}\n\n") }
         .append("${context.getString(R.string.summary_capital_gain)} ")
         .append(capitalGainLossText)
-        .append("\n${context.getString(R.string.summary_total_purchase_price)} ")
-        .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
-        .append("${context.getString(R.string.summary_total_assets)} ")
-        .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
+        .append(totalAssetsStr)
 
     /*
     val s = SpannableStringBuilder()
@@ -402,7 +413,7 @@ class SummaryGroupAdapter internal constructor(
 
     // Print the summary gain in larger font.
     if (all) {
-      gainLossText = SpannableStringBuilder().scale(1.5f) {
+      gainLossText = SpannableStringBuilder().scale(1.4f) {
         append(gainLossText)
       }
     }
