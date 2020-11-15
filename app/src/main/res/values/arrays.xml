@@ -9,7 +9,7 @@
     <item>Block</item>
     <item>Summary</item>
     <item>News</item>
-    <item>Timeline Assets</item>
+    <item>Timeline Transactions</item>
     <item>Timeline Events</item>
     <item>Timeline Dividends</item>
   </string-array>
@@ -22,7 +22,7 @@
     <item>Block</item>
     <item>Summary</item>
     <item>News</item>
-    <item>Assets</item>
+    <item>Transactions</item>
     <item>Events</item>
     <item>Dividends</item>
   </string-array>

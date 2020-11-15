@@ -393,22 +393,23 @@ class SummaryGroupAdapter internal constructor(
       0.0
     }
 
-    var gainLossText = getCapitalGainLossText(context, gain, loss, total, "-", "\n")
+    var gainLossText = SpannableStringBuilder().append(
+        "${context.getString(R.string.summary_gain_loss)}  "
+    )
+        .append(
+            getCapitalGainLossText(context, gain, loss, total, "-", "\n")
+        )
 
     // Print the summary gain in larger font.
     if (all) {
       gainLossText = SpannableStringBuilder().scale(1.5f) {
-        append(
-            "${context.getString(R.string.summary_gain_loss)} "
-        ).append(" ")
-            .append(gainLossText)
+        append(gainLossText)
       }
     }
 
     val summaryGroup1 = SpannableStringBuilder()
         .append(gainLossText)
-        .append("\n")
-        .append("${context.getString(R.string.summary_no_dividend_assets)} ")
+        .append("\n${context.getString(R.string.summary_no_dividend_assets)} ")
         .bold {
           append(
               "${
