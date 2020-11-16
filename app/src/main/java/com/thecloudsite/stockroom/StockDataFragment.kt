@@ -226,9 +226,12 @@ class StockDataFragment : Fragment() {
     get() {
       val sharedPref =
         PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewRange.OneDay
-      return StockViewRange.values()[sharedPref.getInt(
-          settingStockViewRange, StockViewRange.OneDay.value
-      )]
+      val index = sharedPref.getInt(settingStockViewRange, StockViewRange.OneDay.value)
+      return if (index >= 0 && index < StockViewRange.values().size) {
+        StockViewRange.values()[index]
+      } else {
+        StockViewRange.OneDay
+      }
     }
     set(value) {
       val sharedPref = PreferenceManager.getDefaultSharedPreferences(activity) ?: return
@@ -243,9 +246,12 @@ class StockDataFragment : Fragment() {
     get() {
       val sharedPref =
         PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewMode.Line
-      return StockViewMode.values()[sharedPref.getInt(
-          settingStockViewMode, StockViewMode.Line.value
-      )]
+      val index = sharedPref.getInt(settingStockViewMode, StockViewMode.Line.value)
+      return if (index >= 0 && index < StockViewMode.values().size) {
+        StockViewMode.values()[index]
+      } else {
+        StockViewMode.Line
+      }
     }
     set(value) {
       val sharedPref = PreferenceManager.getDefaultSharedPreferences(activity) ?: return

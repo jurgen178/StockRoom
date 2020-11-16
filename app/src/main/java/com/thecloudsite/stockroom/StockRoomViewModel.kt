@@ -238,15 +238,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   val sortingLiveData: LiveData<SortMode>
     get() = sorting
 
-  private var _sortMode: SortMode = SortMode.values()[sharedPreferences.getInt(
-      settingSortmode, SortMode.ByName.value
-  )]
   private var sortMode: SortMode
     get() {
-      return _sortMode
+      val index = sharedPreferences.getInt(settingSortmode, SortMode.ByName.value)
+      return if (index >= 0 && index < SortMode.values().size) {
+        SortMode.values()[index]
+      } else {
+        SortMode.ByName
+      }
     }
     set(value) {
-      _sortMode = value
       with(sharedPreferences.edit()) {
         putInt(settingSortmode, value.value)
         commit()
