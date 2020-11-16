@@ -27,10 +27,6 @@ limitations under the License. -->
     <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
   </style>
 
-  <style name="news_headline_text">
-    <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
-  </style>
-
   <style name="db_layout_style">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
@@ -90,14 +86,7 @@ limitations under the License. -->
     <item name="android:tint">@color/buttonLabel</item>
     <item name="android:scaleType">centerInside</item>
   </style>
-  <style name="alert_item_imagebutton">
-    <item name="android:layout_width">40dp</item>
-    <item name="android:layout_height">40dp</item>
-    <item name="android:padding">2dp</item>
-    <item name="android:layout_marginEnd">16dp</item>
-    <item name="android:tint">@color/colorPrimary</item>
-    <item name="android:scaleType">centerInside</item>
-  </style>
+
   <style name="Divider">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">1dp</item>
