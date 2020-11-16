@@ -438,10 +438,10 @@ class MainActivity : AppCompatActivity() {
         stockRoomViewModel.updateSortMode(SortMode.ByGroup)
         true
       }
-      R.id.menu_sort_unsorted -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByUnsorted)
-        true
-      }
+//      R.id.menu_sort_unsorted -> {
+//        stockRoomViewModel.updateSortMode(SortMode.ByUnsorted)
+//        true
+//      }
       R.id.menu_sync -> {
         stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
         true
@@ -464,7 +464,7 @@ class MainActivity : AppCompatActivity() {
       menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked = sortMode == SortMode.ByProfitPercentage
       menu?.findItem(R.id.menu_sort_dividend)?.isChecked = sortMode == SortMode.ByDividend
       menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
-      menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
+      //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 
       val portfolios = SharedRepository.portfolios.value!!
       if (portfolios.size > 1) {

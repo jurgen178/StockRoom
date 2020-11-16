@@ -37,7 +37,7 @@ enum class SortMode(val value: Int) {
   ByProfitPercentage(4),
   ByDividend(5),
   ByGroup(6),
-  ByUnsorted(7),
+  //ByUnsorted(7),
 }
 
 open class StockRoomBaseFragment : Fragment() {

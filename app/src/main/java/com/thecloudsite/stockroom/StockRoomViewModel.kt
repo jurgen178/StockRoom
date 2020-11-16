@@ -1037,9 +1037,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 item.stockDBdata.groupColor
               }
         }
-        SortMode.ByUnsorted -> {
-          stockItemSet.stockItems
-        }
+//        SortMode.ByUnsorted -> {
+//          stockItemSet.stockItems
+//        }
       }
     } else {
       emptyList()
