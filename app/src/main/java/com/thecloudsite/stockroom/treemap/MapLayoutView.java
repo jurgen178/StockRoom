@@ -198,7 +198,9 @@ public class MapLayoutView extends View {
         mTextPaint.setColor(Color.BLACK);
       }
 
-      float labelSize = Math.min(Math.max(rectF.width() / 7, 20), 100);
+      // Print label-only items in smaller font, for example the root item when no assets are present.
+      boolean labelOnly = text.isEmpty() && change.isEmpty();
+      float labelSize = Math.min(Math.max(rectF.width() / 7, 20), labelOnly ? 48 : 100);
       mTextPaint.setTextSize((int) labelSize);
 
       float tym = labelSize / 2;

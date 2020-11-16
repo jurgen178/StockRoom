@@ -19,30 +19,17 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.R.color
-import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
-import com.thecloudsite.stockroom.news.NewsAdapter.GoogleNewsViewHolder
-import com.thecloudsite.stockroom.news.NewsAdapter.NasdaqNewsViewHolder
-import com.thecloudsite.stockroom.news.NewsAdapter.NewsHeadlineViewHolder
-import com.thecloudsite.stockroom.news.NewsAdapter.YahooNewsViewHolder
-import com.thecloudsite.stockroom.news.NewsData
-import com.thecloudsite.stockroom.news.news_type_google
-import com.thecloudsite.stockroom.news.news_type_headline
-import com.thecloudsite.stockroom.news.news_type_nasdaq
-import com.thecloudsite.stockroom.news.news_type_yahoo
 import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -51,7 +38,7 @@ import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-const val summarygroup_all_item: Int = 0
+const val summarygroup_all_items: Int = 0
 const val summarygroup_item: Int = 1
 
 data class SummaryData(
@@ -96,8 +83,8 @@ class SummaryGroupAdapter internal constructor(
   ): BaseViewHolder<*> {
 
     return when (viewType) {
-      summarygroup_all_item -> {
-        val itemView = inflater.inflate(R.layout.summarygroup_all_item, parent, false)
+      summarygroup_all_items -> {
+        val itemView = inflater.inflate(R.layout.summarygroup_all_items, parent, false)
         OnlineDataAllViewHolder(itemView)
       }
       summarygroup_item -> {
@@ -158,7 +145,7 @@ class SummaryGroupAdapter internal constructor(
     } else {
       context.getString(R.string.overview_headline_portfolio, portfolio)
     }
-    data.add(SummaryData(overview, text1, text2, Color.WHITE, summarygroup_all_item))
+    data.add(SummaryData(overview, text1, text2, Color.WHITE, summarygroup_all_items))
 
     // Get all groups.
     val groupSet = HashSet<Int>()
