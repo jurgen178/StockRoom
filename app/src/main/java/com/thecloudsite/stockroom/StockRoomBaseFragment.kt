@@ -30,13 +30,14 @@ import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.Group
 
 enum class SortMode(val value: Int) {
-  ByChange(0),
+  ByChangePercentage(0),
   ByName(1),
   ByAssets(2),
   ByProfit(3),
-  ByDividend(4),
-  ByGroup(5),
-  ByUnsorted(6),
+  ByProfitPercentage(4),
+  ByDividend(5),
+  ByGroup(6),
+  ByUnsorted(7),
 }
 
 open class StockRoomBaseFragment : Fragment() {

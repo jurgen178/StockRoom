@@ -87,12 +87,13 @@ limitations under the License. -->
 
   <string name="hint_add_stock">Stock symbol</string>
   <string name="button_add">Add</string>
-  <string name="sort_change">Sort by Change</string>
+  <string name="sort_change_percentage">Sort by Change %</string>
   <string name="sort_name">Sort by Name</string>
   <string name="sort_group">Sort by Group</string>
   <string name="sort_group_unsorted">Unsorted</string>
   <string name="sort_assets">Sort by Assets</string>
   <string name="sort_profit">Sort by Gain</string>
+  <string name="sort_profit_percentage">Sort by Gain %</string>
   <string name="sort_dividend">Sort by Dividend</string>
 
   <string name="ok">OK</string>

@@ -960,7 +960,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ): List<StockItem> =
     if (stockItemSet != null) {
       when (sortMode) {
-        SortMode.ByChange -> {
+        SortMode.ByChangePercentage -> {
           stockItemSet.stockItems.sortedByDescending { item ->
             item.onlineMarketData.marketChangePercent
           }
@@ -999,6 +999,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //              item.assets.sumByDouble {
 //                it.shares * it.price
 //              }
+            }
+          }
+        }
+        SortMode.ByProfitPercentage -> {
+          stockItemSet.stockItems.sortedByDescending { item ->
+            val (totalQuantity, totalPrice) = getAssets(item.assets)
+            if (item.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
+              (totalQuantity * item.onlineMarketData.marketPrice - totalPrice) / totalPrice
+            } else {
+              totalPrice
             }
           }
         }

@@ -19,9 +19,9 @@
     -->
     <menu>
       <item
-          android:id="@+id/menu_sort_change"
+          android:id="@+id/menu_sort_change_percentage"
           android:checkable="true"
-          android:title="@string/sort_change" />
+          android:title="@string/sort_change_percentage" />
       <item
           android:id="@+id/menu_sort_name"
           android:checkable="true"
@@ -34,6 +34,10 @@
           android:id="@+id/menu_sort_profit"
           android:checkable="true"
           android:title="@string/sort_profit" />
+      <item
+          android:id="@+id/menu_sort_profit_percentage"
+          android:checkable="true"
+          android:title="@string/sort_profit_percentage" />
       <item
           android:id="@+id/menu_sort_dividend"
           android:checkable="true"

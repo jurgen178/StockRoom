@@ -410,8 +410,8 @@ class MainActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
-      R.id.menu_sort_change -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByChange)
+      R.id.menu_sort_change_percentage -> {
+        stockRoomViewModel.updateSortMode(SortMode.ByChangePercentage)
         true
       }
       R.id.menu_sort_name -> {
@@ -424,6 +424,10 @@ class MainActivity : AppCompatActivity() {
       }
       R.id.menu_sort_profit -> {
         stockRoomViewModel.updateSortMode(SortMode.ByProfit)
+        true
+      }
+      R.id.menu_sort_profit_percentage -> {
+        stockRoomViewModel.updateSortMode(SortMode.ByProfitPercentage)
         true
       }
       R.id.menu_sort_dividend -> {
@@ -453,10 +457,11 @@ class MainActivity : AppCompatActivity() {
     if (SharedRepository.portfolios.value != null) {
 
       val sortMode = stockRoomViewModel.sortMode()
-      menu?.findItem(R.id.menu_sort_change)?.isChecked = sortMode == SortMode.ByChange
+      menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked = sortMode == SortMode.ByChangePercentage
       menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
       menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
       menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
+      menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked = sortMode == SortMode.ByProfitPercentage
       menu?.findItem(R.id.menu_sort_dividend)?.isChecked = sortMode == SortMode.ByDividend
       menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
       menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
