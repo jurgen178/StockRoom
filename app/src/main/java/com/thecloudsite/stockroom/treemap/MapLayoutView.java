@@ -206,7 +206,7 @@ public class MapLayoutView extends View {
       float tym = labelSize / 2;
       float txm = mTextPaint.measureText(label);
       float xm = rectF.left + rectF.width() / 2 - txm / 2;
-      float ym = rectF.top + rectF.height() / 2 - tym;
+      float ym = rectF.top + rectF.height() / 2 - tym + 8; // Border=8
       canvas.drawText(label, xm, ym, mTextPaint);
       ym += tym;
 
