@@ -1013,7 +1013,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             }
           }
         }
-        SortMode.ByDividend -> {
+        SortMode.ByDividendPercentage -> {
           stockItemSet.stockItems.sortedByDescending { item ->
 
             // Use stockDBdata.annualDividendRate if available.

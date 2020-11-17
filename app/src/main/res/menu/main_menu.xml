@@ -39,9 +39,9 @@
           android:checkable="true"
           android:title="@string/sort_profit_percentage" />
       <item
-          android:id="@+id/menu_sort_dividend"
+          android:id="@+id/menu_sort_dividend_percentage"
           android:checkable="true"
-          android:title="@string/sort_dividend" />
+          android:title="@string/sort_dividend_percentage" />
       <item
           android:id="@+id/menu_sort_group"
           android:checkable="true"
