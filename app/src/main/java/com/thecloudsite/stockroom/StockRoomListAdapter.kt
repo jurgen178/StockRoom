@@ -152,6 +152,14 @@ class StockRoomListAdapter internal constructor(
 //          it.quantity * it.price
 //        }
 
+        assets.append(
+            "${DecimalFormat("0.####").format(quantity)}@${
+              DecimalFormat("0.00##").format(
+                  asset / quantity
+              )
+            }"
+        )
+
         if (current.onlineMarketData.marketPrice > 0.0) {
           capital = quantity * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
@@ -159,7 +167,7 @@ class StockRoomListAdapter internal constructor(
 //          }
 
           assets.append(
-              "${
+              "\n${
                 DecimalFormat(
                     "0.00"
                 ).format(asset)
@@ -227,22 +235,24 @@ class StockRoomListAdapter internal constructor(
           )
       )
 
-      if (quantity > 0.0) {
-        assets.append(
-            "\n${DecimalFormat("0.####").format(quantity)}@${DecimalFormat("0.00##").format(asset / quantity)}"
-        )
-      }
-
       val dividendStr = getDividendStr(current, context)
       if (dividendStr.isNotEmpty()) {
+        if (assets.isNotEmpty()) {
+          assets.append("\n")
+        }
+
         assets.append(
-            "\n$dividendStr"
+            "$dividendStr"
         )
       }
 
       if (current.stockDBdata.alertAbove > 0.0) {
+        if (assets.isNotEmpty()) {
+          assets.append("\n")
+        }
+
         assets.append(
-            "\n${context.getString(R.string.alert_above_in_list)} ${
+            "${context.getString(R.string.alert_above_in_list)} ${
               DecimalFormat(
                   "0.00##"
               ).format(current.stockDBdata.alertAbove)
@@ -250,8 +260,12 @@ class StockRoomListAdapter internal constructor(
         )
       }
       if (current.stockDBdata.alertBelow > 0.0) {
+        if (assets.isNotEmpty()) {
+          assets.append("\n")
+        }
+
         assets.append(
-            "\n${context.getString(R.string.alert_below_in_list)} ${
+            "${context.getString(R.string.alert_below_in_list)} ${
               DecimalFormat(
                   "0.00##"
               ).format(current.stockDBdata.alertBelow)
@@ -263,7 +277,11 @@ class StockRoomListAdapter internal constructor(
         val eventStr =
           context.resources.getQuantityString(R.plurals.events_in_list, count, count)
 
-        assets.append("\n$eventStr")
+        if (assets.isNotEmpty()) {
+          assets.append("\n")
+        }
+
+        assets.append("$eventStr")
         current.events.forEach {
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
@@ -277,8 +295,12 @@ class StockRoomListAdapter internal constructor(
         }
       }
       if (current.stockDBdata.note.isNotEmpty()) {
+        if (assets.isNotEmpty()) {
+          assets.append("\n")
+        }
+
         assets.append(
-            "\n${
+            "${
               context.getString(
                   R.string.note_in_list
               )
