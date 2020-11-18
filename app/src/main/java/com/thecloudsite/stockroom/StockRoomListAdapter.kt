@@ -227,6 +227,12 @@ class StockRoomListAdapter internal constructor(
           )
       )
 
+      if (quantity > 0.0) {
+        assets.append(
+            "\n${DecimalFormat("0.####").format(quantity)}@${DecimalFormat("0.00##").format(asset / quantity)}"
+        )
+      }
+
       val dividendStr = getDividendStr(current, context)
       if (dividendStr.isNotEmpty()) {
         assets.append(
