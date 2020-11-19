@@ -55,6 +55,7 @@ import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButto
 import kotlinx.android.synthetic.main.fragment_dividend.dividendNoteTextView
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsAnnouncedView
 import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
+import kotlinx.android.synthetic.main.fragment_dividend.textViewAddDividendLayout
 import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendPayout
 import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendOnlineData
 import kotlinx.android.synthetic.main.fragment_dividend.textViewSetAnnualDividend
@@ -614,7 +615,7 @@ class DividendFragment : Fragment() {
           .show()
     }
 
-    textViewSetAnnualDividend.setOnClickListener {
+    textViewAddDividendLayout.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
       val inflater = LayoutInflater.from(requireContext())

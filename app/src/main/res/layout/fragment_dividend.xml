@@ -87,7 +87,7 @@
 
           <TextView
               android:id="@+id/textViewSetAnnualDividend"
-              android:layout_width="80dp"
+              android:layout_width="100dp"
               android:layout_height="wrap_content"
               android:gravity="end"
               android:layout_marginTop="16dp"

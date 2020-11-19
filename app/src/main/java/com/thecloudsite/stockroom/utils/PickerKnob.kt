@@ -22,6 +22,7 @@ import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Paint.Style
 import android.graphics.Paint.Style.FILL
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -35,7 +36,6 @@ import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.ceil
 import kotlin.math.cos
-import kotlin.math.max
 
 /*
 http://eng.moldedbits.com/technical/android/2015/09/11/android-picker-knob.html
@@ -82,7 +82,9 @@ class PickerKnob : View {
   private var radius: Double = 0.0
 
   /* Used to draw to the canvas  */
-  private var paint: Paint? = null
+  private lateinit var paint: Paint
+
+  private lateinit var midrectPaint: Paint
 
   /* Total number of dashes to draw  */
   private var totalDashCount = 0
@@ -195,48 +197,50 @@ class PickerKnob : View {
     attrs: AttributeSet?
   ) {
     paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    if (paint != null) {
-      paint!!.style = FILL
-      paint!!.color = Color.BLUE
-      currentTime = System.nanoTime()
+    paint.style = FILL
+    paint.color = Color.GRAY
+    currentTime = System.nanoTime()
 
-      if (attrs != null) {
-        val attrsArray = intArrayOf(
-            attr.color
-        )
-        var styleAttributes: TypedArray =
-          context.theme.obtainStyledAttributes(attrs, attrsArray, 0, 0)
-        // Silver color
-        lineColor = styleAttributes.getColor(0, Color.rgb(192, 192, 192))
-        paint!!.color = lineColor
-        styleAttributes.recycle()
-        styleAttributes = context.theme.obtainStyledAttributes(attrs, styleable.PickerKnob, 0, 0)
-        textSize = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_size, 12)
-        viewHeight = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_IN_DP.toFloat(),
-            context.resources.displayMetrics
-        )
-            .toInt() + styleAttributes.getDimensionPixelSize(
-            styleable.PickerKnob_picker_view_height, 12
-        )
-        textPadding =
-          styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_padding, 10)
-        dashGap = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_dash_gap, 20)
-        textColor = styleAttributes.getColor(styleable.PickerKnob_picker_text_color, Color.BLACK)
-        dashCount = styleAttributes.getInteger(styleable.PickerKnob_picker_dash_count, dashCount)
-        deceleration =
-          styleAttributes.getFloat(styleable.PickerKnob_picker_friction, deceleration.toFloat())
-              .toDouble()
-        styleAttributes.recycle()
-      }
-
-      paint!!.textSize = textSize.toFloat()
-      viewWidth = TypedValue.applyDimension(
-          TypedValue.COMPLEX_UNIT_DIP, MIN_WIDTH_IN_DP.toFloat(),
+    if (attrs != null) {
+      val attrsArray = intArrayOf(
+          attr.color
+      )
+      var styleAttributes: TypedArray =
+        context.theme.obtainStyledAttributes(attrs, attrsArray, 0, 0)
+      // Silver color
+      lineColor = styleAttributes.getColor(0, Color.rgb(192, 192, 192))
+      paint.color = lineColor
+      styleAttributes.recycle()
+      styleAttributes = context.theme.obtainStyledAttributes(attrs, styleable.PickerKnob, 0, 0)
+      textSize = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_size, 12)
+      viewHeight = TypedValue.applyDimension(
+          TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_IN_DP.toFloat(),
           context.resources.displayMetrics
       )
-          .toInt()
+          .toInt() + styleAttributes.getDimensionPixelSize(
+          styleable.PickerKnob_picker_view_height, 12
+      )
+      textPadding =
+        styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_padding, 10)
+      dashGap = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_dash_gap, 20)
+      textColor = styleAttributes.getColor(styleable.PickerKnob_picker_text_color, Color.BLACK)
+      dashCount = styleAttributes.getInteger(styleable.PickerKnob_picker_dash_count, dashCount)
+      deceleration =
+        styleAttributes.getFloat(styleable.PickerKnob_picker_friction, deceleration.toFloat())
+            .toDouble()
+      styleAttributes.recycle()
     }
+
+    paint.textSize = textSize.toFloat()
+    viewWidth = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP, MIN_WIDTH_IN_DP.toFloat(),
+        context.resources.displayMetrics
+    )
+        .toInt()
+
+    midrectPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    midrectPaint.style = Style.STROKE
+    midrectPaint.color = Color.DKGRAY
   }
 
   fun setValue(
@@ -327,7 +331,15 @@ class PickerKnob : View {
     startPosition = 0.coerceAtLeast(startPosition)
 
     var oldX = -1.0f
-    var oldX10 = -Float.MAX_VALUE
+    var oldXstart = 0.0f
+
+    val formatStr = if (maxValueOrig < 1.0f) "0.0000" else "0.00"
+
+    val midrectX = width / 2f
+    val midrectsize = 4f
+    canvas.drawRect(
+        midrectX - midrectsize, (textSize + textPadding).toFloat(), midrectX + midrectsize, viewHeight.toFloat(), midrectPaint
+    )
 
     while (true) {
       var theta = startPosition * dashGap / radius
@@ -346,24 +358,25 @@ class PickerKnob : View {
 
         // map the 0..100 range to minValue..maxValue
         val newValue = minValueOrig + value / 100 * (maxValueOrig - minValueOrig)
-        val text = DecimalFormat("0.00").format(newValue)
-        val textWidth = paint!!.measureText(text)
+        val text = DecimalFormat(formatStr).format(newValue)
+        val textWidth = paint.measureText(text)
 
         // Check if text not overlap
-        val xStart = max(x - textWidth / 2f, 0f)
-        if (xStart - oldX10 - 4 > textWidth) {
-          paint!!.color = textColor
-          canvas.drawText(text, xStart, textSize.toFloat(), paint!!)
-          oldX10 = xStart
+        val xStart = x - textWidth / 2f
+        // ensure small margin between numbers at the beginning/end ( + 4, + 16 )
+        if (xStart > oldXstart + 4 && xStart + textWidth + 16 < width) {
+          paint.color = textColor
+          canvas.drawText(text, xStart, textSize.toFloat(), paint)
+          oldXstart = xStart
         }
       }
 
       oldX = x
-      paint!!.color = lineColor
+      paint.color = lineColor
       canvas.drawLine(
           x,
           ((if (startPosition % (dashCount + 1) == 0) 0 else dashHeight / 2) + textSize + textPadding).toFloat(),
-          x, viewHeight.toFloat(), paint!!
+          x, viewHeight.toFloat(), paint
       )
       startPosition++
     }
