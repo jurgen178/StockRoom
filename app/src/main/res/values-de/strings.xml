@@ -180,6 +180,7 @@ limitations under the License. -->
   <string name="asset_price_not_empty">Geben Sie einen Preis ein.</string>
   <string name="asset_summary_text">Gesamtaktienbestand:</string>
   <string name="title_activity_add">Aktien hinzufügen</string>
+  <string name="title_activity_filter">Filter</string>
   <string name="title_activity_stockdata">Aktiendetails</string>
   <string name="add_stock">Aktie \'%1$s\' wurde hinzugefügt.</string>
   <string name="current_events">Ereignisse</string>
@@ -351,4 +352,9 @@ limitations under the License. -->
   <string name="no_assets">Keine Aktienbestände</string>
   <string name="tab_headlines">Auswahlüberschriften</string>
   <string name="tab_headlines_desc">Zeigt Überschriften zur schnelleren Auswahl der Darstellungen an.</string>
+  <string name="menu_filter">Filter</string>
+  <string name="group_filter">Filter</string>
+  <string name="delete_filter">Filter entfernen</string>
+  <string name="delete_filter_confirm">Sind Sie sicher, dass Sie den Filter entfernen möchten?</string>
+  <string name="delete_filter_msg">Der Filter wurde entfernt.</string>
 </resources>

@@ -94,9 +94,9 @@ class SummaryGroupFragment : Fragment() {
     )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItemSet ->
-        summaryGroupAdapter.updateData(stockItemSet.stockItems)
-        updatePieData(view, stockItemSet.stockItems)
+      items?.let { stockItems ->
+        summaryGroupAdapter.updateData(stockItems)
+        updatePieData(view, stockItems)
       }
     })
 

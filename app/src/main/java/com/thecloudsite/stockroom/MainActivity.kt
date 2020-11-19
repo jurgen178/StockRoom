@@ -27,6 +27,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -405,6 +406,7 @@ class MainActivity : AppCompatActivity() {
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
     // Inflate the menu; this adds items to the action bar if it is present.
     menuInflater.inflate(R.menu.main_menu, menu)
+    MenuCompat.setGroupDividerEnabled(menu, true);
     return true
   }
 
@@ -446,6 +448,11 @@ class MainActivity : AppCompatActivity() {
         stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
         true
       }
+      R.id.menu_filter -> {
+        val intent = Intent(this, FilterActivity::class.java)
+        startActivity(intent)
+        true
+      }
       else -> super.onOptionsItemSelected(item)
     }
   }
@@ -457,12 +464,15 @@ class MainActivity : AppCompatActivity() {
     if (SharedRepository.portfolios.value != null) {
 
       val sortMode = stockRoomViewModel.sortMode()
-      menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked = sortMode == SortMode.ByChangePercentage
+      menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked =
+        sortMode == SortMode.ByChangePercentage
       menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
       menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
       menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
-      menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked = sortMode == SortMode.ByProfitPercentage
-      menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked = sortMode == SortMode.ByDividendPercentage
+      menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
+        sortMode == SortMode.ByProfitPercentage
+      menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
+        sortMode == SortMode.ByDividendPercentage
       menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
       //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 

@@ -183,6 +183,7 @@ limitations under the License. -->
   <string name="asset_price_not_empty">Enter a price for the stock.</string>
   <string name="asset_summary_text">Total assets:</string>
   <string name="title_activity_add">Add stocks</string>
+  <string name="title_activity_filter">Filter</string>
   <string name="title_activity_stockdata">Stock details</string>
   <string name="add_stock">Added stock \'%1$s\'.</string>
   <string name="current_events">Events</string>
@@ -354,4 +355,9 @@ limitations under the License. -->
   <string name="no_assets">No assets</string>
   <string name="tab_headlines">Tab Headlines</string>
   <string name="tab_headlines_desc">Display tab headlines to select what is on display.</string>
+  <string name="menu_filter">Filter</string>
+  <string name="group_filter">Filter</string>
+  <string name="delete_filter">Delete filter</string>
+  <string name="delete_filter_confirm">Are you sure to delete the filter?</string>
+  <string name="delete_filter_msg">The filter was deleted.</string>
 </resources>

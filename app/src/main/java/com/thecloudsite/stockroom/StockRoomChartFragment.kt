@@ -125,10 +125,10 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItemSet ->
+      items?.let { stockItems ->
         val emptyList = symbolList.isEmpty()
 
-        stockItemSet.stockItems.forEach { stockItem ->
+        stockItems.forEach { stockItem ->
           if (!symbolList.contains(stockItem.stockDBdata.symbol)) {
             symbolList.add(stockItem.stockDBdata.symbol)
 
@@ -139,7 +139,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
           }
         }
 
-        adapter.setStockItems(stockItemSet)
+        adapter.setStockItems(stockItems)
       }
     })
 

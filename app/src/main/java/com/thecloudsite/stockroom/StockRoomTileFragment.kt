@@ -156,8 +156,8 @@ class StockRoomTileFragment : Fragment() {
     stockRoomTile.layoutManager = GridLayoutManager(requireContext(), min(max(spanCount, 2), 20))
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItemSet ->
-        stockRoomTileAdapter.updateData(stockItemSet)
+      items?.let { stockItems ->
+        stockRoomTileAdapter.updateData(stockItems)
       }
     })
   }

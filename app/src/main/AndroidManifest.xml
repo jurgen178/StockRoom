@@ -18,6 +18,9 @@
         android:name=".AddActivity"
         android:label="@string/title_activity_add" />
     <activity
+        android:name=".FilterActivity"
+        android:label="@string/title_activity_filter" />
+    <activity
         android:name=".SettingsActivity"
         android:label="@string/title_activity_settings" />
     <activity

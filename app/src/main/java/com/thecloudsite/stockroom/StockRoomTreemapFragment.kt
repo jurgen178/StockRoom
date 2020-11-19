@@ -69,8 +69,8 @@ class StockRoomTreemapFragment : Fragment() {
     //val adapter = StockRoomTreemapListAdapter(requireContext(), clickListenerSummary)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItemSet ->
-        updateTreemap(view, stockItemSet.stockItems)
+      items?.let { stockItems ->
+        updateTreemap(view, stockItems)
       }
     })
 

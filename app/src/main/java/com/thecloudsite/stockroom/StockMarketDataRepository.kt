@@ -24,12 +24,6 @@ import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
 
-data class StockItemSet
-(
-  var allDataReady: Boolean = false,
-  var stockItems: MutableList<StockItem> = mutableListOf()
-)
-
 // Data from the DB and online data fields.
 data class StockItem
 (

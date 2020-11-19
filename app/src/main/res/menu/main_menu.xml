@@ -18,40 +18,47 @@
       </group>
     -->
     <menu>
+      <group android:id="@+id/sorting" >
+        <item
+            android:id="@+id/menu_sort_change_percentage"
+            android:checkable="true"
+            android:title="@string/sort_change_percentage" />
+        <item
+            android:id="@+id/menu_sort_name"
+            android:checkable="true"
+            android:title="@string/sort_name" />
+        <item
+            android:id="@+id/menu_sort_assets"
+            android:checkable="true"
+            android:title="@string/sort_assets" />
+        <item
+            android:id="@+id/menu_sort_profit"
+            android:checkable="true"
+            android:title="@string/sort_profit" />
+        <item
+            android:id="@+id/menu_sort_profit_percentage"
+            android:checkable="true"
+            android:title="@string/sort_profit_percentage" />
+        <item
+            android:id="@+id/menu_sort_dividend_percentage"
+            android:checkable="true"
+            android:title="@string/sort_dividend_percentage" />
+        <item
+            android:id="@+id/menu_sort_group"
+            android:checkable="true"
+            android:title="@string/sort_group" />
+      </group>
       <item
-          android:id="@+id/menu_sort_change_percentage"
-          android:checkable="true"
-          android:title="@string/sort_change_percentage" />
-      <item
-          android:id="@+id/menu_sort_name"
-          android:checkable="true"
-          android:title="@string/sort_name" />
-      <item
-          android:id="@+id/menu_sort_assets"
-          android:checkable="true"
-          android:title="@string/sort_assets" />
-      <item
-          android:id="@+id/menu_sort_profit"
-          android:checkable="true"
-          android:title="@string/sort_profit" />
-      <item
-          android:id="@+id/menu_sort_profit_percentage"
-          android:checkable="true"
-          android:title="@string/sort_profit_percentage" />
-      <item
-          android:id="@+id/menu_sort_dividend_percentage"
-          android:checkable="true"
-          android:title="@string/sort_dividend_percentage" />
-      <item
-          android:id="@+id/menu_sort_group"
-          android:checkable="true"
-          android:title="@string/sort_group" />
-<!--
-      <item
-          android:id="@+id/menu_sort_unsorted"
-          android:checkable="true"
-          android:title="@string/sort_unsorted" />
--->
+          android:id="@+id/menu_filter"
+          android:title="@string/menu_filter" />
+      <group android:id="@+id/filter" >
+      </group>
+      <!--
+            <item
+                android:id="@+id/menu_sort_unsorted"
+                android:checkable="true"
+                android:title="@string/sort_unsorted" />
+      -->
     </menu>
   </item>
 

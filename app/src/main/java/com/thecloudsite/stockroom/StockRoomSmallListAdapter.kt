@@ -134,8 +134,8 @@ class StockRoomSmallListAdapter internal constructor(
     }
   }
 
-  internal fun setStockItems(stockItemSet: StockItemSet) {
-    submitList(stockItemSet.stockItems)
+  internal fun setStockItems(stockItems: List<StockItem>) {
+    submitList(stockItems)
     notifyDataSetChanged()
   }
 }

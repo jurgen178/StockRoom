@@ -325,14 +325,14 @@ class StockRoomListAdapter internal constructor(
     }
   }
 
-  internal fun setStockItems(stockItemSet: StockItemSet) {
+  internal fun setStockItems(stockItems: List<StockItem>) {
     // Using allDataReady the list is updated only if all data sources are ready
     // which can take a few seconds because of the slow online data.
     // Without this check, the list is filled instantly, but might be reshuffled
     // for sorting when the online data is ready.
 
     //if (stockItemSet.allDataReady) {
-    submitList(stockItemSet.stockItems)
+    submitList(stockItems)
     notifyDataSetChanged()
     //}
   }

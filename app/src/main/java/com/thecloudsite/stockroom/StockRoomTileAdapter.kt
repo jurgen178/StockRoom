@@ -37,7 +37,7 @@ class StockRoomTileAdapter internal constructor(
 ) : RecyclerView.Adapter<StockRoomTileAdapter.OnlineDataViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var stockItems: MutableList<StockItem> = mutableListOf()
+  private var stockItems: List<StockItem> = listOf()
 
   class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
@@ -147,14 +147,14 @@ class StockRoomTileAdapter internal constructor(
     }
   }
 
-  fun updateData(stockItemSet: StockItemSet) {
+  fun updateData(stockItems: List<StockItem>) {
     // Using allDataReady the list is updated only if all data sources are ready
     // which can take a few seconds because of the slow online data.
     // Without this check, the list is filled instantly, but might be reshuffled
     // for sorting when the online data is ready.
 
     //if (stockItemSet.allDataReady) {
-    stockItems = stockItemSet.stockItems.toMutableList()
+    this.stockItems = stockItems
     notifyDataSetChanged()
     //}
   }
