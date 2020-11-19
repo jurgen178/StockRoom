@@ -77,14 +77,15 @@ limitations under the License. -->
     <item name="android:layout_marginEnd">8dp</item>
   </style>
   <style name="asset_item_imagebutton">
-    <item name="android:layout_width">40dp</item>
-    <item name="android:layout_height">40dp</item>
-    <item name="android:padding">2dp</item>
+    <item name="android:layout_width">48dp</item>
+    <item name="android:layout_height">48dp</item>
     <item name="android:layout_gravity">center_horizontal</item>
+    <item name="android:padding">4dp</item>
+    <item name="android:layout_marginStart">16dp</item>
     <item name="android:layout_marginEnd">16dp</item>
     <item name="android:background">@drawable/roundcorner</item>
     <item name="android:tint">@color/buttonLabel</item>
-    <item name="android:scaleType">centerInside</item>
+    <item name="android:scaleType">fitCenter</item>
   </style>
 
   <style name="Divider">

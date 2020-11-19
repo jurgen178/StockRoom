@@ -173,7 +173,7 @@ limitations under the License. -->
   <string name="delete_all_assets_msg">All assets are deleted from the portfolio.</string>
   <string name="delete_all_assets_confirm">Are you sure to delete all assets of \'%1$s\' from your portfolio?</string>
   <string name="split">Split</string>
-  <string name="split_asset">Stock split</string>
+  <string name="split_asset">Apply stock split</string>
   <string name="split_asset_help">For example Stock split ratio 1:2, for each share you get 2 shares for half the price.</string>
   <string name="split_ratio">Stock split ratio, 1:n</string>
   <string name="invalid_split_entry">The stock split ratio must be greater than 0 and less or equal than 20.</string>

@@ -99,7 +99,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.eventsView
 import kotlinx.android.synthetic.main.fragment_stockdata.imageButtonIconCandle
 import kotlinx.android.synthetic.main.fragment_stockdata.imageButtonIconLine
 import kotlinx.android.synthetic.main.fragment_stockdata.lineChart
-import kotlinx.android.synthetic.main.fragment_stockdata.linearLayoutGroup
+import kotlinx.android.synthetic.main.fragment_stockdata.stockgroupLayout
 import kotlinx.android.synthetic.main.fragment_stockdata.new_stock_price
 import kotlinx.android.synthetic.main.fragment_stockdata.new_total_asset
 import kotlinx.android.synthetic.main.fragment_stockdata.noteTextView
@@ -1093,7 +1093,7 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    linearLayoutGroup.setOnClickListener { viewLayout ->
+    stockgroupLayout.setOnClickListener { viewLayout ->
       val popupMenu = PopupMenu(requireContext(), viewLayout)
 
       var menuIndex: Int = Menu.FIRST
@@ -1889,16 +1889,13 @@ class StockDataFragment : Fragment() {
       val assets: List<Asset> = data.assets?.assets!!
       val (totalQuantity, totalPrice) = getAssets(assets)
 
-      if (totalPrice == 0.0) {
-        price_preview_divider.visibility = View.GONE
-        price_preview_textview.visibility = View.GONE
-        price_preview_layout.visibility = View.GONE
-      } else {
+      val marketPrice = data.onlineMarketData!!.marketPrice
+
+      if (totalPrice > 0.0 && marketPrice > 0.0) {
+
         price_preview_divider.visibility = View.VISIBLE
         price_preview_textview.visibility = View.VISIBLE
         price_preview_layout.visibility = View.VISIBLE
-
-        val marketPrice = data.onlineMarketData!!.marketPrice
 
         // Update the new price and asset.
         picker_knob.onValueChangeListener { value ->
@@ -1919,6 +1916,10 @@ class StockDataFragment : Fragment() {
 
         // min, max, start
         picker_knob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
+      } else {
+        price_preview_divider.visibility = View.GONE
+        price_preview_textview.visibility = View.GONE
+        price_preview_layout.visibility = View.GONE
       }
 
       val purchasePrice = if (totalPrice > 0.0) {

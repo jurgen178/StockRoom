@@ -259,9 +259,10 @@
 
         <TextView
             android:id="@+id/textViewPortfolio"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="16dp"
+            android:textSize="16sp"
             android:textColor="@color/buttonLabel"
             android:background="@drawable/portfolio_item_bg"
             android:gravity="center_horizontal|center_vertical"
@@ -278,30 +279,36 @@
           style="@style/section_header"
           />
 
-      <LinearLayout
-          android:id="@+id/linearLayoutGroup"
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/stockgroupLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:orientation="horizontal"
           android:layout_margin="16dp"
           >
-
         <TextView
             android:id="@+id/textViewGroupColor"
             android:layout_width="20dp"
             android:layout_height="40dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/group_item_bg"
-            android:gravity="center_horizontal|center_vertical"
             />
         <TextView
             android:id="@+id/textViewGroup"
-            android:layout_width="210dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
-            android:background="@drawable/stock_item_bg"
             android:gravity="center_horizontal|center_vertical"
+            android:textSize="16sp"
+            android:textColor="@color/material_on_background_emphasis_high_type"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewGroupColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/stock_item_bg"
             />
 
-      </LinearLayout>
+      </androidx.constraintlayout.widget.ConstraintLayout>
 
       <View style="@style/Divider"/>
 
@@ -384,7 +391,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:picker_text_size="10sp"
-            app:picker_dash_gap="10dp"
+            app:picker_view_height="24dp"
+            app:picker_dash_gap="12dp"
             app:picker_text_color="@android:color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

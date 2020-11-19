@@ -170,7 +170,7 @@ limitations under the License. -->
   <string name="delete_all_assets_msg">Alle Aktien wurden aus Ihrem Aktienbestand entfernt.</string>
   <string name="delete_all_assets_confirm">Sind Sie sicher, dass Sie alle Aktien von \'%1$s\' aus Ihrem Aktienbestand entfernen möchten?</string>
   <string name="split">Split</string>
-  <string name="split_asset">Aktiensplit</string>
+  <string name="split_asset">Aktiensplit anwenden</string>
   <string name="split_asset_help">z.B. Aktiensplitverhältnis 1:2 bedeutet für jede Aktie bekommt man 2 Aktien zum halben Preis.</string>
   <string name="split_ratio">Aktiensplit\nVerhältnis 1:n</string>
   <string name="invalid_split_entry">Das Aktiensplitverhältnis muss größer als 0 und kleiner oder gleich 20 sein.</string>

@@ -195,39 +195,48 @@ class PickerKnob : View {
     attrs: AttributeSet?
   ) {
     paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    paint!!.style = FILL
-    paint!!.color = Color.BLUE
-    currentTime = System.nanoTime()
-    if (attrs != null) {
-      val attrsArray = intArrayOf(
-          attr.color
+    if (paint != null) {
+      paint!!.style = FILL
+      paint!!.color = Color.BLUE
+      currentTime = System.nanoTime()
+
+      if (attrs != null) {
+        val attrsArray = intArrayOf(
+            attr.color
+        )
+        var styleAttributes: TypedArray =
+          context.theme.obtainStyledAttributes(attrs, attrsArray, 0, 0)
+        // Silver color
+        lineColor = styleAttributes.getColor(0, Color.rgb(192, 192, 192))
+        paint!!.color = lineColor
+        styleAttributes.recycle()
+        styleAttributes = context.theme.obtainStyledAttributes(attrs, styleable.PickerKnob, 0, 0)
+        textSize = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_size, 12)
+        viewHeight = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_IN_DP.toFloat(),
+            context.resources.displayMetrics
+        )
+            .toInt() + styleAttributes.getDimensionPixelSize(
+            styleable.PickerKnob_picker_view_height, 12
+        )
+        textPadding =
+          styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_padding, 10)
+        dashGap = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_dash_gap, 20)
+        textColor = styleAttributes.getColor(styleable.PickerKnob_picker_text_color, Color.BLACK)
+        dashCount = styleAttributes.getInteger(styleable.PickerKnob_picker_dash_count, dashCount)
+        deceleration =
+          styleAttributes.getFloat(styleable.PickerKnob_picker_friction, deceleration.toFloat())
+              .toDouble()
+        styleAttributes.recycle()
+      }
+
+      paint!!.textSize = textSize.toFloat()
+      viewWidth = TypedValue.applyDimension(
+          TypedValue.COMPLEX_UNIT_DIP, MIN_WIDTH_IN_DP.toFloat(),
+          context.resources.displayMetrics
       )
-      var a: TypedArray = context.theme.obtainStyledAttributes(attrs, attrsArray, 0, 0)
-      // Silver color
-      lineColor = a.getColor(0, Color.rgb(192, 192, 192))
-      paint!!.color = lineColor
-      a.recycle()
-      a = context.theme.obtainStyledAttributes(attrs, styleable.PickerKnob, 0, 0)
-      textSize = a.getDimensionPixelSize(styleable.PickerKnob_picker_text_size, 12)
-      textPadding = a.getDimensionPixelSize(styleable.PickerKnob_picker_text_padding, 10)
-      dashGap = a.getDimensionPixelSize(styleable.PickerKnob_picker_dash_gap, 20)
-      textColor = a.getColor(styleable.PickerKnob_picker_text_color, Color.BLACK)
-      dashCount = a.getInteger(styleable.PickerKnob_picker_dash_count, dashCount)
-      deceleration = a.getFloat(styleable.PickerKnob_picker_friction, deceleration.toFloat())
-          .toDouble()
-      a.recycle()
+          .toInt()
     }
-    paint!!.textSize = textSize.toFloat()
-    viewHeight = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_IN_DP.toFloat(),
-        context.resources.displayMetrics
-    )
-        .toInt() + textSize
-    viewWidth = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, MIN_WIDTH_IN_DP.toFloat(),
-        context.resources.displayMetrics
-    )
-        .toInt()
   }
 
   fun setValue(
