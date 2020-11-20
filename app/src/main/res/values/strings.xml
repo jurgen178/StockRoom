@@ -358,10 +358,13 @@ limitations under the License. -->
   <string name="menu_filter">Filter</string>
   <string name="group_filter">Filter</string>
   <string name="delete_filter">Delete filter</string>
-  <string name="delete_filter_confirm">Are you sure to delete the filter?</string>
-  <string name="delete_filter_msg">The filter was deleted.</string>
+  <string name="delete_filter_confirm">Are you sure to delete the filter \'%1$s\' ?</string>
+  <string name="delete_filter_msg">The filter \'%1$s\' was deleted.</string>
   <string name="add_filter">addfilter</string>
   <string name="filter_type">filter type</string>
-  <string name="filter_value">filter value</string>
+  <string name="filter_value_text">filter value text</string>
+  <string name="filter_value_double">filter value double</string>
   <string name="update_filter">update_filter</string>
+  <string name="add_filter_msg">The filter \'%1$s\' was added.</string>
+  <string name="update_filter_msg">The filter \'%1$s\' was updated.</string>
 </resources>

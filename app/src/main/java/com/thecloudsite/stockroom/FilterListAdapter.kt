@@ -29,8 +29,8 @@ import kotlinx.android.synthetic.main.filterview_item.view.filterText
 
 class FilterListAdapter internal constructor(
   private val context: Context,
-  private val clickListenerUpdate: (IFilterType) -> Unit,
-  private val clickListenerDelete: (IFilterType) -> Unit
+  private val clickListenerUpdate: (IFilterType, Int) -> Unit,
+  private val clickListenerDelete: (IFilterType, Int) -> Unit
 ) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -39,16 +39,18 @@ class FilterListAdapter internal constructor(
   class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
       filterType: IFilterType,
-      clickListenerUpdate: (IFilterType) -> Unit
+      index: Int,
+      clickListenerUpdate: (IFilterType, Int) -> Unit
     ) {
-      itemView.filterText.setOnClickListener { clickListenerUpdate(filterType) }
+      itemView.filterText.setOnClickListener { clickListenerUpdate(filterType, index) }
     }
 
     fun bindDelete(
       filterType: IFilterType,
-      clickListenerDelete: (IFilterType) -> Unit
+      index: Int,
+      clickListenerDelete: (IFilterType, Int) -> Unit
     ) {
-      itemView.filterDelete.setOnClickListener { clickListenerDelete(filterType) }
+      itemView.filterDelete.setOnClickListener { clickListenerDelete(filterType, index) }
     }
 
     val filterText: TextView = itemView.findViewById(R.id.filterText)
@@ -68,11 +70,10 @@ class FilterListAdapter internal constructor(
   ) {
     val current: IFilterType = filterList[position]
 
-    // Asset items
-    holder.bindUpdate(current, clickListenerUpdate)
-    holder.bindDelete(current, clickListenerDelete)
+    holder.bindUpdate(current, position, clickListenerUpdate)
+    holder.bindDelete(current, position, clickListenerDelete)
 
-    holder.filterText.text = current.desc
+    holder.filterText.text = "${current.desc} ${current.data}"
   }
 
   internal fun setFilter(filterList: List<IFilterType>) {

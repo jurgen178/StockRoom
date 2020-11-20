@@ -55,18 +55,18 @@
           />
 
       <TextView
-          android:id="@+id/textViewFilterValue"
+          android:id="@+id/textViewFilterDoubleType"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/filter_value"
-          app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
+          android:text="@string/filter_value_double"
+          app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutFilterDoubleType"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintHorizontal_bias="0.0"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayoutFilterDoubleType"
           />
       <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/textInputLayout1"
+          android:id="@+id/textInputLayoutFilterDoubleType"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
@@ -75,16 +75,48 @@
           app:layout_constraintTop_toBottomOf="@id/textViewFilterSpinner"
           >
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/filterValue"
+            android:id="@+id/filterDoubleValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/design_default_color_background"
-            android:digits="0123456789.,"
             android:gravity="end"
             android:imeOptions="actionDone"
+            android:digits="0123456789.,"
             android:inputType="numberDecimal"
             android:maxLength="9"
             android:maxLines="1"
+            android:textAlignment="textEnd"
+            />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <TextView
+          android:id="@+id/textViewFilterTextType"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/filter_value_text"
+          app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutFilterTextType"
+          app:layout_constraintEnd_toStartOf="@+id/guideline1"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayoutFilterTextType"
+          />
+      <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/textInputLayoutFilterTextType"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_margin="8dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
+          app:layout_constraintTop_toBottomOf="@id/textInputLayoutFilterDoubleType"
+          >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filterTextValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_background"
+            android:inputType="textShortMessage"
+            android:gravity="end"
+            android:imeOptions="actionDone"
             android:textAlignment="textEnd"
             />
       </com.google.android.material.textfield.TextInputLayout>

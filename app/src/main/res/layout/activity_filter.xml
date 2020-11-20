@@ -17,6 +17,8 @@
       android:src="@drawable/ic_action_add_circle_outline"
       style="@style/asset_item_imagebutton"
       android:contentDescription="@string/add_filter"
+      android:layout_margin="16dp"
+      android:layout_gravity="end"
       />
 
   <androidx.recyclerview.widget.RecyclerView

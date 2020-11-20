@@ -355,10 +355,13 @@ limitations under the License. -->
   <string name="menu_filter">Filter</string>
   <string name="group_filter">Filter</string>
   <string name="delete_filter">Filter entfernen</string>
-  <string name="delete_filter_confirm">Sind Sie sicher, dass Sie den Filter entfernen möchten?</string>
-  <string name="delete_filter_msg">Der Filter wurde entfernt.</string>
+  <string name="delete_filter_confirm">Sind Sie sicher, dass Sie den Filter \'%1$s\' entfernen möchten?</string>
+  <string name="delete_filter_msg">Der Filter \'%1$s\' wurde entfernt.</string>
   <string name="add_filter">addfilter</string>
   <string name="filter_type">filter type</string>
-  <string name="filter_value">filter value</string>
+  <string name="filter_value_text">filter value text</string>
+  <string name="filter_value_double">filter value double</string>
   <string name="update_filter">update_filter</string>
+  <string name="add_filter_msg">Der Filter \'%1$s\' wurde hinzugefügt.</string>
+  <string name="update_filter_msg">Der Filter \'%1$s\' wurde aktualisiert.</string>
 </resources>
