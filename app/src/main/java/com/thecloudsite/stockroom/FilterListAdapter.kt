@@ -73,7 +73,7 @@ class FilterListAdapter internal constructor(
     holder.bindUpdate(current, position, clickListenerUpdate)
     holder.bindDelete(current, position, clickListenerDelete)
 
-    holder.filterText.text = "${current.desc} ${current.data}"
+    holder.filterText.text = "${current.displayName} ${current.data}"
   }
 
   internal fun setFilter(filterList: List<IFilterType>) {

@@ -401,6 +401,11 @@ class MainActivity : AppCompatActivity() {
     } else {
       View.GONE
     }
+
+    val filterdata = sharedPreferences.getString("filterSetting", "")
+    if (filterdata != null) {
+      FilterDataRepository().setSerializedStr(filterdata)
+    }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {

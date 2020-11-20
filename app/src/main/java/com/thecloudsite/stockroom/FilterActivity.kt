@@ -16,8 +16,6 @@
 
 package com.thecloudsite.stockroom
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +30,7 @@ import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
@@ -72,13 +71,9 @@ class FilterActivity : AppCompatActivity() {
     filterRecyclerView.layoutManager = LinearLayoutManager(this)
     filterRecyclerView.adapter = filterAdapter
 
-    val testdata: List<IFilterType> =
-      listOf(FilterTestType(), FilterTestType(), FilterTextType(), FilterDoubleType())
-    filterDataViewModel.setData(testdata)
-
-
-    val s = filterDataViewModel.getSerializedStr()
-
+//    val testdata: List<IFilterType> =
+//      listOf(FilterTestType(), FilterTestType(), FilterTextType(), FilterDoubleType())
+//    filterDataViewModel.setData(testdata)
 
     addFilterButton.setOnClickListener {
       val builder = Builder(this)
@@ -104,7 +99,7 @@ class FilterActivity : AppCompatActivity() {
       textViewFilterDoubleType.visibility = View.GONE
       textInputLayoutFilterDoubleType.visibility = View.GONE
 
-      val spinnerData = getFilterDescriptionList()
+      val spinnerData = getFilterNameList()
       val textViewFilterSpinner = dialogView.findViewById<Spinner>(id.textViewFilterSpinner)
       textViewFilterSpinner.adapter =
         ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
@@ -120,7 +115,7 @@ class FilterActivity : AppCompatActivity() {
           id: Long
         ) {
           val filter = FilterFactory.create(position)
-          when (filter.type) {
+          when (filter.dataType) {
             TextType -> {
               textViewFilterTextType.visibility = View.VISIBLE
               textInputLayoutFilterTextType.visibility = View.VISIBLE
@@ -154,7 +149,7 @@ class FilterActivity : AppCompatActivity() {
             val filterIndex = textViewFilterSpinner.selectedItemPosition
             val filterType = FilterFactory.create(filterIndex)
 
-            filterType.data = when (filterType.type) {
+            filterType.data = when (filterType.dataType) {
               TextType -> {
                 // Add () to avoid cast exception.
                 (filterTextValueView.text).toString()
@@ -173,7 +168,7 @@ class FilterActivity : AppCompatActivity() {
             filterDataViewModel.addData(filterType)
 
             Toast.makeText(
-                this, getString(R.string.add_filter_msg, filterType.desc), Toast.LENGTH_LONG
+                this, getString(R.string.add_filter_msg, filterType.displayName), Toast.LENGTH_LONG
             )
                 .show()
           }
@@ -192,32 +187,15 @@ class FilterActivity : AppCompatActivity() {
     return true
   }
 
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    resultData: Intent?
-  ) {
-    super.onActivityResult(requestCode, resultCode, resultData)
+  override fun onPause() {
+    super.onPause()
 
-    if (resultCode == Activity.RESULT_OK) {
-//      if (requestCode == importListActivityRequestCode) {
-//        resultData?.data?.also { uri ->
-//
-//          // Perform operations on the document using its URI.
-//          stockRoomViewModel.importList(applicationContext, uri)
-//          finish()
-//        }
-//      }
-      /*
-      else
-        if (requestCode == exportListActivityRequestCode) {
-          if (data != null && data.data is Uri) {
-            val exportListUri = data.data!!
-            stockRoomViewModel.exportList(applicationContext, exportListUri)
-            finish()
-          }
-        }
-      */
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+
+    with(sharedPreferences.edit()) {
+      putString("filterSetting", filterDataViewModel.getSerializedStr())
+      commit()
     }
   }
 
@@ -237,11 +215,11 @@ class FilterActivity : AppCompatActivity() {
       dialogView.findViewById<TextView>(R.id.addUpdateFilterHeadline)
     addUpdateFilterHeadlineView.text = getString(R.string.update_filter)
 
-    val spinnerData = getFilterDescriptionList()
+    val spinnerData = getFilterNameList()
     val textViewFilterSpinner = dialogView.findViewById<Spinner>(R.id.textViewFilterSpinner)
     textViewFilterSpinner.adapter =
       ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
-    textViewFilterSpinner.setSelection(spinnerData.indexOf(filterType.desc))
+    textViewFilterSpinner.setSelection(spinnerData.indexOf(filterType.displayName))
 
     textViewFilterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -254,7 +232,7 @@ class FilterActivity : AppCompatActivity() {
         id: Long
       ) {
         val filter = FilterFactory.create(position)
-        if (filter.desc == "") {
+        if (filter.displayName == "") {
 
         }
       }
@@ -289,7 +267,7 @@ class FilterActivity : AppCompatActivity() {
         .setTitle(R.string.delete_filter)
         .setMessage(
             getString(
-                R.string.delete_filter_confirm, filterType.desc
+                R.string.delete_filter_confirm, filterType.displayName
             )
         )
         .setPositiveButton(R.string.delete) { _, _ ->
@@ -297,7 +275,7 @@ class FilterActivity : AppCompatActivity() {
           filterDataViewModel.deleteData(index)
 
           Toast.makeText(
-              this, getString(R.string.delete_filter_msg, filterType.desc), Toast.LENGTH_LONG
+              this, getString(R.string.delete_filter_msg, filterType.displayName), Toast.LENGTH_LONG
           )
               .show()
         }

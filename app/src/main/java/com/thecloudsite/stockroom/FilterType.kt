@@ -17,53 +17,63 @@
 package com.thecloudsite.stockroom
 
 import java.text.NumberFormat
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 enum class FilterTypeEnum(val value: Int) {
-  FilterTestType(0),
-  FilterTextType(1),
-  FilterDoubleType(2),
+  FilterNullType(0),
+  FilterTestType(1),
+  FilterTextType(2),
+  FilterDoubleType(3),
+  FilterLongTermType(4),
 }
 
 enum class FilterDataTypeEnum(val value: Int) {
   NoType(0),
-  TextType(10),
+  TextType(1),
   DoubleType(2),
 }
 
 object FilterFactory {
   fun create(type: FilterTypeEnum): IFilterType =
     when (type) {
-      FilterTypeEnum.FilterTestType -> FilterTestType()
-      FilterTypeEnum.FilterTextType -> FilterTextType()
-      FilterTypeEnum.FilterDoubleType -> FilterDoubleType()
+      FilterTypeEnum.FilterNullType -> FilterNullType()
+      FilterTypeEnum.FilterTestType -> FilterTestType(type)
+      FilterTypeEnum.FilterTextType -> FilterTextType(type)
+      FilterTypeEnum.FilterDoubleType -> FilterDoubleType(type)
+      FilterTypeEnum.FilterLongTermType -> FilterLongTermType(type)
     }
 
-  fun create(index: Int): IFilterType =
-    if (index >= 0 && index < FilterTypeEnum.values().size) {
-      val type: FilterTypeEnum = FilterTypeEnum.values()[index]
-      create(type)
-    } else {
-      FilterNullType()
-    }
-
-  fun create(desc: String): IFilterType {
+  fun create(id: String): IFilterType {
     FilterTypeEnum.values()
         .forEach { filter ->
           val filterType = create(filter)
-          if (desc == filterType.desc) {
+          if (id == filterType.id.toString()) {
             return filterType
           }
         }
     return FilterNullType()
   }
+
+  fun create(index: Int): IFilterType =
+    // + 1, skip NullFilter
+    if (index >= 0 && index + 1 < FilterTypeEnum.values().size) {
+      val type: FilterTypeEnum = FilterTypeEnum.values()[index + 1]
+      create(type)
+    } else {
+      FilterNullType()
+    }
 }
 
-fun getFilterDescriptionList(): List<String> {
+fun getFilterNameList(): List<String> {
   val filterList = mutableListOf<String>()
 
   FilterTypeEnum.values()
+      .filter { type ->
+        type != FilterTypeEnum.FilterNullType
+      }
       .forEach { filter ->
-        filterList.add(FilterFactory.create(filter).desc)
+        filterList.add(FilterFactory.create(filter).displayName)
       }
 
   return filterList
@@ -83,9 +93,10 @@ private fun strToDouble(str: String): Double {
 
 interface IFilterType {
   fun filter(stockItem: StockItem): Boolean
+  val id: FilterTypeEnum
+  val dataType: FilterDataTypeEnum
+  val displayName: String
   var data: String
-  val desc: String
-  val type: FilterDataTypeEnum
 }
 
 class FilterNullType : IFilterType {
@@ -93,42 +104,62 @@ class FilterNullType : IFilterType {
     return true
   }
 
+  override val id = FilterTypeEnum.FilterNullType
+  override val dataType = FilterDataTypeEnum.NoType
+  override val displayName = id.toString()
   override var data = ""
-  override val desc = "null"
-  override val type = FilterDataTypeEnum.NoType
 }
 
-class FilterTestType : IFilterType {
+class FilterTestType(override val id: FilterTypeEnum) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.stockDBdata.symbol.isNotEmpty()
   }
 
+  override val dataType = FilterDataTypeEnum.NoType
+  override val displayName = id.toString()
   override var data = ""
-  override val desc = "test"
-  override val type = FilterDataTypeEnum.NoType
 }
 
-class FilterTextType : IFilterType {
+class FilterTextType(override val id: FilterTypeEnum) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.stockDBdata.symbol.isNotEmpty()
   }
 
+  override val dataType = FilterDataTypeEnum.TextType
+  override val displayName = id.toString()
   override var data = ""
-  override val desc = "Text"
-  override val type = FilterDataTypeEnum.TextType
 }
 
-class FilterDoubleType : IFilterType {
+class FilterDoubleType(override val id: FilterTypeEnum) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.stockDBdata.symbol.isNotEmpty()
+    return stockItem.stockDBdata.symbol.startsWith("A")
   }
 
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = id.toString()
   override var data: String = ""
     get() = field
     set(value) {
       field = value
     }
-  override val desc = "Double"
-  override val type = FilterDataTypeEnum.DoubleType
+}
+
+// Stocks are at least one year old.
+class FilterLongTermType(override val id: FilterTypeEnum) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val secondsNow = LocalDateTime.now()
+        .toEpochSecond(ZoneOffset.UTC)
+    val newestAssetDate = stockItem.assets.maxOf { asset ->
+      asset.date
+    }
+
+    // 365 plus one day
+    val secondsPerYear: Long = 366 * 24 * 60 * 60
+    return secondsNow > newestAssetDate + secondsPerYear
+  }
+
+  override val dataType = FilterDataTypeEnum.NoType
+  override var displayName = id.toString()
+  override var data = ""
 }
 

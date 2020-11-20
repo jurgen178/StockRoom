@@ -149,6 +149,11 @@ object SharedRepository {
   val alerts: LiveData<List<AlertData>>
     get() = alertsData
 
+  var filterActive: Boolean = true
+  val filterLiveData = MutableLiveData<List<IFilterType>>()
+  val filterData: LiveData<List<IFilterType>>
+    get() = filterLiveData
+
   val debugList = ArrayList<DebugData>()
   val debugLiveData = MutableLiveData<List<DebugData>>()
   val debugData: LiveData<List<DebugData>>
@@ -200,6 +205,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<List<StockItem>>
+
+  var filterList: List<IFilterType> = emptyList()
 
   private var portfolioSymbols: HashSet<String> = HashSet()
 
@@ -582,6 +589,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
     }
 
+    allMediatorData.addSource(SharedRepository.filterData) { value ->
+      if (value != null) {
+        // Set filterlist and update.
+        filterList = if (SharedRepository.filterActive) value else emptyList()
+        allMediatorData.value = allData.value?.let { process(it, false) }
+      }
+    }
+
     return allMediatorData
   }
 
@@ -951,8 +966,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private fun filter(
     stockItems: List<StockItem>
   ): List<StockItem> =
-    stockItems.filter { item ->
-      true //item.stockDBdata.symbol.startsWith("A")
+    if (filterList.isEmpty()) {
+      stockItems
+    } else {
+      stockItems.filter { item ->
+        var match = true
+        // All filters must return true to match.
+        for (filterType in filterList) {
+          if (!filterType.filter(item)) {
+            match = false
+            break
+          }
+        }
+        match
+      }
     }
 
   private fun sort(

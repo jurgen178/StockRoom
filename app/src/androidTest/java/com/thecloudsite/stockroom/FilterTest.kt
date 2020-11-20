@@ -33,7 +33,7 @@ class FilterTest {
       return stockItem.stockDBdata.symbol == "s1"
     }
 
-    override val desc = "test1"
+    override val displayName = "test1"
   }
 
   @Test
@@ -57,6 +57,6 @@ class FilterTest {
     )
 
     assertEquals(true, filter1.filter(stockItem1))
-    assertEquals("test1", filter1.desc)
+    assertEquals("test1", filter1.displayName)
   }
 }
