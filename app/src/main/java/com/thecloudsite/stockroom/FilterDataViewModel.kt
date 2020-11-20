@@ -20,12 +20,40 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+
+data class FilterTypeJson
+(
+  var desc: String,
+  val data: String,
+)
 
 class FilterDataRepository {
 
   private val _data = MutableLiveData<List<IFilterType>>()
   val data: LiveData<List<IFilterType>>
     get() = _data
+
+  fun getSerializedStr(): String {
+
+    val filterTypeJsonList = _data.value?.let { filterList ->
+      filterList.map {filterType ->
+        FilterTypeJson(
+            desc = filterType.desc,
+            data = filterType.data
+        )
+      }
+    }
+
+    // Convert to a json string.
+    val gson: Gson = GsonBuilder()
+        //.setPrettyPrinting()
+        .create()
+    val jsonString = gson.toJson(filterTypeJsonList)
+
+    return jsonString
+  }
 
   fun setData(filterList: List<IFilterType>) {
     _data.value = filterList
@@ -52,6 +80,10 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
 
   private val filterDataRepository: FilterDataRepository = FilterDataRepository()
   var data: LiveData<List<IFilterType>>
+
+  fun getSerializedStr(): String {
+    return filterDataRepository.getSerializedStr()
+  }
 
   fun setData(filterList: List<IFilterType>) {
     filterDataRepository.setData(filterList)

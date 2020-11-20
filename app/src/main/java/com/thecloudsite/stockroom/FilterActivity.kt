@@ -76,6 +76,10 @@ class FilterActivity : AppCompatActivity() {
       listOf(FilterTestType(), FilterTestType(), FilterTextType(), FilterDoubleType())
     filterDataViewModel.setData(testdata)
 
+
+    val s = filterDataViewModel.getSerializedStr()
+
+
     addFilterButton.setOnClickListener {
       val builder = Builder(this)
       // Get the layout inflater

@@ -45,6 +45,17 @@ object FilterFactory {
     } else {
       FilterNullType()
     }
+
+  fun create(desc: String): IFilterType {
+    FilterTypeEnum.values()
+        .forEach { filter ->
+          val filterType = create(filter)
+          if (desc == filterType.desc) {
+            return filterType
+          }
+        }
+    return FilterNullType()
+  }
 }
 
 fun getFilterDescriptionList(): List<String> {
