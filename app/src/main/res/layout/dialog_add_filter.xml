@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scrollbars="vertical"
+      tools:layout_editor_absoluteX="-25dp"
+      tools:layout_editor_absoluteY="78dp"
+      >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        >
+
+      <TextView
+          android:id="@+id/addUpdateFilterHeadline"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          style="@style/section_header"
+          />
+
+      <TextView
+          android:id="@+id/textViewFilter"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/filter_type"
+          app:layout_constraintBottom_toBottomOf="@+id/textViewFilterSpinner"
+          app:layout_constraintEnd_toStartOf="@+id/guideline1"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="@+id/textViewFilterSpinner"
+          />
+      <Spinner
+          android:id="@+id/textViewFilterSpinner"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="32dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
+          app:layout_constraintTop_toBottomOf="@+id/addUpdateFilterHeadline"
+          app:layout_constraintTop_toTopOf="@+id/addUpdateFilterHeadline"
+          />
+
+      <TextView
+          android:id="@+id/textViewFilterValue"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/filter_value"
+          app:layout_constraintBottom_toBottomOf="@+id/textInputLayout1"
+          app:layout_constraintEnd_toStartOf="@+id/guideline1"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayout1"
+          />
+      <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/textInputLayout1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_margin="8dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
+          app:layout_constraintTop_toBottomOf="@id/textViewFilterSpinner"
+          >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filterValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_background"
+            android:digits="0123456789.,"
+            android:gravity="end"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:maxLength="9"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <androidx.constraintlayout.widget.Barrier
+          android:id="@+id/guideline1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:barrierDirection="start"
+          />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

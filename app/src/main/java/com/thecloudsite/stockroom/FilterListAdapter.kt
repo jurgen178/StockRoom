@@ -22,7 +22,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.database.Asset
 import kotlinx.android.synthetic.main.filterview_item.view.filterDelete
 import kotlinx.android.synthetic.main.filterview_item.view.filterText
 
@@ -30,31 +29,29 @@ import kotlinx.android.synthetic.main.filterview_item.view.filterText
 
 class FilterListAdapter internal constructor(
   private val context: Context,
-  private val clickListenerUpdate: (Asset) -> Unit,
-  private val clickListenerDelete: (String?, Asset?) -> Unit
+  private val clickListenerUpdate: (IFilterType) -> Unit,
+  private val clickListenerDelete: (IFilterType) -> Unit
 ) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var assetList = mutableListOf<Asset>()
+  private var filterList = mutableListOf<IFilterType>()
 
   class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindUpdate(
-      asset: Asset,
-      clickListenerUpdate: (Asset) -> Unit
+      filterType: IFilterType,
+      clickListenerUpdate: (IFilterType) -> Unit
     ) {
-      itemView.filterText.setOnClickListener { clickListenerUpdate(asset) }
+      itemView.filterText.setOnClickListener { clickListenerUpdate(filterType) }
     }
 
     fun bindDelete(
-      symbol: String?,
-      asset: Asset?,
-      clickListenerDelete: (String?, Asset?) -> Unit
+      filterType: IFilterType,
+      clickListenerDelete: (IFilterType) -> Unit
     ) {
-      itemView.filterDelete.setOnClickListener { clickListenerDelete(symbol, asset) }
+      itemView.filterDelete.setOnClickListener { clickListenerDelete(filterType) }
     }
 
     val filterText: TextView = itemView.findViewById(R.id.filterText)
-    val filterDelete: TextView = itemView.findViewById(R.id.filterDelete)
   }
 
   override fun onCreateViewHolder(
@@ -69,20 +66,27 @@ class FilterListAdapter internal constructor(
     holder: FilterViewHolder,
     position: Int
   ) {
-    val current: Asset = assetList[position]
+    val current: IFilterType = filterList[position]
 
     // Asset items
     holder.bindUpdate(current, clickListenerUpdate)
-    holder.bindDelete(null, current, clickListenerDelete)
+    holder.bindDelete(current, clickListenerDelete)
 
-    holder.filterText.text = "test"
+    holder.filterText.text = current.desc
   }
 
-  internal fun updateAssets(assets: List<Asset>) {
-    assetList = assets as MutableList<Asset>
+  internal fun setFilter(filterList: List<IFilterType>) {
+    this.filterList.clear()
+    this.filterList.addAll(filterList)
 
     notifyDataSetChanged()
   }
 
-  override fun getItemCount() = assetList.size
+  internal fun addFilter(filter: IFilterType) {
+    this.filterList.add(filter)
+
+    notifyDataSetChanged()
+  }
+
+  override fun getItemCount() = filterList.size
 }

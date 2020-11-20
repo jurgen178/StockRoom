@@ -20,19 +20,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.DatePicker
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.thecloudsite.stockroom.database.Asset
+import kotlinx.android.synthetic.main.activity_filter.addFilterButton
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import kotlin.math.absoluteValue
 
 class FilterActivity : AppCompatActivity() {
 
@@ -42,16 +38,58 @@ class FilterActivity : AppCompatActivity() {
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     val filterClickListenerUpdate =
-      { asset: Asset -> filterItemUpdateClicked(asset) }
+      { filterType: IFilterType -> filterItemUpdateClicked(filterType) }
     val filterClickListenerDelete =
-      { symbol: String?, asset: Asset? -> filterItemDeleteClicked(symbol, asset) }
+      { filterType: IFilterType -> filterItemDeleteClicked(filterType) }
     val filterAdapter =
       FilterListAdapter(this, filterClickListenerUpdate, filterClickListenerDelete)
 
     filterRecyclerView.layoutManager = LinearLayoutManager(this)
     filterRecyclerView.adapter = filterAdapter
 
-    filterAdapter.updateAssets(listOf(Asset(symbol = "a", price = 1.0, quantity = 2.0)))
+    filterAdapter.setFilter(listOf(FilterTestType()))
+
+    addFilterButton.setOnClickListener {
+      val builder = AlertDialog.Builder(this)
+      // Get the layout inflater
+      val inflater = LayoutInflater.from(this)
+
+      // Inflate and set the layout for the dialog
+      // Pass null as the parent view because its going in the dialog layout
+      val dialogView = inflater.inflate(R.layout.dialog_add_filter, null)
+      val addUpdateFilterHeadlineView =
+        dialogView.findViewById<TextView>(R.id.addUpdateFilterHeadline)
+      addUpdateFilterHeadlineView.text = getString(R.string.add_filter)
+
+      val spinnerData = getFilterDescriptionList()
+      val textViewFilterSpinner = dialogView.findViewById<Spinner>(R.id.textViewFilterSpinner)
+      textViewFilterSpinner.adapter =
+        ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
+
+      val filterValueView = dialogView.findViewById<TextView>(R.id.filterValue)
+
+      builder.setView(dialogView)
+          // Add action buttons
+          .setPositiveButton(
+              R.string.add
+          ) { _, _ ->
+            // Add () to avoid cast exception.
+            val filterValueText = (filterValueView.text).toString()
+                .trim()
+
+            filterAdapter.addFilter(FilterTestType())
+
+            Toast.makeText(this, "pluralstr", Toast.LENGTH_LONG)
+                .show()
+          }
+          .setNegativeButton(
+              R.string.cancel
+          ) { _, _ ->
+          }
+      builder
+          .create()
+          .show()
+    }
   }
 
   override fun onSupportNavigateUp(): Boolean {
@@ -88,145 +126,33 @@ class FilterActivity : AppCompatActivity() {
     }
   }
 
-  private fun filterItemUpdateClicked(asset: Asset) {
+  private fun filterItemUpdateClicked(filterType: IFilterType) {
     val builder = AlertDialog.Builder(this)
     // Get the layout inflater
     val inflater = LayoutInflater.from(this)
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_asset, null)
+    val dialogView = inflater.inflate(R.layout.dialog_add_filter, null)
 
-    val addUpdateQuantityHeadlineView =
-      dialogView.findViewById<TextView>(R.id.addUpdateQuantityHeadline)
-    addUpdateQuantityHeadlineView.text = getString(R.string.update_asset)
-    val addQuantityView = dialogView.findViewById<TextView>(R.id.addQuantity)
-    addQuantityView.text = DecimalFormat("0.######").format(asset.quantity.absoluteValue)
-//    if (asset.shares < 0) {
-//      addSharesView.inputType = TYPE_CLASS_NUMBER or
-//          TYPE_NUMBER_FLAG_DECIMAL or
-//          TYPE_NUMBER_FLAG_SIGNED
-//    }
-
-    val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
-    addPriceView.text = DecimalFormat("0.00####").format(asset.price)
-
-    val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
-    addNoteView.text = asset.note
-
-    val localDateTime = if (asset.date == 0L) {
-      LocalDateTime.now()
-    } else {
-      LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
-    }
-    val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
-    // month is starting from zero
-    datePickerAssetDateView.updateDate(
-        localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
-    )
+    val addUpdateFilterHeadlineView =
+      dialogView.findViewById<TextView>(R.id.addUpdateFilterHeadline)
+    addUpdateFilterHeadlineView.text = getString(R.string.update_filter)
+    val filterValueView = dialogView.findViewById<TextView>(R.id.filterValue)
+    filterValueView.text = "test123"
 
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val quantityText = (addQuantityView.text).toString()
+          val filterValueText = (filterValueView.text).toString()
               .trim()
-          var quantity = 0.0
 
-          try {
-            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-            quantity = numberFormat.parse(quantityText)!!
-                .toDouble()
-            if (asset.quantity < 0.0) {
-              quantity = -quantity
-            }
-          } catch (e: Exception) {
-            Toast.makeText(
-                this, getString(R.string.asset_share_not_empty), Toast.LENGTH_LONG
-            )
-                .show()
-            return@setPositiveButton
-          }
-
-          val priceText = (addPriceView.text).toString()
-              .trim()
-          var price = 0.0
-          try {
-            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-            price = numberFormat.parse(priceText)!!
-                .toDouble()
-          } catch (e: Exception) {
-            Toast.makeText(
-                this, getString(R.string.asset_price_not_empty), Toast.LENGTH_LONG
-            )
-                .show()
-            return@setPositiveButton
-          }
-          if (price <= 0.0) {
-            Toast.makeText(
-                this, getString(R.string.price_not_zero), Toast.LENGTH_LONG
-            )
-                .show()
-            return@setPositiveButton
-          }
-
-          // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-          val localDateTimeNew: LocalDateTime = LocalDateTime.of(
-              datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
-              datePickerAssetDateView.dayOfMonth, 0, 0
+          Toast.makeText(
+              this, "pluralstr", Toast.LENGTH_LONG
           )
-          val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
-
-          val noteText = (addNoteView.text).toString()
-              .trim()
-
-          val assetNew =
-            Asset(
-                symbol = "symbol", quantity = quantity, price = price, date = date, note = noteText
-            )
-
-          if (asset.quantity != assetNew.quantity
-              || asset.price != assetNew.price
-              || asset.date != assetNew.date
-              || asset.note != assetNew.note
-          ) {
-            // Each asset has an id. Delete the asset with that id and then add assetNew.
-            //stockRoomViewModel.updateAsset2(asset, assetNew)
-
-            var pluralstr: String = ""
-            val quantityAbs = quantity.absoluteValue
-            val count: Int = when {
-              quantityAbs == 1.0 -> {
-                1
-              }
-              quantityAbs > 1.0 -> {
-                quantityAbs.toInt() + 1
-              }
-              else -> {
-                0
-              }
-            }
-
-            pluralstr = if (asset.quantity > 0.0) {
-              resources.getQuantityString(
-                  R.plurals.asset_updated, count, DecimalFormat("0.####").format(quantityAbs),
-                  DecimalFormat("0.00##").format(price)
-              )
-            } else {
-              resources.getQuantityString(
-                  R.plurals.asset_removed_updated, count,
-                  DecimalFormat("0.####").format(quantityAbs)
-              )
-            }
-
-            Toast.makeText(
-                this, pluralstr, Toast.LENGTH_LONG
-            )
-                .show()
-          }
-
-          // hideSoftInputFromWindow()
+              .show()
         }
         .setNegativeButton(
             R.string.cancel
@@ -239,8 +165,7 @@ class FilterActivity : AppCompatActivity() {
   }
 
   private fun filterItemDeleteClicked(
-    symbol: String?,
-    asset: Asset?
+    filterType: IFilterType
   ) {
     android.app.AlertDialog.Builder(this)
         .setTitle(R.string.delete_filter)

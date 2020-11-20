@@ -12,6 +12,13 @@
       style="@style/section_header"
       />
 
+  <ImageButton
+      android:id="@+id/addFilterButton"
+      android:src="@drawable/ic_action_add_circle_outline"
+      style="@style/asset_item_imagebutton"
+      android:contentDescription="@string/add_filter"
+      />
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/filterRecyclerView"
       android:layout_width="match_parent"

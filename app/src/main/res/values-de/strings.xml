@@ -357,4 +357,8 @@ limitations under the License. -->
   <string name="delete_filter">Filter entfernen</string>
   <string name="delete_filter_confirm">Sind Sie sicher, dass Sie den Filter entfernen möchten?</string>
   <string name="delete_filter_msg">Der Filter wurde entfernt.</string>
+  <string name="add_filter">addfilter</string>
+  <string name="filter_type">filter type</string>
+  <string name="filter_value">filter value</string>
+  <string name="update_filter">update_filter</string>
 </resources>
