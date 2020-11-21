@@ -30,6 +30,7 @@ enum class FilterTypeEnum(val value: Int) {
   FilterLongTermType(4),
   FilterPercentageChangeGreaterThanType(5),
   FilterPercentageChangeLessThanType(6),
+  FilterSymbolContainsType(7),
 }
 
 enum class FilterDataTypeEnum(val value: Int) {
@@ -55,6 +56,7 @@ object FilterFactory {
       FilterTypeEnum.FilterPercentageChangeLessThanType -> FilterPercentageChangeLessThanType(
           type, context
       )
+      FilterTypeEnum.FilterSymbolContainsType -> FilterSymbolContainsType(type, context)
     }
 
   fun create(
@@ -205,7 +207,7 @@ class FilterPercentageChangeGreaterThanType(
   override val dataType = FilterDataTypeEnum.DoubleType
   override var displayName = typeId.toString()
   override var data: String = ""
-    get() = field
+    get() = DecimalFormat("0.00").format(change)
     set(value) {
       field = value
       change = strToDouble(value)
@@ -232,5 +234,19 @@ class FilterPercentageChangeLessThanType(
       field = value
       change = strToDouble(value)
     }
+  override var desc = ""
+}
+
+class FilterSymbolContainsType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
+  }
+
+  override val dataType = FilterDataTypeEnum.TextType
+  override val displayName = typeId.toString()
+  override var data = ""
   override var desc = ""
 }

@@ -50,6 +50,7 @@ import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
+import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_main.main_tab_layout
 import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
 import kotlinx.android.synthetic.main.activity_main.viewpager
@@ -406,6 +407,8 @@ class MainActivity : AppCompatActivity() {
     if (filterdata != null) {
       FilterDataRepository(applicationContext).setSerializedStr(filterdata)
     }
+
+    SharedRepository.filterActive = sharedPreferences.getBoolean("filterEnabled", false)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {

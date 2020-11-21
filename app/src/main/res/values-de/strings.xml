@@ -356,11 +356,11 @@ limitations under the License. -->
   <string name="delete_filter">Filter entfernen</string>
   <string name="delete_filter_confirm">Sind Sie sicher, dass Sie den Filter \'%1$s\' entfernen möchten?</string>
   <string name="delete_filter_msg">Der Filter \'%1$s\' wurde entfernt.</string>
-  <string name="add_filter">addfilter</string>
-  <string name="filter_type">filter type</string>
-  <string name="filter_value_text">filter value text</string>
-  <string name="filter_value_double">filter value double</string>
-  <string name="update_filter">update_filter</string>
+  <string name="add_filter">Filter hinzufügen</string>
+  <string name="filter_type">Filtertyp</string>
+  <string name="filter_value_text">Text</string>
+  <string name="filter_value_double">Zahlenwert</string>
+  <string name="update_filter">Filter aktualisieren</string>
   <string name="add_filter_msg">Der Filter \'%1$s\' wurde hinzugefügt.</string>
   <string name="update_filter_msg">Der Filter \'%1$s\' wurde aktualisiert.</string>
   <string name="filter_longterm_name">filter_longterm_name1</string>

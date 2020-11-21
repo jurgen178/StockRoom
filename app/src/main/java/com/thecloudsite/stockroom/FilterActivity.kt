@@ -72,15 +72,16 @@ class FilterActivity : AppCompatActivity() {
     filterRecyclerView.layoutManager = LinearLayoutManager(this)
     filterRecyclerView.adapter = filterAdapter
 
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    filterEnableSwitch.isChecked = sharedPreferences.getBoolean("filterEnabled", false)
+    filterEnableSwitch.isChecked = SharedRepository.filterActive
     enableDisable(filterEnableSwitch.isChecked)
 
     filterEnableSwitch.setOnCheckedChangeListener { _, isChecked ->
 
       enableDisable(isChecked)
+      SharedRepository.filterActive = isChecked
 
+      val sharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
       sharedPreferences
           .edit()
           .putBoolean("filterEnabled", isChecked)

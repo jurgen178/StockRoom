@@ -80,7 +80,7 @@
             android:background="@color/design_default_color_background"
             android:gravity="end"
             android:imeOptions="actionDone"
-            android:digits="0123456789.,"
+            android:digits="-0123456789.,"
             android:inputType="numberDecimal"
             android:maxLength="9"
             android:maxLines="1"
