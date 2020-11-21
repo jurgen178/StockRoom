@@ -48,10 +48,11 @@
             android:checkable="true"
             android:title="@string/sort_group" />
       </group>
-      <item
-          android:id="@+id/menu_filter"
-          android:title="@string/menu_filter" />
       <group android:id="@+id/filter" >
+        <item
+            android:id="@+id/menu_filter"
+            android:checkable="true"
+            android:title="@string/menu_filter" />
       </group>
       <!--
             <item

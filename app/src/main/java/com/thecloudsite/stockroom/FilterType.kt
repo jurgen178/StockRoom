@@ -233,14 +233,14 @@ class FilterPercentageChangeGreaterThanType(
   var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_percentagechangegreater_name)
+  override var desc = context.getString(R.string.filter_percentagechangegreater_desc)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
     }
-  override var desc = ""
 }
 
 // Change percentage less than
@@ -256,7 +256,8 @@ class FilterPercentageChangeLessThanType(
   var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_percentagechangeless_name)
+  override var desc = context.getString(R.string.filter_percentagechangeless_desc)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -264,7 +265,6 @@ class FilterPercentageChangeLessThanType(
       filterValue = strToDouble(value)
       filterPercentageValue = filterValue / 100
     }
-  override var desc = ""
 }
 
 class FilterSymbolContainsType(
@@ -276,9 +276,9 @@ class FilterSymbolContainsType(
   }
 
   override val dataType = FilterDataTypeEnum.TextType
-  override val displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_symbolcontainstype_name)
+  override var desc = context.getString(R.string.filter_symbolcontainstype_desc)
   override var data = ""
-  override var desc = ""
 }
 
 class FilterNoteContainsType(
@@ -290,9 +290,9 @@ class FilterNoteContainsType(
   }
 
   override val dataType = FilterDataTypeEnum.TextType
-  override val displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_notecontainstype_name)
+  override var desc = context.getString(R.string.filter_notecontainstype_desc)
   override var data = ""
-  override var desc = ""
 }
 
 // Asset greater than
@@ -313,14 +313,14 @@ class FilterAssetGreaterThanType(
   var filterValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_assetgreater_name)
+  override var desc = context.getString(R.string.filter_assetgreater_desc)
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
     }
-  override var desc = ""
 }
 
 // Asset less than
@@ -341,14 +341,14 @@ class FilterAssetLessThanType(
   var filterValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_assetless_name)
+  override var desc = context.getString(R.string.filter_assetless_desc)
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
     }
-  override var desc = ""
 }
 
 // Profit greater than
@@ -369,14 +369,14 @@ class FilterProfitGreaterThanType(
   var filterValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_profitgreater_name)
+  override var desc = context.getString(R.string.filter_profitgreater_desc)
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
     }
-  override var desc = ""
 }
 
 // Profit less than
@@ -397,14 +397,14 @@ class FilterProfitLessThanType(
   var filterValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_profitless_name)
+  override var desc = context.getString(R.string.filter_profitless_desc)
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
     }
-  override var desc = ""
 }
 
 // Profit Percentage greater than
@@ -427,7 +427,8 @@ class FilterProfitPercentageGreaterThanType(
   var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_profitpercentagegreater_name)
+  override var desc = context.getString(R.string.filter_profitpercentagegreater_desc)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -435,7 +436,6 @@ class FilterProfitPercentageGreaterThanType(
       filterValue = strToDouble(value)
       filterPercentageValue = filterValue / 100
     }
-  override var desc = ""
 }
 
 // Profit Percentage less than
@@ -458,7 +458,8 @@ class FilterProfitPercentageLessThanType(
   var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_profitpercentageless_name)
+  override var desc = context.getString(R.string.filter_profitpercentageless_desc)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -466,7 +467,6 @@ class FilterProfitPercentageLessThanType(
       filterValue = strToDouble(value)
       filterPercentageValue = filterValue / 100
     }
-  override var desc = ""
 }
 
 // Dividend Percentage greater than
@@ -492,7 +492,8 @@ class FilterDividendPercentageGreaterThanType(
   var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_dividendpercentagegreater_name)
+  override var desc = context.getString(R.string.filter_dividendpercentagegreater_desc)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -500,7 +501,6 @@ class FilterDividendPercentageGreaterThanType(
       filterValue = strToDouble(value)
       filterPercentageValue = filterValue / 100
     }
-  override var desc = ""
 }
 
 // Dividend Percentage less than
@@ -526,7 +526,8 @@ class FilterDividendPercentageLessThanType(
   var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = typeId.toString()
+  override var displayName = context.getString(R.string.filter_dividendpercentageless_name)
+  override var desc = context.getString(R.string.filter_dividendpercentageless_desc)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -534,5 +535,4 @@ class FilterDividendPercentageLessThanType(
       filterValue = strToDouble(value)
       filterPercentageValue = filterValue / 100
     }
-  override var desc = ""
 }

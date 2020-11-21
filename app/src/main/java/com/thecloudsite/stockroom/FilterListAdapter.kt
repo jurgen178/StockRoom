@@ -17,13 +17,17 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.bold
+import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.filterview_item.view.filterDelete
 import kotlinx.android.synthetic.main.filterview_item.view.filterText
+import java.text.DecimalFormat
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -54,6 +58,7 @@ class FilterListAdapter internal constructor(
     }
 
     val filterText: TextView = itemView.findViewById(R.id.filterText)
+    val filterDesc: TextView = itemView.findViewById(R.id.filterDesc)
   }
 
   override fun onCreateViewHolder(
@@ -73,7 +78,13 @@ class FilterListAdapter internal constructor(
     holder.bindUpdate(current, position, clickListenerUpdate)
     holder.bindDelete(current, position, clickListenerDelete)
 
-    holder.filterText.text = "${current.displayName} ${current.data}"
+    holder.filterText.text = SpannableStringBuilder()
+        .append(current.displayName)
+        .append(" ")
+        .bold {
+          append(current.data)
+        }
+    holder.filterDesc.text = current.desc
   }
 
   internal fun setFilter(filterList: List<IFilterType>) {

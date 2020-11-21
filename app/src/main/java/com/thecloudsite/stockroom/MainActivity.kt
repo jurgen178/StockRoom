@@ -252,6 +252,11 @@ class MainActivity : AppCompatActivity() {
     )
 
     // Update the menu when portfolio data changed.
+    SharedRepository.filterActiveLiveData.observe(this, Observer {
+      invalidateOptionsMenu()
+    })
+
+    // Update the menu when portfolio data changed.
     SharedRepository.portfoliosLiveData.observe(this, Observer {
       invalidateOptionsMenu()
     })
@@ -408,7 +413,7 @@ class MainActivity : AppCompatActivity() {
       FilterDataRepository(applicationContext).setSerializedStr(filterdata)
     }
 
-    SharedRepository.filterActive = sharedPreferences.getBoolean("filterEnabled", false)
+    SharedRepository.filterActive.value = sharedPreferences.getBoolean("filterEnabled", false)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -469,20 +474,22 @@ class MainActivity : AppCompatActivity() {
     val portfolioMenuItem = menu?.findItem(R.id.menu_portfolio)
     portfolioMenuItem?.isVisible = false
 
-    if (SharedRepository.portfolios.value != null) {
+    val sortMode = stockRoomViewModel.sortMode()
+    menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked =
+      sortMode == SortMode.ByChangePercentage
+    menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
+    menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
+    menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
+    menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
+      sortMode == SortMode.ByProfitPercentage
+    menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
+      sortMode == SortMode.ByDividendPercentage
+    menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
+    //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 
-      val sortMode = stockRoomViewModel.sortMode()
-      menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked =
-        sortMode == SortMode.ByChangePercentage
-      menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
-      menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
-      menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
-      menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
-        sortMode == SortMode.ByProfitPercentage
-      menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
-        sortMode == SortMode.ByDividendPercentage
-      menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
-      //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
+    menu?.findItem(R.id.menu_filter)?.isChecked = SharedRepository.filterActive.value!!
+
+    if (SharedRepository.portfolios.value != null) {
 
       val portfolios = SharedRepository.portfolios.value!!
       if (portfolios.size > 1) {

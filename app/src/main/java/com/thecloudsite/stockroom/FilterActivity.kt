@@ -72,13 +72,20 @@ class FilterActivity : AppCompatActivity() {
     filterRecyclerView.layoutManager = LinearLayoutManager(this)
     filterRecyclerView.adapter = filterAdapter
 
-    filterEnableSwitch.isChecked = SharedRepository.filterActive
-    enableDisable(filterEnableSwitch.isChecked)
-
     filterEnableSwitch.setOnCheckedChangeListener { _, isChecked ->
+      SharedRepository.filterActive.value = isChecked
+    }
 
-      enableDisable(isChecked)
-      SharedRepository.filterActive = isChecked
+    SharedRepository.filterActiveLiveData.observe(this, Observer { isChecked ->
+      filterEnableSwitch.isChecked = isChecked
+
+      if (isChecked) {
+        filterRecyclerView.visibility = View.VISIBLE
+        addFilterButton.visibility = View.VISIBLE
+      } else {
+        filterRecyclerView.visibility = View.GONE
+        addFilterButton.visibility = View.GONE
+      }
 
       val sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
@@ -86,7 +93,7 @@ class FilterActivity : AppCompatActivity() {
           .edit()
           .putBoolean("filterEnabled", isChecked)
           .apply()
-    }
+    })
 
 //    val testdata: List<IFilterType> =
 //      listOf(FilterTestType(), FilterTestType(), FilterTextType(), FilterDoubleType())
@@ -111,16 +118,6 @@ class FilterActivity : AppCompatActivity() {
     with(sharedPreferences.edit()) {
       putString("filterSetting", filterDataViewModel.getSerializedStr())
       commit()
-    }
-  }
-
-  private fun enableDisable(enabled: Boolean) {
-    if (enabled) {
-      filterRecyclerView.visibility = View.VISIBLE
-      addFilterButton.visibility = View.VISIBLE
-    } else {
-      filterRecyclerView.visibility = View.GONE
-      addFilterButton.visibility = View.GONE
     }
   }
 
@@ -248,7 +245,7 @@ class FilterActivity : AppCompatActivity() {
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
-            string.add
+            if (filterType.typeId != FilterTypeEnum.FilterNullType) string.update else string.add
         ) { _, _ ->
           val filterIndex = textViewFilterSpinner.selectedItemPosition
           val newFilterType = FilterFactory.create(filterIndex, applicationContext)
