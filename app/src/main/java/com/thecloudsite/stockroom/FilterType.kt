@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import com.thecloudsite.stockroom.utils.getAssets
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -31,6 +32,15 @@ enum class FilterTypeEnum(val value: Int) {
   FilterPercentageChangeGreaterThanType(5),
   FilterPercentageChangeLessThanType(6),
   FilterSymbolContainsType(7),
+  FilterNoteContainsType(8),
+  FilterAssetGreaterThanType(9),
+  FilterAssetLessThanType(10),
+  FilterProfitGreaterThanType(11),
+  FilterProfitLessThanType(12),
+  FilterProfitPercentageGreaterThanType(13),
+  FilterProfitPercentageLessThanType(14),
+  FilterDividendPercentageGreaterThanType(15),
+  FilterDividendPercentageLessThanType(16),
 }
 
 enum class FilterDataTypeEnum(val value: Int) {
@@ -57,6 +67,23 @@ object FilterFactory {
           type, context
       )
       FilterTypeEnum.FilterSymbolContainsType -> FilterSymbolContainsType(type, context)
+      FilterTypeEnum.FilterNoteContainsType -> FilterNoteContainsType(type, context)
+      FilterTypeEnum.FilterAssetGreaterThanType -> FilterAssetGreaterThanType(type, context)
+      FilterTypeEnum.FilterAssetLessThanType -> FilterAssetLessThanType(type, context)
+      FilterTypeEnum.FilterProfitGreaterThanType -> FilterProfitGreaterThanType(type, context)
+      FilterTypeEnum.FilterProfitLessThanType -> FilterProfitLessThanType(type, context)
+      FilterTypeEnum.FilterProfitPercentageGreaterThanType -> FilterProfitPercentageGreaterThanType(
+          type, context
+      )
+      FilterTypeEnum.FilterProfitPercentageLessThanType -> FilterProfitPercentageLessThanType(
+          type, context
+      )
+      FilterTypeEnum.FilterDividendPercentageGreaterThanType -> FilterDividendPercentageGreaterThanType(
+          type, context
+      )
+      FilterTypeEnum.FilterDividendPercentageLessThanType -> FilterDividendPercentageLessThanType(
+          type, context
+      )
     }
 
   fun create(
@@ -248,5 +275,253 @@ class FilterSymbolContainsType(
   override val dataType = FilterDataTypeEnum.TextType
   override val displayName = typeId.toString()
   override var data = ""
+  override var desc = ""
+}
+
+class FilterNoteContainsType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return stockItem.stockDBdata.note.contains(data, ignoreCase = true)
+  }
+
+  override val dataType = FilterDataTypeEnum.TextType
+  override val displayName = typeId.toString()
+  override var data = ""
+  override var desc = ""
+}
+
+// Asset greater than
+class FilterAssetGreaterThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
+      totalQuantity * stockItem.onlineMarketData.marketPrice
+    } else {
+      totalPrice
+    }
+    return asset > filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Asset less than
+class FilterAssetLessThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
+      totalQuantity * stockItem.onlineMarketData.marketPrice
+    } else {
+      totalPrice
+    }
+    return asset < filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Profit greater than
+class FilterProfitGreaterThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
+      totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice
+    } else {
+      totalPrice
+    }
+    return profit > filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Profit less than
+class FilterProfitLessThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
+      totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice
+    } else {
+      totalPrice
+    }
+    return profit < filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Profit Percentage greater than
+class FilterProfitPercentageGreaterThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val profitPercentage =
+      if (stockItem.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
+        (totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice) / totalPrice
+      } else {
+        totalPrice
+      }
+    return profitPercentage > filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Profit Percentage less than
+class FilterProfitPercentageLessThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val profitPercentage =
+      if (stockItem.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
+        (totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice) / totalPrice
+      } else {
+        totalPrice
+      }
+    return profitPercentage < filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Dividend Percentage greater than
+class FilterDividendPercentageGreaterThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val dividendPercentage =
+      if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
+        if (stockItem.onlineMarketData.marketPrice > 0.0) {
+          stockItem.stockDBdata.annualDividendRate / stockItem.onlineMarketData.marketPrice
+        } else {
+          0.0
+        }
+      } else {
+        stockItem.onlineMarketData.annualDividendYield
+      }
+    return dividendPercentage > filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Dividend Percentage less than
+class FilterDividendPercentageLessThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val dividendPercentage =
+      if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
+        if (stockItem.onlineMarketData.marketPrice > 0.0) {
+          stockItem.stockDBdata.annualDividendRate / stockItem.onlineMarketData.marketPrice
+        } else {
+          0.0
+        }
+      } else {
+        stockItem.onlineMarketData.annualDividendYield
+      }
+    return dividendPercentage < filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
   override var desc = ""
 }

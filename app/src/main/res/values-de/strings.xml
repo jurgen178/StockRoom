@@ -353,6 +353,7 @@ limitations under the License. -->
   <string name="tab_headlines">Auswahlüberschriften</string>
   <string name="tab_headlines_desc">Zeigt Überschriften zur schnelleren Auswahl der Darstellungen an.</string>
   <string name="menu_filter">Filter</string>
+  <string name="filter_enable_switch">Filter verwenden</string>
   <string name="delete_filter">Filter entfernen</string>
   <string name="delete_filter_confirm">Sind Sie sicher, dass Sie den Filter \'%1$s\' entfernen möchten?</string>
   <string name="delete_filter_msg">Der Filter \'%1$s\' wurde entfernt.</string>
@@ -365,5 +366,4 @@ limitations under the License. -->
   <string name="update_filter_msg">Der Filter \'%1$s\' wurde aktualisiert.</string>
   <string name="filter_longterm_name">filter_longterm_name1</string>
   <string name="filter_longterm_desc">filter_longterm_desc1</string>
-  <string name="filter_enable_switch">filter aktiv</string>
 </resources>
