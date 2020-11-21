@@ -34,36 +34,35 @@
 
       <TextView
           android:id="@+id/textViewFilter"
-          android:layout_width="wrap_content"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:text="@string/filter_type"
-          app:layout_constraintBottom_toBottomOf="@+id/textViewFilterSpinner"
+          app:layout_constraintTop_toTopOf="@+id/textViewFilterSpinner"
+          app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintHorizontal_bias="0.0"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="@+id/textViewFilterSpinner"
+          app:layout_constraintBottom_toBottomOf="@+id/textViewFilterSpinner"
           />
       <Spinner
           android:id="@+id/textViewFilterSpinner"
-          android:layout_width="wrap_content"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_margin="32dp"
+          android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toEndOf="@+id/guideline1"
           app:layout_constraintTop_toBottomOf="@+id/addUpdateFilterHeadline"
-          app:layout_constraintTop_toTopOf="@+id/addUpdateFilterHeadline"
           />
 
       <TextView
           android:id="@+id/textViewFilterDoubleType"
-          android:layout_width="wrap_content"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:text="@string/filter_value_double"
-          app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutFilterDoubleType"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayoutFilterDoubleType"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintHorizontal_bias="0.0"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="@+id/textInputLayoutFilterDoubleType"
+          app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutFilterDoubleType"
           />
       <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/textInputLayoutFilterDoubleType"
@@ -91,7 +90,7 @@
 
       <TextView
           android:id="@+id/textViewFilterTextType"
-          android:layout_width="wrap_content"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:text="@string/filter_value_text"
           app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutFilterTextType"
@@ -121,12 +120,14 @@
             />
       </com.google.android.material.textfield.TextInputLayout>
 
-      <androidx.constraintlayout.widget.Barrier
+      <androidx.constraintlayout.widget.Guideline
           android:id="@+id/guideline1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          app:barrierDirection="start"
+          android:orientation="vertical"
+          app:layout_constraintGuide_percent="0.3"
           />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
   </androidx.core.widget.NestedScrollView>

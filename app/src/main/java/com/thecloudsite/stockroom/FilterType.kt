@@ -16,6 +16,8 @@
 
 package com.thecloudsite.stockroom
 
+import android.content.Context
+import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -26,6 +28,8 @@ enum class FilterTypeEnum(val value: Int) {
   FilterTextType(2),
   FilterDoubleType(3),
   FilterLongTermType(4),
+  FilterPercentageChangeGreaterThanType(5),
+  FilterPercentageChangeLessThanType(6),
 }
 
 enum class FilterDataTypeEnum(val value: Int) {
@@ -35,37 +39,52 @@ enum class FilterDataTypeEnum(val value: Int) {
 }
 
 object FilterFactory {
-  fun create(type: FilterTypeEnum): IFilterType =
+  fun create(
+    type: FilterTypeEnum,
+    context: Context
+  ): IFilterType =
     when (type) {
       FilterTypeEnum.FilterNullType -> FilterNullType()
       FilterTypeEnum.FilterTestType -> FilterTestType(type)
       FilterTypeEnum.FilterTextType -> FilterTextType(type)
       FilterTypeEnum.FilterDoubleType -> FilterDoubleType(type)
-      FilterTypeEnum.FilterLongTermType -> FilterLongTermType(type)
+      FilterTypeEnum.FilterLongTermType -> FilterLongTermType(type, context)
+      FilterTypeEnum.FilterPercentageChangeGreaterThanType -> FilterPercentageChangeGreaterThanType(
+          type, context
+      )
+      FilterTypeEnum.FilterPercentageChangeLessThanType -> FilterPercentageChangeLessThanType(
+          type, context
+      )
     }
 
-  fun create(id: String): IFilterType {
+  fun create(
+    id: String,
+    context: Context
+  ): IFilterType {
     FilterTypeEnum.values()
         .forEach { filter ->
-          val filterType = create(filter)
-          if (id == filterType.id.toString()) {
+          val filterType = create(filter, context)
+          if (id == filterType.typeId.toString()) {
             return filterType
           }
         }
     return FilterNullType()
   }
 
-  fun create(index: Int): IFilterType =
+  fun create(
+    index: Int,
+    context: Context
+  ): IFilterType =
     // + 1, skip NullFilter
     if (index >= 0 && index + 1 < FilterTypeEnum.values().size) {
       val type: FilterTypeEnum = FilterTypeEnum.values()[index + 1]
-      create(type)
+      create(type, context)
     } else {
       FilterNullType()
     }
 }
 
-fun getFilterNameList(): List<String> {
+fun getFilterNameList(context: Context): List<String> {
   val filterList = mutableListOf<String>()
 
   FilterTypeEnum.values()
@@ -73,7 +92,7 @@ fun getFilterNameList(): List<String> {
         type != FilterTypeEnum.FilterNullType
       }
       .forEach { filter ->
-        filterList.add(FilterFactory.create(filter).displayName)
+        filterList.add(FilterFactory.create(filter, context).displayName)
       }
 
   return filterList
@@ -93,10 +112,11 @@ private fun strToDouble(str: String): Double {
 
 interface IFilterType {
   fun filter(stockItem: StockItem): Boolean
-  val id: FilterTypeEnum
+  val typeId: FilterTypeEnum
   val dataType: FilterDataTypeEnum
   val displayName: String
   var data: String
+  var desc: String
 }
 
 class FilterNullType : IFilterType {
@@ -104,48 +124,55 @@ class FilterNullType : IFilterType {
     return true
   }
 
-  override val id = FilterTypeEnum.FilterNullType
+  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.NoType
-  override val displayName = id.toString()
+  override val displayName = typeId.toString()
   override var data = ""
+  override var desc = ""
 }
 
-class FilterTestType(override val id: FilterTypeEnum) : IFilterType {
+class FilterTestType(override val typeId: FilterTypeEnum) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.stockDBdata.symbol.isNotEmpty()
   }
 
   override val dataType = FilterDataTypeEnum.NoType
-  override val displayName = id.toString()
+  override val displayName = typeId.toString()
   override var data = ""
+  override var desc = ""
 }
 
-class FilterTextType(override val id: FilterTypeEnum) : IFilterType {
+class FilterTextType(override val typeId: FilterTypeEnum) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.stockDBdata.symbol.isNotEmpty()
   }
 
   override val dataType = FilterDataTypeEnum.TextType
-  override val displayName = id.toString()
+  override val displayName = typeId.toString()
   override var data = ""
+  override var desc = ""
 }
 
-class FilterDoubleType(override val id: FilterTypeEnum) : IFilterType {
+class FilterDoubleType(override val typeId: FilterTypeEnum) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.stockDBdata.symbol.startsWith("A")
   }
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override var displayName = id.toString()
+  override var displayName = typeId.toString()
   override var data: String = ""
     get() = field
     set(value) {
       field = value
     }
+  override var desc = ""
 }
 
 // Stocks are at least one year old.
-class FilterLongTermType(override val id: FilterTypeEnum) : IFilterType {
+class FilterLongTermType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     val secondsNow = LocalDateTime.now()
         .toEpochSecond(ZoneOffset.UTC)
@@ -159,7 +186,51 @@ class FilterLongTermType(override val id: FilterTypeEnum) : IFilterType {
   }
 
   override val dataType = FilterDataTypeEnum.NoType
-  override var displayName = id.toString()
+  override var displayName = context.getString(R.string.filter_longterm_name)
   override var data = ""
+  override var desc = context.getString(R.string.filter_longterm_desc)
 }
 
+// Change percentage greater than
+class FilterPercentageChangeGreaterThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return stockItem.onlineMarketData.marketChangePercent > change
+  }
+
+  var change: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = field
+    set(value) {
+      field = value
+      change = strToDouble(value)
+    }
+  override var desc = ""
+}
+
+// Change percentage less than
+class FilterPercentageChangeLessThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return stockItem.onlineMarketData.marketChangePercent < change
+  }
+
+  var change: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override var displayName = typeId.toString()
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(change)
+    set(value) {
+      field = value
+      change = strToDouble(value)
+    }
+  override var desc = ""
+}

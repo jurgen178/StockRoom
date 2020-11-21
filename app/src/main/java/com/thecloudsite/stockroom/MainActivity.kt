@@ -404,7 +404,7 @@ class MainActivity : AppCompatActivity() {
 
     val filterdata = sharedPreferences.getString("filterSetting", "")
     if (filterdata != null) {
-      FilterDataRepository().setSerializedStr(filterdata)
+      FilterDataRepository(applicationContext).setSerializedStr(filterdata)
     }
   }
 

@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
 
-  <TextView
-      android:layout_width="wrap_content"
+  <Switch
+      android:id="@+id/filterEnableSwitch"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/group_filter"
-      style="@style/section_header"
+      android:layout_marginTop="16dp"
+      android:layout_marginStart="100dp"
+      android:layout_marginEnd="14dp"
+      android:textSize="16sp"
+      android:text="@string/filter_enable_switch"
       />
+
+  <View style="@style/Divider"/>
 
   <ImageButton
       android:id="@+id/addFilterButton"
@@ -26,6 +34,14 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="2dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="100dp"
       />
 
 </LinearLayout>

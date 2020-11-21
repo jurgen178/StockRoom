@@ -39,6 +39,7 @@ import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.string
 import kotlinx.android.synthetic.main.activity_filter.addFilterButton
+import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
 
 class FilterActivity : AppCompatActivity() {
@@ -71,114 +72,27 @@ class FilterActivity : AppCompatActivity() {
     filterRecyclerView.layoutManager = LinearLayoutManager(this)
     filterRecyclerView.adapter = filterAdapter
 
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+    filterEnableSwitch.isChecked = sharedPreferences.getBoolean("filterEnabled", false)
+    enableDisable(filterEnableSwitch.isChecked)
+
+    filterEnableSwitch.setOnCheckedChangeListener { _, isChecked ->
+
+      enableDisable(isChecked)
+
+      sharedPreferences
+          .edit()
+          .putBoolean("filterEnabled", isChecked)
+          .apply()
+    }
+
 //    val testdata: List<IFilterType> =
 //      listOf(FilterTestType(), FilterTestType(), FilterTextType(), FilterDoubleType())
 //    filterDataViewModel.setData(testdata)
 
     addFilterButton.setOnClickListener {
-      val builder = Builder(this)
-      // Get the layout inflater
-      val inflater = LayoutInflater.from(this)
-
-      // Inflate and set the layout for the dialog
-      // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(layout.dialog_add_filter, null)
-      val addUpdateFilterHeadlineView =
-        dialogView.findViewById<TextView>(id.addUpdateFilterHeadline)
-      addUpdateFilterHeadlineView.text = getString(string.add_filter)
-
-      val textViewFilterTextType = dialogView.findViewById<TextView>(id.textViewFilterTextType)
-      val textInputLayoutFilterTextType =
-        dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterTextType)
-      val textViewFilterDoubleType =
-        dialogView.findViewById<TextView>(id.textViewFilterDoubleType)
-      val textInputLayoutFilterDoubleType =
-        dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterDoubleType)
-      textViewFilterTextType.visibility = View.GONE
-      textInputLayoutFilterTextType.visibility = View.GONE
-      textViewFilterDoubleType.visibility = View.GONE
-      textInputLayoutFilterDoubleType.visibility = View.GONE
-
-      val spinnerData = getFilterNameList()
-      val textViewFilterSpinner = dialogView.findViewById<Spinner>(id.textViewFilterSpinner)
-      textViewFilterSpinner.adapter =
-        ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
-
-      textViewFilterSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-
-        override fun onItemSelected(
-          parent: AdapterView<*>?,
-          view: View?,
-          position: Int,
-          id: Long
-        ) {
-          val filter = FilterFactory.create(position)
-          when (filter.dataType) {
-            TextType -> {
-              textViewFilterTextType.visibility = View.VISIBLE
-              textInputLayoutFilterTextType.visibility = View.VISIBLE
-              textViewFilterDoubleType.visibility = View.GONE
-              textInputLayoutFilterDoubleType.visibility = View.GONE
-            }
-            DoubleType -> {
-              textViewFilterTextType.visibility = View.GONE
-              textInputLayoutFilterTextType.visibility = View.GONE
-              textViewFilterDoubleType.visibility = View.VISIBLE
-              textInputLayoutFilterDoubleType.visibility = View.VISIBLE
-            }
-            else -> {
-              textViewFilterTextType.visibility = View.GONE
-              textInputLayoutFilterTextType.visibility = View.GONE
-              textViewFilterDoubleType.visibility = View.GONE
-              textInputLayoutFilterDoubleType.visibility = View.GONE
-            }
-          }
-        }
-      }
-
-      val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
-      val filterTextValueView = dialogView.findViewById<TextView>(id.filterTextValue)
-
-      builder.setView(dialogView)
-          // Add action buttons
-          .setPositiveButton(
-              string.add
-          ) { _, _ ->
-            val filterIndex = textViewFilterSpinner.selectedItemPosition
-            val filterType = FilterFactory.create(filterIndex)
-
-            filterType.data = when (filterType.dataType) {
-              TextType -> {
-                // Add () to avoid cast exception.
-                (filterTextValueView.text).toString()
-                    .trim()
-              }
-              DoubleType -> {
-                // Add () to avoid cast exception.
-                (filterDoubleValueView.text).toString()
-                    .trim()
-              }
-              else -> {
-                ""
-              }
-            }
-
-            filterDataViewModel.addData(filterType)
-
-            Toast.makeText(
-                this, getString(R.string.add_filter_msg, filterType.displayName), Toast.LENGTH_LONG
-            )
-                .show()
-          }
-          .setNegativeButton(
-              string.cancel
-          ) { _, _ ->
-          }
-      builder
-          .create()
-          .show()
+      addUpdateFilter(FilterNullType(), -1)
     }
   }
 
@@ -199,64 +113,21 @@ class FilterActivity : AppCompatActivity() {
     }
   }
 
+  private fun enableDisable(enabled: Boolean) {
+    if (enabled) {
+      filterRecyclerView.visibility = View.VISIBLE
+      addFilterButton.visibility = View.VISIBLE
+    } else {
+      filterRecyclerView.visibility = View.GONE
+      addFilterButton.visibility = View.GONE
+    }
+  }
+
   private fun filterItemUpdateClicked(
     filterType: IFilterType,
     index: Int
   ) {
-    val builder = AlertDialog.Builder(this)
-    // Get the layout inflater
-    val inflater = LayoutInflater.from(this)
-
-    // Inflate and set the layout for the dialog
-    // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_filter, null)
-
-    val addUpdateFilterHeadlineView =
-      dialogView.findViewById<TextView>(R.id.addUpdateFilterHeadline)
-    addUpdateFilterHeadlineView.text = getString(R.string.update_filter)
-
-    val spinnerData = getFilterNameList()
-    val textViewFilterSpinner = dialogView.findViewById<Spinner>(R.id.textViewFilterSpinner)
-    textViewFilterSpinner.adapter =
-      ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
-    textViewFilterSpinner.setSelection(spinnerData.indexOf(filterType.displayName))
-
-    textViewFilterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-      }
-
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View?,
-        position: Int,
-        id: Long
-      ) {
-        val filter = FilterFactory.create(position)
-        if (filter.displayName == "") {
-
-        }
-      }
-    }
-
-    builder.setView(dialogView)
-        // Add action buttons
-        .setPositiveButton(
-            R.string.update
-        ) { _, _ ->
-
-          Toast.makeText(
-              this, "pluralstr", Toast.LENGTH_LONG
-          )
-              .show()
-        }
-        .setNegativeButton(
-            R.string.cancel
-        ) { _, _ ->
-          //getDialog().cancel()
-        }
-    builder
-        .create()
-        .show()
+    addUpdateFilter(filterType, index)
   }
 
   private fun filterItemDeleteClicked(
@@ -275,11 +146,155 @@ class FilterActivity : AppCompatActivity() {
           filterDataViewModel.deleteData(index)
 
           Toast.makeText(
-              this, getString(R.string.delete_filter_msg, filterType.displayName), Toast.LENGTH_LONG
+              this, getString(R.string.delete_filter_msg, filterType.displayName),
+              Toast.LENGTH_LONG
           )
               .show()
         }
         .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+        .show()
+  }
+
+  private fun addUpdateFilter(
+    filterType: IFilterType,
+    index: Int
+  ) {
+    val builder = Builder(this)
+    // Get the layout inflater
+    val inflater = LayoutInflater.from(this)
+
+    // Inflate and set the layout for the dialog
+    // Pass null as the parent view because its going in the dialog layout
+    val dialogView = inflater.inflate(layout.dialog_add_filter, null)
+    val addUpdateFilterHeadlineView =
+      dialogView.findViewById<TextView>(id.addUpdateFilterHeadline)
+
+    val textViewFilterTextType = dialogView.findViewById<TextView>(id.textViewFilterTextType)
+    val textInputLayoutFilterTextType =
+      dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterTextType)
+    val textViewFilterDoubleType =
+      dialogView.findViewById<TextView>(id.textViewFilterDoubleType)
+    val textInputLayoutFilterDoubleType =
+      dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterDoubleType)
+    textViewFilterTextType.visibility = View.GONE
+    textInputLayoutFilterTextType.visibility = View.GONE
+    textViewFilterDoubleType.visibility = View.GONE
+    textInputLayoutFilterDoubleType.visibility = View.GONE
+
+    val spinnerData = getFilterNameList(applicationContext)
+    val textViewFilterSpinner = dialogView.findViewById<Spinner>(id.textViewFilterSpinner)
+    textViewFilterSpinner.adapter =
+      ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
+
+    val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
+    val filterTextValueView = dialogView.findViewById<TextView>(id.filterTextValue)
+
+    // Update or Add?
+    if (filterType.typeId != FilterTypeEnum.FilterNullType) {
+      // Update
+      textViewFilterSpinner.setSelection(spinnerData.indexOf(filterType.displayName))
+      addUpdateFilterHeadlineView.text = getString(string.update_filter)
+
+      when (filterType.dataType) {
+        TextType -> {
+          filterTextValueView.text = filterType.data
+        }
+        DoubleType -> {
+          filterDoubleValueView.text = filterType.data
+        }
+        else -> {
+        }
+      }
+    } else {
+      // Add
+      addUpdateFilterHeadlineView.text = getString(string.add_filter)
+    }
+
+    textViewFilterSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        val filter = FilterFactory.create(position, applicationContext)
+        when (filter.dataType) {
+          TextType -> {
+            textViewFilterTextType.visibility = View.VISIBLE
+            textInputLayoutFilterTextType.visibility = View.VISIBLE
+            textViewFilterDoubleType.visibility = View.GONE
+            textInputLayoutFilterDoubleType.visibility = View.GONE
+          }
+          DoubleType -> {
+            textViewFilterTextType.visibility = View.GONE
+            textInputLayoutFilterTextType.visibility = View.GONE
+            textViewFilterDoubleType.visibility = View.VISIBLE
+            textInputLayoutFilterDoubleType.visibility = View.VISIBLE
+          }
+          else -> {
+            textViewFilterTextType.visibility = View.GONE
+            textInputLayoutFilterTextType.visibility = View.GONE
+            textViewFilterDoubleType.visibility = View.GONE
+            textInputLayoutFilterDoubleType.visibility = View.GONE
+          }
+        }
+      }
+    }
+
+    builder.setView(dialogView)
+        // Add action buttons
+        .setPositiveButton(
+            string.add
+        ) { _, _ ->
+          val filterIndex = textViewFilterSpinner.selectedItemPosition
+          val newFilterType = FilterFactory.create(filterIndex, applicationContext)
+
+          newFilterType.data = when (newFilterType.dataType) {
+            TextType -> {
+              // Add () to avoid cast exception.
+              (filterTextValueView.text).toString()
+                  .trim()
+            }
+            DoubleType -> {
+              // Add () to avoid cast exception.
+              (filterDoubleValueView.text).toString()
+                  .trim()
+            }
+            else -> {
+              ""
+            }
+          }
+
+          // Update or Add?
+          if (filterType.typeId != FilterTypeEnum.FilterNullType) {
+            // Update
+            filterDataViewModel.updateData(newFilterType, index)
+
+            Toast.makeText(
+                this, getString(R.string.update_filter_msg, newFilterType.displayName),
+                Toast.LENGTH_LONG
+            )
+                .show()
+          } else {
+            // Add
+            filterDataViewModel.addData(newFilterType)
+
+            Toast.makeText(
+                this, getString(R.string.add_filter_msg, newFilterType.displayName),
+                Toast.LENGTH_LONG
+            )
+                .show()
+          }
+        }
+        .setNegativeButton(
+            string.cancel
+        ) { _, _ ->
+        }
+    builder
+        .create()
         .show()
   }
 }

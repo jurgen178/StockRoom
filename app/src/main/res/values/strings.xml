@@ -356,7 +356,6 @@ limitations under the License. -->
   <string name="tab_headlines">Tab Headlines</string>
   <string name="tab_headlines_desc">Display tab headlines to select what is on display.</string>
   <string name="menu_filter">Filter</string>
-  <string name="group_filter">Filter</string>
   <string name="delete_filter">Delete filter</string>
   <string name="delete_filter_confirm">Are you sure to delete the filter \'%1$s\' ?</string>
   <string name="delete_filter_msg">The filter \'%1$s\' was deleted.</string>
@@ -367,4 +366,7 @@ limitations under the License. -->
   <string name="update_filter">update_filter</string>
   <string name="add_filter_msg">The filter \'%1$s\' was added.</string>
   <string name="update_filter_msg">The filter \'%1$s\' was updated.</string>
+  <string name="filter_longterm_name">filter_longterm_name</string>
+  <string name="filter_longterm_desc">filter_longterm_desc</string>
+  <string name="filter_enable_switch">filter aktiv</string>
 </resources>

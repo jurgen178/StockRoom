@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.Gson
@@ -25,11 +26,11 @@ import com.google.gson.reflect.TypeToken
 
 data class FilterTypeJson
 (
-  var id: FilterTypeEnum,
+  var typeId: FilterTypeEnum,
   val data: String,
 )
 
-class FilterDataRepository {
+class FilterDataRepository(val context: Context) {
 
 //  private val _data = MutableLiveData<List<IFilterType>>()
 //  val data: LiveData<List<IFilterType>>
@@ -40,7 +41,7 @@ class FilterDataRepository {
     val filterTypeJsonList = SharedRepository.filterLiveData.value?.let { filterList ->
       filterList.map { filterType ->
         FilterTypeJson(
-            id = filterType.id,
+            typeId = filterType.typeId,
             data = filterType.data
         )
       }
@@ -66,8 +67,8 @@ class FilterDataRepository {
 
     val list: MutableList<IFilterType> = mutableListOf()
     filterTypeJsonList?.forEach { filterTypeJson ->
-      if (filterTypeJson.id != null && filterTypeJson.data != null) {
-        val filterType = FilterFactory.create(filterTypeJson.id)
+      if (filterTypeJson.typeId != null && filterTypeJson.data != null) {
+        val filterType = FilterFactory.create(filterTypeJson.typeId, context)
         filterType.data = filterTypeJson.data
         list.add(filterType)
       }
@@ -82,6 +83,19 @@ class FilterDataRepository {
     SharedRepository.filterLiveData.value = list
   }
 
+  // update Filter at position index
+  fun updateData(
+    filterType: IFilterType,
+    index: Int
+  ) {
+    val list: MutableList<IFilterType> = mutableListOf()
+    SharedRepository.filterLiveData.value?.let { list.addAll(it) }
+    if (index >= 0 && index < list.size) {
+      list[index] = filterType
+      SharedRepository.filterLiveData.value = list
+    }
+  }
+
   fun deleteData(index: Int) {
     val list: MutableList<IFilterType> = mutableListOf()
     SharedRepository.filterLiveData.value?.let { list.addAll(it) }
@@ -94,8 +108,8 @@ class FilterDataRepository {
 
 class FilterDataViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val filterDataRepository: FilterDataRepository = FilterDataRepository()
-  var data: LiveData<List<IFilterType>>
+  private val filterDataRepository: FilterDataRepository = FilterDataRepository(application)
+  var data: LiveData<List<IFilterType>> = SharedRepository.filterData
 
   fun getSerializedStr(): String {
     return filterDataRepository.getSerializedStr()
@@ -113,11 +127,14 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
     filterDataRepository.addData(filterType)
   }
 
-  fun deleteData(index: Int) {
-    filterDataRepository.deleteData(index)
+  fun updateData(
+    filterType: IFilterType,
+    index: Int
+  ) {
+    filterDataRepository.updateData(filterType, index)
   }
 
-  init {
-    data = SharedRepository.filterData
+  fun deleteData(index: Int) {
+    filterDataRepository.deleteData(index)
   }
 }

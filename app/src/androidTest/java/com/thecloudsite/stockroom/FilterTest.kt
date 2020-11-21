@@ -33,7 +33,11 @@ class FilterTest {
       return stockItem.stockDBdata.symbol == "s1"
     }
 
+    override val typeId = FilterTypeEnum.FilterTestType
     override val displayName = "test1"
+    override val dataType = FilterDataTypeEnum.NoType
+    override var data = ""
+    override var desc = ""
   }
 
   @Test
