@@ -7,16 +7,31 @@
     android:orientation="vertical"
     >
 
-  <Switch
-      android:id="@+id/filterEnableSwitch"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:layout_marginStart="100dp"
-      android:layout_marginEnd="14dp"
-      android:textSize="16sp"
-      android:text="@string/filter_enable_switch"
-      />
+      android:orientation="horizontal"
+      android:layout_margin="16dp"
+      >
+
+    <ImageView
+        android:src="@drawable/ic_action_filter_list"
+        android:layout_height="30dp"
+        android:layout_width="30dp"
+        android:layout_gravity="center_vertical"
+        />
+
+    <Switch
+        android:id="@+id/filterEnableSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="14dp"
+        android:textSize="16sp"
+        android:text="@string/filter_enable_switch"
+        android:layout_gravity="center_vertical"
+        />
+  </LinearLayout>
 
   <View style="@style/Divider"/>
 

@@ -226,18 +226,19 @@ class FilterPercentageChangeGreaterThanType(
   context: Context
 ) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.onlineMarketData.marketChangePercent > change
+    return stockItem.onlineMarketData.marketChangePercent > filterPercentageValue
   }
 
-  var change: Double = 0.0
+  var filterValue: Double = 0.0
+  var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override var displayName = typeId.toString()
   override var data: String = ""
-    get() = DecimalFormat("0.00").format(change)
+    get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
       field = value
-      change = strToDouble(value)
+      filterValue = strToDouble(value)
     }
   override var desc = ""
 }
@@ -248,18 +249,20 @@ class FilterPercentageChangeLessThanType(
   context: Context
 ) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.onlineMarketData.marketChangePercent < change
+    return stockItem.onlineMarketData.marketChangePercent < filterPercentageValue
   }
 
-  var change: Double = 0.0
+  var filterValue: Double = 0.0
+  var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override var displayName = typeId.toString()
   override var data: String = ""
-    get() = DecimalFormat("0.00").format(change)
+    get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
       field = value
-      change = strToDouble(value)
+      filterValue = strToDouble(value)
+      filterPercentageValue = filterValue / 100
     }
   override var desc = ""
 }
@@ -417,18 +420,20 @@ class FilterProfitPercentageGreaterThanType(
       } else {
         totalPrice
       }
-    return profitPercentage > filterValue
+    return profitPercentage > filterPercentageValue
   }
 
   var filterValue: Double = 0.0
+  var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override var displayName = typeId.toString()
   override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
+    get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
+      filterPercentageValue = filterValue / 100
     }
   override var desc = ""
 }
@@ -446,18 +451,20 @@ class FilterProfitPercentageLessThanType(
       } else {
         totalPrice
       }
-    return profitPercentage < filterValue
+    return profitPercentage < filterPercentageValue
   }
 
   var filterValue: Double = 0.0
+  var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override var displayName = typeId.toString()
   override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
+    get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
+      filterPercentageValue = filterValue / 100
     }
   override var desc = ""
 }
@@ -478,18 +485,20 @@ class FilterDividendPercentageGreaterThanType(
       } else {
         stockItem.onlineMarketData.annualDividendYield
       }
-    return dividendPercentage > filterValue
+    return dividendPercentage > filterPercentageValue
   }
 
   var filterValue: Double = 0.0
+  var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override var displayName = typeId.toString()
   override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
+    get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
+      filterPercentageValue = filterValue / 100
     }
   override var desc = ""
 }
@@ -510,18 +519,20 @@ class FilterDividendPercentageLessThanType(
       } else {
         stockItem.onlineMarketData.annualDividendYield
       }
-    return dividendPercentage < filterValue
+    return dividendPercentage < filterPercentageValue
   }
 
   var filterValue: Double = 0.0
+  var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override var displayName = typeId.toString()
   override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
+    get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
+      filterPercentageValue = filterValue / 100
     }
   override var desc = ""
 }
