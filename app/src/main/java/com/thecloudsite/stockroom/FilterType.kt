@@ -25,29 +25,31 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
 
-enum class FilterTypeEnum(val value: Int) {
-  FilterNullType(0),
-  FilterPercentageChangeGreaterThanType(1),
-  FilterPercentageChangeLessThanType(2),
-  FilterSymbolContainsType(3),
-  FilterNoteContainsType(4),
-  FilterAssetGreaterThanType(5),
-  FilterAssetLessThanType(6),
-  FilterProfitGreaterThanType(7),
-  FilterProfitLessThanType(8),
-  FilterProfitPercentageGreaterThanType(9),
-  FilterProfitPercentageLessThanType(10),
-  FilterDividendPercentageGreaterThanType(11),
-  FilterDividendPercentageLessThanType(12),
-  FilterFirstAssetSoldBeforeType(13),
-  FilterFirstAssetSoldAfterType(14),
-  FilterFirstAssetBoughtBeforeType(15),
-  FilterFirstAssetBoughtAfterType(16),
-  FilterLastAssetSoldBeforeType(17),
-  FilterLastAssetSoldAfterType(18),
-  FilterLastAssetBoughtBeforeType(19),
-  FilterLastAssetBoughtAfterType(20),
-  FilterLongTermType(21),
+enum class FilterTypeEnum {
+  FilterNullType,
+  FilterPercentageChangeGreaterThanType,
+  FilterPercentageChangeLessThanType,
+  FilterSymbolContainsType,
+  FilterNoteContainsType,
+  FilterAssetGreaterThanType,
+  FilterAssetLessThanType,
+  FilterProfitGreaterThanType,
+  FilterProfitLessThanType,
+  FilterProfitPercentageGreaterThanType,
+  FilterProfitPercentageLessThanType,
+  FilterDividendPercentageGreaterThanType,
+  FilterDividendPercentageLessThanType,
+  FilterQuantityGreaterThanType,
+  FilterQuantityLessThanType,
+  FilterFirstAssetSoldBeforeType,
+  FilterFirstAssetSoldAfterType,
+  FilterFirstAssetBoughtBeforeType,
+  FilterFirstAssetBoughtAfterType,
+  FilterLastAssetSoldBeforeType,
+  FilterLastAssetSoldAfterType,
+  FilterLastAssetBoughtBeforeType,
+  FilterLastAssetBoughtAfterType,
+  FilterLongTermType,
 }
 
 enum class FilterDataTypeEnum(val value: Int) {
@@ -88,6 +90,8 @@ object FilterFactory {
       FilterTypeEnum.FilterDividendPercentageLessThanType -> FilterDividendPercentageLessThanType(
           type, context
       )
+      FilterTypeEnum.FilterQuantityGreaterThanType -> FilterQuantityGreaterThanType(type, context)
+      FilterTypeEnum.FilterQuantityLessThanType -> FilterQuantityLessThanType(type, context)
       FilterTypeEnum.FilterFirstAssetSoldBeforeType -> FilterFirstAssetSoldBeforeType(
           type, context
       )
@@ -566,6 +570,58 @@ class FilterDividendPercentageLessThanType(
       field = value
       filterValue = strToDouble(value)
       filterPercentageValue = filterValue / 100
+    }
+  override var serializedData
+    get() = data
+    set(value) {}
+}
+
+// Quantity greater than
+class FilterQuantityGreaterThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    return totalQuantity > filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override val displayName = context.getString(R.string.filter_quantitygreater_name)
+  override val desc = context.getString(R.string.filter_quantitygreater_desc)
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var serializedData
+    get() = data
+    set(value) {}
+}
+
+// Quantity less than
+class FilterQuantityLessThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    return totalQuantity < filterValue
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override val displayName = context.getString(R.string.filter_quantityless_name)
+  override val desc = context.getString(R.string.filter_quantityless_desc)
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
     }
   override var serializedData
     get() = data

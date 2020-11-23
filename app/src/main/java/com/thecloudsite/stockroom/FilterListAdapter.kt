@@ -85,6 +85,13 @@ class FilterListAdapter internal constructor(
         .bold {
           append(current.data)
         }
+
+    holder.filterDesc.visibility =
+      if (current.desc.isNotEmpty()) {
+        View.VISIBLE
+      } else {
+        View.GONE
+      }
     holder.filterDesc.text = current.desc
   }
 
