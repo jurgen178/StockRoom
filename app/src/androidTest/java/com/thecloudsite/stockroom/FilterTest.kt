@@ -38,6 +38,7 @@ class FilterTest {
     override val dataType = FilterDataTypeEnum.NoType
     override var data = ""
     override var desc = ""
+    override var date = 0L
   }
 
   @Test

@@ -32,7 +32,9 @@ import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.validateDouble
 import java.text.DecimalFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
@@ -77,6 +79,10 @@ class StockRoomTest {
 
     assertEquals("01.01.70, 03:25", dateTimeShort)
     assertEquals("01.01.1970, 03:25:45", dateTimeMedium)
+
+//    val localDateFull = LocalDate.parse("Freitag, 2. Januar 1970", DateTimeFormatter.ofLocalizedDate(FULL))
+//    val secondsFull = localDateFull.
+//    assertEquals(100, secondsFull)
   }
 
   @Test

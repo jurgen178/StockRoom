@@ -23,11 +23,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.bold
-import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.filterview_item.view.filterDelete
 import kotlinx.android.synthetic.main.filterview_item.view.filterText
-import java.text.DecimalFormat
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 

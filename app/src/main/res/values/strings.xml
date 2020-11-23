@@ -367,8 +367,6 @@ limitations under the License. -->
   <string name="update_filter">Update filter</string>
   <string name="add_filter_msg">The filter \'%1$s\' was added.</string>
   <string name="update_filter_msg">The filter \'%1$s\' was updated.</string>
-  <string name="filter_longterm_name">filter_longterm_name</string>
-  <string name="filter_longterm_desc">filter_longterm_desc</string>
   <string name="filter_percentagechangegreater_name"></string>
   <string name="filter_percentagechangegreater_desc"></string>
   <string name="filter_percentagechangeless_name"></string>
@@ -393,4 +391,22 @@ limitations under the License. -->
   <string name="filter_dividendpercentagegreater_desc"></string>
   <string name="filter_dividendpercentageless_name"></string>
   <string name="filter_dividendpercentageless_desc"></string>
+  <string name="filter_firstassetsoldbefore_name"></string>
+  <string name="filter_firstassetsoldbefore_desc"></string>
+  <string name="filter_firstassetsoldafter_name"></string>
+  <string name="filter_firstassetsoldafter_desc"></string>
+  <string name="filter_firstassetboughtbefore_name"></string>
+  <string name="filter_firstassetboughtbefore_desc"></string>
+  <string name="filter_firstassetboughtafter_name"></string>
+  <string name="filter_firstassetboughtafter_desc"></string>
+  <string name="filter_lastassetsoldbefore_name"></string>
+  <string name="filter_lastassetsoldbefore_desc"></string>
+  <string name="filter_lastassetsoldafter_name"></string>
+  <string name="filter_lastassetsoldafter_desc"></string>
+  <string name="filter_lastassetboughtbefore_name"></string>
+  <string name="filter_lastassetboughtbefore_desc"></string>
+  <string name="filter_lastassetboughtafter_name"></string>
+  <string name="filter_lastassetboughtafter_desc"></string>
+  <string name="filter_longterm_name">filter_longterm_name</string>
+  <string name="filter_longterm_desc">filter_longterm_desc</string>
 </resources>

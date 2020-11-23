@@ -22,6 +22,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -33,6 +34,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
+import com.thecloudsite.stockroom.FilterDataTypeEnum.DateType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.id
@@ -41,6 +43,8 @@ import com.thecloudsite.stockroom.R.string
 import kotlinx.android.synthetic.main.activity_filter.addFilterButton
 import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class FilterActivity : AppCompatActivity() {
 
@@ -186,6 +190,8 @@ class FilterActivity : AppCompatActivity() {
 
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
     val filterTextValueView = dialogView.findViewById<TextView>(id.filterTextValue)
+    val datePickerFilterDateView =
+      dialogView.findViewById<DatePicker>(R.id.datePickerFilter)
 
     // Update or Add?
     if (filterType.typeId != FilterTypeEnum.FilterNullType) {
@@ -199,6 +205,18 @@ class FilterActivity : AppCompatActivity() {
         }
         DoubleType -> {
           filterDoubleValueView.text = filterType.data
+        }
+        DateType -> {
+          val date = try {
+            filterType.serializedData.toLong()
+          } catch (e: Exception) {
+            0L
+          }
+          val localDateTime = LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.UTC)
+          // month is starting from zero
+          datePickerFilterDateView.updateDate(
+              localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
+          )
         }
         else -> {
         }
@@ -225,18 +243,28 @@ class FilterActivity : AppCompatActivity() {
             textInputLayoutFilterTextType.visibility = View.VISIBLE
             textViewFilterDoubleType.visibility = View.GONE
             textInputLayoutFilterDoubleType.visibility = View.GONE
+            datePickerFilterDateView.visibility = View.GONE
           }
           DoubleType -> {
             textViewFilterTextType.visibility = View.GONE
             textInputLayoutFilterTextType.visibility = View.GONE
             textViewFilterDoubleType.visibility = View.VISIBLE
             textInputLayoutFilterDoubleType.visibility = View.VISIBLE
+            datePickerFilterDateView.visibility = View.GONE
+          }
+          DateType -> {
+            textViewFilterTextType.visibility = View.GONE
+            textInputLayoutFilterTextType.visibility = View.GONE
+            textViewFilterDoubleType.visibility = View.GONE
+            textInputLayoutFilterDoubleType.visibility = View.GONE
+            datePickerFilterDateView.visibility = View.VISIBLE
           }
           else -> {
             textViewFilterTextType.visibility = View.GONE
             textInputLayoutFilterTextType.visibility = View.GONE
             textViewFilterDoubleType.visibility = View.GONE
             textInputLayoutFilterDoubleType.visibility = View.GONE
+            datePickerFilterDateView.visibility = View.GONE
           }
         }
       }
@@ -260,6 +288,14 @@ class FilterActivity : AppCompatActivity() {
               // Add () to avoid cast exception.
               (filterDoubleValueView.text).toString()
                   .trim()
+            }
+            DateType -> {
+              val localDateTime: LocalDateTime = LocalDateTime.of(
+                  datePickerFilterDateView.year, datePickerFilterDateView.month + 1,
+                  datePickerFilterDateView.dayOfMonth, 0, 0
+              )
+              val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+              date.toString()
             }
             else -> {
               ""

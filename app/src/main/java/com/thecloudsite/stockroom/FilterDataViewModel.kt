@@ -42,7 +42,7 @@ class FilterDataRepository(val context: Context) {
       filterList.map { filterType ->
         FilterTypeJson(
             typeId = filterType.typeId,
-            data = filterType.data
+            data = filterType.serializedData
         )
       }
     }

@@ -120,6 +120,15 @@
             />
       </com.google.android.material.textfield.TextInputLayout>
 
+      <com.thecloudsite.stockroom.CustomDatePicker
+          android:id="@+id/datePickerFilter"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp"
+          android:datePickerMode="calendar"
+          app:layout_constraintTop_toBottomOf="@+id/textInputLayoutFilterTextType"
+          />
+
       <androidx.constraintlayout.widget.Guideline
           android:id="@+id/guideline1"
           android:layout_width="wrap_content"
