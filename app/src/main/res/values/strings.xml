@@ -413,4 +413,8 @@ limitations under the License. -->
   <string name="filter_quantitygreater_desc"></string>
   <string name="filter_quantityless_name">Stock quantity less than</string>
   <string name="filter_quantityless_desc"></string>
+  <string name="filter_capitalgaingreater_name">Executed Capital Gain greater than</string>
+  <string name="filter_capitalgaingreater_desc"></string>
+  <string name="filter_capitalgainless_name">Executed Capital Gain less than</string>
+  <string name="filter_capitalgainless_desc"></string>
 </resources>

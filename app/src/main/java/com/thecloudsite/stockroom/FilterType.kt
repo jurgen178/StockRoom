@@ -18,6 +18,7 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -41,6 +42,8 @@ enum class FilterTypeEnum {
   FilterDividendPercentageLessThanType,
   FilterQuantityGreaterThanType,
   FilterQuantityLessThanType,
+  FilterCapitalGainGreaterThanType,
+  FilterCapitalGainLessThanType,
   FilterFirstAssetSoldBeforeType,
   FilterFirstAssetSoldAfterType,
   FilterFirstAssetBoughtBeforeType,
@@ -57,6 +60,7 @@ enum class FilterDataTypeEnum(val value: Int) {
   TextType(1),
   DoubleType(2),
   DateType(3),
+  IntType(3),
 }
 
 object FilterFactory {
@@ -92,6 +96,8 @@ object FilterFactory {
       )
       FilterTypeEnum.FilterQuantityGreaterThanType -> FilterQuantityGreaterThanType(type, context)
       FilterTypeEnum.FilterQuantityLessThanType -> FilterQuantityLessThanType(type, context)
+      FilterTypeEnum.FilterCapitalGainGreaterThanType -> FilterCapitalGainGreaterThanType(type, context)
+      FilterTypeEnum.FilterCapitalGainLessThanType -> FilterCapitalGainLessThanType(type, context)
       FilterTypeEnum.FilterFirstAssetSoldBeforeType -> FilterFirstAssetSoldBeforeType(
           type, context
       )
@@ -164,6 +170,18 @@ private fun strToDouble(str: String): Double {
   return value
 }
 
+private fun strToInt(str: String): Int {
+  var value: Int = 0
+  try {
+    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+    value = numberFormat.parse(str)!!
+        .toInt()
+  } catch (e: Exception) {
+  }
+
+  return value
+}
+
 interface IFilterType {
   fun filter(stockItem: StockItem): Boolean
   val typeId: FilterTypeEnum
@@ -186,6 +204,108 @@ class FilterNullType : IFilterType {
   override var data = ""
   override var serializedData
     get() = data
+    set(value) {}
+}
+
+open class FilterDoubleType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return false
+  }
+
+  var filterValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override val displayName = ""
+  override val desc = ""
+  override var data: String = ""
+    get() = DecimalFormat("0.00").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override var serializedData
+    get() = data
+    set(value) {}
+}
+
+open class FilterDoublePercentageType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return false
+  }
+
+  var filterValue: Double = 0.0
+  var filterPercentageValue: Double = 0.0
+
+  override val dataType = FilterDataTypeEnum.DoubleType
+  override val displayName = ""
+  override val desc = ""
+  override var data: String = ""
+    get() = DecimalFormat("0.##").format(filterValue)
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+      filterPercentageValue = filterValue / 100
+    }
+  override var serializedData
+    get() = data
+    set(value) {}
+}
+
+open class FilterIntType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return false
+  }
+
+  var filterValue: Int = 0
+
+  override val dataType = FilterDataTypeEnum.IntType
+  override val displayName = ""
+  override val desc = ""
+  override var data: String = ""
+    get() = filterValue.toString()
+    set(value) {
+      field = value
+      filterValue = strToInt(value)
+    }
+  override var serializedData
+    get() = data
+    set(value) {}
+}
+
+open class FilterDateType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : IFilterType {
+  override fun filter(stockItem: StockItem): Boolean {
+    return false
+  }
+  var filterDateValue: Long = 0L
+
+  override val dataType = FilterDataTypeEnum.DateType
+  override val displayName = ""
+  override val desc = ""
+  override var data: String = ""
+    get() = LocalDateTime.ofEpochSecond(filterDateValue, 0, ZoneOffset.UTC)
+        .format(DateTimeFormatter.ofLocalizedDate(FULL))
+    set(value) {
+      field = value
+      filterDateValue = try {
+        value.toLong()
+      } catch (e: Exception) {
+        0L
+      }
+    }
+  override var serializedData
+    get() = filterDateValue.toString()
     set(value) {}
 }
 
@@ -230,50 +350,26 @@ class FilterNullType : IFilterType {
 class FilterPercentageChangeGreaterThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoubleType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.onlineMarketData.marketChangePercent > filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_percentagechangegreater_name)
   override val desc = context.getString(R.string.filter_percentagechangegreater_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.##").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Change percentage less than
 class FilterPercentageChangeLessThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoubleType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.onlineMarketData.marketChangePercent < filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_percentagechangeless_name)
   override val desc = context.getString(R.string.filter_percentagechangeless_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.##").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 class FilterSymbolContainsType(
@@ -314,7 +410,7 @@ class FilterNoteContainsType(
 class FilterAssetGreaterThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoubleType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -325,27 +421,15 @@ class FilterAssetGreaterThanType(
     return asset > filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_assetgreater_name)
   override val desc = context.getString(R.string.filter_assetgreater_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Asset less than
 class FilterAssetLessThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoubleType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -356,27 +440,15 @@ class FilterAssetLessThanType(
     return asset < filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_assetless_name)
   override val desc = context.getString(R.string.filter_assetless_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Profit greater than
 class FilterProfitGreaterThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoubleType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -387,27 +459,15 @@ class FilterProfitGreaterThanType(
     return profit > filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_profitgreater_name)
   override val desc = context.getString(R.string.filter_profitgreater_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Profit less than
 class FilterProfitLessThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoubleType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -418,27 +478,15 @@ class FilterProfitLessThanType(
     return profit < filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_profitless_name)
   override val desc = context.getString(R.string.filter_profitless_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Profit Percentage greater than
 class FilterProfitPercentageGreaterThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoublePercentageType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profitPercentage =
@@ -450,29 +498,15 @@ class FilterProfitPercentageGreaterThanType(
     return profitPercentage > filterPercentageValue
   }
 
-  var filterValue: Double = 0.0
-  var filterPercentageValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_profitpercentagegreater_name)
   override val desc = context.getString(R.string.filter_profitpercentagegreater_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.##").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-      filterPercentageValue = filterValue / 100
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Profit Percentage less than
 class FilterProfitPercentageLessThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoublePercentageType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profitPercentage =
@@ -484,29 +518,15 @@ class FilterProfitPercentageLessThanType(
     return profitPercentage < filterPercentageValue
   }
 
-  var filterValue: Double = 0.0
-  var filterPercentageValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_profitpercentageless_name)
   override val desc = context.getString(R.string.filter_profitpercentageless_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.##").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-      filterPercentageValue = filterValue / 100
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Dividend Percentage greater than
 class FilterDividendPercentageGreaterThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoublePercentageType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val dividendPercentage =
       if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
@@ -521,29 +541,15 @@ class FilterDividendPercentageGreaterThanType(
     return dividendPercentage > filterPercentageValue
   }
 
-  var filterValue: Double = 0.0
-  var filterPercentageValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_dividendpercentagegreater_name)
   override val desc = context.getString(R.string.filter_dividendpercentagegreater_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.##").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-      filterPercentageValue = filterValue / 100
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Dividend Percentage less than
 class FilterDividendPercentageLessThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoublePercentageType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val dividendPercentage =
       if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
@@ -558,114 +564,64 @@ class FilterDividendPercentageLessThanType(
     return dividendPercentage < filterPercentageValue
   }
 
-  var filterValue: Double = 0.0
-  var filterPercentageValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_dividendpercentageless_name)
   override val desc = context.getString(R.string.filter_dividendpercentageless_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.##").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-      filterPercentageValue = filterValue / 100
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Quantity greater than
 class FilterQuantityGreaterThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterIntType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     return totalQuantity > filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_quantitygreater_name)
   override val desc = context.getString(R.string.filter_quantitygreater_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 // Quantity less than
 class FilterQuantityLessThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterIntType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     return totalQuantity < filterValue
   }
 
-  var filterValue: Double = 0.0
-
-  override val dataType = FilterDataTypeEnum.DoubleType
   override val displayName = context.getString(R.string.filter_quantityless_name)
   override val desc = context.getString(R.string.filter_quantityless_desc)
-  override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
-    set(value) {
-      field = value
-      filterValue = strToDouble(value)
-    }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
-open class FilterDateType(
+// CapitalGain greater than
+class FilterCapitalGainGreaterThanType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterDoubleType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
-    val assetSold = stockItem.assets.filter { asset ->
-      asset.quantity < 0.0
-    }
-
-    return if (assetSold.isNotEmpty()) {
-      val newestAssetSoldDate = assetSold.maxOf { asset ->
-        asset.date
-      }
-      newestAssetSoldDate > filterDateValue
-    } else {
-      false
-    }
+    val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
+    return capitalGain - capitalLoss > filterValue
   }
 
-  var filterDateValue: Long = 0L
+  override val displayName = context.getString(R.string.filter_capitalgaingreater_name)
+  override val desc = context.getString(R.string.filter_capitalgaingreater_desc)
+}
 
-  override val dataType = FilterDataTypeEnum.DateType
-  override val displayName = ""
-  override val desc = ""
-  override var data: String = ""
-    get() = LocalDateTime.ofEpochSecond(filterDateValue, 0, ZoneOffset.UTC)
-        .format(DateTimeFormatter.ofLocalizedDate(FULL))
-    set(value) {
-      field = value
-      filterDateValue = try {
-        value.toLong()
-      } catch (e: Exception) {
-        0L
-      }
-    }
-  override var serializedData
-    get() = filterDateValue.toString()
-    set(value) {}
+// CapitalGain less than
+class FilterCapitalGainLessThanType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : FilterDoubleType(typeId, context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
+    return capitalGain - capitalLoss < filterValue
+  }
+
+  override val displayName = context.getString(R.string.filter_capitalgainless_name)
+  override val desc = context.getString(R.string.filter_capitalgainless_desc)
 }
 
 class FilterFirstAssetSoldBeforeType(

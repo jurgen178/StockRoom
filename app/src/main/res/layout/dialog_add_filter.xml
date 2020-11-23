@@ -100,6 +100,41 @@
       </com.google.android.material.textfield.TextInputLayout>
 
       <TextView
+          android:id="@+id/textViewFilterIntType"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:text="@string/filter_value_double"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayoutFilterIntType"
+          app:layout_constraintEnd_toStartOf="@+id/guideline1"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutFilterIntType"
+          />
+      <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/textInputLayoutFilterIntType"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_margin="8dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
+          app:layout_constraintTop_toBottomOf="@id/textInputLayoutFilterDoubleType"
+          >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filterIntValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_background"
+            android:gravity="end"
+            android:imeOptions="actionDone"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:maxLength="9"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <TextView
           android:id="@+id/textViewFilterTextType"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
@@ -117,7 +152,7 @@
           android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toEndOf="@+id/guideline1"
-          app:layout_constraintTop_toBottomOf="@id/textInputLayoutFilterDoubleType"
+          app:layout_constraintTop_toBottomOf="@id/textInputLayoutFilterIntType"
           >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/filterTextValue"

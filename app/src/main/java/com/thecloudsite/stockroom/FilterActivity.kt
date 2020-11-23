@@ -26,7 +26,6 @@ import android.widget.DatePicker
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -36,6 +35,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DateType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
+import com.thecloudsite.stockroom.FilterDataTypeEnum.IntType
+import com.thecloudsite.stockroom.FilterDataTypeEnum.NoType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.layout
@@ -171,18 +172,27 @@ class FilterActivity : AppCompatActivity() {
     val addUpdateFilterHeadlineView =
       dialogView.findViewById<TextView>(id.addUpdateFilterHeadline)
 
-    val textViewFilterTextType = dialogView.findViewById<TextView>(id.textViewFilterTextType)
     val textViewFilterDesc = dialogView.findViewById<TextView>(id.textViewFilterDesc)
+    val textViewFilterTextType = dialogView.findViewById<TextView>(id.textViewFilterTextType)
     val textInputLayoutFilterTextType =
       dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterTextType)
+
     val textViewFilterDoubleType =
       dialogView.findViewById<TextView>(id.textViewFilterDoubleType)
     val textInputLayoutFilterDoubleType =
       dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterDoubleType)
+
+    val textViewFilterIntType =
+      dialogView.findViewById<TextView>(id.textViewFilterIntType)
+    val textInputLayoutFilterIntType =
+      dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterIntType)
+
     textViewFilterTextType.visibility = View.GONE
     textInputLayoutFilterTextType.visibility = View.GONE
     textViewFilterDoubleType.visibility = View.GONE
     textInputLayoutFilterDoubleType.visibility = View.GONE
+    textViewFilterIntType.visibility = View.GONE
+    textInputLayoutFilterIntType.visibility = View.GONE
 
     val spinnerData = getFilterNameList(applicationContext)
     val textViewFilterSpinner = dialogView.findViewById<Spinner>(id.textViewFilterSpinner)
@@ -190,6 +200,7 @@ class FilterActivity : AppCompatActivity() {
       ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
 
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
+    val filterIntValueView = dialogView.findViewById<TextView>(id.filterIntValue)
     val filterTextValueView = dialogView.findViewById<TextView>(id.filterTextValue)
     val datePickerFilterDateView =
       dialogView.findViewById<DatePicker>(R.id.datePickerFilter)
@@ -207,6 +218,9 @@ class FilterActivity : AppCompatActivity() {
         DoubleType -> {
           filterDoubleValueView.text = filterType.data
         }
+        IntType -> {
+          filterIntValueView.text = filterType.data
+        }
         DateType -> {
           val date = try {
             filterType.serializedData.toLong()
@@ -219,7 +233,7 @@ class FilterActivity : AppCompatActivity() {
               localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
           )
         }
-        else -> {
+        NoType -> {
         }
       }
     } else {
@@ -248,6 +262,8 @@ class FilterActivity : AppCompatActivity() {
             textInputLayoutFilterTextType.visibility = View.VISIBLE
             textViewFilterDoubleType.visibility = View.GONE
             textInputLayoutFilterDoubleType.visibility = View.GONE
+            textViewFilterIntType.visibility = View.GONE
+            textInputLayoutFilterIntType.visibility = View.GONE
             datePickerFilterDateView.visibility = View.GONE
           }
           DoubleType -> {
@@ -255,6 +271,17 @@ class FilterActivity : AppCompatActivity() {
             textInputLayoutFilterTextType.visibility = View.GONE
             textViewFilterDoubleType.visibility = View.VISIBLE
             textInputLayoutFilterDoubleType.visibility = View.VISIBLE
+            textViewFilterIntType.visibility = View.GONE
+            textInputLayoutFilterIntType.visibility = View.GONE
+            datePickerFilterDateView.visibility = View.GONE
+          }
+          IntType -> {
+            textViewFilterTextType.visibility = View.GONE
+            textInputLayoutFilterTextType.visibility = View.GONE
+            textViewFilterDoubleType.visibility = View.GONE
+            textInputLayoutFilterDoubleType.visibility = View.GONE
+            textViewFilterIntType.visibility = View.VISIBLE
+            textInputLayoutFilterIntType.visibility = View.VISIBLE
             datePickerFilterDateView.visibility = View.GONE
           }
           DateType -> {
@@ -262,13 +289,17 @@ class FilterActivity : AppCompatActivity() {
             textInputLayoutFilterTextType.visibility = View.GONE
             textViewFilterDoubleType.visibility = View.GONE
             textInputLayoutFilterDoubleType.visibility = View.GONE
+            textViewFilterIntType.visibility = View.GONE
+            textInputLayoutFilterIntType.visibility = View.GONE
             datePickerFilterDateView.visibility = View.VISIBLE
           }
-          else -> {
+          NoType -> {
             textViewFilterTextType.visibility = View.GONE
             textInputLayoutFilterTextType.visibility = View.GONE
             textViewFilterDoubleType.visibility = View.GONE
             textInputLayoutFilterDoubleType.visibility = View.GONE
+            textViewFilterIntType.visibility = View.GONE
+            textInputLayoutFilterIntType.visibility = View.GONE
             datePickerFilterDateView.visibility = View.GONE
           }
         }
@@ -294,6 +325,11 @@ class FilterActivity : AppCompatActivity() {
               (filterDoubleValueView.text).toString()
                   .trim()
             }
+            IntType -> {
+              // Add () to avoid cast exception.
+              (filterIntValueView.text).toString()
+                  .trim()
+            }
             DateType -> {
               val localDateTime: LocalDateTime = LocalDateTime.of(
                   datePickerFilterDateView.year, datePickerFilterDateView.month + 1,
@@ -302,7 +338,7 @@ class FilterActivity : AppCompatActivity() {
               val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
               date.toString()
             }
-            else -> {
+            NoType -> {
               ""
             }
           }

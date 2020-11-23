@@ -410,4 +410,8 @@ limitations under the License. -->
   <string name="filter_quantitygreater_desc"></string>
   <string name="filter_quantityless_name">Aktienanzahl kleiner als</string>
   <string name="filter_quantityless_desc"></string>
+  <string name="filter_capitalgaingreater_name">Ausgeführter Kapitalgewin größer als</string>
+  <string name="filter_capitalgaingreater_desc"></string>
+  <string name="filter_capitalgainless_name">Ausgeführter Kapitalgewin kleiner als</string>
+  <string name="filter_capitalgainless_desc"></string>
 </resources>
