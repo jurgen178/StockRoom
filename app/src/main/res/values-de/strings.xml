@@ -405,5 +405,5 @@ limitations under the License. -->
   <string name="filter_lastassetboughtafter_name">Letzte Aktien gekauft nach</string>
   <string name="filter_lastassetboughtafter_desc"></string>
   <string name="filter_longterm_name">Letzte Aktien vor einem Jahr gekauft</string>
-  <string name="filter_longterm_desc"></string>
+  <string name="filter_longterm_desc">Aktien die vor einem Jahr oder mehr gekauft worden sind, haben beim Verkauf einen Steuervorteil.</string>
 </resources>

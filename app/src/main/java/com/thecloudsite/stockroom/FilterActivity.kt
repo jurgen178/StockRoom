@@ -172,6 +172,7 @@ class FilterActivity : AppCompatActivity() {
       dialogView.findViewById<TextView>(id.addUpdateFilterHeadline)
 
     val textViewFilterTextType = dialogView.findViewById<TextView>(id.textViewFilterTextType)
+    val textViewFilterDesc = dialogView.findViewById<TextView>(id.textViewFilterDesc)
     val textInputLayoutFilterTextType =
       dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterTextType)
     val textViewFilterDoubleType =
@@ -225,6 +226,8 @@ class FilterActivity : AppCompatActivity() {
       // Add
       addUpdateFilterHeadlineView.text = getString(string.add_filter)
     }
+
+    textViewFilterDesc.text = filterType.desc
 
     textViewFilterSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
