@@ -84,7 +84,7 @@ limitations under the License. -->
 
   <string name="hint_add_stock">Aktienkürzel</string>
   <string name="button_add">Hinzufügen</string>
-  <string name="sort_change_percentage">Nach Änderung % sortieren</string>
+  <string name="sort_change_percentage">Nach Änderung %% sortieren</string>
   <string name="sort_name">Nach Namen sortieren</string>
   <string name="sort_assets">Nach Bestand sortieren</string>
   <string name="sort_profit">Nach Gewinn sortieren</string>
@@ -372,6 +372,8 @@ limitations under the License. -->
   <string name="filter_symbolcontainstype_desc"></string>
   <string name="filter_notecontainstype_name">Anmerkung enthält</string>
   <string name="filter_notecontainstype_desc"></string>
+  <string name="filter_dividendnotecontainstype_name">Dividendenanmerkung enthält</string>
+  <string name="filter_dividendnotecontainstype_desc"></string>
   <string name="filter_assetgreater_name">Bestand größer als</string>
   <string name="filter_assetgreater_desc"></string>
   <string name="filter_assetless_name">Bestand kleiner als</string>

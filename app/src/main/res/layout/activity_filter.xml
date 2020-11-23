@@ -19,6 +19,7 @@
         android:layout_height="30dp"
         android:layout_width="30dp"
         android:layout_gravity="center_vertical"
+        android:contentDescription="@string/menu_filter"
         />
 
     <Switch

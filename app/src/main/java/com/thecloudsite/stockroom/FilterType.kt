@@ -32,6 +32,7 @@ enum class FilterTypeEnum {
   FilterPercentageChangeLessThanType,
   FilterSymbolContainsType,
   FilterNoteContainsType,
+  FilterDividendNoteContainsType,
   FilterAssetGreaterThanType,
   FilterAssetLessThanType,
   FilterProfitGreaterThanType,
@@ -78,6 +79,7 @@ object FilterFactory {
       )
       FilterTypeEnum.FilterSymbolContainsType -> FilterSymbolContainsType(type, context)
       FilterTypeEnum.FilterNoteContainsType -> FilterNoteContainsType(type, context)
+      FilterTypeEnum.FilterDividendNoteContainsType -> FilterDividendNoteContainsType(type, context)
       FilterTypeEnum.FilterAssetGreaterThanType -> FilterAssetGreaterThanType(type, context)
       FilterTypeEnum.FilterAssetLessThanType -> FilterAssetLessThanType(type, context)
       FilterTypeEnum.FilterProfitGreaterThanType -> FilterProfitGreaterThanType(type, context)
@@ -96,7 +98,9 @@ object FilterFactory {
       )
       FilterTypeEnum.FilterQuantityGreaterThanType -> FilterQuantityGreaterThanType(type, context)
       FilterTypeEnum.FilterQuantityLessThanType -> FilterQuantityLessThanType(type, context)
-      FilterTypeEnum.FilterCapitalGainGreaterThanType -> FilterCapitalGainGreaterThanType(type, context)
+      FilterTypeEnum.FilterCapitalGainGreaterThanType -> FilterCapitalGainGreaterThanType(
+          type, context
+      )
       FilterTypeEnum.FilterCapitalGainLessThanType -> FilterCapitalGainLessThanType(type, context)
       FilterTypeEnum.FilterFirstAssetSoldBeforeType -> FilterFirstAssetSoldBeforeType(
           type, context
@@ -207,7 +211,7 @@ class FilterNullType : IFilterType {
     set(value) {}
 }
 
-open class FilterDoubleType(
+open class FilterBaseType(
   override val typeId: FilterTypeEnum,
   context: Context
 ) : IFilterType {
@@ -215,36 +219,48 @@ open class FilterDoubleType(
     return false
   }
 
+  override val dataType = FilterDataTypeEnum.NoType
+  override val displayName = ""
+  override val desc = ""
+  override var data = ""
+  override var serializedData
+    get() = data
+    set(value) {}
+}
+
+open class FilterTextType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : FilterBaseType(typeId, context) {
+
+  override val dataType = FilterDataTypeEnum.TextType
+}
+
+open class FilterDoubleType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : FilterBaseType(typeId, context) {
+
   var filterValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override val displayName = ""
-  override val desc = ""
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
     }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 open class FilterDoublePercentageType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
-  override fun filter(stockItem: StockItem): Boolean {
-    return false
-  }
+) : FilterBaseType(typeId, context) {
 
-  var filterValue: Double = 0.0
+  private var filterValue: Double = 0.0
   var filterPercentageValue: Double = 0.0
 
   override val dataType = FilterDataTypeEnum.DoubleType
-  override val displayName = ""
-  override val desc = ""
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -252,47 +268,32 @@ open class FilterDoublePercentageType(
       filterValue = strToDouble(value)
       filterPercentageValue = filterValue / 100
     }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 open class FilterIntType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
-  override fun filter(stockItem: StockItem): Boolean {
-    return false
-  }
+) : FilterBaseType(typeId, context) {
 
   var filterValue: Int = 0
 
   override val dataType = FilterDataTypeEnum.IntType
-  override val displayName = ""
-  override val desc = ""
   override var data: String = ""
     get() = filterValue.toString()
     set(value) {
       field = value
       filterValue = strToInt(value)
     }
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 open class FilterDateType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
-  override fun filter(stockItem: StockItem): Boolean {
-    return false
-  }
+) : FilterBaseType(typeId, context) {
+
   var filterDateValue: Long = 0L
 
   override val dataType = FilterDataTypeEnum.DateType
-  override val displayName = ""
-  override val desc = ""
   override var data: String = ""
     get() = LocalDateTime.ofEpochSecond(filterDateValue, 0, ZoneOffset.UTC)
         .format(DateTimeFormatter.ofLocalizedDate(FULL))
@@ -375,35 +376,37 @@ class FilterPercentageChangeLessThanType(
 class FilterSymbolContainsType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterTextType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
   }
 
-  override val dataType = FilterDataTypeEnum.TextType
   override val displayName = context.getString(R.string.filter_symbolcontainstype_name)
   override val desc = context.getString(R.string.filter_symbolcontainstype_desc)
-  override var data = ""
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 class FilterNoteContainsType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterTextType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     return stockItem.stockDBdata.note.contains(data, ignoreCase = true)
   }
 
-  override val dataType = FilterDataTypeEnum.TextType
   override val displayName = context.getString(R.string.filter_notecontainstype_name)
   override val desc = context.getString(R.string.filter_notecontainstype_desc)
-  override var data = ""
-  override var serializedData
-    get() = data
-    set(value) {}
+}
+
+class FilterDividendNoteContainsType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : FilterTextType(typeId, context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    return stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
+  }
+
+  override val displayName = context.getString(R.string.filter_dividendnotecontainstype_name)
+  override val desc = context.getString(R.string.filter_dividendnotecontainstype_desc)
 }
 
 // Asset greater than
@@ -812,7 +815,7 @@ class FilterLastAssetBoughtAfterType(
 class FilterLongTermType(
   override val typeId: FilterTypeEnum,
   context: Context
-) : IFilterType {
+) : FilterBaseType(typeId, context) {
   override fun filter(stockItem: StockItem): Boolean {
     val assetBought = stockItem.assets.filter { asset ->
       asset.quantity > 0.0
@@ -832,11 +835,6 @@ class FilterLongTermType(
     }
   }
 
-  override val dataType = FilterDataTypeEnum.NoType
   override val displayName = context.getString(R.string.filter_longterm_name)
   override val desc = context.getString(R.string.filter_longterm_desc)
-  override var data = ""
-  override var serializedData
-    get() = data
-    set(value) {}
 }

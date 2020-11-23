@@ -123,14 +123,14 @@ object SharedHandler {
   val deleteStockHandler = MutableLiveData<String>()
 }
 
-val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf<String>(
+val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf(
     "00_StockRoomChartFragment",
     "01_StockRoomListFragment",
     "02_StockRoomTileFragment",
     "06_SummaryGroupFragment"
 )
 
-val displayedViewsSet: MutableSet<String> = mutableSetOf<String>(
+val displayedViewsSet: MutableSet<String> = mutableSetOf(
     "00_StockRoomChartFragment",
     "01_StockRoomListFragment",
     "02_StockRoomTileFragment",
@@ -209,7 +209,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<List<StockItem>>
 
-  var filterList: List<IFilterType> = emptyList()
+  private var filterList: List<IFilterType> = emptyList()
 
   private var portfolioSymbols: HashSet<String> = HashSet()
 

@@ -375,6 +375,8 @@ limitations under the License. -->
   <string name="filter_symbolcontainstype_desc"></string>
   <string name="filter_notecontainstype_name">Note contains</string>
   <string name="filter_notecontainstype_desc"></string>
+  <string name="filter_dividendnotecontainstype_name">Dividend note contains</string>
+  <string name="filter_dividendnotecontainstype_desc"></string>
   <string name="filter_assetgreater_name">Asset greater than</string>
   <string name="filter_assetgreater_desc"></string>
   <string name="filter_assetless_name">Asset less than</string>

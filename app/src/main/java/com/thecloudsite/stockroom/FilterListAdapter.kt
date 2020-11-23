@@ -22,17 +22,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.filterview_item.view.filterDelete
-import kotlinx.android.synthetic.main.filterview_item.view.filterText
 import kotlinx.android.synthetic.main.filterview_item.view.filterTextLayout
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
 class FilterListAdapter internal constructor(
-  private val context: Context,
+  context: Context,
   private val clickListenerUpdate: (IFilterType, Int) -> Unit,
   private val clickListenerDelete: (IFilterType, Int) -> Unit
 ) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>() {
@@ -57,7 +55,6 @@ class FilterListAdapter internal constructor(
       itemView.filterDelete.setOnClickListener { clickListenerDelete(filterType, index) }
     }
 
-    val filterTextLayout: ConstraintLayout = itemView.findViewById(R.id.filterTextLayout)
     val filterText: TextView = itemView.findViewById(R.id.filterText)
     val filterDesc: TextView = itemView.findViewById(R.id.filterDesc)
   }

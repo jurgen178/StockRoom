@@ -106,14 +106,14 @@ class NewsAdapter(
 
   private var newsDataList = if (headline.isNotEmpty()) {
     // Add headline to news list.
-    listOf<NewsData>(
+    listOf(
         // News is sorted by time, date=Long.MAX_VALUE is top entry.
         NewsData(
             headline, "", Long.MAX_VALUE, "", news_type_headline
         )
     )
   } else {
-    listOf<NewsData>()
+    listOf()
   }
 
   // https://medium.com/@ivancse.58/android-and-kotlin-recyclerview-with-multiple-view-types-65285a254393

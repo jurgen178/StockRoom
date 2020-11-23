@@ -197,7 +197,7 @@ class FilterActivity : AppCompatActivity() {
     val spinnerData = getFilterNameList(applicationContext)
     val textViewFilterSpinner = dialogView.findViewById<Spinner>(id.textViewFilterSpinner)
     textViewFilterSpinner.adapter =
-      ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, spinnerData)
+      ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerData)
 
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
     val filterIntValueView = dialogView.findViewById<TextView>(id.filterIntValue)
