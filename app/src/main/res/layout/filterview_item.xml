@@ -24,6 +24,7 @@ limitations under the License. -->
     >
 
   <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/filterTextLayout"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       app:layout_constraintTop_toTopOf="parent"
@@ -46,6 +47,7 @@ limitations under the License. -->
         android:id="@+id/filterDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@+id/filterText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,15 +58,17 @@ limitations under the License. -->
 
   <TextView
       android:id="@+id/filterDelete"
-      android:layout_width="50dp"
+      android:layout_width="60dp"
       android:layout_height="wrap_content"
-      android:paddingStart="4dp"
-      android:paddingEnd="4dp"
-      app:drawableTint="@color/colorPrimaryDark"
+      android:layout_marginEnd="4dp"
+      android:paddingEnd="8dp"
+      android:paddingStart="8dp"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:drawableStartCompat="@drawable/ic_action_delete2"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.5"
+      app:drawableEndCompat="@drawable/ic_action_delete2"
+      app:drawableTint="@color/colorPrimaryDark"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

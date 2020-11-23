@@ -240,6 +240,8 @@ class FilterActivity : AppCompatActivity() {
         id: Long
       ) {
         val filter = FilterFactory.create(position, applicationContext)
+        textViewFilterDesc.text = filter.desc
+
         when (filter.dataType) {
           TextType -> {
             textViewFilterTextType.visibility = View.VISIBLE

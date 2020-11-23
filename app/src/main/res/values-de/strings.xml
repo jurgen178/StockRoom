@@ -364,9 +364,9 @@ limitations under the License. -->
   <string name="update_filter">Filter aktualisieren</string>
   <string name="add_filter_msg">Der Filter \'%1$s\' wurde hinzugefügt.</string>
   <string name="update_filter_msg">Der Filter \'%1$s\' wurde aktualisiert.</string>
-  <string name="filter_percentagechangegreater_name">Änderung % &gt;</string>
+  <string name="filter_percentagechangegreater_name">Aktienpreisänderung % &gt;</string>
   <string name="filter_percentagechangegreater_desc"></string>
-  <string name="filter_percentagechangeless_name">Änderung % &lt;</string>
+  <string name="filter_percentagechangeless_name">Aktienpreisänderung % &lt;</string>
   <string name="filter_percentagechangeless_desc"></string>
   <string name="filter_symbolcontainstype_name">Aktienkürzel enthält</string>
   <string name="filter_symbolcontainstype_desc"></string>
@@ -376,7 +376,7 @@ limitations under the License. -->
   <string name="filter_assetgreater_desc"></string>
   <string name="filter_assetless_name">Bestand &lt;</string>
   <string name="filter_assetless_desc"></string>
-  <string name="filter_profitgreater_name">Gewinn % &gt;</string>
+  <string name="filter_profitgreater_name">Gewinn &gt;</string>
   <string name="filter_profitgreater_desc"></string>
   <string name="filter_profitless_name">Gewinn &lt;</string>
   <string name="filter_profitless_desc"></string>
@@ -384,9 +384,9 @@ limitations under the License. -->
   <string name="filter_profitpercentagegreater_desc"></string>
   <string name="filter_profitpercentageless_name">Gewinn % &lt;</string>
   <string name="filter_profitpercentageless_desc"></string>
-  <string name="filter_dividendpercentagegreater_name">Dividend % &gt;</string>
+  <string name="filter_dividendpercentagegreater_name">Dividende % &gt;</string>
   <string name="filter_dividendpercentagegreater_desc"></string>
-  <string name="filter_dividendpercentageless_name">Dividend % &lt;</string>
+  <string name="filter_dividendpercentageless_name">Dividende % &lt;</string>
   <string name="filter_dividendpercentageless_desc"></string>
   <string name="filter_firstassetsoldbefore_name">Früheste Aktien verkauft bevor</string>
   <string name="filter_firstassetsoldbefore_desc"></string>
