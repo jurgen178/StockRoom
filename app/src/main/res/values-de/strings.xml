@@ -84,7 +84,7 @@ limitations under the License. -->
 
   <string name="hint_add_stock">Aktienkürzel</string>
   <string name="button_add">Hinzufügen</string>
-  <string name="sort_change_percentage">Nach Änderung %% sortieren</string>
+  <string name="sort_change_percentage">Nach Änderung % sortieren</string>
   <string name="sort_name">Nach Namen sortieren</string>
   <string name="sort_assets">Nach Bestand sortieren</string>
   <string name="sort_profit">Nach Gewinn sortieren</string>
@@ -412,8 +412,8 @@ limitations under the License. -->
   <string name="filter_quantitygreater_desc"></string>
   <string name="filter_quantityless_name">Aktienanzahl kleiner als</string>
   <string name="filter_quantityless_desc"></string>
-  <string name="filter_capitalgaingreater_name">Ausgeführter Kapitalgewin größer als</string>
+  <string name="filter_capitalgaingreater_name">Ausgeführter Kapitalgewinn größer als</string>
   <string name="filter_capitalgaingreater_desc"></string>
-  <string name="filter_capitalgainless_name">Ausgeführter Kapitalgewin kleiner als</string>
+  <string name="filter_capitalgainless_name">Ausgeführter Kapitalgewinn kleiner als</string>
   <string name="filter_capitalgainless_desc"></string>
 </resources>
