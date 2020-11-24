@@ -79,7 +79,7 @@ class SoundPlayer(context: Context) {
     }
 
     fun playSound(id: Int){
-        // TODO: stereo sound with left an right volume
+        // TODO: stereo sound with left and right volume
         soundPool.play(id, 1f, 1f, 0, 0, 1f)
     }
 
