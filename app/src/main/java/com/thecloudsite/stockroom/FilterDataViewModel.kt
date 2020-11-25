@@ -32,8 +32,23 @@ data class FilterTypeJson
   val data: String,
 )
 
-class Filters {
+class Filters(var map: MutableMap<String, List<IFilterType>> = mutableMapOf()) {
+
   var selectedFilter: String = ""
+    //    get() {
+//      return when {
+//        map.containsKey(field) -> {
+//          field
+//        }
+//        map.isNotEmpty() -> {
+//          map.toList()
+//              .first().first
+//        }
+//        else -> {
+//          "Filter"
+//        }
+//      }
+//    }
     set(value) {
       field = when {
         value.isNotEmpty() -> {
@@ -50,7 +65,6 @@ class Filters {
     }
 
   var filterActive: Boolean = false
-  var map: MutableMap<String, List<IFilterType>> = mutableMapOf()
 
   fun add(filterType: IFilterType) {
     val list: MutableList<IFilterType> = mutableListOf()
@@ -95,15 +109,11 @@ class Filters {
   }
 
   fun getFilterNameList(): List<String> {
-    return if (map.containsKey(selectedFilter)) {
-      val list: MutableList<String> = mutableListOf()
-      map.forEach { name, filterList ->
-        list.add(name)
-      }
-      return list
-    } else {
-      emptyList()
+    val list: MutableList<String> = mutableListOf()
+    map.forEach { (name, _) ->
+      list.add(name)
     }
+    return list
   }
 
   fun enable(enabled: Boolean) {
@@ -164,10 +174,18 @@ class FilterDataRepository(val context: Context) {
       map[filterTypeJson.name] = list
     }
 
-    val filters = Filters()
-    filters.selectedFilter = SharedRepository.filterMap.value?.selectedFilter.toString()
+    val filters = Filters(map)
+    val selectedFilter = SharedRepository.filterMap.value?.selectedFilter.toString()
+    if (map.containsKey(selectedFilter)) {
+      filters.selectedFilter = selectedFilter
+
+    } else
+      if (map.isNotEmpty()) {
+        filters.selectedFilter = map.toList()
+            .first().first
+      }
+
     filters.filterActive = SharedRepository.filterMap.value?.filterActive == true
-    filters.map = map
     SharedRepository.filterMap.value = filters
   }
 

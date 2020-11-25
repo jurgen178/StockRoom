@@ -418,6 +418,6 @@ limitations under the License. -->
   <string name="filter_capitalgaingreater_desc"></string>
   <string name="filter_capitalgainless_name">Ausgeführter Kapitalgewinn kleiner als</string>
   <string name="filter_capitalgainless_desc"></string>
-  <string name="filter_name">filter name</string>
-  <string name="filter_name_not_empty">not empty</string>
+  <string name="filter_name">Filtername</string>
+  <string name="filter_name_not_empty">Geben Sie einen Filternamen ein.</string>
 </resources>
