@@ -31,6 +31,7 @@ enum class FilterTypeEnum {
   FilterPercentageChangeGreaterThanType,
   FilterPercentageChangeLessThanType,
   FilterSymbolContainsType,
+  FilterDisplayNameContainsType,
   FilterNoteContainsType,
   FilterDividendNoteContainsType,
   FilterAssetGreaterThanType,
@@ -78,6 +79,7 @@ object FilterFactory {
           type, context
       )
       FilterTypeEnum.FilterSymbolContainsType -> FilterSymbolContainsType(type, context)
+      FilterTypeEnum.FilterDisplayNameContainsType -> FilterDisplayNameContainsType(type, context)
       FilterTypeEnum.FilterNoteContainsType -> FilterNoteContainsType(type, context)
       FilterTypeEnum.FilterDividendNoteContainsType -> FilterDividendNoteContainsType(type, context)
       FilterTypeEnum.FilterAssetGreaterThanType -> FilterAssetGreaterThanType(type, context)
@@ -383,6 +385,18 @@ class FilterSymbolContainsType(
 
   override val displayName = context.getString(R.string.filter_symbolcontainstype_name)
   override val desc = context.getString(R.string.filter_symbolcontainstype_desc)
+}
+
+class FilterDisplayNameContainsType(
+  override val typeId: FilterTypeEnum,
+  context: Context
+) : FilterTextType(typeId, context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    return getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
+  }
+
+  override val displayName = context.getString(R.string.filter_displaynamecontainstype_name)
+  override val desc = context.getString(R.string.filter_displaynamecontainstype_desc)
 }
 
 class FilterNoteContainsType(

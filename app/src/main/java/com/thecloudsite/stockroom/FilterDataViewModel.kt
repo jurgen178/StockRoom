@@ -23,9 +23,11 @@ import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.thecloudsite.stockroom.database.Events
 
 data class FilterTypeJson
 (
+  val name: String,
   var typeId: FilterTypeEnum,
   val data: String,
 )
@@ -102,42 +104,54 @@ class FilterDataRepository(val context: Context) {
 
   fun getSerializedStr(): String {
 
-//    val filterTypeJsonList = SharedRepository.filterData.value?.let { filterList ->
-//      filterList.map { filterType ->
-//        FilterTypeJson(
-//            typeId = filterType.typeId,
-//            data = filterType.serializedData
-//        )
-//      }
-//    }
+    var jsonString = ""
+    val filters = SharedRepository.filterMap.value
+    if (filters != null) {
+      val filterTypeJsonList: MutableList<FilterTypeJson> = mutableListOf()
+      filters.map.forEach { (name, filterList) ->
+        filterList.forEach { filter ->
+          filterTypeJsonList.add(
+              FilterTypeJson(
+                  name = name,
+                  typeId = filter.typeId,
+                  data = filter.serializedData
+              )
+          )
+        }
+      }
 
-    // Convert to a json string.
-    val gson: Gson = GsonBuilder()
-        //.setPrettyPrinting()
-        .create()
-    val jsonString = ""//gson.toJson(SharedRepository.filterData.value)
+      // Convert to a json string.
+      val gson: Gson = GsonBuilder()
+          //.setPrettyPrinting()
+          .create()
+
+      jsonString = gson.toJson(filterTypeJsonList)
+    }
 
     return jsonString
   }
 
-  fun setData(filterList: List<IFilterType>) {
-    //SharedRepository.filterData.value?.filterList = filterList
-  }
-
   fun setSerializedStr(filterData: String) {
-//    val sType = object : TypeToken<List<FilterTypeJson>>() {}.type
-//    val gson = Gson()
-//    val filterTypeJsonList = gson.fromJson<List<FilterTypeJson>>(filterData, sType)
-//
-//    val list: MutableList<IFilterType> = mutableListOf()
-//    filterTypeJsonList?.forEach { filterTypeJson ->
-//      if (filterTypeJson.typeId != null && filterTypeJson.data != null) {
-//        val filterType = FilterFactory.create(filterTypeJson.typeId, context)
-//        filterType.data = filterTypeJson.data
-//        list.add(filterType)
-//      }
-//    }
-//    SharedRepository.filterData.value?.filterList = list
+    val sType = object : TypeToken<List<FilterTypeJson>>() {}.type
+    val gson = Gson()
+    val filterList = gson.fromJson<List<FilterTypeJson>>(filterData, sType)
+
+    val map: MutableMap<String, List<IFilterType>> = mutableMapOf()
+
+    filterList?.forEach { filterTypeJson ->
+      val list: MutableList<IFilterType> = mutableListOf()
+      if (map.containsKey(filterTypeJson.name)) {
+        map[filterTypeJson.name]?.let { list.addAll(it) }
+      }
+      val filterType = FilterFactory.create(filterTypeJson.typeId, context)
+      filterType.data = filterTypeJson.data
+      list.add(filterType)
+      map[filterTypeJson.name] = list
+    }
+
+    val filters = Filters()
+    filters.map = map
+    SharedRepository.filterMap.value = filters
   }
 
   fun addData(filterType: IFilterType) {
@@ -211,10 +225,6 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
 
   fun setSerializedStr(filterData: String) {
     return filterDataRepository.setSerializedStr(filterData)
-  }
-
-  fun setData(filterList: List<IFilterType>) {
-    filterDataRepository.setData(filterList)
   }
 
   fun addData(filterType: IFilterType) {

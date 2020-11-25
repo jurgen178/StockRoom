@@ -255,13 +255,6 @@ class MainActivity : AppCompatActivity() {
       invalidateOptionsMenu()
     })
 
-//    SharedRepository.selectedFilterLiveData.observe(this, Observer { value ->
-//      if (value != null) {
-//        // update filterlist
-//        SharedRepository.updateFilter(value)
-//      }
-//    })
-
     // Update the menu when portfolio data changed.
     SharedRepository.portfoliosLiveData.observe(this, Observer {
       invalidateOptionsMenu()

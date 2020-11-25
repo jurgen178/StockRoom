@@ -149,14 +149,6 @@ object SharedRepository {
   val alerts: LiveData<List<AlertData>>
     get() = alertsData
 
-//  var filterActive = MutableLiveData(false)
-//  val filterActiveLiveData: LiveData<Boolean>
-//    get() = filterActive
-//
-//  var selectedFilter = MutableLiveData("")
-//  val selectedFilterLiveData: LiveData<String>
-//    get() = selectedFilter
-
   val filterMap = MutableLiveData<Filters>(Filters())
   val filterMapLiveData: LiveData<Filters>
     get() = filterMap

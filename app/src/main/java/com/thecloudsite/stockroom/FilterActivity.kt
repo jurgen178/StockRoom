@@ -87,26 +87,20 @@ class FilterActivity : AppCompatActivity() {
       filterDataViewModel.enable(isChecked)
     }
 
-//    SharedRepository.selectedFilterLiveData.observe(this, Observer { value ->
-//      if (value != null) {
-//        // update filterlist
-//        SharedRepository.updateFilter(value)
-//        if (SharedRepository.filterMap.containsKey(value)) {
-//          SharedRepository.filterMap[value]?.let { filterDataViewModel.setData(it) }
-//        }
-//      }
-//    })
-
     SharedRepository.filterMapLiveData.observe(this, Observer { filter ->
+
+      textViewFilterSelection.text = filterDataViewModel.selectedFilter
+
       filterEnableSwitch.isChecked = filter.filterActive
 
-      if (filter.filterActive) {
-        filterRecyclerView.visibility = View.VISIBLE
-        addFilterButton.visibility = View.VISIBLE
+      val visibility = if (filter.filterActive) {
+        View.VISIBLE
       } else {
-        filterRecyclerView.visibility = View.GONE
-        addFilterButton.visibility = View.GONE
+        View.GONE
       }
+      textViewFilterSelection.visibility = visibility
+      filterRecyclerView.visibility = visibility
+      addFilterButton.visibility = visibility
 
       val sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
@@ -198,8 +192,6 @@ class FilterActivity : AppCompatActivity() {
         true
       }
     }
-
-    textViewFilterSelection.text = filterDataViewModel.selectedFilter
 
     addFilterButton.setOnClickListener {
       addUpdateFilter(FilterNullType(), -1)

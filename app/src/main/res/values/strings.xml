@@ -373,6 +373,8 @@ limitations under the License. -->
   <string name="filter_percentagechangeless_desc"></string>
   <string name="filter_symbolcontainstype_name">Symbol contains</string>
   <string name="filter_symbolcontainstype_desc"></string>
+  <string name="filter_displaynamecontainstype_name">Display name contains</string>
+  <string name="filter_displaynamecontainstype_desc"></string>
   <string name="filter_notecontainstype_name">Note contains</string>
   <string name="filter_notecontainstype_desc"></string>
   <string name="filter_dividendnotecontainstype_name">Dividend note contains</string>

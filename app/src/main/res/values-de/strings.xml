@@ -370,6 +370,8 @@ limitations under the License. -->
   <string name="filter_percentagechangeless_desc"></string>
   <string name="filter_symbolcontainstype_name">Aktienkürzel enthält</string>
   <string name="filter_symbolcontainstype_desc"></string>
+  <string name="filter_displaynamecontainstype_name">Anzeigename enthält</string>
+  <string name="filter_displaynamecontainstype_desc"></string>
   <string name="filter_notecontainstype_name">Anmerkung enthält</string>
   <string name="filter_notecontainstype_desc"></string>
   <string name="filter_dividendnotecontainstype_name">Dividendenanmerkung enthält</string>
