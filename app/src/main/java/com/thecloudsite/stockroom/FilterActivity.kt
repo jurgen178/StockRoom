@@ -106,7 +106,8 @@ class FilterActivity : AppCompatActivity() {
         PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
       sharedPreferences
           .edit()
-          .putBoolean("filterEnabled", filter.filterActive)
+          .putBoolean("filterActive", filter.filterActive)
+          .putString("selectedFilter", filter.selectedFilter)
           .apply()
     })
 
@@ -151,11 +152,8 @@ class FilterActivity : AppCompatActivity() {
           val addFilterNameView =
             dialogView.findViewById<TextView>(R.id.addFilterName)
 
-          val selectedFilter = filterDataViewModel.selectedFilter
-
           filterHeaderView.text = getString(R.string.add_filter)
 
-          val addNameView = dialogView.findViewById<TextView>(R.id.addPortfolioName)
           builder.setView(dialogView)
               // Add action buttons
               .setPositiveButton(R.string.add) { _, _ ->

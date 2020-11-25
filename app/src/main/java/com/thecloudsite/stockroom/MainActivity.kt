@@ -412,7 +412,13 @@ class MainActivity : AppCompatActivity() {
       FilterDataRepository(applicationContext).setSerializedStr(filterdata)
     }
 
-    SharedRepository.filterMapLiveData.value?.filterActive = sharedPreferences.getBoolean("filterEnabled", false)
+    val selectedFilter = sharedPreferences.getString("selectedFilter", "")
+    if (selectedFilter != null) {
+      SharedRepository.filterMapLiveData.value?.selectedFilter = selectedFilter
+    }
+
+    SharedRepository.filterMapLiveData.value?.filterActive =
+      sharedPreferences.getBoolean("filterActive", false)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -486,7 +492,8 @@ class MainActivity : AppCompatActivity() {
     menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
     //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 
-    menu?.findItem(R.id.menu_filter)?.isChecked = SharedRepository.filterMapLiveData.value?.filterActive == true
+    menu?.findItem(R.id.menu_filter)?.isChecked =
+      SharedRepository.filterMapLiveData.value?.filterActive == true
 
     if (SharedRepository.portfolios.value != null) {
 

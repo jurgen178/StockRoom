@@ -33,7 +33,22 @@ data class FilterTypeJson
 )
 
 class Filters {
-  var selectedFilter: String = "test"
+  var selectedFilter: String = ""
+    set(value) {
+      field = when {
+        value.isNotEmpty() -> {
+          value
+        }
+        map.isNotEmpty() -> {
+          map.toList()
+              .first().first
+        }
+        else -> {
+          "Filter"
+        }
+      }
+    }
+
   var filterActive: Boolean = false
   var map: MutableMap<String, List<IFilterType>> = mutableMapOf()
 
@@ -150,6 +165,8 @@ class FilterDataRepository(val context: Context) {
     }
 
     val filters = Filters()
+    filters.selectedFilter = SharedRepository.filterMap.value?.selectedFilter.toString()
+    filters.filterActive = SharedRepository.filterMap.value?.filterActive == true
     filters.map = map
     SharedRepository.filterMap.value = filters
   }
