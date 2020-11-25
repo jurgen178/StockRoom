@@ -250,10 +250,17 @@ class MainActivity : AppCompatActivity() {
         }, false
     )
 
-    // Update the menu when portfolio data changed.
-    SharedRepository.filterActiveLiveData.observe(this, Observer {
+    // Update the menu when filter data changed.
+    SharedRepository.filterMapLiveData.observe(this, Observer {
       invalidateOptionsMenu()
     })
+
+//    SharedRepository.selectedFilterLiveData.observe(this, Observer { value ->
+//      if (value != null) {
+//        // update filterlist
+//        SharedRepository.updateFilter(value)
+//      }
+//    })
 
     // Update the menu when portfolio data changed.
     SharedRepository.portfoliosLiveData.observe(this, Observer {
@@ -412,7 +419,7 @@ class MainActivity : AppCompatActivity() {
       FilterDataRepository(applicationContext).setSerializedStr(filterdata)
     }
 
-    SharedRepository.filterActive.value = sharedPreferences.getBoolean("filterEnabled", false)
+    SharedRepository.filterMapLiveData.value?.filterActive = sharedPreferences.getBoolean("filterEnabled", false)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -486,7 +493,7 @@ class MainActivity : AppCompatActivity() {
     menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
     //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 
-    menu?.findItem(R.id.menu_filter)?.isChecked = SharedRepository.filterActive.value!!
+    menu?.findItem(R.id.menu_filter)?.isChecked = SharedRepository.filterMapLiveData.value?.filterActive == true
 
     if (SharedRepository.portfolios.value != null) {
 

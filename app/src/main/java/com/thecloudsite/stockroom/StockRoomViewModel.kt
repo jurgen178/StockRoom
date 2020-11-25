@@ -149,13 +149,17 @@ object SharedRepository {
   val alerts: LiveData<List<AlertData>>
     get() = alertsData
 
-  var filterActive = MutableLiveData(false)
-  val filterActiveLiveData: LiveData<Boolean>
-    get() = filterActive
+//  var filterActive = MutableLiveData(false)
+//  val filterActiveLiveData: LiveData<Boolean>
+//    get() = filterActive
+//
+//  var selectedFilter = MutableLiveData("")
+//  val selectedFilterLiveData: LiveData<String>
+//    get() = selectedFilter
 
-  val filterLiveData = MutableLiveData<List<IFilterType>>()
-  val filterData: LiveData<List<IFilterType>>
-    get() = filterLiveData
+  val filterMap = MutableLiveData<Filters>(Filters())
+  val filterMapLiveData: LiveData<Filters>
+    get() = filterMap
 
   val debugList = ArrayList<DebugData>()
   val debugLiveData = MutableLiveData<List<DebugData>>()
@@ -592,10 +596,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
     }
 
-    allMediatorData.addSource(SharedRepository.filterData) { value ->
+    allMediatorData.addSource(SharedRepository.filterMapLiveData) { value ->
       if (value != null) {
         // Set filterlist and update.
-        filterList = if (SharedRepository.filterActive.value!!) value else emptyList()
+        filterList = value.getFilterList()
         allMediatorData.value = allData.value?.let { process(it, false) }
       }
     }

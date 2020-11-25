@@ -17,17 +17,22 @@
 package com.thecloudsite.stockroom
 
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.PopupMenu
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -44,6 +49,7 @@ import com.thecloudsite.stockroom.R.string
 import kotlinx.android.synthetic.main.activity_filter.addFilterButton
 import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
+import kotlinx.android.synthetic.main.activity_filter.textViewFilterSelection
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -69,8 +75,8 @@ class FilterActivity : AppCompatActivity() {
     filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
     filterDataViewModel.data.observe(this, Observer { data ->
-      data?.let { filterData ->
-        filterAdapter.setFilter(filterData)
+      data?.let { filters ->
+        filterAdapter.setFilter(filters.getFilterList())
       }
     })
 
@@ -78,13 +84,23 @@ class FilterActivity : AppCompatActivity() {
     filterRecyclerView.adapter = filterAdapter
 
     filterEnableSwitch.setOnCheckedChangeListener { _, isChecked ->
-      SharedRepository.filterActive.value = isChecked
+      filterDataViewModel.enable(isChecked)
     }
 
-    SharedRepository.filterActiveLiveData.observe(this, Observer { isChecked ->
-      filterEnableSwitch.isChecked = isChecked
+//    SharedRepository.selectedFilterLiveData.observe(this, Observer { value ->
+//      if (value != null) {
+//        // update filterlist
+//        SharedRepository.updateFilter(value)
+//        if (SharedRepository.filterMap.containsKey(value)) {
+//          SharedRepository.filterMap[value]?.let { filterDataViewModel.setData(it) }
+//        }
+//      }
+//    })
 
-      if (isChecked) {
+    SharedRepository.filterMapLiveData.observe(this, Observer { filter ->
+      filterEnableSwitch.isChecked = filter.filterActive
+
+      if (filter.filterActive) {
         filterRecyclerView.visibility = View.VISIBLE
         addFilterButton.visibility = View.VISIBLE
       } else {
@@ -96,13 +112,94 @@ class FilterActivity : AppCompatActivity() {
         PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
       sharedPreferences
           .edit()
-          .putBoolean("filterEnabled", isChecked)
+          .putBoolean("filterEnabled", filter.filterActive)
           .apply()
     })
 
 //    val testdata: List<IFilterType> =
 //      listOf(FilterTestType(), FilterTestType(), FilterTextType(), FilterDoubleType())
 //    filterDataViewModel.setData(testdata)
+
+    // Setup filter selection menu
+    textViewFilterSelection.setOnClickListener { viewFilter ->
+      val popupMenu = PopupMenu(this, viewFilter)
+
+      var menuIndex: Int = Menu.FIRST
+
+      filterDataViewModel.filterNameList
+          .forEach { filtername ->
+            popupMenu.menu.add(0, menuIndex++, Menu.NONE, filtername)
+          }
+
+      // Last item is to add a new filter
+      val addFilterItem = SpannableStringBuilder()
+          .color(getColor(R.color.colorAccent)) {
+            bold { append(getString(R.string.add_filter)) }
+          }
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addFilterItem)
+
+      popupMenu.show()
+
+      popupMenu.setOnMenuItemClickListener { menuitem ->
+
+        if (menuIndex - 1 == menuitem.itemId) {
+          // Add filter
+          val builder = android.app.AlertDialog.Builder(this)
+          // Get the layout inflater
+          val inflater = LayoutInflater.from(this)
+
+          // Inflate and set the layout for the dialog
+          // Pass null as the parent view because its going in the dialog layout
+          val dialogView = inflater.inflate(R.layout.dialog_add_filtername, null)
+
+          val filterHeaderView =
+            dialogView.findViewById<TextView>(R.id.filterHeader)
+          val addFilterNameView =
+            dialogView.findViewById<TextView>(R.id.addFilterName)
+
+          val selectedFilter = filterDataViewModel.selectedFilter
+
+          filterHeaderView.text = getString(R.string.add_filter)
+
+          val addNameView = dialogView.findViewById<TextView>(R.id.addPortfolioName)
+          builder.setView(dialogView)
+              // Add action buttons
+              .setPositiveButton(R.string.add) { _, _ ->
+                // Add () to avoid cast exception.
+                val filterName = (addFilterNameView.text).toString()
+                    .trim()
+                if (filterName.isEmpty()) {
+                  Toast.makeText(
+                      this, getString(R.string.filter_name_not_empty),
+                      Toast.LENGTH_LONG
+                  )
+                      .show()
+                  return@setPositiveButton
+                }
+
+                addFilterNameView.text = filterName
+
+                filterDataViewModel.selectedFilter = filterName
+              }
+              .setNegativeButton(
+                  R.string.cancel
+              ) { _, _ ->
+              }
+          builder
+              .create()
+              .show()
+        } else {
+          val filterName = menuitem.title.trim()
+              .toString()
+          textViewFilterSelection.text = filterName
+
+          filterDataViewModel.selectedFilter = filterName
+        }
+        true
+      }
+    }
+
+    textViewFilterSelection.text = filterDataViewModel.selectedFilter
 
     addFilterButton.setOnClickListener {
       addUpdateFilter(FilterNullType(), -1)
