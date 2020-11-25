@@ -423,4 +423,9 @@ limitations under the License. -->
   <string name="filter_capitalgainless_desc"></string>
   <string name="filter_name">Filter name</string>
   <string name="filter_name_not_empty">Enter a filter name.</string>
+  <string name="delete_all_filter">Delete all filter</string>
+  <string name="menu_load_filter">Load Filter</string>
+  <string name="menu_save_filter">Save Filter</string>
+  <string name="json_default_filter_filename">Filter %1$s</string>
+  <string name="export_filter_msg">Your filter list with %1$d filter was exported to a .json file.</string>
 </resources>

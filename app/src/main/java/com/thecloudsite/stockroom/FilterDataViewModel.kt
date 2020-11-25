@@ -23,7 +23,6 @@ import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.thecloudsite.stockroom.database.Events
 
 data class FilterTypeJson
 (
@@ -34,35 +33,23 @@ data class FilterTypeJson
 
 class Filters(var map: MutableMap<String, List<IFilterType>> = mutableMapOf()) {
 
-  var selectedFilter: String = ""
-    //    get() {
-//      return when {
-//        map.containsKey(field) -> {
-//          field
+  private val defaultFilterName = "Filter"
+
+  var selectedFilter: String = defaultFilterName
+//    set(value) {
+//      field = when {
+//        value.isNotEmpty() -> {
+//          value
 //        }
 //        map.isNotEmpty() -> {
 //          map.toList()
 //              .first().first
 //        }
 //        else -> {
-//          "Filter"
+//          defaultFilterName
 //        }
 //      }
 //    }
-    set(value) {
-      field = when {
-        value.isNotEmpty() -> {
-          value
-        }
-        map.isNotEmpty() -> {
-          map.toList()
-              .first().first
-        }
-        else -> {
-          "Filter"
-        }
-      }
-    }
 
   var filterActive: Boolean = false
 
@@ -129,6 +116,8 @@ class FilterDataRepository(val context: Context) {
 
   fun getSerializedStr(): String {
 
+    verify()
+
     var jsonString = ""
     val filters = SharedRepository.filterMap.value
     if (filters != null) {
@@ -156,7 +145,11 @@ class FilterDataRepository(val context: Context) {
     return jsonString
   }
 
-  fun setSerializedStr(filterData: String) {
+  fun setSerializedStr(
+    filterData: String,
+    selectedFilter: String?,
+    filterActive: Boolean?
+  ) {
     val sType = object : TypeToken<List<FilterTypeJson>>() {}.type
     val gson = Gson()
     val filterList = gson.fromJson<List<FilterTypeJson>>(filterData, sType)
@@ -175,18 +168,28 @@ class FilterDataRepository(val context: Context) {
     }
 
     val filters = Filters(map)
-    val selectedFilter = SharedRepository.filterMap.value?.selectedFilter.toString()
-    if (map.containsKey(selectedFilter)) {
-      filters.selectedFilter = selectedFilter
-
-    } else
-      if (map.isNotEmpty()) {
-        filters.selectedFilter = map.toList()
-            .first().first
-      }
-
-    filters.filterActive = SharedRepository.filterMap.value?.filterActive == true
+    filters.selectedFilter = selectedFilter ?: SharedRepository.filterMap.value?.selectedFilter.toString()
+    filters.filterActive = filterActive ?: SharedRepository.filterMap.value?.filterActive == true
     SharedRepository.filterMap.value = filters
+
+    verify()
+  }
+
+  val filterActive: Boolean
+    get() = SharedRepository.filterMap.value?.filterActive == true
+
+  private fun verify() {
+    var selectedFilter = SharedRepository.filterMap.value?.selectedFilter ?: "Filter"
+
+    val map: MutableMap<String, List<IFilterType>>? = SharedRepository.filterMap.value?.map
+
+    if (map != null && !map.containsKey(selectedFilter)) {
+      if (map.isNotEmpty()) {
+        selectedFilter = map.toList()
+            .first().first
+        SharedRepository.filterMap.value?.selectedFilter = selectedFilter
+      }
+    }
   }
 
   fun addData(filterType: IFilterType) {
@@ -217,6 +220,13 @@ class FilterDataRepository(val context: Context) {
     }
   }
 
+  fun deleteAllData() {
+    val filters = Filters()
+    filters.filterActive = SharedRepository.filterMap.value?.filterActive == true
+
+    SharedRepository.filterMap.value = filters
+  }
+
   fun enable(enabled: Boolean) {
     val filters = SharedRepository.filterMap.value
     if (filters != null) {
@@ -235,12 +245,21 @@ class FilterDataRepository(val context: Context) {
     return filters?.getFilterNameList() ?: emptyList()
   }
 
-  fun getSelectedFilter(): String {
+  fun getSelectedFilterName(): String {
     val filters = SharedRepository.filterMap.value
-    return filters?.selectedFilter ?: ""
+
+//    if (filters?.map?.containsKey(selectedFilter) != true) {
+//      if (filters?.map?.isNotEmpty() == true) {
+//        selectedFilter = filters.map.toList()
+//            .first().first
+//        SharedRepository.filterMap.value?.selectedFilter = selectedFilter
+//      }
+//    }
+
+    return filters?.selectedFilter ?: "Filter"
   }
 
-  fun setSelectedFilter(value: String) {
+  fun setSelectedFilterName(value: String) {
     val filters = SharedRepository.filterMap.value
     if (filters != null) {
       filters.selectedFilter = value
@@ -258,8 +277,12 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
     return filterDataRepository.getSerializedStr()
   }
 
-  fun setSerializedStr(filterData: String) {
-    return filterDataRepository.setSerializedStr(filterData)
+  fun setSerializedStr(
+    filterData: String,
+    selectedFilter: String? = null,
+    filterActive: Boolean = false
+  ) {
+    return filterDataRepository.setSerializedStr(filterData, selectedFilter, filterActive)
   }
 
   fun addData(filterType: IFilterType) {
@@ -277,6 +300,10 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
     filterDataRepository.deleteData(index)
   }
 
+  fun deleteAllData() {
+    filterDataRepository.deleteAllData()
+  }
+
   fun enable(enabled: Boolean) {
     filterDataRepository.enable(enabled)
   }
@@ -288,6 +315,9 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
     get() = filterDataRepository.getFilterNameList()
 
   var selectedFilter: String
-    get() = filterDataRepository.getSelectedFilter()
-    set(value) = filterDataRepository.setSelectedFilter(value)
+    get() = filterDataRepository.getSelectedFilterName()
+    set(value) = filterDataRepository.setSelectedFilterName(value)
+
+  val filterActive: Boolean
+    get() = filterDataRepository.filterActive
 }

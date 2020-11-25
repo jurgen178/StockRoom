@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity() {
 
   private lateinit var remoteConfig: FirebaseRemoteConfig
 
+  private lateinit var filterDataViewModel: FilterDataViewModel
+
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var eventList: MutableList<Events> = mutableListOf()
 
@@ -116,6 +118,8 @@ class MainActivity : AppCompatActivity() {
     if (!isOnline(applicationContext)) {
       stockRoomViewModel.logDebug("Network is offline.")
     }
+
+    filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
 /*
     // When you enable disk persistence, your app writes the data locally
@@ -251,7 +255,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     // Update the menu when filter data changed.
-    SharedRepository.filterMapLiveData.observe(this, Observer {
+    filterDataViewModel.data.observe(this, Observer {
       invalidateOptionsMenu()
     })
 
@@ -407,18 +411,12 @@ class MainActivity : AppCompatActivity() {
       View.GONE
     }
 
-    val filterdata = sharedPreferences.getString("filterSetting", "")
-    if (filterdata != null) {
-      FilterDataRepository(applicationContext).setSerializedStr(filterdata)
-    }
-
     val selectedFilter = sharedPreferences.getString("selectedFilter", "")
-    if (selectedFilter != null) {
-      SharedRepository.filterMapLiveData.value?.selectedFilter = selectedFilter
+    val filterActive = sharedPreferences.getBoolean("filterActive", false)
+    val filterData = sharedPreferences.getString("filterSetting", "")
+    if (filterData != null) {
+      filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
     }
-
-    SharedRepository.filterMapLiveData.value?.filterActive =
-      sharedPreferences.getBoolean("filterActive", false)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -493,7 +491,7 @@ class MainActivity : AppCompatActivity() {
     //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 
     menu?.findItem(R.id.menu_filter)?.isChecked =
-      SharedRepository.filterMapLiveData.value?.filterActive == true
+      filterDataViewModel.filterActive == true
 
     if (SharedRepository.portfolios.value != null) {
 
