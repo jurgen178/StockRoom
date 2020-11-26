@@ -343,7 +343,7 @@ class FilterActivity : AppCompatActivity() {
                   storeFilters()
                 }
                 else -> {
-                  val msg = getApplication().getString(
+                  val msg = application.getString(
                       R.string.import_mimetype_error, type
                   )
                   throw IllegalArgumentException(msg)
@@ -353,7 +353,7 @@ class FilterActivity : AppCompatActivity() {
           }
     } catch (e: Exception) {
       Toast.makeText(
-          context, getApplication().getString(R.string.import_error, e.message),
+          context, application.getString(R.string.import_error, e.message),
           Toast.LENGTH_LONG
       )
           .show()
@@ -375,7 +375,7 @@ class FilterActivity : AppCompatActivity() {
             output.write(jsonString.toByteArray())
           }
 
-      val msg = getApplication().getString(
+      val msg = application.getString(
           R.string.export_filter_msg, filterDataViewModel.filterNameList.size
       )
 

@@ -39,7 +39,7 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
     symbol: String,
     interval: String,
     range: String
-  ): List<StockDataEntry>? {
+  ): List<StockDataEntry> {
 
     val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
     val api: YahooApiChartData = api() ?: return stockDataEntries.toList()

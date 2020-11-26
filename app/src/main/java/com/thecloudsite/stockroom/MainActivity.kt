@@ -29,7 +29,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -46,7 +45,6 @@ import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.R.array
-import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.list.ListLogAdapter

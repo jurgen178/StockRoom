@@ -79,7 +79,7 @@ open class NewsRepository(
 
   private suspend fun getOnlineNewsData(
     newsQuery: String
-  ): List<NewsData>? {
+  ): List<NewsData> {
 
     var newsData: List<NewsData>? = null
 
