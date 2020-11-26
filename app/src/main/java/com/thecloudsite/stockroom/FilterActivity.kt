@@ -17,7 +17,6 @@
 package com.thecloudsite.stockroom
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -44,8 +43,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DateType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.IntType
@@ -54,9 +51,6 @@ import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.string
-import com.thecloudsite.stockroom.database.Group
-import com.thecloudsite.stockroom.utils.validateDouble
-import kotlinx.android.synthetic.main.activity_add.importButton
 import kotlinx.android.synthetic.main.activity_filter.addFilterButton
 import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
@@ -107,7 +101,7 @@ class FilterActivity : AppCompatActivity() {
 
     SharedRepository.filterMapLiveData.observe(this, Observer { filter ->
 
-      textViewFilterSelection.text = filterDataViewModel.selectedFilter
+      textViewFilterSelection.text = getString(R.string.filter_set, filterDataViewModel.selectedFilter)
 
       filterEnableSwitch.isChecked = filter.filterActive
 
@@ -145,39 +139,39 @@ class FilterActivity : AppCompatActivity() {
           }
 
       // Last-3 item is to add a new filter
-      val addFilterItem = SpannableStringBuilder()
+      val addFilterSet = SpannableStringBuilder()
           .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.add_filter)) }
+            bold { append(getString(R.string.add_filter_set)) }
           }
-      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addFilterItem)
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addFilterSet)
 
       // Last-2 item is to delete all filter
-      val deleteAllFilterItem = SpannableStringBuilder()
+      val deleteFilterSetItem = SpannableStringBuilder()
           .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.delete_all_filter)) }
+            bold { append(getString(R.string.delete_filter_set)) }
           }
-      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, deleteAllFilterItem)
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, deleteFilterSetItem)
 
       // Last-1 item is to load filter
-      val loadItem = SpannableStringBuilder()
+      val loadFilterSetItem = SpannableStringBuilder()
           .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.menu_load_filter)) }
+            bold { append(getString(R.string.menu_load_filter_set)) }
           }
-      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, loadItem)
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, loadFilterSetItem)
 
       // Last item is to save the filter
-      val saveItem = SpannableStringBuilder()
+      val saveFilterSetItem = SpannableStringBuilder()
           .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.menu_save_filter)) }
+            bold { append(getString(R.string.menu_save_filter_set)) }
           }
-      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, saveItem)
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, saveFilterSetItem)
 
       popupMenu.show()
 
       popupMenu.setOnMenuItemClickListener { menuitem ->
 
         val addSelected = menuIndex - 4 == menuitem.itemId
-        val deleteAllSelected = menuIndex - 3 == menuitem.itemId
+        val deleteSelected = menuIndex - 3 == menuitem.itemId
         val loadSelected = menuIndex - 2 == menuitem.itemId
         val saveSelected = menuIndex - 1 == menuitem.itemId
 
@@ -197,7 +191,7 @@ class FilterActivity : AppCompatActivity() {
             val addFilterNameView =
               dialogView.findViewById<TextView>(R.id.addFilterName)
 
-            filterHeaderView.text = getString(R.string.add_filter)
+            filterHeaderView.text = getString(R.string.add_filter_set)
 
             builder.setView(dialogView)
                 // Add action buttons
@@ -226,7 +220,7 @@ class FilterActivity : AppCompatActivity() {
                 .create()
                 .show()
           }
-          deleteAllSelected -> {
+          deleteSelected -> {
             filterDataViewModel.deleteAllData()
           }
           loadSelected -> {
@@ -266,7 +260,7 @@ class FilterActivity : AppCompatActivity() {
           else -> {
             val filterName = menuitem.title.trim()
                 .toString()
-            textViewFilterSelection.text = filterName
+            textViewFilterSelection.text = getString(R.string.filter_set, filterName)
 
             filterDataViewModel.selectedFilter = filterName
           }

@@ -25,8 +25,11 @@ import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.SubMenuBuilder
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -42,6 +45,7 @@ import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.R.array
+import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.list.ListLogAdapter
@@ -423,6 +427,46 @@ class MainActivity : AppCompatActivity() {
     // Inflate the menu; this adds items to the action bar if it is present.
     menuInflater.inflate(R.menu.main_menu, menu)
     MenuCompat.setGroupDividerEnabled(menu, true)
+
+    //val menuItem = menu.findItem(R.id.menu_filter)
+
+
+//    menu.apply {
+//      // ----------------- add a new item to menu ----------------
+//      // add new item to menu
+//      val newItem:MenuItem = menu.add(
+//          Menu.NONE, // group id
+//          2, // item id
+//          1, // order
+//          "New Item" // title
+//      )
+//
+//      // set new item show as action flags
+//      newItem.setShowAsActionFlags(
+//          MenuItem.SHOW_AS_ACTION_ALWAYS or
+//              MenuItem.SHOW_AS_ACTION_WITH_TEXT
+//      )
+//
+//      // menu new item click listener
+//      newItem.setOnMenuItemClickListener {
+//        Toast.makeText(this@MainActivity,
+//            "New Item Clicked",
+//            Toast.LENGTH_SHORT)
+//            .show()
+//        true
+//      }
+//  //
+//  //
+//  //      // ----------------- remove an item from menu ----------------
+//  //      menu.removeItem(R.id.cancel)
+//  //
+//  //
+//  //      // ----------------- update an item in menu ----------------
+//  //      menu.findItem(R.id.settings).apply {
+//  //        title = "Updated Title"
+//  //      }
+//    }
+
     return true
   }
 

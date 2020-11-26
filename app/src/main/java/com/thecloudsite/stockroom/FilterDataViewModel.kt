@@ -31,9 +31,13 @@ data class FilterTypeJson
   val data: String,
 )
 
-class Filters(var map: MutableMap<String, List<IFilterType>> = mutableMapOf()) {
+class Filters(
+  var map: MutableMap<String, List<IFilterType>> = mutableMapOf(),
+  context: Context? = null
+) {
 
-  private val defaultFilterName = "Filter"
+  private val defaultFilterName =
+    context?.getString(R.string.filter_default_name) ?: "Standard Filter"
 
   var selectedFilter: String = defaultFilterName
 //    set(value) {
@@ -167,8 +171,9 @@ class FilterDataRepository(val context: Context) {
       map[filterTypeJson.name] = list
     }
 
-    val filters = Filters(map)
-    filters.selectedFilter = selectedFilter ?: SharedRepository.filterMap.value?.selectedFilter.toString()
+    val filters = Filters(map, context)
+    filters.selectedFilter =
+      selectedFilter ?: SharedRepository.filterMap.value?.selectedFilter.toString()
     filters.filterActive = filterActive ?: SharedRepository.filterMap.value?.filterActive == true
     SharedRepository.filterMap.value = filters
 
@@ -221,7 +226,7 @@ class FilterDataRepository(val context: Context) {
   }
 
   fun deleteAllData() {
-    val filters = Filters()
+    val filters = Filters(mutableMapOf(), context)
     filters.filterActive = SharedRepository.filterMap.value?.filterActive == true
 
     SharedRepository.filterMap.value = filters
