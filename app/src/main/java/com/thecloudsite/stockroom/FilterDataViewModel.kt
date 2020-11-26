@@ -23,6 +23,7 @@ import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import java.util.Locale
 
 data class FilterTypeJson
 (
@@ -104,7 +105,9 @@ class Filters(
     map.forEach { (name, _) ->
       list.add(name)
     }
-    return list
+    return list.sortedBy { filterName ->
+      filterName.toLowerCase(Locale.ROOT)
+    }
   }
 
   fun enable(enabled: Boolean) {
@@ -309,10 +312,6 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
     filterDataRepository.deleteAllData()
   }
 
-  fun enable(enabled: Boolean) {
-    filterDataRepository.enable(enabled)
-  }
-
   val filterList: List<IFilterType>
     get() = filterDataRepository.getFilterList()
 
@@ -323,6 +322,7 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
     get() = filterDataRepository.getSelectedFilterName()
     set(value) = filterDataRepository.setSelectedFilterName(value)
 
-  val filterActive: Boolean
+  var filterActive: Boolean
     get() = filterDataRepository.filterActive
+    set(value) = filterDataRepository.enable(value)
 }

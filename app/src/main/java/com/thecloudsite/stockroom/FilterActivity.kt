@@ -96,12 +96,13 @@ class FilterActivity : AppCompatActivity() {
     filterRecyclerView.adapter = filterAdapter
 
     filterEnableSwitch.setOnCheckedChangeListener { _, isChecked ->
-      filterDataViewModel.enable(isChecked)
+      filterDataViewModel.filterActive = isChecked
     }
 
     SharedRepository.filterMapLiveData.observe(this, Observer { filter ->
 
-      textViewFilterSelection.text = getString(R.string.filter_set, filterDataViewModel.selectedFilter)
+      textViewFilterSelection.text =
+        getString(R.string.filter_set, filterDataViewModel.selectedFilter)
 
       filterEnableSwitch.isChecked = filter.filterActive
 
@@ -270,7 +271,7 @@ class FilterActivity : AppCompatActivity() {
     }
 
     addFilterButton.setOnClickListener {
-      addUpdateFilter(FilterNullType(), -1)
+      addUpdateFilter(FilterFactory.create(FilterTypeEnum.FilterNullType, this), -1)
     }
   }
 
@@ -454,7 +455,7 @@ class FilterActivity : AppCompatActivity() {
     textViewFilterIntType.visibility = View.GONE
     textInputLayoutFilterIntType.visibility = View.GONE
 
-    val spinnerData = getFilterNameList(applicationContext)
+    val spinnerData = getFilterTypeList(applicationContext)
     val textViewFilterSpinner = dialogView.findViewById<Spinner>(id.textViewFilterSpinner)
     textViewFilterSpinner.adapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerData)
@@ -466,7 +467,7 @@ class FilterActivity : AppCompatActivity() {
       dialogView.findViewById<DatePicker>(R.id.datePickerFilter)
 
     // Update or Add?
-    if (filterType.typeId != FilterTypeEnum.FilterNullType) {
+    if (index >= 0) {
       // Update
       textViewFilterSpinner.setSelection(spinnerData.indexOf(filterType.displayName))
       addUpdateFilterHeadlineView.text = getString(string.update_filter)
@@ -569,7 +570,7 @@ class FilterActivity : AppCompatActivity() {
     builder.setView(dialogView)
         // Add action buttons
         .setPositiveButton(
-            if (filterType.typeId != FilterTypeEnum.FilterNullType) string.update else string.add
+            if (index >= 0) string.update else string.add
         ) { _, _ ->
           val filterIndex = textViewFilterSpinner.selectedItemPosition
           val newFilterType = FilterFactory.create(filterIndex, applicationContext)
@@ -604,7 +605,7 @@ class FilterActivity : AppCompatActivity() {
           }
 
           // Update or Add?
-          if (filterType.typeId != FilterTypeEnum.FilterNullType) {
+          if (index >= 0) {
             // Update
             filterDataViewModel.updateData(newFilterType, index)
 

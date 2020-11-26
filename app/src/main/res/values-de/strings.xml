@@ -364,6 +364,8 @@ limitations under the License. -->
   <string name="update_filter">Filter aktualisieren</string>
   <string name="add_filter_msg">Der Filter \'%1$s\' wurde hinzugefügt.</string>
   <string name="update_filter_msg">Der Filter \'%1$s\' wurde aktualisiert.</string>
+  <string name="filter_null_name">Kein Filter</string>
+  <string name="filter_null_desc">Dieser Filter führt keine Filterung durch.</string>
   <string name="filter_percentagechangegreater_name">Aktienpreisänderung % größer als</string>
   <string name="filter_percentagechangegreater_desc"></string>
   <string name="filter_percentagechangeless_name">Aktienpreisänderung % kleiner als</string>

@@ -71,7 +71,7 @@ object FilterFactory {
     context: Context
   ): IFilterType =
     when (type) {
-      FilterTypeEnum.FilterNullType -> FilterNullType()
+      FilterTypeEnum.FilterNullType -> FilterNullType(context)
       FilterTypeEnum.FilterPercentageChangeGreaterThanType -> FilterPercentageChangeGreaterThanType(
           type, context
       )
@@ -134,29 +134,37 @@ object FilterFactory {
             return filterType
           }
         }
-    return FilterNullType()
+    return FilterNullType(context)
   }
 
   fun create(
     index: Int,
     context: Context
   ): IFilterType =
-    // + 1, skip NullFilter
-    if (index >= 0 && index + 1 < FilterTypeEnum.values().size) {
-      val type: FilterTypeEnum = FilterTypeEnum.values()[index + 1]
+
+//    // + 1, skip NullFilter
+//    if (index >= 0 && index + 1 < FilterTypeEnum.values().size) {
+//      val type: FilterTypeEnum = FilterTypeEnum.values()[index + 1]
+//      create(type, context)
+//    } else {
+//      FilterNullType()
+//    }
+
+    if (index >= 0 && index < FilterTypeEnum.values().size) {
+      val type: FilterTypeEnum = FilterTypeEnum.values()[index]
       create(type, context)
     } else {
-      FilterNullType()
+      FilterNullType(context)
     }
 }
 
-fun getFilterNameList(context: Context): List<String> {
+fun getFilterTypeList(context: Context): List<String> {
   val filterList = mutableListOf<String>()
 
   FilterTypeEnum.values()
-      .filter { type ->
-        type != FilterTypeEnum.FilterNullType
-      }
+//      .filter { type ->
+//        type != FilterTypeEnum.FilterNullType
+//      }
       .forEach { filter ->
         filterList.add(FilterFactory.create(filter, context).displayName)
       }
@@ -196,21 +204,6 @@ interface IFilterType {
   val desc: String
   var data: String
   var serializedData: String
-}
-
-class FilterNullType : IFilterType {
-  override fun filter(stockItem: StockItem): Boolean {
-    return true
-  }
-
-  override val typeId = FilterTypeEnum.FilterNullType
-  override val dataType = FilterDataTypeEnum.NoType
-  override val displayName = typeId.toString()
-  override val desc = ""
-  override var data = ""
-  override var serializedData
-    get() = data
-    set(value) {}
 }
 
 open class FilterBaseType(
@@ -348,6 +341,19 @@ open class FilterDateType(
 //    }
 //  override val desc = ""
 //}
+
+// No filtering, always returns true
+class FilterNullType(
+  context: Context
+) : FilterBaseType(FilterTypeEnum.FilterNullType, context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    return true
+  }
+
+  override val dataType = FilterDataTypeEnum.NoType
+  override val displayName = context.getString(R.string.filter_null_name)
+  override val desc = context.getString(R.string.filter_null_desc)
+}
 
 // Change percentage greater than
 class FilterPercentageChangeGreaterThanType(

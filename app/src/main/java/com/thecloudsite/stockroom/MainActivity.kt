@@ -22,14 +22,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuBuilder
-import androidx.appcompat.view.menu.SubMenuBuilder
+import androidx.core.text.bold
+import androidx.core.text.color
+import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -423,49 +424,45 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  private var filterMenuIdMap: MutableMap<Int, String> = mutableMapOf()
+
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
     // Inflate the menu; this adds items to the action bar if it is present.
     menuInflater.inflate(R.menu.main_menu, menu)
     MenuCompat.setGroupDividerEnabled(menu, true)
 
-    //val menuItem = menu.findItem(R.id.menu_filter)
+    // Remove previous filter items.
+    filterMenuIdMap.forEach { (id, _) ->
+      menu.removeItem(id)
+    }
+    filterMenuIdMap.clear()
 
+    // Change the Filter menu item to bold style.
+    val menuFilterItem = menu.findItem(R.id.menu_filter)
+    menuFilterItem.title = SpannableStringBuilder()
+        .bold { append(getString(R.string.menu_filter)) }
 
-//    menu.apply {
-//      // ----------------- add a new item to menu ----------------
-//      // add new item to menu
-//      val newItem:MenuItem = menu.add(
-//          Menu.NONE, // group id
-//          2, // item id
-//          1, // order
-//          "New Item" // title
-//      )
-//
-//      // set new item show as action flags
-//      newItem.setShowAsActionFlags(
-//          MenuItem.SHOW_AS_ACTION_ALWAYS or
-//              MenuItem.SHOW_AS_ACTION_WITH_TEXT
-//      )
-//
-//      // menu new item click listener
-//      newItem.setOnMenuItemClickListener {
-//        Toast.makeText(this@MainActivity,
-//            "New Item Clicked",
-//            Toast.LENGTH_SHORT)
-//            .show()
-//        true
-//      }
-//  //
-//  //
-//  //      // ----------------- remove an item from menu ----------------
-//  //      menu.removeItem(R.id.cancel)
-//  //
-//  //
-//  //      // ----------------- update an item in menu ----------------
-//  //      menu.findItem(R.id.settings).apply {
-//  //        title = "Updated Title"
-//  //      }
-//    }
+    val menuItem = menu.findItem(R.id.menu_sort)
+    val filterActive = filterDataViewModel.filterActive
+    val selectedFilter = filterDataViewModel.selectedFilter
+
+    // Add the new filter items.
+    var id: Int = 1
+    filterDataViewModel.filterNameList.forEach { filterSet ->
+
+      val filterSetMenuName = SpannableStringBuilder()
+          .italic { append(filterSet) }
+
+      // Add the menu item to the group R.id.filter
+      val newMenuFilterItem = menuItem.subMenu.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
+      if (filterActive) {
+        newMenuFilterItem.isCheckable = true
+        newMenuFilterItem.isChecked = selectedFilter == filterSet
+      }
+
+      filterMenuIdMap[id] = filterSet
+      id++
+    }
 
     return true
   }
@@ -513,7 +510,16 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         true
       }
-      else -> super.onOptionsItemSelected(item)
+      else -> {
+        if (filterMenuIdMap.contains(item.itemId)) {
+          filterDataViewModel.filterActive = true
+          filterDataViewModel.selectedFilter = filterMenuIdMap[item.itemId].toString()
+
+          true
+        } else {
+          super.onOptionsItemSelected(item)
+        }
+      }
     }
   }
 
@@ -579,18 +585,18 @@ class MainActivity : AppCompatActivity() {
     return super.onPrepareOptionsMenu(menu)
   }
 
-  /*
-  override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-    val item = menu!!.add("Clear Array")
-    item.setOnMenuItemClickListener(object : OnMenuItemClickListener {
-      override fun onMenuItemClick(item: MenuItem?): Boolean {
-        //clearArray()
-        return true
-      }
-    })
-    return super.onPrepareOptionsMenu(menu)
-  }
-   */
+/*
+override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+  val item = menu!!.add("Clear Array")
+  item.setOnMenuItemClickListener(object : OnMenuItemClickListener {
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+      //clearArray()
+      return true
+    }
+  })
+  return super.onPrepareOptionsMenu(menu)
+}
+ */
 
   fun onSettings(item: MenuItem) {
     val intent = Intent(this@MainActivity, SettingsActivity::class.java)

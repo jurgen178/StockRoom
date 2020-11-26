@@ -367,6 +367,8 @@ limitations under the License. -->
   <string name="update_filter">Update filter</string>
   <string name="add_filter_msg">The filter \'%1$s\' was added.</string>
   <string name="update_filter_msg">The filter \'%1$s\' was updated.</string>
+  <string name="filter_null_name">No filter</string>
+  <string name="filter_null_desc">This filter does not filter any items.</string>
   <string name="filter_percentagechangegreater_name">Stock price change % greater than</string>
   <string name="filter_percentagechangegreater_desc"></string>
   <string name="filter_percentagechangeless_name">Stock price change % less than</string>
