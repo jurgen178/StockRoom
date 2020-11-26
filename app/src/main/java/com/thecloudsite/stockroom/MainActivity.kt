@@ -28,7 +28,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -435,10 +434,10 @@ class MainActivity : AppCompatActivity() {
     }
     filterMenuIdMap.clear()
 
-    // Change the Filter menu item to bold style.
-    val menuFilterItem = menu.findItem(R.id.menu_filter)
-    menuFilterItem.title = SpannableStringBuilder()
-        .bold { append(getString(R.string.menu_filter)) }
+//    // Change the Filter menu item to bold style.
+//    val menuFilterItem = menu.findItem(R.id.menu_filter)
+//    menuFilterItem.title = SpannableStringBuilder()
+//        .bold { append(getString(R.string.menu_filter)) }
 
     val menuItem = menu.findItem(R.id.menu_sort)
     val filterActive = filterDataViewModel.filterActive

@@ -1905,13 +1905,22 @@ class StockDataFragment : Fragment() {
             DecimalFormat("0.00##").format(value)
           }
 
-          new_total_asset.text = getAssetChange(
+          val assetChange = getAssetChange(
               assets,
               value,
               data.onlineMarketData?.postMarketData!!,
               Color.DKGRAY,
               requireActivity()
-          ).second
+          )
+
+          val asset = SpannableStringBuilder()
+              .append(assetChange.second)
+              .append("\n")
+              .bold {
+                append(DecimalFormat("0.00").format(totalQuantity * value))
+              }
+
+          new_total_asset.text = asset
         }
 
         // min, max, start
