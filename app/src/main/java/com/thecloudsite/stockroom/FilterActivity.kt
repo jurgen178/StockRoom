@@ -377,6 +377,11 @@ class FilterActivity : AppCompatActivity() {
           .show()
 
     } catch (e: Exception) {
+      Toast.makeText(
+          context, application.getString(R.string.export_error, e.message),
+          Toast.LENGTH_LONG
+      )
+          .show()
       Log.d("Export JSON error", "Exception: $e")
     }
   }

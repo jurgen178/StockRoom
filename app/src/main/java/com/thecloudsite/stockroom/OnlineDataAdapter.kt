@@ -107,6 +107,9 @@ class OnlineDataAdapter internal constructor(
           // Add date-time to time values.
           val dateTimeKey = key.contains("time", true)
               || key.contains("dividenddate", true)
+              || key == "startDate"
+              || key == "expireDate"
+
           if (dateTimeKey && valueString.matches("^\\d+$".toRegex())
           ) {
             val datetime = valueString.toLong()
@@ -146,11 +149,15 @@ class OnlineDataAdapter internal constructor(
             element.setValue(JsonPrimitive("#<b>$valueString</b>#"))
           }
 
-          // Add MarketCap size abbreviation.
-          if (key == "marketCap") {
-            val formattedMarketCap = formatInt(valueString.toLong())
-            val marketCap = "#$valueString <i>($formattedMarketCap)</i>#"
-            element.setValue(JsonPrimitive(marketCap))
+          // Add size abbreviation.
+          if (key == "marketCap"
+              || key == "sharesOutstanding"
+              || key == "circulatingSupply"
+              || key == "openInterest"
+              || key.contains("volume", true)
+          ) {
+            val formattedLong = formatInt(valueString.toLong())
+            element.setValue(JsonPrimitive("#$valueString<i>${formattedLong.second}</i>#"))
           }
 
           // Recursion for json array.
@@ -272,31 +279,42 @@ class OnlineDataAdapter internal constructor(
     holder.itemViewOnlineData.text = current.text
   }
 
-  private fun formatInt(value: Long): String {
+  // first: abbr
+  // second: add optional (abbr)
+  private fun formatInt(value: Long): Pair<String, String> {
     return when {
       value >= 1000000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000000.0)}${
-          context.getString(
-              R.string.trillion_abbr
-          )
-        }"
+        val formattedStr =
+          "${DecimalFormat("0.##").format(value / 1000000000000.0)}${
+            context.getString(
+                R.string.trillion_abbr
+            )
+          }"
+
+        Pair(formattedStr, " ($formattedStr)")
       }
       value >= 1000000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000000.0)}${
-          context.getString(
-              R.string.billion_abbr
-          )
-        }"
+        val formattedStr =
+          "${DecimalFormat("0.##").format(value / 1000000000.0)}${
+            context.getString(
+                R.string.billion_abbr
+            )
+          }"
+
+        Pair(formattedStr, " ($formattedStr)")
       }
       value >= 1000000L -> {
-        "${DecimalFormat("0.##").format(value / 1000000.0)}${
-          context.getString(
-              R.string.million_abbr
-          )
-        }"
+        val formattedStr =
+          "${DecimalFormat("0.##").format(value / 1000000.0)}${
+            context.getString(
+                R.string.million_abbr
+            )
+          }"
+
+        Pair(formattedStr, " ($formattedStr)")
       }
       else -> {
-        DecimalFormat("0.##").format(value)
+        Pair(DecimalFormat("0.##").format(value), "")
       }
     }
   }
@@ -405,16 +423,16 @@ class OnlineDataAdapter internal constructor(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketVolume),
             text = SpannableStringBuilder().bold {
-              append(
-                  formatInt(onlineMarketData.regularMarketVolume)
-              )
+              append(formatInt(onlineMarketData.regularMarketVolume).first)
             }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_marketCap),
-            text = SpannableStringBuilder().bold { append(formatInt(onlineMarketData.marketCap)) }
+            text = SpannableStringBuilder().bold {
+              append(formatInt(onlineMarketData.marketCap).first)
+            }
         )
     )
 

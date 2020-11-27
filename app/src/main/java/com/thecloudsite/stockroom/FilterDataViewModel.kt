@@ -25,7 +25,6 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.thecloudsite.stockroom.R.string.import_error
 import java.util.Locale
 
 data class FilterTypeJson
