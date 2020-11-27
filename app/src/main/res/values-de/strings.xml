@@ -150,6 +150,7 @@ limitations under the License. -->
   <string name="export_msg">Ihre Aktienliste mit %1$d Aktiendaten wurde in eine .JSON-Datei exportiert.</string>
   <string name="export_list">Aktienliste Exportieren</string>
   <string name="export_list_desc">Aktienliste ihres Portfolios in eine .JSON-Datei exportieren.</string>
+  <string name="export_error">Ein Fehler beim Export ist aufgetreten:\n%1$s</string>
   <string name="export_select_file">Wählen Sie eine Datei aus</string>
   <string name="import_select_file">Wählen Sie eine Datei aus</string>
   <string name="delete_stock">Sind Sie sicher dass sie die Aktie \'%1$s\' entfernen möchten?</string>
@@ -428,6 +429,9 @@ limitations under the License. -->
   <string name="menu_load_filter_set">Laden</string>
   <string name="menu_save_filter_set">Speichern</string>
   <string name="json_default_filter_filename">Filter %1$s</string>
-  <string name="export_filter_msg">Ihre Filterliste mit %1$d Filtersätzen wurde in eine .JSON-Datei gespeichert.</string>
+  <string name="save_filter_msg">Ihre Filterliste mit %1$d Filtersätzen wurde in eine .JSON-Datei gespeichert.</string>
+  <string name="load_filter_msg">Die Filterliste mit %1$d Filtersätzen wurde geladen.</string>
   <string name="filter_default_name">Standardfilter</string>
+  <string name="save_filter_error">Der Filter konnte nicht gespeichert werden:\n%1$s</string>
+  <string name="load_filter_error">Der Filter konnte nicht geladen werden:\n%1$s</string>
 </resources>

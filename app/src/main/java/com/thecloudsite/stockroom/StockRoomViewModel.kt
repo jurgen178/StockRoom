@@ -1929,10 +1929,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           .show()
 
     } catch (e: Exception) {
-      //Toast.makeText(
-      //    context, getApplication<Application>().getString(R.string.export_error), Toast.LENGTH_LONG
-      //)
-      //    .show()
+      Toast.makeText(
+          context, getApplication<Application>().getString(R.string.export_error, e.message), Toast.LENGTH_LONG
+      )
+          .show()
       Log.d("Export JSON error", "Exception: $e")
       logDebug("Export JSON Exception: $e")
     }

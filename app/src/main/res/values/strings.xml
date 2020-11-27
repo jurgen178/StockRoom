@@ -153,6 +153,7 @@ limitations under the License. -->
   <string name="export_msg">Your portfolio with %1$d stocks was exported to a .json file.</string>
   <string name="export_list">Export portfolio</string>
   <string name="export_list_desc">Export portfolio to a .json file.</string>
+  <string name="export_error">An error occurred while exporting the data:\n%1$s</string>
   <string name="export_select_file">Select a file</string>
   <string name="import_select_file">Select a file</string>
   <string name="delete_stock">Are you sure to delete the stock \'%1$s\' ?</string>
@@ -431,6 +432,9 @@ limitations under the License. -->
   <string name="menu_load_filter_set">Load</string>
   <string name="menu_save_filter_set">Save</string>
   <string name="json_default_filter_filename">Filter %1$s</string>
-  <string name="export_filter_msg">Your filter list with %1$d filter sets was exported to a .json file.</string>
+  <string name="save_filter_msg">Your filter list with %1$d filter sets was saved to a .json file.</string>
+  <string name="load_filter_msg">The filter list with %1$d filter sets was loaded.</string>
   <string name="filter_default_name">Standard Filter</string>
+  <string name="save_filter_error">The filter could not be saved:\n%1$s</string>
+  <string name="load_filter_error">The filter could not be loaded:\n%1$s</string>
 </resources>

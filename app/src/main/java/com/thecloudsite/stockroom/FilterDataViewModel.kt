@@ -18,11 +18,14 @@ package com.thecloudsite.stockroom
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.thecloudsite.stockroom.R.string.import_error
 import java.util.Locale
 
 data class FilterTypeJson
@@ -34,29 +37,37 @@ data class FilterTypeJson
 
 class Filters(
   var map: MutableMap<String, List<IFilterType>> = mutableMapOf(),
-  context: Context? = null
+  val context: Context? = null
 ) {
 
   private val defaultFilterName =
     context?.getString(R.string.filter_default_name) ?: "Standard Filter"
 
   var selectedFilter: String = defaultFilterName
-//    set(value) {
-//      field = when {
-//        value.isNotEmpty() -> {
-//          value
-//        }
-//        map.isNotEmpty() -> {
-//          map.toList()
-//              .first().first
-//        }
-//        else -> {
-//          defaultFilterName
-//        }
-//      }
-//    }
+    set(value) {
+      if (field != value) {
+        field = value
+        val sharedPreferences =
+          PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+        sharedPreferences
+            .edit()
+            .putString("selectedFilter", value)
+            .apply()
+      }
+    }
 
   var filterActive: Boolean = false
+    set(value) {
+      if (field != value) {
+        field = value
+        val sharedPreferences =
+          PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+        sharedPreferences
+            .edit()
+            .putBoolean("filterActive", value)
+            .apply()
+      }
+    }
 
   fun add(filterType: IFilterType) {
     val list: MutableList<IFilterType> = mutableListOf()
@@ -100,6 +111,7 @@ class Filters(
     }
   }
 
+  // sorted alphabetically case insensitive
   fun getFilterNameList(): List<String> {
     val list: MutableList<String> = mutableListOf()
     map.forEach { (name, _) ->
@@ -109,44 +121,43 @@ class Filters(
       filterName.toLowerCase(Locale.ROOT)
     }
   }
-
-  fun enable(enabled: Boolean) {
-    filterActive = enabled
-  }
 }
 
 class FilterDataRepository(val context: Context) {
-
-//  private val _data = MutableLiveData<List<IFilterType>>()
-//  val data: LiveData<List<IFilterType>>
-//    get() = _data
 
   fun getSerializedStr(): String {
 
     verify()
 
     var jsonString = ""
-    val filters = SharedRepository.filterMap.value
-    if (filters != null) {
-      val filterTypeJsonList: MutableList<FilterTypeJson> = mutableListOf()
-      filters.map.forEach { (name, filterList) ->
-        filterList.forEach { filter ->
-          filterTypeJsonList.add(
-              FilterTypeJson(
-                  name = name,
-                  typeId = filter.typeId,
-                  data = filter.serializedData
-              )
-          )
+    try {
+      val filters = SharedRepository.filterMap.value
+      if (filters != null) {
+        val filterTypeJsonList: MutableList<FilterTypeJson> = mutableListOf()
+        filters.map.forEach { (name, filterList) ->
+          filterList.forEach { filter ->
+            filterTypeJsonList.add(
+                FilterTypeJson(
+                    name = name,
+                    typeId = filter.typeId,
+                    data = filter.serializedData
+                )
+            )
+          }
         }
+
+        // Convert to a json string.
+        val gson: Gson = GsonBuilder()
+            .setPrettyPrinting()
+            .create()
+
+        jsonString = gson.toJson(filterTypeJsonList)
       }
-
-      // Convert to a json string.
-      val gson: Gson = GsonBuilder()
-          //.setPrettyPrinting()
-          .create()
-
-      jsonString = gson.toJson(filterTypeJsonList)
+    } catch (e: Exception) {
+      Toast.makeText(
+          context, context.getString(R.string.load_filter_error, e.message), Toast.LENGTH_LONG
+      )
+          .show()
     }
 
     return jsonString
@@ -157,30 +168,38 @@ class FilterDataRepository(val context: Context) {
     selectedFilter: String?,
     filterActive: Boolean?
   ) {
-    val sType = object : TypeToken<List<FilterTypeJson>>() {}.type
-    val gson = Gson()
-    val filterList = gson.fromJson<List<FilterTypeJson>>(filterData, sType)
+    try {
 
-    val map: MutableMap<String, List<IFilterType>> = mutableMapOf()
+      val sType = object : TypeToken<List<FilterTypeJson>>() {}.type
+      val gson = Gson()
+      val filterList = gson.fromJson<List<FilterTypeJson>>(filterData, sType)
 
-    filterList?.forEach { filterTypeJson ->
-      val list: MutableList<IFilterType> = mutableListOf()
-      if (map.containsKey(filterTypeJson.name)) {
-        map[filterTypeJson.name]?.let { list.addAll(it) }
+      val map: MutableMap<String, List<IFilterType>> = mutableMapOf()
+
+      filterList?.forEach { filterTypeJson ->
+        val list: MutableList<IFilterType> = mutableListOf()
+        if (map.containsKey(filterTypeJson.name)) {
+          map[filterTypeJson.name]?.let { list.addAll(it) }
+        }
+        val filterType = FilterFactory.create(filterTypeJson.typeId, context)
+        filterType.data = filterTypeJson.data
+        list.add(filterType)
+        map[filterTypeJson.name] = list
       }
-      val filterType = FilterFactory.create(filterTypeJson.typeId, context)
-      filterType.data = filterTypeJson.data
-      list.add(filterType)
-      map[filterTypeJson.name] = list
+
+      val filters = Filters(map, context)
+      filters.selectedFilter =
+        selectedFilter ?: SharedRepository.filterMap.value?.selectedFilter.toString()
+      filters.filterActive = filterActive ?: SharedRepository.filterMap.value?.filterActive == true
+      SharedRepository.filterMap.value = filters
+
+      verify()
+    } catch (e: Exception) {
+      Toast.makeText(
+          context, context.getString(R.string.save_filter_error, e.message), Toast.LENGTH_LONG
+      )
+          .show()
     }
-
-    val filters = Filters(map, context)
-    filters.selectedFilter =
-      selectedFilter ?: SharedRepository.filterMap.value?.selectedFilter.toString()
-    filters.filterActive = filterActive ?: SharedRepository.filterMap.value?.filterActive == true
-    SharedRepository.filterMap.value = filters
-
-    verify()
   }
 
   val filterActive: Boolean
@@ -238,7 +257,7 @@ class FilterDataRepository(val context: Context) {
   fun enable(enabled: Boolean) {
     val filters = SharedRepository.filterMap.value
     if (filters != null) {
-      filters.enable(enabled)
+      filters.filterActive = enabled
       SharedRepository.filterMap.value = filters
     }
   }

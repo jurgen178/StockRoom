@@ -86,12 +86,6 @@ class FilterActivity : AppCompatActivity() {
 
     filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
-    filterDataViewModel.data.observe(this, Observer { data ->
-      data?.let { filters ->
-        filterAdapter.setFilter(filters.getFilterList())
-      }
-    })
-
     filterRecyclerView.layoutManager = LinearLayoutManager(this)
     filterRecyclerView.adapter = filterAdapter
 
@@ -99,7 +93,9 @@ class FilterActivity : AppCompatActivity() {
       filterDataViewModel.filterActive = isChecked
     }
 
-    SharedRepository.filterMapLiveData.observe(this, Observer { filter ->
+    filterDataViewModel.data.observe(this, Observer { filter ->
+
+      filterAdapter.setFilter(filter.getFilterList())
 
       textViewFilterSelection.text =
         getString(R.string.filter_set, filterDataViewModel.selectedFilter)
@@ -114,14 +110,6 @@ class FilterActivity : AppCompatActivity() {
       textViewFilterSelection.visibility = visibility
       filterRecyclerView.visibility = visibility
       addFilterButton.visibility = visibility
-
-      val sharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-      sharedPreferences
-          .edit()
-          .putBoolean("filterActive", filter.filterActive)
-          .putString("selectedFilter", filter.selectedFilter)
-          .apply()
     })
 
 //    val testdata: List<IFilterType> =
@@ -341,6 +329,12 @@ class FilterActivity : AppCompatActivity() {
                 "application/json", "text/x-json" -> {
                   filterDataViewModel.setSerializedStr(text)
                   storeFilters()
+
+                  val msg = application.getString(
+                      R.string.load_filter_msg, filterDataViewModel.filterNameList.size
+                  )
+                  Toast.makeText(context, msg, Toast.LENGTH_LONG)
+                      .show()
                 }
                 else -> {
                   val msg = application.getString(
@@ -376,7 +370,7 @@ class FilterActivity : AppCompatActivity() {
           }
 
       val msg = application.getString(
-          R.string.export_filter_msg, filterDataViewModel.filterNameList.size
+          R.string.save_filter_msg, filterDataViewModel.filterNameList.size
       )
 
       Toast.makeText(context, msg, Toast.LENGTH_LONG)
