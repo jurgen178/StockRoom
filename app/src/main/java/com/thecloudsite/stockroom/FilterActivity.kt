@@ -112,6 +112,9 @@ class FilterActivity : AppCompatActivity() {
       addFilterButton.visibility = visibility
     })
 
+    // initialize the display values for the sub type enum
+    initSubTypeList(this)
+
 //    val testdata: List<IFilterType> =
 //      listOf(FilterTestType(), FilterTestType(), FilterTextType(), FilterDoubleType())
 //    filterDataViewModel.setData(testdata)
@@ -419,9 +422,11 @@ class FilterActivity : AppCompatActivity() {
   }
 
   private fun addUpdateFilter(
-    filterType: IFilterType,
+    filter: IFilterType,
     index: Int
   ) {
+    var filterType: IFilterType = filter
+
     val builder = Builder(this)
     // Get the layout inflater
     val inflater = LayoutInflater.from(this)
@@ -447,21 +452,15 @@ class FilterActivity : AppCompatActivity() {
     val textInputLayoutFilterIntType =
       dialogView.findViewById<TextInputLayout>(id.textInputLayoutFilterIntType)
 
-    textViewFilterTextType.visibility = View.GONE
-    textInputLayoutFilterTextType.visibility = View.GONE
-    textViewFilterDoubleType.visibility = View.GONE
-    textInputLayoutFilterDoubleType.visibility = View.GONE
-    textViewFilterIntType.visibility = View.GONE
-    textInputLayoutFilterIntType.visibility = View.GONE
+    val textViewSubTypeSpinner = dialogView.findViewById<Spinner>(R.id.textViewSubTypeSpinner)
+    val datePickerFilterDateView =
+      dialogView.findViewById<DatePicker>(R.id.datePickerFilter)
 
     val spinnerData = getFilterTypeList(applicationContext)
     val textViewFilterSpinner = dialogView.findViewById<Spinner>(id.textViewFilterSpinner)
     textViewFilterSpinner.adapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerData)
 
-    initSubTypeList(this)
-
-    val textViewSubTypeSpinner = dialogView.findViewById<Spinner>(R.id.textViewSubTypeSpinner)
     val subTypeData: MutableList<String> = mutableListOf()
     subTypeData.addAll(filterType.subTypeList.map { type ->
       type.value
@@ -474,8 +473,6 @@ class FilterActivity : AppCompatActivity() {
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
     val filterIntValueView = dialogView.findViewById<TextView>(id.filterIntValue)
     val filterTextValueView = dialogView.findViewById<TextView>(id.filterTextValue)
-    val datePickerFilterDateView =
-      dialogView.findViewById<DatePicker>(R.id.datePickerFilter)
 
     // Update or Add?
     if (index >= 0) {
@@ -525,10 +522,11 @@ class FilterActivity : AppCompatActivity() {
         position: Int,
         id: Long
       ) {
-        val filter = FilterFactory.create(position, applicationContext)
-        textViewFilterDesc.text = filter.desc
+        filterType = FilterFactory.create(position, applicationContext)
+        textViewFilterDesc.text = filterType.desc
+        textViewFilterDesc.visibility = if (filterType.desc.isEmpty()) View.GONE else View.VISIBLE
 
-        when (filter.dataType) {
+        when (filterType.dataType) {
           TextType -> {
             textViewFilterTextType.visibility = View.VISIBLE
             textInputLayoutFilterTextType.visibility = View.VISIBLE
@@ -548,8 +546,8 @@ class FilterActivity : AppCompatActivity() {
             datePickerFilterDateView.visibility = View.GONE
           }
           IntType -> {
-            textViewFilterTextType.visibility = View.GONE
-            textInputLayoutFilterTextType.visibility = View.GONE
+            textViewFilterDesc.visibility = View.GONE
+            textViewSubTypeSpinner.visibility = View.GONE
             textViewFilterDoubleType.visibility = View.GONE
             textInputLayoutFilterDoubleType.visibility = View.GONE
             textViewFilterIntType.visibility = View.VISIBLE
@@ -577,10 +575,38 @@ class FilterActivity : AppCompatActivity() {
         }
 
         subTypeData.clear()
-        subTypeData.addAll(filter.subTypeList.map { type ->
+        subTypeData.addAll(filterType.subTypeList.map { type ->
           type.value
         })
+        textViewSubTypeSpinner.visibility = if (subTypeData.isEmpty()) View.GONE else View.VISIBLE
         subTypeSpinnerAdapter.notifyDataSetChanged()
+      }
+    }
+
+    textViewSubTypeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        val selectedSubType = filterType.subTypeList[position]
+
+        when (selectedSubType) {
+          FilterSubTypeEnum.ContainsType, FilterSubTypeEnum.NotContainsType -> {
+            textViewFilterTextType.visibility = View.VISIBLE
+            textInputLayoutFilterTextType.visibility = View.VISIBLE
+          }
+          FilterSubTypeEnum.IsEmptyTextType, FilterSubTypeEnum.IsNotEmptyTextType -> {
+            textViewFilterTextType.visibility = View.GONE
+            textInputLayoutFilterTextType.visibility = View.GONE
+          }
+          else -> {
+          }
+        }
       }
     }
 

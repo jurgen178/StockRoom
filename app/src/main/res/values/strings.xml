@@ -382,7 +382,7 @@ limitations under the License. -->
   <string name="filter_dividendnote_desc"></string>
   <string name="filter_asset_name">Asset</string>
   <string name="filter_asset_desc"></string>
-  <string name="filter_profit_name">Profitn</string>
+  <string name="filter_profit_name">Profit</string>
   <string name="filter_profit_desc"></string>
   <string name="filter_profitpercentage_name">Profit %</string>
   <string name="filter_profitpercentage_desc"></string>
@@ -421,4 +421,6 @@ limitations under the License. -->
   <string name="filter_AfterDateType">after date</string>
   <string name="filter_ContainsType">contains</string>
   <string name="filter_NotContainsType">not contains</string>
+  <string name="filter_IsEmptyTextType">is empty</string>
+  <string name="filter_IsNotEmptyTextType">is not empty</string>
 </resources>

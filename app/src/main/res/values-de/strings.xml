@@ -379,11 +379,11 @@ limitations under the License. -->
   <string name="filter_dividendnote_desc"></string>
   <string name="filter_asset_name">Bestand</string>
   <string name="filter_asset_desc"></string>
-  <string name="filter_profit_name">Gewinns</string>
+  <string name="filter_profit_name">Gewinn</string>
   <string name="filter_profit_desc"></string>
   <string name="filter_profitpercentage_name">Gewinn %</string>
   <string name="filter_profitpercentage_desc"></string>
-  <string name="filter_dividendpercentage_name">Dividende %s</string>
+  <string name="filter_dividendpercentage_name">Dividende %</string>
   <string name="filter_dividendpercentage_desc"></string>
   <string name="filter_firstassetsold_name">Früheste Aktien verkauft</string>
   <string name="filter_firstassetsold_desc"></string>
@@ -395,9 +395,9 @@ limitations under the License. -->
   <string name="filter_lastassetbought_desc"></string>
   <string name="filter_longterm_name">Letzte Aktien vor einem Jahr gekauft</string>
   <string name="filter_longterm_desc">Aktien die vor einem Jahr oder mehr gekauft worden sind, haben beim Verkauf einen Steuervorteil.</string>
-  <string name="filter_quantity_name">Aktienanzahls</string>
+  <string name="filter_quantity_name">Aktienanzahl</string>
   <string name="filter_quantity_desc"></string>
-  <string name="filter_capitalgain_name">Ausgeführter Kapitalgewinns</string>
+  <string name="filter_capitalgain_name">Ausgeführter Kapitalgewinn</string>
   <string name="filter_capitalgain_desc"></string>
   <string name="filter_name">Filtername</string>
   <string name="filter_name_not_empty">Geben Sie einen Filternamen ein.</string>
@@ -418,4 +418,6 @@ limitations under the License. -->
   <string name="filter_AfterDateType">nach Datum</string>
   <string name="filter_ContainsType">enthält</string>
   <string name="filter_NotContainsType">enthält nicht</string>
+  <string name="filter_IsEmptyTextType">enthält keinen Text</string>
+  <string name="filter_IsNotEmptyTextType">enthält Text</string>
 </resources>

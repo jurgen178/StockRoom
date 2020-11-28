@@ -55,10 +55,12 @@
 
       <TextView
           android:id="@+id/textViewFilterDesc"
+          android:visibility="visible"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="12sp"
           android:layout_marginTop="16dp"
+          app:layout_constraintHorizontal_bias="0.0"
           app:layout_constraintTop_toBottomOf="@+id/textViewFilterSpinner"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -66,17 +68,18 @@
 
       <Spinner
           android:id="@+id/textViewSubTypeSpinner"
-          android:layout_width="match_parent"
+          android:visibility="gone"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
           app:layout_constraintTop_toBottomOf="@+id/textViewFilterDesc"
           />
 
       <TextView
           android:id="@+id/textViewFilterDoubleType"
-          android:visibility="visible"
+          android:visibility="gone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:text="@string/filter_value_double"
@@ -88,7 +91,7 @@
           />
       <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/textInputLayoutFilterDoubleType"
-          android:visibility="visible"
+          android:visibility="gone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
@@ -113,7 +116,7 @@
 
       <TextView
           android:id="@+id/textViewFilterIntType"
-          android:visibility="visible"
+          android:visibility="gone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:text="@string/filter_value_double"
@@ -125,7 +128,7 @@
           />
       <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/textInputLayoutFilterIntType"
-          android:visibility="visible"
+          android:visibility="gone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
@@ -150,7 +153,7 @@
 
       <TextView
           android:id="@+id/textViewFilterTextType"
-          android:visibility="visible"
+          android:visibility="gone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:text="@string/filter_value_text"
@@ -162,7 +165,7 @@
           />
       <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/textInputLayoutFilterTextType"
-          android:visibility="visible"
+          android:visibility="gone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_margin="8dp"
@@ -184,7 +187,7 @@
 
       <com.thecloudsite.stockroom.CustomDatePicker
           android:id="@+id/datePickerFilter"
-          android:visibility="visible"
+          android:visibility="gone"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="16dp"

@@ -62,6 +62,8 @@ enum class FilterSubTypeEnum(var value: String) {
   AfterDateType(""),
   ContainsType(""),
   NotContainsType(""),
+  IsEmptyTextType(""),
+  IsNotEmptyTextType(""),
 }
 
 object FilterFactory {
@@ -131,6 +133,8 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.AfterDateType.value = context.getString(R.string.filter_AfterDateType)
   FilterSubTypeEnum.ContainsType.value = context.getString(R.string.filter_ContainsType)
   FilterSubTypeEnum.NotContainsType.value = context.getString(R.string.filter_NotContainsType)
+  FilterSubTypeEnum.IsEmptyTextType.value = context.getString(R.string.filter_IsEmptyTextType)
+  FilterSubTypeEnum.IsNotEmptyTextType.value = context.getString(R.string.filter_IsNotEmptyTextType)
 }
 
 fun getFilterTypeList(context: Context): List<String> {
@@ -175,7 +179,7 @@ interface IFilterType {
   fun filter(stockItem: StockItem): Boolean
   val typeId: FilterTypeEnum
   val dataType: FilterDataTypeEnum
-  val subTypeList: MutableList<FilterSubTypeEnum>
+  val subTypeList: List<FilterSubTypeEnum>
   var subTypeIndex: Int
   val displayName: String
   val desc: String
@@ -192,7 +196,7 @@ open class FilterBaseType(
 
   override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.NoType
-  override val subTypeList = mutableListOf<FilterSubTypeEnum>()
+  override val subTypeList = listOf<FilterSubTypeEnum>()
   override var subTypeIndex = 0
     set(value) {
       field = if (value >= 0 && value < subTypeList.size) {
@@ -215,8 +219,6 @@ open class FilterTextType(
 
   override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.TextType
-  override val subTypeList =
-    mutableListOf(FilterSubTypeEnum.ContainsType, FilterSubTypeEnum.NotContainsType)
 }
 
 open class FilterDoubleType(
@@ -228,7 +230,7 @@ open class FilterDoubleType(
   override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.DoubleType
   override val subTypeList =
-    mutableListOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
+    listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
@@ -247,7 +249,7 @@ open class FilterDoublePercentageType(
   override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.DoubleType
   override val subTypeList =
-    mutableListOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
+    listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -265,7 +267,7 @@ open class FilterIntType(
 
   override val dataType = FilterDataTypeEnum.IntType
   override val subTypeList =
-    mutableListOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
+    listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
   override var data: String = ""
     get() = filterValue.toString()
     set(value) {
@@ -282,7 +284,7 @@ open class FilterDateType(
 
   override val dataType = FilterDataTypeEnum.DateType
   override val subTypeList =
-    mutableListOf(FilterSubTypeEnum.BeforeDateType, FilterSubTypeEnum.AfterDateType)
+    listOf(FilterSubTypeEnum.BeforeDateType, FilterSubTypeEnum.AfterDateType)
   override var data: String = ""
     get() = LocalDateTime.ofEpochSecond(filterDateValue, 0, ZoneOffset.UTC)
         .format(DateTimeFormatter.ofLocalizedDate(FULL))
@@ -386,6 +388,8 @@ class FilterSymbolNameType(
     }
   }
 
+  override val subTypeList =
+    listOf(FilterSubTypeEnum.ContainsType, FilterSubTypeEnum.NotContainsType)
   override val typeId = FilterTypeEnum.FilterSymbolNameType
   override val displayName = context.getString(R.string.filter_symbolname_name)
   override val desc = context.getString(R.string.filter_symbolname_desc)
@@ -406,6 +410,8 @@ class FilterDisplayNameType(
     }
   }
 
+  override val subTypeList =
+    listOf(FilterSubTypeEnum.ContainsType, FilterSubTypeEnum.NotContainsType)
   override val typeId = FilterTypeEnum.FilterDisplayNameType
   override val displayName = context.getString(R.string.filter_displayname_name)
   override val desc = context.getString(R.string.filter_displayname_desc)
@@ -422,10 +428,23 @@ class FilterNoteType(
       subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsType -> {
         !stockItem.stockDBdata.note.contains(data, ignoreCase = true)
       }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsEmptyTextType -> {
+        stockItem.stockDBdata.note.isEmpty()
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsNotEmptyTextType -> {
+        stockItem.stockDBdata.note.isNotEmpty()
+      }
       else -> false
     }
   }
 
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.ContainsType,
+        FilterSubTypeEnum.NotContainsType,
+        FilterSubTypeEnum.IsEmptyTextType,
+        FilterSubTypeEnum.IsNotEmptyTextType
+    )
   override val typeId = FilterTypeEnum.FilterNoteType
   override val displayName = context.getString(R.string.filter_note_name)
   override val desc = context.getString(R.string.filter_note_desc)
@@ -442,10 +461,23 @@ class FilterDividendNoteType(
       subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsType -> {
         !stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
       }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsEmptyTextType -> {
+        stockItem.stockDBdata.dividendNote.isEmpty()
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsNotEmptyTextType -> {
+        stockItem.stockDBdata.dividendNote.isNotEmpty()
+      }
       else -> false
     }
   }
 
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.ContainsType,
+        FilterSubTypeEnum.NotContainsType,
+        FilterSubTypeEnum.IsEmptyTextType,
+        FilterSubTypeEnum.IsNotEmptyTextType
+    )
   override val typeId = FilterTypeEnum.FilterDividendNoteType
   override val displayName = context.getString(R.string.filter_dividendnote_name)
   override val desc = context.getString(R.string.filter_dividendnote_desc)
