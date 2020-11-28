@@ -459,6 +459,18 @@ class FilterActivity : AppCompatActivity() {
     textViewFilterSpinner.adapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerData)
 
+    initSubTypeList(this)
+
+    val textViewSubTypeSpinner = dialogView.findViewById<Spinner>(R.id.textViewSubTypeSpinner)
+    val subTypeData: MutableList<String> = mutableListOf()
+    subTypeData.addAll(filterType.subTypeList.map { type ->
+      type.value
+    })
+    val subTypeSpinnerAdapter =
+      ArrayAdapter(this, android.R.layout.simple_list_item_1, subTypeData)
+    textViewSubTypeSpinner.adapter = subTypeSpinnerAdapter
+    textViewSubTypeSpinner.setSelection(filterType.subTypeIndex)
+
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
     val filterIntValueView = dialogView.findViewById<TextView>(id.filterIntValue)
     val filterTextValueView = dialogView.findViewById<TextView>(id.filterTextValue)
@@ -563,6 +575,12 @@ class FilterActivity : AppCompatActivity() {
             datePickerFilterDateView.visibility = View.GONE
           }
         }
+
+        subTypeData.clear()
+        subTypeData.addAll(filter.subTypeList.map { type ->
+          type.value
+        })
+        subTypeSpinnerAdapter.notifyDataSetChanged()
       }
     }
 
@@ -573,6 +591,9 @@ class FilterActivity : AppCompatActivity() {
         ) { _, _ ->
           val filterIndex = textViewFilterSpinner.selectedItemPosition
           val newFilterType = FilterFactory.create(filterIndex, applicationContext)
+
+          val subTypeIndex = textViewSubTypeSpinner.selectedItemPosition
+          newFilterType.subTypeIndex = subTypeIndex
 
           newFilterType.data = when (newFilterType.dataType) {
             TextType -> {

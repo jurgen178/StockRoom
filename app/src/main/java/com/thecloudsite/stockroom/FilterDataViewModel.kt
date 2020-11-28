@@ -32,6 +32,7 @@ data class FilterTypeJson
   val name: String,
   var typeId: FilterTypeEnum,
   val data: String,
+  val subTypeIndex: Int
 )
 
 class Filters(
@@ -46,12 +47,14 @@ class Filters(
     set(value) {
       if (field != value) {
         field = value
-        val sharedPreferences =
-          PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
-        sharedPreferences
-            .edit()
-            .putString("selectedFilter", value)
-            .apply()
+        if (context != null) {
+          val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+          sharedPreferences
+              .edit()
+              .putString("selectedFilter", value)
+              .apply()
+        }
       }
     }
 
@@ -59,12 +62,14 @@ class Filters(
     set(value) {
       if (field != value) {
         field = value
-        val sharedPreferences =
-          PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
-        sharedPreferences
-            .edit()
-            .putBoolean("filterActive", value)
-            .apply()
+        if (context != null) {
+          val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+          sharedPreferences
+              .edit()
+              .putBoolean("filterActive", value)
+              .apply()
+        }
       }
     }
 
@@ -139,7 +144,8 @@ class FilterDataRepository(val context: Context) {
                 FilterTypeJson(
                     name = name,
                     typeId = filter.typeId,
-                    data = filter.serializedData
+                    data = filter.serializedData,
+                    subTypeIndex = filter.subTypeIndex
                 )
             )
           }
@@ -176,14 +182,18 @@ class FilterDataRepository(val context: Context) {
       val map: MutableMap<String, List<IFilterType>> = mutableMapOf()
 
       filterList?.forEach { filterTypeJson ->
-        val list: MutableList<IFilterType> = mutableListOf()
-        if (map.containsKey(filterTypeJson.name)) {
-          map[filterTypeJson.name]?.let { list.addAll(it) }
+        // de-serialized JSON type can be null
+        if (filterTypeJson.typeId != null) {
+          val list: MutableList<IFilterType> = mutableListOf()
+          if (map.containsKey(filterTypeJson.name)) {
+            map[filterTypeJson.name]?.let { list.addAll(it) }
+          }
+          val filterType = FilterFactory.create(filterTypeJson.typeId, context)
+          filterType.data = filterTypeJson.data
+          filterType.subTypeIndex = filterTypeJson.subTypeIndex
+          list.add(filterType)
+          map[filterTypeJson.name] = list
         }
-        val filterType = FilterFactory.create(filterTypeJson.typeId, context)
-        filterType.data = filterTypeJson.data
-        list.add(filterType)
-        map[filterTypeJson.name] = list
       }
 
       val filters = Filters(map, context)

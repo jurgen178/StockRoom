@@ -76,9 +76,16 @@ class FilterListAdapter internal constructor(
     holder.bindUpdate(current, position, clickListenerUpdate)
     holder.bindDelete(current, position, clickListenerDelete)
 
+    val subType =
+      if (current.subTypeIndex >= 0 && current.subTypeIndex < current.subTypeList.size) {
+        " ${current.subTypeList[current.subTypeIndex].value} "
+      } else {
+        " "
+      }
+
     holder.filterText.text = SpannableStringBuilder()
         .append(current.displayName)
-        .append(" ")
+        .append(subType)
         .bold {
           append(current.data)
         }

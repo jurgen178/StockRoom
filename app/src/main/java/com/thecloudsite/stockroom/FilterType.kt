@@ -28,32 +28,21 @@ import java.time.format.FormatStyle.FULL
 
 enum class FilterTypeEnum {
   FilterNullType,
-  FilterPercentageChangeGreaterThanType,
-  FilterPercentageChangeLessThanType,
-  FilterSymbolContainsType,
-  FilterDisplayNameContainsType,
-  FilterNoteContainsType,
-  FilterDividendNoteContainsType,
-  FilterAssetGreaterThanType,
-  FilterAssetLessThanType,
-  FilterProfitGreaterThanType,
-  FilterProfitLessThanType,
-  FilterProfitPercentageGreaterThanType,
-  FilterProfitPercentageLessThanType,
-  FilterDividendPercentageGreaterThanType,
-  FilterDividendPercentageLessThanType,
-  FilterQuantityGreaterThanType,
-  FilterQuantityLessThanType,
-  FilterCapitalGainGreaterThanType,
-  FilterCapitalGainLessThanType,
-  FilterFirstAssetSoldBeforeType,
-  FilterFirstAssetSoldAfterType,
-  FilterFirstAssetBoughtBeforeType,
-  FilterFirstAssetBoughtAfterType,
-  FilterLastAssetSoldBeforeType,
-  FilterLastAssetSoldAfterType,
-  FilterLastAssetBoughtBeforeType,
-  FilterLastAssetBoughtAfterType,
+  FilterPercentageChangeType,
+  FilterSymbolNameType,
+  FilterDisplayNameType,
+  FilterNoteType,
+  FilterDividendNoteType,
+  FilterAssetType,
+  FilterProfitType,
+  FilterProfitPercentageType,
+  FilterDividendPercentageType,
+  FilterQuantityType,
+  FilterCapitalGainType,
+  FilterFirstAssetSoldType,
+  FilterFirstAssetBoughtType,
+  FilterLastAssetSoldType,
+  FilterLastAssetBoughtType,
   FilterLongTermType,
 }
 
@@ -62,7 +51,17 @@ enum class FilterDataTypeEnum(val value: Int) {
   TextType(1),
   DoubleType(2),
   DateType(3),
-  IntType(3),
+  IntType(4),
+}
+
+enum class FilterSubTypeEnum(var value: String) {
+  NoType(""),
+  GreaterThanType(""),
+  LessThanType(""),
+  BeforeDateType(""),
+  AfterDateType(""),
+  ContainsType(""),
+  NotContainsType(""),
 }
 
 object FilterFactory {
@@ -72,55 +71,22 @@ object FilterFactory {
   ): IFilterType =
     when (type) {
       FilterTypeEnum.FilterNullType -> FilterNullType(context)
-      FilterTypeEnum.FilterPercentageChangeGreaterThanType -> FilterPercentageChangeGreaterThanType(
-          type, context
-      )
-      FilterTypeEnum.FilterPercentageChangeLessThanType -> FilterPercentageChangeLessThanType(
-          type, context
-      )
-      FilterTypeEnum.FilterSymbolContainsType -> FilterSymbolContainsType(type, context)
-      FilterTypeEnum.FilterDisplayNameContainsType -> FilterDisplayNameContainsType(type, context)
-      FilterTypeEnum.FilterNoteContainsType -> FilterNoteContainsType(type, context)
-      FilterTypeEnum.FilterDividendNoteContainsType -> FilterDividendNoteContainsType(type, context)
-      FilterTypeEnum.FilterAssetGreaterThanType -> FilterAssetGreaterThanType(type, context)
-      FilterTypeEnum.FilterAssetLessThanType -> FilterAssetLessThanType(type, context)
-      FilterTypeEnum.FilterProfitGreaterThanType -> FilterProfitGreaterThanType(type, context)
-      FilterTypeEnum.FilterProfitLessThanType -> FilterProfitLessThanType(type, context)
-      FilterTypeEnum.FilterProfitPercentageGreaterThanType -> FilterProfitPercentageGreaterThanType(
-          type, context
-      )
-      FilterTypeEnum.FilterProfitPercentageLessThanType -> FilterProfitPercentageLessThanType(
-          type, context
-      )
-      FilterTypeEnum.FilterDividendPercentageGreaterThanType -> FilterDividendPercentageGreaterThanType(
-          type, context
-      )
-      FilterTypeEnum.FilterDividendPercentageLessThanType -> FilterDividendPercentageLessThanType(
-          type, context
-      )
-      FilterTypeEnum.FilterQuantityGreaterThanType -> FilterQuantityGreaterThanType(type, context)
-      FilterTypeEnum.FilterQuantityLessThanType -> FilterQuantityLessThanType(type, context)
-      FilterTypeEnum.FilterCapitalGainGreaterThanType -> FilterCapitalGainGreaterThanType(
-          type, context
-      )
-      FilterTypeEnum.FilterCapitalGainLessThanType -> FilterCapitalGainLessThanType(type, context)
-      FilterTypeEnum.FilterFirstAssetSoldBeforeType -> FilterFirstAssetSoldBeforeType(
-          type, context
-      )
-      FilterTypeEnum.FilterFirstAssetSoldAfterType -> FilterFirstAssetSoldAfterType(type, context)
-      FilterTypeEnum.FilterFirstAssetBoughtBeforeType -> FilterFirstAssetBoughtBeforeType(
-          type, context
-      )
-      FilterTypeEnum.FilterFirstAssetBoughtAfterType -> FilterFirstAssetBoughtAfterType(
-          type, context
-      )
-      FilterTypeEnum.FilterLastAssetSoldBeforeType -> FilterLastAssetSoldBeforeType(type, context)
-      FilterTypeEnum.FilterLastAssetSoldAfterType -> FilterLastAssetSoldAfterType(type, context)
-      FilterTypeEnum.FilterLastAssetBoughtBeforeType -> FilterLastAssetBoughtBeforeType(
-          type, context
-      )
-      FilterTypeEnum.FilterLastAssetBoughtAfterType -> FilterLastAssetBoughtAfterType(type, context)
-      FilterTypeEnum.FilterLongTermType -> FilterLongTermType(type, context)
+      FilterTypeEnum.FilterPercentageChangeType -> FilterPercentageChangeType(context)
+      FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
+      FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
+      FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
+      FilterTypeEnum.FilterDividendNoteType -> FilterDividendNoteType(context)
+      FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
+      FilterTypeEnum.FilterProfitType -> FilterProfitType(context)
+      FilterTypeEnum.FilterProfitPercentageType -> FilterProfitPercentageType(context)
+      FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
+      FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
+      FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
+      FilterTypeEnum.FilterFirstAssetSoldType -> FilterFirstAssetSoldType(context)
+      FilterTypeEnum.FilterFirstAssetBoughtType -> FilterFirstAssetBoughtType(context)
+      FilterTypeEnum.FilterLastAssetSoldType -> FilterLastAssetSoldType(context)
+      FilterTypeEnum.FilterLastAssetBoughtType -> FilterLastAssetBoughtType(context)
+      FilterTypeEnum.FilterLongTermType -> FilterLongTermType(context)
     }
 
   fun create(
@@ -156,6 +122,15 @@ object FilterFactory {
     } else {
       FilterNullType(context)
     }
+}
+
+fun initSubTypeList(context: Context) {
+  FilterSubTypeEnum.GreaterThanType.value = context.getString(R.string.filter_GreaterThanType)
+  FilterSubTypeEnum.LessThanType.value = context.getString(R.string.filter_LessThanType)
+  FilterSubTypeEnum.BeforeDateType.value = context.getString(R.string.filter_BeforeDateType)
+  FilterSubTypeEnum.AfterDateType.value = context.getString(R.string.filter_AfterDateType)
+  FilterSubTypeEnum.ContainsType.value = context.getString(R.string.filter_ContainsType)
+  FilterSubTypeEnum.NotContainsType.value = context.getString(R.string.filter_NotContainsType)
 }
 
 fun getFilterTypeList(context: Context): List<String> {
@@ -200,6 +175,8 @@ interface IFilterType {
   fun filter(stockItem: StockItem): Boolean
   val typeId: FilterTypeEnum
   val dataType: FilterDataTypeEnum
+  val subTypeList: MutableList<FilterSubTypeEnum>
+  var subTypeIndex: Int
   val displayName: String
   val desc: String
   var data: String
@@ -207,14 +184,23 @@ interface IFilterType {
 }
 
 open class FilterBaseType(
-  override val typeId: FilterTypeEnum,
   context: Context
 ) : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return false
   }
 
+  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.NoType
+  override val subTypeList = mutableListOf<FilterSubTypeEnum>()
+  override var subTypeIndex = 0
+    set(value) {
+      field = if (value >= 0 && value < subTypeList.size) {
+        value
+      } else {
+        0
+      }
+    }
   override val displayName = ""
   override val desc = ""
   override var data = ""
@@ -224,21 +210,25 @@ open class FilterBaseType(
 }
 
 open class FilterTextType(
-  override val typeId: FilterTypeEnum,
   context: Context
-) : FilterBaseType(typeId, context) {
+) : FilterBaseType(context) {
 
+  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.TextType
+  override val subTypeList =
+    mutableListOf(FilterSubTypeEnum.ContainsType, FilterSubTypeEnum.NotContainsType)
 }
 
 open class FilterDoubleType(
-  override val typeId: FilterTypeEnum,
   context: Context
-) : FilterBaseType(typeId, context) {
+) : FilterBaseType(context) {
 
   var filterValue: Double = 0.0
 
+  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.DoubleType
+  override val subTypeList =
+    mutableListOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
@@ -248,14 +238,16 @@ open class FilterDoubleType(
 }
 
 open class FilterDoublePercentageType(
-  override val typeId: FilterTypeEnum,
   context: Context
-) : FilterBaseType(typeId, context) {
+) : FilterBaseType(context) {
 
   private var filterValue: Double = 0.0
   var filterPercentageValue: Double = 0.0
 
+  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.DoubleType
+  override val subTypeList =
+    mutableListOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -266,13 +258,14 @@ open class FilterDoublePercentageType(
 }
 
 open class FilterIntType(
-  override val typeId: FilterTypeEnum,
   context: Context
-) : FilterBaseType(typeId, context) {
+) : FilterBaseType(context) {
 
   var filterValue: Int = 0
 
   override val dataType = FilterDataTypeEnum.IntType
+  override val subTypeList =
+    mutableListOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
   override var data: String = ""
     get() = filterValue.toString()
     set(value) {
@@ -282,13 +275,14 @@ open class FilterIntType(
 }
 
 open class FilterDateType(
-  override val typeId: FilterTypeEnum,
   context: Context
-) : FilterBaseType(typeId, context) {
+) : FilterBaseType(context) {
 
   var filterDateValue: Long = 0L
 
   override val dataType = FilterDataTypeEnum.DateType
+  override val subTypeList =
+    mutableListOf(FilterSubTypeEnum.BeforeDateType, FilterSubTypeEnum.AfterDateType)
   override var data: String = ""
     get() = LocalDateTime.ofEpochSecond(filterDateValue, 0, ZoneOffset.UTC)
         .format(DateTimeFormatter.ofLocalizedDate(FULL))
@@ -345,95 +339,122 @@ open class FilterDateType(
 // No filtering, always returns true
 class FilterNullType(
   context: Context
-) : FilterBaseType(FilterTypeEnum.FilterNullType, context) {
+) : FilterBaseType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     return true
   }
 
+  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.NoType
   override val displayName = context.getString(R.string.filter_null_name)
   override val desc = context.getString(R.string.filter_null_desc)
 }
 
 // Change percentage greater than
-class FilterPercentageChangeGreaterThanType(
-  override val typeId: FilterTypeEnum,
+class FilterPercentageChangeType(
   context: Context
-) : FilterDoubleType(typeId, context) {
+) : FilterDoubleType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.onlineMarketData.marketChangePercent > filterValue
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+        stockItem.onlineMarketData.marketChangePercent > filterValue
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+        stockItem.onlineMarketData.marketChangePercent < filterValue
+      }
+      else -> false
+    }
   }
 
-  override val displayName = context.getString(R.string.filter_percentagechangegreater_name)
-  override val desc = context.getString(R.string.filter_percentagechangegreater_desc)
+  override val typeId = FilterTypeEnum.FilterPercentageChangeType
+  override val displayName = context.getString(R.string.filter_percentagechange_name)
+  override val desc = context.getString(R.string.filter_percentagechange_desc)
 }
 
-// Change percentage less than
-class FilterPercentageChangeLessThanType(
-  override val typeId: FilterTypeEnum,
+class FilterSymbolNameType(
   context: Context
-) : FilterDoubleType(typeId, context) {
+) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.onlineMarketData.marketChangePercent < filterValue
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsType -> {
+        stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsType -> {
+        !stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
+      }
+      else -> false
+    }
   }
 
-  override val displayName = context.getString(R.string.filter_percentagechangeless_name)
-  override val desc = context.getString(R.string.filter_percentagechangeless_desc)
+  override val typeId = FilterTypeEnum.FilterSymbolNameType
+  override val displayName = context.getString(R.string.filter_symbolname_name)
+  override val desc = context.getString(R.string.filter_symbolname_desc)
 }
 
-class FilterSymbolContainsType(
-  override val typeId: FilterTypeEnum,
+class FilterDisplayNameType(
   context: Context
-) : FilterTextType(typeId, context) {
+) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsType -> {
+        getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsType -> {
+        !getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
+      }
+      else -> false
+    }
   }
 
-  override val displayName = context.getString(R.string.filter_symbolcontainstype_name)
-  override val desc = context.getString(R.string.filter_symbolcontainstype_desc)
+  override val typeId = FilterTypeEnum.FilterDisplayNameType
+  override val displayName = context.getString(R.string.filter_displayname_name)
+  override val desc = context.getString(R.string.filter_displayname_desc)
 }
 
-class FilterDisplayNameContainsType(
-  override val typeId: FilterTypeEnum,
+class FilterNoteType(
   context: Context
-) : FilterTextType(typeId, context) {
+) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsType -> {
+        stockItem.stockDBdata.note.contains(data, ignoreCase = true)
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsType -> {
+        !stockItem.stockDBdata.note.contains(data, ignoreCase = true)
+      }
+      else -> false
+    }
   }
 
-  override val displayName = context.getString(R.string.filter_displaynamecontainstype_name)
-  override val desc = context.getString(R.string.filter_displaynamecontainstype_desc)
+  override val typeId = FilterTypeEnum.FilterNoteType
+  override val displayName = context.getString(R.string.filter_note_name)
+  override val desc = context.getString(R.string.filter_note_desc)
 }
 
-class FilterNoteContainsType(
-  override val typeId: FilterTypeEnum,
+class FilterDividendNoteType(
   context: Context
-) : FilterTextType(typeId, context) {
+) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.stockDBdata.note.contains(data, ignoreCase = true)
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsType -> {
+        stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsType -> {
+        !stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
+      }
+      else -> false
+    }
   }
 
-  override val displayName = context.getString(R.string.filter_notecontainstype_name)
-  override val desc = context.getString(R.string.filter_notecontainstype_desc)
+  override val typeId = FilterTypeEnum.FilterDividendNoteType
+  override val displayName = context.getString(R.string.filter_dividendnote_name)
+  override val desc = context.getString(R.string.filter_dividendnote_desc)
 }
 
-class FilterDividendNoteContainsType(
-  override val typeId: FilterTypeEnum,
+// Asset
+class FilterAssetType(
   context: Context
-) : FilterTextType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    return stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
-  }
-
-  override val displayName = context.getString(R.string.filter_dividendnotecontainstype_name)
-  override val desc = context.getString(R.string.filter_dividendnotecontainstype_desc)
-}
-
-// Asset greater than
-class FilterAssetGreaterThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDoubleType(typeId, context) {
+) : FilterDoubleType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -441,37 +462,27 @@ class FilterAssetGreaterThanType(
     } else {
       totalPrice
     }
-    return asset > filterValue
-  }
 
-  override val displayName = context.getString(R.string.filter_assetgreater_name)
-  override val desc = context.getString(R.string.filter_assetgreater_desc)
-}
-
-// Asset less than
-class FilterAssetLessThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDoubleType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
-    val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
-      totalQuantity * stockItem.onlineMarketData.marketPrice
-    } else {
-      totalPrice
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+        asset > filterValue
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+        asset < filterValue
+      }
+      else -> false
     }
-    return asset < filterValue
   }
 
-  override val displayName = context.getString(R.string.filter_assetless_name)
-  override val desc = context.getString(R.string.filter_assetless_desc)
+  override val typeId = FilterTypeEnum.FilterAssetType
+  override val displayName = context.getString(R.string.filter_asset_name)
+  override val desc = context.getString(R.string.filter_asset_desc)
 }
 
-// Profit greater than
-class FilterProfitGreaterThanType(
-  override val typeId: FilterTypeEnum,
+// Profit
+class FilterProfitType(
   context: Context
-) : FilterDoubleType(typeId, context) {
+) : FilterDoubleType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -479,37 +490,27 @@ class FilterProfitGreaterThanType(
     } else {
       totalPrice
     }
-    return profit > filterValue
-  }
 
-  override val displayName = context.getString(R.string.filter_profitgreater_name)
-  override val desc = context.getString(R.string.filter_profitgreater_desc)
-}
-
-// Profit less than
-class FilterProfitLessThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDoubleType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
-    val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
-      totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice
-    } else {
-      totalPrice
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+        profit > filterValue
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+        profit < filterValue
+      }
+      else -> false
     }
-    return profit < filterValue
   }
 
-  override val displayName = context.getString(R.string.filter_profitless_name)
-  override val desc = context.getString(R.string.filter_profitless_desc)
+  override val typeId = FilterTypeEnum.FilterProfitType
+  override val displayName = context.getString(R.string.filter_profit_name)
+  override val desc = context.getString(R.string.filter_profit_desc)
 }
 
-// Profit Percentage greater than
-class FilterProfitPercentageGreaterThanType(
-  override val typeId: FilterTypeEnum,
+// Profit Percentage
+class FilterProfitPercentageType(
   context: Context
-) : FilterDoublePercentageType(typeId, context) {
+) : FilterDoublePercentageType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profitPercentage =
@@ -518,38 +519,28 @@ class FilterProfitPercentageGreaterThanType(
       } else {
         totalPrice
       }
+
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+        profitPercentage > filterPercentageValue
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+        profitPercentage < filterPercentageValue
+      }
+      else -> false
+    }
     return profitPercentage > filterPercentageValue
   }
 
-  override val displayName = context.getString(R.string.filter_profitpercentagegreater_name)
-  override val desc = context.getString(R.string.filter_profitpercentagegreater_desc)
+  override val typeId = FilterTypeEnum.FilterProfitPercentageType
+  override val displayName = context.getString(R.string.filter_profitpercentage_name)
+  override val desc = context.getString(R.string.filter_profitpercentage_desc)
 }
 
-// Profit Percentage less than
-class FilterProfitPercentageLessThanType(
-  override val typeId: FilterTypeEnum,
+// Dividend Percentage
+class FilterDividendPercentageType(
   context: Context
-) : FilterDoublePercentageType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
-    val profitPercentage =
-      if (stockItem.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
-        (totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice) / totalPrice
-      } else {
-        totalPrice
-      }
-    return profitPercentage < filterPercentageValue
-  }
-
-  override val displayName = context.getString(R.string.filter_profitpercentageless_name)
-  override val desc = context.getString(R.string.filter_profitpercentageless_desc)
-}
-
-// Dividend Percentage greater than
-class FilterDividendPercentageGreaterThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDoublePercentageType(typeId, context) {
+) : FilterDoublePercentageType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val dividendPercentage =
       if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
@@ -561,142 +552,104 @@ class FilterDividendPercentageGreaterThanType(
       } else {
         stockItem.onlineMarketData.annualDividendYield
       }
-    return dividendPercentage > filterPercentageValue
+
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+        dividendPercentage > filterPercentageValue
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+        dividendPercentage < filterPercentageValue
+      }
+      else -> false
+    }
   }
 
-  override val displayName = context.getString(R.string.filter_dividendpercentagegreater_name)
-  override val desc = context.getString(R.string.filter_dividendpercentagegreater_desc)
+  override val typeId = FilterTypeEnum.FilterDividendPercentageType
+  override val displayName = context.getString(R.string.filter_dividendpercentage_name)
+  override val desc = context.getString(R.string.filter_dividendpercentage_desc)
 }
 
-// Dividend Percentage less than
-class FilterDividendPercentageLessThanType(
-  override val typeId: FilterTypeEnum,
+// Quantity
+class FilterQuantityType(
   context: Context
-) : FilterDoublePercentageType(typeId, context) {
+) : FilterIntType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    val dividendPercentage =
-      if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
-        if (stockItem.onlineMarketData.marketPrice > 0.0) {
-          stockItem.stockDBdata.annualDividendRate / stockItem.onlineMarketData.marketPrice
-        } else {
-          0.0
+    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+        totalQuantity > filterValue
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+        totalQuantity < filterValue
+      }
+      else -> false
+    }
+  }
+
+  override val typeId = FilterTypeEnum.FilterQuantityType
+  override val displayName = context.getString(R.string.filter_quantity_name)
+  override val desc = context.getString(R.string.filter_quantity_desc)
+}
+
+// CapitalGain
+class FilterCapitalGainType(
+  context: Context
+) : FilterDoubleType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
+
+    return when {
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+        capitalGain - capitalLoss > filterValue
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+        capitalGain - capitalLoss < filterValue
+      }
+      else -> false
+    }
+  }
+
+  override val typeId = FilterTypeEnum.FilterCapitalGainType
+  override val displayName = context.getString(R.string.filter_capitalgain_name)
+  override val desc = context.getString(R.string.filter_capitalgain_desc)
+}
+
+class FilterFirstAssetSoldType(
+  context: Context
+) : FilterDateType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    val assetSold = stockItem.assets.filter { asset ->
+      asset.quantity < 0.0
+    }
+
+    return if (assetSold.isNotEmpty()) {
+      val firstAssetDate = assetSold.minOf { asset ->
+        asset.date
+      }
+
+      when {
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+          firstAssetDate < filterDateValue
         }
-      } else {
-        stockItem.onlineMarketData.annualDividendYield
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+          firstAssetDate > filterDateValue
+        }
+        else -> false
       }
-    return dividendPercentage < filterPercentageValue
-  }
-
-  override val displayName = context.getString(R.string.filter_dividendpercentageless_name)
-  override val desc = context.getString(R.string.filter_dividendpercentageless_desc)
-}
-
-// Quantity greater than
-class FilterQuantityGreaterThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterIntType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
-    return totalQuantity > filterValue
-  }
-
-  override val displayName = context.getString(R.string.filter_quantitygreater_name)
-  override val desc = context.getString(R.string.filter_quantitygreater_desc)
-}
-
-// Quantity less than
-class FilterQuantityLessThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterIntType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
-    return totalQuantity < filterValue
-  }
-
-  override val displayName = context.getString(R.string.filter_quantityless_name)
-  override val desc = context.getString(R.string.filter_quantityless_desc)
-}
-
-// CapitalGain greater than
-class FilterCapitalGainGreaterThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDoubleType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
-    return capitalGain - capitalLoss > filterValue
-  }
-
-  override val displayName = context.getString(R.string.filter_capitalgaingreater_name)
-  override val desc = context.getString(R.string.filter_capitalgaingreater_desc)
-}
-
-// CapitalGain less than
-class FilterCapitalGainLessThanType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDoubleType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
-    return capitalGain - capitalLoss < filterValue
-  }
-
-  override val displayName = context.getString(R.string.filter_capitalgainless_name)
-  override val desc = context.getString(R.string.filter_capitalgainless_desc)
-}
-
-class FilterFirstAssetSoldBeforeType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDateType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val assetSold = stockItem.assets.filter { asset ->
-      asset.quantity < 0.0
-    }
-
-    return if (assetSold.isNotEmpty()) {
-      val firstAssetDate = assetSold.minOf { asset ->
-        asset.date
-      }
-      firstAssetDate < filterDateValue
     } else {
       false
     }
   }
 
-  override val displayName = context.getString(R.string.filter_firstassetsoldbefore_name)
-  override val desc = context.getString(R.string.filter_firstassetsoldbefore_desc)
+  override val typeId = FilterTypeEnum.FilterFirstAssetSoldType
+  override val displayName = context.getString(R.string.filter_firstassetsold_name)
+  override val desc = context.getString(R.string.filter_firstassetsold_desc)
 }
 
-class FilterFirstAssetSoldAfterType(
-  override val typeId: FilterTypeEnum,
+class FilterFirstAssetBoughtType(
   context: Context
-) : FilterDateType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val assetSold = stockItem.assets.filter { asset ->
-      asset.quantity < 0.0
-    }
-
-    return if (assetSold.isNotEmpty()) {
-      val firstAssetDate = assetSold.minOf { asset ->
-        asset.date
-      }
-      firstAssetDate > filterDateValue
-    } else {
-      false
-    }
-  }
-
-  override val displayName = context.getString(R.string.filter_firstassetsoldafter_name)
-  override val desc = context.getString(R.string.filter_firstassetsoldafter_desc)
-}
-
-class FilterFirstAssetBoughtBeforeType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDateType(typeId, context) {
+) : FilterDateType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val assetBought = stockItem.assets.filter { asset ->
       asset.quantity > 0.0
@@ -706,43 +659,29 @@ class FilterFirstAssetBoughtBeforeType(
       val firstAssetDate = assetBought.minOf { asset ->
         asset.date
       }
-      firstAssetDate < filterDateValue
-    } else {
-      false
-    }
-  }
 
-  override val displayName = context.getString(R.string.filter_firstassetboughtbefore_name)
-  override val desc = context.getString(R.string.filter_firstassetboughtbefore_desc)
-}
-
-class FilterFirstAssetBoughtAfterType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDateType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val assetBought = stockItem.assets.filter { asset ->
-      asset.quantity > 0.0
-    }
-
-    return if (assetBought.isNotEmpty()) {
-      val firstAssetDate = assetBought.minOf { asset ->
-        asset.date
+      when {
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+          firstAssetDate < filterDateValue
+        }
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+          firstAssetDate > filterDateValue
+        }
+        else -> false
       }
-      firstAssetDate > filterDateValue
     } else {
       false
     }
   }
 
-  override val displayName = context.getString(R.string.filter_firstassetboughtafter_name)
-  override val desc = context.getString(R.string.filter_firstassetboughtafter_desc)
+  override val typeId = FilterTypeEnum.FilterFirstAssetBoughtType
+  override val displayName = context.getString(R.string.filter_firstassetbought_name)
+  override val desc = context.getString(R.string.filter_firstassetbought_desc)
 }
 
-class FilterLastAssetSoldBeforeType(
-  override val typeId: FilterTypeEnum,
+class FilterLastAssetSoldType(
   context: Context
-) : FilterDateType(typeId, context) {
+) : FilterDateType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val assetSold = stockItem.assets.filter { asset ->
       asset.quantity < 0.0
@@ -752,43 +691,28 @@ class FilterLastAssetSoldBeforeType(
       val lastAssetDate = assetSold.maxOf { asset ->
         asset.date
       }
-      lastAssetDate < filterDateValue
-    } else {
-      false
-    }
-  }
-
-  override val displayName = context.getString(R.string.filter_lastassetsoldbefore_name)
-  override val desc = context.getString(R.string.filter_lastassetsoldbefore_desc)
-}
-
-class FilterLastAssetSoldAfterType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDateType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val assetSold = stockItem.assets.filter { asset ->
-      asset.quantity < 0.0
-    }
-
-    return if (assetSold.isNotEmpty()) {
-      val lastAssetDate = assetSold.maxOf { asset ->
-        asset.date
+      when {
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+          lastAssetDate < filterDateValue
+        }
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+          lastAssetDate > filterDateValue
+        }
+        else -> false
       }
-      lastAssetDate > filterDateValue
     } else {
       false
     }
   }
 
-  override val displayName = context.getString(R.string.filter_lastassetsoldafter_name)
-  override val desc = context.getString(R.string.filter_lastassetsoldafter_desc)
+  override val typeId = FilterTypeEnum.FilterLastAssetSoldType
+  override val displayName = context.getString(R.string.filter_lastassetsold_name)
+  override val desc = context.getString(R.string.filter_lastassetsold_desc)
 }
 
-class FilterLastAssetBoughtBeforeType(
-  override val typeId: FilterTypeEnum,
+class FilterLastAssetBoughtType(
   context: Context
-) : FilterDateType(typeId, context) {
+) : FilterDateType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val assetBought = stockItem.assets.filter { asset ->
       asset.quantity > 0.0
@@ -798,44 +722,29 @@ class FilterLastAssetBoughtBeforeType(
       val lastAssetDate = assetBought.maxOf { asset ->
         asset.date
       }
-      lastAssetDate < filterDateValue
-    } else {
-      false
-    }
-  }
-
-  override val displayName = context.getString(R.string.filter_lastassetboughtbefore_name)
-  override val desc = context.getString(R.string.filter_lastassetboughtbefore_desc)
-}
-
-class FilterLastAssetBoughtAfterType(
-  override val typeId: FilterTypeEnum,
-  context: Context
-) : FilterDateType(typeId, context) {
-  override fun filter(stockItem: StockItem): Boolean {
-    val assetBought = stockItem.assets.filter { asset ->
-      asset.quantity > 0.0
-    }
-
-    return if (assetBought.isNotEmpty()) {
-      val lastAssetDate = assetBought.maxOf { asset ->
-        asset.date
+      when {
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+          lastAssetDate < filterDateValue
+        }
+        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+          lastAssetDate > filterDateValue
+        }
+        else -> false
       }
-      lastAssetDate > filterDateValue
     } else {
       false
     }
   }
 
-  override val displayName = context.getString(R.string.filter_lastassetboughtafter_name)
-  override val desc = context.getString(R.string.filter_lastassetboughtafter_desc)
+  override val typeId = FilterTypeEnum.FilterLastAssetBoughtType
+  override val displayName = context.getString(R.string.filter_lastassetbought_name)
+  override val desc = context.getString(R.string.filter_lastassetbought_desc)
 }
 
 // Stocks are at least one year old.
 class FilterLongTermType(
-  override val typeId: FilterTypeEnum,
   context: Context
-) : FilterBaseType(typeId, context) {
+) : FilterBaseType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     val assetBought = stockItem.assets.filter { asset ->
       asset.quantity > 0.0
@@ -855,6 +764,7 @@ class FilterLongTermType(
     }
   }
 
+  override val typeId = FilterTypeEnum.FilterLongTermType
   override val displayName = context.getString(R.string.filter_longterm_name)
   override val desc = context.getString(R.string.filter_longterm_desc)
 }
