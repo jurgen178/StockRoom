@@ -380,12 +380,14 @@ limitations under the License. -->
   <string name="filter_note_desc"></string>
   <string name="filter_dividendnote_name">Dividend note</string>
   <string name="filter_dividendnote_desc"></string>
-  <string name="filter_asset_name">Asset</string>
-  <string name="filter_asset_desc"></string>
+  <string name="filter_purchaseprice_name">Purchase price</string>
+  <string name="filter_purchaseprice_desc"></string>
   <string name="filter_profit_name">Profit</string>
   <string name="filter_profit_desc"></string>
   <string name="filter_profitpercentage_name">Profit %</string>
   <string name="filter_profitpercentage_desc"></string>
+  <string name="filter_asset_name">Asset</string>
+  <string name="filter_asset_desc"></string>
   <string name="filter_dividendpercentage_name">Dividend %</string>
   <string name="filter_dividendpercentage_desc"></string>
   <string name="filter_firstassetsold_name">First asset sold</string>
@@ -419,8 +421,8 @@ limitations under the License. -->
   <string name="filter_LessThanType">less than</string>
   <string name="filter_BeforeDateType">before date</string>
   <string name="filter_AfterDateType">after date</string>
-  <string name="filter_ContainsType">contains</string>
-  <string name="filter_NotContainsType">not contains</string>
+  <string name="filter_ContainsTextType">contains</string>
+  <string name="filter_NotContainsTextType">not contains</string>
   <string name="filter_IsEmptyTextType">is empty</string>
   <string name="filter_IsNotEmptyTextType">is not empty</string>
 </resources>

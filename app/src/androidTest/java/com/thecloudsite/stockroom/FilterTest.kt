@@ -35,10 +35,12 @@ class FilterTest {
 
     override val typeId = FilterTypeEnum.FilterNullType
     override val displayName = "test1"
-    override var desc = ""
+    override val desc = ""
     override val dataType = FilterDataTypeEnum.NoType
+    override val subTypeList: List<FilterSubTypeEnum> = listOf()
+    override var subTypeIndex: Int = 0
     override var data = ""
-    override var serializedData = ""
+    override val serializedData = ""
   }
 
   @Test

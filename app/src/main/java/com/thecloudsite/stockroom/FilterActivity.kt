@@ -593,18 +593,21 @@ class FilterActivity : AppCompatActivity() {
         position: Int,
         id: Long
       ) {
-        val selectedSubType = filterType.subTypeList[position]
+        if (position >= 0 && position < filterType.subTypeList.size) {
+          val selectedSubType = filterType.subTypeList[position]
 
-        when (selectedSubType) {
-          FilterSubTypeEnum.ContainsType, FilterSubTypeEnum.NotContainsType -> {
-            textViewFilterTextType.visibility = View.VISIBLE
-            textInputLayoutFilterTextType.visibility = View.VISIBLE
-          }
-          FilterSubTypeEnum.IsEmptyTextType, FilterSubTypeEnum.IsNotEmptyTextType -> {
-            textViewFilterTextType.visibility = View.GONE
-            textInputLayoutFilterTextType.visibility = View.GONE
-          }
-          else -> {
+          // Display/Hide text entry for certain types.
+          when (selectedSubType) {
+            FilterSubTypeEnum.ContainsTextType, FilterSubTypeEnum.NotContainsTextType -> {
+              textViewFilterTextType.visibility = View.VISIBLE
+              textInputLayoutFilterTextType.visibility = View.VISIBLE
+            }
+            FilterSubTypeEnum.IsEmptyTextType, FilterSubTypeEnum.IsNotEmptyTextType -> {
+              textViewFilterTextType.visibility = View.GONE
+              textInputLayoutFilterTextType.visibility = View.GONE
+            }
+            else -> {
+            }
           }
         }
       }
