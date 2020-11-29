@@ -77,6 +77,11 @@ limitations under the License. -->
     <item>Annual</item>
   </string-array>
 
+  <string-array name="filter_mode_items">
+    <item>And (&amp;&amp;)</item>
+    <item>Or (||)</item>
+  </string-array>
+
   <!-- Preference Titles -->
   <string name="title_activity_settings">Settings</string>
   <string name="general_header">General</string>
@@ -427,4 +432,5 @@ limitations under the License. -->
   <string name="filter_NotContainsTextType">not contains</string>
   <string name="filter_IsEmptyTextType">is empty</string>
   <string name="filter_IsNotEmptyTextType">is not empty</string>
+  <string name="filter_mode">Filter mode</string>
 </resources>

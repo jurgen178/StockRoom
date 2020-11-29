@@ -30,13 +30,20 @@ import java.util.Locale
 data class FilterTypeJson
 (
   val name: String,
+  val mode: FilterModeTypeEnum,
   var typeId: FilterTypeEnum,
   val data: String,
   val subTypeIndex: Int
 )
 
+data class FilterSet
+(
+  var list: List<IFilterType> = mutableListOf(),
+  var mode: FilterModeTypeEnum = FilterModeTypeEnum.AndType,
+)
+
 class Filters(
-  var map: MutableMap<String, List<IFilterType>> = mutableMapOf(),
+  var map: MutableMap<String, FilterSet> = mutableMapOf(),
   val context: Context? = null
 ) {
 
@@ -73,13 +80,19 @@ class Filters(
       }
     }
 
+  var filterMode: FilterModeTypeEnum
+    get() = map[selectedFilter]?.mode!!
+    set(value) {
+      map[selectedFilter]?.mode = value
+    }
+
   fun add(filterType: IFilterType) {
     val list: MutableList<IFilterType> = mutableListOf()
     if (map.containsKey(selectedFilter)) {
-      map[selectedFilter]?.let { list.addAll(it) }
+      map[selectedFilter]?.let { list.addAll(it.list) }
     }
     list.add(filterType)
-    map[selectedFilter] = list
+    map[selectedFilter]?.list = list
   }
 
   fun update(
@@ -88,10 +101,10 @@ class Filters(
   ) {
     if (map.containsKey(selectedFilter)) {
       val list: MutableList<IFilterType> = mutableListOf()
-      map[selectedFilter]?.let { list.addAll(it) }
+      map[selectedFilter]?.let { list.addAll(it.list) }
       if (index >= 0 && index < list.size) {
         list[index] = filterType
-        map[selectedFilter] = list
+        map[selectedFilter]?.list = list
       }
     }
   }
@@ -99,17 +112,17 @@ class Filters(
   fun delete(index: Int) {
     if (map.containsKey(selectedFilter)) {
       val list: MutableList<IFilterType> = mutableListOf()
-      map[selectedFilter]?.let { list.addAll(it) }
+      map[selectedFilter]?.let { list.addAll(it.list) }
       if (index >= 0 && index < list.size) {
         list.removeAt(index)
-        map[selectedFilter] = list
+        map[selectedFilter]?.list = list
       }
     }
   }
 
   fun getFilterList(): List<IFilterType> {
     return if (filterActive && map.containsKey(selectedFilter)) {
-      map[selectedFilter]!!
+      map[selectedFilter]?.list!!
     } else {
       emptyList()
     }
@@ -139,10 +152,12 @@ class FilterDataRepository(val context: Context) {
       if (filters != null) {
         val filterTypeJsonList: MutableList<FilterTypeJson> = mutableListOf()
         filters.map.forEach { (name, filterList) ->
-          filterList.forEach { filter ->
+          val mode = filters.map[name]?.mode!!
+          filterList.list.forEach { filter ->
             filterTypeJsonList.add(
                 FilterTypeJson(
                     name = name,
+                    mode = mode,
                     typeId = filter.typeId,
                     data = filter.serializedData,
                     subTypeIndex = filter.subTypeIndex
@@ -179,20 +194,21 @@ class FilterDataRepository(val context: Context) {
       val gson = Gson()
       val filterList = gson.fromJson<List<FilterTypeJson>>(filterData, sType)
 
-      val map: MutableMap<String, List<IFilterType>> = mutableMapOf()
+      val map: MutableMap<String, FilterSet> = mutableMapOf()
 
       filterList?.forEach { filterTypeJson ->
         // de-serialized JSON type can be null
         if (filterTypeJson.typeId != null) {
           val list: MutableList<IFilterType> = mutableListOf()
           if (map.containsKey(filterTypeJson.name)) {
-            map[filterTypeJson.name]?.let { list.addAll(it) }
+            map[filterTypeJson.name]?.let { list.addAll(it.list) }
           }
           val filterType = FilterFactory.create(filterTypeJson.typeId, context)
           filterType.data = filterTypeJson.data
           filterType.subTypeIndex = filterTypeJson.subTypeIndex
           list.add(filterType)
-          map[filterTypeJson.name] = list
+          map[filterTypeJson.name]?.list = list
+          map[filterTypeJson.name]?.mode = filterTypeJson.mode
         }
       }
 
@@ -214,10 +230,26 @@ class FilterDataRepository(val context: Context) {
   val filterActive: Boolean
     get() = SharedRepository.filterMap.value?.filterActive == true
 
+  var filterMode: FilterModeTypeEnum
+    get() {
+      val filters = SharedRepository.filterMap.value
+      return if (filters != null) {
+        SharedRepository.filterMap.value!!.filterMode
+      } else {
+        FilterModeTypeEnum.AndType
+      }
+    }
+    set(value) {
+      val filters = SharedRepository.filterMap.value
+      if (filters != null) {
+        SharedRepository.filterMap.value!!.filterMode = value
+      }
+    }
+
   private fun verify() {
     var selectedFilter = SharedRepository.filterMap.value?.selectedFilter ?: "Filter"
 
-    val map: MutableMap<String, List<IFilterType>>? = SharedRepository.filterMap.value?.map
+    val map: MutableMap<String, FilterSet>? = SharedRepository.filterMap.value?.map
 
     if (map != null && !map.containsKey(selectedFilter)) {
       if (map.isNotEmpty()) {
@@ -353,4 +385,10 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
   var filterActive: Boolean
     get() = filterDataRepository.filterActive
     set(value) = filterDataRepository.enable(value)
+
+  var filterMode: FilterModeTypeEnum
+    get() = filterDataRepository.filterMode
+    set(value) {
+      filterDataRepository.filterMode = value
+    }
 }

@@ -44,6 +44,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
+import com.squareup.moshi.internal.Util
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DateType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.IntType
@@ -55,6 +56,7 @@ import com.thecloudsite.stockroom.R.string
 import kotlinx.android.synthetic.main.activity_filter.addFilterButton
 import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
+import kotlinx.android.synthetic.main.activity_filter.textViewFilterModeSpinner
 import kotlinx.android.synthetic.main.activity_filter.textViewFilterSelection
 import java.io.BufferedReader
 import java.io.FileOutputStream
@@ -271,6 +273,24 @@ class FilterActivity : AppCompatActivity() {
 
     addFilterButton.setOnClickListener {
       addUpdateFilter(FilterFactory.create(FilterTypeEnum.FilterNullType, this), -1)
+    }
+
+    textViewFilterModeSpinner.setSelection(filterDataViewModel.filterMode.value)
+    textViewFilterModeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        when (position) {
+          0 -> filterDataViewModel.filterMode = FilterModeTypeEnum.AndType
+          1 -> filterDataViewModel.filterMode = FilterModeTypeEnum.OrMode
+        }
+      }
     }
   }
 
