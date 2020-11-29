@@ -48,44 +48,22 @@
       android:gravity="center_horizontal|center_vertical"
       />
 
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="16dp"
-      >
-    <TextView
-        android:id="@+id/textViewFilterModeText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/filter_mode"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
-    <Spinner
-        android:id="@+id/textViewFilterModeSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintStart_toEndOf="@+id/textViewFilterModeText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:entries="@array/filter_mode_items"
-        />
+  <Spinner
+      android:id="@+id/textViewFilterModeSpinner"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:entries="@array/filter_mode_items"
+      />
 
-    <ImageButton
-        android:id="@+id/addFilterButton"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/add_filter"
-        android:src="@drawable/ic_action_add_circle_outline"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textViewFilterModeSpinner"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/asset_item_imagebutton"
-        />
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  <ImageButton
+      android:id="@+id/addFilterButton"
+      android:layout_margin="16dp"
+      android:layout_gravity="end"
+      android:contentDescription="@string/add_filter"
+      android:src="@drawable/ic_action_add_circle_outline"
+      style="@style/asset_item_imagebutton"
+      />
 
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/filterRecyclerView"

@@ -78,8 +78,8 @@ limitations under the License. -->
   </string-array>
 
   <string-array name="filter_mode_items">
-    <item>And (&amp;&amp;)</item>
-    <item>Or (||)</item>
+    <item>All filters must match (&amp;&amp;)</item>
+    <item>At least one filter match (||)</item>
   </string-array>
 
   <!-- Preference Titles -->
@@ -432,5 +432,4 @@ limitations under the License. -->
   <string name="filter_NotContainsTextType">not contains</string>
   <string name="filter_IsEmptyTextType">is empty</string>
   <string name="filter_IsNotEmptyTextType">is not empty</string>
-  <string name="filter_mode">Filter mode</string>
 </resources>

@@ -31,7 +31,7 @@ data class FilterTypeJson
 (
   val name: String,
   val mode: FilterModeTypeEnum,
-  var typeId: FilterTypeEnum,
+  val typeId: FilterTypeEnum,
   val data: String,
   val subTypeIndex: Int
 )

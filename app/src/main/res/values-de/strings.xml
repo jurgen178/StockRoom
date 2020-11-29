@@ -75,8 +75,8 @@ limitations under the License. -->
   </string-array>
 
   <string-array name="filter_mode_items">
-    <item>Alle (&amp;&amp;)</item>
-    <item>Eins (||)</item>
+    <item>Alle Kriterien müssen erfüllt sein (&amp;&amp;)</item>
+    <item>Mindestens ein Kriterium muss erfüllt sein (||)</item>
   </string-array>
 
   <!-- Preference Titles -->
@@ -429,5 +429,4 @@ limitations under the License. -->
   <string name="filter_NotContainsTextType">enthält nicht</string>
   <string name="filter_IsEmptyTextType">enthält keinen Text</string>
   <string name="filter_IsNotEmptyTextType">enthält Text</string>
-  <string name="filter_mode">Filter mode</string>
 </resources>
