@@ -57,7 +57,7 @@ enum class FilterDataTypeEnum(val value: Int) {
 
 enum class FilterModeTypeEnum(val value: Int) {
   AndType(0),
-  OrMode(1),
+  OrType(1),
 }
 
 enum class FilterSubTypeEnum(var value: String) {

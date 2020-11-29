@@ -81,7 +81,7 @@ class Filters(
     }
 
   var filterMode: FilterModeTypeEnum
-    get() = map[selectedFilter]?.mode!!
+    get() = map[selectedFilter]?.mode ?: FilterModeTypeEnum.AndType
     set(value) {
       map[selectedFilter]?.mode = value
     }
@@ -92,7 +92,7 @@ class Filters(
       map[selectedFilter]?.let { list.addAll(it.list) }
     }
     list.add(filterType)
-    map[selectedFilter]?.list = list
+    map[selectedFilter] = FilterSet(list = list)
   }
 
   fun update(
@@ -120,24 +120,25 @@ class Filters(
     }
   }
 
-  fun getFilterList(): List<IFilterType> {
-    return if (filterActive && map.containsKey(selectedFilter)) {
-      map[selectedFilter]?.list!!
-    } else {
-      emptyList()
-    }
-  }
+  val filterList: List<IFilterType>
+    get() =
+      if (filterActive && map.containsKey(selectedFilter)) {
+        map[selectedFilter]?.list!!
+      } else {
+        emptyList()
+      }
 
   // sorted alphabetically case insensitive
-  fun getFilterNameList(): List<String> {
-    val list: MutableList<String> = mutableListOf()
-    map.forEach { (name, _) ->
-      list.add(name)
+  val filterNameList: List<String>
+    get() {
+      val list: MutableList<String> = mutableListOf()
+      map.forEach { (name, _) ->
+        list.add(name)
+      }
+      return list.sortedBy { filterName ->
+        filterName.toLowerCase(Locale.ROOT)
+      }
     }
-    return list.sortedBy { filterName ->
-      filterName.toLowerCase(Locale.ROOT)
-    }
-  }
 }
 
 class FilterDataRepository(val context: Context) {
@@ -152,7 +153,7 @@ class FilterDataRepository(val context: Context) {
       if (filters != null) {
         val filterTypeJsonList: MutableList<FilterTypeJson> = mutableListOf()
         filters.map.forEach { (name, filterList) ->
-          val mode = filters.map[name]?.mode!!
+          val mode = filters.map[name]?.mode ?: FilterModeTypeEnum.AndType
           filterList.list.forEach { filter ->
             filterTypeJsonList.add(
                 FilterTypeJson(
@@ -207,8 +208,7 @@ class FilterDataRepository(val context: Context) {
           filterType.data = filterTypeJson.data
           filterType.subTypeIndex = filterTypeJson.subTypeIndex
           list.add(filterType)
-          map[filterTypeJson.name]?.list = list
-          map[filterTypeJson.name]?.mode = filterTypeJson.mode
+          map[filterTypeJson.name] = FilterSet(list = list, mode = filterTypeJson.mode)
         }
       }
 
@@ -303,18 +303,21 @@ class FilterDataRepository(val context: Context) {
     }
   }
 
-  fun getFilterList(): List<IFilterType> {
-    val filters = SharedRepository.filterMap.value
-    return filters?.getFilterList() ?: emptyList()
-  }
+  val filterList: List<IFilterType>
+    get() {
+      val filters = SharedRepository.filterMap.value
+      return filters?.filterList ?: emptyList()
+    }
 
-  fun getFilterNameList(): List<String> {
-    val filters = SharedRepository.filterMap.value
-    return filters?.getFilterNameList() ?: emptyList()
-  }
+  val filterNameList: List<String>
+    get() {
+      val filters = SharedRepository.filterMap.value
+      return filters?.filterNameList ?: emptyList()
+    }
 
-  fun getSelectedFilterName(): String {
-    val filters = SharedRepository.filterMap.value
+  var selectedFilterName: String
+    get() {
+      val filters = SharedRepository.filterMap.value
 
 //    if (filters?.map?.containsKey(selectedFilter) != true) {
 //      if (filters?.map?.isNotEmpty() == true) {
@@ -324,16 +327,16 @@ class FilterDataRepository(val context: Context) {
 //      }
 //    }
 
-    return filters?.selectedFilter ?: "Filter"
-  }
-
-  fun setSelectedFilterName(value: String) {
-    val filters = SharedRepository.filterMap.value
-    if (filters != null) {
-      filters.selectedFilter = value
-      SharedRepository.filterMap.value = filters
+      return filters?.selectedFilter ?: "Filter"
     }
-  }
+    set(value) {
+      val filters = SharedRepository.filterMap.value
+      if (filters != null) {
+        filters.selectedFilter = value
+        SharedRepository.filterMap.value = filters
+      }
+    }
+
 }
 
 class FilterDataViewModel(application: Application) : AndroidViewModel(application) {
@@ -373,14 +376,16 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
   }
 
   val filterList: List<IFilterType>
-    get() = filterDataRepository.getFilterList()
+    get() = filterDataRepository.filterList
 
   val filterNameList: List<String>
-    get() = filterDataRepository.getFilterNameList()
+    get() = filterDataRepository.filterNameList
 
   var selectedFilter: String
-    get() = filterDataRepository.getSelectedFilterName()
-    set(value) = filterDataRepository.setSelectedFilterName(value)
+    get() = filterDataRepository.selectedFilterName
+    set(value) {
+      filterDataRepository.selectedFilterName = value
+    }
 
   var filterActive: Boolean
     get() = filterDataRepository.filterActive

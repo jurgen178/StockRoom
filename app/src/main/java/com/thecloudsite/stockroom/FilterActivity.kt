@@ -44,7 +44,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
-import com.squareup.moshi.internal.Util
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DateType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.IntType
@@ -98,7 +97,7 @@ class FilterActivity : AppCompatActivity() {
 
     filterDataViewModel.data.observe(this, Observer { filter ->
 
-      filterAdapter.setFilter(filter.getFilterList())
+      filterAdapter.setFilter(filter.filterList)
 
       textViewFilterSelection.text =
         getString(R.string.filter_set, filterDataViewModel.selectedFilter)
@@ -110,6 +109,7 @@ class FilterActivity : AppCompatActivity() {
       } else {
         View.GONE
       }
+      textViewFilterModeSpinner.visibility = visibility
       textViewFilterSelection.visibility = visibility
       filterRecyclerView.visibility = visibility
       addFilterButton.visibility = visibility
@@ -275,7 +275,13 @@ class FilterActivity : AppCompatActivity() {
       addUpdateFilter(FilterFactory.create(FilterTypeEnum.FilterNullType, this), -1)
     }
 
-    textViewFilterModeSpinner.setSelection(filterDataViewModel.filterMode.value)
+    textViewFilterModeSpinner.setSelection(
+        when (filterDataViewModel.filterMode) {
+          FilterModeTypeEnum.AndType -> 0
+          FilterModeTypeEnum.OrType -> 1
+        }
+    )
+
     textViewFilterModeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
       }
@@ -288,7 +294,7 @@ class FilterActivity : AppCompatActivity() {
       ) {
         when (position) {
           0 -> filterDataViewModel.filterMode = FilterModeTypeEnum.AndType
-          1 -> filterDataViewModel.filterMode = FilterModeTypeEnum.OrMode
+          1 -> filterDataViewModel.filterMode = FilterModeTypeEnum.OrType
         }
       }
     }

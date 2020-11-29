@@ -206,6 +206,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   val allStockItems: LiveData<List<StockItem>>
 
   private var filterList: List<IFilterType> = emptyList()
+  private var filterMode: FilterModeTypeEnum = FilterModeTypeEnum.AndType
 
   private var portfolioSymbols: HashSet<String> = HashSet()
 
@@ -591,7 +592,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(SharedRepository.filterMapLiveData) { value ->
       if (value != null) {
         // Set filterlist and update.
-        filterList = value.getFilterList()
+        filterList = value.filterList
+        filterMode = value.filterMode
         allMediatorData.value = allData.value?.let { process(it, false) }
       }
     }
@@ -968,23 +970,43 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     if (filterList.isEmpty()) {
       stockItems
     } else {
-      stockItems.filter { item ->
-        var match = true
-        // All filters must return true to match.
-        for (filterType in filterList) {
-          if (!filterType.filter(item)) {
-            match = false
-            break
+      when (filterMode) {
+
+        FilterModeTypeEnum.AndType -> {
+          stockItems.filter { item ->
+            var match = true
+            // All filters must return true to match.
+            for (filterType in filterList) {
+              if (!filterType.filter(item)) {
+                match = false
+                break
+              }
+            }
+            match
           }
         }
-        match
+
+        FilterModeTypeEnum.OrType -> {
+          stockItems.filter { item ->
+            var match = false
+            // First filter match return true.
+            for (filterType in filterList) {
+              if (filterType.filter(item)) {
+                match = true
+                break
+              }
+            }
+            match
+          }
+        }
       }
     }
 
   private fun sort(
     sortMode: SortMode,
     stockItems: List<StockItem>
-  ): List<StockItem> =
+  )
+      : List<StockItem> =
     when (sortMode) {
       SortMode.ByChangePercentage -> {
         stockItems.sortedByDescending { item ->
@@ -1495,7 +1517,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         .show()
   }
 
-  private fun csvStrToDouble(str: String): Double {
+  private fun csvStrToDouble(str: String)
+      : Double {
     val s = str.replace("$", "")
         .replace(",", "")
     var value: Double
@@ -1538,7 +1561,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     if (symbolColumn == -1) {
       val msg =
-        getApplication<Application>().getString(R.string.import_csv_column_error, "Symbol|Name")
+        getApplication<Application>().getString(
+            R.string.import_csv_column_error, "Symbol|Name"
+        )
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
@@ -1557,7 +1582,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     if (sharesColumn == -1) {
       val msg =
-        getApplication<Application>().getString(R.string.import_csv_column_error, "Shares|Quantity")
+        getApplication<Application>().getString(
+            R.string.import_csv_column_error, "Shares|Quantity"
+        )
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
@@ -1922,7 +1949,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             output.write(jsonString.toByteArray())
           }
 
-      val msg = getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size)
+      val msg =
+        getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size)
       logDebug("Export JSON '$msg'")
 
       Toast.makeText(context, msg, Toast.LENGTH_LONG)
@@ -1930,7 +1958,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     } catch (e: Exception) {
       Toast.makeText(
-          context, getApplication<Application>().getString(R.string.export_error, e.message), Toast.LENGTH_LONG
+          context, getApplication<Application>().getString(R.string.export_error, e.message),
+          Toast.LENGTH_LONG
       )
           .show()
       Log.d("Export JSON error", "Exception: $e")
@@ -1996,7 +2025,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     runBlocking {
       withContext(Dispatchers.IO) {
         if (symbol.isNotEmpty()) {
-          repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote)
+          repository.updateAlertAbove(
+              symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote
+          )
         }
       }
     }
@@ -2010,7 +2041,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     runBlocking {
       withContext(Dispatchers.IO) {
         if (symbol.isNotEmpty()) {
-          repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote)
+          repository.updateAlertBelow(
+              symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote
+          )
         }
       }
     }
@@ -2098,7 +2131,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.updatePortfolio(portfolioOld, portfolioNew)
   }
 
-  fun getGroupSync(color: Int): Group {
+  fun getGroupSync(color: Int)
+      : Group {
     var group: Group?
     runBlocking {
       withContext(Dispatchers.IO) {
@@ -2127,7 +2161,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return stockMarketDataRepository.getStockData(symbol.toUpperCase(Locale.ROOT))
   }
 
-  private suspend fun getStockData(): Pair<MarketState, String> {
+  private suspend fun getStockData()
+      : Pair<MarketState, String> {
     // When the stock data activity is selected, query only the selected symbol.
     val selectedSymbol = SharedRepository.selectedSymbol
 
@@ -2214,7 +2249,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.deleteAllGroups()
   }
 
-  fun getAssetsSync(symbol: String): Assets? {
+  fun getAssetsSync(symbol: String)
+      : Assets
+  ? {
     var assets: Assets? = null
     runBlocking {
       withContext(Dispatchers.IO) {
@@ -2310,7 +2347,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return repository.getStockDBLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
-  fun getAssetsLiveData(symbol: String): LiveData<Assets> {
+  fun getAssetsLiveData(symbol: String)
+      : LiveData<Assets> {
     return repository.getAssetsLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
@@ -2318,7 +2356,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return repository.getEventsLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
-  fun getDividendsLiveData(symbol: String): LiveData<Dividends> {
+  fun getDividendsLiveData(symbol: String)
+      : LiveData<Dividends> {
     return repository.getDividendsLiveData(symbol.toUpperCase(Locale.ROOT))
   }
 
