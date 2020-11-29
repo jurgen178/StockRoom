@@ -357,6 +357,8 @@ limitations under the License. -->
   <string name="filter_enable_switch">Filter verwenden</string>
   <string name="delete_filter">Filter entfernen</string>
   <string name="delete_filter_confirm">Sind Sie sicher, dass Sie den Filter \'%1$s\' entfernen möchten?</string>
+  <string name="delete_all_filter_title">Alle Filter entfernen</string>
+  <string name="delete_all_filter_confirm">Sind Sie sicher, dass Sie alle Filter entfernen möchten?</string>
   <string name="delete_filter_msg">Der Filter \'%1$s\' wurde entfernt.</string>
   <string name="add_filter">Filter hinzufügen</string>
   <string name="filter_type">Filter</string>

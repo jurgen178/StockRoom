@@ -350,7 +350,7 @@ class FilterNullType(
   override val desc = context.getString(R.string.filter_null_desc)
 }
 
-// Change percentage greater than
+// Change percentage
 class FilterPercentageChangeType(
   context: Context
 ) : FilterDoubleType(context) {

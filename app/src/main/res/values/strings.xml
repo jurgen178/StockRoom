@@ -360,6 +360,8 @@ limitations under the License. -->
   <string name="filter_enable_switch">Use Filter</string>
   <string name="delete_filter">Delete filter</string>
   <string name="delete_filter_confirm">Are you sure to delete the filter \'%1$s\' ?</string>
+  <string name="delete_all_filter_title">Delete all filter</string>
+  <string name="delete_all_filter_confirm">Are you sure to delete the filter \'%1$s\' ?</string>
   <string name="delete_filter_msg">The filter \'%1$s\' was deleted.</string>
   <string name="add_filter">Add filter</string>
   <string name="filter_type">Filter</string>

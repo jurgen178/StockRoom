@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -213,7 +214,14 @@ class FilterActivity : AppCompatActivity() {
                 .show()
           }
           deleteSelected -> {
-            filterDataViewModel.deleteAllData()
+            AlertDialog.Builder(this)
+                .setTitle(R.string.delete_all_filter_title)
+                .setMessage(getString(R.string.delete_all_filter_confirm))
+                .setPositiveButton(R.string.delete) { _, _ ->
+                  filterDataViewModel.deleteAllData()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
           }
           loadSelected -> {
             // match importList()
@@ -598,11 +606,13 @@ class FilterActivity : AppCompatActivity() {
 
           // Display/Hide text entry for certain types.
           when (selectedSubType) {
-            FilterSubTypeEnum.ContainsTextType, FilterSubTypeEnum.NotContainsTextType -> {
+            FilterSubTypeEnum.ContainsTextType,
+            FilterSubTypeEnum.NotContainsTextType -> {
               textViewFilterTextType.visibility = View.VISIBLE
               textInputLayoutFilterTextType.visibility = View.VISIBLE
             }
-            FilterSubTypeEnum.IsEmptyTextType, FilterSubTypeEnum.IsNotEmptyTextType -> {
+            FilterSubTypeEnum.IsEmptyTextType,
+            FilterSubTypeEnum.IsNotEmptyTextType -> {
               textViewFilterTextType.visibility = View.GONE
               textInputLayoutFilterTextType.visibility = View.GONE
             }
