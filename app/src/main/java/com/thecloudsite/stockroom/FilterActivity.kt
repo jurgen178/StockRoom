@@ -664,7 +664,9 @@ class FilterActivity : AppCompatActivity() {
           val newFilterType = FilterFactory.create(filterIndex, applicationContext)
 
           val subType =
-            if (textViewSubTypeSpinner.selectedItemPosition < newFilterType.subTypeList.size) {
+            if (textViewSubTypeSpinner.selectedItemPosition >= 0
+                && textViewSubTypeSpinner.selectedItemPosition < newFilterType.subTypeList.size
+            ) {
               newFilterType.subTypeList[textViewSubTypeSpinner.selectedItemPosition]
             } else {
               FilterSubTypeEnum.NoType
