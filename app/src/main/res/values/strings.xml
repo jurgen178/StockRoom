@@ -432,4 +432,9 @@ limitations under the License. -->
   <string name="filter_NotContainsTextType">not contains</string>
   <string name="filter_IsEmptyTextType">is empty</string>
   <string name="filter_IsNotEmptyTextType">is not empty</string>
+  <string name="filter_StartsWithTextType">starts with</string>
+  <string name="filter_EndsWithTextType">ends with</string>
+  <string name="filter_IsTextType">is equal</string>
+  <string name="filter_IsNotTextType">is not equal</string>
+  <string name="filter_mode">Filter mode</string>
 </resources>

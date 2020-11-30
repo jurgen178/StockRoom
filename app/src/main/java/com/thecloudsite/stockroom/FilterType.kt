@@ -69,6 +69,10 @@ enum class FilterSubTypeEnum(var value: String) {
   NotContainsTextType(""),
   IsEmptyTextType(""),
   IsNotEmptyTextType(""),
+  StartsWithTextType(""),
+  EndsWithTextType(""),
+  IsTextType(""),
+  IsNotTextType(""),
 }
 
 object FilterFactory {
@@ -138,9 +142,14 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.BeforeDateType.value = context.getString(R.string.filter_BeforeDateType)
   FilterSubTypeEnum.AfterDateType.value = context.getString(R.string.filter_AfterDateType)
   FilterSubTypeEnum.ContainsTextType.value = context.getString(R.string.filter_ContainsTextType)
-  FilterSubTypeEnum.NotContainsTextType.value = context.getString(R.string.filter_NotContainsTextType)
+  FilterSubTypeEnum.NotContainsTextType.value =
+    context.getString(R.string.filter_NotContainsTextType)
   FilterSubTypeEnum.IsEmptyTextType.value = context.getString(R.string.filter_IsEmptyTextType)
   FilterSubTypeEnum.IsNotEmptyTextType.value = context.getString(R.string.filter_IsNotEmptyTextType)
+  FilterSubTypeEnum.StartsWithTextType.value = context.getString(R.string.filter_StartsWithTextType)
+  FilterSubTypeEnum.EndsWithTextType.value = context.getString(R.string.filter_EndsWithTextType)
+  FilterSubTypeEnum.IsTextType.value = context.getString(R.string.filter_IsTextType)
+  FilterSubTypeEnum.IsNotTextType.value = context.getString(R.string.filter_IsNotTextType)
 }
 
 fun getFilterTypeList(context: Context): List<String> {
@@ -387,12 +396,31 @@ class FilterSymbolNameType(
       subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsTextType -> {
         !stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
       }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.StartsWithTextType -> {
+        stockItem.stockDBdata.symbol.startsWith(data, ignoreCase = true)
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.EndsWithTextType -> {
+        stockItem.stockDBdata.symbol.endsWith(data, ignoreCase = true)
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsTextType -> {
+        stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
+      }
+      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsNotTextType -> {
+        !stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
+      }
       else -> false
     }
   }
 
   override val subTypeList =
-    listOf(FilterSubTypeEnum.ContainsTextType, FilterSubTypeEnum.NotContainsTextType)
+    listOf(
+        FilterSubTypeEnum.ContainsTextType,
+        FilterSubTypeEnum.NotContainsTextType,
+        FilterSubTypeEnum.StartsWithTextType,
+        FilterSubTypeEnum.EndsWithTextType,
+        FilterSubTypeEnum.IsTextType,
+        FilterSubTypeEnum.IsNotTextType
+    )
   override val typeId = FilterTypeEnum.FilterSymbolNameType
   override val displayName = context.getString(R.string.filter_symbolname_name)
   override val desc = context.getString(R.string.filter_symbolname_desc)

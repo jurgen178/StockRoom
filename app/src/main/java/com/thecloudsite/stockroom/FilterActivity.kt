@@ -580,8 +580,8 @@ class FilterActivity : AppCompatActivity() {
             datePickerFilterDateView.visibility = View.GONE
           }
           IntType -> {
-            textViewFilterDesc.visibility = View.GONE
-            textViewSubTypeSpinner.visibility = View.GONE
+            textViewFilterTextType.visibility = View.GONE
+            textInputLayoutFilterTextType.visibility = View.GONE
             textViewFilterDoubleType.visibility = View.GONE
             textInputLayoutFilterDoubleType.visibility = View.GONE
             textViewFilterIntType.visibility = View.VISIBLE
@@ -633,7 +633,12 @@ class FilterActivity : AppCompatActivity() {
           // Display/Hide text entry for certain types.
           when (selectedSubType) {
             FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType -> {
+            FilterSubTypeEnum.NotContainsTextType,
+            FilterSubTypeEnum.StartsWithTextType,
+            FilterSubTypeEnum.EndsWithTextType,
+            FilterSubTypeEnum.IsTextType,
+            FilterSubTypeEnum.IsNotTextType
+            -> {
               textViewFilterTextType.visibility = View.VISIBLE
               textInputLayoutFilterTextType.visibility = View.VISIBLE
             }
