@@ -502,7 +502,8 @@ class FilterActivity : AppCompatActivity() {
     val subTypeSpinnerAdapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, subTypeData)
     textViewSubTypeSpinner.adapter = subTypeSpinnerAdapter
-    textViewSubTypeSpinner.setSelection(filterType.subTypeIndex)
+    val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
+    textViewSubTypeSpinner.setSelection(subTypeIndex)
 
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
     val filterIntValueView = dialogView.findViewById<TextView>(id.filterIntValue)
@@ -662,8 +663,13 @@ class FilterActivity : AppCompatActivity() {
           val filterIndex = textViewFilterSpinner.selectedItemPosition
           val newFilterType = FilterFactory.create(filterIndex, applicationContext)
 
-          val subTypeIndex = textViewSubTypeSpinner.selectedItemPosition
-          newFilterType.subTypeIndex = subTypeIndex
+          val subType =
+            if (textViewSubTypeSpinner.selectedItemPosition < newFilterType.subTypeList.size) {
+              newFilterType.subTypeList[textViewSubTypeSpinner.selectedItemPosition]
+            } else {
+              FilterSubTypeEnum.NoType
+            }
+          newFilterType.subType = subType
 
           newFilterType.data = when (newFilterType.dataType) {
             TextType -> {

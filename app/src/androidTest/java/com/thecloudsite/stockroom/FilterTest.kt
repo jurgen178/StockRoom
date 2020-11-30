@@ -38,7 +38,7 @@ class FilterTest {
     override val desc = ""
     override val dataType = FilterDataTypeEnum.NoType
     override val subTypeList: List<FilterSubTypeEnum> = listOf()
-    override var subTypeIndex: Int = 0
+    override var subType: FilterSubTypeEnum = FilterSubTypeEnum.NoType
     override var data = ""
     override val serializedData = ""
   }

@@ -77,8 +77,8 @@ class FilterListAdapter internal constructor(
     holder.bindDelete(current, position, clickListenerDelete)
 
     val subType =
-      if (current.subTypeIndex >= 0 && current.subTypeIndex < current.subTypeList.size) {
-        " ${current.subTypeList[current.subTypeIndex].value} "
+      if (current.subType != FilterSubTypeEnum.NoType) {
+        " ${current.subType.value} "
       } else {
         " "
       }

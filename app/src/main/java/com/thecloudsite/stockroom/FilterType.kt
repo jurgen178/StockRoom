@@ -61,6 +61,7 @@ enum class FilterModeTypeEnum(val value: Int) {
 }
 
 enum class FilterSubTypeEnum(var value: String) {
+  NoType(""),
   GreaterThanType(""),
   LessThanType(""),
   BeforeDateType(""),
@@ -195,7 +196,7 @@ interface IFilterType {
   val typeId: FilterTypeEnum
   val dataType: FilterDataTypeEnum
   val subTypeList: List<FilterSubTypeEnum>
-  var subTypeIndex: Int
+  var subType: FilterSubTypeEnum
   val displayName: String
   val desc: String
   var data: String
@@ -212,12 +213,12 @@ open class FilterBaseType(
   override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.NoType
   override val subTypeList = listOf<FilterSubTypeEnum>()
-  override var subTypeIndex = 0
+  override var subType = FilterSubTypeEnum.NoType
     set(value) {
-      field = if (value >= 0 && value < subTypeList.size) {
+      field = if (subTypeList.contains(value)) {
         value
       } else {
-        0
+        FilterSubTypeEnum.NoType
       }
     }
   override val displayName = ""
@@ -369,11 +370,11 @@ class FilterPercentageChangeType(
   context: Context
 ) : FilterDoubleType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         stockItem.onlineMarketData.marketChangePercent > filterValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         stockItem.onlineMarketData.marketChangePercent < filterValue
       }
       else -> false
@@ -389,23 +390,23 @@ class FilterSymbolNameType(
   context: Context
 ) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsTextType -> {
+    return when (subType) {
+      FilterSubTypeEnum.ContainsTextType -> {
         stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsTextType -> {
+      FilterSubTypeEnum.NotContainsTextType -> {
         !stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.StartsWithTextType -> {
+      FilterSubTypeEnum.StartsWithTextType -> {
         stockItem.stockDBdata.symbol.startsWith(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.EndsWithTextType -> {
+      FilterSubTypeEnum.EndsWithTextType -> {
         stockItem.stockDBdata.symbol.endsWith(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsTextType -> {
+      FilterSubTypeEnum.IsTextType -> {
         stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsNotTextType -> {
+      FilterSubTypeEnum.IsNotTextType -> {
         !stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
       }
       else -> false
@@ -430,11 +431,11 @@ class FilterDisplayNameType(
   context: Context
 ) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsTextType -> {
+    return when (subType) {
+      FilterSubTypeEnum.ContainsTextType -> {
         getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsTextType -> {
+      FilterSubTypeEnum.NotContainsTextType -> {
         !getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
       }
       else -> false
@@ -452,17 +453,17 @@ class FilterNoteType(
   context: Context
 ) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsTextType -> {
+    return when (subType) {
+      FilterSubTypeEnum.ContainsTextType -> {
         stockItem.stockDBdata.note.contains(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsTextType -> {
+      FilterSubTypeEnum.NotContainsTextType -> {
         !stockItem.stockDBdata.note.contains(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsEmptyTextType -> {
+      FilterSubTypeEnum.IsEmptyTextType -> {
         stockItem.stockDBdata.note.isEmpty()
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsNotEmptyTextType -> {
+      FilterSubTypeEnum.IsNotEmptyTextType -> {
         stockItem.stockDBdata.note.isNotEmpty()
       }
       else -> false
@@ -485,17 +486,17 @@ class FilterDividendNoteType(
   context: Context
 ) : FilterTextType(context) {
   override fun filter(stockItem: StockItem): Boolean {
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.ContainsTextType -> {
+    return when (subType) {
+      FilterSubTypeEnum.ContainsTextType -> {
         stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.NotContainsTextType -> {
+      FilterSubTypeEnum.NotContainsTextType -> {
         !stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsEmptyTextType -> {
+      FilterSubTypeEnum.IsEmptyTextType -> {
         stockItem.stockDBdata.dividendNote.isEmpty()
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.IsNotEmptyTextType -> {
+      FilterSubTypeEnum.IsNotEmptyTextType -> {
         stockItem.stockDBdata.dividendNote.isNotEmpty()
       }
       else -> false
@@ -521,11 +522,11 @@ class FilterPurchasePriceType(
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
 
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         totalPrice > filterValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         totalPrice < filterValue
       }
       else -> false
@@ -549,11 +550,11 @@ class FilterProfitType(
       totalPrice
     }
 
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         profit > filterValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         profit < filterValue
       }
       else -> false
@@ -578,11 +579,11 @@ class FilterProfitPercentageType(
         totalPrice
       }
 
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         profitPercentage > filterPercentageValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         profitPercentage < filterPercentageValue
       }
       else -> false
@@ -606,11 +607,11 @@ class FilterAssetType(
       totalPrice
     }
 
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         asset > filterValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         asset < filterValue
       }
       else -> false
@@ -638,11 +639,11 @@ class FilterDividendPercentageType(
         stockItem.onlineMarketData.annualDividendYield
       }
 
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         dividendPercentage > filterPercentageValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         dividendPercentage < filterPercentageValue
       }
       else -> false
@@ -661,11 +662,11 @@ class FilterQuantityType(
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
 
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         totalQuantity > filterValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         totalQuantity < filterValue
       }
       else -> false
@@ -684,11 +685,11 @@ class FilterCapitalGainType(
   override fun filter(stockItem: StockItem): Boolean {
     val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
 
-    return when {
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.GreaterThanType -> {
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
         capitalGain - capitalLoss > filterValue
       }
-      subTypeList[subTypeIndex] == FilterSubTypeEnum.LessThanType -> {
+      FilterSubTypeEnum.LessThanType -> {
         capitalGain - capitalLoss < filterValue
       }
       else -> false
@@ -713,11 +714,11 @@ class FilterFirstAssetSoldType(
         asset.date
       }
 
-      when {
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+      when (subType) {
+        FilterSubTypeEnum.BeforeDateType -> {
           firstAssetDate < filterDateValue
         }
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+        FilterSubTypeEnum.AfterDateType -> {
           firstAssetDate > filterDateValue
         }
         else -> false
@@ -745,11 +746,11 @@ class FilterFirstAssetBoughtType(
         asset.date
       }
 
-      when {
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+      when (subType) {
+        FilterSubTypeEnum.BeforeDateType -> {
           firstAssetDate < filterDateValue
         }
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+        FilterSubTypeEnum.AfterDateType -> {
           firstAssetDate > filterDateValue
         }
         else -> false
@@ -776,11 +777,11 @@ class FilterLastAssetSoldType(
       val lastAssetDate = assetSold.maxOf { asset ->
         asset.date
       }
-      when {
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+      when (subType) {
+        FilterSubTypeEnum.BeforeDateType -> {
           lastAssetDate < filterDateValue
         }
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+        FilterSubTypeEnum.AfterDateType -> {
           lastAssetDate > filterDateValue
         }
         else -> false
@@ -807,11 +808,11 @@ class FilterLastAssetBoughtType(
       val lastAssetDate = assetBought.maxOf { asset ->
         asset.date
       }
-      when {
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.BeforeDateType -> {
+      when (subType) {
+        FilterSubTypeEnum.BeforeDateType -> {
           lastAssetDate < filterDateValue
         }
-        subTypeList[subTypeIndex] == FilterSubTypeEnum.AfterDateType -> {
+        FilterSubTypeEnum.AfterDateType -> {
           lastAssetDate > filterDateValue
         }
         else -> false

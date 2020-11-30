@@ -33,7 +33,7 @@ data class FilterTypeJson
   val mode: FilterModeTypeEnum,
   val typeId: FilterTypeEnum,
   val data: String,
-  val subTypeIndex: Int
+  val subType: FilterSubTypeEnum
 )
 
 data class FilterSet
@@ -161,7 +161,7 @@ class FilterDataRepository(val context: Context) {
                     mode = mode,
                     typeId = filter.typeId,
                     data = filter.serializedData,
-                    subTypeIndex = filter.subTypeIndex
+                    subType = filter.subType
                 )
             )
           }
@@ -206,7 +206,7 @@ class FilterDataRepository(val context: Context) {
           }
           val filterType = FilterFactory.create(filterTypeJson.typeId, context)
           filterType.data = filterTypeJson.data
-          filterType.subTypeIndex = filterTypeJson.subTypeIndex
+          filterType.subType = filterTypeJson.subType
           list.add(filterType)
           map[filterTypeJson.name] = FilterSet(list = list, mode = filterTypeJson.mode)
         }
