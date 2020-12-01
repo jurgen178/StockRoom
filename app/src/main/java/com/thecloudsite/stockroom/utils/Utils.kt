@@ -379,6 +379,24 @@ fun getAssets(
   return Pair(totalQuantity, totalPrice)
 }
 
+// Only gets the assets that are added.
+fun getAddedAssets(
+  assetList: List<Asset>?
+): Pair<Double, Double> {
+
+  var totalQuantity: Double = 0.0
+  var totalPrice: Double = 0.0
+
+  assetList?.forEach { asset ->
+    if (asset.quantity > 0.0) {
+      totalQuantity += asset.quantity
+      totalPrice += asset.quantity * asset.price
+    }
+  }
+
+  return Pair(totalQuantity, totalPrice)
+}
+
 fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
 
   var totalQuantity: Double = 0.0

@@ -237,7 +237,10 @@ open class FilterDoubleBaseType : FilterBaseType() {
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override val subTypeList =
-    listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
+    listOf(
+        FilterSubTypeEnum.GreaterThanType,
+        FilterSubTypeEnum.LessThanType
+    )
   override var data: String = ""
     get() = DecimalFormat("0.00").format(filterValue)
     set(value) {
@@ -253,7 +256,10 @@ open class FilterDoublePercentageBaseType : FilterBaseType() {
 
   override val dataType = FilterDataTypeEnum.DoubleType
   override val subTypeList =
-    listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
+    listOf(
+        FilterSubTypeEnum.GreaterThanType,
+        FilterSubTypeEnum.LessThanType
+    )
   override var data: String = ""
     get() = DecimalFormat("0.##").format(filterValue)
     set(value) {
@@ -269,7 +275,10 @@ open class FilterIntBaseType : FilterBaseType() {
 
   override val dataType = FilterDataTypeEnum.IntType
   override val subTypeList =
-    listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
+    listOf(
+        FilterSubTypeEnum.GreaterThanType,
+        FilterSubTypeEnum.LessThanType
+    )
   override var data: String = ""
     get() = filterValue.toString()
     set(value) {
@@ -284,7 +293,10 @@ open class FilterDateBaseType : FilterBaseType() {
 
   override val dataType = FilterDataTypeEnum.DateType
   override val subTypeList =
-    listOf(FilterSubTypeEnum.BeforeDateType, FilterSubTypeEnum.AfterDateType)
+    listOf(
+        FilterSubTypeEnum.BeforeDateType,
+        FilterSubTypeEnum.AfterDateType
+    )
   override var data: String = ""
     get() = LocalDateTime.ofEpochSecond(filterDateValue, 0, ZoneOffset.UTC)
         .format(DateTimeFormatter.ofLocalizedDate(FULL))
@@ -428,7 +440,10 @@ class FilterDisplayNameType(
   }
 
   override val subTypeList =
-    listOf(FilterSubTypeEnum.ContainsTextType, FilterSubTypeEnum.NotContainsTextType)
+    listOf(
+        FilterSubTypeEnum.ContainsTextType,
+        FilterSubTypeEnum.NotContainsTextType
+    )
   override val typeId = FilterTypeEnum.FilterDisplayNameType
   override val displayName = context.getString(R.string.filter_displayname_name)
   override val desc = context.getString(R.string.filter_displayname_desc)
