@@ -203,9 +203,7 @@ interface IFilterType {
   val serializedData: String
 }
 
-open class FilterBaseType(
-  context: Context
-) : IFilterType {
+open class FilterBaseType : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return false
   }
@@ -228,21 +226,15 @@ open class FilterBaseType(
     get() = data
 }
 
-open class FilterTextType(
-  context: Context
-) : FilterBaseType(context) {
+open class FilterTextBaseType : FilterBaseType() {
 
-  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.TextType
 }
 
-open class FilterDoubleType(
-  context: Context
-) : FilterBaseType(context) {
+open class FilterDoubleBaseType : FilterBaseType() {
 
   var filterValue: Double = 0.0
 
-  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.DoubleType
   override val subTypeList =
     listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
@@ -254,14 +246,11 @@ open class FilterDoubleType(
     }
 }
 
-open class FilterDoublePercentageType(
-  context: Context
-) : FilterBaseType(context) {
+open class FilterDoublePercentageBaseType : FilterBaseType() {
 
   private var filterValue: Double = 0.0
   var filterPercentageValue: Double = 0.0
 
-  override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.DoubleType
   override val subTypeList =
     listOf(FilterSubTypeEnum.GreaterThanType, FilterSubTypeEnum.LessThanType)
@@ -274,9 +263,7 @@ open class FilterDoublePercentageType(
     }
 }
 
-open class FilterIntType(
-  context: Context
-) : FilterBaseType(context) {
+open class FilterIntBaseType : FilterBaseType() {
 
   var filterValue: Int = 0
 
@@ -291,9 +278,7 @@ open class FilterIntType(
     }
 }
 
-open class FilterDateType(
-  context: Context
-) : FilterBaseType(context) {
+open class FilterDateBaseType : FilterBaseType() {
 
   var filterDateValue: Long = 0L
 
@@ -355,7 +340,7 @@ open class FilterDateType(
 // No filtering, always returns true
 class FilterNullType(
   context: Context
-) : FilterBaseType(context) {
+) : FilterBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     return true
   }
@@ -368,7 +353,7 @@ class FilterNullType(
 // Change percentage
 class FilterPercentageChangeType(
   context: Context
-) : FilterDoubleType(context) {
+) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {
@@ -388,7 +373,7 @@ class FilterPercentageChangeType(
 
 class FilterSymbolNameType(
   context: Context
-) : FilterTextType(context) {
+) : FilterTextBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -429,7 +414,7 @@ class FilterSymbolNameType(
 
 class FilterDisplayNameType(
   context: Context
-) : FilterTextType(context) {
+) : FilterTextBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -451,7 +436,7 @@ class FilterDisplayNameType(
 
 class FilterNoteType(
   context: Context
-) : FilterTextType(context) {
+) : FilterTextBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -484,7 +469,7 @@ class FilterNoteType(
 
 class FilterDividendNoteType(
   context: Context
-) : FilterTextType(context) {
+) : FilterTextBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -518,7 +503,7 @@ class FilterDividendNoteType(
 // Purchase price
 class FilterPurchasePriceType(
   context: Context
-) : FilterDoubleType(context) {
+) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
 
@@ -541,7 +526,7 @@ class FilterPurchasePriceType(
 // Profit
 class FilterProfitType(
   context: Context
-) : FilterDoubleType(context) {
+) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -569,7 +554,7 @@ class FilterProfitType(
 // Profit Percentage
 class FilterProfitPercentageType(
   context: Context
-) : FilterDoublePercentageType(context) {
+) : FilterDoublePercentageBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val profitPercentage =
@@ -598,7 +583,7 @@ class FilterProfitPercentageType(
 // Asset
 class FilterAssetType(
   context: Context
-) : FilterDoubleType(context) {
+) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
     val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
@@ -626,7 +611,7 @@ class FilterAssetType(
 // Dividend Percentage
 class FilterDividendPercentageType(
   context: Context
-) : FilterDoublePercentageType(context) {
+) : FilterDoublePercentageBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val dividendPercentage =
       if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
@@ -658,7 +643,7 @@ class FilterDividendPercentageType(
 // Quantity
 class FilterQuantityType(
   context: Context
-) : FilterIntType(context) {
+) : FilterIntBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
 
@@ -681,7 +666,7 @@ class FilterQuantityType(
 // CapitalGain
 class FilterCapitalGainType(
   context: Context
-) : FilterDoubleType(context) {
+) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
 
@@ -703,7 +688,7 @@ class FilterCapitalGainType(
 
 class FilterFirstAssetSoldType(
   context: Context
-) : FilterDateType(context) {
+) : FilterDateBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val assetSold = stockItem.assets.filter { asset ->
       asset.quantity < 0.0
@@ -735,7 +720,7 @@ class FilterFirstAssetSoldType(
 
 class FilterFirstAssetBoughtType(
   context: Context
-) : FilterDateType(context) {
+) : FilterDateBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val assetBought = stockItem.assets.filter { asset ->
       asset.quantity > 0.0
@@ -767,7 +752,7 @@ class FilterFirstAssetBoughtType(
 
 class FilterLastAssetSoldType(
   context: Context
-) : FilterDateType(context) {
+) : FilterDateBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val assetSold = stockItem.assets.filter { asset ->
       asset.quantity < 0.0
@@ -798,7 +783,7 @@ class FilterLastAssetSoldType(
 
 class FilterLastAssetBoughtType(
   context: Context
-) : FilterDateType(context) {
+) : FilterDateBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val assetBought = stockItem.assets.filter { asset ->
       asset.quantity > 0.0
@@ -830,7 +815,7 @@ class FilterLastAssetBoughtType(
 // Stocks are at least one year old.
 class FilterLongTermType(
   context: Context
-) : FilterBaseType(context) {
+) : FilterBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val assetBought = stockItem.assets.filter { asset ->
       asset.quantity > 0.0

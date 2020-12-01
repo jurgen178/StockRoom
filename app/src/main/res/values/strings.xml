@@ -92,12 +92,12 @@ limitations under the License. -->
 
   <string name="hint_add_stock">Stock symbol</string>
   <string name="button_add">Add</string>
-  <string name="sort_change_percentage">Sort by Change %</string>
+  <string name="sort_change_percentage">Sort by Change \u0025</string>
   <string name="sort_name">Sort by Name</string>
   <string name="sort_assets">Sort by Assets</string>
   <string name="sort_profit">Sort by Gain</string>
-  <string name="sort_profit_percentage">Sort by Gain %</string>
-  <string name="sort_dividend_percentage">Sort by Dividend %</string>
+  <string name="sort_profit_percentage">Sort by Gain \u0025</string>
+  <string name="sort_dividend_percentage">Sort by Dividend \u0025</string>
   <string name="sort_group">Sort by Group</string>
   <string name="sort_unsorted">Unsorted</string>
 
@@ -366,7 +366,7 @@ limitations under the License. -->
   <string name="delete_filter">Delete filter</string>
   <string name="delete_filter_confirm">Are you sure to delete the filter \'%1$s\' ?</string>
   <string name="delete_all_filter_title">Delete all filter</string>
-  <string name="delete_all_filter_confirm">Are you sure to delete the filter \'%1$s\' ?</string>
+  <string name="delete_all_filter_confirm">Are you sure to delete all filter?</string>
   <string name="delete_filter_msg">The filter \'%1$s\' was deleted.</string>
   <string name="add_filter">Add filter</string>
   <string name="filter_type">Filter</string>
