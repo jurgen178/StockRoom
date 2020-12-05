@@ -1090,16 +1090,24 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItems.sortedByDescending { item ->
 
 //          // Get the most recent sold activity.
-//          item.assets.filter { asset ->
-//            asset.quantity > 0.0
+//          if (item.assets.isNotEmpty()) {
+//            item.assets.filter { asset ->
+//              asset.quantity > 0.0
+//            }
+//                .maxOf { asset ->
+//                  asset.date
+//                }
+//          } else {
+//            0
 //          }
-//              .maxOf { asset ->
-//                asset.date
-//              }
 
           // Get the most recent activity.
-          item.assets.maxOf { asset ->
-            asset.date
+          if (item.assets.isNotEmpty()) {
+            item.assets.maxOf { asset ->
+              asset.date
+            }
+          } else {
+            0
           }
         }
 
