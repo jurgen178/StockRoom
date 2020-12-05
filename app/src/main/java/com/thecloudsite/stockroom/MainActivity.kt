@@ -503,6 +503,10 @@ class MainActivity : AppCompatActivity() {
         stockRoomViewModel.updateSortMode(SortMode.ByGroup)
         true
       }
+      R.id.menu_sort_activity -> {
+        stockRoomViewModel.updateSortMode(SortMode.ByActivity)
+        true
+      }
 //      R.id.menu_sort_unsorted -> {
 //        stockRoomViewModel.updateSortMode(SortMode.ByUnsorted)
 //        true
@@ -544,6 +548,7 @@ class MainActivity : AppCompatActivity() {
     menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
       sortMode == SortMode.ByDividendPercentage
     menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
+    menu?.findItem(R.id.menu_sort_activity)?.isChecked = sortMode == SortMode.ByActivity
     //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 
     menu?.findItem(R.id.menu_filter)?.isChecked =

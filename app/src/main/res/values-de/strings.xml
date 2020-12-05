@@ -96,7 +96,7 @@ limitations under the License. -->
   <string name="sort_profit_percentage">Nach Gewinn \u0025 sortieren</string>
   <string name="sort_dividend_percentage">Nach Dividende \u0025 sortieren</string>
   <string name="sort_group">Nach Gruppe sortieren</string>
-  <string name="sort_unsorted">Nach Einfügedatum sortiert</string>
+  <string name="sort_activity">Nach Kaufaktivität sortiert</string>
 
   <string name="ok">OK</string>
   <string name="cancel">Abbrechen</string>

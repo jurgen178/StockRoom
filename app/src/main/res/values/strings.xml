@@ -99,7 +99,7 @@ limitations under the License. -->
   <string name="sort_profit_percentage">Sort by Gain \u0025</string>
   <string name="sort_dividend_percentage">Sort by Dividend \u0025</string>
   <string name="sort_group">Sort by Group</string>
-  <string name="sort_unsorted">Unsorted</string>
+  <string name="sort_activity">Sort by activity</string>
 
   <string name="ok">OK</string>
   <string name="cancel">Cancel</string>

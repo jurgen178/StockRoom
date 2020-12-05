@@ -1086,9 +1086,27 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               item.stockDBdata.groupColor
             }
       }
+      SortMode.ByActivity -> {
+        stockItems.sortedByDescending { item ->
+
+//          // Get the most recent sold activity.
+//          item.assets.filter { asset ->
+//            asset.quantity > 0.0
+//          }
+//              .maxOf { asset ->
+//                asset.date
+//              }
+
+          // Get the most recent activity.
+          item.assets.maxOf { asset ->
+            asset.date
+          }
+        }
+
 //        SortMode.ByUnsorted -> {
 //          stockItemSet.stockItems
 //        }
+      }
     }
 
 /*
