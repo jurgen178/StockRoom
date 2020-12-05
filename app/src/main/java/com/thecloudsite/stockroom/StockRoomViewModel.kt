@@ -48,6 +48,7 @@ import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDatabase
 import com.thecloudsite.stockroom.list.DebugData
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getGroupsMenuList
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import com.thecloudsite.stockroom.utils.validateDouble
@@ -1969,27 +1970,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   // Get the colored menu entries for the groups.
   fun getGroupsMenuList(standardGroupName: String): List<SpannableString> {
-    val menuStrings: MutableList<SpannableString> = mutableListOf()
-
-    val space: String = "    "
-    val spacePos = space.length
     val groups: MutableList<Group> = getGroupsSync().toMutableList()
-    groups.add(Group(color = backgroundListColor, name = standardGroupName))
-    for (i in groups.indices) {
-      val grp: Group = groups[i]
-      val s = SpannableString("$space  ${grp.name}")
-      s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
-
-      // backgroundListColor is light color, make the group name readable
-      if (grp.color == backgroundListColor) {
-        grp.color = Color.BLACK
-      }
-
-      s.setSpan(ForegroundColorSpan(grp.color), spacePos, s.length, 0)
-      menuStrings.add(s)
-    }
-
-    return menuStrings
+    return getGroupsMenuList(groups, backgroundListColor, standardGroupName)
   }
 
   /*

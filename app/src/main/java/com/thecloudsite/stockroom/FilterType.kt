@@ -17,10 +17,14 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
+import android.graphics.Color
+import android.text.SpannableStringBuilder
+import androidx.core.text.backgroundColor
+import androidx.core.text.color
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
+import com.thecloudsite.stockroom.utils.isWhiteColor
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -214,7 +218,7 @@ interface IFilterType {
   val desc: String
   var data: String
   val serializedData: String
-  val displayData: String
+  val displayData: SpannableStringBuilder
 }
 
 open class FilterBaseType : IFilterType {
@@ -239,7 +243,7 @@ open class FilterBaseType : IFilterType {
   override val serializedData
     get() = data
   override val displayData
-    get() = data
+    get() = SpannableStringBuilder().append(data)
 }
 
 open class FilterTextBaseType : FilterBaseType() {
@@ -328,7 +332,7 @@ open class FilterDateBaseType : FilterBaseType() {
     get() = filterDateValue.toString()
 }
 
-open class FilterGroupBaseType : FilterBaseType() {
+open class FilterGroupBaseType(val context: Context) : FilterBaseType() {
 
   var filterGroupValue: Int = 0
 
@@ -344,12 +348,31 @@ open class FilterGroupBaseType : FilterBaseType() {
       field = value
       filterGroupValue = strToInt(value)
     }
-  override val displayData: String
+
+  override val displayData: SpannableStringBuilder
     get() {
       val group = SharedFilterGroupList.groups.find { group ->
         group.color == filterGroupValue
       }
-      return group?.name ?: ""
+      return if (group != null) {
+        if (isWhiteColor(group.color)) {
+          SpannableStringBuilder().backgroundColor(context.getColor(R.color.colorPrimary)) {
+            color(group.color) {
+              append(
+                  " ${group.name} "
+              )
+            }
+          }
+        } else {
+          SpannableStringBuilder().color(group.color) {
+            append(group.name)
+          }
+        }
+      } else {
+        SpannableStringBuilder().append(
+            context.getString(R.string.standard_group)
+        )
+      }
     }
 }
 
@@ -492,7 +515,7 @@ class FilterDisplayNameType(
 
 class FilterGroupType(
   context: Context
-) : FilterGroupBaseType() {
+) : FilterGroupBaseType(context) {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.IsType -> {

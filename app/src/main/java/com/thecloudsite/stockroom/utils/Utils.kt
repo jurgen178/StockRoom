@@ -19,11 +19,16 @@ package com.thecloudsite.stockroom.utils
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
 import androidx.annotation.RawRes
+import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
 import com.thecloudsite.stockroom.DividendCycle.Annual
@@ -37,6 +42,7 @@ import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
+import com.thecloudsite.stockroom.database.Group
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDate
@@ -614,4 +620,44 @@ fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
       }
 
   return Pair(totalQuantity, totalPrice)
+}
+
+// Get the colored menu entries for the groups.
+fun getGroupsMenuList(
+  groups: List<Group>,
+  backgroundListColor: Int,
+  standardGroupName: String
+): List<SpannableString> {
+  val menuStrings: MutableList<SpannableString> = mutableListOf()
+
+  val menuGroups: MutableList<Group> = mutableListOf()
+  menuGroups.addAll(groups)
+  menuGroups.add(Group(color = backgroundListColor, name = standardGroupName))
+
+  val space: String = "    "
+  val spacePos = space.length
+  for (i in menuGroups.indices) {
+    val grp: Group = menuGroups[i]
+    val s = SpannableString("$space  ${grp.name}")
+    s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
+
+    // backgroundListColor is light color, make the group name readable
+    val textColor = if (isWhiteColor(grp.color) || grp.color == backgroundListColor) {
+      Color.BLACK
+    } else {
+      grp.color
+    }
+
+    s.setSpan(ForegroundColorSpan(textColor), spacePos, s.length, 0)
+    menuStrings.add(s)
+  }
+
+  return menuStrings
+}
+
+fun isWhiteColor(color: Int): Boolean {
+  val r = color shr 16 and 0xff
+  val g = color shr 8 and 0xff
+  val b = color and 0xff
+  return r + g + b > 700
 }

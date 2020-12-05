@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
@@ -53,7 +54,7 @@ import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.string
-import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.utils.getGroupsMenuList
 import kotlinx.android.synthetic.main.activity_filter.addFilterButton
 import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
@@ -521,9 +522,13 @@ class FilterActivity : AppCompatActivity() {
 
     val groupSpinnerFilter =
       dialogView.findViewById<Spinner>(R.id.groupSpinnerFilter)
-    val groupData: List<String> = SharedFilterGroupList.groups.map { group ->
-      group.name
-    }
+
+    val groupData: List<SpannableString> = getGroupsMenuList(
+        SharedFilterGroupList.groups,
+        0,
+        getString(string.standard_group)
+    )
+
     val groupSpinnerAdapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, groupData)
     groupSpinnerFilter.adapter = groupSpinnerAdapter
@@ -569,10 +574,15 @@ class FilterActivity : AppCompatActivity() {
           val selectedGroup = SharedFilterGroupList.groups.find { group ->
             group.color == groupColor
           }
-          if (selectedGroup != null) {
-            val selectedIndex = SharedFilterGroupList.groups.indexOf(selectedGroup)
-            groupSpinnerFilter.setSelection(selectedIndex)
-          }
+          groupSpinnerFilter.setSelection(
+              if (selectedGroup != null) {
+                val selectedIndex = SharedFilterGroupList.groups.indexOf(selectedGroup)
+                selectedIndex
+              } else {
+                // not-assigned color is added to the group list as last entry
+                SharedFilterGroupList.groups.size
+              }
+          )
         }
         NoType -> {
         }
@@ -759,6 +769,8 @@ class FilterActivity : AppCompatActivity() {
               val group = groupSpinnerFilter.selectedItemPosition
               val color = if (group >= 0 && group < SharedFilterGroupList.groups.size) {
                 SharedFilterGroupList.groups[group].color
+              } else if (group == SharedFilterGroupList.groups.size) {
+                0 // not-assigned entry added as last entry selected
               } else {
                 -1
               }
