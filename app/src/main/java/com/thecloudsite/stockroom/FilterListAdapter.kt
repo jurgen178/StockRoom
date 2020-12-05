@@ -87,7 +87,7 @@ class FilterListAdapter internal constructor(
         .append(current.displayName)
         .append(subType)
         .bold {
-          append(current.data)
+          append(current.displayData)
         }
 
     holder.filterDesc.visibility =

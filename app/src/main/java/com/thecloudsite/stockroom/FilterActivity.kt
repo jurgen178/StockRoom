@@ -46,16 +46,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DateType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
+import com.thecloudsite.stockroom.FilterDataTypeEnum.GroupType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.IntType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.NoType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.database.Group
 import kotlinx.android.synthetic.main.activity_filter.addFilterButton
 import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
 import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
 import kotlinx.android.synthetic.main.activity_filter.textViewFilterModeSpinner
+import kotlinx.android.synthetic.main.activity_filter.textViewFilterModeText
 import kotlinx.android.synthetic.main.activity_filter.textViewFilterSelection
 import java.io.BufferedReader
 import java.io.FileOutputStream
@@ -70,6 +73,8 @@ class FilterActivity : AppCompatActivity() {
   private val loadFilterActivityRequestCode = 5
   private val saveFilterActivityRequestCode = 6
   private lateinit var filterDataViewModel: FilterDataViewModel
+  //private lateinit var stockRoomViewModel: StockRoomViewModel
+  //private lateinit var groups: MutableList<Group>
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -109,11 +114,17 @@ class FilterActivity : AppCompatActivity() {
       } else {
         View.GONE
       }
+      textViewFilterModeText.visibility = visibility
       textViewFilterModeSpinner.visibility = visibility
       textViewFilterSelection.visibility = visibility
       filterRecyclerView.visibility = visibility
       addFilterButton.visibility = visibility
     })
+
+//    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
+//
+//    groups = stockRoomViewModel.getGroupsSync()
+//        .toMutableList()
 
     // initialize the display values for the sub type enum
     initSubTypeList(this)
@@ -505,6 +516,19 @@ class FilterActivity : AppCompatActivity() {
     val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
     textViewSubTypeSpinner.setSelection(subTypeIndex)
 
+    val textViewFilterGroupType =
+      dialogView.findViewById<TextView>(id.textViewFilterGroupType)
+
+    val groupSpinnerFilter =
+      dialogView.findViewById<Spinner>(R.id.groupSpinnerFilter)
+    val groupData: List<String> = SharedFilterGroupList.groups.map { group ->
+      group.name
+    }
+    val groupSpinnerAdapter =
+      ArrayAdapter(this, android.R.layout.simple_list_item_1, groupData)
+    groupSpinnerFilter.adapter = groupSpinnerAdapter
+    groupSpinnerFilter.setSelection(subTypeIndex)
+
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
     val filterIntValueView = dialogView.findViewById<TextView>(id.filterIntValue)
     val filterTextValueView = dialogView.findViewById<TextView>(id.filterTextValue)
@@ -536,6 +560,14 @@ class FilterActivity : AppCompatActivity() {
           datePickerFilterDateView.updateDate(
               localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
           )
+        }
+        GroupType -> {
+          val date = try {
+            filterType.serializedData.toLong()
+          } catch (e: Exception) {
+            0L
+          }
+          groupSpinnerFilter
         }
         NoType -> {
         }
@@ -570,6 +602,8 @@ class FilterActivity : AppCompatActivity() {
             textViewFilterIntType.visibility = View.GONE
             textInputLayoutFilterIntType.visibility = View.GONE
             datePickerFilterDateView.visibility = View.GONE
+            textViewFilterGroupType.visibility = View.GONE
+            groupSpinnerFilter.visibility = View.GONE
           }
           DoubleType -> {
             textViewFilterTextType.visibility = View.GONE
@@ -579,6 +613,8 @@ class FilterActivity : AppCompatActivity() {
             textViewFilterIntType.visibility = View.GONE
             textInputLayoutFilterIntType.visibility = View.GONE
             datePickerFilterDateView.visibility = View.GONE
+            textViewFilterGroupType.visibility = View.GONE
+            groupSpinnerFilter.visibility = View.GONE
           }
           IntType -> {
             textViewFilterTextType.visibility = View.GONE
@@ -588,6 +624,8 @@ class FilterActivity : AppCompatActivity() {
             textViewFilterIntType.visibility = View.VISIBLE
             textInputLayoutFilterIntType.visibility = View.VISIBLE
             datePickerFilterDateView.visibility = View.GONE
+            textViewFilterGroupType.visibility = View.GONE
+            groupSpinnerFilter.visibility = View.GONE
           }
           DateType -> {
             textViewFilterTextType.visibility = View.GONE
@@ -597,6 +635,19 @@ class FilterActivity : AppCompatActivity() {
             textViewFilterIntType.visibility = View.GONE
             textInputLayoutFilterIntType.visibility = View.GONE
             datePickerFilterDateView.visibility = View.VISIBLE
+            textViewFilterGroupType.visibility = View.GONE
+            groupSpinnerFilter.visibility = View.GONE
+          }
+          GroupType -> {
+            textViewFilterTextType.visibility = View.GONE
+            textInputLayoutFilterTextType.visibility = View.GONE
+            textViewFilterDoubleType.visibility = View.GONE
+            textInputLayoutFilterDoubleType.visibility = View.GONE
+            textViewFilterIntType.visibility = View.GONE
+            textInputLayoutFilterIntType.visibility = View.GONE
+            datePickerFilterDateView.visibility = View.GONE
+            textViewFilterGroupType.visibility = View.VISIBLE
+            groupSpinnerFilter.visibility = View.VISIBLE
           }
           NoType -> {
             textViewFilterTextType.visibility = View.GONE
@@ -606,6 +657,8 @@ class FilterActivity : AppCompatActivity() {
             textViewFilterIntType.visibility = View.GONE
             textInputLayoutFilterIntType.visibility = View.GONE
             datePickerFilterDateView.visibility = View.GONE
+            textViewFilterGroupType.visibility = View.GONE
+            groupSpinnerFilter.visibility = View.GONE
           }
         }
 
@@ -696,6 +749,15 @@ class FilterActivity : AppCompatActivity() {
               )
               val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
               date.toString()
+            }
+            GroupType -> {
+              val group = groupSpinnerFilter.selectedItemPosition
+              val color = if (group >= 0 && group < SharedFilterGroupList.groups.size) {
+                SharedFilterGroupList.groups[group].color
+              } else {
+                -1
+              }
+              color.toString()
             }
             NoType -> {
               ""

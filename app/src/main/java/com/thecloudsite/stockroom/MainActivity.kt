@@ -166,6 +166,15 @@ class MainActivity : AppCompatActivity() {
       }
     })
 
+    // Update groups to be used by the filter.
+    stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
+      if (groups != null) {
+        SharedFilterGroupList.groups = groups.sortedBy { group ->
+          group.name
+        }
+      }
+    })
+
     SharedRepository.debugData.observe(this, Observer { debugdatalist ->
       if (debugdatalist != null) {
         val s = recyclerViewDebug.canScrollVertically(1)

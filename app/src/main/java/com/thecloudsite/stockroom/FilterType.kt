@@ -17,6 +17,8 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
+import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import java.text.DecimalFormat
@@ -31,6 +33,7 @@ enum class FilterTypeEnum {
   FilterPercentageChangeType,
   FilterSymbolNameType,
   FilterDisplayNameType,
+  FilterGroupType,
   FilterNoteType,
   FilterDividendNoteType,
   FilterPurchasePriceType,
@@ -53,6 +56,7 @@ enum class FilterDataTypeEnum(val value: Int) {
   DoubleType(2),
   DateType(3),
   IntType(4),
+  GroupType(5)
 }
 
 enum class FilterModeTypeEnum(val value: Int) {
@@ -74,6 +78,12 @@ enum class FilterSubTypeEnum(var value: String) {
   EndsWithTextType(""),
   IsTextType(""),
   IsNotTextType(""),
+  IsType(""),
+  IsNotType(""),
+}
+
+object SharedFilterGroupList {
+  var groups: List<Group> = emptyList()
 }
 
 object FilterFactory {
@@ -86,6 +96,7 @@ object FilterFactory {
       FilterTypeEnum.FilterPercentageChangeType -> FilterPercentageChangeType(context)
       FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
       FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
+      FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
       FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
       FilterTypeEnum.FilterDividendNoteType -> FilterDividendNoteType(context)
       FilterTypeEnum.FilterPurchasePriceType -> FilterPurchasePriceType(context)
@@ -151,6 +162,8 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.EndsWithTextType.value = context.getString(R.string.filter_EndsWithTextType)
   FilterSubTypeEnum.IsTextType.value = context.getString(R.string.filter_IsTextType)
   FilterSubTypeEnum.IsNotTextType.value = context.getString(R.string.filter_IsNotTextType)
+  FilterSubTypeEnum.IsType.value = context.getString(R.string.filter_IsType)
+  FilterSubTypeEnum.IsNotType.value = context.getString(R.string.filter_IsNotType)
 }
 
 fun getFilterTypeList(context: Context): List<String> {
@@ -201,6 +214,7 @@ interface IFilterType {
   val desc: String
   var data: String
   val serializedData: String
+  val displayData: String
 }
 
 open class FilterBaseType : IFilterType {
@@ -223,6 +237,8 @@ open class FilterBaseType : IFilterType {
   override val desc = ""
   override var data = ""
   override val serializedData
+    get() = data
+  override val displayData
     get() = data
 }
 
@@ -310,6 +326,31 @@ open class FilterDateBaseType : FilterBaseType() {
     }
   override val serializedData
     get() = filterDateValue.toString()
+}
+
+open class FilterGroupBaseType : FilterBaseType() {
+
+  var filterGroupValue: Int = 0
+
+  override val dataType = FilterDataTypeEnum.GroupType
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.IsType,
+        FilterSubTypeEnum.IsNotType
+    )
+  override var data: String = ""
+    get() = filterGroupValue.toString()
+    set(value) {
+      field = value
+      filterGroupValue = strToInt(value)
+    }
+  override val displayData: String
+    get() {
+      val group = SharedFilterGroupList.groups.find { group ->
+        group.color == filterGroupValue
+      }
+      return group?.name ?: ""
+    }
 }
 
 //class FilterTestType(override val typeId: FilterTypeEnum) : IFilterType {
@@ -447,6 +488,31 @@ class FilterDisplayNameType(
   override val typeId = FilterTypeEnum.FilterDisplayNameType
   override val displayName = context.getString(R.string.filter_displayname_name)
   override val desc = context.getString(R.string.filter_displayname_desc)
+}
+
+class FilterGroupType(
+  context: Context
+) : FilterGroupBaseType() {
+  override fun filter(stockItem: StockItem): Boolean {
+    return when (subType) {
+      FilterSubTypeEnum.IsType -> {
+        stockItem.stockDBdata.groupColor == filterGroupValue
+      }
+      FilterSubTypeEnum.IsNotType -> {
+        stockItem.stockDBdata.groupColor != filterGroupValue
+      }
+      else -> false
+    }
+  }
+
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.IsType,
+        FilterSubTypeEnum.IsNotType
+    )
+  override val typeId = FilterTypeEnum.FilterGroupType
+  override val displayName = context.getString(R.string.filter_group_name)
+  override val desc = context.getString(R.string.filter_group_desc)
 }
 
 class FilterNoteType(

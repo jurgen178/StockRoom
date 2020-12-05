@@ -369,6 +369,7 @@ limitations under the License. -->
   <string name="filter_type">Filter</string>
   <string name="filter_value_text">Text</string>
   <string name="filter_value_double">Zahlenwert</string>
+  <string name="filter_value_group">Gruppe</string>
   <string name="update_filter">Filter aktualisieren</string>
   <string name="add_filter_msg">Der Filter \'%1$s\' wurde hinzugefügt.</string>
   <string name="update_filter_msg">Der Filter \'%1$s\' wurde aktualisiert.</string>
@@ -380,6 +381,8 @@ limitations under the License. -->
   <string name="filter_symbolname_desc"></string>
   <string name="filter_displayname_name">Anzeigename</string>
   <string name="filter_displayname_desc"></string>
+  <string name="filter_group_name">Gruppe</string>
+  <string name="filter_group_desc"></string>
   <string name="filter_note_name">Anmerkung</string>
   <string name="filter_note_desc"></string>
   <string name="filter_dividendnote_name">Dividendenanmerkung</string>
@@ -433,5 +436,7 @@ limitations under the License. -->
   <string name="filter_EndsWithTextType">ended mit</string>
   <string name="filter_IsTextType">ist gleich</string>
   <string name="filter_IsNotTextType">ist nicht gleich</string>
+  <string name="filter_IsType">ist</string>
+  <string name="filter_IsNotType">ist nicht</string>
   <string name="filter_mode">Filterart</string>
 </resources>
