@@ -527,7 +527,6 @@ class FilterActivity : AppCompatActivity() {
     val groupSpinnerAdapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, groupData)
     groupSpinnerFilter.adapter = groupSpinnerAdapter
-    groupSpinnerFilter.setSelection(subTypeIndex)
 
     val filterDoubleValueView = dialogView.findViewById<TextView>(id.filterDoubleValue)
     val filterIntValueView = dialogView.findViewById<TextView>(id.filterIntValue)
@@ -562,12 +561,18 @@ class FilterActivity : AppCompatActivity() {
           )
         }
         GroupType -> {
-          val date = try {
-            filterType.serializedData.toLong()
+          val groupColor = try {
+            filterType.data.toInt()
           } catch (e: Exception) {
-            0L
+            0
           }
-          groupSpinnerFilter
+          val selectedGroup = SharedFilterGroupList.groups.find { group ->
+            group.color == groupColor
+          }
+          if (selectedGroup != null) {
+            val selectedIndex = SharedFilterGroupList.groups.indexOf(selectedGroup)
+            groupSpinnerFilter.setSelection(selectedIndex)
+          }
         }
         NoType -> {
         }
