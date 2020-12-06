@@ -48,6 +48,15 @@
       android:gravity="center_horizontal|center_vertical"
       />
 
+  <ImageButton
+      android:id="@+id/addFilterButton"
+      android:layout_margin="16dp"
+      android:layout_gravity="end"
+      android:contentDescription="@string/add_filter"
+      android:src="@drawable/ic_action_add_circle_outline"
+      style="@style/asset_item_imagebutton"
+      />
+
   <TextView
       android:id="@+id/textViewFilterModeText"
       android:layout_width="wrap_content"
@@ -62,17 +71,11 @@
       android:id="@+id/textViewFilterModeSpinner"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="8dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginEnd="8dp"
+      android:layout_marginBottom="16dp"
       android:entries="@array/filter_mode_items"
-      />
-
-  <ImageButton
-      android:id="@+id/addFilterButton"
-      android:layout_margin="16dp"
-      android:layout_gravity="end"
-      android:contentDescription="@string/add_filter"
-      android:src="@drawable/ic_action_add_circle_outline"
-      style="@style/asset_item_imagebutton"
       />
 
   <androidx.recyclerview.widget.RecyclerView

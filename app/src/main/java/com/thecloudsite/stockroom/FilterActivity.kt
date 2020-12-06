@@ -115,8 +115,16 @@ class FilterActivity : AppCompatActivity() {
       } else {
         View.GONE
       }
-      textViewFilterModeText.visibility = visibility
-      textViewFilterModeSpinner.visibility = visibility
+
+      // Show filter mode only for more than one filter
+      val filterModeVisibility = if (filter.filterList.size > 1) {
+        visibility
+      } else {
+        View.GONE
+      }
+      textViewFilterModeText.visibility = filterModeVisibility
+      textViewFilterModeSpinner.visibility = filterModeVisibility
+
       textViewFilterSelection.visibility = visibility
       filterRecyclerView.visibility = visibility
       addFilterButton.visibility = visibility
