@@ -41,10 +41,24 @@
       android:layout_margin="4dp"
       android:paddingStart="12dp"
       android:paddingEnd="12dp"
-      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/googleNewsItemDate"
+      />
+
+  <TextView
+      android:id="@+id/googleNewsItemOrigin"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="4dp"
+      android:paddingStart="12dp"
+      android:paddingEnd="12dp"
+      android:textSize="10sp"
+      android:text="Google News"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/googleNewsItemPreviewText"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
