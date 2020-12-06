@@ -17,7 +17,6 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import android.graphics.Color
 import android.text.SpannableStringBuilder
 import androidx.core.text.backgroundColor
 import androidx.core.text.color
@@ -242,7 +241,7 @@ open class FilterBaseType : IFilterType {
   override var data = ""
   override val serializedData
     get() = data
-  override val displayData
+  override val displayData: SpannableStringBuilder
     get() = SpannableStringBuilder().append(data)
 }
 

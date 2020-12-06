@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.text.SpannableStringBuilder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
@@ -28,7 +29,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FilterTest {
 
-  class FilterTest1Type : IFilterType {
+  class FilterTest1Type() : IFilterType {
     override fun filter(stockItem: StockItem): Boolean {
       return stockItem.stockDBdata.symbol == "s1"
     }
@@ -41,6 +42,7 @@ class FilterTest {
     override var subType: FilterSubTypeEnum = FilterSubTypeEnum.NoType
     override var data = ""
     override val serializedData = ""
+    override val displayData: SpannableStringBuilder = SpannableStringBuilder()
   }
 
   @Test

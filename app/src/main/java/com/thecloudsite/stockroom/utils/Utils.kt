@@ -28,7 +28,6 @@ import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import androidx.annotation.RawRes
-import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
 import com.thecloudsite.stockroom.DividendCycle.Annual

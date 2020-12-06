@@ -18,11 +18,8 @@ package com.thecloudsite.stockroom
 
 import android.app.Application
 import android.content.Context
-import android.graphics.Color
 import android.net.Uri
 import android.text.SpannableString
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -31,12 +28,12 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.thecloudsite.stockroom.DividendCycle.Quarterly
 import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
+import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend

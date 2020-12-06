@@ -7,90 +7,107 @@
     android:orientation="vertical"
     >
 
-  <LinearLayout
+  <androidx.core.widget.NestedScrollView
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:layout_margin="16dp"
+      android:layout_height="match_parent"
+      android:scrollbars="vertical"
+      android:fadeScrollbars="false"
       >
 
-    <ImageView
-        android:src="@drawable/ic_action_filter_list"
-        android:layout_height="30dp"
-        android:layout_width="30dp"
-        android:layout_gravity="center_vertical"
-        android:contentDescription="@string/menu_filter"
-        />
-
-    <Switch
-        android:id="@+id/filterEnableSwitch"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="14dp"
-        android:textSize="16sp"
-        android:text="@string/filter_enable_switch"
-        android:layout_gravity="center_vertical"
-        />
-  </LinearLayout>
+        android:orientation="vertical"
+        >
 
-  <View style="@style/Divider"/>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_margin="16dp"
+          >
 
-  <TextView
-      android:id="@+id/textViewFilterSelection"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="16dp"
-      android:padding="8dp"
-      android:textSize="16sp"
-      android:textColor="@color/buttonLabel"
-      android:background="@drawable/portfolio_item_bg"
-      android:gravity="center_horizontal|center_vertical"
-      />
+        <ImageView
+            android:src="@drawable/ic_action_filter_list"
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/menu_filter"
+            />
 
-  <ImageButton
-      android:id="@+id/addFilterButton"
-      android:layout_margin="16dp"
-      android:layout_gravity="end"
-      android:contentDescription="@string/add_filter"
-      android:src="@drawable/ic_action_add_circle_outline"
-      style="@style/asset_item_imagebutton"
-      />
+        <Switch
+            android:id="@+id/filterEnableSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="14dp"
+            android:textSize="16sp"
+            android:text="@string/filter_enable_switch"
+            android:layout_gravity="center_vertical"
+            />
+      </LinearLayout>
 
-  <TextView
-      android:id="@+id/textViewFilterModeText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="@string/filter_mode"
-      />
+      <View style="@style/Divider"/>
 
-  <Spinner
-      android:id="@+id/textViewFilterModeSpinner"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginBottom="16dp"
-      android:entries="@array/filter_mode_items"
-      />
+      <TextView
+          android:id="@+id/textViewFilterSelection"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="16dp"
+          android:padding="8dp"
+          android:textSize="16sp"
+          android:textColor="@color/buttonLabel"
+          android:background="@drawable/portfolio_item_bg"
+          android:gravity="center_horizontal|center_vertical"
+          />
 
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/filterRecyclerView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="2dp"
-      />
+      <ImageButton
+          android:id="@+id/addFilterButton"
+          android:layout_margin="16dp"
+          android:layout_gravity="end"
+          android:contentDescription="@string/add_filter"
+          android:src="@drawable/ic_action_add_circle_outline"
+          style="@style/asset_item_imagebutton"
+          />
 
-  <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_constraintGuide_begin="100dp"
-      />
+      <TextView
+          android:id="@+id/textViewFilterModeText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:text="@string/filter_mode"
+          />
+
+      <Spinner
+          android:id="@+id/textViewFilterModeSpinner"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginBottom="16dp"
+          android:entries="@array/filter_mode_items"
+          />
+
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/filterRecyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="2dp"
+          />
+
+      <androidx.constraintlayout.widget.Guideline
+          android:id="@+id/guideline1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          app:layout_constraintGuide_begin="100dp"
+          />
+
+    </LinearLayout>
+
+  </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

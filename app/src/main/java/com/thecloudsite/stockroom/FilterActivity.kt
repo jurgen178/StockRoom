@@ -116,18 +116,19 @@ class FilterActivity : AppCompatActivity() {
         View.GONE
       }
 
+      textViewFilterSelection.visibility = visibility
+      filterRecyclerView.visibility = visibility
+      addFilterButton.visibility = visibility
+
       // Show filter mode only for more than one filter
       val filterModeVisibility = if (filter.filterList.size > 1) {
         visibility
       } else {
         View.GONE
       }
+
       textViewFilterModeText.visibility = filterModeVisibility
       textViewFilterModeSpinner.visibility = filterModeVisibility
-
-      textViewFilterSelection.visibility = visibility
-      filterRecyclerView.visibility = visibility
-      addFilterButton.visibility = visibility
     })
 
 //    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
