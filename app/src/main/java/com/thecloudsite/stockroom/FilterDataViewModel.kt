@@ -51,6 +51,13 @@ class Filters(
     context?.getString(R.string.filter_default_name) ?: "Standard Filter"
 
   var selectedFilter: String = defaultFilterName
+    get() {
+      return if (field.isEmpty()) {
+        defaultFilterName
+      } else {
+        field
+      }
+    }
     set(value) {
       if (field != value) {
         field = value
@@ -291,6 +298,7 @@ class FilterDataRepository(val context: Context) {
   fun deleteAllData() {
     val filters = Filters(mutableMapOf(), context)
     filters.filterActive = SharedRepository.filterMap.value?.filterActive == true
+    filters.selectedFilter = ""
 
     SharedRepository.filterMap.value = filters
   }
