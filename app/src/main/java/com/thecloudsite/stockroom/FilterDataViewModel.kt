@@ -95,7 +95,7 @@ class Filters(
 
   fun add(filterType: IFilterType) {
     if (map.containsKey(selectedFilter)) {
-      // Add new filter type at the end.
+      // Add new filter type at the end of the list.
       map[selectedFilter]?.list?.add(filterType)
     } else {
       // Create new filter.
