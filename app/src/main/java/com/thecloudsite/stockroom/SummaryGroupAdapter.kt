@@ -37,6 +37,7 @@ import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.Locale
 
 const val summarygroup_all_items: Int = 0
 const val summarygroup_item: Int = 1
@@ -168,7 +169,7 @@ class SummaryGroupAdapter internal constructor(
     // Display stats for each group.
     if (groups.size > 1) {
       groups.sortedBy { group ->
-        group.name
+        group.name.toLowerCase(Locale.ROOT)
       }
           .forEach { group ->
             val (text1, text2) = getTotal(group.color, false, stockItemsList)

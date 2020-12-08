@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
     stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
       if (groups != null) {
         SharedFilterGroupList.groups = groups.sortedBy { group ->
-          group.name
+          group.name.toLowerCase(Locale.ROOT)
         }
       }
     })
@@ -564,7 +564,7 @@ class MainActivity : AppCompatActivity() {
 
         // Add portfolios as submenu items.
         portfolios.sortedBy {
-          it
+          it.toLowerCase(Locale.ROOT)
         }
             .forEach { portfolio ->
               val standardPortfolio = getString(R.string.standard_portfolio)

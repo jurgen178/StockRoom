@@ -27,6 +27,7 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import kotlinx.android.synthetic.main.groupview_item.view.groupItemName
 import kotlinx.android.synthetic.main.groupview_item.view.textViewGroupDelete
+import java.util.Locale
 
 data class GroupData(
   var color: Int,
@@ -107,7 +108,7 @@ class UpdateGroupAdapter internal constructor(
 
   internal fun addGroups(groups: List<Group>) {
     groupList = groups.sortedBy { group ->
-      group.name
+      group.name.toLowerCase(Locale.ROOT)
     }
 
     mergeData()

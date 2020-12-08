@@ -948,7 +948,7 @@ class StockDataFragment : Fragment() {
       var menuIndex: Int = Menu.FIRST
 
       SharedRepository.portfolios.value?.sortedBy {
-        it
+        it.toLowerCase(Locale.ROOT)
       }
           ?.forEach { portfolio ->
             val name = if (portfolio.isEmpty()) {
