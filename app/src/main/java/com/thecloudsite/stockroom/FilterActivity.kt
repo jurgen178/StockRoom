@@ -129,6 +129,13 @@ class FilterActivity : AppCompatActivity() {
 
       textViewFilterModeText.visibility = filterModeVisibility
       textViewFilterModeSpinner.visibility = filterModeVisibility
+
+      textViewFilterModeSpinner.setSelection(
+          when (filter.filterMode) {
+            FilterModeTypeEnum.AndType -> 0
+            FilterModeTypeEnum.OrType -> 1
+          }
+      )
     })
 
 //    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)

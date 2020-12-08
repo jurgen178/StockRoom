@@ -38,7 +38,7 @@ data class FilterTypeJson
 
 data class FilterSet
 (
-  var list: List<IFilterType> = mutableListOf(),
+  var list: MutableList<IFilterType> = mutableListOf(),
   var mode: FilterModeTypeEnum = FilterModeTypeEnum.AndType,
 )
 
@@ -94,12 +94,13 @@ class Filters(
     }
 
   fun add(filterType: IFilterType) {
-    val list: MutableList<IFilterType> = mutableListOf()
     if (map.containsKey(selectedFilter)) {
-      map[selectedFilter]?.let { list.addAll(it.list) }
+      // Add new filter type at the end.
+      map[selectedFilter]?.list?.add(filterType)
+    } else {
+      // Create new filter.
+      map[selectedFilter] = FilterSet(list = mutableListOf(filterType))
     }
-    list.add(filterType)
-    map[selectedFilter] = FilterSet(list = list)
   }
 
   fun update(
@@ -107,22 +108,16 @@ class Filters(
     index: Int
   ) {
     if (map.containsKey(selectedFilter)) {
-      val list: MutableList<IFilterType> = mutableListOf()
-      map[selectedFilter]?.let { list.addAll(it.list) }
-      if (index >= 0 && index < list.size) {
-        list[index] = filterType
-        map[selectedFilter]?.list = list
+      if (index >= 0 && index < map[selectedFilter]?.list?.size ?: 0) {
+        map[selectedFilter]?.list?.set(index, filterType)
       }
     }
   }
 
   fun delete(index: Int) {
     if (map.containsKey(selectedFilter)) {
-      val list: MutableList<IFilterType> = mutableListOf()
-      map[selectedFilter]?.let { list.addAll(it.list) }
-      if (index >= 0 && index < list.size) {
-        list.removeAt(index)
-        map[selectedFilter]?.list = list
+      if (index >= 0 && index < map[selectedFilter]?.list?.size ?: 0) {
+        map[selectedFilter]?.list?.removeAt(index)
       }
     }
   }
@@ -323,7 +318,7 @@ class FilterDataRepository(val context: Context) {
       return filters?.filterNameList ?: emptyList()
     }
 
-  var selectedFilterName: String
+  var selectedFilter: String
     get() {
       val filters = SharedRepository.filterMap.value
 
@@ -390,9 +385,9 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
     get() = filterDataRepository.filterNameList
 
   var selectedFilter: String
-    get() = filterDataRepository.selectedFilterName
+    get() = filterDataRepository.selectedFilter
     set(value) {
-      filterDataRepository.selectedFilterName = value
+      filterDataRepository.selectedFilter = value
     }
 
   var filterActive: Boolean
