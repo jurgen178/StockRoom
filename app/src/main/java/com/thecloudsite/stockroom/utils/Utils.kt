@@ -328,9 +328,46 @@ fun getDividendStr(
   }
 }
 
+fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
+
+  var totalQuantity: Double = 0.0
+  var totalPrice: Double = 0.0
+
+  assetList?.sortedBy { item ->
+    item.date
+  }
+      ?.forEach { asset ->
+
+        // added shares
+        if (asset.quantity > 0.0) {
+          totalQuantity += asset.quantity
+          totalPrice += asset.quantity * asset.price
+        } else
+        // removed shares
+          if (asset.quantity < 0.0) {
+            // removed all?
+            if (-asset.quantity >= (totalQuantity - epsilon)) {
+              // reset if more removed than owned
+              totalQuantity = 0.0
+              totalPrice = 0.0
+            } else {
+              // adjust the total price for the removed shares
+              if (totalQuantity > epsilon) {
+                val averageSharePrice = totalPrice / totalQuantity
+                totalQuantity += asset.quantity
+                totalPrice = totalQuantity * averageSharePrice
+              }
+            }
+          }
+      }
+
+  return Pair(totalQuantity, totalPrice)
+}
+
+// Adds a marker for assets that are obsolete (bought and then sold)
 fun getAssets(
   assetList: List<Asset>?,
-  tagObsoleteAssetType: Int = 0
+  tagObsoleteAssetType: Int
 ): Pair<Double, Double> {
 
   var totalQuantity: Double = 0.0
@@ -341,6 +378,7 @@ fun getAssets(
       asset.date
     }
 
+    // Reset the obsolete marker
     if (tagObsoleteAssetType != 0) {
       assetListSorted.forEach { asset ->
         asset.type = asset.type and tagObsoleteAssetType.inv()
@@ -364,6 +402,7 @@ fun getAssets(
             totalQuantity = 0.0
             totalPrice = 0.0
 
+            // Mark all assets down to the beginning as obsolete because they are bought and all sold.
             if (tagObsoleteAssetType != 0) {
               for (j in i downTo 0) {
                 assetListSorted[j].type = assetListSorted[j].type or tagObsoleteAssetType
@@ -583,42 +622,6 @@ fun checkUrl(url: String): String {
   } else {
     url
   }
-}
-
-fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
-
-  var totalQuantity: Double = 0.0
-  var totalPrice: Double = 0.0
-
-  assetList?.sortedBy { item ->
-    item.date
-  }
-      ?.forEach { asset ->
-
-        // added shares
-        if (asset.quantity > 0.0) {
-          totalQuantity += asset.quantity
-          totalPrice += asset.quantity * asset.price
-        } else
-        // removed shares
-          if (asset.quantity < 0.0) {
-            // removed all?
-            if (-asset.quantity >= (totalQuantity + epsilon)) {
-              // reset if more removed than owned
-              totalQuantity = 0.0
-              totalPrice = 0.0
-            } else {
-              // adjust the total price for the removed shares
-              if (totalQuantity > epsilon) {
-                val averageSharePrice = totalPrice / totalQuantity
-                totalQuantity += asset.quantity
-                totalPrice = totalQuantity * averageSharePrice
-              }
-            }
-          }
-      }
-
-  return Pair(totalQuantity, totalPrice)
 }
 
 // Get the colored menu entries for the groups.

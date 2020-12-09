@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import androidx.room.PrimaryKey
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.thecloudsite.stockroom.database.Asset
 import org.junit.Assert.assertEquals
@@ -166,7 +167,7 @@ class AssetTest {
           // removed shares
             if (asset.quantity < 0.0) {
               // removed all?
-              if (-asset.quantity >= (totalQuantity - com.thecloudsite.stockroom.utils.epsilon)) {
+              if (-asset.quantity >= (totalQuantity - epsilon)) {
                 // reset if more removed than owned
                 totalQuantity = 0.0
                 totalPrice = 0.0
@@ -178,7 +179,7 @@ class AssetTest {
                 }
               } else {
                 // adjust the total price for the removed shares
-                if (totalQuantity > com.thecloudsite.stockroom.utils.epsilon) {
+                if (totalQuantity > epsilon) {
                   val averageSharePrice = totalPrice / totalQuantity
                   totalQuantity += asset.quantity
                   totalPrice = totalQuantity * averageSharePrice
@@ -329,6 +330,243 @@ class AssetTest {
     assertEquals(0, assetList5[2].type)
     assertEquals(0, assetList5[3].type)
     assertEquals(obsoleteAssetType, assetList5[4].type)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun assetAddRemove2() {
+
+    data class Asset2(
+      var price: Double,
+      var quantity: Double,
+      var quantity2: Double,
+      var type: Int = 0,
+    )
+
+    fun getAssets2(
+      assetList: List<Asset>?,
+      tagObsoleteAssetType: Int = 0
+    ): Pair<Double, Double> {
+
+      var totalQuantity: Double = 0.0
+      var totalPrice: Double = 0.0
+
+      if (assetList != null) {
+        val assetListSorted = assetList.sortedBy { asset ->
+          asset.date
+        }
+            .map { asset ->
+              Asset2(
+                  price = asset.price,
+                  quantity = asset.quantity,
+                  quantity2 = asset.quantity,
+                  type = asset.type and tagObsoleteAssetType.inv()
+              )
+            }
+
+        var k = 0
+        for (i in assetListSorted.indices) {
+
+          val asset = assetListSorted[i]
+
+          // remove shares from the beginning
+          if (asset.quantity2 < 0.0) {
+            var quantityToRemove = -asset.quantity2
+            for (j in k until i) {
+              if (assetListSorted[j].quantity2 > 0.0) {
+                if (quantityToRemove > assetListSorted[j].quantity2) {
+                  quantityToRemove -= assetListSorted[j].quantity2
+                  assetListSorted[j].quantity2 = 0.0
+                } else {
+                  assetListSorted[j].quantity2 -= quantityToRemove
+                  // Do not check all the empty quantities again.
+                  k = j
+                  break
+                }
+              }
+            }
+
+            // Sold entry is subtracted already. Set to 0.
+            assetListSorted[i].quantity2 = 0.0
+          }
+        }
+
+        assetListSorted.forEach { asset ->
+          totalQuantity += asset.quantity2
+          totalPrice += asset.quantity2 * asset.price
+        }
+      }
+
+      return Pair(totalQuantity, totalPrice)
+    }
+
+    val assetList1 = listOf(
+        Asset(
+            symbol = "s1",
+            quantity = 20.0,
+            price = 20.0,
+            date = 1
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = -10.0,
+            price = 50.0,
+            date = 2
+        )
+    )
+
+//    val (totalShares1, totalPrice1) = getAssets2(assetList1)
+//    assertEquals(10.0, totalShares1, epsilon)
+//    assertEquals(200.0, totalPrice1, epsilon)
+
+    val assetList2 = listOf(
+        Asset(
+            symbol = "s1",
+            quantity = 0.0,
+            price = 0.0,
+            date = 1
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = -20.0,
+            price = 50.0,
+            date = 2
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = 20.0,
+            price = 2.0,
+            date = 3
+        )
+    )
+//    val (totalShares2, totalPrice2) = getAssets2(assetList2)
+//    assertEquals(20.0, totalShares2, epsilon)
+//    assertEquals(40.0, totalPrice2, epsilon)
+
+    val assetList3 = listOf(
+        Asset(
+            date = 1592179200,
+            price = 0.7659,
+            quantity = 2000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1592265600,
+            price = 0.7774,
+            quantity = 3200.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1592265600,
+            price = 0.7774,
+            quantity = 6800.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1597708800,
+            price = 1.6991,
+            quantity = 30000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1599116400,
+            price = 1.23,
+            quantity = 8000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 255.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 75.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 1100.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 5281.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 400.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 400.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 1000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603152000,
+            price = 1.19,
+            quantity = 614.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1603238400,
+            price = 1.1597,
+            quantity = 10000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1605484800,
+            price = 1.0363,
+            quantity = 875.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607040000,
+            price = 1.06,
+            quantity = -10000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607040000,
+            price = 1.0604,
+            quantity = -10000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607040000,
+            price = 1.07,
+            quantity = -10000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607040000,
+            price = 1.0703,
+            quantity = -10000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607385600,
+            price = 1.0804,
+            quantity = -10000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607385600,
+            price = 1.085,
+            quantity = -5000.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607472000,
+            price = 1.07,
+            quantity = -2200.0, symbol = "s2"
+        ),
+        Asset(
+            date = 1607472000,
+            price = 1.0649,
+            quantity = -7800.0, symbol = "s2"
+        ),
+    )
+
+    // 1.17 bei 15000 (17547), 1.16 bei 5000 (5798.50)
+    val (totalShares3, totalPrice3) = getAssets2(assetList3)
+    val totalSP = totalPrice3 / totalShares3
+    assertEquals(5000.0, totalShares3, epsilon)
+    assertEquals(5690.525, totalPrice3, epsilon)
+    assertEquals(1.138105, totalSP, epsilon)
   }
 
   @Test
