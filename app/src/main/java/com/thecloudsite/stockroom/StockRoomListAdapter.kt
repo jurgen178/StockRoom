@@ -63,6 +63,7 @@ class StockRoomListAdapter internal constructor(
   private val clickListenerSummary: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
   private val inflater: LayoutInflater = LayoutInflater.from(context)
+  private var defaultTextColor: Int? = null
 
   class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindGroup(
@@ -104,6 +105,11 @@ class StockRoomListAdapter internal constructor(
     position: Int
   ) {
     val current = getItem(position)
+
+    if (defaultTextColor == null) {
+      defaultTextColor = holder.itemViewAssets.currentTextColor
+    }
+
     if (current != null) {
       holder.bindGroup(current, clickListenerGroup)
       holder.bindSummary(current, clickListenerSummary)
@@ -181,7 +187,7 @@ class StockRoomListAdapter internal constructor(
               getChangeColor(
                   assetChange,
                   current.onlineMarketData.postMarketData,
-                  context.getColor(R.color.backgroundListColor),
+                  defaultTextColor!!,
                   context
               )
           )

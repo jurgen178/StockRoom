@@ -18,6 +18,8 @@ limitations under the License. -->
   <color name="colorAccent">#FF4081</color>
   <color name="buttonLabel">#FFFFFF</color>
   <color name="backgroundListColor">#F0F0FF</color>
+  <color name="negativeAsset">#A0A0A0</color>
+  <color name="obsoleteAsset">#A0A0A0</color>
 
   <color name="green">#32CD32</color>
   <color name="red">#DC143C</color>

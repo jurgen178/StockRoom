@@ -16,9 +16,9 @@
 
 package com.thecloudsite.stockroom
 
-import androidx.room.PrimaryKey
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.utils.getAssetsRemoveOldestFirst
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,6 +41,8 @@ class AssetTest {
   private val epsilon = 0.0000001
   private val obsoleteAssetType
       : Int = 0x0001
+  private val removedAssetType
+      : Int = 0x0002
 
   @Test
   @Throws(Exception::class)
@@ -336,14 +338,7 @@ class AssetTest {
   @Throws(Exception::class)
   fun assetAddRemove2() {
 
-    data class Asset2(
-      var price: Double,
-      var quantity: Double,
-      var quantity2: Double,
-      var type: Int = 0,
-    )
-
-    fun getAssets2(
+    fun getAssets3(
       assetList: List<Asset>?,
       tagObsoleteAssetType: Int = 0
     ): Pair<Double, Double> {
@@ -355,45 +350,43 @@ class AssetTest {
         val assetListSorted = assetList.sortedBy { asset ->
           asset.date
         }
-            .map { asset ->
-              Asset2(
-                  price = asset.price,
-                  quantity = asset.quantity,
-                  quantity2 = asset.quantity,
-                  type = asset.type and tagObsoleteAssetType.inv()
-              )
-            }
 
-        var k = 0
+        if (tagObsoleteAssetType != 0) {
+          assetListSorted.forEach { asset ->
+            asset.type = asset.type and tagObsoleteAssetType.inv()
+          }
+        }
+
         for (i in assetListSorted.indices) {
 
           val asset = assetListSorted[i]
 
-          // remove shares from the beginning
-          if (asset.quantity2 < 0.0) {
-            var quantityToRemove = -asset.quantity2
-            for (j in k until i) {
-              if (assetListSorted[j].quantity2 > 0.0) {
-                if (quantityToRemove > assetListSorted[j].quantity2) {
-                  quantityToRemove -= assetListSorted[j].quantity2
-                  assetListSorted[j].quantity2 = 0.0
-                } else {
-                  assetListSorted[j].quantity2 -= quantityToRemove
-                  // Do not check all the empty quantities again.
-                  k = j
-                  break
+          // added shares
+          if (asset.quantity > 0.0) {
+            totalQuantity += asset.quantity
+            totalPrice += asset.quantity * asset.price
+          } else
+          // removed shares
+            if (asset.quantity < 0.0) {
+              // removed all?
+              if (-asset.quantity >= (totalQuantity - epsilon)) {
+                // reset if more removed than owned
+                totalQuantity = 0.0
+                totalPrice = 0.0
+
+                if (tagObsoleteAssetType != 0) {
+                  for (j in i downTo 0) {
+                    assetListSorted[j].type = assetListSorted[j].type or tagObsoleteAssetType
+                  }
+                }
+              } else {
+                // adjust the total price for the removed shares
+                if (totalQuantity > epsilon) {
                 }
               }
+              totalQuantity += asset.quantity
+              totalPrice += asset.quantity * asset.price
             }
-
-            // Sold entry is subtracted already. Set to 0.
-            assetListSorted[i].quantity2 = 0.0
-          }
-        }
-
-        assetListSorted.forEach { asset ->
-          totalQuantity += asset.quantity2
-          totalPrice += asset.quantity2 * asset.price
         }
       }
 
@@ -562,11 +555,45 @@ class AssetTest {
     )
 
     // 1.17 bei 15000 (17547), 1.16 bei 5000 (5798.50)
-    val (totalShares3, totalPrice3) = getAssets2(assetList3)
+    val (totalShares3, totalPrice3) = getAssetsRemoveOldestFirst(assetList3)
     val totalSP = totalPrice3 / totalShares3
     assertEquals(5000.0, totalShares3, epsilon)
     assertEquals(5690.525, totalPrice3, epsilon)
     assertEquals(1.138105, totalSP, epsilon)
+
+    val assetList4 = listOf(
+        Asset(
+            symbol = "s1",
+            quantity = 300.0,
+            price = 76.55,
+            date = 1
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = 250.0,
+            price = 81.43,
+            date = 2
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = 200.0,
+            price = 82.45,
+            date = 3
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = -100.0,
+            price = 91.73,
+            date = 4
+        )
+    )
+
+    // 650@79.75 = 51837.50
+    // 650@80.24 = 52157.50
+    val (totalShares42, totalPrice42) = getAssetsRemoveOldestFirst(assetList4)
+    val (totalShares43, totalPrice43) = getAssets3(assetList4)
+    assertEquals(20.0, totalShares42, epsilon)
+    assertEquals(40.0, totalPrice42, epsilon)
   }
 
   @Test

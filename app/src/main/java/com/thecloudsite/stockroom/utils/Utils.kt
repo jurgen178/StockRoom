@@ -328,7 +328,16 @@ fun getDividendStr(
   }
 }
 
-fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
+fun getAssets(
+  assetList: List<Asset>?
+): Pair<Double, Double> {
+  //return getAssetUseLastAverage(assetList)
+  return getAssetsRemoveOldestFirst(assetList)
+}
+
+fun getAssetUseLastAverage(
+  assetList: List<Asset>?
+): Pair<Double, Double> {
 
   var totalQuantity: Double = 0.0
   var totalPrice: Double = 0.0
@@ -366,6 +375,14 @@ fun getAssets(assetList: List<Asset>?): Pair<Double, Double> {
 
 // Adds a marker for assets that are obsolete (bought and then sold)
 fun getAssets(
+  assetList: List<Asset>?,
+  tagObsoleteAssetType: Int
+): Pair<Double, Double> {
+  //return getAssetUseLastAverage(assetList, tagObsoleteAssetType)
+  return getAssetsRemoveOldestFirst(assetList, tagObsoleteAssetType)
+}
+
+fun getAssetUseLastAverage(
   assetList: List<Asset>?,
   tagObsoleteAssetType: Int
 ): Pair<Double, Double> {
@@ -417,6 +434,81 @@ fun getAssets(
             }
           }
         }
+    }
+  }
+
+  return Pair(totalQuantity, totalPrice)
+}
+
+data class Asset2(
+  var price: Double,
+  var quantity: Double,
+  var quantity2: Double,
+  var type: Int = 0,
+)
+
+fun getAssetsRemoveOldestFirst(
+  assetList: List<Asset>?,
+  tagObsoleteAssetType: Int = 0
+): Pair<Double, Double> {
+
+  var totalQuantity: Double = 0.0
+  var totalPrice: Double = 0.0
+
+  if (assetList != null) {
+    val assetListSorted = assetList.sortedBy { asset ->
+      asset.date
+    }
+
+    // list with second quantity
+    // Sold values (negative quantities) will be subtracted from the quantities from the beginning.
+    val assetListSorted2 = assetListSorted.map { asset ->
+      Asset2(
+          price = asset.price,
+          quantity = asset.quantity,
+          quantity2 = asset.quantity,
+          type = asset.type and tagObsoleteAssetType.inv()
+      )
+    }
+
+    var k = 0
+    for (i in assetListSorted2.indices) {
+
+      val asset = assetListSorted2[i]
+
+      // remove shares from the beginning
+      if (asset.quantity2 < 0.0) {
+        var quantityToRemove = -asset.quantity2
+        for (j in k until i) {
+          if (assetListSorted2[j].quantity2 > 0.0) {
+            if (quantityToRemove > assetListSorted2[j].quantity2) {
+              quantityToRemove -= assetListSorted2[j].quantity2
+              assetListSorted2[j].quantity2 = 0.0
+            } else {
+              assetListSorted2[j].quantity2 -= quantityToRemove
+              // Start with the index in the next iteration where it left off.
+              k = j
+              break
+            }
+          }
+        }
+
+        // Sold entry is subtracted already. Set to 0.
+        assetListSorted2[i].quantity2 = 0.0
+      }
+    }
+
+    // Mark all removed entry with the obsolete flag.
+    for (i in assetListSorted2.indices) {
+      if (tagObsoleteAssetType != 0 && assetListSorted2[i].quantity2 < epsilon) {
+        // Set the type in the original list (not in assetListSorted2).
+        assetListSorted[i].type = assetListSorted2[i].type or tagObsoleteAssetType
+      }
+    }
+
+    assetListSorted2.forEach { asset ->
+      totalQuantity += asset.quantity2
+      totalPrice += asset.quantity2 * asset.price
     }
   }
 

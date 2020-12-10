@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.utils.getAssets
@@ -166,15 +167,26 @@ class AssetListAdapter internal constructor(
         holder.bindUpdate(current, clickListenerUpdate)
         holder.bindDelete(null, current, clickListenerDelete)
 
-        // Removed and obsolete entries are colored light gray.
-        if (current.quantity < 0.0 || (current.type and obsoleteAssetType != 0)) {
-          holder.itemViewQuantity.setTextColor(Color.LTGRAY)
-          holder.itemViewPrice.setTextColor(Color.LTGRAY)
-          holder.itemViewTotal.setTextColor(Color.LTGRAY)
-          holder.itemViewDate.setTextColor(Color.LTGRAY)
-          holder.itemViewNote.setTextColor(Color.LTGRAY)
-        } else {
-          if (defaultTextColor != null) {
+        val colorNegativeAsset = context.getColor(R.color.negativeAsset)
+        val colorObsoleteAsset = context.getColor(R.color.obsoleteAsset)
+
+        // Removed and obsolete entries are colored gray.
+        when {
+          current.quantity < 0.0 -> {
+            holder.itemViewQuantity.setTextColor(colorNegativeAsset)
+            holder.itemViewPrice.setTextColor(colorNegativeAsset)
+            holder.itemViewTotal.setTextColor(colorNegativeAsset)
+            holder.itemViewDate.setTextColor(colorNegativeAsset)
+            holder.itemViewNote.setTextColor(colorNegativeAsset)
+          }
+          current.type and obsoleteAssetType != 0 -> {
+            holder.itemViewQuantity.setTextColor(colorObsoleteAsset)
+            holder.itemViewPrice.setTextColor(colorObsoleteAsset)
+            holder.itemViewTotal.setTextColor(colorObsoleteAsset)
+            holder.itemViewDate.setTextColor(colorObsoleteAsset)
+            holder.itemViewNote.setTextColor(colorObsoleteAsset)
+          }
+          defaultTextColor != null -> {
             holder.itemViewQuantity.setTextColor(defaultTextColor!!)
             holder.itemViewPrice.setTextColor(defaultTextColor!!)
             holder.itemViewTotal.setTextColor(defaultTextColor!!)
@@ -183,22 +195,42 @@ class AssetListAdapter internal constructor(
           }
         }
 
-        holder.itemViewQuantity.text = DecimalFormat("0.####").format(current.quantity)
-
-        if (current.price > 0.0) {
-          holder.itemViewPrice.text = DecimalFormat("0.00##").format(current.price)
-          holder.itemViewTotal.text =
-            DecimalFormat("0.00").format(current.quantity.absoluteValue * current.price)
+        val itemViewQuantityText = DecimalFormat("0.####").format(current.quantity)
+        val itemViewPriceText = if (current.price > 0.0) {
+          DecimalFormat("0.00##").format(current.price)
         } else {
-          holder.itemViewPrice.text = ""
-          holder.itemViewTotal.text = ""
+          ""
         }
-
+        val itemViewTotalText = if (current.price > 0.0) {
+          DecimalFormat("0.00").format(current.quantity.absoluteValue * current.price)
+        } else {
+          ""
+        }
         val datetime: LocalDateTime =
           LocalDateTime.ofEpochSecond(current.date, 0, ZoneOffset.UTC)
-        holder.itemViewDate.text =
+        val itemViewDateText =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        holder.itemViewNote.text = current.note
+        val itemViewNoteText = current.note
+
+        // Negative values in italic.
+        if (current.quantity < 0.0) {
+          holder.itemViewQuantity.text =
+            SpannableStringBuilder().italic { append(itemViewQuantityText) }
+          holder.itemViewPrice.text =
+            SpannableStringBuilder().italic { append(itemViewPriceText) }
+          holder.itemViewTotal.text =
+            SpannableStringBuilder().italic { append(itemViewTotalText) }
+          holder.itemViewDate.text =
+            SpannableStringBuilder().italic { append(itemViewDateText) }
+          holder.itemViewNote.text =
+            SpannableStringBuilder().italic { append(itemViewNoteText) }
+        } else {
+          holder.itemViewQuantity.text = itemViewQuantityText
+          holder.itemViewPrice.text = itemViewPriceText
+          holder.itemViewTotal.text = itemViewTotalText
+          holder.itemViewDate.text = itemViewDateText
+          holder.itemViewNote.text = itemViewNoteText
+        }
 
         holder.itemViewDelete.visibility = View.VISIBLE
         holder.assetSummaryView.visibility = View.GONE
@@ -224,11 +256,13 @@ class AssetListAdapter internal constructor(
     )
 
     // Sort assets in the list by date.
-    assetList.addAll(assets.sortedBy { asset ->
+    val sortedList = assets.sortedBy { asset ->
       asset.date
-    })
+    }
 
-    val (totalQuantity, totalPrice) = getAssets(assetList, obsoleteAssetType)
+    val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
+
+    assetList.addAll(sortedList)
 
 //    val totalQuantity = assetList.sumByDouble {
 //      it.shares
