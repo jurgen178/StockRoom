@@ -115,6 +115,7 @@ import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroup
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroupColor
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewMarketPrice
+import kotlinx.android.synthetic.main.fragment_stockdata.textViewMarketPriceDelayed
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewName
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewPortfolio
 import kotlinx.android.synthetic.main.fragment_stockdata.textViewPurchasePrice
@@ -1901,6 +1902,19 @@ class StockDataFragment : Fragment() {
     textViewName.text = name
     textViewMarketPrice.text = marketPrice
     textViewChange.text = marketChange
+
+    val quoteSourceName = onlineMarketData?.quoteSourceName ?: ""
+    textViewMarketPriceDelayed.text = when (quoteSourceName) {
+      "Delayed Quote" -> {
+        getString(R.string.delayed_quote)
+      }
+      "Nasdaq Real Time Price" -> {
+        getString(R.string.nasdaq_real_time_price)
+      }
+      else -> {
+        ""
+      }
+    }
   }
 
   private fun updateAssetChange(data: StockAssetsLiveData) {

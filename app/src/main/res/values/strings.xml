@@ -442,4 +442,6 @@ limitations under the License. -->
   <string name="filter_IsType">is</string>
   <string name="filter_IsNotType">is not</string>
   <string name="filter_mode">Filter mode</string>
+  <string name="delayed_quote">Delayed Quote</string>
+  <string name="nasdaq_real_time_price">Nasdaq Real Time Price</string>
 </resources>

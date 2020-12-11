@@ -20,88 +20,99 @@
         android:orientation="vertical"
         >
 
-      <LinearLayout
-          android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        >
+
+      <TextView
+          android:id="@+id/textViewSymbol"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_marginTop="16dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          >
+          style="@style/stock_item_text"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          />
 
-        <TextView
-            android:id="@+id/textViewSymbol"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            style="@style/stock_item_text"
-            />
-
-        <TextView
-            android:id="@+id/textViewMarketPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="end"
-            style="@style/stock_item_text"
-            />
-
-      </LinearLayout>
-
-      <LinearLayout
-          android:layout_width="match_parent"
+      <TextView
+          android:id="@+id/textViewMarketPrice"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          >
-
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:textSize="13sp"
-            />
-
-        <TextView
-            android:id="@+id/textViewChange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:gravity="end"
-            android:textSize="13sp"
-            />
-
-      </LinearLayout>
-
-      <LinearLayout
-          android:id="@+id/textViewAsset"
-          android:layout_width="match_parent"
+          android:gravity="end"
+          app:layout_constraintBottom_toTopOf="@+id/guidelineTop"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintStart_toEndOf="@+id/textViewSymbol"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintVertical_bias="0.0"
+          style="@style/stock_item_text"
+          />
+      <TextView
+          android:id="@+id/textViewMarketPriceDelayed"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          >
+          android:textSize="10sp"
+          android:gravity="end"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/textViewMarketPrice"
+          app:layout_constraintBottom_toTopOf="@+id/guidelineTop"
+          />
 
-        <TextView
-            android:id="@+id/textViewPurchasePrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:gravity="start"
-            android:layout_weight="0.5"
-            />
+      <TextView
+          android:id="@+id/textViewName"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineTop"
+          android:textSize="13sp"
+          />
 
-        <TextView
-            android:id="@+id/textViewAssetChange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="end"
-            />
+      <TextView
+          android:id="@+id/textViewChange"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:gravity="end"
+          android:textSize="13sp"
+          app:layout_constraintStart_toEndOf="@id/textViewName"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineTop"
+          app:layout_constraintEnd_toEndOf="parent"
+          />
 
-      </LinearLayout>
+      <TextView
+          android:id="@+id/textViewPurchasePrice"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:textSize="13sp"
+          android:gravity="start"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/textViewName"
+          />
+
+      <TextView
+          android:id="@+id/textViewAssetChange"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:gravity="end"
+          app:layout_constraintStart_toEndOf="@+id/textViewPurchasePrice"
+          app:layout_constraintTop_toBottomOf="@+id/textViewName"
+          app:layout_constraintEnd_toEndOf="parent"
+          />
+
+      <androidx.constraintlayout.widget.Barrier
+          android:id="@+id/guidelineTop"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:barrierDirection="top"
+          />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
       <TextView
           android:id="@+id/textViewRange"
@@ -922,6 +933,8 @@
           android:padding="4dp"
           android:background="@drawable/note_bg"
           />
+
+    </LinearLayout>
 
     </LinearLayout>
 

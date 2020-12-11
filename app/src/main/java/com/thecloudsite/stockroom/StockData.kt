@@ -424,6 +424,7 @@ data class OnlineMarketData(
   var messageBoardId: String = "",
   var financialCurrency: String = "",
 
+  var quoteSourceName: String = "",
   var sharesOutstanding: Long = 0L,
   var fiftyDayAverage: Double = 0.0,
   var twoHundredDayAverage: Double = 0.0,

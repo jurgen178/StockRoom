@@ -439,4 +439,6 @@ limitations under the License. -->
   <string name="filter_IsType">ist</string>
   <string name="filter_IsNotType">ist nicht</string>
   <string name="filter_mode">Filterart</string>
+  <string name="delayed_quote">Verzögerter Aktienpreis</string>
+  <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
 </resources>
