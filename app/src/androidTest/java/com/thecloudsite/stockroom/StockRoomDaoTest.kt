@@ -384,9 +384,14 @@ class StockRoomDaoTest {
     assertEquals(assets2.assets[0].quantity, asset3.quantity, epsilon)
     assertEquals(assets2.assets[0].price, asset3.price, epsilon)
 
+    // Expect one asset
+    val assets3a = stockRoomDao.getAssets("symbol1")
+    assertEquals(assets3a.assets.size, 1)
+    // Delete the asset
     stockRoomDao.deleteAssets("symbol1")
-    val assets3 = stockRoomDao.getAssets("symbol1")
-    assertEquals(assets3, null)
+    // Expect no assets
+    val assets3b = stockRoomDao.getAssets("symbol1")
+    assertEquals(assets3b.assets.size, 0)
   }
 
   @Test
@@ -517,13 +522,13 @@ class StockRoomDaoTest {
     assertEquals(groupsC.size, 3)
 
     val group10Updated = stockRoomDao.getGroup(10)
-    assertEquals(group10Updated.name, "g10")
+    assertEquals(group10Updated.name, "g100")
     stockRoomDao.updateGroupName(10, "g1010")
     val group1010 = stockRoomDao.getGroup(10)
     assertEquals(group1010.name, "g1010")
 
     val groupsD = stockRoomDao.getGroups()
-    assertEquals(groupsD.size, 2)
+    assertEquals(groupsD.size, 3)
   }
 
   @Test
@@ -551,9 +556,9 @@ class StockRoomDaoTest {
     assertEquals(stockDBdata3.groupColor, Color.BLACK)
 
     val groups1 = stockRoomDao.getGroups()
-    assertEquals(groups1.size, 5)
-    assertEquals(groups1[3].name, "test2")
-    assertEquals(groups1[2].color, 5)
+    assertEquals(5, groups1.size)
+    assertEquals("test2",groups1[3].name )
+    assertEquals(3, groups1[2].color)
   }
 
   @Test
@@ -708,7 +713,7 @@ class StockRoomDaoTest {
     stockRoomDao.deleteDividends("symbol1")
 
     val dividends1 = stockRoomDao.getDividends("symbol1")
-    assertEquals(0, dividends.dividends.size)
+    assertEquals(0, dividends1.dividends.size)
   }
 
   @Test
