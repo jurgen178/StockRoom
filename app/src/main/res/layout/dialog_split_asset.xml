@@ -54,8 +54,30 @@
           />
 
       <com.google.android.material.textfield.TextInputEditText
-          android:id="@+id/splitRatio"
-          android:layout_weight="0.6"
+          android:id="@+id/splitRatioZ"
+          android:layout_weight="0.4"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:gravity="end"
+          android:inputType="numberDecimal"
+          android:digits="0123456789.,"
+          android:imeOptions="actionDone"
+          android:maxLength="4"
+          android:maxLines="1"
+          android:textAlignment="textEnd"
+          />
+
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal|center_vertical"
+          android:layout_weight="0.2"
+          android:text=":"
+          />
+
+      <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/splitRatioN"
+          android:layout_weight="0.4"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:gravity="end"

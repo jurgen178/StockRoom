@@ -1183,7 +1183,9 @@ class StockDataFragment : Fragment() {
         val inflater = LayoutInflater.from(requireContext())
 
         val dialogView = inflater.inflate(R.layout.dialog_split_asset, null)
-        val splitRatioView = dialogView.findViewById<TextView>(R.id.splitRatio)
+        val splitRatioViewZ = dialogView.findViewById<TextView>(R.id.splitRatioZ)
+        splitRatioViewZ.text = "1"
+        val splitRatioViewN = dialogView.findViewById<TextView>(R.id.splitRatioN)
 
         builder.setView(dialogView)
             // Add action buttons
@@ -1191,17 +1193,33 @@ class StockDataFragment : Fragment() {
                 R.string.split
             ) { _, _ ->
               // Add () to avoid cast exception.
-              val splitRatioText = (splitRatioView.text).toString()
+              val splitRatioTextZ = (splitRatioViewZ.text).toString()
                   .trim()
-              if (splitRatioText.isNotEmpty()) {
-                var splitRatio = 0.0
+              val splitRatioTextN = (splitRatioViewN.text).toString()
+                  .trim()
+              if (splitRatioTextZ.isNotEmpty() && splitRatioTextN.isNotEmpty()) {
                 var valid = true
+                var splitRatioZ = 0.0
                 try {
                   val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                  splitRatio = numberFormat.parse(splitRatioText)!!
+                  splitRatioZ = numberFormat.parse(splitRatioTextZ)!!
                       .toDouble()
 
-                  if (splitRatio <= 0.0 || splitRatio > 20.0) {
+                  if (splitRatioZ <= 0.0 || splitRatioZ > 20.0) {
+                    valid = false
+                  }
+
+                } catch (e: Exception) {
+                  valid = false
+                }
+
+                var splitRatioN = 0.0
+                try {
+                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                  splitRatioN = numberFormat.parse(splitRatioTextN)!!
+                      .toDouble()
+
+                  if (splitRatioN <= 0.0 || splitRatioN > 20.0) {
                     valid = false
                   }
 
@@ -1212,6 +1230,8 @@ class StockDataFragment : Fragment() {
                 if (valid && assets?.assets != null) {
                   var minQuantity = Double.MAX_VALUE
                   var minPrice = Double.MAX_VALUE
+                  // split = 1/(Z/N)
+                  val splitRatio = splitRatioN / splitRatioZ
                   assets.assets.forEach { asset ->
                     asset.quantity *= splitRatio
                     if (asset.price > 0) {
