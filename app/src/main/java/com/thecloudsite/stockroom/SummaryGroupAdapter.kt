@@ -230,8 +230,8 @@ class SummaryGroupAdapter internal constructor(
     var capitalGain = 0.0
     var capitalLoss = 0.0
 
-    val boughtHashSet = hashSetOf<String>()
-    val soldHashSet = hashSetOf<String>()
+    var boughtAssets: Int = 0
+    var soldAssets: Int = 0
 
     stockItemsSelected.forEach { stockItem ->
       val (quantity, price) = getAssets(stockItem.assets)
@@ -254,13 +254,13 @@ class SummaryGroupAdapter internal constructor(
         }
       }
 
-      stockItem.assets.forEach { asset ->
-        if (asset.quantity > 0.0) {
-          boughtHashSet.add("${asset.symbol} ${asset.date}")
-        } else {
-          soldHashSet.add("${asset.symbol} ${asset.date}")
-        }
-      }
+      boughtAssets += stockItem.assets.filter { asset ->
+        asset.quantity > 0.0
+      }.size
+
+      soldAssets += stockItem.assets.filter { asset ->
+        asset.quantity < 0.0
+      }.size
 
       stockItem.dividends.forEach { dividend ->
         if (dividend.type == DividendType.Received.value) {
@@ -308,7 +308,7 @@ class SummaryGroupAdapter internal constructor(
     val capitalGainLossText =
       getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
 
-    val boughtSoldText = "${boughtHashSet.size}/${soldHashSet.size}"
+    val boughtSoldText = "${boughtAssets}/${soldAssets}"
 
     val stockAssets = stockItemsSelected.filter {
       it.assets.isNotEmpty()
