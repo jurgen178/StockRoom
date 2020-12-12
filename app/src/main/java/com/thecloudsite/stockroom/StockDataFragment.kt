@@ -65,6 +65,7 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
+import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Event
@@ -75,6 +76,7 @@ import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
 import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
 import com.thecloudsite.stockroom.utils.openNewTabWindow
 import kotlinx.android.synthetic.main.fragment_stockdata.addAssetsButton
@@ -1888,7 +1890,15 @@ class StockDataFragment : Fragment() {
       name = getName(onlineMarketData)
 
       val marketValues = getMarketValues(onlineMarketData)
-      val marketChangeStr = "${marketValues.second} ${marketValues.third}"
+
+      val marketChangeStr = SpannableStringBuilder().color(
+          getChangeColor(
+              onlineMarketData.marketChange,
+              onlineMarketData.postMarketData,
+              Color.DKGRAY,
+              requireContext()
+          )
+      ) { append("${marketValues.second} ${marketValues.third}") }
 
       if (onlineMarketData.postMarketData) {
         marketPrice.italic { append(marketValues.first) }
@@ -1967,7 +1977,9 @@ class StockDataFragment : Fragment() {
 
       val purchasePrice = if (totalPrice > 0.0) {
         getString(
-            R.string.bought_for, DecimalFormat("0.00##").format(totalPrice / totalQuantity)
+            R.string.bought_for,
+            DecimalFormat("0.####").format(totalQuantity),
+            DecimalFormat("0.00##").format(totalPrice / totalQuantity)
         )
       } else {
         ""

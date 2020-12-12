@@ -157,13 +157,21 @@ fun Resources.getRawTextFile(@RawRes id: Int) =
       .use { it.readText() }
 
 fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, String> {
+
+  val signStr =
+    if (onlineMarketData.marketChange > 0.0) {
+      "+"
+    } else {
+      ""
+    }
+
   val marketPrice = if (onlineMarketData.marketPrice > 5.0) {
     DecimalFormat("0.00").format(onlineMarketData.marketPrice)
   } else {
     DecimalFormat("0.00##").format(onlineMarketData.marketPrice)
   }
-  val change = DecimalFormat("0.00##").format(onlineMarketData.marketChange)
-  val changePercent = "(${
+  val change = "${signStr}${DecimalFormat("0.00##").format(onlineMarketData.marketChange)}"
+  val changePercent = "($signStr${
     DecimalFormat("0.00").format(
         onlineMarketData.marketChangePercent
     )
@@ -295,6 +303,34 @@ fun getAssetChange(
   }
 
   return Triple("", SpannableStringBuilder(), neutralColor)
+}
+
+// Gets the change string "asset (%changePercent)"
+fun getAssetChangeText(
+  assetStr: String,
+  changePercentStr: String,
+  changePercent: Double,
+): String {
+
+  var changeStr = "${
+    if (changePercent > 0.0) {
+      "+"
+    } else {
+      ""
+    }
+  }${assetStr}"
+
+  if (changePercent < 10000.0) {
+    changeStr += " (${
+      if (changePercent > 0.0) {
+        "+"
+      } else {
+        ""
+      }
+    }${changePercentStr}%)"
+  }
+
+  return changeStr
 }
 
 fun getDividendStr(
@@ -512,6 +548,12 @@ fun getAssetsRemoveOldestFirst(
     }
   }
 
+  if(totalQuantity < 0.0001)
+  {
+    totalQuantity = 0.0
+    totalPrice = 0.0
+  }
+
   return Pair(totalQuantity, totalPrice)
 }
 
@@ -540,6 +582,8 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
   var totalLoss: Double = 0.0
   var bought: Double = 0.0
   var sold: Double = 0.0
+
+  val epsilon = 0.0001
 
   assetList?.sortedBy { asset ->
     asset.date

@@ -20,921 +20,926 @@
         android:orientation="vertical"
         >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        >
-
-      <TextView
-          android:id="@+id/textViewSymbol"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          style="@style/stock_item_text"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          />
-
-      <TextView
-          android:id="@+id/textViewMarketPrice"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:gravity="end"
-          app:layout_constraintBottom_toTopOf="@+id/guidelineTop"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.0"
-          app:layout_constraintStart_toEndOf="@+id/textViewSymbol"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintVertical_bias="0.0"
-          style="@style/stock_item_text"
-          />
-      <TextView
-          android:id="@+id/textViewMarketPriceDelayed"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:textSize="10sp"
-          android:gravity="end"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/textViewMarketPrice"
-          app:layout_constraintBottom_toTopOf="@+id/guidelineTop"
-          />
-
-      <TextView
-          android:id="@+id/textViewName"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineTop"
-          android:textSize="13sp"
-          />
-
-      <TextView
-          android:id="@+id/textViewChange"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:gravity="end"
-          android:textSize="13sp"
-          app:layout_constraintStart_toEndOf="@id/textViewName"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineTop"
-          app:layout_constraintEnd_toEndOf="parent"
-          />
-
-      <TextView
-          android:id="@+id/textViewPurchasePrice"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:textSize="13sp"
-          android:gravity="start"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/textViewName"
-          />
-
-      <TextView
-          android:id="@+id/textViewAssetChange"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:gravity="end"
-          app:layout_constraintStart_toEndOf="@+id/textViewPurchasePrice"
-          app:layout_constraintTop_toBottomOf="@+id/textViewName"
-          app:layout_constraintEnd_toEndOf="parent"
-          />
-
-      <androidx.constraintlayout.widget.Barrier
-          android:id="@+id/guidelineTop"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          app:barrierDirection="top"
-          />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
-      <TextView
-          android:id="@+id/textViewRange"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="16dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:textAppearance="@android:style/TextAppearance.Medium"
-          />
-
-      <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_marginStart="4dp"
-          android:layout_marginEnd="4dp"
-          >
-
-        <com.thecloudsite.stockroom.CustomCandleStickChart
-            android:id="@+id/candleStickChart"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:visibility="gone"
-            />
-
-        <com.thecloudsite.stockroom.CustomLineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:visibility="gone"
-            />
-
-      </FrameLayout>
-
-      <LinearLayout
+      <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:orientation="horizontal"
+          android:layout_margin="16dp"
           >
 
-        <org.apmem.tools.layouts.FlowLayout
-            android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/textViewSymbol"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            >
-          <Button
-              android:id="@+id/buttonOneDay"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="1D"
-              style="@style/stock_item_button"
-              />
+            style="@style/stock_item_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guidelineVert"
+            />
 
-          <Button
-              android:id="@+id/buttonFiveDays"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="5D"
-              style="@style/stock_item_button"
-              />
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guidelineVert"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSymbol"
+            android:textSize="13sp"
+            />
 
-          <Button
-              android:id="@+id/buttonOneMonth"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="1M"
-              style="@style/stock_item_button"
-              />
+        <TextView
+            android:id="@+id/textViewMarketPrice"
+            android:layout_width="0dp"
+            style="@style/stock_item_text"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="0.0"
+            android:gravity="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guidelineVert"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-          <Button
-              android:id="@+id/buttonThreeMonth"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="3M"
-              style="@style/stock_item_button"
-              />
+        <TextView
+            android:id="@+id/textViewChange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            app:layout_constraintStart_toEndOf="@id/guidelineVert"
+            app:layout_constraintTop_toBottomOf="@+id/textViewMarketPrice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            />
 
-          <Button
-              android:id="@+id/buttonYTD"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="YTD"
-              style="@style/stock_item_button"
-              />
+        <TextView
+            android:id="@+id/textViewMarketPriceDelayed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:gravity="end"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guidelineVert"
+            app:layout_constraintTop_toBottomOf="@+id/textViewChange"
+            />
 
-          <Button
-              android:id="@+id/buttonOneYear"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="1Y"
-              style="@style/stock_item_button"
-              />
+        <TextView
+            android:id="@+id/textViewPurchasePrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guidelineVert"
+            />
 
-          <Button
-              android:id="@+id/buttonFiveYears"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="5Y"
-              style="@style/stock_item_button"
-              />
+        <TextView
+            android:id="@+id/textViewAssetChange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/guidelineVert"
+            app:layout_constraintTop_toBottomOf="@+id/textViewMarketPriceDelayed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
-          <Button
-              android:id="@+id/buttonMax"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="Max"
-              style="@style/stock_item_button"
-              />
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/guidelineVert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            />
 
-          <ImageButton
-              android:id="@+id/imageButtonIconLine"
-              android:src="@drawable/ic_candlegraph"
-              android:visibility="gone"
-              style="@style/stock_item_imagebutton"
-              android:contentDescription="1D"
-              />
-
-          <ImageButton
-              android:id="@+id/imageButtonIconCandle"
-              android:src="@drawable/ic_linegraph"
-              android:visibility="gone"
-              style="@style/stock_item_imagebutton"
-              android:contentDescription="@string/linegraph"
-              />
-        </org.apmem.tools.layouts.FlowLayout>
-      </LinearLayout>
-
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/onlineDataView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginTop="16dp"
-          android:layout_marginBottom="8dp"
-          tools:listitem="@layout/onlinedataview_item"
-          />
+      </androidx.constraintlayout.widget.ConstraintLayout>
 
       <LinearLayout
-          android:id="@+id/portfolioLinearLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical"
           >
+
+        <TextView
+            android:id="@+id/textViewRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            >
+
+          <com.thecloudsite.stockroom.CustomCandleStickChart
+              android:id="@+id/candleStickChart"
+              android:layout_width="match_parent"
+              android:layout_height="250dp"
+              android:visibility="gone"
+              />
+
+          <com.thecloudsite.stockroom.CustomLineChart
+              android:id="@+id/lineChart"
+              android:layout_width="match_parent"
+              android:layout_height="250dp"
+              android:visibility="gone"
+              />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            >
+
+          <org.apmem.tools.layouts.FlowLayout
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              >
+            <Button
+                android:id="@+id/buttonOneDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1D"
+                style="@style/stock_item_button"
+                />
+
+            <Button
+                android:id="@+id/buttonFiveDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5D"
+                style="@style/stock_item_button"
+                />
+
+            <Button
+                android:id="@+id/buttonOneMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1M"
+                style="@style/stock_item_button"
+                />
+
+            <Button
+                android:id="@+id/buttonThreeMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3M"
+                style="@style/stock_item_button"
+                />
+
+            <Button
+                android:id="@+id/buttonYTD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YTD"
+                style="@style/stock_item_button"
+                />
+
+            <Button
+                android:id="@+id/buttonOneYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1Y"
+                style="@style/stock_item_button"
+                />
+
+            <Button
+                android:id="@+id/buttonFiveYears"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5Y"
+                style="@style/stock_item_button"
+                />
+
+            <Button
+                android:id="@+id/buttonMax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max"
+                style="@style/stock_item_button"
+                />
+
+            <ImageButton
+                android:id="@+id/imageButtonIconLine"
+                android:src="@drawable/ic_candlegraph"
+                android:visibility="gone"
+                style="@style/stock_item_imagebutton"
+                android:contentDescription="1D"
+                />
+
+            <ImageButton
+                android:id="@+id/imageButtonIconCandle"
+                android:src="@drawable/ic_linegraph"
+                android:visibility="gone"
+                style="@style/stock_item_imagebutton"
+                android:contentDescription="@string/linegraph"
+                />
+          </org.apmem.tools.layouts.FlowLayout>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/onlineDataView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            tools:listitem="@layout/onlinedataview_item"
+            />
+
+        <LinearLayout
+            android:id="@+id/portfolioLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+          <View style="@style/Divider"/>
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/portfolio_header"
+              style="@style/section_header"
+              />
+
+          <TextView
+              android:id="@+id/textViewPortfolio"
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              android:layout_margin="16dp"
+              android:textSize="16sp"
+              android:textColor="@color/buttonLabel"
+              android:background="@drawable/portfolio_item_bg"
+              android:gravity="center_horizontal|center_vertical"
+              />
+
+        </LinearLayout>
 
         <View style="@style/Divider"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/portfolio_header"
+            android:text="@string/group_header"
             style="@style/section_header"
             />
 
-        <TextView
-            android:id="@+id/textViewPortfolio"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/stockgroupLayout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:textSize="16sp"
-            android:textColor="@color/buttonLabel"
-            android:background="@drawable/portfolio_item_bg"
-            android:gravity="center_horizontal|center_vertical"
-            />
+            >
+          <TextView
+              android:id="@+id/textViewGroupColor"
+              android:layout_width="20dp"
+              android:layout_height="40dp"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintBottom_toBottomOf="parent"
+              android:background="@drawable/group_item_bg"
+              />
+          <TextView
+              android:id="@+id/textViewGroup"
+              android:layout_width="0dp"
+              android:layout_height="40dp"
+              android:gravity="center_horizontal|center_vertical"
+              android:textSize="16sp"
+              android:textColor="@color/material_on_background_emphasis_high_type"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintStart_toEndOf="@+id/textViewGroupColor"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintBottom_toBottomOf="parent"
+              android:background="@drawable/stock_item_bg"
+              />
 
-      </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-      <View style="@style/Divider"/>
+        <View style="@style/Divider"/>
 
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/group_header"
-          style="@style/section_header"
-          />
-
-      <androidx.constraintlayout.widget.ConstraintLayout
-          android:id="@+id/stockgroupLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="16dp"
-          >
         <TextView
-            android:id="@+id/textViewGroupColor"
-            android:layout_width="20dp"
-            android:layout_height="40dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/group_item_bg"
-            />
-        <TextView
-            android:id="@+id/textViewGroup"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:gravity="center_horizontal|center_vertical"
-            android:textSize="16sp"
-            android:textColor="@color/material_on_background_emphasis_high_type"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewGroupColor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/stock_item_bg"
-            />
-
-      </androidx.constraintlayout.widget.ConstraintLayout>
-
-      <View style="@style/Divider"/>
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/current_assets"
-          style="@style/section_header"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_marginTop="16dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="end"
-          >
-
-        <ImageButton
-            android:id="@+id/splitAssetsButton"
-            android:src="@drawable/ic_action_split"
-            style="@style/asset_item_imagebutton"
-            android:contentDescription="@string/split_asset"
-            />
-
-        <ImageButton
-            android:id="@+id/addAssetsButton"
-            android:src="@drawable/ic_action_add_circle_outline"
-            style="@style/asset_item_imagebutton"
-            android:contentDescription="@string/add_asset"
-            />
-
-        <ImageButton
-            android:id="@+id/removeAssetButton"
-            android:src="@drawable/ic_action_remove_circle_outline"
-            style="@style/asset_item_imagebutton"
-            android:contentDescription="@string/remove_asset"
-            />
-
-      </LinearLayout>
-
-      <HorizontalScrollView
-          android:fillViewport="true"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="16dp"
-          android:fadeScrollbars="false"
-          >
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/assetsView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/assetview_item"
+            android:text="@string/current_assets"
+            style="@style/section_header"
             />
-      </HorizontalScrollView>
 
-      <View style="@style/Divider"
-          android:id="@+id/price_preview_divider"
-          />
-
-      <TextView
-          android:id="@+id/price_preview_textview"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/price_preview_header"
-          style="@style/section_header"
-          />
-
-      <androidx.constraintlayout.widget.ConstraintLayout
-          android:id="@+id/price_preview_layout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="20dp"
-          >
-
-        <com.thecloudsite.stockroom.utils.PickerKnob
-            android:id="@+id/picker_knob"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:picker_text_size="10sp"
-            app:picker_view_height="24dp"
-            app:picker_dash_gap="12dp"
-            app:picker_text_color="@android:color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-
-        <TextView
-            android:id="@+id/new_stock_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            style="@style/stock_item_text"
-            app:layout_constraintTop_toBottomOf="@id/picker_knob"
-            app:layout_constraintStart_toEndOf="@id/guidelineKnob"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-
-        <TextView
-            android:id="@+id/new_total_asset"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintTop_toBottomOf="@id/new_stock_price"
-            app:layout_constraintStart_toEndOf="@id/guidelineKnob"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="end"
+            >
+
+          <ImageButton
+              android:id="@+id/splitAssetsButton"
+              android:src="@drawable/ic_action_split"
+              style="@style/asset_item_imagebutton"
+              android:contentDescription="@string/split_asset"
+              />
+
+          <ImageButton
+              android:id="@+id/addAssetsButton"
+              android:src="@drawable/ic_action_add_circle_outline"
+              style="@style/asset_item_imagebutton"
+              android:contentDescription="@string/add_asset"
+              />
+
+          <ImageButton
+              android:id="@+id/removeAssetButton"
+              android:src="@drawable/ic_action_remove_circle_outline"
+              style="@style/asset_item_imagebutton"
+              android:contentDescription="@string/remove_asset"
+              />
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:fadeScrollbars="false"
+            >
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/assetsView"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              tools:listitem="@layout/assetview_item"
+              />
+        </HorizontalScrollView>
+
+        <View style="@style/Divider"
+            android:id="@+id/price_preview_divider"
             />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineKnob"
+        <TextView
+            android:id="@+id/price_preview_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.4"
+            android:text="@string/price_preview_header"
+            style="@style/section_header"
             />
 
-      </androidx.constraintlayout.widget.ConstraintLayout>
-
-      <View style="@style/Divider"/>
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/alerts"
-          style="@style/section_header"
-          />
-
-      <androidx.constraintlayout.widget.ConstraintLayout
-          android:id="@+id/alertLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="10dp"
-          android:layout_marginEnd="16dp"
-          >
-
-        <TextView
-            android:id="@+id/textviewAlertAbove"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/price_preview_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@+id/alertAboveInputLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline1"
-            app:layout_constraintBottom_toBottomOf="@+id/alertAboveInputLayout"
-            android:text="@string/alert_above"
-            />
-
-        <TextView
-            android:text="▲"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/alert_above"
-            app:layout_constraintTop_toTopOf="@+id/alertAboveInputLayout"
-            app:layout_constraintStart_toEndOf="@+id/guideline1"
-            app:layout_constraintEnd_toStartOf="@id/guideline2"
-            app:layout_constraintBottom_toBottomOf="@+id/alertAboveInputLayout"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertAboveInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guideline2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:endIconMode="clear_text"
+            android:layout_margin="20dp"
             >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertAboveInputEditText"
-              android:background="@color/design_default_color_background"
+
+          <com.thecloudsite.stockroom.utils.PickerKnob
+              android:id="@+id/picker_knob"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:gravity="end"
-              android:inputType="numberDecimal"
-              android:digits="0123456789.,"
-              android:imeOptions="actionDone"
-              android:maxLength="9"
-              android:maxLines="1"
-              android:textAlignment="textEnd"
+              app:picker_text_size="10sp"
+              app:picker_view_height="24dp"
+              app:picker_dash_gap="12dp"
+              app:picker_text_color="@android:color/black"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
               />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/alert_note"
-            app:layout_constraintTop_toTopOf="@+id/alertAboveNoteInputLayout"
-            app:layout_constraintEnd_toStartOf="@+id/guideline1"
-            app:layout_constraintBottom_toBottomOf="@+id/alertAboveNoteInputLayout"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertAboveNoteInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/alertAboveInputLayout"
-            app:layout_constraintStart_toEndOf="@id/guideline2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:endIconMode="clear_text"
-            >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertAboveNoteInputEditText"
-              android:background="@color/design_default_color_background"
-              android:layout_width="match_parent"
+          <TextView
+              android:id="@+id/new_stock_price"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
-              android:inputType="textMultiLine"
-              android:imeOptions="actionDone"
+              android:layout_margin="16dp"
+              style="@style/stock_item_text"
+              app:layout_constraintTop_toBottomOf="@id/picker_knob"
+              app:layout_constraintStart_toEndOf="@id/guidelineKnob"
+              app:layout_constraintEnd_toEndOf="parent"
               />
-        </com.google.android.material.textfield.TextInputLayout>
+
+          <TextView
+              android:id="@+id/new_total_asset"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp"
+              android:layout_marginStart="16dp"
+              android:layout_marginEnd="16dp"
+              app:layout_constraintTop_toBottomOf="@id/new_stock_price"
+              app:layout_constraintStart_toEndOf="@id/guidelineKnob"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintBottom_toBottomOf="parent"
+              />
+
+          <androidx.constraintlayout.widget.Guideline
+              android:id="@+id/guidelineKnob"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              app:layout_constraintGuide_percent="0.4"
+              />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View style="@style/Divider"/>
 
         <TextView
-            android:id="@+id/textviewBelowAbove"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@+id/alertBelowInputLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline1"
-            app:layout_constraintBottom_toBottomOf="@+id/alertBelowInputLayout"
-            android:text="@string/alert_below"
+            android:text="@string/alerts"
+            style="@style/section_header"
             />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/alertLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            >
+
+          <TextView
+              android:id="@+id/textviewAlertAbove"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toTopOf="@+id/alertAboveInputLayout"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toStartOf="@+id/guideline1"
+              app:layout_constraintBottom_toBottomOf="@+id/alertAboveInputLayout"
+              android:text="@string/alert_above"
+              />
+
+          <TextView
+              android:text="▲"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:contentDescription="@string/alert_above"
+              app:layout_constraintTop_toTopOf="@+id/alertAboveInputLayout"
+              app:layout_constraintStart_toEndOf="@+id/guideline1"
+              app:layout_constraintEnd_toStartOf="@id/guideline2"
+              app:layout_constraintBottom_toBottomOf="@+id/alertAboveInputLayout"
+              />
+
+          <com.google.android.material.textfield.TextInputLayout
+              android:id="@+id/alertAboveInputLayout"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintStart_toEndOf="@id/guideline2"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:endIconMode="clear_text"
+              >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/alertAboveInputEditText"
+                android:background="@color/design_default_color_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:inputType="numberDecimal"
+                android:digits="0123456789.,"
+                android:imeOptions="actionDone"
+                android:maxLength="9"
+                android:maxLines="1"
+                android:textAlignment="textEnd"
+                />
+          </com.google.android.material.textfield.TextInputLayout>
+
+          <TextView
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:text="@string/alert_note"
+              app:layout_constraintTop_toTopOf="@+id/alertAboveNoteInputLayout"
+              app:layout_constraintEnd_toStartOf="@+id/guideline1"
+              app:layout_constraintBottom_toBottomOf="@+id/alertAboveNoteInputLayout"
+              />
+
+          <com.google.android.material.textfield.TextInputLayout
+              android:id="@+id/alertAboveNoteInputLayout"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/alertAboveInputLayout"
+              app:layout_constraintStart_toEndOf="@id/guideline2"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:endIconMode="clear_text"
+              >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/alertAboveNoteInputEditText"
+                android:background="@color/design_default_color_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionDone"
+                />
+          </com.google.android.material.textfield.TextInputLayout>
+
+          <TextView
+              android:id="@+id/textviewBelowAbove"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toTopOf="@+id/alertBelowInputLayout"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toStartOf="@+id/guideline1"
+              app:layout_constraintBottom_toBottomOf="@+id/alertBelowInputLayout"
+              android:text="@string/alert_below"
+              />
+
+          <TextView
+              android:text="▼"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:contentDescription="@string/alert_below"
+              app:layout_constraintTop_toTopOf="@+id/alertBelowInputLayout"
+              app:layout_constraintStart_toEndOf="@+id/guideline1"
+              app:layout_constraintEnd_toStartOf="@id/guideline2"
+              app:layout_constraintBottom_toBottomOf="@+id/alertBelowInputLayout"
+              />
+
+          <com.google.android.material.textfield.TextInputLayout
+              android:id="@+id/alertBelowInputLayout"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="16dp"
+              app:layout_constraintTop_toBottomOf="@+id/alertAboveNoteInputLayout"
+              app:layout_constraintStart_toEndOf="@id/guideline2"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:endIconMode="clear_text"
+              >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/alertBelowInputEditText"
+                android:background="@color/design_default_color_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:inputType="numberDecimal"
+                android:digits="0123456789.,"
+                android:imeOptions="actionDone"
+                android:maxLength="9"
+                android:maxLines="1"
+                android:textAlignment="textEnd"
+                />
+          </com.google.android.material.textfield.TextInputLayout>
+
+          <TextView
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:text="@string/alert_note"
+              app:layout_constraintTop_toTopOf="@+id/alertBelowNoteInputLayout"
+              app:layout_constraintEnd_toStartOf="@+id/guideline1"
+              app:layout_constraintBottom_toBottomOf="@+id/alertBelowNoteInputLayout"
+              />
+
+          <com.google.android.material.textfield.TextInputLayout
+              android:id="@+id/alertBelowNoteInputLayout"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/alertBelowInputLayout"
+              app:layout_constraintStart_toEndOf="@id/guideline2"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:endIconMode="clear_text"
+              >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/alertBelowNoteInputEditText"
+                android:background="@color/design_default_color_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionDone"
+                />
+          </com.google.android.material.textfield.TextInputLayout>
+
+          <androidx.constraintlayout.widget.Guideline
+              android:id="@+id/guideline1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              app:layout_constraintGuide_percent="0.4"
+              />
+
+          <androidx.constraintlayout.widget.Guideline
+              android:id="@+id/guideline2"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              app:layout_constraintGuide_percent="0.45"
+              />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--
+              <View style="@style/Divider"
+                  android:id="@+id/alertGainDivider"
+                  android:layout_marginTop="30dp"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginEnd="16dp"
+                  android:layout_marginBottom="10dp"
+                  android:visibility="gone"
+                  />
+
+              <LinearLayout
+                  android:id="@+id/alertGainAboveLayout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginEnd="16dp"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal"
+                  android:visibility="gone"
+                  >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.4"
+                    android:text="@string/alert_gain_above"
+                    />
+
+                <ImageView
+                    android:src="@drawable/ic_action_trending_up"
+                    style="@style/alert_item_imagebutton"
+                    android:contentDescription="@string/alert_gain_above"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/alertGainAboveInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_weight="0.6"
+                    app:endIconMode="clear_text"
+                    >
+                  <com.google.android.material.textfield.TextInputEditText
+                      android:id="@+id/alertGainAboveInputEditText"
+                      android:background="@color/design_default_color_background"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="end"
+                      android:inputType="numberDecimal"
+                      android:digits="0123456789.,"
+                      android:imeOptions="actionDone"
+                      android:maxLength="9"
+                      android:maxLines="1"
+                      android:textAlignment="textEnd"
+                      />
+                </com.google.android.material.textfield.TextInputLayout>
+
+              </LinearLayout>
+
+              <LinearLayout
+                  android:id="@+id/alertGainBelowLayout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginEnd="16dp"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal"
+                  android:visibility="gone"
+                  >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.4"
+                    android:text="@string/alert_gain_below"
+                    />
+
+                <ImageView
+                    android:src="@drawable/ic_action_trending_down"
+                    style="@style/alert_item_imagebutton"
+                    android:contentDescription="@string/alert_gain_below"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/alertGainBelowInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_weight="0.6"
+                    app:endIconMode="clear_text"
+                    >
+                  <com.google.android.material.textfield.TextInputEditText
+                      android:id="@+id/alertGainBelowInputEditText"
+                      android:background="@color/design_default_color_background"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="end"
+                      android:inputType="numberDecimal"
+                      android:digits="0123456789.,"
+                      android:imeOptions="actionDone"
+                      android:maxLength="9"
+                      android:maxLines="1"
+                      android:textAlignment="textEnd"
+                      />
+                </com.google.android.material.textfield.TextInputLayout>
+
+              </LinearLayout>
+
+              <View style="@style/Divider"
+                  android:id="@+id/alertLossDivider"
+                  android:layout_marginTop="30dp"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginEnd="16dp"
+                  android:layout_marginBottom="10dp"
+                  android:visibility="gone"
+                  />
+
+              <LinearLayout
+                  android:id="@+id/alertLossAboveLayout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginEnd="16dp"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal"
+                  android:visibility="gone"
+                  >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.4"
+                    android:text="@string/alert_loss_above"
+                    />
+
+                <ImageView
+                    android:src="@drawable/ic_action_trending_up"
+                    style="@style/alert_item_imagebutton"
+                    android:contentDescription="@string/alert_loss_above"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/alertLossAboveInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_weight="0.6"
+                    app:endIconMode="clear_text"
+                    >
+                  <com.google.android.material.textfield.TextInputEditText
+                      android:id="@+id/alertLossAboveInputEditText"
+                      android:background="@color/design_default_color_background"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="end"
+                      android:inputType="numberDecimal"
+                      android:digits="0123456789.,"
+                      android:imeOptions="actionDone"
+                      android:maxLength="9"
+                      android:maxLines="1"
+                      android:textAlignment="textEnd"
+                      />
+                </com.google.android.material.textfield.TextInputLayout>
+
+              </LinearLayout>
+
+              <LinearLayout
+                  android:id="@+id/alertLossBelowLayout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginEnd="16dp"
+                  android:layout_marginBottom="16dp"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal"
+                  android:visibility="gone"
+                  >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.4"
+                    android:text="@string/alert_loss_below"
+                    />
+
+                <ImageView
+                    android:src="@drawable/ic_action_trending_down"
+                    style="@style/alert_item_imagebutton"
+                    android:contentDescription="@string/alert_loss_below"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/alertLossBelowInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_weight="0.6"
+                    app:endIconMode="clear_text"
+                    >
+                  <com.google.android.material.textfield.TextInputEditText
+                      android:id="@+id/alertLossBelowInputEditText"
+                      android:background="@color/design_default_color_background"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="end"
+                      android:inputType="numberDecimal"
+                      android:digits="0123456789.,"
+                      android:imeOptions="actionDone"
+                      android:maxLength="9"
+                      android:maxLines="1"
+                      android:textAlignment="textEnd"
+                      />
+                </com.google.android.material.textfield.TextInputLayout>
+
+              </LinearLayout>
+        -->
+
+        <View style="@style/Divider"/>
 
         <TextView
-            android:text="▼"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/alert_below"
-            app:layout_constraintTop_toTopOf="@+id/alertBelowInputLayout"
-            app:layout_constraintStart_toEndOf="@+id/guideline1"
-            app:layout_constraintEnd_toStartOf="@id/guideline2"
-            app:layout_constraintBottom_toBottomOf="@+id/alertBelowInputLayout"
+            android:text="@string/current_events"
+            style="@style/section_header"
             />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertBelowInputLayout"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/alertAboveNoteInputLayout"
-            app:layout_constraintStart_toEndOf="@id/guideline2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:endIconMode="clear_text"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="end"
             >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertBelowInputEditText"
-              android:background="@color/design_default_color_background"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="end"
-              android:inputType="numberDecimal"
-              android:digits="0123456789.,"
-              android:imeOptions="actionDone"
-              android:maxLength="9"
-              android:maxLines="1"
-              android:textAlignment="textEnd"
+
+          <ImageButton
+              android:id="@+id/addEventsButton"
+              android:src="@drawable/ic_action_event_note"
+              style="@style/asset_item_imagebutton"
+              android:contentDescription="@string/add_event"
               />
-        </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:fadeScrollbars="false"
+            >
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/eventsView"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              tools:listitem="@layout/eventview_item"
+              />
+        </HorizontalScrollView>
+
+        <View style="@style/Divider"/>
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/alert_note"
-            app:layout_constraintTop_toTopOf="@+id/alertBelowNoteInputLayout"
-            app:layout_constraintEnd_toStartOf="@+id/guideline1"
-            app:layout_constraintBottom_toBottomOf="@+id/alertBelowNoteInputLayout"
+            android:layout_marginTop="10dp"
+            android:text="@string/note"
+            style="@style/section_header"
             />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertBelowNoteInputLayout"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/alertBelowInputLayout"
-            app:layout_constraintStart_toEndOf="@id/guideline2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:endIconMode="clear_text"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="end"
             >
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/alertBelowNoteInputEditText"
-              android:background="@color/design_default_color_background"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:inputType="textMultiLine"
-              android:imeOptions="actionDone"
+          <ImageButton
+              android:id="@+id/updateNoteButton"
+              android:src="@drawable/ic_action_note_add"
+              style="@style/asset_item_imagebutton"
+              android:tooltipText="@string/update_note"
+              android:contentDescription="@string/update_note"
               />
-        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline1"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/noteTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.4"
-            />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.45"
-            />
-
-      </androidx.constraintlayout.widget.ConstraintLayout>
-
-      <!--
-            <View style="@style/Divider"
-                android:id="@+id/alertGainDivider"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="10dp"
-                android:visibility="gone"
-                />
-
-            <LinearLayout
-                android:id="@+id/alertGainAboveLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-
-              <TextView
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="0.4"
-                  android:text="@string/alert_gain_above"
-                  />
-
-              <ImageView
-                  android:src="@drawable/ic_action_trending_up"
-                  style="@style/alert_item_imagebutton"
-                  android:contentDescription="@string/alert_gain_above"
-                  />
-
-              <com.google.android.material.textfield.TextInputLayout
-                  android:id="@+id/alertGainAboveInputLayout"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical|end"
-                  android:layout_weight="0.6"
-                  app:endIconMode="clear_text"
-                  >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/alertGainAboveInputEditText"
-                    android:background="@color/design_default_color_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:inputType="numberDecimal"
-                    android:digits="0123456789.,"
-                    android:imeOptions="actionDone"
-                    android:maxLength="9"
-                    android:maxLines="1"
-                    android:textAlignment="textEnd"
-                    />
-              </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/alertGainBelowLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-
-              <TextView
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="0.4"
-                  android:text="@string/alert_gain_below"
-                  />
-
-              <ImageView
-                  android:src="@drawable/ic_action_trending_down"
-                  style="@style/alert_item_imagebutton"
-                  android:contentDescription="@string/alert_gain_below"
-                  />
-
-              <com.google.android.material.textfield.TextInputLayout
-                  android:id="@+id/alertGainBelowInputLayout"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical|end"
-                  android:layout_weight="0.6"
-                  app:endIconMode="clear_text"
-                  >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/alertGainBelowInputEditText"
-                    android:background="@color/design_default_color_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:inputType="numberDecimal"
-                    android:digits="0123456789.,"
-                    android:imeOptions="actionDone"
-                    android:maxLength="9"
-                    android:maxLines="1"
-                    android:textAlignment="textEnd"
-                    />
-              </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <View style="@style/Divider"
-                android:id="@+id/alertLossDivider"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="10dp"
-                android:visibility="gone"
-                />
-
-            <LinearLayout
-                android:id="@+id/alertLossAboveLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-
-              <TextView
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="0.4"
-                  android:text="@string/alert_loss_above"
-                  />
-
-              <ImageView
-                  android:src="@drawable/ic_action_trending_up"
-                  style="@style/alert_item_imagebutton"
-                  android:contentDescription="@string/alert_loss_above"
-                  />
-
-              <com.google.android.material.textfield.TextInputLayout
-                  android:id="@+id/alertLossAboveInputLayout"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical|end"
-                  android:layout_weight="0.6"
-                  app:endIconMode="clear_text"
-                  >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/alertLossAboveInputEditText"
-                    android:background="@color/design_default_color_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:inputType="numberDecimal"
-                    android:digits="0123456789.,"
-                    android:imeOptions="actionDone"
-                    android:maxLength="9"
-                    android:maxLines="1"
-                    android:textAlignment="textEnd"
-                    />
-              </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/alertLossBelowLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-
-              <TextView
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="0.4"
-                  android:text="@string/alert_loss_below"
-                  />
-
-              <ImageView
-                  android:src="@drawable/ic_action_trending_down"
-                  style="@style/alert_item_imagebutton"
-                  android:contentDescription="@string/alert_loss_below"
-                  />
-
-              <com.google.android.material.textfield.TextInputLayout
-                  android:id="@+id/alertLossBelowInputLayout"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical|end"
-                  android:layout_weight="0.6"
-                  app:endIconMode="clear_text"
-                  >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/alertLossBelowInputEditText"
-                    android:background="@color/design_default_color_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:inputType="numberDecimal"
-                    android:digits="0123456789.,"
-                    android:imeOptions="actionDone"
-                    android:maxLength="9"
-                    android:maxLines="1"
-                    android:textAlignment="textEnd"
-                    />
-              </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-      -->
-
-      <View style="@style/Divider"/>
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/current_events"
-          style="@style/section_header"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_marginTop="16dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="end"
-          >
-
-        <ImageButton
-            android:id="@+id/addEventsButton"
-            android:src="@drawable/ic_action_event_note"
-            style="@style/asset_item_imagebutton"
-            android:contentDescription="@string/add_event"
+            android:layout_margin="16dp"
+            android:padding="4dp"
+            android:background="@drawable/note_bg"
             />
 
       </LinearLayout>
-
-      <HorizontalScrollView
-          android:fillViewport="true"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="16dp"
-          android:fadeScrollbars="false"
-          >
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/eventsView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/eventview_item"
-            />
-      </HorizontalScrollView>
-
-      <View style="@style/Divider"/>
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="10dp"
-          android:text="@string/note"
-          style="@style/section_header"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_marginTop="16dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="end"
-          >
-        <ImageButton
-            android:id="@+id/updateNoteButton"
-            android:src="@drawable/ic_action_note_add"
-            style="@style/asset_item_imagebutton"
-            android:tooltipText="@string/update_note"
-            android:contentDescription="@string/update_note"
-            />
-      </LinearLayout>
-
-      <TextView
-          android:id="@+id/noteTextView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="16dp"
-          android:padding="4dp"
-          android:background="@drawable/note_bg"
-          />
-
-    </LinearLayout>
 
     </LinearLayout>
 

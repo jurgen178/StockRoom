@@ -205,8 +205,8 @@ class StockRoomListAdapter internal constructor(
                   )
                 }"
             )
-            assets.append(
-                if (capitalPercent < 10000.0) {
+            if (capitalPercent < 10000.0) {
+              assets.append(
                   " (${
                     if (capital >= asset) {
                       "+"
@@ -214,12 +214,8 @@ class StockRoomListAdapter internal constructor(
                       ""
                     }
                   }${DecimalFormat("0.00").format(capitalPercent)}%)"
-                } else {
-                  DecimalFormat(
-                      "0.00"
-                  ).format(asset)
-                }
-            )
+              )
+            }
           }
 
           assets.append(" = ")
