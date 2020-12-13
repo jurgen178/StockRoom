@@ -43,6 +43,7 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.underline
+import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -65,7 +66,6 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
-import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Event
@@ -152,6 +152,13 @@ enum class StockViewRange(val value: Int) {
 enum class StockViewMode(val value: Int) {
   Line(0),
   Candle(1),
+}
+
+enum class LinkType(val value: Int) {
+  HeadlineType(0),
+  CommunityType(1),
+  SearchType(2),
+  WebsiteType(3),
 }
 
 data class StockAssetsLiveData(
@@ -713,20 +720,73 @@ class StockDataFragment : Fragment() {
     textViewSymbol.setOnClickListener { viewSymbol ->
       val popupMenu = PopupMenu(requireContext(), viewSymbol)
 
-      val communityLinkList: Map<String, String> = mapOf(
-          "Yahoo community" to "https://finance.yahoo.com/quote/$symbol/community",
-          "Stocktwits" to "https://stocktwits.com/symbol/$symbol",
-          "Bing" to "https://www.bing.com/search?q=$symbol%20stock",
-          "Google" to "https://www.google.com/finance?q=$symbol",
-          "Yahoo" to "https://finance.yahoo.com/quote/$symbol",
-          "Nasdaq" to "https://www.nasdaq.com/market-activity/stocks/$symbol",
-          "CNN Money" to "http://money.cnn.com/quote/quote.html?symb=$symbol",
-          "TheStreet" to "https://www.thestreet.com/quote/$symbol",
-          "FinViz" to "https://finviz.com/quote.ashx?t=$symbol",
-          "MarketBeat" to "https://www.marketbeat.com/stocks/$symbol/",
-          "MarketWatch" to "https://www.marketwatch.com/investing/stock/$symbol/",
-          "TD Ameritrade" to "https://research.tdameritrade.com/grid/public/research/stocks/calendar?symbol=$symbol",
-          "Zacks" to "https://www.zacks.com/stock/quote/$symbol"
+      data class LinkListEntry
+      (
+        val linkType: LinkType,
+        val link: String,
+      )
+
+      val linkList: Map<String, LinkListEntry> = mapOf(
+          "Yahoo community" to LinkListEntry(
+              linkType = LinkType.CommunityType,
+              link = "https://finance.yahoo.com/quote/$symbol/community"
+          ),
+          "Stocktwits" to LinkListEntry(
+              linkType = LinkType.CommunityType,
+              link = "https://stocktwits.com/symbol/$symbol"
+          ),
+          "Bing" to LinkListEntry(
+              linkType = LinkType.SearchType,
+              link = "https://www.bing.com/search?q=$symbol%20stock"
+          ),
+          "Google" to LinkListEntry(
+              linkType = LinkType.SearchType,
+              link = "https://www.google.com/finance?q=$symbol"
+          ),
+          "Yahoo" to LinkListEntry(
+              linkType = LinkType.SearchType,
+              link = "https://finance.yahoo.com/quote/$symbol"
+          ),
+          "CNBC" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://www.cnbc.com/quotes/?symbol=$symbol"
+          ),
+          "CNN Money" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "http://money.cnn.com/quote/quote.html?symb=$symbol"
+          ),
+          "FinViz" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://finviz.com/quote.ashx?t=$symbol"
+          ),
+          "MarketBeat" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://www.marketbeat.com/stocks/$symbol/"
+          ),
+          "MarketWatch" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://www.marketwatch.com/investing/stock/$symbol/"
+          ),
+          "Nasdaq" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://www.nasdaq.com/market-activity/stocks/$symbol"
+          ),
+          "OTC Markets" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://otcmarkets.com/stock/$symbol/overview"
+          ),
+          "TD Ameritrade" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://research.tdameritrade.com/grid/public/research/stocks/calendar?symbol=$symbol"
+          ),
+          "TheStreet" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://www.thestreet.com/quote/$symbol"
+          ),
+          "Zacks" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://www.zacks.com/stock/quote/$symbol"
+          )
       )
 
       var menuIndex: Int = Menu.FIRST
@@ -735,16 +795,19 @@ class StockDataFragment : Fragment() {
           .color(context?.getColor(R.color.colorPrimary)!!) {
             bold { append(getString(R.string.community_search_links)) }
           }
-      popupMenu.menu.add(0, menuIndex++, Menu.NONE, menuHeadlineItem)
 
-      communityLinkList.forEach { (name, _) ->
-        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+      popupMenu.menu.add(LinkType.HeadlineType.value, menuIndex++, Menu.NONE, menuHeadlineItem)
+
+      // One group for each link type.
+      linkList.forEach { (name, entry) ->
+        popupMenu.menu.add(entry.linkType.value, menuIndex++, Menu.NONE, name)
       }
 
+      MenuCompat.setGroupDividerEnabled(popupMenu.menu, true)
       popupMenu.show()
 
       popupMenu.setOnMenuItemClickListener { menuitem ->
-        communityLinkList[menuitem.toString()]?.let { openNewTabWindow(it, requireContext()) }
+        linkList[menuitem.toString()]?.let { openNewTabWindow(it.link, requireContext()) }
 
         true
       }
