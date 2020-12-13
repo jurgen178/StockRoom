@@ -123,9 +123,9 @@ limitations under the License. -->
   <string name="alert_loss_below">Loss below</string>
   <string name="alert_note">Note</string>
   <string name="note_in_list">Note:</string>
-  <string name="alert_above_in_list">Alert if over:</string>
-  <string name="alert_below_in_list">Alert if under:</string>
-  <string name="alert_gain_above_in_list">Alert if gain above:</string>
+  <string name="alert_above_in_list">Alert if over</string>
+  <string name="alert_below_in_list">Alert if under</string>
+  <string name="alert_gain_above_in_list">Alert if gain above</string>
   <string name="alert_gain_below_in_list">Alert if gain below</string>
   <string name="alert_loss_above_in_list">Alert if loss above</string>
   <string name="alert_loss_below_in_list">Alert if loss below</string>
