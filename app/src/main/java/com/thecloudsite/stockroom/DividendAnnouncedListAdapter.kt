@@ -27,6 +27,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import kotlinx.android.synthetic.main.dividend_announced_view_item.view.dividendAnnouncedLinearLayout
 import kotlinx.android.synthetic.main.dividend_announced_view_item.view.textViewDividendAnnouncedDelete
@@ -118,7 +119,7 @@ class DividendAnnouncedListAdapter internal constructor(
       holder.bindDelete(null, current, clickListenerDelete)
 
       holder.textViewDividendAnnouncedAmount.text = if (current.amount > 0.0) {
-        DecimalFormat("0.00##").format(current.amount)
+        DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
       } else {
         ""
       }

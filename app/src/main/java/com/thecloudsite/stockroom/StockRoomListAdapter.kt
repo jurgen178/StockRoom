@@ -31,6 +31,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
@@ -159,8 +162,8 @@ class StockRoomListAdapter internal constructor(
 //        }
 
         assets.append(
-            "${DecimalFormat("0.####").format(quantity)}@${
-              DecimalFormat("0.00##").format(
+            "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
+              DecimalFormat(DecimalFormat2To4Digits).format(
                   asset / quantity
               )
             }"
@@ -175,7 +178,7 @@ class StockRoomListAdapter internal constructor(
           assets.append(
               "\n${
                 DecimalFormat(
-                    "0.00"
+                    DecimalFormat2Digits
                 ).format(asset)
               } "
           )
@@ -200,7 +203,7 @@ class StockRoomListAdapter internal constructor(
                     "-"
                   }
                 } ${
-                  DecimalFormat("0.00").format(
+                  DecimalFormat(DecimalFormat2Digits).format(
                       (assetChange).absoluteValue
                   )
                 }"
@@ -213,13 +216,13 @@ class StockRoomListAdapter internal constructor(
                     } else {
                       ""
                     }
-                  }${DecimalFormat("0.00").format(capitalPercent)}%)"
+                  }${DecimalFormat(DecimalFormat2Digits).format(capitalPercent)}%)"
               )
             }
           }
 
           assets.append(" = ")
-          assets.bold { append(DecimalFormat("0.00").format(capital)) }
+          assets.bold { append(DecimalFormat(DecimalFormat2Digits).format(capital)) }
         }
       }
 
@@ -256,7 +259,7 @@ class StockRoomListAdapter internal constructor(
         assets.append(
             "${context.getString(R.string.alert_above_in_list)} ${
               DecimalFormat(
-                  "0.00##"
+                  DecimalFormat2To4Digits
               ).format(current.stockDBdata.alertAbove)
             }"
         )
@@ -269,7 +272,7 @@ class StockRoomListAdapter internal constructor(
         assets.append(
             "${context.getString(R.string.alert_below_in_list)} ${
               DecimalFormat(
-                  "0.00##"
+                  DecimalFormat2To4Digits
               ).format(current.stockDBdata.alertBelow)
             }"
         )

@@ -47,6 +47,10 @@ import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleToSelection
 import com.thecloudsite.stockroom.utils.dividendSelectionToCycle
 import com.thecloudsite.stockroom.utils.getAssets
@@ -125,7 +129,7 @@ class DividendFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
     addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
+    addDividendView.text = DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
     val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
     addNoteView.text = dividend.note
     val datePickerDividendDateView =
@@ -245,7 +249,7 @@ class DividendFragment : Fragment() {
           .setTitle(R.string.delete_dividend)
           .setMessage(
               getString(
-                  R.string.delete_dividend_confirm, DecimalFormat("0.##").format(dividend.amount),
+                  R.string.delete_dividend_confirm, DecimalFormat(DecimalFormat0To2Digits).format(dividend.amount),
                   localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
               )
           )
@@ -273,7 +277,7 @@ class DividendFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
     addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
     val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat("0.######").format(dividend.amount)
+    addDividendView.text = DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
     val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
     addNoteView.text = dividend.note
 
@@ -378,7 +382,7 @@ class DividendFragment : Fragment() {
           .setTitle(R.string.delete_dividend)
           .setMessage(
               getString(
-                  R.string.delete_dividend_confirm, DecimalFormat("0.##").format(dividend.amount),
+                  R.string.delete_dividend_confirm, DecimalFormat(DecimalFormat0To2Digits).format(dividend.amount),
                   localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
               )
           )
@@ -627,7 +631,7 @@ class DividendFragment : Fragment() {
         dialogView.findViewById<TextView>(R.id.setAnnualDividend)
 
       if (annualDividend >= 0.0) {
-        setAnnualDividend.text = DecimalFormat("0.00##").format(annualDividend)
+        setAnnualDividend.text = DecimalFormat(DecimalFormat2To4Digits).format(annualDividend)
       }
 
       builder.setView(dialogView)
@@ -819,7 +823,7 @@ class DividendFragment : Fragment() {
 
     textViewSetAnnualDividend.text =
       if (data.stockDBdata != null && data.stockDBdata?.annualDividendRate!! >= 0.0) {
-        DecimalFormat("0.00##").format(data.stockDBdata?.annualDividendRate)
+        DecimalFormat(DecimalFormat2To4Digits).format(data.stockDBdata?.annualDividendRate)
       } else {
         ""
       }
@@ -836,7 +840,7 @@ class DividendFragment : Fragment() {
     textViewSetAnnualDividendPercent.text =
       if (annualDividend > 0.0 && data.onlineMarketData != null && data.onlineMarketData?.marketPrice!! > 0.0) {
         "(${
-          DecimalFormat("0.00##").format(
+          DecimalFormat(DecimalFormat2To4Digits).format(
               annualDividend / data.onlineMarketData?.marketPrice!! * 100
           )
         }%)"
@@ -861,14 +865,14 @@ class DividendFragment : Fragment() {
         .append(getString(R.string.annualDividendRate))
         .bold {
           append(
-              " ${DecimalFormat("0.00##").format(data.onlineMarketData?.annualDividendRate)}\n"
+              " ${DecimalFormat(DecimalFormat2To4Digits).format(data.onlineMarketData?.annualDividendRate)}\n"
           )
         }
         .append(getString(R.string.annualDividendYield))
         .bold {
           append(
               " ${
-                DecimalFormat("0.00##").format(
+                DecimalFormat(DecimalFormat2To4Digits).format(
                     data.onlineMarketData?.annualDividendYield?.times(100)
                 )
               }%"
@@ -918,15 +922,15 @@ class DividendFragment : Fragment() {
         dividendStr
             .append("\n${getString(R.string.quarterlyDividend)}")
             .bold {
-              append(" ${DecimalFormat("0.00").format(totalDividend / 4.0)}")
+              append(" ${DecimalFormat(DecimalFormat2Digits).format(totalDividend / 4.0)}")
             }
             .append("\n(${getString(R.string.monthly)}")
             .bold {
-              append(" ${DecimalFormat("0.00").format(totalDividend / 12.0)}")
+              append(" ${DecimalFormat(DecimalFormat2Digits).format(totalDividend / 12.0)}")
             }
             .append(", ${getString(R.string.annual)}")
             .bold {
-              append(" ${DecimalFormat("0.00").format(totalDividend)}")
+              append(" ${DecimalFormat(DecimalFormat2Digits).format(totalDividend)}")
             }
             .append(")")
       }

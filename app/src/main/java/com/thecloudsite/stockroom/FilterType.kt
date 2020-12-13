@@ -21,6 +21,8 @@ import android.text.SpannableStringBuilder
 import androidx.core.text.backgroundColor
 import androidx.core.text.color
 import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.isWhiteColor
@@ -261,7 +263,7 @@ open class FilterDoubleBaseType : FilterBaseType() {
         FilterSubTypeEnum.LessThanType
     )
   override var data: String = ""
-    get() = DecimalFormat("0.00").format(filterValue)
+    get() = DecimalFormat(DecimalFormat2Digits).format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)
@@ -280,7 +282,7 @@ open class FilterDoublePercentageBaseType : FilterBaseType() {
         FilterSubTypeEnum.LessThanType
     )
   override var data: String = ""
-    get() = DecimalFormat("0.##").format(filterValue)
+    get() = DecimalFormat(DecimalFormat0To2Digits).format(filterValue)
     set(value) {
       field = value
       filterValue = strToDouble(value)

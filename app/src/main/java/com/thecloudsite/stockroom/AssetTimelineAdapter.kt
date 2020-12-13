@@ -23,6 +23,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import kotlinx.android.synthetic.main.timeline_asset_item.view.timelineCardView
 import java.text.DecimalFormat
 import java.time.LocalDateTime
@@ -96,17 +99,17 @@ class AssetTimelineAdapter(
             context.getString(
                 R.string.timeline_asset_bought,
                 date,
-                DecimalFormat("0.####").format(asset.quantity),
-                DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(asset.quantity * asset.price)
+                DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity),
+                DecimalFormat(DecimalFormat2To4Digits).format(asset.price),
+                DecimalFormat(DecimalFormat2Digits).format(asset.quantity * asset.price)
             )
           } else {
             context.getString(
                 R.string.timeline_asset_sold,
                 date,
-                DecimalFormat("0.####").format(-asset.quantity),
-                DecimalFormat("0.00##").format(asset.price),
-                DecimalFormat("0.00").format(-asset.quantity * asset.price)
+                DecimalFormat(DecimalFormat0To4Digits).format(-asset.quantity),
+                DecimalFormat(DecimalFormat2To4Digits).format(asset.price),
+                DecimalFormat(DecimalFormat2Digits).format(-asset.quantity * asset.price)
             )
           }
         }

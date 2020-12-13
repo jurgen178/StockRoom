@@ -28,6 +28,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.thecloudsite.stockroom.treemap.AndroidMapItem
 import com.thecloudsite.stockroom.treemap.TreeModel
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_treemap.view.treemap_view
@@ -135,7 +136,7 @@ class StockRoomTreemapFragment : Fragment() {
                 AndroidMapItem(
                     assets,
                     stockItem.stockDBdata.symbol,
-                    DecimalFormat("0.00").format(assets),
+                    DecimalFormat(DecimalFormat2Digits).format(assets),
                     assetChange,
                     color
                 )

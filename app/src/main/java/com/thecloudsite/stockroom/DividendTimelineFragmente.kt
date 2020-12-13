@@ -25,6 +25,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
@@ -126,7 +127,7 @@ class DividendTimelineFragment : Fragment() {
 
               // get dividend total of the month
               val dividendTotal =
-                DecimalFormat("0.00").format(dividendlist.sumByDouble { (dividenddate, list) ->
+                DecimalFormat(DecimalFormat2Digits).format(dividendlist.sumByDouble { (dividenddate, list) ->
                   list.sumByDouble { dividend ->
                     if (dividend.type == DividendType.Received.value) {
                       dividend.amount

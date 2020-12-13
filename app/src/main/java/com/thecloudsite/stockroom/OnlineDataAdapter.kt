@@ -37,6 +37,9 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
+import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.enNumberStrToDouble
 import com.thecloudsite.stockroom.utils.isOnline
 import kotlinx.coroutines.Dispatchers
@@ -285,7 +288,7 @@ class OnlineDataAdapter internal constructor(
     return when {
       value >= 1000000000000L -> {
         val formattedStr =
-          "${DecimalFormat("0.##").format(value / 1000000000000.0)}${
+          "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
             context.getString(
                 R.string.trillion_abbr
             )
@@ -295,7 +298,7 @@ class OnlineDataAdapter internal constructor(
       }
       value >= 1000000000L -> {
         val formattedStr =
-          "${DecimalFormat("0.##").format(value / 1000000000.0)}${
+          "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
             context.getString(
                 R.string.billion_abbr
             )
@@ -305,7 +308,7 @@ class OnlineDataAdapter internal constructor(
       }
       value >= 1000000L -> {
         val formattedStr =
-          "${DecimalFormat("0.##").format(value / 1000000.0)}${
+          "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
             context.getString(
                 R.string.million_abbr
             )
@@ -314,14 +317,14 @@ class OnlineDataAdapter internal constructor(
         Pair(formattedStr, " ($formattedStr)")
       }
       else -> {
-        Pair(DecimalFormat("0.##").format(value), "")
+        Pair(DecimalFormat(DecimalFormat0To2Digits).format(value), "")
       }
     }
   }
 
   private fun formatDoubleToSpannableString(value: Double): SpannableStringBuilder {
     // only negative values in red
-    val str = DecimalFormat("0.00").format(value)
+    val str = DecimalFormat(DecimalFormat2Digits).format(value)
     return if (value < 0.0) {
       SpannableStringBuilder().bold {
         color(context.getColor(R.color.red)) {
@@ -342,8 +345,8 @@ class OnlineDataAdapter internal constructor(
     val rangeList = rangeStr.split(delimiter)
 
     if (rangeList.size == 2) {
-      val rangeStr1 = DecimalFormat("0.00##").format(enNumberStrToDouble(rangeList[0]))
-      val rangeStr2 = DecimalFormat("0.00##").format(enNumberStrToDouble(rangeList[1]))
+      val rangeStr1 = DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[0]))
+      val rangeStr2 = DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[1]))
       return "$rangeStr1$delimiter$rangeStr2"
     }
 
@@ -362,7 +365,7 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat("0.00##").format(onlineMarketData.regularMarketPreviousClose)
+                  DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.regularMarketPreviousClose)
               )
             }
         )
@@ -372,7 +375,7 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_regularMarketOpen),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat("0.00##").format(onlineMarketData.regularMarketOpen)
+                  DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.regularMarketOpen)
               )
             }
         )
@@ -382,7 +385,7 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_fiftyDayAverage),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat("0.00").format(onlineMarketData.fiftyDayAverage)
+                  DecimalFormat(DecimalFormat2Digits).format(onlineMarketData.fiftyDayAverage)
               )
             }
         )
@@ -392,7 +395,7 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat("0.00").format(onlineMarketData.twoHundredDayAverage)
+                  DecimalFormat(DecimalFormat2Digits).format(onlineMarketData.twoHundredDayAverage)
               )
             }
         )
@@ -440,13 +443,13 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_annualDividendRate),
-            text = DecimalFormat("0.00##").format(onlineMarketData.annualDividendRate)
+            text = DecimalFormat(DecimalFormat2To4Digits.format(onlineMarketData.annualDividendRate)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_annualDividendYield),
-            text = "${DecimalFormat("0.00##").format(
+            text = "${DecimalFormat(DecimalFormat2To4Digits).format(
                 onlineMarketData.annualDividendYield * 100.0
             )}%"
         )

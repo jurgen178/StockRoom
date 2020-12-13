@@ -333,7 +333,7 @@ class PickerKnob : View {
     var oldX = -1.0f
     var oldXstart = 0.0f
 
-    val formatStr = if (maxValueOrig < 1.0f) "0.0000" else "0.00"
+    val formatStr = if (maxValueOrig < 1.0f) DecimalFormat4Digits else DecimalFormat2Digits
 
     val midrectX = width / 2f
     val midrectsize = 4f

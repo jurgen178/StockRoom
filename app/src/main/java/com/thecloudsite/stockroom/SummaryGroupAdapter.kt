@@ -30,6 +30,8 @@ import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
+import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -323,9 +325,9 @@ class SummaryGroupAdapter internal constructor(
     var totalAssetsStr = SpannableStringBuilder().append(
         "\n${context.getString(R.string.summary_total_purchase_price)} "
     )
-        .bold { append("${DecimalFormat("0.00").format(totalPurchasePrice)}\n") }
+        .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}\n") }
         .append("${context.getString(R.string.summary_total_assets)} ")
-        .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
+        .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
 
     // Print the summary assets in larger font.
     if (all) {
@@ -348,7 +350,7 @@ class SummaryGroupAdapter internal constructor(
         .append("${context.getString(R.string.summary_notes)} ")
         .bold { append("$totalNotes\n") }
         .append("${context.getString(R.string.summary_number_of_stocks)} ")
-        .bold { append("${DecimalFormat("0.####").format(totalQuantity)}\n\n") }
+        .bold { append("${DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)}\n\n") }
         .append("${context.getString(R.string.summary_capital_gain)} ")
         .append(capitalGainLossText)
         .append(totalAssetsStr)
@@ -412,7 +414,7 @@ class SummaryGroupAdapter internal constructor(
         .bold {
           append(
               "${
-                DecimalFormat("0.00")
+                DecimalFormat(DecimalFormat2Digits)
                     .format(totalAssets - totalDividendAssets)
               }\n"
           )
@@ -421,7 +423,7 @@ class SummaryGroupAdapter internal constructor(
         .bold {
           append(
               "${
-                DecimalFormat("0.00")
+                DecimalFormat(DecimalFormat2Digits)
                     .format(totalDividendAssets)
               }\n"
           )
@@ -430,10 +432,10 @@ class SummaryGroupAdapter internal constructor(
         .bold {
           append(
               "${
-                DecimalFormat("0.00")
+                DecimalFormat(DecimalFormat2Digits)
                     .format(totalDividend)
               } (${
-                DecimalFormat("0.00")
+                DecimalFormat(DecimalFormat2Digits)
                     .format(
                         totalDividendChange * 100.0
                     )
@@ -447,13 +449,13 @@ class SummaryGroupAdapter internal constructor(
             {
               append(
                   "${
-                    DecimalFormat("0.00")
+                    DecimalFormat(DecimalFormat2Digits)
                         .format(totalDividendPayed)
                   }\n"
               )
             }
           } else {
-            append("${DecimalFormat("0.00").format(0.0)}\n")
+            append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
           }
         }
         .append("${context.getString(R.string.totaldividend_payedYTD)} ")
@@ -463,13 +465,13 @@ class SummaryGroupAdapter internal constructor(
             {
               append(
                   "${
-                    DecimalFormat("0.00")
+                    DecimalFormat(DecimalFormat2Digits)
                         .format(totalDividendPayedYTD)
                   }\n"
               )
             }
           } else {
-            append("${DecimalFormat("0.00").format(0.0)}\n")
+            append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
           }
         }
 

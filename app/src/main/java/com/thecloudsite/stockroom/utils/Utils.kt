@@ -49,6 +49,16 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+// https://developer.android.com/reference/java/text/DecimalFormat
+const val DecimalFormat1Digit = "#,##0.0"
+const val DecimalFormat2Digits = "#,##0.00"
+const val DecimalFormat4Digits = "#,##0.0000"
+const val DecimalFormat0To2Digits = "#,##0.##"
+const val DecimalFormat0To4Digits = "#,##0.####"
+const val DecimalFormat0To6Digits = "#,##0.######"
+const val DecimalFormat2To4Digits = "#,##0.00##"
+const val DecimalFormat2To6Digits = "#,##0.00####"
+
 // Rounding error
 const val epsilon = 0.0000001
 
@@ -166,13 +176,14 @@ fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, 
     }
 
   val marketPrice = if (onlineMarketData.marketPrice > 5.0) {
-    DecimalFormat("0.00").format(onlineMarketData.marketPrice)
+    DecimalFormat(DecimalFormat2Digits).format(onlineMarketData.marketPrice)
   } else {
-    DecimalFormat("0.00##").format(onlineMarketData.marketPrice)
+    DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.marketPrice)
   }
-  val change = "${signStr}${DecimalFormat("0.00##").format(onlineMarketData.marketChange)}"
+  val change =
+    "${signStr}${DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.marketChange)}"
   val changePercent = "($signStr${
-    DecimalFormat("0.00").format(
+    DecimalFormat(DecimalFormat2Digits).format(
         onlineMarketData.marketChangePercent
     )
   }%)"
@@ -264,7 +275,7 @@ fun getAssetChange(
         }
       }${
         DecimalFormat(
-            "0.00"
+            DecimalFormat2Digits
         ).format(
             change
         )
@@ -278,7 +289,7 @@ fun getAssetChange(
           } else {
             ""
           }
-        }${DecimalFormat("0.00").format(changePercent)}%)"
+        }${DecimalFormat(DecimalFormat2Digits).format(changePercent)}%)"
       }
 
       val assetChangeColor = getChangeColor(capital - asset, isPostMarket, neutralColor, context)
@@ -355,9 +366,9 @@ fun getDividendStr(
 
   return if (annualDividendRate > 0.0) {
     "${context.getString(R.string.dividend_in_list)} ${
-      DecimalFormat("0.00##").format(annualDividendRate)
+      DecimalFormat(DecimalFormat2To4Digits).format(annualDividendRate)
     } (${
-      DecimalFormat("0.0").format(annualDividendYield * 100.0)
+      DecimalFormat(DecimalFormat1Digit).format(annualDividendYield * 100.0)
     }%)"
   } else {
     ""
@@ -548,8 +559,7 @@ fun getAssetsRemoveOldestFirst(
     }
   }
 
-  if(totalQuantity < 0.0001)
-  {
+  if (totalQuantity < 0.0001) {
     totalQuantity = 0.0
     totalPrice = 0.0
   }
@@ -639,43 +649,59 @@ fun getCapitalGainLossText(
   return when {
     capitalLoss == 0.0 && capitalGain > 0.0 -> {
       SpannableStringBuilder().color(context.getColor(R.color.green)) {
-        bold { append("${DecimalFormat("0.00").format(capitalGain)}$formatEnd") }
+        bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
       }
     }
     capitalGain == 0.0 && capitalLoss > 0.0 -> {
       SpannableStringBuilder().color(context.getColor(R.color.red)) {
-        bold { append("${DecimalFormat("0.00").format(-capitalLoss)}$formatEnd") }
+        bold { append("${DecimalFormat(DecimalFormat2Digits).format(-capitalLoss)}$formatEnd") }
       }
     }
     capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain > capitalLoss -> {
       SpannableStringBuilder()
           .color(context.getColor(R.color.green)) {
-            bold { append("${DecimalFormat("0.00").format(capitalGain)}$formatEnd") }
+            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
           }
           .color(context.getColor(R.color.red)) {
-            bold { append("$formatConcat${DecimalFormat("0.00").format(capitalLoss)}$formatEnd") }
+            bold {
+              append(
+                  "$formatConcat${
+                    DecimalFormat(DecimalFormat2Digits).format(
+                        capitalLoss
+                    )
+                  }$formatEnd"
+              )
+            }
           }
           .append(" = ")
           .color(context.getColor(R.color.green)) {
-            bold { append("${DecimalFormat("0.00").format(capitalTotal)}$formatEnd") }
+            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
           }
     }
     capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain < capitalLoss -> {
       SpannableStringBuilder()
           .color(context.getColor(R.color.green)) {
-            bold { append("${DecimalFormat("0.00").format(capitalGain)}$formatEnd") }
+            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
           }
           .color(context.getColor(R.color.red)) {
-            bold { append("$formatConcat${DecimalFormat("0.00").format(capitalLoss)}$formatEnd") }
+            bold {
+              append(
+                  "$formatConcat${
+                    DecimalFormat(DecimalFormat2Digits).format(
+                        capitalLoss
+                    )
+                  }$formatEnd"
+              )
+            }
           }
           .append(" = ")
           .color(context.getColor(R.color.red)) {
-            bold { append("${DecimalFormat("0.00").format(capitalTotal)}$formatEnd") }
+            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
           }
     }
     else -> {
       SpannableStringBuilder().bold {
-        append("${DecimalFormat("0.00").format(0.0)}$formatEnd")
+        append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}$formatEnd")
       }
     }
   }

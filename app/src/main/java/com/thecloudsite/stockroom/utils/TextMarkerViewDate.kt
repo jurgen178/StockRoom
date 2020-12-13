@@ -56,13 +56,13 @@ class TextMarkerViewCandleChart(
               .format(dateTimeFormatter)
 
         if (entry.high != entry.low) {
-          textmarker.text = "${DecimalFormat("0.00##").format(entry.low)}-${
-            DecimalFormat("0.00##").format(
+          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.low)}-${
+            DecimalFormat(DecimalFormat2To4Digits).format(
                 entry.high
             )
           }\n$date"
         } else {
-          textmarker.text = "${DecimalFormat("0.00##").format(entry.high)}\n$date"
+          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.high)}\n$date"
         }
 
       } else {
@@ -100,7 +100,7 @@ class TextMarkerViewLineChart(
           )
               .format(dateTimeFormatter)
 
-        textmarker.text = "${DecimalFormat("0.00##").format(entry.y)}\n$date"
+        textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.y)}\n$date"
 
       } else {
         textmarker.text = ""

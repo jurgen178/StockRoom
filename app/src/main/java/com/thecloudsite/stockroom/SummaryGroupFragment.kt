@@ -41,6 +41,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.thecloudsite.stockroom.invaders.InvadersActivity
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.imageView
 import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
@@ -257,7 +258,7 @@ class SummaryGroupFragment : Fragment() {
       sortedAssetList.take(n)
           .forEach { assetItem ->
             listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
-            //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat("0.00").format(assetItem.assets)}"))
+            //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
             listColors.add(assetItem.color)
           }
 
@@ -290,7 +291,7 @@ class SummaryGroupFragment : Fragment() {
     // pieDataSet.valueFormatter = DefaultValueFormatter(2)
     pieDataSet.valueFormatter = object : ValueFormatter() {
       override fun getFormattedValue(value: Float) =
-        DecimalFormat("0.00").format(value)
+        DecimalFormat(DecimalFormat2Digits).format(value)
     }
 
     // Line start
@@ -309,7 +310,7 @@ class SummaryGroupFragment : Fragment() {
 
     val centerText = SpannableStringBuilder()
         .append("${context?.getString(R.string.summary_total_assets)} ")
-        .underline { bold { append(DecimalFormat("0.00").format(totalAssets)) } }
+        .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
     view.summaryPieChart.centerText = centerText
 
     view.summaryPieChart.description.isEnabled = false

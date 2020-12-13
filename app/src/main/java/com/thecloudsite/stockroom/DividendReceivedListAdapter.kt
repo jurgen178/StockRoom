@@ -28,6 +28,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import com.thecloudsite.stockroom.utils.getAssets
 import kotlinx.android.synthetic.main.dividend_received_view_item.view.dividendReceivedLinearLayout
@@ -126,7 +128,7 @@ class DividendReceivedListAdapter internal constructor(
         // handler for delete all
         holder.bindDelete(current.symbol, null, dividendList, clickListenerDelete)
 
-        holder.textViewDividendReceivedAmount.text = DecimalFormat("0.00##").format(current.amount)
+        holder.textViewDividendReceivedAmount.text = DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
         holder.textViewDividendReceivedDate.text = ""
         holder.textViewDividendReceivedCycle.text = ""
         holder.textViewDividendReceivedNote.text = ""
@@ -155,7 +157,7 @@ class DividendReceivedListAdapter internal constructor(
               && current.amount > 0.0 && marketValue > 0.0
           ) {
             "\n${
-              DecimalFormat("0.00").format(
+              DecimalFormat(DecimalFormat2Digits).format(
                   (current.cycle * 100.0 * current.amount / marketValue)
               )
             }% p. a."
@@ -163,7 +165,7 @@ class DividendReceivedListAdapter internal constructor(
             ""
           }
         holder.textViewDividendReceivedAmount.text =
-          DecimalFormat("0.00##").format(current.amount) + dividendYield
+          DecimalFormat(DecimalFormat2To4Digits).format(current.amount) + dividendYield
 
         val datetime: LocalDateTime =
           LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)

@@ -23,6 +23,7 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.validateDouble
 import org.junit.Assert.assertEquals
@@ -270,7 +271,7 @@ class StockRoomTest {
     val value = enNumberStrToDouble("1.0E-4")
     assertEquals(0.0001, value, epsilon)
     assertEquals("1.0E-4", "$value")
-    assertEquals("0,0001", DecimalFormat("0.####").format(value))
+    assertEquals("0,0001", DecimalFormat(DecimalFormat0To4Digits).format(value))
 
     val rangeStr = "1.23 - 4.56"
     val rangeList = rangeStr.split(" - ")

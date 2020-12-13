@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getMarketValues
@@ -119,7 +120,7 @@ class StockRoomTileAdapter internal constructor(
 //          it.quantity * current.onlineMarketData.marketPrice
 //        }
 
-        holder.itemCapital.text = DecimalFormat("0.00").format(capital)
+        holder.itemCapital.text = DecimalFormat(DecimalFormat2Digits).format(capital)
       } else {
         // Don't own any quantity of this stock.
         holder.itemCapital.text = ""
@@ -140,7 +141,7 @@ class StockRoomTileAdapter internal constructor(
       holder.itemAssetChange.text = ""
 
       if (asset > 0.0) {
-        holder.itemCapital.text = DecimalFormat("0.00").format(asset)
+        holder.itemCapital.text = DecimalFormat(DecimalFormat2Digits).format(asset)
       } else {
         holder.itemCapital.text = ""
       }

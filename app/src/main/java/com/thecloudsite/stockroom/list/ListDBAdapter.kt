@@ -36,6 +36,8 @@ import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.list.ListDBAdapter.BaseViewHolder
+import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
 import java.time.LocalDateTime
@@ -265,18 +267,18 @@ class ListDBAdapter(
           holder.db_stockdbdata_note.text = data.note
           holder.db_stockdbdata_dividendNote.text = data.dividendNote
           holder.db_stockdbdata_annualDividendRate.text = if (data.annualDividendRate >= 0.0) {
-            DecimalFormat("0.00##").format(data.annualDividendRate)
+            DecimalFormat(DecimalFormat2To4Digits).format(data.annualDividendRate)
           } else {
             ""
           }
           holder.db_stockdbdata_alertAbove.text = if (data.alertAbove > 0.0) {
-            DecimalFormat("0.00##").format(data.alertAbove)
+            DecimalFormat(DecimalFormat2To4Digits).format(data.alertAbove)
           } else {
             ""
           }
           holder.db_stockdbdata_alertAboveNote.text = data.alertAboveNote
           holder.db_stockdbdata_alertBelow.text = if (data.alertBelow > 0.0) {
-            DecimalFormat("0.00##").format(data.alertBelow)
+            DecimalFormat(DecimalFormat2To4Digits).format(data.alertBelow)
           } else {
             ""
           }
@@ -328,17 +330,17 @@ class ListDBAdapter(
           holder.db_asset_layout.setBackgroundColor(Color.rgb(255, 106, 0))
           holder.db_asset_id.text = data.id?.toString() ?: ""
           holder.db_asset_symbol.text = data.symbol
-          holder.db_asset_quantity.text = DecimalFormat("0.####").format(data.quantity)
-          holder.db_asset_price.text = DecimalFormat("0.####").format(data.price)
+          holder.db_asset_quantity.text = DecimalFormat(DecimalFormat0To4Digits).format(data.quantity)
+          holder.db_asset_price.text = DecimalFormat(DecimalFormat0To4Digits).format(data.price)
           holder.db_asset_type.text = data.type.toString()
           holder.db_asset_note.text = data.note
           holder.db_asset_date.text = getDateTimeStr(data.date)
           holder.db_asset_sharesPerQuantity.text = "${data.sharesPerQuantity}"
           holder.db_asset_expirationDate.text = getDateStr(data.expirationDate)
           holder.db_asset_premium.text =
-            if (data.premium > 0.0) DecimalFormat("0.####").format(data.premium) else ""
+            if (data.premium > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(data.premium) else ""
           holder.db_asset_commission.text =
-            if (data.commission > 0.0) DecimalFormat("0.####").format(data.commission) else ""
+            if (data.commission > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(data.commission) else ""
         }
 //      assetTableRowsCount = items.size
 //
@@ -346,7 +348,7 @@ class ListDBAdapter(
 //        assetTableRows.append("<tr>")
 //        assetTableRows.append("<td>${assetItem.id}</td>")
 //        assetTableRows.append("<td>${assetItem.symbol}</td>")
-//        assetTableRows.append("<td>${DecimalFormat("0.####").format(assetItem.quantity)}</td>")
+//        assetTableRows.append("<td>${DecimalFormat(DecimalFormat0To4Digits).format(assetItem.quantity)}</td>")
 //        assetTableRows.append("<td>${assetItem.price}</td>")
 //        assetTableRows.append("<td>${assetItem.type}</td>")
 //        assetTableRows.append("<td>${assetItem.note}</td>")
@@ -417,7 +419,7 @@ class ListDBAdapter(
           holder.db_dividend_layout.setBackgroundColor(Color.rgb(255, 233, 127))
           holder.db_dividend_id.text = data.id?.toString() ?: ""
           holder.db_dividend_symbol.text = data.symbol
-          holder.db_dividend_amount.text = DecimalFormat("0.00##").format(data.amount)
+          holder.db_dividend_amount.text = DecimalFormat(DecimalFormat2To4Digits).format(data.amount)
           holder.db_dividend_cycle.text = data.cycle.toString()
           holder.db_dividend_paydate.text = getDateStr(data.paydate)
           holder.db_dividend_type.text = data.type.toString()
@@ -431,7 +433,7 @@ class ListDBAdapter(
 //        dividendTableRows.append("<tr>")
 //        dividendTableRows.append("<td>${dividendItem.id}</td>")
 //        dividendTableRows.append("<td>${dividendItem.symbol}</td>")
-//        dividendTableRows.append("<td>${DecimalFormat("0.00##").format(dividendItem.amount)}</td>")
+//        dividendTableRows.append("<td>${DecimalFormat(DecimalFormat2To4Digits).format(dividendItem.amount)}</td>")
 //        dividendTableRows.append("<td>${dividendItem.type}</td>")
 //        dividendTableRows.append("<td>${dividendItem.cycle}</td>")
 //        dividendTableRows.append("<td>${getDateStr(dividendItem.paydate)}</td>")

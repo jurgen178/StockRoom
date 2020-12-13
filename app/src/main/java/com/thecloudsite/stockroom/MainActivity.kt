@@ -50,6 +50,7 @@ import com.thecloudsite.stockroom.list.ListLogAdapter
 import com.thecloudsite.stockroom.news.AllNewsFragment
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import kotlinx.android.synthetic.main.activity_main.main_tab_layout
@@ -676,14 +677,14 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
       if (alert.alertAbove > 0.0) {
         val title = getString(
             R.string.alert_above_notification_title, alert.symbol,
-            DecimalFormat("0.00##").format(alert.alertAbove),
-            DecimalFormat("0.00##").format(alert.marketPrice)
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
         )
 
         var text = getString(
             R.string.alert_above_notification, alert.symbol, alert.name,
-            DecimalFormat("0.00##").format(alert.alertAbove),
-            DecimalFormat("0.00##").format(alert.marketPrice)
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
         )
         if (alert.alertAboveNote.isNotEmpty()) {
           text += "\n───\n${alert.alertAboveNote}"  // '─' = \u2500
@@ -700,14 +701,14 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if (alert.alertBelow > 0.0) {
           val title = getString(
               R.string.alert_below_notification_title, alert.symbol,
-              DecimalFormat("0.00##").format(alert.alertBelow),
-              DecimalFormat("0.00##").format(alert.marketPrice)
+              DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
+              DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
           )
 
           var text = getString(
               R.string.alert_below_notification, alert.symbol, alert.name,
-              DecimalFormat("0.00##").format(alert.alertBelow),
-              DecimalFormat("0.00##").format(alert.marketPrice)
+              DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
+              DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
           )
           if (alert.alertBelowNote.isNotEmpty()) {
             text += "\n───\n${alert.alertBelowNote}"

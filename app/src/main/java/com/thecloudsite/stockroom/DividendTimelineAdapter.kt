@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import java.text.DecimalFormat
 import java.time.LocalDateTime
@@ -84,7 +85,7 @@ class DividendTimelineAdapter(
               R.string.timeline_dividend,
               timeStr,
               dividendCycleStr(dividend.cycle, context),
-              DecimalFormat("0.00").format(dividend.amount),
+              DecimalFormat(DecimalFormat2Digits).format(dividend.amount),
               dividend.symbol
           )
         }

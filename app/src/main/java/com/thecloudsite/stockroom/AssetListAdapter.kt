@@ -29,6 +29,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
@@ -124,17 +127,17 @@ class AssetListAdapter internal constructor(
         val isSum = current.quantity > 0.0 && current.price > 0.0
 
         holder.itemViewQuantity.text = if (isSum) {
-          DecimalFormat("0.####").format(current.quantity)
+          DecimalFormat(DecimalFormat0To4Digits).format(current.quantity)
         } else {
           ""
         }
 
         holder.itemViewPrice.text = if (isSum) {
-          DecimalFormat("0.00##").format(current.price / current.quantity)
+          DecimalFormat(DecimalFormat2To4Digits).format(current.price / current.quantity)
         } else {
           ""
         }
-        holder.itemViewTotal.text = DecimalFormat("0.00").format(current.price)
+        holder.itemViewTotal.text = DecimalFormat(DecimalFormat2Digits).format(current.price)
         holder.itemViewDate.text = ""
         holder.itemViewNote.text = ""
 
@@ -195,14 +198,14 @@ class AssetListAdapter internal constructor(
           }
         }
 
-        val itemViewQuantityText = DecimalFormat("0.####").format(current.quantity)
+        val itemViewQuantityText = DecimalFormat(DecimalFormat0To4Digits).format(current.quantity)
         val itemViewPriceText = if (current.price > 0.0) {
-          DecimalFormat("0.00##").format(current.price)
+          DecimalFormat(DecimalFormat2To4Digits).format(current.price)
         } else {
           ""
         }
         val itemViewTotalText = if (current.price > 0.0) {
-          DecimalFormat("0.00").format(current.quantity.absoluteValue * current.price)
+          DecimalFormat(DecimalFormat2Digits).format(current.quantity.absoluteValue * current.price)
         } else {
           ""
         }
