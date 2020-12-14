@@ -50,6 +50,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 // https://developer.android.com/reference/java/text/DecimalFormat
+// #,## add thousand separator: 1.234,56
 const val DecimalFormat1Digit = "#,##0.0"
 const val DecimalFormat2Digits = "#,##0.00"
 const val DecimalFormat4Digits = "#,##0.0000"

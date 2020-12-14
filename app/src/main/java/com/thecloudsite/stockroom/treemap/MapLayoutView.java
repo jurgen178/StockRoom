@@ -200,35 +200,87 @@ public class MapLayoutView extends View {
 
       // Print label-only items in smaller font, for example the root item when no assets are present.
       boolean labelOnly = text.isEmpty() && change.isEmpty();
-      float labelSize = Math.min(Math.max(rectF.width() / 7, 20), labelOnly ? 48 : 100);
+      float labelSize = Math.min(Math.max(rectF.width() / 6, 20), labelOnly ? 48 : 100);
       mTextPaint.setTextSize((int) labelSize);
 
-      float tym = labelSize / 2;
-      float txm = mTextPaint.measureText(label);
-      float xm = rectF.left + rectF.width() / 2 - txm / 2;
-      float ym = rectF.top + rectF.height() / 2 - tym + 8; // Border=8
-      canvas.drawText(label, xm, ym, mTextPaint);
-      ym += tym;
+      float labelX = -1;
+      float labelY = -1;
+      float textX = -1;
+      float textY = -1;
+      float changeX = -1;
+      float changeY = -1;
 
-      float textSize = 0.75f * labelSize;
-      mTextPaint.setTextSize((int) textSize);
-      txm = mTextPaint.measureText(text);
-      tym = textSize / 2;
+      android.graphics.Rect labelRect = new android.graphics.Rect(0, 0, 0, 0);
+      mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
+      float tym = labelRect.height();
+      float txm = labelRect.width();
+      float xm = rectF.left + rectF.width() / 2 - txm / 2;
+      float ym = rectF.top + tym + 8; // Border=8
+      if (txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+        labelX = xm;
+        labelY = ym;
+        ym += tym / 4;
+      } else {
+        // rect to small for initial text, resize text
+        mTextPaint.setTextSize((int) (0.6 * (rectF.height() - 8)));
+        mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
+        tym = labelRect.height();
+        txm = labelRect.width();
+        xm = rectF.left + rectF.width() / 2 - txm / 2;
+        ym = rectF.top + tym + 8; // Border=8
+        if (txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+          labelX = xm;
+          labelY = ym;
+          ym += tym / 4;
+        } else {
+          labelX = -1;
+          labelY = -1;
+        }
+      }
+
+      Paint textPaint = new Paint(mTextPaint);
+      float textSize = 0.5f * labelSize;
+      textPaint.setTextSize((int) textSize);
+      android.graphics.Rect textRect = new android.graphics.Rect(0, 0, 0, 0);
+      textPaint.getTextBounds(text, 0, text.length(), textRect);
+      tym = textRect.height();
+      txm = textRect.width();
       xm = rectF.left + rectF.width() / 2 - txm / 2;
-      ym += 2 * tym;
-      if (txm < rectF.width() && ym + tym < rectF.bottom) {
-        canvas.drawText(text, xm, ym, mTextPaint);
-        ym += tym;
+      ym += tym;
+      if (labelY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+        textX = xm;
+        textY = ym;
+        ym += tym / 4;
       }
 
       float changeSize = 0.5f * labelSize;
-      mTextPaint.setTextSize((int) changeSize);
-      txm = mTextPaint.measureText(change);
-      tym = changeSize / 2;
+      Paint changePaint = new Paint(mTextPaint);
+      changePaint.setTextSize((int) changeSize);
+      android.graphics.Rect changeRect = new android.graphics.Rect(0, 0, 0, 0);
+      changePaint.getTextBounds(change, 0, change.length(), changeRect);
+      tym = changeRect.height();
+      txm = changeRect.width();
       xm = rectF.left + rectF.width() / 2 - txm / 2;
-      ym += 2 * tym;
-      if (txm < rectF.width() && ym + tym < rectF.bottom) {
-        canvas.drawText(change, xm, ym, mTextPaint);
+      ym += tym;
+      if (textY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+        changeX = xm;
+        changeY = ym;
+      }
+
+      // Center the text vertically.
+      float Y = Math.max(labelY, Math.max(textY, changeY));
+      float offsetY = 0;
+      if (Y < rectF.bottom) {
+        offsetY = (rectF.bottom - Y) / 2;
+      }
+      if (labelY > 0) {
+        canvas.drawText(label, labelX, labelY + offsetY, mTextPaint);
+      }
+      if (textY > 0) {
+        canvas.drawText(text, textX, textY + offsetY, textPaint);
+      }
+      if (changeY > 0) {
+        canvas.drawText(change, changeX, changeY + offsetY, changePaint);
       }
     }
   }
