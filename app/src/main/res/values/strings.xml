@@ -384,6 +384,8 @@ limitations under the License. -->
   <string name="filter_symbolname_desc"></string>
   <string name="filter_displayname_name">Display name</string>
   <string name="filter_displayname_desc"></string>
+  <string name="filter_stockexchangename_name">Stock exchange name</string>
+  <string name="filter_stockexchangename_desc"></string>
   <string name="filter_group_name">Group</string>
   <string name="filter_group_desc"></string>
   <string name="filter_note_name">Note</string>

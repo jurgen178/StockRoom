@@ -38,6 +38,7 @@ enum class FilterTypeEnum {
   FilterPercentageChangeType,
   FilterSymbolNameType,
   FilterDisplayNameType,
+  FilterStockExchangeName,
   FilterGroupType,
   FilterNoteType,
   FilterDividendNoteType,
@@ -101,6 +102,7 @@ object FilterFactory {
       FilterTypeEnum.FilterPercentageChangeType -> FilterPercentageChangeType(context)
       FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
       FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
+      FilterTypeEnum.FilterStockExchangeName -> FilterStockExchangeNameType(context)
       FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
       FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
       FilterTypeEnum.FilterDividendNoteType -> FilterDividendNoteType(context)
@@ -512,6 +514,31 @@ class FilterDisplayNameType(
   override val typeId = FilterTypeEnum.FilterDisplayNameType
   override val displayName = context.getString(R.string.filter_displayname_name)
   override val desc = context.getString(R.string.filter_displayname_desc)
+}
+
+class FilterStockExchangeNameType(
+  context: Context
+) : FilterTextBaseType() {
+  override fun filter(stockItem: StockItem): Boolean {
+    return when (subType) {
+      FilterSubTypeEnum.ContainsTextType -> {
+        stockItem.onlineMarketData.fullExchangeName.contains(data, ignoreCase = true)
+      }
+      FilterSubTypeEnum.NotContainsTextType -> {
+        !stockItem.onlineMarketData.fullExchangeName.contains(data, ignoreCase = true)
+      }
+      else -> false
+    }
+  }
+
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.ContainsTextType,
+        FilterSubTypeEnum.NotContainsTextType
+    )
+  override val typeId = FilterTypeEnum.FilterStockExchangeName
+  override val displayName = context.getString(R.string.filter_stockexchangename_name)
+  override val desc = context.getString(R.string.filter_stockexchangename_desc)
 }
 
 class FilterGroupType(

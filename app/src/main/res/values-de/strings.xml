@@ -381,6 +381,8 @@ limitations under the License. -->
   <string name="filter_symbolname_desc"></string>
   <string name="filter_displayname_name">Anzeigename</string>
   <string name="filter_displayname_desc"></string>
+  <string name="filter_stockexchangename_name">Börsenname</string>
+  <string name="filter_stockexchangename_desc"></string>
   <string name="filter_group_name">Gruppe</string>
   <string name="filter_group_desc"></string>
   <string name="filter_note_name">Anmerkung</string>
