@@ -27,11 +27,13 @@ import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.isWhiteColor
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
+import kotlin.text.RegexOption.DOT_MATCHES_ALL
+import kotlin.text.RegexOption.IGNORE_CASE
+import kotlin.text.RegexOption.MULTILINE
 
 enum class FilterTypeEnum {
   FilterNullType,
@@ -86,7 +88,11 @@ enum class FilterSubTypeEnum(var value: String) {
   IsNotTextType(""),
   IsType(""),
   IsNotType(""),
+  MatchRegexTextType(""),
+  NotMatchRegexTextType(""),
 }
+
+val regexOption = setOf(IGNORE_CASE, DOT_MATCHES_ALL)
 
 object SharedFilterGroupList {
   var groups: List<Group> = emptyList()
@@ -155,62 +161,6 @@ object FilterFactory {
     }
 }
 
-fun initSubTypeList(context: Context) {
-  FilterSubTypeEnum.GreaterThanType.value = context.getString(R.string.filter_GreaterThanType)
-  FilterSubTypeEnum.LessThanType.value = context.getString(R.string.filter_LessThanType)
-  FilterSubTypeEnum.BeforeDateType.value = context.getString(R.string.filter_BeforeDateType)
-  FilterSubTypeEnum.AfterDateType.value = context.getString(R.string.filter_AfterDateType)
-  FilterSubTypeEnum.ContainsTextType.value = context.getString(R.string.filter_ContainsTextType)
-  FilterSubTypeEnum.NotContainsTextType.value =
-    context.getString(R.string.filter_NotContainsTextType)
-  FilterSubTypeEnum.IsEmptyTextType.value = context.getString(R.string.filter_IsEmptyTextType)
-  FilterSubTypeEnum.IsNotEmptyTextType.value = context.getString(R.string.filter_IsNotEmptyTextType)
-  FilterSubTypeEnum.StartsWithTextType.value = context.getString(R.string.filter_StartsWithTextType)
-  FilterSubTypeEnum.EndsWithTextType.value = context.getString(R.string.filter_EndsWithTextType)
-  FilterSubTypeEnum.IsTextType.value = context.getString(R.string.filter_IsTextType)
-  FilterSubTypeEnum.IsNotTextType.value = context.getString(R.string.filter_IsNotTextType)
-  FilterSubTypeEnum.IsType.value = context.getString(R.string.filter_IsType)
-  FilterSubTypeEnum.IsNotType.value = context.getString(R.string.filter_IsNotType)
-}
-
-fun getFilterTypeList(context: Context): List<String> {
-  val filterList = mutableListOf<String>()
-
-  FilterTypeEnum.values()
-//      .filter { type ->
-//        type != FilterTypeEnum.FilterNullType
-//      }
-      .forEach { filter ->
-        filterList.add(FilterFactory.create(filter, context).displayName)
-      }
-
-  return filterList
-}
-
-private fun strToDouble(str: String): Double {
-  var value: Double = 0.0
-  try {
-    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-    value = numberFormat.parse(str)!!
-        .toDouble()
-  } catch (e: Exception) {
-  }
-
-  return value
-}
-
-private fun strToInt(str: String): Int {
-  var value: Int = 0
-  try {
-    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-    value = numberFormat.parse(str)!!
-        .toInt()
-  } catch (e: Exception) {
-  }
-
-  return value
-}
-
 interface IFilterType {
   fun filter(stockItem: StockItem): Boolean
   val typeId: FilterTypeEnum
@@ -252,6 +202,15 @@ open class FilterBaseType : IFilterType {
 open class FilterTextBaseType : FilterBaseType() {
 
   override val dataType = FilterDataTypeEnum.TextType
+  override val displayData: SpannableStringBuilder
+    get() {
+      return when (subType) {
+        FilterSubTypeEnum.IsEmptyTextType,
+        FilterSubTypeEnum.IsNotEmptyTextType
+        -> SpannableStringBuilder()
+        else -> super.displayData
+      }
+    }
 }
 
 open class FilterDoubleBaseType : FilterBaseType() {
@@ -473,6 +432,14 @@ class FilterSymbolNameType(
       FilterSubTypeEnum.IsNotTextType -> {
         !stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
       }
+      FilterSubTypeEnum.MatchRegexTextType -> {
+        data.toRegex(regexOption)
+            .containsMatchIn(stockItem.stockDBdata.symbol)
+      }
+      FilterSubTypeEnum.NotMatchRegexTextType -> {
+        !data.toRegex(regexOption)
+            .containsMatchIn(stockItem.stockDBdata.symbol)
+      }
       else -> false
     }
   }
@@ -484,7 +451,9 @@ class FilterSymbolNameType(
         FilterSubTypeEnum.StartsWithTextType,
         FilterSubTypeEnum.EndsWithTextType,
         FilterSubTypeEnum.IsTextType,
-        FilterSubTypeEnum.IsNotTextType
+        FilterSubTypeEnum.IsNotTextType,
+        FilterSubTypeEnum.MatchRegexTextType,
+        FilterSubTypeEnum.NotMatchRegexTextType,
     )
   override val typeId = FilterTypeEnum.FilterSymbolNameType
   override val displayName = context.getString(R.string.filter_symbolname_name)
@@ -502,6 +471,14 @@ class FilterDisplayNameType(
       FilterSubTypeEnum.NotContainsTextType -> {
         !getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
       }
+      FilterSubTypeEnum.MatchRegexTextType -> {
+        data.toRegex(regexOption)
+            .containsMatchIn(getName(stockItem.onlineMarketData))
+      }
+      FilterSubTypeEnum.NotMatchRegexTextType -> {
+        !data.toRegex(regexOption)
+            .containsMatchIn(getName(stockItem.onlineMarketData))
+      }
       else -> false
     }
   }
@@ -509,7 +486,9 @@ class FilterDisplayNameType(
   override val subTypeList =
     listOf(
         FilterSubTypeEnum.ContainsTextType,
-        FilterSubTypeEnum.NotContainsTextType
+        FilterSubTypeEnum.NotContainsTextType,
+        FilterSubTypeEnum.MatchRegexTextType,
+        FilterSubTypeEnum.NotMatchRegexTextType
     )
   override val typeId = FilterTypeEnum.FilterDisplayNameType
   override val displayName = context.getString(R.string.filter_displayname_name)
@@ -527,6 +506,14 @@ class FilterStockExchangeNameType(
       FilterSubTypeEnum.NotContainsTextType -> {
         !stockItem.onlineMarketData.fullExchangeName.contains(data, ignoreCase = true)
       }
+      FilterSubTypeEnum.MatchRegexTextType -> {
+        data.toRegex(regexOption)
+            .containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
+      }
+      FilterSubTypeEnum.NotMatchRegexTextType -> {
+        !data.toRegex(regexOption)
+            .containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
+      }
       else -> false
     }
   }
@@ -534,7 +521,9 @@ class FilterStockExchangeNameType(
   override val subTypeList =
     listOf(
         FilterSubTypeEnum.ContainsTextType,
-        FilterSubTypeEnum.NotContainsTextType
+        FilterSubTypeEnum.NotContainsTextType,
+        FilterSubTypeEnum.MatchRegexTextType,
+        FilterSubTypeEnum.NotMatchRegexTextType
     )
   override val typeId = FilterTypeEnum.FilterStockExchangeName
   override val displayName = context.getString(R.string.filter_stockexchangename_name)
@@ -583,6 +572,14 @@ class FilterNoteType(
       FilterSubTypeEnum.IsNotEmptyTextType -> {
         stockItem.stockDBdata.note.isNotEmpty()
       }
+      FilterSubTypeEnum.MatchRegexTextType -> {
+        data.toRegex(regexOption)
+            .containsMatchIn(stockItem.stockDBdata.note)
+      }
+      FilterSubTypeEnum.NotMatchRegexTextType -> {
+        !data.toRegex(regexOption)
+            .containsMatchIn(stockItem.stockDBdata.note)
+      }
       else -> false
     }
   }
@@ -592,7 +589,9 @@ class FilterNoteType(
         FilterSubTypeEnum.ContainsTextType,
         FilterSubTypeEnum.NotContainsTextType,
         FilterSubTypeEnum.IsEmptyTextType,
-        FilterSubTypeEnum.IsNotEmptyTextType
+        FilterSubTypeEnum.IsNotEmptyTextType,
+        FilterSubTypeEnum.MatchRegexTextType,
+        FilterSubTypeEnum.NotMatchRegexTextType
     )
   override val typeId = FilterTypeEnum.FilterNoteType
   override val displayName = context.getString(R.string.filter_note_name)
@@ -616,6 +615,14 @@ class FilterDividendNoteType(
       FilterSubTypeEnum.IsNotEmptyTextType -> {
         stockItem.stockDBdata.dividendNote.isNotEmpty()
       }
+      FilterSubTypeEnum.MatchRegexTextType -> {
+        data.toRegex(regexOption)
+            .containsMatchIn(stockItem.stockDBdata.dividendNote)
+      }
+      FilterSubTypeEnum.NotMatchRegexTextType -> {
+        !data.toRegex(regexOption)
+            .containsMatchIn(stockItem.stockDBdata.dividendNote)
+      }
       else -> false
     }
   }
@@ -625,7 +632,9 @@ class FilterDividendNoteType(
         FilterSubTypeEnum.ContainsTextType,
         FilterSubTypeEnum.NotContainsTextType,
         FilterSubTypeEnum.IsEmptyTextType,
-        FilterSubTypeEnum.IsNotEmptyTextType
+        FilterSubTypeEnum.IsNotEmptyTextType,
+        FilterSubTypeEnum.MatchRegexTextType,
+        FilterSubTypeEnum.NotMatchRegexTextType
     )
   override val typeId = FilterTypeEnum.FilterDividendNoteType
   override val displayName = context.getString(R.string.filter_dividendnote_name)

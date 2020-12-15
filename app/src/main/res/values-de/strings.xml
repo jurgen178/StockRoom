@@ -415,7 +415,7 @@ limitations under the License. -->
   <string name="filter_capitalgain_desc"></string>
   <string name="filter_name">Filtername</string>
   <string name="filter_name_not_empty">Geben Sie einen Filternamen ein.</string>
-  <string name="add_filter_set">Filtersatz hinzufügen</string>
+  <string name="add_filter_set">Neuen Filtersatz</string>
   <string name="filter_set">Filtersatz \'%1$s\'</string>
   <string name="delete_filter_set">Alle entfernen</string>
   <string name="menu_load_filter_set">Laden</string>
@@ -432,12 +432,14 @@ limitations under the License. -->
   <string name="filter_AfterDateType">nach Datum</string>
   <string name="filter_ContainsTextType">enthält</string>
   <string name="filter_NotContainsTextType">enthält nicht</string>
-  <string name="filter_IsEmptyTextType">enthält keinen Text</string>
-  <string name="filter_IsNotEmptyTextType">enthält Text</string>
+  <string name="filter_IsEmptyTextType">ist leer</string>
+  <string name="filter_IsNotEmptyTextType">ist nicht leer</string>
   <string name="filter_StartsWithTextType">beginnt mit</string>
   <string name="filter_EndsWithTextType">ended mit</string>
   <string name="filter_IsTextType">ist gleich</string>
   <string name="filter_IsNotTextType">ist nicht gleich</string>
+  <string name="filter_MatchRegexTextType">passt zum regulären Ausdruck</string>
+  <string name="filter_NotMatchRegexTextType">passt nicht zum regulären Ausdruck</string>
   <string name="filter_IsType">ist</string>
   <string name="filter_IsNotType">ist nicht</string>
   <string name="filter_mode">Filterart</string>

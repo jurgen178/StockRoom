@@ -22,9 +22,12 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.epsilon
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.text.RegexOption.DOT_MATCHES_ALL
+import kotlin.text.RegexOption.IGNORE_CASE
 
 @RunWith(AndroidJUnit4::class)
 class FilterTest {
@@ -67,5 +70,28 @@ class FilterTest {
 
     assertEquals(true, filter1.filter(stockItem1))
     assertEquals("test1", filter1.displayName)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun filterRegexMatch() {
+    // match char in second line
+    val regexOption = setOf(IGNORE_CASE, DOT_MATCHES_ALL)
+    val regexStr = "b"
+    val match = (regexStr.toRegex(regexOption)).containsMatchIn("a\nb")
+    assertEquals(true, match)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun filterStringMatch() {
+    val d1 = getLevenshteinDistance("", "")
+    assertEquals(0.0, d1, epsilon)
+
+    val d2 = getLevenshteinDistance("a", "a")
+    assertEquals(0.0, d2, epsilon)
+
+    val d3 = getLevenshteinDistance("a", "bb")
+    assertEquals(1.0, d3, epsilon)
   }
 }

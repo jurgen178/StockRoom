@@ -441,6 +441,8 @@ limitations under the License. -->
   <string name="filter_EndsWithTextType">ends with</string>
   <string name="filter_IsTextType">is equal</string>
   <string name="filter_IsNotTextType">is not equal</string>
+  <string name="filter_MatchRegexTextType">match regex</string>
+  <string name="filter_NotMatchRegexTextType">not match regex</string>
   <string name="filter_IsType">is</string>
   <string name="filter_IsNotType">is not</string>
   <string name="filter_mode">Filter mode</string>

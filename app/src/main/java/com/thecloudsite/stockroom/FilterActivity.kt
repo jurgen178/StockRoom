@@ -722,7 +722,9 @@ class FilterActivity : AppCompatActivity() {
             FilterSubTypeEnum.StartsWithTextType,
             FilterSubTypeEnum.EndsWithTextType,
             FilterSubTypeEnum.IsTextType,
-            FilterSubTypeEnum.IsNotTextType
+            FilterSubTypeEnum.IsNotTextType,
+            FilterSubTypeEnum.MatchRegexTextType,
+            FilterSubTypeEnum.NotMatchRegexTextType
             -> {
               textViewFilterTextType.visibility = View.VISIBLE
               textInputLayoutFilterTextType.visibility = View.VISIBLE
