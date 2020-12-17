@@ -289,7 +289,8 @@ class StockDataFragment : Fragment() {
       dialogView.findViewById<TextView>(R.id.addUpdateQuantityHeadline)
     addUpdateQuantityHeadlineView.text = getString(R.string.update_asset)
     val addQuantityView = dialogView.findViewById<TextView>(R.id.addQuantity)
-    addQuantityView.text = DecimalFormat(DecimalFormat0To6Digits).format(asset.quantity.absoluteValue)
+    addQuantityView.text =
+      DecimalFormat(DecimalFormat0To6Digits).format(asset.quantity.absoluteValue)
 //    if (asset.shares < 0) {
 //      addSharesView.inputType = TYPE_CLASS_NUMBER or
 //          TYPE_NUMBER_FLAG_DECIMAL or
@@ -403,7 +404,8 @@ class StockDataFragment : Fragment() {
 
             pluralstr = if (asset.quantity > 0.0) {
               resources.getQuantityString(
-                  R.plurals.asset_updated, count, DecimalFormat(DecimalFormat0To4Digits).format(quantityAbs),
+                  R.plurals.asset_updated, count,
+                  DecimalFormat(DecimalFormat0To4Digits).format(quantityAbs),
                   DecimalFormat(DecimalFormat2To4Digits).format(price)
               )
             } else {
@@ -482,7 +484,8 @@ class StockDataFragment : Fragment() {
             stockRoomViewModel.deleteAsset(asset)
             val pluralstr = if (asset.quantity > 0) {
               resources.getQuantityString(
-                  R.plurals.delete_asset_msg, count, DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity),
+                  R.plurals.delete_asset_msg, count,
+                  DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity),
                   DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
               )
             } else {
@@ -1449,7 +1452,8 @@ class StockDataFragment : Fragment() {
             }
 
             val pluralstr = resources.getQuantityString(
-                R.plurals.asset_added, count, DecimalFormat(DecimalFormat0To4Digits).format(quantity),
+                R.plurals.asset_added, count,
+                DecimalFormat(DecimalFormat0To4Digits).format(quantity),
                 DecimalFormat(DecimalFormat2To4Digits).format(price)
             )
             Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
@@ -1591,7 +1595,8 @@ class StockDataFragment : Fragment() {
               }
 
               val pluralstr = resources.getQuantityString(
-                  R.plurals.asset_removed, count, DecimalFormat(DecimalFormat0To4Digits).format(quantity)
+                  R.plurals.asset_removed, count,
+                  DecimalFormat(DecimalFormat0To4Digits).format(quantity)
               )
               Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
                   .show()
@@ -2053,7 +2058,9 @@ class StockDataFragment : Fragment() {
         ""
       }
 
-      textViewAssetChange.text = if (purchasePrice.isNotEmpty()) {
+      textViewPurchasePrice.text = purchasePrice
+
+      val assetChange = if (purchasePrice.isNotEmpty()) {
         getAssetChange(
             assets,
             data.onlineMarketData?.marketPrice!!,
@@ -2065,7 +2072,14 @@ class StockDataFragment : Fragment() {
         ""
       }
 
-      textViewPurchasePrice.text = purchasePrice
+      val asset = SpannableStringBuilder()
+          .append(assetChange)
+          .append("\n")
+          .bold {
+            append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
+          }
+
+      textViewAssetChange.text = asset
     }
   }
 
