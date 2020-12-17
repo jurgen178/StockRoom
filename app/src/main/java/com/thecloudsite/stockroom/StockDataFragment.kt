@@ -2013,6 +2013,8 @@ class StockDataFragment : Fragment() {
         price_preview_divider.visibility = View.VISIBLE
         price_preview_textview.visibility = View.VISIBLE
         price_preview_layout.visibility = View.VISIBLE
+        textViewPurchasePrice.visibility = View.VISIBLE
+        textViewAssetChange.visibility = View.VISIBLE
 
         // Update the new price and asset.
         picker_knob.onValueChangeListener { value ->
@@ -2040,46 +2042,39 @@ class StockDataFragment : Fragment() {
           new_total_asset.text = asset
         }
 
-        // min, max, start
-        picker_knob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
-      } else {
-        price_preview_divider.visibility = View.GONE
-        price_preview_textview.visibility = View.GONE
-        price_preview_layout.visibility = View.GONE
-      }
-
-      val purchasePrice = if (totalPrice > 0.0) {
-        getString(
+        textViewPurchasePrice.text = getString(
             R.string.bought_for,
             DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity),
             DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity)
         )
-      } else {
-        ""
-      }
 
-      textViewPurchasePrice.text = purchasePrice
-
-      val assetChange = if (purchasePrice.isNotEmpty()) {
-        getAssetChange(
+        val assetChange = getAssetChange(
             assets,
             data.onlineMarketData?.marketPrice!!,
             data.onlineMarketData?.postMarketData!!,
             Color.DKGRAY,
             requireActivity()
         ).second
+
+        val asset = SpannableStringBuilder()
+            .append(assetChange)
+            .append("\n")
+            .bold {
+              append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
+            }
+
+        textViewAssetChange.text = asset
+
+        // min, max, start
+        picker_knob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
       } else {
-        ""
+        price_preview_divider.visibility = View.GONE
+        price_preview_textview.visibility = View.GONE
+        price_preview_layout.visibility = View.GONE
+
+        textViewPurchasePrice.visibility = View.GONE
+        textViewAssetChange.visibility = View.GONE
       }
-
-      val asset = SpannableStringBuilder()
-          .append(assetChange)
-          .append("\n")
-          .bold {
-            append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
-          }
-
-      textViewAssetChange.text = asset
     }
   }
 
