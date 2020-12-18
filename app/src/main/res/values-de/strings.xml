@@ -96,7 +96,7 @@ limitations under the License. -->
   <string name="sort_profit_percentage">Nach Gewinn \u0025 sortieren</string>
   <string name="sort_dividend_percentage">Nach Dividende \u0025 sortieren</string>
   <string name="sort_group">Nach Gruppe sortieren</string>
-  <string name="sort_activity">Nach Kaufaktivität sortieren</string>
+  <string name="sort_activity">Nach Aktivitätsdatum sortieren</string>
 
   <string name="ok">OK</string>
   <string name="cancel">Abbrechen</string>
@@ -286,7 +286,7 @@ limitations under the License. -->
   <string name="donate">Donate</string>
   <string name="email_feedback_summary">Eine E-Mail direkt an die Entwickler.</string>
   <string name="email_feedback_title">E-Mail senden</string>
-  <string name="bought_for">Gekauft %1$s@%2$s</string>
+  <string name="bought_for">Gekauft für %1$s\n%2$s@%1$s=%3$s</string>
   <string name="version">Version</string>
   <string name="example_List_delete_all">\n\n***\nWählen sie in den Einstellungen die Funktion \'Alle Daten entfernen\', um diese Beispielliste zu löschen.\n***</string>
   <string name="example_List_note">Beispielanmerkung.\n1234 abcd.\nLetzte Zeile der Anmerkung.</string>

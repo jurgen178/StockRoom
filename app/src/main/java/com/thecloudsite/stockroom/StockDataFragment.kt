@@ -2044,8 +2044,9 @@ class StockDataFragment : Fragment() {
 
         textViewPurchasePrice.text = getString(
             R.string.bought_for,
+            DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity),
             DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity),
-            DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity)
+            DecimalFormat(DecimalFormat2Digits).format(totalPrice)
         )
 
         val assetChange = getAssetChange(

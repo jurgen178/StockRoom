@@ -99,7 +99,7 @@ limitations under the License. -->
   <string name="sort_profit_percentage">Sort by Gain \u0025</string>
   <string name="sort_dividend_percentage">Sort by Dividend \u0025</string>
   <string name="sort_group">Sort by Group</string>
-  <string name="sort_activity">Sort by activity</string>
+  <string name="sort_activity">Sort by Activity Date</string>
 
   <string name="ok">OK</string>
   <string name="cancel">Cancel</string>
@@ -289,7 +289,7 @@ limitations under the License. -->
   <string name="donate">Donate</string>
   <string name="email_feedback_summary">Send an email directly to the developers.</string>
   <string name="email_feedback_title">Send email</string>
-  <string name="bought_for">Bought %1$s@%2$s</string>
+  <string name="bought_for">Bought for %1$s\n%2$s@%1$s=%3$s</string>
   <string name="version">Version</string>
   <string name="example_List_delete_all">\n\n***\nUse the \'Delete all\' function in the settings to clear this example list.\n***</string>
   <string name="example_List_note">Sample note.\n1234 abcd.\nLast line of the note.</string>
