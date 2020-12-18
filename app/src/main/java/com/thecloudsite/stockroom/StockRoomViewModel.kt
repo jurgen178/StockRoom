@@ -18,6 +18,7 @@ package com.thecloudsite.stockroom
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.text.SpannableString
 import android.util.Log
@@ -1079,8 +1080,23 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItems.sortedBy { item ->
           item.stockDBdata.symbol
         }
-            .sortedBy { item ->
-              item.stockDBdata.groupColor
+            // Sort by HUE color. Put items with no color to the end.
+            // Items with groupColor = 0 would be at the beginning.
+            .sortedByDescending { item ->
+              if (item.stockDBdata.groupColor == 0) {
+                //Int.MIN_VALUE
+                  
+                -1f
+              } else {
+                //item.stockDBdata.groupColor
+
+                val hsv = FloatArray(3)
+                Color.colorToHSV(item.stockDBdata.groupColor, hsv)
+                // hsv[0] --> hue
+                // hsv[1] --> saturation
+                // hsv[2] --> value
+                hsv[0]
+              }
             }
       }
       SortMode.ByActivity -> {
