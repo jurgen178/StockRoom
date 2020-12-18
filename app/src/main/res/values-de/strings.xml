@@ -413,6 +413,9 @@ limitations under the License. -->
   <string name="filter_quantity_desc"></string>
   <string name="filter_capitalgain_name">Ausgeführter Kapitalgewinn</string>
   <string name="filter_capitalgain_desc"></string>
+  <string name="filter_postmarket_name">Nachbörslich</string>
+  <string name="filter_postmarket_desc">Mit diesem Filter werden entweder nur die Aktien angezeigt, die nachbörslich gehandelt werden, oder die nicht nachbörslich gehandelt werden.</string>
+  <string name="filter_postmarket_verb">angezeigt</string>
   <string name="filter_name">Filtername</string>
   <string name="filter_name_not_empty">Geben Sie einen Filternamen ein.</string>
   <string name="add_filter_set">Neuen Filtersatz</string>

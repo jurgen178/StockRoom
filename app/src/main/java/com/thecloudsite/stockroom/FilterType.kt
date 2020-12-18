@@ -51,6 +51,7 @@ enum class FilterTypeEnum {
   FilterDividendPercentageType,
   FilterQuantityType,
   FilterCapitalGainType,
+  FilterPostMarketType,
   FilterFirstAssetSoldType,
   FilterFirstAssetBoughtType,
   FilterLastAssetSoldType,
@@ -64,7 +65,7 @@ enum class FilterDataTypeEnum(val value: Int) {
   DoubleType(2),
   DateType(3),
   IntType(4),
-  GroupType(5)
+  GroupType(5),
 }
 
 enum class FilterModeTypeEnum(val value: Int) {
@@ -119,6 +120,7 @@ object FilterFactory {
       FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
       FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
       FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
+      FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
       FilterTypeEnum.FilterFirstAssetSoldType -> FilterFirstAssetSoldType(context)
       FilterTypeEnum.FilterFirstAssetBoughtType -> FilterFirstAssetBoughtType(context)
       FilterTypeEnum.FilterLastAssetSoldType -> FilterLastAssetSoldType(context)
@@ -338,6 +340,19 @@ open class FilterGroupBaseType(val context: Context) : FilterBaseType() {
     }
 }
 
+open class FilterBooleanBaseType(val context: Context) : FilterBaseType() {
+
+  override val dataType = FilterDataTypeEnum.NoType
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.IsType,
+        FilterSubTypeEnum.IsNotType
+    )
+  // Boolean uses only the subType for the bool content.
+  override var data: String = ""
+  override val displayData: SpannableStringBuilder = SpannableStringBuilder()
+}
+
 //class FilterTestType(override val typeId: FilterTypeEnum) : IFilterType {
 //  override fun filter(stockItem: StockItem): Boolean {
 //    return stockItem.stockDBdata.symbol.isNotEmpty()
@@ -545,11 +560,6 @@ class FilterGroupType(
     }
   }
 
-  override val subTypeList =
-    listOf(
-        FilterSubTypeEnum.IsType,
-        FilterSubTypeEnum.IsNotType
-    )
   override val typeId = FilterTypeEnum.FilterGroupType
   override val displayName = context.getString(R.string.filter_group_name)
   override val desc = context.getString(R.string.filter_group_desc)
@@ -825,6 +835,31 @@ class FilterCapitalGainType(
   override val typeId = FilterTypeEnum.FilterCapitalGainType
   override val displayName = context.getString(R.string.filter_capitalgain_name)
   override val desc = context.getString(R.string.filter_capitalgain_desc)
+}
+
+// Post market
+class FilterPostMarketType(
+  context: Context
+) : FilterBooleanBaseType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+
+    return when (subType) {
+      FilterSubTypeEnum.IsType -> {
+        stockItem.onlineMarketData.postMarketData
+      }
+      FilterSubTypeEnum.IsNotType -> {
+        !stockItem.onlineMarketData.postMarketData
+      }
+      else -> false
+    }
+  }
+
+  override val displayData: SpannableStringBuilder
+    get() = SpannableStringBuilder().append(context.getString(R.string.filter_postmarket_verb))
+
+  override val typeId = FilterTypeEnum.FilterPostMarketType
+  override val displayName = context.getString(R.string.filter_postmarket_name)
+  override val desc = context.getString(R.string.filter_postmarket_desc)
 }
 
 class FilterFirstAssetSoldType(

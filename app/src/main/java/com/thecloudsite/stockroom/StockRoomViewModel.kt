@@ -1085,7 +1085,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             .sortedByDescending { item ->
               if (item.stockDBdata.groupColor == 0) {
                 //Int.MIN_VALUE
-                  
+
                 -1f
               } else {
                 //item.stockDBdata.groupColor

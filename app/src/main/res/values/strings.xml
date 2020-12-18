@@ -416,6 +416,9 @@ limitations under the License. -->
   <string name="filter_quantity_desc"></string>
   <string name="filter_capitalgain_name">Executed Capital Gain</string>
   <string name="filter_capitalgain_desc"></string>
+  <string name="filter_postmarket_name">Post market</string>
+  <string name="filter_postmarket_desc">This filter displays only stocks that are traded post market, or not traded post market.</string>
+  <string name="filter_postmarket_verb">displayed</string>
   <string name="filter_name">Filter name</string>
   <string name="filter_name_not_empty">Enter a filter name.</string>
   <string name="add_filter_set">Add filter set</string>
