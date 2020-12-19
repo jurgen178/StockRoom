@@ -392,6 +392,10 @@ limitations under the License. -->
   <string name="filter_note_desc"></string>
   <string name="filter_dividendnote_name">Dividend note</string>
   <string name="filter_dividendnote_desc"></string>
+  <string name="filter_alertnote_name">Alert note</string>
+  <string name="filter_alertnote_desc"></string>
+  <string name="filter_eventnote_name">Event note</string>
+  <string name="filter_eventnote_desc"></string>
   <string name="filter_purchaseprice_name">Purchase price</string>
   <string name="filter_purchaseprice_desc"></string>
   <string name="filter_profit_name">Profit</string>

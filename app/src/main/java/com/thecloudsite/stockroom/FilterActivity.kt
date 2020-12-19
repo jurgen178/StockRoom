@@ -631,7 +631,7 @@ class FilterActivity : AppCompatActivity() {
       viewMap["textViewFilterGroupTypeVisibility"] = ViewSet(textViewFilterGroupType)
       viewMap["groupSpinnerFilterVisibility"] = ViewSet(groupSpinnerFilter)
 
-      fun disableAll() {
+      fun allGone() {
         viewMap.forEach { (view, _) ->
           viewMap[view]?.visibility = View.GONE
         }
@@ -658,7 +658,7 @@ class FilterActivity : AppCompatActivity() {
           viewMap["groupSpinnerFilterVisibility"]?.visibility = View.VISIBLE
         }
         NoType -> {
-          disableAll()
+          allGone()
         }
       }
 
@@ -670,7 +670,7 @@ class FilterActivity : AppCompatActivity() {
         FilterSubTypeEnum.IsNotUsedType,
         FilterSubTypeEnum.IsEmptyTextType,
         FilterSubTypeEnum.IsNotEmptyTextType -> {
-          disableAll()
+          allGone()
         }
         else -> {
         }
