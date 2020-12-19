@@ -530,8 +530,8 @@ class FilterActivity : AppCompatActivity() {
     val subTypeSpinnerAdapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, subTypeData)
     textViewSubTypeSpinner.adapter = subTypeSpinnerAdapter
-    val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
-    textViewSubTypeSpinner.setSelection(subTypeIndex)
+//    val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
+//    textViewSubTypeSpinner.setSelection(subTypeIndex)
 
     val textViewFilterGroupType =
       dialogView.findViewById<TextView>(id.textViewFilterGroupType)
@@ -610,6 +610,114 @@ class FilterActivity : AppCompatActivity() {
 
     textViewFilterDesc.text = filterType.desc
 
+    fun setUI(
+      dataType: FilterDataTypeEnum,
+      selectedSubType: FilterSubTypeEnum
+    ) {
+      when (dataType) {
+        TextType -> {
+          textViewFilterTextType.visibility = View.VISIBLE
+          textInputLayoutFilterTextType.visibility = View.VISIBLE
+          textViewFilterDoubleType.visibility = View.GONE
+          textInputLayoutFilterDoubleType.visibility = View.GONE
+          textViewFilterIntType.visibility = View.GONE
+          textInputLayoutFilterIntType.visibility = View.GONE
+          datePickerFilterDateView.visibility = View.GONE
+          textViewFilterGroupType.visibility = View.GONE
+          groupSpinnerFilter.visibility = View.GONE
+        }
+        DoubleType -> {
+          textViewFilterTextType.visibility = View.GONE
+          textInputLayoutFilterTextType.visibility = View.GONE
+          textViewFilterDoubleType.visibility = View.VISIBLE
+          textInputLayoutFilterDoubleType.visibility = View.VISIBLE
+          textViewFilterIntType.visibility = View.GONE
+          textInputLayoutFilterIntType.visibility = View.GONE
+          datePickerFilterDateView.visibility = View.GONE
+          textViewFilterGroupType.visibility = View.GONE
+          groupSpinnerFilter.visibility = View.GONE
+        }
+        IntType -> {
+          textViewFilterTextType.visibility = View.GONE
+          textInputLayoutFilterTextType.visibility = View.GONE
+          textViewFilterDoubleType.visibility = View.GONE
+          textInputLayoutFilterDoubleType.visibility = View.GONE
+          textViewFilterIntType.visibility = View.VISIBLE
+          textInputLayoutFilterIntType.visibility = View.VISIBLE
+          datePickerFilterDateView.visibility = View.GONE
+          textViewFilterGroupType.visibility = View.GONE
+          groupSpinnerFilter.visibility = View.GONE
+        }
+        DateType -> {
+          textViewFilterTextType.visibility = View.GONE
+          textInputLayoutFilterTextType.visibility = View.GONE
+          textViewFilterDoubleType.visibility = View.GONE
+          textInputLayoutFilterDoubleType.visibility = View.GONE
+          textViewFilterIntType.visibility = View.GONE
+          textInputLayoutFilterIntType.visibility = View.GONE
+          datePickerFilterDateView.visibility = View.VISIBLE
+          textViewFilterGroupType.visibility = View.GONE
+          groupSpinnerFilter.visibility = View.GONE
+        }
+        GroupType -> {
+          textViewFilterTextType.visibility = View.GONE
+          textInputLayoutFilterTextType.visibility = View.GONE
+          textViewFilterDoubleType.visibility = View.GONE
+          textInputLayoutFilterDoubleType.visibility = View.GONE
+          textViewFilterIntType.visibility = View.GONE
+          textInputLayoutFilterIntType.visibility = View.GONE
+          datePickerFilterDateView.visibility = View.GONE
+          textViewFilterGroupType.visibility = View.VISIBLE
+          groupSpinnerFilter.visibility = View.VISIBLE
+        }
+        NoType -> {
+          textViewFilterTextType.visibility = View.GONE
+          textInputLayoutFilterTextType.visibility = View.GONE
+          textViewFilterDoubleType.visibility = View.GONE
+          textInputLayoutFilterDoubleType.visibility = View.GONE
+          textViewFilterIntType.visibility = View.GONE
+          textInputLayoutFilterIntType.visibility = View.GONE
+          datePickerFilterDateView.visibility = View.GONE
+          textViewFilterGroupType.visibility = View.GONE
+          groupSpinnerFilter.visibility = View.GONE
+        }
+      }
+
+      // Display/Hide text entry for certain types.
+      when (selectedSubType) {
+//        FilterSubTypeEnum.ContainsTextType,
+//        FilterSubTypeEnum.NotContainsTextType,
+//        FilterSubTypeEnum.StartsWithTextType,
+//        FilterSubTypeEnum.EndsWithTextType,
+//        FilterSubTypeEnum.IsTextType,
+//        FilterSubTypeEnum.IsNotTextType,
+//        FilterSubTypeEnum.MatchRegexTextType,
+//        FilterSubTypeEnum.NotMatchRegexTextType,
+//        -> {
+//          textViewFilterTextType.visibility = View.VISIBLE
+//          textInputLayoutFilterTextType.visibility = View.VISIBLE
+//        }
+        FilterSubTypeEnum.IsPresentType,
+        FilterSubTypeEnum.IsNotPresentType,
+        FilterSubTypeEnum.IsUsedType,
+        FilterSubTypeEnum.IsNotUsedType,
+        FilterSubTypeEnum.IsEmptyTextType,
+        FilterSubTypeEnum.IsNotEmptyTextType -> {
+          textViewFilterTextType.visibility = View.GONE
+          textInputLayoutFilterTextType.visibility = View.GONE
+          textViewFilterDoubleType.visibility = View.GONE
+          textInputLayoutFilterDoubleType.visibility = View.GONE
+          textViewFilterIntType.visibility = View.GONE
+          textInputLayoutFilterIntType.visibility = View.GONE
+          datePickerFilterDateView.visibility = View.GONE
+          textViewFilterGroupType.visibility = View.GONE
+          groupSpinnerFilter.visibility = View.GONE
+        }
+        else -> {
+        }
+      }
+    }
+
     textViewFilterSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
       }
@@ -620,85 +728,25 @@ class FilterActivity : AppCompatActivity() {
         position: Int,
         id: Long
       ) {
+        // Preserve sub type.
+        val subType = filterType.subType
         filterType = FilterFactory.create(position, applicationContext)
+        filterType.subType = subType
         textViewFilterDesc.text = filterType.desc
         textViewFilterDesc.visibility = if (filterType.desc.isEmpty()) View.GONE else View.VISIBLE
-
-        when (filterType.dataType) {
-          TextType -> {
-            textViewFilterTextType.visibility = View.VISIBLE
-            textInputLayoutFilterTextType.visibility = View.VISIBLE
-            textViewFilterDoubleType.visibility = View.GONE
-            textInputLayoutFilterDoubleType.visibility = View.GONE
-            textViewFilterIntType.visibility = View.GONE
-            textInputLayoutFilterIntType.visibility = View.GONE
-            datePickerFilterDateView.visibility = View.GONE
-            textViewFilterGroupType.visibility = View.GONE
-            groupSpinnerFilter.visibility = View.GONE
-          }
-          DoubleType -> {
-            textViewFilterTextType.visibility = View.GONE
-            textInputLayoutFilterTextType.visibility = View.GONE
-            textViewFilterDoubleType.visibility = View.VISIBLE
-            textInputLayoutFilterDoubleType.visibility = View.VISIBLE
-            textViewFilterIntType.visibility = View.GONE
-            textInputLayoutFilterIntType.visibility = View.GONE
-            datePickerFilterDateView.visibility = View.GONE
-            textViewFilterGroupType.visibility = View.GONE
-            groupSpinnerFilter.visibility = View.GONE
-          }
-          IntType -> {
-            textViewFilterTextType.visibility = View.GONE
-            textInputLayoutFilterTextType.visibility = View.GONE
-            textViewFilterDoubleType.visibility = View.GONE
-            textInputLayoutFilterDoubleType.visibility = View.GONE
-            textViewFilterIntType.visibility = View.VISIBLE
-            textInputLayoutFilterIntType.visibility = View.VISIBLE
-            datePickerFilterDateView.visibility = View.GONE
-            textViewFilterGroupType.visibility = View.GONE
-            groupSpinnerFilter.visibility = View.GONE
-          }
-          DateType -> {
-            textViewFilterTextType.visibility = View.GONE
-            textInputLayoutFilterTextType.visibility = View.GONE
-            textViewFilterDoubleType.visibility = View.GONE
-            textInputLayoutFilterDoubleType.visibility = View.GONE
-            textViewFilterIntType.visibility = View.GONE
-            textInputLayoutFilterIntType.visibility = View.GONE
-            datePickerFilterDateView.visibility = View.VISIBLE
-            textViewFilterGroupType.visibility = View.GONE
-            groupSpinnerFilter.visibility = View.GONE
-          }
-          GroupType -> {
-            textViewFilterTextType.visibility = View.GONE
-            textInputLayoutFilterTextType.visibility = View.GONE
-            textViewFilterDoubleType.visibility = View.GONE
-            textInputLayoutFilterDoubleType.visibility = View.GONE
-            textViewFilterIntType.visibility = View.GONE
-            textInputLayoutFilterIntType.visibility = View.GONE
-            datePickerFilterDateView.visibility = View.GONE
-            textViewFilterGroupType.visibility = View.VISIBLE
-            groupSpinnerFilter.visibility = View.VISIBLE
-          }
-          NoType -> {
-            textViewFilterTextType.visibility = View.GONE
-            textInputLayoutFilterTextType.visibility = View.GONE
-            textViewFilterDoubleType.visibility = View.GONE
-            textInputLayoutFilterDoubleType.visibility = View.GONE
-            textViewFilterIntType.visibility = View.GONE
-            textInputLayoutFilterIntType.visibility = View.GONE
-            datePickerFilterDateView.visibility = View.GONE
-            textViewFilterGroupType.visibility = View.GONE
-            groupSpinnerFilter.visibility = View.GONE
-          }
-        }
 
         subTypeData.clear()
         subTypeData.addAll(filterType.subTypeList.map { type ->
           type.value
         })
+
+        setUI(filterType.dataType, subType)
+
         textViewSubTypeSpinner.visibility = if (subTypeData.isEmpty()) View.GONE else View.VISIBLE
         subTypeSpinnerAdapter.notifyDataSetChanged()
+
+        val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
+        textViewSubTypeSpinner.setSelection(subTypeIndex)
       }
     }
 
@@ -715,28 +763,7 @@ class FilterActivity : AppCompatActivity() {
         if (position >= 0 && position < filterType.subTypeList.size) {
           val selectedSubType = filterType.subTypeList[position]
 
-          // Display/Hide text entry for certain types.
-          when (selectedSubType) {
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.StartsWithTextType,
-            FilterSubTypeEnum.EndsWithTextType,
-            FilterSubTypeEnum.IsTextType,
-            FilterSubTypeEnum.IsNotTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-            -> {
-              textViewFilterTextType.visibility = View.VISIBLE
-              textInputLayoutFilterTextType.visibility = View.VISIBLE
-            }
-            FilterSubTypeEnum.IsEmptyTextType,
-            FilterSubTypeEnum.IsNotEmptyTextType -> {
-              textViewFilterTextType.visibility = View.GONE
-              textInputLayoutFilterTextType.visibility = View.GONE
-            }
-            else -> {
-            }
-          }
+          setUI(filterType.dataType, selectedSubType)
         }
       }
     }

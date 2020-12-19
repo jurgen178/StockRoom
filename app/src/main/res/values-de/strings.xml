@@ -414,8 +414,11 @@ limitations under the License. -->
   <string name="filter_capitalgain_name">Ausgeführter Kapitalgewinn</string>
   <string name="filter_capitalgain_desc"></string>
   <string name="filter_postmarket_name">Nachbörslich</string>
-  <string name="filter_postmarket_desc">Mit diesem Filter werden entweder nur die Aktien angezeigt, die nachbörslich gehandelt werden, oder die nicht nachbörslich gehandelt werden.</string>
-  <string name="filter_postmarket_verb">angezeigt</string>
+  <string name="filter_postmarket_desc">Mit diesem Filter wird festgelegt, ob Aktien nachbörslich gehandelt werden.</string>
+  <string name="filter_alert_name">Benachrichtigung</string>
+  <string name="filter_alert_desc">Mit diesem Filter wird festgelegt, ob Aktien Benachrichtigungen haben.</string>
+  <string name="filter_event_name">Ereignis</string>
+  <string name="filter_event_desc">Mit diesem Filter wird festgelegt, ob Aktien Ereignisse haben.</string>
   <string name="filter_name">Filtername</string>
   <string name="filter_name_not_empty">Geben Sie einen Filternamen ein.</string>
   <string name="add_filter_set">Neuen Filtersatz</string>
@@ -443,6 +446,10 @@ limitations under the License. -->
   <string name="filter_IsNotTextType">ist nicht gleich</string>
   <string name="filter_MatchRegexTextType">passt zum regulären Ausdruck</string>
   <string name="filter_NotMatchRegexTextType">passt nicht zum regulären Ausdruck</string>
+  <string name="filter_IsPresentType">ist vorhanden</string>
+  <string name="filter_IsNotPresentType">ist nicht vorhanden</string>
+  <string name="filter_IsUsedType">wird verwendet</string>
+  <string name="filter_IsNotUsedType">wird nicht verwendet</string>
   <string name="filter_IsType">ist</string>
   <string name="filter_IsNotType">ist nicht</string>
   <string name="filter_mode">Filterart</string>

@@ -417,8 +417,11 @@ limitations under the License. -->
   <string name="filter_capitalgain_name">Executed Capital Gain</string>
   <string name="filter_capitalgain_desc"></string>
   <string name="filter_postmarket_name">Post market</string>
-  <string name="filter_postmarket_desc">This filter displays only stocks that are traded post market, or not traded post market.</string>
-  <string name="filter_postmarket_verb">displayed</string>
+  <string name="filter_postmarket_desc">With this Filter you select if stocks are traded post market.</string>
+  <string name="filter_alert_name">Alert</string>
+  <string name="filter_alert_desc">With this Filter you select if stocks have alerts.</string>
+  <string name="filter_event_name">Event</string>
+  <string name="filter_event_desc">With this Filter you select if stocks have events.</string>
   <string name="filter_name">Filter name</string>
   <string name="filter_name_not_empty">Enter a filter name.</string>
   <string name="add_filter_set">Add filter set</string>
@@ -446,6 +449,10 @@ limitations under the License. -->
   <string name="filter_IsNotTextType">is not equal</string>
   <string name="filter_MatchRegexTextType">match regex</string>
   <string name="filter_NotMatchRegexTextType">not match regex</string>
+  <string name="filter_IsPresentType">is present</string>
+  <string name="filter_IsNotPresentType">is not present</string>
+  <string name="filter_IsUsedType">is used</string>
+  <string name="filter_IsNotUsedType">is not used</string>
   <string name="filter_IsType">is</string>
   <string name="filter_IsNotType">is not</string>
   <string name="filter_mode">Filter mode</string>

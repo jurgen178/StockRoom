@@ -94,6 +94,10 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.IsNotType.value = context.getString(R.string.filter_IsNotType)
   FilterSubTypeEnum.MatchRegexTextType.value = context.getString(R.string.filter_MatchRegexTextType)
   FilterSubTypeEnum.NotMatchRegexTextType.value = context.getString(R.string.filter_NotMatchRegexTextType)
+  FilterSubTypeEnum.IsPresentType.value = context.getString(R.string.filter_IsPresentType)
+  FilterSubTypeEnum.IsNotPresentType.value = context.getString(R.string.filter_IsNotPresentType)
+  FilterSubTypeEnum.IsUsedType.value = context.getString(R.string.filter_IsUsedType)
+  FilterSubTypeEnum.IsNotUsedType.value = context.getString(R.string.filter_IsNotUsedType)
 }
 
 fun getFilterTypeList(context: Context): List<String> {

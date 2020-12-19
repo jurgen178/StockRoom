@@ -33,7 +33,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
 import kotlin.text.RegexOption.DOT_MATCHES_ALL
 import kotlin.text.RegexOption.IGNORE_CASE
-import kotlin.text.RegexOption.MULTILINE
 
 enum class FilterTypeEnum {
   FilterNullType,
@@ -52,6 +51,8 @@ enum class FilterTypeEnum {
   FilterQuantityType,
   FilterCapitalGainType,
   FilterPostMarketType,
+  FilterAlertType,
+  FilterEventType,
   FilterFirstAssetSoldType,
   FilterFirstAssetBoughtType,
   FilterLastAssetSoldType,
@@ -91,6 +92,10 @@ enum class FilterSubTypeEnum(var value: String) {
   IsNotType(""),
   MatchRegexTextType(""),
   NotMatchRegexTextType(""),
+  IsPresentType(""),
+  IsNotPresentType(""),
+  IsUsedType(""),
+  IsNotUsedType(""),
 }
 
 val regexOption = setOf(IGNORE_CASE, DOT_MATCHES_ALL)
@@ -121,6 +126,8 @@ object FilterFactory {
       FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
       FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
       FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
+      FilterTypeEnum.FilterAlertType -> FilterAlertType(context)
+      FilterTypeEnum.FilterEventType -> FilterEventType(context)
       FilterTypeEnum.FilterFirstAssetSoldType -> FilterFirstAssetSoldType(context)
       FilterTypeEnum.FilterFirstAssetBoughtType -> FilterFirstAssetBoughtType(context)
       FilterTypeEnum.FilterLastAssetSoldType -> FilterLastAssetSoldType(context)
@@ -348,9 +355,9 @@ open class FilterBooleanBaseType(val context: Context) : FilterBaseType() {
         FilterSubTypeEnum.IsType,
         FilterSubTypeEnum.IsNotType
     )
-  // Boolean uses only the subType for the bool content.
+
+  // Boolean uses the subType for the bool content.
   override var data: String = ""
-  override val displayData: SpannableStringBuilder = SpannableStringBuilder()
 }
 
 //class FilterTestType(override val typeId: FilterTypeEnum) : IFilterType {
@@ -733,7 +740,7 @@ class FilterProfitPercentageType(
 
 // Asset
 class FilterAssetType(
-  context: Context
+  val context: Context
 ) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
@@ -750,13 +757,45 @@ class FilterAssetType(
       FilterSubTypeEnum.LessThanType -> {
         asset < filterValue
       }
+      FilterSubTypeEnum.IsPresentType -> {
+        stockItem.assets.isNotEmpty()
+      }
+      FilterSubTypeEnum.IsNotPresentType -> {
+        stockItem.assets.isEmpty()
+      }
       else -> false
     }
   }
 
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.GreaterThanType,
+        FilterSubTypeEnum.LessThanType,
+        FilterSubTypeEnum.IsPresentType,
+        FilterSubTypeEnum.IsNotPresentType,
+    )
+
   override val typeId = FilterTypeEnum.FilterAssetType
+  override var data: String = ""
+    get() = when (subType) {
+      FilterSubTypeEnum.GreaterThanType,
+      FilterSubTypeEnum.LessThanType -> DecimalFormat(DecimalFormat0To2Digits).format(
+          filterValue
+      )
+      else -> ""
+    }
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
   override val displayName = context.getString(R.string.filter_asset_name)
   override val desc = context.getString(R.string.filter_asset_desc)
+  override val displayData: SpannableStringBuilder
+    get() = when (subType) {
+      FilterSubTypeEnum.GreaterThanType,
+      FilterSubTypeEnum.LessThanType -> SpannableStringBuilder().append(data)
+      else -> SpannableStringBuilder().append("")
+    }
 }
 
 // Dividend Percentage
@@ -844,22 +883,81 @@ class FilterPostMarketType(
   override fun filter(stockItem: StockItem): Boolean {
 
     return when (subType) {
-      FilterSubTypeEnum.IsType -> {
+      FilterSubTypeEnum.IsUsedType -> {
         stockItem.onlineMarketData.postMarketData
       }
-      FilterSubTypeEnum.IsNotType -> {
+      FilterSubTypeEnum.IsNotUsedType -> {
         !stockItem.onlineMarketData.postMarketData
       }
       else -> false
     }
   }
 
-  override val displayData: SpannableStringBuilder
-    get() = SpannableStringBuilder().append(context.getString(R.string.filter_postmarket_verb))
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.IsUsedType,
+        FilterSubTypeEnum.IsNotUsedType
+    )
 
   override val typeId = FilterTypeEnum.FilterPostMarketType
   override val displayName = context.getString(R.string.filter_postmarket_name)
   override val desc = context.getString(R.string.filter_postmarket_desc)
+}
+
+// Alert
+class FilterAlertType(
+  context: Context
+) : FilterBooleanBaseType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+
+    return when (subType) {
+      FilterSubTypeEnum.IsPresentType -> {
+        stockItem.stockDBdata.alertAbove > 0.0 || stockItem.stockDBdata.alertBelow > 0.0
+      }
+      FilterSubTypeEnum.IsNotPresentType -> {
+        !(stockItem.stockDBdata.alertAbove > 0.0 || stockItem.stockDBdata.alertBelow > 0.0)
+      }
+      else -> false
+    }
+  }
+
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.IsPresentType,
+        FilterSubTypeEnum.IsNotPresentType
+    )
+
+  override val typeId = FilterTypeEnum.FilterAlertType
+  override val displayName = context.getString(R.string.filter_alert_name)
+  override val desc = context.getString(R.string.filter_alert_desc)
+}
+
+// Event
+class FilterEventType(
+  context: Context
+) : FilterBooleanBaseType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+
+    return when (subType) {
+      FilterSubTypeEnum.IsPresentType -> {
+        stockItem.events.isNotEmpty()
+      }
+      FilterSubTypeEnum.IsNotPresentType -> {
+        stockItem.events.isEmpty()
+      }
+      else -> false
+    }
+  }
+
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.IsPresentType,
+        FilterSubTypeEnum.IsNotPresentType
+    )
+
+  override val typeId = FilterTypeEnum.FilterEventType
+  override val displayName = context.getString(R.string.filter_event_name)
+  override val desc = context.getString(R.string.filter_event_desc)
 }
 
 class FilterFirstAssetSoldType(
