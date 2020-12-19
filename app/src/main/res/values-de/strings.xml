@@ -389,10 +389,14 @@ limitations under the License. -->
   <string name="filter_note_desc"></string>
   <string name="filter_dividendnote_name">Dividendenanmerkung</string>
   <string name="filter_dividendnote_desc"></string>
-  <string name="filter_alertnote_name">Benachrichtigunganmerkung</string>
+  <string name="filter_alert_name">Benachrichtigung</string>
+  <string name="filter_alert_desc">Mit diesem Filter wird festgelegt, ob Aktien Benachrichtigungen haben.</string>
+  <string name="filter_alertnote_name">Benachrichtigungsanmerkung</string>
   <string name="filter_alertnote_desc"></string>
-  <string name="filter_eventnote_name">Ereignisanmerkung</string>
-  <string name="filter_eventnote_desc"></string>
+  <string name="filter_event_name">Ereignis</string>
+  <string name="filter_event_desc">Mit diesem Filter wird festgelegt, ob Aktien Ereignisse haben.</string>
+  <string name="filter_eventdetail_name">Ereignisdetail</string>
+  <string name="filter_eventdetail_desc"></string>
   <string name="filter_purchaseprice_name">Kaufpreis</string>
   <string name="filter_purchaseprice_desc"></string>
   <string name="filter_profit_name">Gewinn</string>
@@ -401,6 +405,8 @@ limitations under the License. -->
   <string name="filter_profitpercentage_desc"></string>
   <string name="filter_asset_name">Bestand</string>
   <string name="filter_asset_desc"></string>
+  <string name="filter_assetnote_name">Bestandsanmerkung</string>
+  <string name="filter_assetnote_desc"></string>
   <string name="filter_dividendpercentage_name">Dividende %</string>
   <string name="filter_dividendpercentage_desc"></string>
   <string name="filter_firstassetsold_name">Früheste Aktien verkauft</string>
@@ -419,10 +425,6 @@ limitations under the License. -->
   <string name="filter_capitalgain_desc"></string>
   <string name="filter_postmarket_name">Nachbörslich</string>
   <string name="filter_postmarket_desc">Mit diesem Filter wird festgelegt, ob Aktien nachbörslich gehandelt werden.</string>
-  <string name="filter_alert_name">Benachrichtigung</string>
-  <string name="filter_alert_desc">Mit diesem Filter wird festgelegt, ob Aktien Benachrichtigungen haben.</string>
-  <string name="filter_event_name">Ereignis</string>
-  <string name="filter_event_desc">Mit diesem Filter wird festgelegt, ob Aktien Ereignisse haben.</string>
   <string name="filter_name">Filtername</string>
   <string name="filter_name_not_empty">Geben Sie einen Filternamen ein.</string>
   <string name="add_filter_set">Neuen Filtersatz</string>

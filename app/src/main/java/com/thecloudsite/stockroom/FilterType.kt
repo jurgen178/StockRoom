@@ -43,18 +43,19 @@ enum class FilterTypeEnum {
   FilterGroupType,
   FilterNoteType,
   FilterDividendNoteType,
+  FilterAlertType,
   FilterAlertNoteType,
+  FilterEventType,
   FilterEventDetailType,
   FilterPurchasePriceType,
   FilterProfitType,
   FilterProfitPercentageType,
   FilterAssetType,
+  FilterAssetNoteType,
   FilterDividendPercentageType,
   FilterQuantityType,
   FilterCapitalGainType,
   FilterPostMarketType,
-  FilterAlertType,
-  FilterEventType,
   FilterFirstAssetSoldType,
   FilterFirstAssetBoughtType,
   FilterLastAssetSoldType,
@@ -126,6 +127,7 @@ object FilterFactory {
       FilterTypeEnum.FilterProfitType -> FilterProfitType(context)
       FilterTypeEnum.FilterProfitPercentageType -> FilterProfitPercentageType(context)
       FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
+      FilterTypeEnum.FilterAssetNoteType -> FilterAssetNoteType(context)
       FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
       FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
       FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
@@ -662,20 +664,20 @@ class FilterDividendNoteType(
   override val desc = context.getString(R.string.filter_dividendnote_desc)
 }
 
-class FilterAlertNoteType(
+class FilterAssetNoteType(
   context: Context
 ) : FilterTextBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
-        stockItem.assets.find { asset ->
+        stockItem.assets.any { asset ->
           asset.note.contains(data, ignoreCase = true)
-        } != null
+        }
       }
       FilterSubTypeEnum.NotContainsTextType -> {
-        stockItem.assets.find { asset ->
+        stockItem.assets.none { asset ->
           asset.note.contains(data, ignoreCase = true)
-        } == null
+        }
       }
       FilterSubTypeEnum.IsEmptyTextType -> {
         stockItem.assets.none { asset ->
@@ -712,6 +714,55 @@ class FilterAlertNoteType(
         FilterSubTypeEnum.MatchRegexTextType,
         FilterSubTypeEnum.NotMatchRegexTextType
     )
+  override val typeId = FilterTypeEnum.FilterAssetNoteType
+  override val displayName = context.getString(R.string.filter_assetnote_name)
+  override val desc = context.getString(R.string.filter_assetnote_desc)
+}
+
+class FilterAlertNoteType(
+  context: Context
+) : FilterTextBaseType() {
+  override fun filter(stockItem: StockItem): Boolean {
+    return when (subType) {
+      FilterSubTypeEnum.ContainsTextType -> {
+        stockItem.stockDBdata.alertAboveNote.contains(data, ignoreCase = true)
+            || stockItem.stockDBdata.alertBelowNote.contains(data, ignoreCase = true)
+      }
+      FilterSubTypeEnum.NotContainsTextType -> {
+        !(stockItem.stockDBdata.alertAboveNote.contains(data, ignoreCase = true)
+            || stockItem.stockDBdata.alertBelowNote.contains(data, ignoreCase = true))
+      }
+      FilterSubTypeEnum.IsEmptyTextType -> {
+        stockItem.stockDBdata.alertAboveNote.isEmpty()
+            && stockItem.stockDBdata.alertBelowNote.isEmpty()
+      }
+      FilterSubTypeEnum.IsNotEmptyTextType -> {
+        stockItem.stockDBdata.alertAboveNote.isNotEmpty()
+            || stockItem.stockDBdata.alertBelowNote.isNotEmpty()
+      }
+      FilterSubTypeEnum.MatchRegexTextType -> {
+        val regex = data.toRegex(regexOption)
+        regex.containsMatchIn(stockItem.stockDBdata.alertAboveNote)
+            || regex.containsMatchIn(stockItem.stockDBdata.alertBelowNote)
+      }
+      FilterSubTypeEnum.NotMatchRegexTextType -> {
+        val regex = data.toRegex(regexOption)
+        !(regex.containsMatchIn(stockItem.stockDBdata.alertAboveNote)
+            || regex.containsMatchIn(stockItem.stockDBdata.alertBelowNote))
+      }
+      else -> false
+    }
+  }
+
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.ContainsTextType,
+        FilterSubTypeEnum.NotContainsTextType,
+        FilterSubTypeEnum.IsEmptyTextType,
+        FilterSubTypeEnum.IsNotEmptyTextType,
+        FilterSubTypeEnum.MatchRegexTextType,
+        FilterSubTypeEnum.NotMatchRegexTextType
+    )
   override val typeId = FilterTypeEnum.FilterAlertNoteType
   override val displayName = context.getString(R.string.filter_alertnote_name)
   override val desc = context.getString(R.string.filter_alertnote_desc)
@@ -723,41 +774,41 @@ class FilterEventDetailType(
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
-        stockItem.events.find { asset ->
-          asset.title.contains(data, ignoreCase = true) ||
-              asset.note.contains(data, ignoreCase = true)
-        } != null
+        stockItem.events.any { event ->
+          event.title.contains(data, ignoreCase = true) ||
+              event.note.contains(data, ignoreCase = true)
+        }
       }
       FilterSubTypeEnum.NotContainsTextType -> {
-        stockItem.events.find { asset ->
-          asset.title.contains(data, ignoreCase = true) ||
-              asset.note.contains(data, ignoreCase = true)
-        } == null
+        stockItem.events.none { event ->
+          event.title.contains(data, ignoreCase = true) ||
+              event.note.contains(data, ignoreCase = true)
+        }
       }
       FilterSubTypeEnum.IsEmptyTextType -> {
-        stockItem.events.none { asset ->
-          asset.title.isNotEmpty() ||
-              asset.note.isNotEmpty()
+        stockItem.events.none { event ->
+          event.title.isNotEmpty() ||
+              event.note.isNotEmpty()
         }
       }
       FilterSubTypeEnum.IsNotEmptyTextType -> {
-        stockItem.events.any { asset ->
-          asset.title.isNotEmpty() ||
-              asset.note.isNotEmpty()
+        stockItem.events.any { event ->
+          event.title.isNotEmpty() ||
+              event.note.isNotEmpty()
         }
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
-        stockItem.events.find { asset ->
+        stockItem.events.find { event ->
           val regex = data.toRegex(regexOption)
-          regex.containsMatchIn(asset.title) ||
-              regex.containsMatchIn(asset.note)
+          regex.containsMatchIn(event.title) ||
+              regex.containsMatchIn(event.note)
         } != null
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
-        stockItem.events.find { asset ->
+        stockItem.events.find { event ->
           val regex = data.toRegex(regexOption)
-          regex.containsMatchIn(asset.title) ||
-              regex.containsMatchIn(asset.note)
+          regex.containsMatchIn(event.title) ||
+              regex.containsMatchIn(event.note)
         } == null
       }
       else -> false
@@ -774,8 +825,8 @@ class FilterEventDetailType(
         FilterSubTypeEnum.NotMatchRegexTextType
     )
   override val typeId = FilterTypeEnum.FilterEventDetailType
-  override val displayName = context.getString(R.string.filter_eventnote_name)
-  override val desc = context.getString(R.string.filter_eventnote_desc)
+  override val displayName = context.getString(R.string.filter_eventdetail_name)
+  override val desc = context.getString(R.string.filter_eventdetail_desc)
 }
 
 // Purchase price
