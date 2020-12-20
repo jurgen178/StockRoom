@@ -36,6 +36,7 @@ import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -45,12 +46,17 @@ const val exportListActivityRequestCode = 3
 
 class SettingsActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
+  
+  private lateinit var binding: ActivitySettingsBinding
   private lateinit var sharedPreferences: SharedPreferences
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_settings)
+
+    binding = ActivitySettingsBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
 
 /*
     settingsViewpager.adapter = object : FragmentStateAdapter(this) {

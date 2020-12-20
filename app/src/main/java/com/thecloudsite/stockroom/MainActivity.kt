@@ -46,6 +46,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
 import com.thecloudsite.stockroom.database.Events
+import com.thecloudsite.stockroom.databinding.ActivityMainBinding
 import com.thecloudsite.stockroom.list.ListLogAdapter
 import com.thecloudsite.stockroom.news.AllNewsFragment
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
@@ -53,9 +54,6 @@ import com.thecloudsite.stockroom.notification.NotificationFactory
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
-import kotlinx.android.synthetic.main.activity_main.main_tab_layout
-import kotlinx.android.synthetic.main.activity_main.recyclerViewDebug
-import kotlinx.android.synthetic.main.activity_main.viewpager
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -69,6 +67,7 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
+  private lateinit var binding: ActivityMainBinding
   private val newSymbolActivityRequestCode = 1
 
   private lateinit var remoteConfig: FirebaseRemoteConfig
@@ -102,7 +101,10 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
 
     // Setup the notification channel.
     NotificationChannelFactory(this)
@@ -178,13 +180,13 @@ class MainActivity : AppCompatActivity() {
 
     SharedRepository.debugData.observe(this, Observer { debugdatalist ->
       if (debugdatalist != null) {
-        val s = recyclerViewDebug.canScrollVertically(1)
+        val s = binding.recyclerViewDebug.canScrollVertically(1)
         debugListAdapter.updateData(debugdatalist)
         // Scroll only if last item at the bottom to allow scrolling up without jumping
         // to the bottom for each update.
         if (!s) {
-          recyclerViewDebug.adapter?.itemCount?.minus(1)
-              ?.let { recyclerViewDebug.scrollToPosition(it) }
+          binding.recyclerViewDebug.adapter?.itemCount?.minus(1)
+              ?.let { binding.recyclerViewDebug.scrollToPosition(it) }
         }
       }
     })
@@ -195,7 +197,7 @@ class MainActivity : AppCompatActivity() {
       }
     })
 
-    viewpager.adapter = object : FragmentStateAdapter(this) {
+    binding.viewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
 
         return when (SharedRepository.displayedViewsList[position]) {
@@ -244,7 +246,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Display the tab layout headers.
-    TabLayoutMediator(main_tab_layout, viewpager) { tab, position ->
+    TabLayoutMediator(binding.mainTabLayout, binding.viewpager) { tab, position ->
 
       if (position >= 0 && position < SharedRepository.displayedViewsList.size) {
         // 00_StockRoomChartFragment, 01_StockRoomListFragment, ... 10_DividendTimelineFragment
@@ -258,7 +260,7 @@ class MainActivity : AppCompatActivity() {
       }
     }.attach()
 
-    viewpager.setCurrentItem(
+    binding.viewpager.setCurrentItem(
         if (SharedRepository.displayedViewsList.contains("01_StockRoomListFragment")) {
           SharedRepository.displayedViewsList.indexOf("01_StockRoomListFragment")
         } else {
@@ -410,14 +412,14 @@ class MainActivity : AppCompatActivity() {
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
     val debug: Boolean = sharedPreferences.getBoolean("list", false)
-    recyclerViewDebug.visibility = if (debug) {
+    binding.recyclerViewDebug.visibility = if (debug) {
       View.VISIBLE
     } else {
       View.GONE
     }
 
     val tabHeadlines: Boolean = sharedPreferences.getBoolean("tab_headlines", true)
-    main_tab_layout.visibility = if (SharedRepository.displayedViewsList.size > 1 && tabHeadlines) {
+    binding.mainTabLayout.visibility = if (SharedRepository.displayedViewsList.size > 1 && tabHeadlines) {
       View.VISIBLE
     } else {
       View.GONE

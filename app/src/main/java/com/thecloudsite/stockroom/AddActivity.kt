@@ -23,9 +23,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
+import com.thecloudsite.stockroom.databinding.ActivityAddBinding
 import com.thecloudsite.stockroom.list.ListActivity
-import kotlinx.android.synthetic.main.activity_add.button_add
-import kotlinx.android.synthetic.main.activity_add.importButton
 
 /*
  * Activity for entering a new symbol.
@@ -35,6 +34,7 @@ const val importListActivityRequestCode = 2
 
 class AddActivity : AppCompatActivity() {
 
+  private lateinit var binding: ActivityAddBinding
   private lateinit var addView: EditText
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
@@ -44,8 +44,12 @@ class AddActivity : AppCompatActivity() {
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_add)
-    addView = findViewById(R.id.edit_add)
+
+    binding = ActivityAddBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
+
+    addView = binding.editAdd
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     // Crashlytics test
@@ -61,7 +65,7 @@ class AddActivity : AppCompatActivity() {
     })
 */
 
-    button_add.setOnClickListener {
+    binding.buttonAdd.setOnClickListener {
       val replyIntent = Intent()
       if (TextUtils.isEmpty(addView.text)) {
         setResult(Activity.RESULT_CANCELED, replyIntent)
@@ -82,10 +86,10 @@ class AddActivity : AppCompatActivity() {
       finish()
     }
 
-    importButton.setOnClickListener {
+    binding.importButton.setOnClickListener {
       // match importList()
       val mimeTypes = arrayOf(
-          
+
           // .json
           "application/json",
           "text/x-json",

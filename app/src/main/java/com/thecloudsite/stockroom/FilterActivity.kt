@@ -54,13 +54,8 @@ import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.databinding.ActivityFilterBinding
 import com.thecloudsite.stockroom.utils.getGroupsMenuList
-import kotlinx.android.synthetic.main.activity_filter.addFilterButton
-import kotlinx.android.synthetic.main.activity_filter.filterEnableSwitch
-import kotlinx.android.synthetic.main.activity_filter.filterRecyclerView
-import kotlinx.android.synthetic.main.activity_filter.textViewFilterModeSpinner
-import kotlinx.android.synthetic.main.activity_filter.textViewFilterModeText
-import kotlinx.android.synthetic.main.activity_filter.textViewFilterSelection
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -71,6 +66,7 @@ import java.time.format.FormatStyle.MEDIUM
 
 class FilterActivity : AppCompatActivity() {
 
+  private lateinit var binding: ActivityFilterBinding
   private val loadFilterActivityRequestCode = 5
   private val saveFilterActivityRequestCode = 6
   private lateinit var filterDataViewModel: FilterDataViewModel
@@ -79,7 +75,11 @@ class FilterActivity : AppCompatActivity() {
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_filter)
+
+    binding = ActivityFilterBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
+
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     val filterClickListenerUpdate = { filterType: IFilterType, index: Int ->
@@ -94,10 +94,10 @@ class FilterActivity : AppCompatActivity() {
 
     filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
-    filterRecyclerView.layoutManager = LinearLayoutManager(this)
-    filterRecyclerView.adapter = filterAdapter
+    binding.filterRecyclerView.layoutManager = LinearLayoutManager(this)
+    binding.filterRecyclerView.adapter = filterAdapter
 
-    filterEnableSwitch.setOnCheckedChangeListener { _, isChecked ->
+    binding.filterEnableSwitch.setOnCheckedChangeListener { _, isChecked ->
       filterDataViewModel.filterActive = isChecked
     }
 
@@ -105,10 +105,10 @@ class FilterActivity : AppCompatActivity() {
 
       filterAdapter.setFilter(filter.filterList)
 
-      textViewFilterSelection.text =
+      binding.textViewFilterSelection.text =
         getString(R.string.filter_set, filterDataViewModel.selectedFilter)
 
-      filterEnableSwitch.isChecked = filter.filterActive
+      binding.filterEnableSwitch.isChecked = filter.filterActive
 
       val visibility = if (filter.filterActive) {
         View.VISIBLE
@@ -116,9 +116,9 @@ class FilterActivity : AppCompatActivity() {
         View.GONE
       }
 
-      textViewFilterSelection.visibility = visibility
-      filterRecyclerView.visibility = visibility
-      addFilterButton.visibility = visibility
+      binding.textViewFilterSelection.visibility = visibility
+      binding.filterRecyclerView.visibility = visibility
+      binding.addFilterButton.visibility = visibility
 
       // Show filter mode only for more than one filter
       val filterModeVisibility = if (filter.filterList.size > 1) {
@@ -127,10 +127,10 @@ class FilterActivity : AppCompatActivity() {
         View.GONE
       }
 
-      textViewFilterModeText.visibility = filterModeVisibility
-      textViewFilterModeSpinner.visibility = filterModeVisibility
+      binding.textViewFilterModeText.visibility = filterModeVisibility
+      binding.textViewFilterModeSpinner.visibility = filterModeVisibility
 
-      textViewFilterModeSpinner.setSelection(
+      binding.textViewFilterModeSpinner.setSelection(
           when (filter.filterMode) {
             FilterModeTypeEnum.AndType -> 0
             FilterModeTypeEnum.OrType -> 1
@@ -151,7 +151,7 @@ class FilterActivity : AppCompatActivity() {
 //    filterDataViewModel.setData(testdata)
 
     // Setup filter selection menu
-    textViewFilterSelection.setOnClickListener { viewFilter ->
+    binding.textViewFilterSelection.setOnClickListener { viewFilter ->
       val popupMenu = PopupMenu(this, viewFilter)
 
       var menuIndex: Int = Menu.FIRST
@@ -290,7 +290,7 @@ class FilterActivity : AppCompatActivity() {
           else -> {
             val filterName = menuitem.title.trim()
                 .toString()
-            textViewFilterSelection.text = getString(R.string.filter_set, filterName)
+            binding.textViewFilterSelection.text = getString(R.string.filter_set, filterName)
 
             filterDataViewModel.selectedFilter = filterName
           }
@@ -299,18 +299,18 @@ class FilterActivity : AppCompatActivity() {
       }
     }
 
-    addFilterButton.setOnClickListener {
+    binding.addFilterButton.setOnClickListener {
       addUpdateFilter(FilterFactory.create(FilterTypeEnum.FilterNullType, this), -1)
     }
 
-    textViewFilterModeSpinner.setSelection(
+    binding.textViewFilterModeSpinner.setSelection(
         when (filterDataViewModel.filterMode) {
           FilterModeTypeEnum.AndType -> 0
           FilterModeTypeEnum.OrType -> 1
         }
     )
 
-    textViewFilterModeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+    binding.textViewFilterModeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
       }
 

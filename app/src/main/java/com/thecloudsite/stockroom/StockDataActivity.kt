@@ -24,18 +24,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.thecloudsite.stockroom.databinding.ActivityStockBinding
 import com.thecloudsite.stockroom.news.NewsFragment
-import kotlinx.android.synthetic.main.activity_stock.stockViewpager
-import kotlinx.android.synthetic.main.activity_stock.tab_layout
 import java.util.Locale
 
 class StockDataActivity : AppCompatActivity() {
 
+  private lateinit var binding: ActivityStockBinding
   private lateinit var symbol: String
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_stock)
+
+    binding = ActivityStockBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
+
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     val symbolString = intent.getStringExtra("symbol")
@@ -44,7 +48,7 @@ class StockDataActivity : AppCompatActivity() {
     // Query only this symbol when this activity is on.
     SharedRepository.selectedSymbol = symbol
 
-    stockViewpager.adapter = object : FragmentStateAdapter(this) {
+    binding.stockViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
         return when (position) {
           0 -> {
@@ -76,9 +80,9 @@ class StockDataActivity : AppCompatActivity() {
       }
     }
 
-    stockViewpager.setCurrentItem(1, false)
+    binding.stockViewpager.setCurrentItem(1, false)
 
-    TabLayoutMediator(tab_layout, stockViewpager) { tab, position ->
+    TabLayoutMediator(binding.tabLayout, binding.stockViewpager) { tab, position ->
       tab.text = when (position) {
         0 -> getString(R.string.dividend_headline)
         1 -> getString(R.string.data_headline)

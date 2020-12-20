@@ -23,27 +23,29 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.MainActivity.Companion
-import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.StockRoomViewModel
-import kotlinx.android.synthetic.main.activity_list.debugswitch
-import kotlinx.android.synthetic.main.activity_list.listDBRecyclerview
-import kotlinx.android.synthetic.main.activity_list.realtimeswitch
+import com.thecloudsite.stockroom.databinding.ActivityListBinding
 
 class ListActivity : AppCompatActivity() {
 
+  private lateinit var binding: ActivityListBinding
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private lateinit var listDBAdapter: ListDBAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(layout.activity_list)
+
+    binding = ActivityListBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
+
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    debugswitch.isChecked = sharedPreferences.getBoolean("list", false)
+    binding.debugswitch.isChecked = sharedPreferences.getBoolean("list", false)
 
-    debugswitch.setOnCheckedChangeListener { _, isChecked ->
+    binding.debugswitch.setOnCheckedChangeListener { _, isChecked ->
       sharedPreferences
           .edit()
           .putBoolean("list", isChecked)
@@ -51,16 +53,16 @@ class ListActivity : AppCompatActivity() {
     }
 
     // Only valid for the current App run. Will be reset the next time the app starts.
-    realtimeswitch.isChecked = Companion.realtimeOverride
-    realtimeswitch.setOnCheckedChangeListener { _, isChecked ->
+    binding.realtimeswitch.isChecked = Companion.realtimeOverride
+    binding.realtimeswitch.setOnCheckedChangeListener { _, isChecked ->
       Companion.realtimeOverride = isChecked
     }
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
     listDBAdapter = ListDBAdapter(this)
-    listDBRecyclerview.adapter = listDBAdapter
-    listDBRecyclerview.layoutManager = LinearLayoutManager(this)
+    binding.listDBRecyclerview.adapter = listDBAdapter
+    binding.listDBRecyclerview.layoutManager = LinearLayoutManager(this)
 
 /*
     stockRoomViewModel.allStockItems.observe(this, Observer { items ->

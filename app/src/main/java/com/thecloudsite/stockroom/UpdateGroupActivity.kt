@@ -30,12 +30,11 @@ import com.larswerkman.holocolorpicker.ColorPicker
 import com.larswerkman.holocolorpicker.SVBar
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
-import kotlinx.android.synthetic.main.activity_updategroup.addGroupButton
-import kotlinx.android.synthetic.main.activity_updategroup.addPredefinedGroupsButton
-import kotlinx.android.synthetic.main.activity_updategroup.deleteAllGroupButton
-import kotlinx.android.synthetic.main.activity_updategroup.groupView
+import com.thecloudsite.stockroom.databinding.ActivityUpdategroupBinding
 
 class UpdateGroupActivity : AppCompatActivity() {
+
+  private lateinit var binding: ActivityUpdategroupBinding
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var stockDBdataList: List<StockDBdata> = emptyList()
   private var groupList: List<Group> = emptyList()
@@ -150,7 +149,11 @@ class UpdateGroupActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_updategroup)
+
+    binding = ActivityUpdategroupBinding.inflate(layoutInflater)
+    val view = binding.root
+    setContentView(view)
+
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
@@ -161,8 +164,8 @@ class UpdateGroupActivity : AppCompatActivity() {
       { group: GroupData -> groupItemDeleteClicked(group) }
     val updateGroupAdapter =
       UpdateGroupAdapter(this, groupItemClickListenerUpdate, groupItemClickListenerDelete)
-    groupView.adapter = updateGroupAdapter
-    groupView.layoutManager = LinearLayoutManager(this)
+    binding.groupView.adapter = updateGroupAdapter
+    binding.groupView.layoutManager = LinearLayoutManager(this)
 
     stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
       if (groups != null) {
@@ -181,7 +184,7 @@ class UpdateGroupActivity : AppCompatActivity() {
     //val groups: List<Group> = stockRoomViewModel.getGroupsSync()
     //updateGroupAdapter.addGroups(groups)
 
-    addGroupButton.setOnClickListener {
+    binding.addGroupButton.setOnClickListener {
       val builder = AlertDialog.Builder(this)
       // Get the layout inflater
       val inflater = LayoutInflater.from(this)
@@ -257,7 +260,7 @@ class UpdateGroupActivity : AppCompatActivity() {
           .show()
     }
 
-    addPredefinedGroupsButton.setOnClickListener {
+    binding.addPredefinedGroupsButton.setOnClickListener {
       AlertDialog.Builder(this)
           .setTitle(R.string.add_predef_groups_title)
           .setMessage(getString(R.string.add_predef_groups_confirm))
@@ -270,7 +273,7 @@ class UpdateGroupActivity : AppCompatActivity() {
           .show()
     }
 
-    deleteAllGroupButton.setOnClickListener {
+    binding.deleteAllGroupButton.setOnClickListener {
       AlertDialog.Builder(this)
           .setTitle(R.string.delete_allgroups_title)
           .setMessage(getString(R.string.delete_all_groups_confirm))
