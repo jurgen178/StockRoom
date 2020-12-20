@@ -40,6 +40,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
 import com.github.mikephil.charting.listener.OnChartGestureListener
+import com.thecloudsite.stockroom.databinding.FragmentSummarygroupBinding
 import com.thecloudsite.stockroom.invaders.InvadersActivity
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssets
@@ -49,6 +50,12 @@ import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class SummaryGroupFragment : Fragment() {
+
+  private var _binding: FragmentSummarygroupBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var longPressedCounter = 0
@@ -66,9 +73,16 @@ class SummaryGroupFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
+
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_summarygroup, container, false)
+    _binding = FragmentSummarygroupBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onViewCreated(

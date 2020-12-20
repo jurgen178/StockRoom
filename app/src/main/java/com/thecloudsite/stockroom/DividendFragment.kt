@@ -47,6 +47,7 @@ import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.FragmentDividendBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
@@ -54,17 +55,6 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleToSelection
 import com.thecloudsite.stockroom.utils.dividendSelectionToCycle
 import com.thecloudsite.stockroom.utils.getAssets
-import kotlinx.android.synthetic.main.fragment_dividend.addDividendAnnouncedButton
-import kotlinx.android.synthetic.main.fragment_dividend.addDividendReceivedButton
-import kotlinx.android.synthetic.main.fragment_dividend.dividendNoteTextView
-import kotlinx.android.synthetic.main.fragment_dividend.dividendsAnnouncedView
-import kotlinx.android.synthetic.main.fragment_dividend.dividendsReceivedView
-import kotlinx.android.synthetic.main.fragment_dividend.textViewAddDividendLayout
-import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendPayout
-import kotlinx.android.synthetic.main.fragment_dividend.textViewDividendOnlineData
-import kotlinx.android.synthetic.main.fragment_dividend.textViewSetAnnualDividend
-import kotlinx.android.synthetic.main.fragment_dividend.textViewSetAnnualDividendPercent
-import kotlinx.android.synthetic.main.fragment_dividend.updateDividendNoteButton
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDateTime
@@ -100,6 +90,12 @@ class CustomDatePicker(
 }
 
 class DividendFragment : Fragment() {
+
+  private var _binding: FragmentDividendBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
@@ -414,7 +410,7 @@ class DividendFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
 
     symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
 
@@ -422,7 +418,13 @@ class DividendFragment : Fragment() {
     onlineDataHandler = Handler(Looper.getMainLooper())
 
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_dividend, container, false)
+    _binding = FragmentDividendBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onViewCreated(
@@ -447,8 +449,8 @@ class DividendFragment : Fragment() {
       DividendReceivedListAdapter(
           requireContext(), dividendReceivedClickListenerUpdate, dividendReceivedClickListenerDelete
       )
-    dividendsReceivedView.adapter = dividendReceivedListAdapter
-    dividendsReceivedView.layoutManager = LinearLayoutManager(requireContext())
+    binding.dividendsReceivedView.adapter = dividendReceivedListAdapter
+    binding.dividendsReceivedView.layoutManager = LinearLayoutManager(requireContext())
 
     // announced dividends
     val dividendAnnouncedClickListenerUpdate =
@@ -464,8 +466,8 @@ class DividendFragment : Fragment() {
           requireContext(), dividendAnnouncedClickListenerUpdate,
           dividendAnnouncedClickListenerDelete
       )
-    dividendsAnnouncedView.adapter = dividendAnnouncedListAdapter
-    dividendsAnnouncedView.layoutManager = LinearLayoutManager(requireContext())
+    binding.dividendsAnnouncedView.adapter = dividendAnnouncedListAdapter
+    binding.dividendsAnnouncedView.layoutManager = LinearLayoutManager(requireContext())
 
     // Update the dividend list.
     val dividendsLiveData: LiveData<Dividends> = stockRoomViewModel.getDividendsLiveData(symbol)
@@ -473,7 +475,7 @@ class DividendFragment : Fragment() {
       if (data != null) {
         dividendReceivedListAdapter.updateDividends(data)
         dividendAnnouncedListAdapter.updateDividends(data)
-        dividendNoteTextView.text = data.stockDBdata.dividendNote
+        binding.dividendNoteTextView.text = data.stockDBdata.dividendNote
       }
     })
 
@@ -524,7 +526,7 @@ class DividendFragment : Fragment() {
       }
     })
 
-    addDividendReceivedButton.setOnClickListener {
+    binding.addDividendReceivedButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
       val inflater = LayoutInflater.from(requireContext())
@@ -619,7 +621,7 @@ class DividendFragment : Fragment() {
           .show()
     }
 
-    textViewAddDividendLayout.setOnClickListener {
+    binding.textViewAddDividendLayout.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
       val inflater = LayoutInflater.from(requireContext())
@@ -661,7 +663,7 @@ class DividendFragment : Fragment() {
           .show()
     }
 
-    addDividendAnnouncedButton.setOnClickListener {
+    binding.addDividendAnnouncedButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
       val inflater = LayoutInflater.from(requireContext())
@@ -749,11 +751,11 @@ class DividendFragment : Fragment() {
           .show()
     }
 
-    updateDividendNoteButton.setOnClickListener {
+    binding.updateDividendNoteButton.setOnClickListener {
       updateDividendNote()
     }
 
-    dividendNoteTextView.setOnClickListener {
+    binding.dividendNoteTextView.setOnClickListener {
       updateDividendNote()
     }
   }
@@ -780,7 +782,7 @@ class DividendFragment : Fragment() {
     val textInputEditNoteView =
       dialogView.findViewById<TextView>(R.id.textInputEditNote)
 
-    val note = dividendNoteTextView.text
+    val note = binding.dividendNoteTextView.text
     textInputEditNoteView.text = note
 
     builder.setView(dialogView)
@@ -792,7 +794,7 @@ class DividendFragment : Fragment() {
           val noteText = (textInputEditNoteView.text).toString()
 
           if (noteText != note) {
-            dividendNoteTextView.text = noteText
+            binding.dividendNoteTextView.text = noteText
             stockRoomViewModel.updateDividendNote(symbol, noteText)
 
             if (noteText.isEmpty()) {
@@ -821,7 +823,7 @@ class DividendFragment : Fragment() {
 
   private fun updateAssetChange(data: StockAssetsLiveData) {
 
-    textViewSetAnnualDividend.text =
+    binding.textViewSetAnnualDividend.text =
       if (data.stockDBdata != null && data.stockDBdata?.annualDividendRate!! >= 0.0) {
         DecimalFormat(DecimalFormat2To4Digits).format(data.stockDBdata?.annualDividendRate)
       } else {
@@ -831,13 +833,13 @@ class DividendFragment : Fragment() {
     val isOnlineDividendData =
       data.onlineMarketData != null && data.onlineMarketData?.annualDividendRate!! > 0.0
 
-    textViewDividendOnlineData.text = if (isOnlineDividendData) {
+    binding.textViewDividendOnlineData.text = if (isOnlineDividendData) {
       getDividendOnlineData(data)
     } else {
       getString(R.string.no_dividend_data)
     }
 
-    textViewSetAnnualDividendPercent.text =
+    binding.textViewSetAnnualDividendPercent.text =
       if (annualDividend > 0.0 && data.onlineMarketData != null && data.onlineMarketData?.marketPrice!! > 0.0) {
         "(${
           DecimalFormat(DecimalFormat2To4Digits).format(
@@ -848,7 +850,7 @@ class DividendFragment : Fragment() {
         ""
       }
 
-    textViewDividendPayout.text = if (annualDividend >= 0.0 || isOnlineDividendData) {
+    binding.textViewDividendPayout.text = if (annualDividend >= 0.0 || isOnlineDividendData) {
       getDividendPayout(annualDividend, data)
     } else {
       ""

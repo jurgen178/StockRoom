@@ -72,6 +72,7 @@ import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.FragmentStockdataBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
@@ -84,51 +85,6 @@ import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
 import com.thecloudsite.stockroom.utils.openNewTabWindow
-import kotlinx.android.synthetic.main.fragment_stockdata.addAssetsButton
-import kotlinx.android.synthetic.main.fragment_stockdata.addEventsButton
-import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputEditText
-import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveInputLayout
-import kotlinx.android.synthetic.main.fragment_stockdata.alertAboveNoteInputEditText
-import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowInputEditText
-import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowInputLayout
-import kotlinx.android.synthetic.main.fragment_stockdata.alertBelowNoteInputEditText
-import kotlinx.android.synthetic.main.fragment_stockdata.assetsView
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonFiveDays
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonFiveYears
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonMax
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonOneDay
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonOneMonth
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonOneYear
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonThreeMonth
-import kotlinx.android.synthetic.main.fragment_stockdata.buttonYTD
-import kotlinx.android.synthetic.main.fragment_stockdata.candleStickChart
-import kotlinx.android.synthetic.main.fragment_stockdata.eventsView
-import kotlinx.android.synthetic.main.fragment_stockdata.imageButtonIconCandle
-import kotlinx.android.synthetic.main.fragment_stockdata.imageButtonIconLine
-import kotlinx.android.synthetic.main.fragment_stockdata.lineChart
-import kotlinx.android.synthetic.main.fragment_stockdata.stockgroupLayout
-import kotlinx.android.synthetic.main.fragment_stockdata.new_stock_price
-import kotlinx.android.synthetic.main.fragment_stockdata.new_total_asset
-import kotlinx.android.synthetic.main.fragment_stockdata.noteTextView
-import kotlinx.android.synthetic.main.fragment_stockdata.onlineDataView
-import kotlinx.android.synthetic.main.fragment_stockdata.picker_knob
-import kotlinx.android.synthetic.main.fragment_stockdata.price_preview_divider
-import kotlinx.android.synthetic.main.fragment_stockdata.price_preview_layout
-import kotlinx.android.synthetic.main.fragment_stockdata.price_preview_textview
-import kotlinx.android.synthetic.main.fragment_stockdata.removeAssetButton
-import kotlinx.android.synthetic.main.fragment_stockdata.splitAssetsButton
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewAssetChange
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewChange
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroup
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewGroupColor
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewMarketPrice
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewMarketPriceDelayed
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewName
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewPortfolio
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewPurchasePrice
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewRange
-import kotlinx.android.synthetic.main.fragment_stockdata.textViewSymbol
-import kotlinx.android.synthetic.main.fragment_stockdata.updateNoteButton
 import okhttp3.internal.toHexString
 import java.lang.Double.min
 import java.text.DecimalFormat
@@ -213,6 +169,12 @@ class CustomTimePicker(
 }
 
 class StockDataFragment : Fragment() {
+
+  private var _binding: FragmentStockdataBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
 
   private lateinit var stockChartDataViewModel: StockChartDataViewModel
   private lateinit var stockRoomViewModel: StockRoomViewModel
@@ -633,7 +595,13 @@ class StockDataFragment : Fragment() {
     standardPortfolio = getString(R.string.standard_portfolio)
 
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_stockdata, container, false)
+    _binding = FragmentStockdataBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onViewCreated(
@@ -643,14 +611,14 @@ class StockDataFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val onlineDataAdapter = OnlineDataAdapter(requireContext())
-    onlineDataView.adapter = onlineDataAdapter
+    binding.onlineDataView.adapter = onlineDataAdapter
 
     // Set column number depending on screen width.
     val scale = 299
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    onlineDataView.layoutManager = GridLayoutManager(
+    binding.onlineDataView.layoutManager = GridLayoutManager(
         requireContext(),
         Integer.min(Integer.max(spanCount, 1), 10)
     )
@@ -721,11 +689,11 @@ class StockDataFragment : Fragment() {
       }
     })
 
-    textViewSymbol.text =
+    binding.textViewSymbol.text =
       SpannableStringBuilder().underline { color(Color.BLUE) { append(symbol) } }
 
     // Setup community pages menu
-    textViewSymbol.setOnClickListener { viewSymbol ->
+    binding.textViewSymbol.setOnClickListener { viewSymbol ->
       val popupMenu = PopupMenu(requireContext(), viewSymbol)
 
       data class LinkListEntry
@@ -872,8 +840,8 @@ class StockDataFragment : Fragment() {
       { symbol: String?, asset: Asset? -> assetItemDeleteClicked(symbol, asset) }
     val assetAdapter =
       AssetListAdapter(requireContext(), assetClickListenerUpdate, assetClickListenerDelete)
-    assetsView.adapter = assetAdapter
-    assetsView.layoutManager = LinearLayoutManager(requireContext())
+    binding.assetsView.adapter = assetAdapter
+    binding.assetsView.layoutManager = LinearLayoutManager(requireContext())
 
     // Events
     val eventClickListenerUpdate =
@@ -882,17 +850,17 @@ class StockDataFragment : Fragment() {
       { event: Event -> eventItemDeleteClicked(event) }
     val eventAdapter =
       EventListAdapter(requireContext(), eventClickListenerUpdate, eventClickListenerDelete)
-    eventsView.adapter = eventAdapter
-    eventsView.layoutManager = LinearLayoutManager(requireContext())
+    binding.eventsView.adapter = eventAdapter
+    binding.eventsView.layoutManager = LinearLayoutManager(requireContext())
 
     val stockDBLiveData: LiveData<StockDBdata> = stockRoomViewModel.getStockDBLiveData(symbol)
     stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
         stockDBdata = data
-        noteTextView.text = stockDBdata.note
+        binding.noteTextView.text = stockDBdata.note
 
         // Portfolio
-        textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
+        binding.textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
           standardPortfolio
         } else {
           stockDBdata.portfolio
@@ -905,9 +873,9 @@ class StockDataFragment : Fragment() {
       if (color == 0) {
         color = context?.getColor(R.color.backgroundListColor)!!
       }
-      setBackgroundColor(textViewGroupColor, color)
+      setBackgroundColor(binding.textViewGroupColor, color)
 
-      textViewGroup.text = if (stockDBdata.groupColor == 0) {
+      binding.textViewGroup.text = if (stockDBdata.groupColor == 0) {
         getString(R.string.standard_group)
       } else {
         val group = stockRoomViewModel.getGroupSync(stockDBdata.groupColor)
@@ -926,23 +894,23 @@ class StockDataFragment : Fragment() {
         alertBelow = 0.0
       }
 
-      alertAboveInputEditText.setText(
+      binding.alertAboveInputEditText.setText(
           if (alertAbove > 0.0) {
             DecimalFormat(DecimalFormat2To4Digits).format(alertAbove)
           } else {
             ""
           }
       )
-      alertAboveNoteInputEditText.setText(stockDBdata.alertAboveNote)
+      binding.alertAboveNoteInputEditText.setText(stockDBdata.alertAboveNote)
 
-      alertBelowInputEditText.setText(
+      binding.alertBelowInputEditText.setText(
           if (alertBelow > 0.0) {
             DecimalFormat(DecimalFormat2To4Digits).format(alertBelow)
           } else {
             ""
           }
       )
-      alertBelowNoteInputEditText.setText(stockDBdata.alertBelowNote)
+      binding.alertBelowNoteInputEditText.setText(stockDBdata.alertBelowNote)
     })
 
     // Use MediatorLiveView to combine the assets, stockDB and online data changes.
@@ -960,7 +928,7 @@ class StockDataFragment : Fragment() {
         assetAdapter.updateAssets(data.assets)
 
         // Reset when assets are changed.
-        picker_knob.setValue(0.0, 100.0, 0.0)
+        binding.pickerKnob.setValue(0.0, 100.0, 0.0)
 
 //        val (totalQuantity, totalPrice) = getAssets(data.assets)
 //
@@ -1016,7 +984,7 @@ class StockDataFragment : Fragment() {
     })
 
     // Setup portfolio menu
-    textViewPortfolio.setOnClickListener { viewPortfolio ->
+    binding.textViewPortfolio.setOnClickListener { viewPortfolio ->
       val popupMenu = PopupMenu(requireContext(), viewPortfolio)
 
       var menuIndex: Int = Menu.FIRST
@@ -1119,7 +1087,7 @@ class StockDataFragment : Fragment() {
                   return@setPositiveButton
                 }
 
-                textViewPortfolio.text = portfolioText
+                binding.textViewPortfolio.text = portfolioText
 
 //                val portfolios = SharedRepository.portfolios.value
 //                if (portfolios?.find {
@@ -1154,7 +1122,7 @@ class StockDataFragment : Fragment() {
         } else {
           var portfolio = menuitem.title.trim()
               .toString()
-          textViewPortfolio.text = portfolio
+          binding.textViewPortfolio.text = portfolio
 
           if (portfolio == standardPortfolio) {
             portfolio = ""
@@ -1167,7 +1135,7 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    stockgroupLayout.setOnClickListener { viewLayout ->
+    binding.stockgroupLayout.setOnClickListener { viewLayout ->
       val popupMenu = PopupMenu(requireContext(), viewLayout)
 
       var menuIndex: Int = Menu.FIRST
@@ -1196,8 +1164,8 @@ class StockDataFragment : Fragment() {
         }
 
         // Set the preview color in the activity.
-        setBackgroundColor(textViewGroupColor, clr)
-        textViewGroup.text = name
+        setBackgroundColor(binding.textViewGroupColor, clr)
+        binding.textViewGroup.text = name
 
         // Store the selection.
         stockRoomViewModel.setGroup(symbol, name, clrDB)
@@ -1205,39 +1173,39 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    buttonOneDay.setOnClickListener {
+    binding.buttonOneDay.setOnClickListener {
       updateStockViewRange(StockViewRange.OneDay)
     }
-    buttonFiveDays.setOnClickListener {
+    binding.buttonFiveDays.setOnClickListener {
       updateStockViewRange(StockViewRange.FiveDays)
     }
-    buttonOneMonth.setOnClickListener {
+    binding.buttonOneMonth.setOnClickListener {
       updateStockViewRange(StockViewRange.OneMonth)
     }
-    buttonThreeMonth.setOnClickListener {
+    binding.buttonThreeMonth.setOnClickListener {
       updateStockViewRange(StockViewRange.ThreeMonth)
     }
-    buttonYTD.setOnClickListener {
+    binding.buttonYTD.setOnClickListener {
       updateStockViewRange(StockViewRange.YTD)
     }
-    buttonOneYear.setOnClickListener {
+    binding.buttonOneYear.setOnClickListener {
       updateStockViewRange(StockViewRange.OneYear)
     }
-    buttonFiveYears.setOnClickListener {
+    binding.buttonFiveYears.setOnClickListener {
       updateStockViewRange(StockViewRange.FiveYears)
     }
-    buttonMax.setOnClickListener {
+    binding.buttonMax.setOnClickListener {
       updateStockViewRange(StockViewRange.Max)
     }
 
-    imageButtonIconLine.setOnClickListener {
+    binding.imageButtonIconLine.setOnClickListener {
       updateStockViewMode(StockViewMode.Candle)
     }
-    imageButtonIconCandle.setOnClickListener {
+    binding.imageButtonIconCandle.setOnClickListener {
       updateStockViewMode(StockViewMode.Line)
     }
 
-    splitAssetsButton.setOnClickListener {
+    binding.splitAssetsButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
       val (totalQuantity, totalPrice) = getAssets(assets?.assets)
 
@@ -1351,7 +1319,7 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    addAssetsButton.setOnClickListener {
+    binding.addAssetsButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
       val inflater = LayoutInflater.from(requireContext())
@@ -1470,7 +1438,7 @@ class StockDataFragment : Fragment() {
           .show()
     }
 
-    removeAssetButton.setOnClickListener {
+    binding.removeAssetButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
       val (totalQuantity, totalPrice) = getAssets(assets?.assets)
 
@@ -1698,7 +1666,7 @@ class StockDataFragment : Fragment() {
     }
 */
 
-    addEventsButton.setOnClickListener {
+    binding.addEventsButton.setOnClickListener {
       val builder = AlertDialog.Builder(requireContext())
       // Get the layout inflater
       val inflater = LayoutInflater.from(requireContext())
@@ -1759,17 +1727,17 @@ class StockDataFragment : Fragment() {
           .show()
     }
 
-    updateNoteButton.setOnClickListener {
+    binding.updateNoteButton.setOnClickListener {
       updateNote()
     }
-    noteTextView.setOnClickListener {
+    binding.noteTextView.setOnClickListener {
       updateNote()
     }
 
-    alertAboveInputEditText.addTextChangedListener(
+    binding.alertAboveInputEditText.addTextChangedListener(
         object : TextWatcher {
           override fun afterTextChanged(s: Editable?) {
-            alertAboveInputLayout.error = ""
+            binding.alertAboveInputLayout.error = ""
             var valid: Boolean = true
             if (s != null) {
               try {
@@ -1777,19 +1745,19 @@ class StockDataFragment : Fragment() {
                 alertAbove = numberFormat.parse(s.toString())
                     .toDouble()
               } catch (e: NumberFormatException) {
-                alertAboveInputLayout.error = getString(R.string.invalid_number)
+                binding.alertAboveInputLayout.error = getString(R.string.invalid_number)
                 valid = false
               } catch (e: Exception) {
                 valid = false
               }
 
               if (valid && alertAbove == 0.0) {
-                alertAboveInputLayout.error = getString(R.string.invalid_number)
+                binding.alertAboveInputLayout.error = getString(R.string.invalid_number)
                 valid = false
               }
               if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
                 if (valid && alertBelow >= alertAbove) {
-                  alertAboveInputLayout.error = getString(R.string.alert_below_error)
+                  binding.alertAboveInputLayout.error = getString(R.string.alert_below_error)
                   valid = false
                 }
               }
@@ -1817,10 +1785,10 @@ class StockDataFragment : Fragment() {
           }
         })
 
-    alertBelowInputEditText.addTextChangedListener(
+    binding.alertBelowInputEditText.addTextChangedListener(
         object : TextWatcher {
           override fun afterTextChanged(s: Editable?) {
-            alertBelowInputLayout.error = ""
+            binding.alertBelowInputLayout.error = ""
             var valid: Boolean = true
             if (s != null) {
               try {
@@ -1828,7 +1796,7 @@ class StockDataFragment : Fragment() {
                 alertBelow = numberFormat.parse(s.toString())
                     .toDouble()
               } catch (e: NumberFormatException) {
-                alertBelowInputLayout.error = getString(R.string.invalid_number)
+                binding.alertBelowInputLayout.error = getString(R.string.invalid_number)
                 valid = false
               } catch (e: Exception) {
                 valid = false
@@ -1836,12 +1804,12 @@ class StockDataFragment : Fragment() {
             }
 
             if (valid && alertBelow == 0.0) {
-              alertBelowInputLayout.error = getString(R.string.invalid_number)
+              binding.alertBelowInputLayout.error = getString(R.string.invalid_number)
               valid = false
             }
             if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
               if (valid && alertBelow >= alertAbove) {
-                alertBelowInputLayout.error = getString(R.string.alert_above_error)
+                binding.alertBelowInputLayout.error = getString(R.string.alert_above_error)
                 valid = false
               }
             }
@@ -1915,7 +1883,7 @@ class StockDataFragment : Fragment() {
     val textInputEditNoteView =
       dialogView.findViewById<TextView>(R.id.textInputEditNote)
 
-    val note = noteTextView.text
+    val note = binding.noteTextView.text
     textInputEditNoteView.text = note
 
     builder.setView(dialogView)
@@ -1927,7 +1895,7 @@ class StockDataFragment : Fragment() {
           val noteText = (textInputEditNoteView.text).toString()
 
           if (noteText != note) {
-            noteTextView.text = noteText
+            binding.noteTextView.text = noteText
             stockRoomViewModel.updateNote(symbol, noteText)
 
             if (noteText.isEmpty()) {
@@ -1982,12 +1950,12 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    textViewName.text = name
-    textViewMarketPrice.text = marketPrice
-    textViewChange.text = marketChange
+    binding.textViewName.text = name
+    binding.textViewMarketPrice.text = marketPrice
+    binding.textViewChange.text = marketChange
 
     val quoteSourceName = onlineMarketData?.quoteSourceName ?: ""
-    textViewMarketPriceDelayed.text = when (quoteSourceName) {
+    binding.textViewMarketPriceDelayed.text = when (quoteSourceName) {
       "Delayed Quote" -> {
         getString(R.string.delayed_quote)
       }
@@ -2010,15 +1978,15 @@ class StockDataFragment : Fragment() {
 
       if (totalPrice > 0.0 && marketPrice > 0.0) {
 
-        price_preview_divider.visibility = View.VISIBLE
-        price_preview_textview.visibility = View.VISIBLE
-        price_preview_layout.visibility = View.VISIBLE
-        textViewPurchasePrice.visibility = View.VISIBLE
-        textViewAssetChange.visibility = View.VISIBLE
+        binding.pricePreviewDivider.visibility = View.VISIBLE
+        binding.pricePreviewTextview.visibility = View.VISIBLE
+        binding.pricePreviewLayout.visibility = View.VISIBLE
+        binding.textViewPurchasePrice.visibility = View.VISIBLE
+        binding.textViewAssetChange.visibility = View.VISIBLE
 
         // Update the new price and asset.
-        picker_knob.onValueChangeListener { value ->
-          new_stock_price.text = if (marketPrice > 5.0) {
+        binding.pickerKnob.onValueChangeListener { value ->
+          binding.newStockPrice.text = if (marketPrice > 5.0) {
             DecimalFormat(DecimalFormat2Digits).format(value)
           } else {
             DecimalFormat(DecimalFormat2To4Digits).format(value)
@@ -2039,10 +2007,10 @@ class StockDataFragment : Fragment() {
                 append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * value))
               }
 
-          new_total_asset.text = asset
+          binding.newTotalAsset.text = asset
         }
 
-        textViewPurchasePrice.text = getString(
+        binding.textViewPurchasePrice.text = getString(
             R.string.bought_for,
             DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity),
             DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity),
@@ -2064,17 +2032,17 @@ class StockDataFragment : Fragment() {
               append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
             }
 
-        textViewAssetChange.text = asset
+        binding.textViewAssetChange.text = asset
 
         // min, max, start
-        picker_knob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
+        binding.pickerKnob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
       } else {
-        price_preview_divider.visibility = View.GONE
-        price_preview_textview.visibility = View.GONE
-        price_preview_layout.visibility = View.GONE
+        binding.pricePreviewDivider.visibility = View.GONE
+        binding.pricePreviewTextview.visibility = View.GONE
+        binding.pricePreviewLayout.visibility = View.GONE
 
-        textViewPurchasePrice.visibility = View.GONE
-        textViewAssetChange.visibility = View.GONE
+        binding.textViewPurchasePrice.visibility = View.GONE
+        binding.textViewAssetChange.visibility = View.GONE
       }
     }
   }
@@ -2084,14 +2052,14 @@ class StockDataFragment : Fragment() {
     if (!(alertAbove > 0.0 && alertBelow > 0.0 && alertBelow >= alertAbove)) {
 
       // Add () to avoid cast exception.
-      val alertAboveNote = (alertAboveNoteInputEditText.text).toString()
+      val alertAboveNote = (binding.alertAboveNoteInputEditText.text).toString()
 
       if (stockDBdata.alertAbove != alertAbove || stockDBdata.alertAboveNote != alertAboveNote) {
         stockRoomViewModel.updateAlertAboveSync(symbol, alertAbove, alertAboveNote)
       }
 
       // Add () to avoid cast exception.
-      val alertBelowNote = (alertBelowNoteInputEditText.text).toString()
+      val alertBelowNote = (binding.alertBelowNoteInputEditText.text).toString()
 
       if (stockDBdata.alertBelow != alertBelow || stockDBdata.alertBelowNote != alertBelowNote) {
         stockRoomViewModel.updateAlertBelowSync(symbol, alertBelow, alertBelowNote)
@@ -2172,14 +2140,14 @@ class StockDataFragment : Fragment() {
 
   private val rangeButtons: List<Button> by lazy {
     listOf<Button>(
-        buttonOneDay,
-        buttonFiveDays,
-        buttonOneMonth,
-        buttonThreeMonth,
-        buttonYTD,
-        buttonOneYear,
-        buttonFiveYears,
-        buttonMax
+        binding.buttonOneDay,
+        binding.buttonFiveDays,
+        binding.buttonOneMonth,
+        binding.buttonThreeMonth,
+        binding.buttonYTD,
+        binding.buttonOneYear,
+        binding.buttonFiveYears,
+        binding.buttonMax
     )
   }
 
@@ -2223,51 +2191,51 @@ class StockDataFragment : Fragment() {
 
     when (stockViewRange) {
       StockViewRange.OneDay -> {
-        buttonOneDay.isEnabled = false
-        textViewRange.text = getString(R.string.one_day_range)
+        binding.buttonOneDay.isEnabled = false
+        binding.textViewRange.text = getString(R.string.one_day_range)
       }
       StockViewRange.FiveDays -> {
-        buttonFiveDays.isEnabled = false
-        textViewRange.text = getString(R.string.five_days_range)
+        binding.buttonFiveDays.isEnabled = false
+        binding.textViewRange.text = getString(R.string.five_days_range)
       }
       StockViewRange.OneMonth -> {
-        buttonOneMonth.isEnabled = false
-        textViewRange.text = getString(R.string.one_month_range)
+        binding.buttonOneMonth.isEnabled = false
+        binding.textViewRange.text = getString(R.string.one_month_range)
       }
       StockViewRange.ThreeMonth -> {
-        buttonThreeMonth.isEnabled = false
-        textViewRange.text = getString(R.string.three_month_range)
+        binding.buttonThreeMonth.isEnabled = false
+        binding.textViewRange.text = getString(R.string.three_month_range)
       }
       StockViewRange.YTD -> {
-        buttonYTD.isEnabled = false
-        textViewRange.text = getString(R.string.ytd_range)
+        binding.buttonYTD.isEnabled = false
+        binding.textViewRange.text = getString(R.string.ytd_range)
       }
       StockViewRange.OneYear -> {
-        buttonOneYear.isEnabled = false
-        textViewRange.text = getString(R.string.one_year_range)
+        binding.buttonOneYear.isEnabled = false
+        binding.textViewRange.text = getString(R.string.one_year_range)
       }
       StockViewRange.FiveYears -> {
-        buttonFiveYears.isEnabled = false
-        textViewRange.text = getString(R.string.five_year_range)
+        binding.buttonFiveYears.isEnabled = false
+        binding.textViewRange.text = getString(R.string.five_year_range)
       }
       StockViewRange.Max -> {
-        buttonMax.isEnabled = false
-        textViewRange.text = getString(R.string.max_range)
+        binding.buttonMax.isEnabled = false
+        binding.textViewRange.text = getString(R.string.max_range)
       }
     }
 
     when (stockViewMode) {
       StockViewMode.Line -> {
-        lineChart.visibility = View.VISIBLE
-        candleStickChart.visibility = View.GONE
-        imageButtonIconLine.visibility = View.VISIBLE
-        imageButtonIconCandle.visibility = View.GONE
+        binding.lineChart.visibility = View.VISIBLE
+        binding.candleStickChart.visibility = View.GONE
+        binding.imageButtonIconLine.visibility = View.VISIBLE
+        binding.imageButtonIconCandle.visibility = View.GONE
       }
       StockViewMode.Candle -> {
-        lineChart.visibility = View.GONE
-        candleStickChart.visibility = View.VISIBLE
-        imageButtonIconLine.visibility = View.GONE
-        imageButtonIconCandle.visibility = View.VISIBLE
+        binding.lineChart.visibility = View.GONE
+        binding.candleStickChart.visibility = View.VISIBLE
+        binding.imageButtonIconLine.visibility = View.GONE
+        binding.imageButtonIconCandle.visibility = View.VISIBLE
       }
     }
   }

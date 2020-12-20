@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.databinding.TimelineAssetItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
@@ -43,10 +44,13 @@ class AssetTimelineAdapter(
   private val clickListenerCardItem: (AssetTimelineElement) -> Unit
 ) : RecyclerView.Adapter<AssetTimelineAdapter.ViewHolder>() {
 
+  private var _binding: TimelineAssetItemBinding? = null
+  private val binding get() = _binding!!
+
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var timelineElementList: List<AssetTimelineElement> = listOf()
 
-  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+  class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     fun bind(
       timelineElement: AssetTimelineElement,
       clickListener: (AssetTimelineElement) -> Unit
@@ -62,8 +66,9 @@ class AssetTimelineAdapter(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val itemView = inflater.inflate(R.layout.timeline_asset_item, parent, false)
-    return ViewHolder(itemView)
+
+    _binding = TimelineAssetItemBinding.inflate(inflater, parent, false)
+    return ViewHolder(binding.root)
   }
 
   override fun onBindViewHolder(

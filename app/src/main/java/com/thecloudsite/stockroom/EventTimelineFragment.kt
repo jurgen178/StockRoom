@@ -25,6 +25,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.database.Event
+import com.thecloudsite.stockroom.databinding.FragmentTimelineBinding
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
@@ -40,6 +41,12 @@ import java.time.format.FormatStyle.FULL
 
 class EventTimelineFragment : Fragment() {
 
+  private var _binding: FragmentTimelineBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
+
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   companion object {
@@ -50,9 +57,16 @@ class EventTimelineFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
 
-    return inflater.inflate(R.layout.fragment_timeline, container, false)
+    // Inflate the layout for this fragment
+    _binding = FragmentTimelineBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onViewCreated(

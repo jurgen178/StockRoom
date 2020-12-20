@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.thecloudsite.stockroom.databinding.FragmentTreemapBinding
 import com.thecloudsite.stockroom.treemap.AndroidMapItem
 import com.thecloudsite.stockroom.treemap.TreeModel
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
@@ -36,6 +37,12 @@ import okhttp3.internal.toHexString
 import java.text.DecimalFormat
 
 class StockRoomTreemapFragment : Fragment() {
+
+  private var _binding: FragmentTreemapBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
@@ -52,9 +59,16 @@ class StockRoomTreemapFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
+
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_treemap, container, false)
+    _binding = FragmentTreemapBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onViewCreated(
