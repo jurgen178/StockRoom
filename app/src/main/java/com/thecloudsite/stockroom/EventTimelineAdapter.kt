@@ -18,11 +18,11 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Event
+import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
+import com.thecloudsite.stockroom.databinding.TimelineEventItemBinding
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -38,20 +38,22 @@ class EventTimelineAdapter(
   private val context: Context
 ) : RecyclerView.Adapter<EventTimelineAdapter.ViewHolder>() {
 
+  private lateinit var binding: TimelineEventItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var timelineElementList: List<EventTimelineElement> = listOf()
 
-  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val header: TextView = view.findViewById<View>(R.id.timeline_header) as TextView
-    val details: TextView = view.findViewById<View>(R.id.timeline_details) as TextView
+  class ViewHolder(
+    val binding: TimelineEventItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val itemView = inflater.inflate(R.layout.timeline_event_item, parent, false)
-    return ViewHolder(itemView)
+
+    binding = TimelineEventItemBinding.inflate(inflater, parent, false)
+    return ViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -60,7 +62,7 @@ class EventTimelineAdapter(
   ) {
     val timelineElement = timelineElementList[position]
 
-    holder.header.text = timelineElement.symbol
+    holder.binding.timelineHeader.text = timelineElement.symbol
 
     var events = ""
     var skipFirstline = true
@@ -86,7 +88,7 @@ class EventTimelineAdapter(
           )
         }
 
-    holder.details.text = events
+    holder.binding.timelineDetails.text = events
   }
 
   fun updateData(timeline: List<EventTimelineElement>) {

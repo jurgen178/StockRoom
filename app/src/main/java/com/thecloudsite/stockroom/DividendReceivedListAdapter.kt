@@ -22,18 +22,14 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.databinding.DividendReceivedViewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import com.thecloudsite.stockroom.utils.getAssets
-import kotlinx.android.synthetic.main.dividend_received_view_item.view.dividendReceivedLinearLayout
-import kotlinx.android.synthetic.main.dividend_received_view_item.view.textViewDividendReceivedDelete
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -48,6 +44,7 @@ class DividendReceivedListAdapter internal constructor(
   private val clickListenerDelete: (String?, Dividend?, List<Dividend>?) -> Unit
 ) : RecyclerView.Adapter<DividendReceivedListAdapter.DividendReceivedViewHolder>() {
 
+  private lateinit var binding: DividendReceivedViewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var dividendList = mutableListOf<Dividend>()
 
@@ -55,12 +52,14 @@ class DividendReceivedListAdapter internal constructor(
   private var dividends: Dividends? = null
   private var marketValue: Double = 0.0
 
-  class DividendReceivedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class DividendReceivedViewHolder(
+    val binding: DividendReceivedViewItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       dividend: Dividend,
       clickListenerUpdate: (Dividend) -> Unit
     ) {
-      itemView.dividendReceivedLinearLayout.setOnClickListener { clickListenerUpdate(dividend) }
+      binding.dividendReceivedLinearLayout.setOnClickListener { clickListenerUpdate(dividend) }
     }
 
     fun bindDelete(
@@ -69,37 +68,20 @@ class DividendReceivedListAdapter internal constructor(
       dividendList: List<Dividend>?,
       clickListenerDelete: (String?, Dividend?, List<Dividend>?) -> Unit
     ) {
-      itemView.textViewDividendReceivedDelete.setOnClickListener {
+      binding.textViewDividendReceivedDelete.setOnClickListener {
         clickListenerDelete(
             symbol, dividend, dividendList
         )
       }
     }
-
-    val textViewDividendReceivedAmount: TextView =
-      itemView.findViewById(R.id.textViewDividendReceivedAmount)
-    val textViewDividendReceivedDate: TextView =
-      itemView.findViewById(R.id.textViewDividendReceivedDate)
-    val textViewDividendReceivedCycle: TextView =
-      itemView.findViewById(R.id.textViewDividendReceivedCycle)
-    val textViewDividendReceivedNote: TextView =
-      itemView.findViewById(R.id.textViewDividendReceivedNote)
-    val textViewDividendReceivedDelete: TextView =
-      itemView.findViewById(R.id.textViewDividendReceivedDelete)
-    val dividendReceivedSummaryView: LinearLayout =
-      itemView.findViewById(R.id.dividendReceivedSummaryView)
-    val dividendReceivedConstraintLayout: ConstraintLayout =
-      itemView.findViewById(R.id.dividendReceivedConstraintLayout)
-    val dividendReceivedLinearLayout: LinearLayout =
-      itemView.findViewById(R.id.dividendReceivedLinearLayout)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): DividendReceivedViewHolder {
-    val itemView = inflater.inflate(R.layout.dividend_received_view_item, parent, false)
-    return DividendReceivedViewHolder(itemView)
+    binding = DividendReceivedViewItemBinding.inflate(inflater, parent, false)
+    return DividendReceivedViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -110,41 +92,41 @@ class DividendReceivedListAdapter internal constructor(
 
     // First entry is headline.
     if (position == 0) {
-      holder.textViewDividendReceivedAmount.text = context.getString(R.string.dividend)
-      holder.textViewDividendReceivedDate.text = context.getString(R.string.dividend_date)
-      holder.textViewDividendReceivedCycle.text = context.getString(R.string.dividend_cycle)
-      holder.textViewDividendReceivedNote.text = context.getString(R.string.note)
-      holder.textViewDividendReceivedDelete.visibility = View.GONE
-      holder.dividendReceivedSummaryView.visibility = View.GONE
-      holder.dividendReceivedConstraintLayout.setBackgroundColor(
+      holder.binding.textViewDividendReceivedAmount.text = context.getString(R.string.dividend)
+      holder.binding.textViewDividendReceivedDate.text = context.getString(R.string.dividend_date)
+      holder.binding.textViewDividendReceivedCycle.text = context.getString(R.string.dividend_cycle)
+      holder.binding.textViewDividendReceivedNote.text = context.getString(R.string.note)
+      holder.binding.textViewDividendReceivedDelete.visibility = View.GONE
+      holder.binding.dividendReceivedSummaryView.visibility = View.GONE
+      holder.binding.dividendReceivedConstraintLayout.setBackgroundColor(
           context.getColor(R.color.backgroundListColor)
       )
 
       val background = TypedValue()
-      holder.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
+      holder.binding.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
     } else {
       // Last entry is summary.
       if (position == dividendList.size - 1) {
         // handler for delete all
         holder.bindDelete(current.symbol, null, dividendList, clickListenerDelete)
 
-        holder.textViewDividendReceivedAmount.text = DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
-        holder.textViewDividendReceivedDate.text = ""
-        holder.textViewDividendReceivedCycle.text = ""
-        holder.textViewDividendReceivedNote.text = ""
+        holder.binding.textViewDividendReceivedAmount.text = DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
+        holder.binding.textViewDividendReceivedDate.text = ""
+        holder.binding.textViewDividendReceivedCycle.text = ""
+        holder.binding.textViewDividendReceivedNote.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
         if (dividendList.size <= 2) {
-          holder.textViewDividendReceivedDelete.visibility = View.GONE
+          holder.binding.textViewDividendReceivedDelete.visibility = View.GONE
         } else {
-          holder.textViewDividendReceivedDelete.visibility = View.VISIBLE
+          holder.binding.textViewDividendReceivedDelete.visibility = View.VISIBLE
         }
 
-        holder.dividendReceivedSummaryView.visibility = View.VISIBLE
-        holder.dividendReceivedConstraintLayout.setBackgroundColor(Color.YELLOW)
+        holder.binding.dividendReceivedSummaryView.visibility = View.VISIBLE
+        holder.binding.dividendReceivedConstraintLayout.setBackgroundColor(Color.YELLOW)
 
         val background = TypedValue()
-        holder.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
+        holder.binding.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
       } else {
         holder.bindUpdate(current, clickListenerUpdate)
         holder.bindDelete(null, current, null, clickListenerDelete)
@@ -164,23 +146,23 @@ class DividendReceivedListAdapter internal constructor(
           } else {
             ""
           }
-        holder.textViewDividendReceivedAmount.text =
+        holder.binding.textViewDividendReceivedAmount.text =
           DecimalFormat(DecimalFormat2To4Digits).format(current.amount) + dividendYield
 
         val datetime: LocalDateTime =
           LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
-        holder.textViewDividendReceivedDate.text =
+        holder.binding.textViewDividendReceivedDate.text =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        holder.textViewDividendReceivedCycle.text = dividendCycleStr(current.cycle, context)
-        holder.textViewDividendReceivedNote.text = current.note
+        holder.binding.textViewDividendReceivedCycle.text = dividendCycleStr(current.cycle, context)
+        holder.binding.textViewDividendReceivedNote.text = current.note
 
-        holder.textViewDividendReceivedDelete.visibility = View.VISIBLE
-        holder.dividendReceivedSummaryView.visibility = View.GONE
-        holder.dividendReceivedConstraintLayout.background = null
+        holder.binding.textViewDividendReceivedDelete.visibility = View.VISIBLE
+        holder.binding.dividendReceivedSummaryView.visibility = View.GONE
+        holder.binding.dividendReceivedConstraintLayout.background = null
 
         val background = TypedValue()
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
-        holder.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
+        holder.binding.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
       }
     }
   }

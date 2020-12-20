@@ -39,7 +39,6 @@ class StockRoomSmallListFragment : StockRoomBaseFragment() {
     val adapter = StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
 
     val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
-
     recyclerView.adapter = adapter
 
     // Set column number depending on screen width.

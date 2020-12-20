@@ -22,9 +22,7 @@ import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
 import android.text.style.AbsoluteSizeSpan
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -37,6 +35,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
+import com.thecloudsite.stockroom.databinding.OnlinedataviewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
@@ -60,6 +59,7 @@ class OnlineDataAdapter internal constructor(
   val context: Context
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
+  private lateinit var binding: OnlinedataviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
 
@@ -67,9 +67,9 @@ class OnlineDataAdapter internal constructor(
 
   private var detailViewClickCounter = 0
 
-  class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val itemViewOnlineDataDesc: TextView = itemView.findViewById(R.id.textViewOnlineDataDesc)
-    val itemViewOnlineData: TextView = itemView.findViewById(R.id.textViewOnlineData)
+  class OnlineDataViewHolder(
+    val binding: OnlinedataviewItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
   }
 
   private fun processJsonObject(
@@ -181,9 +181,10 @@ class OnlineDataAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): OnlineDataViewHolder {
-    val itemView = inflater.inflate(R.layout.onlinedataview_item, parent, false)
 
-    itemView.setOnClickListener {
+    binding = OnlinedataviewItemBinding.inflate(inflater, parent, false)
+
+    binding.root.setOnClickListener {
 
       if (isOnline(context)) {
         detailViewClickCounter++
@@ -269,7 +270,7 @@ class OnlineDataAdapter internal constructor(
       }
     }
 
-    return OnlineDataViewHolder(itemView)
+    return OnlineDataViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -278,8 +279,8 @@ class OnlineDataAdapter internal constructor(
   ) {
     val current: OnlineData = data[position]
 
-    holder.itemViewOnlineDataDesc.text = current.desc
-    holder.itemViewOnlineData.text = current.text
+    holder.binding.textViewOnlineData.text = current.text
+    holder.binding.textViewOnlineDataDesc.text = current.desc
   }
 
   // first: abbr

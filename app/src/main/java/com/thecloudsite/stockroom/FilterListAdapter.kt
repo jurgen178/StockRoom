@@ -21,11 +21,9 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.filterview_item.view.filterDelete
-import kotlinx.android.synthetic.main.filterview_item.view.filterTextLayout
+import com.thecloudsite.stockroom.databinding.FilterviewItemBinding
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -35,16 +33,19 @@ class FilterListAdapter internal constructor(
   private val clickListenerDelete: (IFilterType, Int) -> Unit
 ) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>() {
 
+  private lateinit var binding: FilterviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var filterList = mutableListOf<IFilterType>()
 
-  class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class FilterViewHolder(
+    val binding: FilterviewItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       filterType: IFilterType,
       index: Int,
       clickListenerUpdate: (IFilterType, Int) -> Unit
     ) {
-      itemView.filterTextLayout.setOnClickListener { clickListenerUpdate(filterType, index) }
+      binding.filterTextLayout.setOnClickListener { clickListenerUpdate(filterType, index) }
     }
 
     fun bindDelete(
@@ -52,19 +53,17 @@ class FilterListAdapter internal constructor(
       index: Int,
       clickListenerDelete: (IFilterType, Int) -> Unit
     ) {
-      itemView.filterDelete.setOnClickListener { clickListenerDelete(filterType, index) }
+      binding.filterDelete.setOnClickListener { clickListenerDelete(filterType, index) }
     }
-
-    val filterText: TextView = itemView.findViewById(R.id.filterText)
-    val filterDesc: TextView = itemView.findViewById(R.id.filterDesc)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): FilterViewHolder {
-    val itemView = inflater.inflate(R.layout.filterview_item, parent, false)
-    return FilterViewHolder(itemView)
+
+    binding = FilterviewItemBinding.inflate(inflater, parent, false)
+    return FilterViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -83,20 +82,20 @@ class FilterListAdapter internal constructor(
         " "
       }
 
-    holder.filterText.text = SpannableStringBuilder()
+    holder.binding.filterText.text = SpannableStringBuilder()
         .append(current.displayName)
         .append(subType)
         .bold {
           append(current.displayData)
         }
 
-    holder.filterDesc.visibility =
+    holder.binding.filterDesc.visibility =
       if (current.desc.isNotEmpty()) {
         View.VISIBLE
       } else {
         View.GONE
       }
-    holder.filterDesc.text = current.desc
+    holder.binding.filterDesc.text = current.desc
   }
 
   internal fun setFilter(filterList: List<IFilterType>) {

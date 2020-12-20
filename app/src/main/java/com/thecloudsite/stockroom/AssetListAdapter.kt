@@ -29,6 +29,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
@@ -36,8 +37,6 @@ import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import com.thecloudsite.stockroom.utils.obsoleteAssetType
-import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetDelete
-import kotlinx.android.synthetic.main.assetview_item.view.textViewAssetItemsLayout
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -53,17 +52,20 @@ class AssetListAdapter internal constructor(
   private val clickListenerDelete: (String?, Asset?) -> Unit
 ) : RecyclerView.Adapter<AssetListAdapter.AssetViewHolder>() {
 
+  private lateinit var binding: AssetviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var assetList = mutableListOf<Asset>()
   private var assetsCopy = listOf<Asset>()
   private var defaultTextColor: Int? = null
 
-  class AssetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class AssetViewHolder(
+    val binding: AssetviewItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       asset: Asset,
       clickListenerUpdate: (Asset) -> Unit
     ) {
-      itemView.textViewAssetItemsLayout.setOnClickListener { clickListenerUpdate(asset) }
+      binding.textViewAssetItemsLayout.setOnClickListener { clickListenerUpdate(asset) }
     }
 
     fun bindDelete(
@@ -71,28 +73,17 @@ class AssetListAdapter internal constructor(
       asset: Asset?,
       clickListenerDelete: (String?, Asset?) -> Unit
     ) {
-      itemView.textViewAssetDelete.setOnClickListener { clickListenerDelete(symbol, asset) }
+      binding.textViewAssetDelete.setOnClickListener { clickListenerDelete(symbol, asset) }
     }
-
-    val itemViewQuantity: TextView = itemView.findViewById(R.id.textViewAssetQuantity)
-    val itemViewPrice: TextView = itemView.findViewById(R.id.textViewAssetPrice)
-    val itemViewTotal: TextView = itemView.findViewById(R.id.textViewAssetTotal)
-    val itemViewDate: TextView = itemView.findViewById(R.id.textViewAssetDate)
-    val itemViewNote: TextView = itemView.findViewById(R.id.textViewAssetNote)
-    val itemViewDelete: TextView = itemView.findViewById(R.id.textViewAssetDelete)
-    val assetSummaryView: LinearLayout = itemView.findViewById(R.id.assetSummaryView)
-    val assetSummaryTextView: TextView = itemView.findViewById(R.id.assetSummaryTextView)
-    val itemViewLayout: ConstraintLayout = itemView.findViewById(R.id.textViewAssetLayout)
-    val textViewAssetItemsLayout: LinearLayout =
-      itemView.findViewById(R.id.textViewAssetItemsLayout)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): AssetViewHolder {
-    val itemView = inflater.inflate(R.layout.assetview_item, parent, false)
-    return AssetViewHolder(itemView)
+
+    binding = AssetviewItemBinding.inflate(inflater, parent, false)
+    return AssetViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -102,22 +93,24 @@ class AssetListAdapter internal constructor(
     val current: Asset = assetList[position]
 
     if (defaultTextColor == null) {
-      defaultTextColor = holder.itemViewQuantity.currentTextColor
+      defaultTextColor = holder.binding.textViewAssetQuantity.currentTextColor
     }
 
     // First entry is headline.
     if (position == 0) {
-      holder.itemViewQuantity.text = context.getString(R.string.quantity)
-      holder.itemViewPrice.text = context.getString(R.string.price)
-      holder.itemViewTotal.text = context.getString(R.string.value)
-      holder.itemViewDate.text = context.getString(R.string.date)
-      holder.itemViewNote.text = context.getString(R.string.note)
-      holder.itemViewDelete.visibility = View.GONE
-      holder.assetSummaryView.visibility = View.GONE
-      holder.itemViewLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.textViewAssetQuantity.text = context.getString(R.string.quantity)
+      holder.binding.textViewAssetPrice.text = context.getString(R.string.price)
+      holder.binding.textViewAssetTotal.text = context.getString(R.string.value)
+      holder.binding.textViewAssetDate.text = context.getString(R.string.date)
+      holder.binding.textViewAssetNote.text = context.getString(R.string.note)
+      holder.binding.textViewAssetDelete.visibility = View.GONE
+      holder.binding.assetSummaryView.visibility = View.GONE
+      holder.binding.textViewAssetLayout.setBackgroundColor(
+          context.getColor(R.color.backgroundListColor)
+      )
 
       val background = TypedValue()
-      holder.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
+      holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
     } else {
       // Last entry is summary.
       if (position == assetList.size - 1) {
@@ -126,45 +119,46 @@ class AssetListAdapter internal constructor(
 
         val isSum = current.quantity > 0.0 && current.price > 0.0
 
-        holder.itemViewQuantity.text = if (isSum) {
+        holder.binding.textViewAssetQuantity.text = if (isSum) {
           DecimalFormat(DecimalFormat0To4Digits).format(current.quantity)
         } else {
           ""
         }
 
-        holder.itemViewPrice.text = if (isSum) {
+        holder.binding.textViewAssetPrice.text = if (isSum) {
           DecimalFormat(DecimalFormat2To4Digits).format(current.price / current.quantity)
         } else {
           ""
         }
-        holder.itemViewTotal.text = DecimalFormat(DecimalFormat2Digits).format(current.price)
-        holder.itemViewDate.text = ""
-        holder.itemViewNote.text = ""
+        holder.binding.textViewAssetTotal.text =
+          DecimalFormat(DecimalFormat2Digits).format(current.price)
+        holder.binding.textViewAssetDate.text = ""
+        holder.binding.textViewAssetNote.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
         if (assetList.size <= 2) {
-          holder.itemViewDelete.visibility = View.GONE
+          holder.binding.textViewAssetDelete.visibility = View.GONE
         } else {
-          holder.itemViewDelete.visibility = View.VISIBLE
+          holder.binding.textViewAssetDelete.visibility = View.VISIBLE
         }
 
-        holder.assetSummaryView.visibility = View.VISIBLE
+        holder.binding.assetSummaryView.visibility = View.VISIBLE
 
         if (assetsCopy.isNotEmpty()) {
           val (capitalGain, capitalLoss) = getAssetsCapitalGain(assetsCopy)
           val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
-          holder.assetSummaryTextView.text = SpannableStringBuilder()
+          holder.binding.assetSummaryTextView.text = SpannableStringBuilder()
               .append("${context.getString(R.string.summary_capital_gain)} ")
               .append(capitalGainLossText)
               .append("\n${context.getString(R.string.asset_summary_text)}")
         } else {
-          holder.assetSummaryTextView.text = context.getString(R.string.asset_summary_text)
+          holder.binding.assetSummaryTextView.text = context.getString(R.string.asset_summary_text)
         }
 
-        holder.itemViewLayout.setBackgroundColor(Color.YELLOW)
+        holder.binding.textViewAssetLayout.setBackgroundColor(Color.YELLOW)
 
         val background = TypedValue()
-        holder.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
+        holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
       } else {
         // Asset items
         holder.bindUpdate(current, clickListenerUpdate)
@@ -176,25 +170,25 @@ class AssetListAdapter internal constructor(
         // Removed and obsolete entries are colored gray.
         when {
           current.quantity < 0.0 -> {
-            holder.itemViewQuantity.setTextColor(colorNegativeAsset)
-            holder.itemViewPrice.setTextColor(colorNegativeAsset)
-            holder.itemViewTotal.setTextColor(colorNegativeAsset)
-            holder.itemViewDate.setTextColor(colorNegativeAsset)
-            holder.itemViewNote.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetQuantity.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetPrice.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetTotal.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetDate.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetNote.setTextColor(colorNegativeAsset)
           }
           current.type and obsoleteAssetType != 0 -> {
-            holder.itemViewQuantity.setTextColor(colorObsoleteAsset)
-            holder.itemViewPrice.setTextColor(colorObsoleteAsset)
-            holder.itemViewTotal.setTextColor(colorObsoleteAsset)
-            holder.itemViewDate.setTextColor(colorObsoleteAsset)
-            holder.itemViewNote.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetQuantity.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetPrice.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetTotal.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetDate.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetNote.setTextColor(colorObsoleteAsset)
           }
           defaultTextColor != null -> {
-            holder.itemViewQuantity.setTextColor(defaultTextColor!!)
-            holder.itemViewPrice.setTextColor(defaultTextColor!!)
-            holder.itemViewTotal.setTextColor(defaultTextColor!!)
-            holder.itemViewDate.setTextColor(defaultTextColor!!)
-            holder.itemViewNote.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetQuantity.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetPrice.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetTotal.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetDate.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetNote.setTextColor(defaultTextColor!!)
           }
         }
 
@@ -217,31 +211,31 @@ class AssetListAdapter internal constructor(
 
         // Negative values in italic.
         if (current.quantity < 0.0) {
-          holder.itemViewQuantity.text =
+          holder.binding.textViewAssetQuantity.text =
             SpannableStringBuilder().italic { append(itemViewQuantityText) }
-          holder.itemViewPrice.text =
+          holder.binding.textViewAssetPrice.text =
             SpannableStringBuilder().italic { append(itemViewPriceText) }
-          holder.itemViewTotal.text =
+          holder.binding.textViewAssetTotal.text =
             SpannableStringBuilder().italic { append(itemViewTotalText) }
-          holder.itemViewDate.text =
+          holder.binding.textViewAssetDate.text =
             SpannableStringBuilder().italic { append(itemViewDateText) }
-          holder.itemViewNote.text =
+          holder.binding.textViewAssetNote.text =
             SpannableStringBuilder().italic { append(itemViewNoteText) }
         } else {
-          holder.itemViewQuantity.text = itemViewQuantityText
-          holder.itemViewPrice.text = itemViewPriceText
-          holder.itemViewTotal.text = itemViewTotalText
-          holder.itemViewDate.text = itemViewDateText
-          holder.itemViewNote.text = itemViewNoteText
+          holder.binding.textViewAssetQuantity.text = itemViewQuantityText
+          holder.binding.textViewAssetPrice.text = itemViewPriceText
+          holder.binding.textViewAssetTotal.text = itemViewTotalText
+          holder.binding.textViewAssetDate.text = itemViewDateText
+          holder.binding.textViewAssetNote.text = itemViewNoteText
         }
 
-        holder.itemViewDelete.visibility = View.VISIBLE
-        holder.assetSummaryView.visibility = View.GONE
-        holder.itemViewLayout.background = null
+        holder.binding.textViewAssetDelete.visibility = View.VISIBLE
+        holder.binding.assetSummaryView.visibility = View.GONE
+        holder.binding.textViewAssetLayout.background = null
 
         val background = TypedValue()
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
-        holder.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
+        holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
       }
     }
   }

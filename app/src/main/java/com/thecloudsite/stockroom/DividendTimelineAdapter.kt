@@ -18,11 +18,10 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.databinding.TimelineDividendItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import java.text.DecimalFormat
@@ -41,20 +40,22 @@ class DividendTimelineAdapter(
   private val context: Context
 ) : RecyclerView.Adapter<DividendTimelineAdapter.ViewHolder>() {
 
+  private lateinit var binding: TimelineDividendItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var timelineElementList: List<DividendTimelineElement> = listOf()
 
-  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val header: TextView = view.findViewById<View>(R.id.timeline_header) as TextView
-    val details: TextView = view.findViewById<View>(R.id.timeline_details) as TextView
+  class ViewHolder(
+    val binding: TimelineDividendItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val itemView = inflater.inflate(R.layout.timeline_dividend_item, parent, false)
-    return ViewHolder(itemView)
+
+    binding = TimelineDividendItemBinding.inflate(inflater, parent, false)
+    return ViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -63,7 +64,7 @@ class DividendTimelineAdapter(
   ) {
     val timelineElement = timelineElementList[position]
 
-    holder.header.text = timelineElement.symbol
+    holder.binding.timelineHeader.text = timelineElement.symbol
 
     var dividends = ""
     var skipFirstline = true
@@ -90,7 +91,7 @@ class DividendTimelineAdapter(
           )
         }
 
-    holder.details.text = dividends
+    holder.binding.timelineDetails.text = dividends
   }
 
   fun updateData(timeline: List<DividendTimelineElement>) {

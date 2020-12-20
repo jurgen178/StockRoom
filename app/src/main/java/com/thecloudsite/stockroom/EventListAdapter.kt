@@ -21,13 +21,9 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Event
-import kotlinx.android.synthetic.main.eventview_item.view.textViewEventDelete
-import kotlinx.android.synthetic.main.eventview_item.view.textViewEventItemsLayout
+import com.thecloudsite.stockroom.databinding.EventviewItemBinding
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -41,39 +37,36 @@ class EventListAdapter internal constructor(
   private val clickListenerUpdate: (Event) -> Unit,
   private val clickListenerDelete: (Event) -> Unit
 ) : RecyclerView.Adapter<EventListAdapter.EventViewHolder>() {
+
+  private lateinit var binding: EventviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var eventList = mutableListOf<Event>()
 
-  class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class EventViewHolder(
+    val binding: EventviewItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       event: Event,
       clickListenerUpdate: (Event) -> Unit
     ) {
-      itemView.textViewEventItemsLayout.setOnClickListener { clickListenerUpdate(event) }
+      binding.textViewEventItemsLayout.setOnClickListener { clickListenerUpdate(event) }
     }
 
     fun bindDelete(
       event: Event,
       clickListenerDelete: (Event) -> Unit
     ) {
-      itemView.textViewEventDelete.setOnClickListener { clickListenerDelete(event) }
+      binding.textViewEventDelete.setOnClickListener { clickListenerDelete(event) }
     }
-
-    val textViewEventTitle: TextView = itemView.findViewById(R.id.textViewEventTitle)
-    val textViewEventNote: TextView = itemView.findViewById(R.id.textViewEventNote)
-    val textViewEventDateTime: TextView = itemView.findViewById(R.id.textViewEventDateTime)
-    val textViewEventDelete: TextView = itemView.findViewById(R.id.textViewEventDelete)
-    val textViewEventLayout: ConstraintLayout = itemView.findViewById(R.id.textViewEventLayout)
-    val textViewEventItemsLayout: LinearLayout =
-      itemView.findViewById(R.id.textViewEventItemsLayout)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): EventViewHolder {
-    val itemView = inflater.inflate(R.layout.eventview_item, parent, false)
-    return EventViewHolder(itemView)
+
+    binding = EventviewItemBinding.inflate(inflater, parent, false)
+    return EventViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -84,29 +77,29 @@ class EventListAdapter internal constructor(
 
     // First entry is headline.
     if (position == 0) {
-      holder.textViewEventTitle.text = context.getString(R.string.event_title)
-      holder.textViewEventNote.text = context.getString(R.string.event_note)
-      holder.textViewEventDateTime.text = context.getString(R.string.event_datetime)
-      holder.textViewEventDelete.visibility = View.GONE
-      holder.textViewEventLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.textViewEventTitle.text = context.getString(R.string.event_title)
+      holder.binding.textViewEventNote.text = context.getString(R.string.event_note)
+      holder.binding.textViewEventDateTime.text = context.getString(R.string.event_datetime)
+      holder.binding.textViewEventDelete.visibility = View.GONE
+      holder.binding.textViewEventLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
       val background = TypedValue()
-      holder.textViewEventItemsLayout.setBackgroundResource(background.resourceId)
+      holder.binding.textViewEventItemsLayout.setBackgroundResource(background.resourceId)
     } else {
       holder.bindUpdate(current, clickListenerUpdate)
       holder.bindDelete(current, clickListenerDelete)
 
-      holder.textViewEventTitle.text = current.title
-      holder.textViewEventNote.text = current.note
+      holder.binding.textViewEventTitle.text = current.title
+      holder.binding.textViewEventNote.text = current.note
       val datetime: LocalDateTime = LocalDateTime.ofEpochSecond(current.datetime, 0, ZoneOffset.UTC)
-      holder.textViewEventDateTime.text =
+      holder.binding.textViewEventDateTime.text =
         "${datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         }\n${datetime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
         }"
 
       val background = TypedValue()
       context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
-      holder.textViewEventItemsLayout.setBackgroundResource(background.resourceId)
+      holder.binding.textViewEventItemsLayout.setBackgroundResource(background.resourceId)
     }
   }
 

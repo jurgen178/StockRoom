@@ -20,19 +20,16 @@ import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.databinding.StockroomSmalllistItemBinding
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroom_smalllist_item.view.smalllist_item_layout
 
 class StockRoomSmallListAdapter internal constructor(
   val context: Context,
@@ -40,31 +37,28 @@ class StockRoomSmallListAdapter internal constructor(
 ) : ListAdapter<StockItem, StockRoomSmallListAdapter.StockRoomViewHolder>(
     StockRoomDiffCallback()
 ) {
+
+  private lateinit var binding: StockroomSmalllistItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-  class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class StockRoomViewHolder(
+    val binding: StockroomSmalllistItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindSummary(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      itemView.smalllist_item_layout.setOnClickListener { clickListener(stockItem) }
+      binding.smalllistItemLayout.setOnClickListener { clickListener(stockItem) }
     }
-
-    val itemViewSymbol: TextView = itemView.findViewById(R.id.smalllist_textViewSymbol)
-    val itemViewChange: TextView = itemView.findViewById(R.id.smalllist_textViewChange)
-    val itemViewMarketPrice: TextView = itemView.findViewById(R.id.smalllist_textViewMarketPrice)
-    val itemViewMarketPriceLayout: ConstraintLayout =
-      itemView.findViewById(R.id.smalllist_textViewMarketPriceLayout)
-    val itemTextViewGroup: TextView = itemView.findViewById(R.id.smalllist_itemview_group)
-    val itemSummary: ConstraintLayout = itemView.findViewById(R.id.smalllist_item_layout)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroom_smalllist_item, parent, false)
-    return StockRoomViewHolder(itemView)
+
+    binding = StockroomSmalllistItemBinding.inflate(inflater, parent, false)
+    return StockRoomViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -75,22 +69,21 @@ class StockRoomSmallListAdapter internal constructor(
     if (current != null) {
       holder.bindSummary(current, clickListenerSummary)
 
-      holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-
-      holder.itemViewSymbol.text = current.onlineMarketData.symbol
+      holder.binding.smalllistItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.smalllistTextViewSymbol.text = current.onlineMarketData.symbol
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketValues = getMarketValues(current.onlineMarketData)
         val marketPriceStr = "${marketValues.first} ${marketValues.second} ${marketValues.third}"
 
         if (current.onlineMarketData.postMarketData) {
-          holder.itemViewMarketPrice.text = SpannableStringBuilder()
+          holder.binding.smalllistTextViewMarketPrice.text = SpannableStringBuilder()
               .italic { append(marketPriceStr) }
         } else {
-          holder.itemViewMarketPrice.text = marketPriceStr
+          holder.binding.smalllistTextViewMarketPrice.text = marketPriceStr
         }
       } else {
-        holder.itemViewMarketPrice.text = ""
+        holder.binding.smalllistTextViewMarketPrice.text = ""
       }
 
       val assetChange =
@@ -108,11 +101,11 @@ class StockRoomSmallListAdapter internal constructor(
       if (assetChange.first.isNotEmpty() && dividendStr.isNotEmpty()) {
         changeText.append("\n")
       }
-      holder.itemViewChange.text =
+      holder.binding.smalllistTextViewChange.text =
         changeText.append(dividendStr)
 
       // set the background color to the market change
-      holder.itemViewMarketPriceLayout.setBackgroundColor(
+      holder.binding.smalllistTextViewMarketPriceLayout.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
               current.onlineMarketData.postMarketData,
@@ -130,7 +123,7 @@ class StockRoomSmallListAdapter internal constructor(
       if (color == 0) {
         color = context.getColor(R.color.backgroundListColor)
       }
-      setBackgroundColor(holder.itemTextViewGroup, color)
+      setBackgroundColor(holder.binding.smalllistItemviewGroup, color)
     }
   }
 

@@ -25,11 +25,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
+import com.thecloudsite.stockroom.databinding.StockroomTileItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroom_tile_item.view.stockRoomTileItemLayout
 import java.text.DecimalFormat
 
 class StockRoomTileAdapter internal constructor(
@@ -37,15 +38,18 @@ class StockRoomTileAdapter internal constructor(
   private val clickListenerListItem: (StockItem) -> Unit
 ) : RecyclerView.Adapter<StockRoomTileAdapter.OnlineDataViewHolder>() {
 
+  private lateinit var binding: StockroomTileItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var stockItems: List<StockItem> = listOf()
 
-  class OnlineDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class OnlineDataViewHolder(
+    val binding: StockroomTileItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      itemView.stockRoomTileItemLayout.setOnClickListener { clickListener(stockItem) }
+      binding.stockRoomTileItemLayout.setOnClickListener { clickListener(stockItem) }
     }
 
     val itemSymbol: TextView = itemView.findViewById(R.id.stockRoomTileItemSymbol)
@@ -64,8 +68,9 @@ class StockRoomTileAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): OnlineDataViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroom_tile_item, parent, false)
-    return OnlineDataViewHolder(itemView)
+
+    binding = AssetviewItemBinding.inflate(inflater, parent, false)
+    return OnlineDataViewHolder(binding)
   }
 
   override fun onBindViewHolder(

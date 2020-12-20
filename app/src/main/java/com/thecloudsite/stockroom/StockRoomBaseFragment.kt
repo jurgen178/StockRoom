@@ -25,9 +25,9 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.databinding.FragmentListBinding
 
 enum class SortMode(val value: Int) {
   ByChangePercentage(0),
@@ -42,6 +42,12 @@ enum class SortMode(val value: Int) {
 }
 
 open class StockRoomBaseFragment : Fragment() {
+
+  private var _binding: FragmentListBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
 
   lateinit var stockRoomViewModel: StockRoomViewModel
 
@@ -115,7 +121,14 @@ open class StockRoomBaseFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View? {
 
-    return inflater.inflate(layout.fragment_list, container, false)
+    // Inflate the layout for this fragment
+    _binding = FragmentListBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onResume() {

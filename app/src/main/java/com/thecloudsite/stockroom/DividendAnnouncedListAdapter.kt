@@ -25,12 +25,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.AssetListAdapter.AssetViewHolder
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
+import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
+import com.thecloudsite.stockroom.databinding.DividendAnnouncedViewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
-import kotlinx.android.synthetic.main.dividend_announced_view_item.view.dividendAnnouncedLinearLayout
-import kotlinx.android.synthetic.main.dividend_announced_view_item.view.textViewDividendAnnouncedDelete
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -45,15 +46,18 @@ class DividendAnnouncedListAdapter internal constructor(
   private val clickListenerDelete: (String?, Dividend?) -> Unit
 ) : RecyclerView.Adapter<DividendAnnouncedListAdapter.DividendAnnouncedViewHolder>() {
 
+  private lateinit var binding: DividendAnnouncedViewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var dividendList = mutableListOf<Dividend>()
 
-  class DividendAnnouncedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class DividendAnnouncedViewHolder(
+    val binding: DividendAnnouncedViewItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       dividend: Dividend,
       clickListenerUpdate: (Dividend) -> Unit
     ) {
-      itemView.dividendAnnouncedLinearLayout.setOnClickListener { clickListenerUpdate(dividend) }
+      binding.dividendAnnouncedLinearLayout.setOnClickListener { clickListenerUpdate(dividend) }
     }
 
     fun bindDelete(
@@ -61,37 +65,21 @@ class DividendAnnouncedListAdapter internal constructor(
       dividend: Dividend?,
       clickListenerDelete: (String?, Dividend?) -> Unit
     ) {
-      itemView.textViewDividendAnnouncedDelete.setOnClickListener {
+      binding.textViewDividendAnnouncedDelete.setOnClickListener {
         clickListenerDelete(
             symbol, dividend
         )
       }
     }
-
-    val textViewDividendAnnouncedAmount: TextView =
-      itemView.findViewById(R.id.textViewDividendAnnouncedAmount)
-    val textViewDividendAnnouncedPayDate: TextView =
-      itemView.findViewById(R.id.textViewDividendAnnouncedPayDate)
-    val textViewDividendAnnouncedExDate: TextView =
-      itemView.findViewById(R.id.textViewDividendAnnouncedExDate)
-    val textViewDividendAnnouncedCycle: TextView =
-      itemView.findViewById(R.id.textViewDividendAnnouncedCycle)
-    val textViewDividendAnnouncedNote: TextView =
-      itemView.findViewById(R.id.textViewDividendAnnouncedNote)
-    val textViewDividendAnnouncedDelete: TextView =
-      itemView.findViewById(R.id.textViewDividendAnnouncedDelete)
-    val dividendAnnouncedConstraintLayout: ConstraintLayout =
-      itemView.findViewById(R.id.dividendAnnouncedConstraintLayout)
-    val dividendAnnouncedLinearLayout: LinearLayout =
-      itemView.findViewById(R.id.dividendAnnouncedLinearLayout)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): DividendAnnouncedViewHolder {
-    val itemView = inflater.inflate(R.layout.dividend_announced_view_item, parent, false)
-    return DividendAnnouncedViewHolder(itemView)
+
+    binding = DividendAnnouncedViewItemBinding.inflate(inflater, parent, false)
+    return DividendAnnouncedViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -102,23 +90,26 @@ class DividendAnnouncedListAdapter internal constructor(
 
     // First entry is headline.
     if (position == 0) {
-      holder.textViewDividendAnnouncedAmount.text = context.getString(R.string.dividend)
-      holder.textViewDividendAnnouncedPayDate.text = context.getString(R.string.dividend_date)
-      holder.textViewDividendAnnouncedExDate.text = context.getString(R.string.dividend_exdate)
-      holder.textViewDividendAnnouncedCycle.text = context.getString(R.string.dividend_cycle)
-      holder.textViewDividendAnnouncedNote.text = context.getString(R.string.note)
-      holder.textViewDividendAnnouncedDelete.visibility = View.GONE
-      holder.dividendAnnouncedConstraintLayout.setBackgroundColor(
+      holder.binding.textViewDividendAnnouncedAmount.text = context.getString(R.string.dividend)
+      holder.binding.textViewDividendAnnouncedPayDate.text =
+        context.getString(R.string.dividend_date)
+      holder.binding.textViewDividendAnnouncedExDate.text =
+        context.getString(R.string.dividend_exdate)
+      holder.binding.textViewDividendAnnouncedCycle.text =
+        context.getString(R.string.dividend_cycle)
+      holder.binding.textViewDividendAnnouncedNote.text = context.getString(R.string.note)
+      holder.binding.textViewDividendAnnouncedDelete.visibility = View.GONE
+      holder.binding.dividendAnnouncedConstraintLayout.setBackgroundColor(
           context.getColor(R.color.backgroundListColor)
       )
 
       val background = TypedValue()
-      holder.dividendAnnouncedLinearLayout.setBackgroundResource(background.resourceId)
+      holder.binding.dividendAnnouncedLinearLayout.setBackgroundResource(background.resourceId)
     } else {
       holder.bindUpdate(current, clickListenerUpdate)
       holder.bindDelete(null, current, clickListenerDelete)
 
-      holder.textViewDividendAnnouncedAmount.text = if (current.amount > 0.0) {
+      holder.binding.textViewDividendAnnouncedAmount.text = if (current.amount > 0.0) {
         DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
       } else {
         ""
@@ -126,21 +117,21 @@ class DividendAnnouncedListAdapter internal constructor(
 
       val datetimePay: LocalDateTime =
         LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
-      holder.textViewDividendAnnouncedPayDate.text =
+      holder.binding.textViewDividendAnnouncedPayDate.text =
         datetimePay.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
       val datetimeEx: LocalDateTime =
         LocalDateTime.ofEpochSecond(current.exdate, 0, ZoneOffset.UTC)
-      holder.textViewDividendAnnouncedExDate.text =
+      holder.binding.textViewDividendAnnouncedExDate.text =
         datetimeEx.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-      holder.textViewDividendAnnouncedCycle.text = dividendCycleStr(current.cycle, context)
-      holder.textViewDividendAnnouncedNote.text = current.note
+      holder.binding.textViewDividendAnnouncedCycle.text = dividendCycleStr(current.cycle, context)
+      holder.binding.textViewDividendAnnouncedNote.text = current.note
 
-      holder.textViewDividendAnnouncedDelete.visibility = View.VISIBLE
-      holder.dividendAnnouncedConstraintLayout.background = null
+      holder.binding.textViewDividendAnnouncedDelete.visibility = View.VISIBLE
+      holder.binding.dividendAnnouncedConstraintLayout.background = null
 
       val background = TypedValue()
       context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
-      holder.dividendAnnouncedLinearLayout.setBackgroundResource(background.resourceId)
+      holder.binding.dividendAnnouncedLinearLayout.setBackgroundResource(background.resourceId)
     }
   }
 

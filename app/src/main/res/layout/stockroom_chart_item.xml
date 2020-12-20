@@ -84,7 +84,7 @@
   </androidx.constraintlayout.widget.ConstraintLayout>
 
   <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/item_summary2"
+      android:id="@+id/itemRedGreen"
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:paddingStart="4dp"

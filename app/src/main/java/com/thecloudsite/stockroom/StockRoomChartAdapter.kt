@@ -23,8 +23,6 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -42,11 +40,9 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.databinding.StockroomChartItemBinding
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary1
-import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary2
-import kotlinx.android.synthetic.main.stockroom_list_item.view.itemview_group
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -55,6 +51,8 @@ class StockRoomChartAdapter internal constructor(
   private val clickListenerGroup: (StockItem, View) -> Unit,
   private val clickListenerSummary: (StockItem) -> Unit,
 ) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
+
+  private lateinit var binding: StockroomChartItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
   private var chartOverlaySymbol: String = ""
@@ -62,40 +60,32 @@ class StockRoomChartAdapter internal constructor(
   private var stockViewMode: StockViewMode = StockViewMode.Line
   private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
 
-  class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class StockRoomViewHolder(
+    val binding: StockroomChartItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindGroup(
       stockItem: StockItem,
       clickListener: (StockItem, View) -> Unit
     ) {
-      itemView.itemview_group.setOnClickListener { clickListener(stockItem, itemView) }
+      binding.itemviewGroup.setOnClickListener { clickListener(stockItem, itemView) }
     }
 
     fun bindSummary(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      itemView.item_summary1.setOnClickListener { clickListener(stockItem) }
-      itemView.item_summary2.setOnClickListener { clickListener(stockItem) }
+      binding.itemSummary1.setOnClickListener { clickListener(stockItem) }
+      binding.itemSummary2.setOnClickListener { clickListener(stockItem) }
     }
-
-    val itemViewSymbol: TextView = itemView.findViewById(R.id.textViewSymbol)
-    val itemViewName: TextView = itemView.findViewById(R.id.textViewName)
-    val itemViewMarketPrice: TextView = itemView.findViewById(R.id.textViewMarketPrice)
-    val itemViewChange: TextView = itemView.findViewById(R.id.textViewChange)
-    val itemViewChangePercent: TextView = itemView.findViewById(R.id.textViewChangePercent)
-    val itemTextViewGroup: TextView = itemView.findViewById(R.id.itemview_group)
-    val itemSummary: ConstraintLayout = itemView.findViewById(R.id.item_summary1)
-    val itemRedGreen: ConstraintLayout = itemView.findViewById(R.id.item_summary2)
-    val candleStickChart: CandleStickChart = itemView.findViewById(R.id.candleStickChart)
-    val lineChart: LineChart = itemView.findViewById(R.id.lineChart)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroom_chart_item, parent, false)
-    return StockRoomViewHolder(itemView)
+
+    binding = StockroomChartItemBinding.inflate(inflater, parent, false)
+    return StockRoomViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -117,24 +107,24 @@ class StockRoomChartAdapter internal constructor(
           chartDataItems[chartOverlaySymbol]
 
         if (stockViewMode == StockViewMode.Candle) {
-          holder.candleStickChart.visibility = View.VISIBLE
-          holder.lineChart.visibility = View.GONE
+          holder.binding.candleStickChart.visibility = View.VISIBLE
+          holder.binding.lineChart.visibility = View.GONE
 
-          setupCandleStickChart(holder.candleStickChart)
+          setupCandleStickChart(holder.binding.candleStickChart)
           loadCandleStickChart(
-              holder.candleStickChart,
+              holder.binding.candleStickChart,
               chartOverlaySymbol,
               stockDataEntriesRef,
               current.onlineMarketData.symbol,
               stockDataEntries
           )
         } else {
-          holder.candleStickChart.visibility = View.GONE
-          holder.lineChart.visibility = View.VISIBLE
+          holder.binding.candleStickChart.visibility = View.GONE
+          holder.binding.lineChart.visibility = View.VISIBLE
 
-          setupLineChart(holder.lineChart)
+          setupLineChart(holder.binding.lineChart)
           loadLineChart(
-              holder.lineChart,
+              holder.binding.lineChart,
               chartOverlaySymbol,
               stockDataEntriesRef,
               current.onlineMarketData.symbol,
@@ -142,40 +132,40 @@ class StockRoomChartAdapter internal constructor(
           )
         }
       } else {
-        holder.candleStickChart.visibility = View.GONE
-        holder.lineChart.visibility = View.GONE
+        holder.binding.candleStickChart.visibility = View.GONE
+        holder.binding.lineChart.visibility = View.GONE
       }
 
-      holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.itemSummary1.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
-      holder.itemViewSymbol.text = current.onlineMarketData.symbol
-      holder.itemViewName.text = getName(current.onlineMarketData)
+      holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
+      holder.binding.textViewName.text = getName(current.onlineMarketData)
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketValues = getMarketValues(current.onlineMarketData)
 
         if (current.onlineMarketData.postMarketData) {
-          holder.itemViewMarketPrice.text = SpannableStringBuilder()
+          holder.binding.textViewMarketPrice.text = SpannableStringBuilder()
               .italic { append(marketValues.first) }
 
-          holder.itemViewChange.text = SpannableStringBuilder()
+          holder.binding.textViewChange.text = SpannableStringBuilder()
               .italic { append(marketValues.second) }
 
-          holder.itemViewChangePercent.text = SpannableStringBuilder()
+          holder.binding.textViewChangePercent.text = SpannableStringBuilder()
               .italic { append(marketValues.third) }
         } else {
-          holder.itemViewMarketPrice.text = marketValues.first
-          holder.itemViewChange.text = marketValues.second
-          holder.itemViewChangePercent.text = marketValues.third
+          holder.binding.textViewMarketPrice.text = marketValues.first
+          holder.binding.textViewChange.text = marketValues.second
+          holder.binding.textViewChangePercent.text = marketValues.third
         }
       } else {
-        holder.itemViewMarketPrice.text = ""
-        holder.itemViewChange.text = ""
-        holder.itemViewChangePercent.text = ""
+        holder.binding.textViewMarketPrice.text = ""
+        holder.binding.textViewChange.text = ""
+        holder.binding.textViewChangePercent.text = ""
       }
 
       // set background to market change
-      holder.itemRedGreen.setBackgroundColor(
+      holder.binding.itemSummary2.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
               current.onlineMarketData.postMarketData,
@@ -188,7 +178,7 @@ class StockRoomChartAdapter internal constructor(
       if (color == 0) {
         color = context.getColor(R.color.backgroundListColor)
       }
-      setBackgroundColor(holder.itemTextViewGroup, color)
+      setBackgroundColor(holder.binding.itemviewGroup, color)
     }
   }
 

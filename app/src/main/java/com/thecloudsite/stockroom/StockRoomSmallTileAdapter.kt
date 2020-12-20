@@ -19,17 +19,14 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.databinding.StockroomSmalltileItemBinding
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroom_smalltile_item.view.smalltile_item_layout
 
 class StockRoomSmallTileAdapter internal constructor(
   val context: Context,
@@ -37,30 +34,28 @@ class StockRoomSmallTileAdapter internal constructor(
 ) : ListAdapter<StockItem, StockRoomSmallTileAdapter.StockRoomViewHolder>(
     StockRoomDiffCallback()
 ) {
+
+  private lateinit var binding: StockroomSmalltileItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-  class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class StockRoomViewHolder(
+    val binding: StockroomSmalltileItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindSummary(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      itemView.smalltile_item_layout.setOnClickListener { clickListener(stockItem) }
+      binding.smalltileItemLayout.setOnClickListener { clickListener(stockItem) }
     }
-
-    val itemViewSymbol: TextView = itemView.findViewById(R.id.smalltile_textViewSymbol)
-    val itemViewMarketPrice: TextView = itemView.findViewById(R.id.smalltile_textViewMarketPrice)
-    val itemViewMarketPriceLayout: ConstraintLayout =
-      itemView.findViewById(R.id.smalltile_textViewMarketPriceLayout)
-    val itemTextViewGroup: TextView = itemView.findViewById(R.id.smalltile_itemview_group)
-    val itemSummary: ConstraintLayout = itemView.findViewById(R.id.smalltile_item_layout)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroom_smalltile_item, parent, false)
-    return StockRoomViewHolder(itemView)
+
+    binding = StockroomSmalltileItemBinding.inflate(inflater, parent, false)
+    return StockRoomViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -71,26 +66,25 @@ class StockRoomSmallTileAdapter internal constructor(
     if (current != null) {
       holder.bindSummary(current, clickListenerSummary)
 
-      holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-
-      holder.itemViewSymbol.text = current.onlineMarketData.symbol
+      holder.binding.smalltileItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.smalltileTextViewSymbol.text = current.onlineMarketData.symbol
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketValues = getMarketValues(current.onlineMarketData)
         val marketPriceStr = "${marketValues.first} ${marketValues.second} ${marketValues.third}"
 
         if (current.onlineMarketData.postMarketData) {
-          holder.itemViewMarketPrice.text = SpannableStringBuilder()
+          holder.binding.smalltileTextViewMarketPrice.text = SpannableStringBuilder()
               .italic { append(marketPriceStr) }
         } else {
-          holder.itemViewMarketPrice.text = marketPriceStr
+          holder.binding.smalltileTextViewMarketPrice.text = marketPriceStr
         }
       } else {
-        holder.itemViewMarketPrice.text = ""
+        holder.binding.smalltileTextViewMarketPrice.text = ""
       }
 
       // set the background color to the market change
-      holder.itemViewMarketPriceLayout.setBackgroundColor(
+      holder.binding.smalltileTextViewMarketPriceLayout.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
               current.onlineMarketData.postMarketData,
@@ -103,7 +97,7 @@ class StockRoomSmallTileAdapter internal constructor(
       if (color == 0) {
         color = context.getColor(R.color.backgroundListColor)
       }
-      setBackgroundColor(holder.itemTextViewGroup, color)
+      setBackgroundColor(holder.binding.smalltileItemviewGroup, color)
     }
   }
 

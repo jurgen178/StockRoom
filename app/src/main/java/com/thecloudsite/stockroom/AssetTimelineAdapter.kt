@@ -19,7 +19,6 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.thecloudsite.stockroom.database.Asset
@@ -27,7 +26,6 @@ import com.thecloudsite.stockroom.databinding.TimelineAssetItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
-import kotlinx.android.synthetic.main.timeline_asset_item.view.timelineCardView
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -44,22 +42,21 @@ class AssetTimelineAdapter(
   private val clickListenerCardItem: (AssetTimelineElement) -> Unit
 ) : RecyclerView.Adapter<AssetTimelineAdapter.ViewHolder>() {
 
-  private var _binding: TimelineAssetItemBinding? = null
-  private val binding get() = _binding!!
+  private lateinit var binding: TimelineAssetItemBinding
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var timelineElementList: List<AssetTimelineElement> = listOf()
 
-  class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+  class ViewHolder(
+    val binding: TimelineAssetItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
+
     fun bind(
       timelineElement: AssetTimelineElement,
       clickListener: (AssetTimelineElement) -> Unit
     ) {
-      itemView.timelineCardView.setOnClickListener { clickListener(timelineElement) }
+      binding.timelineCardView.setOnClickListener { clickListener(timelineElement) }
     }
-
-    val header: TextView = view.findViewById<View>(R.id.timeline_header) as TextView
-    val details: TextView = view.findViewById<View>(R.id.timeline_details) as TextView
   }
 
   override fun onCreateViewHolder(
@@ -67,8 +64,8 @@ class AssetTimelineAdapter(
     viewType: Int
   ): ViewHolder {
 
-    _binding = TimelineAssetItemBinding.inflate(inflater, parent, false)
-    return ViewHolder(binding.root)
+    binding = TimelineAssetItemBinding.inflate(inflater, parent, false)
+    return ViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -78,7 +75,7 @@ class AssetTimelineAdapter(
     val timelineElement = timelineElementList[position]
 
     holder.bind(timelineElement, clickListenerCardItem)
-    holder.header.text = timelineElement.symbol
+    holder.binding.timelineHeader.text = timelineElement.symbol
 
     var stockTransactions = ""
     var skipFirstline = true
@@ -119,7 +116,7 @@ class AssetTimelineAdapter(
           }
         }
 
-    holder.details.text = stockTransactions
+    holder.binding.timelineDetails.text = stockTransactions
   }
 
   fun updateData(timeline: List<AssetTimelineElement>) {

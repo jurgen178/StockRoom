@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.databinding.StockroomListItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
@@ -38,9 +39,6 @@ import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
-import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary1
-import kotlinx.android.synthetic.main.stockroom_list_item.view.item_summary2
-import kotlinx.android.synthetic.main.stockroom_list_item.view.itemview_group
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -65,42 +63,37 @@ class StockRoomListAdapter internal constructor(
   private val clickListenerGroup: (StockItem, View) -> Unit,
   private val clickListenerSummary: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
+
+  private lateinit var binding: StockroomListItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var defaultTextColor: Int? = null
 
-  class StockRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class StockRoomViewHolder(
+    val binding: StockroomListItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindGroup(
       stockItem: StockItem,
       clickListener: (StockItem, View) -> Unit
     ) {
-      itemView.itemview_group.setOnClickListener { clickListener(stockItem, itemView) }
+      binding.itemviewGroup.setOnClickListener { clickListener(stockItem, itemView) }
     }
 
     fun bindSummary(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      itemView.item_summary1.setOnClickListener { clickListener(stockItem) }
-      itemView.item_summary2.setOnClickListener { clickListener(stockItem) }
+      binding.itemSummary1.setOnClickListener { clickListener(stockItem) }
+      binding.itemRedGreen.setOnClickListener { clickListener(stockItem) }
     }
-
-    val itemViewSymbol: TextView = itemView.findViewById(R.id.textViewSymbol)
-    val itemViewName: TextView = itemView.findViewById(R.id.textViewName)
-    val itemViewMarketPrice: TextView = itemView.findViewById(R.id.textViewMarketPrice)
-    val itemViewChange: TextView = itemView.findViewById(R.id.textViewChange)
-    val itemViewChangePercent: TextView = itemView.findViewById(R.id.textViewChangePercent)
-    val itemViewAssets: TextView = itemView.findViewById(R.id.textViewAssets)
-    val itemTextViewGroup: TextView = itemView.findViewById(R.id.itemview_group)
-    val itemSummary: ConstraintLayout = itemView.findViewById(R.id.item_summary1)
-    val itemRedGreen: ConstraintLayout = itemView.findViewById(R.id.item_summary2)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): StockRoomViewHolder {
-    val itemView = inflater.inflate(R.layout.stockroom_list_item, parent, false)
-    return StockRoomViewHolder(itemView)
+
+    binding = StockroomListItemBinding.inflate(inflater, parent, false)
+    return StockRoomViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -110,40 +103,40 @@ class StockRoomListAdapter internal constructor(
     val current = getItem(position)
 
     if (defaultTextColor == null) {
-      defaultTextColor = holder.itemViewAssets.currentTextColor
+      defaultTextColor = holder.binding.textViewAssets.currentTextColor
     }
 
     if (current != null) {
       holder.bindGroup(current, clickListenerGroup)
       holder.bindSummary(current, clickListenerSummary)
 
-      holder.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.itemSummary1.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
-      holder.itemViewSymbol.text = current.onlineMarketData.symbol
-      holder.itemViewName.text = getName(current.onlineMarketData)
+      holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
+      holder.binding.textViewName.text = getName(current.onlineMarketData)
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketValues = getMarketValues(current.onlineMarketData)
 
         if (current.onlineMarketData.postMarketData) {
-          holder.itemViewMarketPrice.text = SpannableStringBuilder()
+          holder.binding.textViewMarketPrice.text = SpannableStringBuilder()
               .italic { append(marketValues.first) }
 
-          holder.itemViewChange.text = SpannableStringBuilder()
+          holder.binding.textViewChange.text = SpannableStringBuilder()
               .italic { append(marketValues.second) }
 
-          holder.itemViewChangePercent.text = SpannableStringBuilder()
+          holder.binding.textViewChangePercent.text = SpannableStringBuilder()
               .italic { append(marketValues.third) }
         } else {
-          holder.itemViewMarketPrice.text = marketValues.first
-          holder.itemViewChange.text = marketValues.second
-          holder.itemViewChangePercent.text = marketValues.third
+          holder.binding.textViewMarketPrice.text = marketValues.first
+          holder.binding.textViewChange.text = marketValues.second
+          holder.binding.textViewChangePercent.text = marketValues.third
         }
       } else {
-        holder.itemViewMarketPrice.text = ""
-        holder.itemViewChange.text = ""
-        holder.itemViewChangePercent.text = ""
-        holder.itemViewAssets.text = ""
+        holder.binding.textViewMarketPrice.text = ""
+        holder.binding.textViewChange.text = ""
+        holder.binding.textViewChangePercent.text = ""
+        holder.binding.textViewAssets.text = ""
       }
 
       val (quantity, asset) = getAssets(current.assets)
@@ -231,7 +224,7 @@ class StockRoomListAdapter internal constructor(
 //          getChangeColor(capital, asset, context.getColor(R.color.backgroundListColor), context)
 //      )
       // set background to market change
-      holder.itemRedGreen.setBackgroundColor(
+      holder.binding.itemRedGreen.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
               current.onlineMarketData.postMarketData,
@@ -313,13 +306,13 @@ class StockRoomListAdapter internal constructor(
         )
       }
 
-      holder.itemViewAssets.text = assets
+      holder.binding.textViewAssets.text = assets
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {
         color = context.getColor(R.color.backgroundListColor)
       }
-      setBackgroundColor(holder.itemTextViewGroup, color)
+      setBackgroundColor(holder.binding.itemviewGroup, color)
 
       /*
       // Keep the corner radii and only change the background color.
