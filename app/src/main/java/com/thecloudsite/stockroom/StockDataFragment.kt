@@ -73,6 +73,7 @@ import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.DialogAddAssetBinding
+import com.thecloudsite.stockroom.databinding.DialogAddEventBinding
 import com.thecloudsite.stockroom.databinding.FragmentStockdataBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
@@ -469,43 +470,38 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_event, null)
-
-    val eventHeadlineView = dialogView.findViewById<TextView>(R.id.eventHeadline)
-    eventHeadlineView.text = getString(R.string.update_event)
-    val textInputEditEventTitleView =
-      dialogView.findViewById<TextView>(R.id.textInputEditEventTitle)
-    textInputEditEventTitleView.text = event.title
-    val textInputEditEventNoteView = dialogView.findViewById<TextView>(R.id.textInputEditEventNote)
-    textInputEditEventNoteView.text = event.note
+    val binding = DialogAddEventBinding.inflate(inflater)
+    binding.eventHeadline.setText(getString(R.string.update_event))
+    binding.textInputEditEventTitle.setText(event.title)
+    binding.textInputEditEventNote.setText(event.note)
     val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
-    val datePickerEventDateView = dialogView.findViewById<DatePicker>(R.id.datePickerEventDate)
     // month is starting from zero
-    datePickerEventDateView.updateDate(
+    binding.datePickerEventDate.updateDate(
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
-    val datePickerEventTimeView = dialogView.findViewById<TimePicker>(R.id.datePickerEventTime)
-    datePickerEventTimeView.hour = localDateTime.hour
-    datePickerEventTimeView.minute = localDateTime.minute
+    binding.datePickerEventTime.hour = localDateTime.hour
+    binding.datePickerEventTime.minute = localDateTime.minute
 
-    builder.setView(dialogView)
+    builder.setView(binding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
           // Add () to avoid cast exception.
-          val title = (textInputEditEventTitleView.text).toString()
+          val title = (binding.textInputEditEventTitle.text).toString()
               .trim()
           if (title.isEmpty()) {
             Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
                 .show()
           } else {
-            val note = (textInputEditEventNoteView.text).toString()
+            val note = (binding.textInputEditEventNote.text).toString()
 
             val datetime: LocalDateTime = LocalDateTime.of(
-                datePickerEventDateView.year, datePickerEventDateView.month + 1,
-                datePickerEventDateView.dayOfMonth, datePickerEventTimeView.hour,
-                datePickerEventTimeView.minute
+                binding.datePickerEventDate.year,
+                binding.datePickerEventDate.month + 1,
+                binding.datePickerEventDate.dayOfMonth,
+                binding.datePickerEventTime.hour,
+                binding.datePickerEventTime.minute
             )
             val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
             val eventNew =
