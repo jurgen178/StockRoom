@@ -22,13 +22,10 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event

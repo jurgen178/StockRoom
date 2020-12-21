@@ -232,9 +232,6 @@ public class MapLayoutView extends View {
           labelX = xm;
           labelY = ym;
           ym += tym / 4;
-        } else {
-          labelX = -1;
-          labelY = -1;
         }
       }
 

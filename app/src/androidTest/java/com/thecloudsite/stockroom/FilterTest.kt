@@ -32,7 +32,7 @@ import kotlin.text.RegexOption.IGNORE_CASE
 @RunWith(AndroidJUnit4::class)
 class FilterTest {
 
-  class FilterTest1Type() : IFilterType {
+  class FilterTest1Type : IFilterType {
     override fun filter(stockItem: StockItem): Boolean {
       return stockItem.stockDBdata.symbol == "s1"
     }

@@ -26,7 +26,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.databinding.FragmentNewsBinding
 import com.thecloudsite.stockroom.databinding.FragmentTileBinding
 import java.lang.Integer.max
 import java.lang.Integer.min

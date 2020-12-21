@@ -44,7 +44,7 @@ fun getLevenshteinDistance(
 
   // Initialize the distance matrix.
   for (j in 1..m) {
-    distance[0][j] = j;
+    distance[0][j] = j
   }
 
   var currentRow = 0

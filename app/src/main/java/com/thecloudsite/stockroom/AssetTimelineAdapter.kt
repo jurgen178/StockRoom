@@ -17,10 +17,9 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.databinding.TimelineAssetItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
