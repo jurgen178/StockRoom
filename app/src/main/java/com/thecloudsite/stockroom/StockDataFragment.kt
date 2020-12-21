@@ -72,6 +72,7 @@ import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.DialogAddAssetBinding
 import com.thecloudsite.stockroom.databinding.FragmentStockdataBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
@@ -245,43 +246,37 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_asset, null)
+    val binding = DialogAddAssetBinding.inflate(inflater)
 
-    val addUpdateQuantityHeadlineView =
-      dialogView.findViewById<TextView>(R.id.addUpdateQuantityHeadline)
-    addUpdateQuantityHeadlineView.text = getString(R.string.update_asset)
-    val addQuantityView = dialogView.findViewById<TextView>(R.id.addQuantity)
-    addQuantityView.text =
-      DecimalFormat(DecimalFormat0To6Digits).format(asset.quantity.absoluteValue)
+    binding.addUpdateQuantityHeadline.text = getString(R.string.update_asset)
+    binding.addQuantity.setText(
+        DecimalFormat(DecimalFormat0To6Digits).format(asset.quantity.absoluteValue)
+    )
 //    if (asset.shares < 0) {
 //      addSharesView.inputType = TYPE_CLASS_NUMBER or
 //          TYPE_NUMBER_FLAG_DECIMAL or
 //          TYPE_NUMBER_FLAG_SIGNED
 //    }
 
-    val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
-    addPriceView.text = DecimalFormat(DecimalFormat2To6Digits).format(asset.price)
-
-    val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
-    addNoteView.text = asset.note
+    binding.addPrice.setText(DecimalFormat(DecimalFormat2To6Digits).format(asset.price))
+    binding.addNote.setText(asset.note)
 
     val localDateTime = if (asset.date == 0L) {
       LocalDateTime.now()
     } else {
       LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
     }
-    val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
     // month is starting from zero
-    datePickerAssetDateView.updateDate(
+    binding.datePickerAssetDate.updateDate(
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
 
-    builder.setView(dialogView)
+    builder.setView(binding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val quantityText = (addQuantityView.text).toString()
+          val quantityText = (binding.addQuantity.text).toString()
               .trim()
           var quantity = 0.0
 
@@ -307,7 +302,7 @@ class StockDataFragment : Fragment() {
             return@setPositiveButton
           }
 
-          val priceText = (addPriceView.text).toString()
+          val priceText = (binding.addPrice.text).toString()
               .trim()
           var price = 0.0
           try {
@@ -331,12 +326,12 @@ class StockDataFragment : Fragment() {
 
           // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
           val localDateTimeNew: LocalDateTime = LocalDateTime.of(
-              datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
-              datePickerAssetDateView.dayOfMonth, 0, 0
+              binding.datePickerAssetDate.year, binding.datePickerAssetDate.month + 1,
+              binding.datePickerAssetDate.dayOfMonth, 0, 0
           )
           val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
 
-          val noteText = (addNoteView.text).toString()
+          val noteText = (binding.addNote.text).toString()
               .trim()
 
           val assetNew =
