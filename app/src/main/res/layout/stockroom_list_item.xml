@@ -23,7 +23,7 @@
       />
 
   <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/item_summary1"
+      android:id="@+id/item_summary"
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:paddingStart="4dp"
