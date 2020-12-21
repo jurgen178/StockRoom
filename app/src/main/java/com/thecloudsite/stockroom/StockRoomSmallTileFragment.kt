@@ -38,8 +38,7 @@ class StockRoomSmallTileFragment : StockRoomBaseFragment() {
     val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
     val adapter = StockRoomSmallTileAdapter(requireContext(), clickListenerSummary)
 
-    val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
-
+    val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter
 
     // Set column number depending on screen width.
@@ -47,7 +46,8 @@ class StockRoomSmallTileFragment : StockRoomBaseFragment() {
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    recyclerView.layoutManager = GridLayoutManager(context,
+    recyclerView.layoutManager = GridLayoutManager(
+        context,
         Integer.min(Integer.max(spanCount, 1), 10)
     )
 

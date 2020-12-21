@@ -47,6 +47,10 @@ import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.DialogAddDividendBinding
+import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
+import com.thecloudsite.stockroom.databinding.DialogAddNoteBinding
+import com.thecloudsite.stockroom.databinding.DialogSetAnnualDividendBinding
 import com.thecloudsite.stockroom.databinding.FragmentDividendBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
@@ -118,35 +122,32 @@ class DividendFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
-    dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
-    dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
-    val addUpdateDividendHeadlineView =
-      dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-    addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
-    val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
-    val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
-    addNoteView.text = dividend.note
-    val datePickerDividendDateView =
-      dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
+    val dialogBinding = DialogAddDividendBinding.inflate(inflater)
+
+    dialogBinding.textViewDividendExDate.visibility = View.GONE
+    dialogBinding.datePickerDividendExDate.visibility = View.GONE
+    dialogBinding.addUpdateDividendHeadline.text = getString(R.string.update_dividend)
+    dialogBinding.addDividend.setText(
+        DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
+    )
+    dialogBinding.addNote.setText(dividend.note)
     val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
     // month is starting from zero
-    datePickerDividendDateView.updateDate(
+    dialogBinding.datePickerDividendDate.updateDate(
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
 
-    val textViewDividendCycleSpinner =
-      dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
-    textViewDividendCycleSpinner.setSelection(dividendCycleToSelection(dividend.cycle))
+    dialogBinding.textViewDividendCycleSpinner.setSelection(
+        dividendCycleToSelection(dividend.cycle)
+    )
 
-    builder.setView(dialogView)
+    builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
           // Add () to avoid cast exception.
-          val addDividendText = (addDividendView.text).toString()
+          val addDividendText = (dialogBinding.addDividend.text).toString()
               .trim()
           if (addDividendText.isNotEmpty()) {
             var dividendAmount = 0.0
@@ -168,16 +169,19 @@ class DividendFragment : Fragment() {
 
             if (valid) {
               val datetime: LocalDateTime = LocalDateTime.of(
-                  datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
-                  datePickerDividendDateView.dayOfMonth, 0, 0
+                  dialogBinding.datePickerDividendDate.year,
+                  dialogBinding.datePickerDividendDate.month + 1,
+                  dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
               )
               val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
-              val noteText = (addNoteView.text).toString()
+              val noteText = (dialogBinding.addNote.text).toString()
                   .trim()
 
               val cycle =
-                dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+                dividendSelectionToCycle(
+                    dialogBinding.textViewDividendCycleSpinner.selectedItemPosition
+                )
 
               if (dividend.amount != dividendAmount
                   || dividend.note != noteText
@@ -245,7 +249,8 @@ class DividendFragment : Fragment() {
           .setTitle(R.string.delete_dividend)
           .setMessage(
               getString(
-                  R.string.delete_dividend_confirm, DecimalFormat(DecimalFormat0To2Digits).format(dividend.amount),
+                  R.string.delete_dividend_confirm,
+                  DecimalFormat(DecimalFormat0To2Digits).format(dividend.amount),
                   localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
               )
           )
@@ -268,42 +273,37 @@ class DividendFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
-    val addUpdateDividendHeadlineView =
-      dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-    addUpdateDividendHeadlineView.text = getString(R.string.update_dividend)
-    val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-    addDividendView.text = DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
-    val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
-    addNoteView.text = dividend.note
+    val dialogBinding = DialogAddDividendBinding.inflate(inflater)
 
-    val datePickerDividendDateView =
-      dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
+    dialogBinding.addUpdateDividendHeadline.text = getString(R.string.update_dividend)
+    dialogBinding.addDividend.setText(
+        DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
+    )
+    dialogBinding.addNote.setText(dividend.note)
+
     val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
     // month is starting from zero
-    datePickerDividendDateView.updateDate(
+    dialogBinding.datePickerDividendDate.updateDate(
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
 
-    val datePickerDividendExDateView =
-      dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate)
     val localDateTimeEx = LocalDateTime.ofEpochSecond(dividend.exdate, 0, ZoneOffset.UTC)
     // month is starting from zero
-    datePickerDividendExDateView.updateDate(
+    dialogBinding.datePickerDividendExDate.updateDate(
         localDateTimeEx.year, localDateTimeEx.month.value - 1, localDateTimeEx.dayOfMonth
     )
 
-    val textViewDividendCycleSpinner =
-      dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
-    textViewDividendCycleSpinner.setSelection(dividendCycleToSelection(dividend.cycle))
+    dialogBinding.textViewDividendCycleSpinner.setSelection(
+        dividendCycleToSelection(dividend.cycle)
+    )
 
-    builder.setView(dialogView)
+    builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
           // Add () to avoid cast exception.
-          val addDividendText = (addDividendView.text).toString()
+          val addDividendText = (dialogBinding.addDividend.text).toString()
               .trim()
           var dividendAmount = 0.0
           if (addDividendText.isNotEmpty()) {
@@ -316,21 +316,25 @@ class DividendFragment : Fragment() {
           }
 
           val datetime: LocalDateTime = LocalDateTime.of(
-              datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
-              datePickerDividendDateView.dayOfMonth, 0, 0
+              dialogBinding.datePickerDividendDate.year,
+              dialogBinding.datePickerDividendDate.month + 1,
+              dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
           )
           val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
           val datetimeEx: LocalDateTime = LocalDateTime.of(
-              datePickerDividendExDateView.year, datePickerDividendExDateView.month + 1,
-              datePickerDividendExDateView.dayOfMonth, 0, 0
+              dialogBinding.datePickerDividendExDate.year,
+              dialogBinding.datePickerDividendExDate.month + 1,
+              dialogBinding.datePickerDividendExDate.dayOfMonth, 0, 0
           )
           val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
-          val noteText = (addNoteView.text).toString()
+          val noteText = (dialogBinding.addNote.text).toString()
               .trim()
 
-          val cycle = dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+          val cycle = dividendSelectionToCycle(
+              dialogBinding.textViewDividendCycleSpinner.selectedItemPosition
+          )
 
           if (dividend.amount != dividendAmount
               || dividend.note != noteText
@@ -378,7 +382,8 @@ class DividendFragment : Fragment() {
           .setTitle(R.string.delete_dividend)
           .setMessage(
               getString(
-                  R.string.delete_dividend_confirm, DecimalFormat(DecimalFormat0To2Digits).format(dividend.amount),
+                  R.string.delete_dividend_confirm,
+                  DecimalFormat(DecimalFormat0To2Digits).format(dividend.amount),
                   localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
               )
           )
@@ -533,30 +538,22 @@ class DividendFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
-      dialogView.findViewById<TextView>(R.id.textViewDividendExDate).visibility = View.GONE
-      dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate).visibility = View.GONE
-      val addUpdateDividendHeadlineView =
-        dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-      addUpdateDividendHeadlineView.text = getString(R.string.add_dividend)
-      val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
-      val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
-      val datePickerDividendDateView =
-        dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
+      val dialogBinding = DialogAddDividendBinding.inflate(inflater)
 
-      val textViewDividendCycleSpinner =
-        dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
-      textViewDividendCycleSpinner.setSelection(
+      dialogBinding.textViewDividendExDate.visibility = View.GONE
+      dialogBinding.datePickerDividendExDate.visibility = View.GONE
+      dialogBinding.addUpdateDividendHeadline.text = getString(R.string.add_dividend)
+      dialogBinding.textViewDividendCycleSpinner.setSelection(
           dividendCycleToSelection(Quarterly.value)
       )
 
-      builder.setView(dialogView)
+      builder.setView(dialogBinding.root)
           // Add action buttons
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
             // Add () to avoid cast exception.
-            val addDividendText = (addDividendView.text).toString()
+            val addDividendText = (dialogBinding.addDividend.text).toString()
                 .trim()
             if (addDividendText.isNotEmpty()) {
               var dividendAmount = 0.0
@@ -578,16 +575,19 @@ class DividendFragment : Fragment() {
 
               if (valid) {
                 val datetime: LocalDateTime = LocalDateTime.of(
-                    datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
-                    datePickerDividendDateView.dayOfMonth, 0, 0
+                    dialogBinding.datePickerDividendDate.year,
+                    dialogBinding.datePickerDividendDate.month + 1,
+                    dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
                 )
                 val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
-                val noteText = (addNoteView.text).toString()
+                val noteText = (dialogBinding.addNote.text).toString()
                     .trim()
 
                 val cycle =
-                  dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+                  dividendSelectionToCycle(
+                      dialogBinding.textViewDividendCycleSpinner.selectedItemPosition
+                  )
 
                 val dividend = Dividend(
                     symbol = symbol,
@@ -628,21 +628,21 @@ class DividendFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.dialog_set_annual_dividend, null)
-      val setAnnualDividend =
-        dialogView.findViewById<TextView>(R.id.setAnnualDividend)
+      val dialogBinding = DialogSetAnnualDividendBinding.inflate(inflater)
 
       if (annualDividend >= 0.0) {
-        setAnnualDividend.text = DecimalFormat(DecimalFormat2To4Digits).format(annualDividend)
+        dialogBinding.setAnnualDividend.setText(
+            DecimalFormat(DecimalFormat2To4Digits).format(annualDividend)
+        )
       }
 
-      builder.setView(dialogView)
+      builder.setView(dialogBinding.root)
           // Add action buttons
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
             // Add () to avoid cast exception.
-            val annualDividendText = (setAnnualDividend.text).toString()
+            val annualDividendText = (dialogBinding.setAnnualDividend.text).toString()
                 .trim()
             // 0.0 is a valid value
             var dividendAmount = -1.0
@@ -670,33 +670,20 @@ class DividendFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.dialog_add_dividend, null)
-      val addUpdateDividendHeadlineView =
-        dialogView.findViewById<TextView>(R.id.addUpdateDividendHeadline)
-      addUpdateDividendHeadlineView.text = getString(R.string.add_dividend)
-      val addDividendView = dialogView.findViewById<TextView>(R.id.addDividend)
+      val dialogBinding = DialogAddDividendBinding.inflate(inflater)
 
-      val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
-
-      val datePickerDividendDateView =
-        dialogView.findViewById<DatePicker>(R.id.datePickerDividendDate)
-
-      val datePickerDividendExDateView =
-        dialogView.findViewById<DatePicker>(R.id.datePickerDividendExDate)
-
-      val textViewDividendCycleSpinner =
-        dialogView.findViewById<Spinner>(R.id.textViewDividendCycleSpinner)
-      textViewDividendCycleSpinner.setSelection(
+      dialogBinding.addUpdateDividendHeadline.setText(getString(R.string.add_dividend))
+      dialogBinding.textViewDividendCycleSpinner.setSelection(
           dividendCycleToSelection(Quarterly.value)
       )
 
-      builder.setView(dialogView)
+      builder.setView(dialogBinding.root)
           // Add action buttons
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
             // Add () to avoid cast exception.
-            val addDividendText = (addDividendView.text).toString()
+            val addDividendText = (dialogBinding.addDividend.text).toString()
                 .trim()
             var dividendAmount = 0.0
             if (addDividendText.isNotEmpty()) {
@@ -709,22 +696,26 @@ class DividendFragment : Fragment() {
             }
 
             val datetime: LocalDateTime = LocalDateTime.of(
-                datePickerDividendDateView.year, datePickerDividendDateView.month + 1,
-                datePickerDividendDateView.dayOfMonth, 0, 0
+                dialogBinding.datePickerDividendDate.year,
+                dialogBinding.datePickerDividendDate.month + 1,
+                dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
             )
             val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
             val datetimeEx: LocalDateTime = LocalDateTime.of(
-                datePickerDividendExDateView.year, datePickerDividendExDateView.month + 1,
-                datePickerDividendExDateView.dayOfMonth, 0, 0
+                dialogBinding.datePickerDividendExDate.year,
+                dialogBinding.datePickerDividendExDate.month + 1,
+                dialogBinding.datePickerDividendExDate.dayOfMonth, 0, 0
             )
             val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
-            val noteText = (addNoteView.text).toString()
+            val noteText = (dialogBinding.addNote.text).toString()
                 .trim()
 
             val cycle =
-              dividendSelectionToCycle(textViewDividendCycleSpinner.selectedItemPosition)
+              dividendSelectionToCycle(
+                  dialogBinding.textViewDividendCycleSpinner.selectedItemPosition
+              )
 
             val dividend = Dividend(
                 symbol = symbol,
@@ -778,20 +769,18 @@ class DividendFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_note, null)
-    val textInputEditNoteView =
-      dialogView.findViewById<TextView>(R.id.textInputEditNote)
+    val dialogBinding = DialogAddNoteBinding.inflate(inflater)
 
     val note = binding.dividendNoteTextView.text
-    textInputEditNoteView.text = note
+    dialogBinding.textInputEditNote.setText(note)
 
-    builder.setView(dialogView)
+    builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.add
         ) { _, _ ->
           // Add () to avoid cast exception.
-          val noteText = (textInputEditNoteView.text).toString()
+          val noteText = (dialogBinding.textInputEditNote.text).toString()
 
           if (noteText != note) {
             binding.dividendNoteTextView.text = noteText
@@ -867,7 +856,11 @@ class DividendFragment : Fragment() {
         .append(getString(R.string.annualDividendRate))
         .bold {
           append(
-              " ${DecimalFormat(DecimalFormat2To4Digits).format(data.onlineMarketData?.annualDividendRate)}\n"
+              " ${
+                DecimalFormat(DecimalFormat2To4Digits).format(
+                    data.onlineMarketData?.annualDividendRate
+                )
+              }\n"
           )
         }
         .append(getString(R.string.annualDividendYield))

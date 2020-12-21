@@ -76,7 +76,7 @@ class DividendTimelineFragment : Fragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val recyclerView: TimeLineRecyclerView = view.findViewById(R.id.timeline_recycler_view)
+    val recyclerView: TimeLineRecyclerView = binding.timelineRecyclerView
 
     // Currently only LinearLayoutManager is supported.
     recyclerView.layoutManager = LinearLayoutManager(
@@ -141,15 +141,16 @@ class DividendTimelineFragment : Fragment() {
 
               // get dividend total of the month
               val dividendTotal =
-                DecimalFormat(DecimalFormat2Digits).format(dividendlist.sumByDouble { (dividenddate, list) ->
-                  list.sumByDouble { dividend ->
-                    if (dividend.type == DividendType.Received.value) {
-                      dividend.amount
-                    } else {
-                      0.0
-                    }
-                  }
-                })
+                DecimalFormat(DecimalFormat2Digits).format(
+                    dividendlist.sumByDouble { (dividenddate, list) ->
+                      list.sumByDouble { dividend ->
+                        if (dividend.type == DividendType.Received.value) {
+                          dividend.amount
+                        } else {
+                          0.0
+                        }
+                      }
+                    })
 
               // add dividend total to the date header for each item
               dividendlist

@@ -110,8 +110,9 @@ class MainActivity : AppCompatActivity() {
     NotificationChannelFactory(this)
 
     val debugListAdapter = ListLogAdapter(this)
-    val debugList = findViewById<RecyclerView>(R.id.recyclerViewDebug)
+    val debugList = binding.recyclerViewDebug
     debugList.adapter = debugListAdapter
+
     val linearLayoutManager = LinearLayoutManager(this)
     linearLayoutManager.stackFromEnd = true
     debugList.layoutManager = linearLayoutManager
@@ -419,11 +420,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     val tabHeadlines: Boolean = sharedPreferences.getBoolean("tab_headlines", true)
-    binding.mainTabLayout.visibility = if (SharedRepository.displayedViewsList.size > 1 && tabHeadlines) {
-      View.VISIBLE
-    } else {
-      View.GONE
-    }
+    binding.mainTabLayout.visibility =
+      if (SharedRepository.displayedViewsList.size > 1 && tabHeadlines) {
+        View.VISIBLE
+      } else {
+        View.GONE
+      }
 
     val selectedFilter = sharedPreferences.getString("selectedFilter", "")
     val filterActive = sharedPreferences.getBoolean("filterActive", false)

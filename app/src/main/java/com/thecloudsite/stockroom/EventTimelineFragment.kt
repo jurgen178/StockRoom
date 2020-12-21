@@ -75,7 +75,7 @@ class EventTimelineFragment : Fragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val recyclerView: TimeLineRecyclerView = view.findViewById(R.id.timeline_recycler_view)
+    val recyclerView: TimeLineRecyclerView = binding.timelineRecyclerView
 
     // Currently only LinearLayoutManager is supported.
     recyclerView.layoutManager = LinearLayoutManager(

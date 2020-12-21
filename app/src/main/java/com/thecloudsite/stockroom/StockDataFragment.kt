@@ -74,6 +74,10 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.DialogAddAssetBinding
 import com.thecloudsite.stockroom.databinding.DialogAddEventBinding
+import com.thecloudsite.stockroom.databinding.DialogAddNoteBinding
+import com.thecloudsite.stockroom.databinding.DialogAddPortfolioBinding
+import com.thecloudsite.stockroom.databinding.DialogRemoveAssetBinding
+import com.thecloudsite.stockroom.databinding.DialogSplitAssetBinding
 import com.thecloudsite.stockroom.databinding.FragmentStockdataBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
@@ -247,10 +251,10 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val binding = DialogAddAssetBinding.inflate(inflater)
+    val dialogBinding = DialogAddAssetBinding.inflate(inflater)
 
-    binding.addUpdateQuantityHeadline.text = getString(R.string.update_asset)
-    binding.addQuantity.setText(
+    dialogBinding.addUpdateQuantityHeadline.text = getString(R.string.update_asset)
+    dialogBinding.addQuantity.setText(
         DecimalFormat(DecimalFormat0To6Digits).format(asset.quantity.absoluteValue)
     )
 //    if (asset.shares < 0) {
@@ -259,8 +263,8 @@ class StockDataFragment : Fragment() {
 //          TYPE_NUMBER_FLAG_SIGNED
 //    }
 
-    binding.addPrice.setText(DecimalFormat(DecimalFormat2To6Digits).format(asset.price))
-    binding.addNote.setText(asset.note)
+    dialogBinding.addPrice.setText(DecimalFormat(DecimalFormat2To6Digits).format(asset.price))
+    dialogBinding.addNote.setText(asset.note)
 
     val localDateTime = if (asset.date == 0L) {
       LocalDateTime.now()
@@ -268,7 +272,7 @@ class StockDataFragment : Fragment() {
       LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
     }
     // month is starting from zero
-    binding.datePickerAssetDate.updateDate(
+    dialogBinding.datePickerAssetDate.updateDate(
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
 
@@ -277,7 +281,7 @@ class StockDataFragment : Fragment() {
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val quantityText = (binding.addQuantity.text).toString()
+          val quantityText = (dialogBinding.addQuantity.text).toString()
               .trim()
           var quantity = 0.0
 
@@ -303,7 +307,7 @@ class StockDataFragment : Fragment() {
             return@setPositiveButton
           }
 
-          val priceText = (binding.addPrice.text).toString()
+          val priceText = (dialogBinding.addPrice.text).toString()
               .trim()
           var price = 0.0
           try {
@@ -327,12 +331,13 @@ class StockDataFragment : Fragment() {
 
           // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
           val localDateTimeNew: LocalDateTime = LocalDateTime.of(
-              binding.datePickerAssetDate.year, binding.datePickerAssetDate.month + 1,
-              binding.datePickerAssetDate.dayOfMonth, 0, 0
+              dialogBinding.datePickerAssetDate.year,
+              dialogBinding.datePickerAssetDate.month + 1,
+              dialogBinding.datePickerAssetDate.dayOfMonth, 0, 0
           )
           val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
 
-          val noteText = (binding.addNote.text).toString()
+          val noteText = (dialogBinding.addNote.text).toString()
               .trim()
 
           val assetNew =
@@ -470,38 +475,38 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val binding = DialogAddEventBinding.inflate(inflater)
-    binding.eventHeadline.setText(getString(R.string.update_event))
-    binding.textInputEditEventTitle.setText(event.title)
-    binding.textInputEditEventNote.setText(event.note)
+    val dialogBinding = DialogAddEventBinding.inflate(inflater)
+    dialogBinding.eventHeadline.setText(getString(R.string.update_event))
+    dialogBinding.textInputEditEventTitle.setText(event.title)
+    dialogBinding.textInputEditEventNote.setText(event.note)
     val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
     // month is starting from zero
-    binding.datePickerEventDate.updateDate(
+    dialogBinding.datePickerEventDate.updateDate(
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
-    binding.datePickerEventTime.hour = localDateTime.hour
-    binding.datePickerEventTime.minute = localDateTime.minute
+    dialogBinding.datePickerEventTime.hour = localDateTime.hour
+    dialogBinding.datePickerEventTime.minute = localDateTime.minute
 
-    builder.setView(binding.root)
+    builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
           // Add () to avoid cast exception.
-          val title = (binding.textInputEditEventTitle.text).toString()
+          val title = (dialogBinding.textInputEditEventTitle.text).toString()
               .trim()
           if (title.isEmpty()) {
             Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
                 .show()
           } else {
-            val note = (binding.textInputEditEventNote.text).toString()
+            val note = (dialogBinding.textInputEditEventNote.text).toString()
 
             val datetime: LocalDateTime = LocalDateTime.of(
-                binding.datePickerEventDate.year,
-                binding.datePickerEventDate.month + 1,
-                binding.datePickerEventDate.dayOfMonth,
-                binding.datePickerEventTime.hour,
-                binding.datePickerEventTime.minute
+                dialogBinding.datePickerEventDate.year,
+                dialogBinding.datePickerEventDate.month + 1,
+                dialogBinding.datePickerEventDate.dayOfMonth,
+                dialogBinding.datePickerEventTime.hour,
+                dialogBinding.datePickerEventTime.minute
             )
             val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
             val eventNew =
@@ -1031,12 +1036,8 @@ class StockDataFragment : Fragment() {
 
           // Inflate and set the layout for the dialog
           // Pass null as the parent view because its going in the dialog layout
-          val dialogView = inflater.inflate(R.layout.dialog_add_portfolio, null)
-
-          val portfolioHeaderView =
-            dialogView.findViewById<TextView>(R.id.portfolioHeader)
-          val portfolioTextView =
-            dialogView.findViewById<TextView>(R.id.portfolioTextView)
+          val dialogBinding = DialogAddPortfolioBinding.inflate(inflater)
+          //val dialogView = inflater.inflate(R.layout.dialog_add_portfolio, null)
 
           val selectedPortfolio =
             SharedRepository.selectedPortfolio.value ?: if (stockDBdata.portfolio.isEmpty()) {
@@ -1046,15 +1047,14 @@ class StockDataFragment : Fragment() {
             }
 
           if (addSelected) {
-            portfolioHeaderView.text = getString(R.string.add_portfolio)
-            portfolioTextView.text = getString(R.string.portfolio_name_text)
+            dialogBinding.portfolioHeader.text = getString(R.string.add_portfolio)
+            dialogBinding.portfolioTextView.text = getString(R.string.portfolio_name_text)
           } else {
-            portfolioHeaderView.text =
+            dialogBinding.portfolioHeader.text =
               getString(R.string.rename_portfolio_header, selectedPortfolio)
-            portfolioTextView.text = getString(R.string.portfolio_rename_text)
+            dialogBinding.portfolioTextView.text = getString(R.string.portfolio_rename_text)
           }
-          val addNameView = dialogView.findViewById<TextView>(R.id.addPortfolioName)
-          builder.setView(dialogView)
+          builder.setView(dialogBinding.root)
               // Add action buttons
               .setPositiveButton(
                   if (addSelected) {
@@ -1064,7 +1064,7 @@ class StockDataFragment : Fragment() {
                   }
               ) { _, _ ->
                 // Add () to avoid cast exception.
-                val portfolioText = (addNameView.text).toString()
+                val portfolioText = (dialogBinding.addPortfolioName.text).toString()
                     .trim()
                 if (portfolioText.isEmpty() || portfolioText.compareTo(
                         standardPortfolio, true
@@ -1215,20 +1215,19 @@ class StockDataFragment : Fragment() {
         // Get the layout inflater
         val inflater = LayoutInflater.from(requireContext())
 
-        val dialogView = inflater.inflate(R.layout.dialog_split_asset, null)
-        val splitRatioViewZ = dialogView.findViewById<TextView>(R.id.splitRatioZ)
-        splitRatioViewZ.text = "1"
-        val splitRatioViewN = dialogView.findViewById<TextView>(R.id.splitRatioN)
+        val dialogBinding = DialogSplitAssetBinding.inflate(inflater)
 
-        builder.setView(dialogView)
+        dialogBinding.splitRatioZ.setText("1")
+
+        builder.setView(dialogBinding.root)
             // Add action buttons
             .setPositiveButton(
                 R.string.split
             ) { _, _ ->
               // Add () to avoid cast exception.
-              val splitRatioTextZ = (splitRatioViewZ.text).toString()
+              val splitRatioTextZ = (dialogBinding.splitRatioZ.text).toString()
                   .trim()
-              val splitRatioTextN = (splitRatioViewN.text).toString()
+              val splitRatioTextN = (dialogBinding.splitRatioN.text).toString()
                   .trim()
               if (splitRatioTextZ.isNotEmpty() && splitRatioTextN.isNotEmpty()) {
                 var valid = true
@@ -1317,22 +1316,17 @@ class StockDataFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.dialog_add_asset, null)
-      val addUpdateQuantityHeadlineView =
-        dialogView.findViewById<TextView>(R.id.addUpdateQuantityHeadline)
-      addUpdateQuantityHeadlineView.text = getString(R.string.add_asset)
-      val addQuantityView = dialogView.findViewById<TextView>(R.id.addQuantity)
-      val addPriceView = dialogView.findViewById<TextView>(R.id.addPrice)
-      val addNoteView = dialogView.findViewById<TextView>(R.id.addNote)
-      val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
+      val dialogBinding = DialogAddAssetBinding.inflate(inflater)
 
-      builder.setView(dialogView)
+      dialogBinding.addUpdateQuantityHeadline.text = getString(R.string.add_asset)
+
+      builder.setView(dialogBinding.root)
           // Add action buttons
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
             // Add () to avoid cast exception.
-            val quantitytText = (addQuantityView.text).toString()
+            val quantitytText = (dialogBinding.addQuantity.text).toString()
                 .trim()
             var quantity = 0.0
 
@@ -1355,7 +1349,7 @@ class StockDataFragment : Fragment() {
               return@setPositiveButton
             }
 
-            val priceText = (addPriceView.text).toString()
+            val priceText = (dialogBinding.addPrice.text).toString()
                 .trim()
             var price = 0.0
             try {
@@ -1378,12 +1372,13 @@ class StockDataFragment : Fragment() {
             }
 
             val localDateTime: LocalDateTime = LocalDateTime.of(
-                datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
-                datePickerAssetDateView.dayOfMonth, 0, 0
+                dialogBinding.datePickerAssetDate.year,
+                dialogBinding.datePickerAssetDate.month + 1,
+                dialogBinding.datePickerAssetDate.dayOfMonth, 0, 0
             )
             val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
 
-            val noteText = (addNoteView.text).toString()
+            val noteText = (dialogBinding.addNote.text).toString()
                 .trim()
 
             //val date = LocalDateTime.now()
@@ -1450,18 +1445,14 @@ class StockDataFragment : Fragment() {
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        val dialogView = inflater.inflate(R.layout.dialog_remove_asset, null)
-        val removeQuantityView = dialogView.findViewById<TextView>(R.id.removeQuantity)
-        val removePriceView = dialogView.findViewById<TextView>(R.id.removePrice)
-        val removeNoteView = dialogView.findViewById<TextView>(R.id.removeNote)
-        val datePickerAssetDateView = dialogView.findViewById<DatePicker>(R.id.datePickerAssetDate)
+        val dialogBinding = DialogRemoveAssetBinding.inflate(inflater)
 
-        builder.setView(dialogView)
+        builder.setView(dialogBinding.root)
             // Add action buttons
             .setPositiveButton(
                 R.string.delete
             ) { _, _ ->
-              val quantityText = (removeQuantityView.text).toString()
+              val quantityText = (dialogBinding.removeQuantity.text).toString()
                   .trim()
               var quantity = 0.0
 
@@ -1484,7 +1475,7 @@ class StockDataFragment : Fragment() {
                 return@setPositiveButton
               }
 
-              val priceText = (removePriceView.text).toString()
+              val priceText = (dialogBinding.removePrice.text).toString()
                   .trim()
               var price = 0.0
               try {
@@ -1520,12 +1511,13 @@ class StockDataFragment : Fragment() {
               }
 
               val localDateTime: LocalDateTime = LocalDateTime.of(
-                  datePickerAssetDateView.year, datePickerAssetDateView.month + 1,
-                  datePickerAssetDateView.dayOfMonth, 0, 0
+                  dialogBinding.datePickerAssetDate.year,
+                  dialogBinding.datePickerAssetDate.month + 1,
+                  dialogBinding.datePickerAssetDate.dayOfMonth, 0, 0
               )
               val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
 
-              val noteText = (removeNoteView.text).toString()
+              val noteText = (dialogBinding.removeNote.text).toString()
                   .trim()
 
               //val date = LocalDateTime.now()
@@ -1664,34 +1656,30 @@ class StockDataFragment : Fragment() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.dialog_add_event, null)
-      val eventHeadlineView = dialogView.findViewById<TextView>(R.id.eventHeadline)
-      eventHeadlineView.text = getString(R.string.add_event)
-      val textInputEditEventTitleView =
-        dialogView.findViewById<TextView>(R.id.textInputEditEventTitle)
-      val textInputEditEventNoteView =
-        dialogView.findViewById<TextView>(R.id.textInputEditEventNote)
-      val datePickerEventDateView = dialogView.findViewById<DatePicker>(R.id.datePickerEventDate)
-      val datePickerEventTimeView = dialogView.findViewById<TimePicker>(R.id.datePickerEventTime)
+      val dialogBinding = DialogAddEventBinding.inflate(inflater)
 
-      builder.setView(dialogView)
+      dialogBinding.eventHeadline.text = getString(R.string.add_event)
+
+      builder.setView(dialogBinding.root)
           // Add action buttons
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
             // Add () to avoid cast exception.
-            val title = (textInputEditEventTitleView.text).toString()
+            val title = (dialogBinding.textInputEditEventTitle.text).toString()
                 .trim()
             // add new event
             if (title.isEmpty()) {
               Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
                   .show()
             } else {
-              val note = (textInputEditEventNoteView.text).toString()
+              val note = (dialogBinding.textInputEditEventNote.text).toString()
               val datetime: LocalDateTime = LocalDateTime.of(
-                  datePickerEventDateView.year, datePickerEventDateView.month + 1,
-                  datePickerEventDateView.dayOfMonth, datePickerEventTimeView.hour,
-                  datePickerEventTimeView.minute
+                  dialogBinding.datePickerEventDate.year,
+                  dialogBinding.datePickerEventDate.month + 1,
+                  dialogBinding.datePickerEventDate.dayOfMonth,
+                  dialogBinding.datePickerEventTime.hour,
+                  dialogBinding.datePickerEventTime.minute
               )
               val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
               stockRoomViewModel.addEvent(
@@ -1870,20 +1858,18 @@ class StockDataFragment : Fragment() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_note, null)
-    val textInputEditNoteView =
-      dialogView.findViewById<TextView>(R.id.textInputEditNote)
+    val dialogBinding = DialogAddNoteBinding.inflate(inflater)
 
     val note = binding.noteTextView.text
-    textInputEditNoteView.text = note
+    dialogBinding.textInputEditNote.setText(note)
 
-    builder.setView(dialogView)
+    builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.add
         ) { _, _ ->
           // Add () to avoid cast exception.
-          val noteText = (textInputEditNoteView.text).toString()
+          val noteText = (dialogBinding.textInputEditNote.text).toString()
 
           if (noteText != note) {
             binding.noteTextView.text = noteText
@@ -2233,7 +2219,7 @@ class StockDataFragment : Fragment() {
 
   private fun setupCandleStickChart() {
     val candleStickChart
-        : CandleStickChart = view?.findViewById(R.id.candleStickChart)!!
+        : CandleStickChart = binding.candleStickChart
     candleStickChart.isDoubleTapToZoomEnabled = false
 
     candleStickChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -2259,7 +2245,7 @@ class StockDataFragment : Fragment() {
     symbol: String,
     stockViewRange: StockViewRange
   ) {
-    val candleStickChart: CandleStickChart = view?.findViewById(R.id.candleStickChart)!!
+    val candleStickChart: CandleStickChart = binding.candleStickChart
     candleStickChart.candleData?.clearValues()
 
     val candleEntries: MutableList<CandleEntry> = mutableListOf()
@@ -2314,7 +2300,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun setupLineChart() {
-    val lineChart: LineChart = view?.findViewById(R.id.lineChart)!!
+    val lineChart: LineChart = binding.lineChart
     lineChart.isDoubleTapToZoomEnabled = false
 
     lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -2339,7 +2325,7 @@ class StockDataFragment : Fragment() {
     symbol: String,
     stockViewRange: StockViewRange
   ) {
-    val lineChart: LineChart = view?.findViewById(R.id.lineChart)!!
+    val lineChart: LineChart = binding.lineChart
     lineChart.setNoDataText("")
     lineChart.lineData?.clearValues()
 

@@ -47,7 +47,7 @@ open class StockRoomBaseFragment : Fragment() {
 
   // This property is only valid between onCreateView and
   // onDestroyView.
-  private val binding get() = _binding!!
+  val binding get() = _binding!!
 
   lateinit var stockRoomViewModel: StockRoomViewModel
 

@@ -40,8 +40,7 @@ class StockRoomListFragment : StockRoomBaseFragment() {
     val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
     val adapter = StockRoomListAdapter(requireContext(), clickListenerGroup, clickListenerSummary)
 
-    val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
-
+    val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter
 
     // Set column number depending on screen width.

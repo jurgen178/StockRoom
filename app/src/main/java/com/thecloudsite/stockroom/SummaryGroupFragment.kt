@@ -93,7 +93,7 @@ class SummaryGroupFragment : Fragment() {
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     val summaryGroupAdapter = SummaryGroupAdapter(requireContext())
-    val summaryGroup = view.findViewById<RecyclerView>(R.id.summaryGroup)
+    val summaryGroup = binding.summaryGroup
     summaryGroup.adapter = summaryGroupAdapter
 
     // Set column number depending on screen width.

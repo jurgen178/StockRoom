@@ -31,6 +31,7 @@ import com.larswerkman.holocolorpicker.SVBar
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.ActivityUpdategroupBinding
+import com.thecloudsite.stockroom.databinding.DialogAddGroupBinding
 
 class UpdateGroupActivity : AppCompatActivity() {
 
@@ -46,34 +47,29 @@ class UpdateGroupActivity : AppCompatActivity() {
 
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    val dialogView = inflater.inflate(R.layout.dialog_add_group, null)
+    val dialogBinding = DialogAddGroupBinding.inflate(inflater)
 
-    val addUpdateGroupsHeadlineView =
-      dialogView.findViewById<TextView>(R.id.addUpdateGroupsHeadline)
-    addUpdateGroupsHeadlineView.text = getString(R.string.update_groups_dialog_headline, group.name)
+    dialogBinding.addUpdateGroupsHeadline.text = getString(R.string.update_groups_dialog_headline, group.name)
 
-    val colorView = dialogView.findViewById<ColorPicker>(R.id.colorPicker)
-    val svbarView = dialogView.findViewById<SVBar>(R.id.colorPickerSV)
 //      val saturationbarView = dialogView.findViewById<SaturationBar>(R.id.colorPickerSaturationbar)
 //      val valuebarView = dialogView.findViewById<ValueBar>(R.id.colorPickerValuebar)
-    colorView.addSVBar(svbarView)
+    dialogBinding.colorPicker.addSVBar(dialogBinding.colorPickerSV)
 
     val clr = group.color
-    colorView.color = clr
-    colorView.oldCenterColor = clr
-    colorView.setNewCenterColor(clr)
+    dialogBinding.colorPicker.color = clr
+    dialogBinding.colorPicker.oldCenterColor = clr
+    dialogBinding.colorPicker.setNewCenterColor(clr)
 //      colorView.addSaturationBar(saturationbarView)
 //      colorView.addValueBar(valuebarView)
 
-    val addNameView = dialogView.findViewById<TextView>(R.id.addName)
-    addNameView.text = group.name
+    dialogBinding.addName.setText(group.name)
 
-    builder.setView(dialogView)
+    builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.update
         ) { _, _ ->
-          val color = colorView.color
+          val color = dialogBinding.colorPicker.color
           if (clr != color) {
             // Change color of all stocks from the old color 'clr' to the new color.
             stockRoomViewModel.updateStockGroupColors(clr, color)
@@ -83,7 +79,7 @@ class UpdateGroupActivity : AppCompatActivity() {
             stockRoomViewModel.setGroup(color = color, name = group.name)
           }
           // Add () to avoid cast exception.
-          val nameText = (addNameView.text).toString()
+          val nameText = (dialogBinding.addName.text).toString()
               .trim()
 
           // Check if color is used
@@ -191,32 +187,28 @@ class UpdateGroupActivity : AppCompatActivity() {
 
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
-      val dialogView = inflater.inflate(R.layout.dialog_add_group, null)
-      val addUpdateGroupsHeadlineView =
-        dialogView.findViewById<TextView>(R.id.addUpdateGroupsHeadline)
-      addUpdateGroupsHeadlineView.text = getString(R.string.add_group)
+      val dialogBinding = DialogAddGroupBinding.inflate(inflater)
 
-      val colorView = dialogView.findViewById<ColorPicker>(R.id.colorPicker)
-      val svbarView = dialogView.findViewById<SVBar>(R.id.colorPickerSV)
+      dialogBinding.addUpdateGroupsHeadline.text = getString(R.string.add_group)
+
 //      val saturationbarView = dialogView.findViewById<SaturationBar>(R.id.colorPickerSaturationbar)
 //      val valuebarView = dialogView.findViewById<ValueBar>(R.id.colorPickerValuebar)
-      colorView.addSVBar(svbarView)
+      dialogBinding.colorPicker.addSVBar(dialogBinding.colorPickerSV)
 
       val clr = Color.BLUE
-      colorView.color = clr
-      colorView.oldCenterColor = clr
-      colorView.setNewCenterColor(clr)
+      dialogBinding.colorPicker.color = clr
+      dialogBinding.colorPicker.oldCenterColor = clr
+      dialogBinding.colorPicker.setNewCenterColor(clr)
 //      colorView.addSaturationBar(saturationbarView)
 //      colorView.addValueBar(valuebarView)
 
-      val addNameView = dialogView.findViewById<TextView>(R.id.addName)
-      builder.setView(dialogView)
+      builder.setView(dialogBinding.root)
           // Add action buttons
           .setPositiveButton(
               R.string.add
           ) { _, _ ->
             // Add () to avoid cast exception.
-            val nameText = (addNameView.text).toString()
+            val nameText = (dialogBinding.addName.text).toString()
                 .trim()
             if (nameText.isEmpty()) {
               Toast.makeText(
@@ -226,7 +218,7 @@ class UpdateGroupActivity : AppCompatActivity() {
               return@setPositiveButton
             }
 
-            val color = colorView.color
+            val color = dialogBinding.colorPicker.color
             // Check if color is used
             val colorUsed = groupList.find { group ->
               group.color == color

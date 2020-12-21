@@ -77,7 +77,7 @@ class StockRoomTileFragment : Fragment() {
 
     val clickListenerListItem = { stockItem: StockItem -> clickListenerListItem(stockItem) }
     val stockRoomTileAdapter = StockRoomTileAdapter(requireContext(), clickListenerListItem)
-    val stockRoomTile = view.findViewById<RecyclerView>(R.id.stockroomtile)
+    val stockRoomTile = binding.stockroomtile
     stockRoomTile.adapter = stockRoomTileAdapter
 
     /*
