@@ -26,7 +26,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
 class StockRoomChartFragment : StockRoomBaseFragment() {

@@ -276,7 +276,7 @@ class StockDataFragment : Fragment() {
         localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
 
-    builder.setView(binding.root)
+    builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             R.string.update

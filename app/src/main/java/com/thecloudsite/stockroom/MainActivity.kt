@@ -35,7 +35,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.ktx.Firebase
@@ -303,6 +302,8 @@ class MainActivity : AppCompatActivity() {
 
     // Setup event handler every 5s.
     eventHandler = Handler(Looper.getMainLooper())
+
+    //supportActionBar?.title = "test title"
   }
 
   private fun updateRemoteConfig() {

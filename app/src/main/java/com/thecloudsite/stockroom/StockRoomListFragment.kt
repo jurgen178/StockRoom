@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
 class StockRoomListFragment : StockRoomBaseFragment() {
