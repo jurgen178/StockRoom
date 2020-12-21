@@ -21,14 +21,9 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.AssetListAdapter.AssetViewHolder
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
-import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.databinding.DividendAnnouncedViewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
@@ -46,7 +41,6 @@ class DividendAnnouncedListAdapter internal constructor(
   private val clickListenerDelete: (String?, Dividend?) -> Unit
 ) : RecyclerView.Adapter<DividendAnnouncedListAdapter.DividendAnnouncedViewHolder>() {
 
-  private lateinit var binding: DividendAnnouncedViewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var dividendList = mutableListOf<Dividend>()
 
@@ -78,7 +72,7 @@ class DividendAnnouncedListAdapter internal constructor(
     viewType: Int
   ): DividendAnnouncedViewHolder {
 
-    binding = DividendAnnouncedViewItemBinding.inflate(inflater, parent, false)
+    val binding = DividendAnnouncedViewItemBinding.inflate(inflater, parent, false)
     return DividendAnnouncedViewHolder(binding)
   }
 

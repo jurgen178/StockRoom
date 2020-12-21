@@ -38,7 +38,6 @@ class EventListAdapter internal constructor(
   private val clickListenerDelete: (Event) -> Unit
 ) : RecyclerView.Adapter<EventListAdapter.EventViewHolder>() {
 
-  private lateinit var binding: EventviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var eventList = mutableListOf<Event>()
 
@@ -65,7 +64,7 @@ class EventListAdapter internal constructor(
     viewType: Int
   ): EventViewHolder {
 
-    binding = EventviewItemBinding.inflate(inflater, parent, false)
+    val binding = EventviewItemBinding.inflate(inflater, parent, false)
     return EventViewHolder(binding)
   }
 

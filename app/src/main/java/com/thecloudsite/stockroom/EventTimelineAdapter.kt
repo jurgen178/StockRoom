@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Event
-import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.databinding.TimelineEventItemBinding
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -38,7 +37,6 @@ class EventTimelineAdapter(
   private val context: Context
 ) : RecyclerView.Adapter<EventTimelineAdapter.ViewHolder>() {
 
-  private lateinit var binding: TimelineEventItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var timelineElementList: List<EventTimelineElement> = listOf()
 
@@ -52,7 +50,7 @@ class EventTimelineAdapter(
     viewType: Int
   ): ViewHolder {
 
-    binding = TimelineEventItemBinding.inflate(inflater, parent, false)
+    val binding = TimelineEventItemBinding.inflate(inflater, parent, false)
     return ViewHolder(binding)
   }
 

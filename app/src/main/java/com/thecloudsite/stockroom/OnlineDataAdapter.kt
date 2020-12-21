@@ -59,7 +59,6 @@ class OnlineDataAdapter internal constructor(
   val context: Context
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
-  private lateinit var binding: OnlinedataviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
 
@@ -182,7 +181,7 @@ class OnlineDataAdapter internal constructor(
     viewType: Int
   ): OnlineDataViewHolder {
 
-    binding = OnlinedataviewItemBinding.inflate(inflater, parent, false)
+    val binding = OnlinedataviewItemBinding.inflate(inflater, parent, false)
 
     binding.root.setOnClickListener {
 

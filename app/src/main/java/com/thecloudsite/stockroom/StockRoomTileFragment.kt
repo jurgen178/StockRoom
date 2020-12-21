@@ -26,11 +26,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.databinding.FragmentNewsBinding
+import com.thecloudsite.stockroom.databinding.FragmentTileBinding
 import java.lang.Integer.max
 import java.lang.Integer.min
 import kotlin.math.roundToInt
 
 class StockRoomTileFragment : Fragment() {
+
+  private var _binding: FragmentTileBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
@@ -47,9 +55,16 @@ class StockRoomTileFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
+
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_tile, container, false)
+    _binding = FragmentTileBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onViewCreated(

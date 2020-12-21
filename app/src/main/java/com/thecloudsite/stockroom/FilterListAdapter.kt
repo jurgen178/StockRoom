@@ -33,7 +33,6 @@ class FilterListAdapter internal constructor(
   private val clickListenerDelete: (IFilterType, Int) -> Unit
 ) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>() {
 
-  private lateinit var binding: FilterviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var filterList = mutableListOf<IFilterType>()
 
@@ -62,7 +61,7 @@ class FilterListAdapter internal constructor(
     viewType: Int
   ): FilterViewHolder {
 
-    binding = FilterviewItemBinding.inflate(inflater, parent, false)
+    val binding = FilterviewItemBinding.inflate(inflater, parent, false)
     return FilterViewHolder(binding)
   }
 

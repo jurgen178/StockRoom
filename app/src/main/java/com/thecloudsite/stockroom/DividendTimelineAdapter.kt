@@ -40,7 +40,6 @@ class DividendTimelineAdapter(
   private val context: Context
 ) : RecyclerView.Adapter<DividendTimelineAdapter.ViewHolder>() {
 
-  private lateinit var binding: TimelineDividendItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var timelineElementList: List<DividendTimelineElement> = listOf()
 
@@ -54,7 +53,7 @@ class DividendTimelineAdapter(
     viewType: Int
   ): ViewHolder {
 
-    binding = TimelineDividendItemBinding.inflate(inflater, parent, false)
+    val binding = TimelineDividendItemBinding.inflate(inflater, parent, false)
     return ViewHolder(binding)
   }
 

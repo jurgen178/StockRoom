@@ -29,12 +29,17 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.id
-import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.DbAssetTypeItemBinding
+import com.thecloudsite.stockroom.databinding.DbDividendTypeItemBinding
+import com.thecloudsite.stockroom.databinding.DbEventTypeItemBinding
+import com.thecloudsite.stockroom.databinding.DbGroupTypeItemBinding
+import com.thecloudsite.stockroom.databinding.DbHeadlineTypeItemBinding
+import com.thecloudsite.stockroom.databinding.DbStockdbdataTypeItemBinding
 import com.thecloudsite.stockroom.list.ListDBAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
@@ -45,7 +50,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
-const val db_type_headline: Int = 0
+const val db_headline_type: Int = 0
 const val db_stockdbdata_type: Int = 1
 const val db_group_type: Int = 2
 const val db_asset_type: Int = 3
@@ -96,88 +101,46 @@ class ListDBAdapter(
   private var dbDataList: MutableList<DBData> = mutableListOf()
   private var dbDataMap: MutableMap<String, MutableList<DBData>> = mutableMapOf()
 
-  class HeadlineViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
+  class HeadlineViewHolder(
+    val binding: DbHeadlineTypeItemBinding
+  ) : BaseViewHolder<DBData>(binding.root) {
     override fun bind(item: DBData) {
     }
-
-    val db_type_headline: TextView = itemView.findViewById(id.db_type_headline)
   }
 
-  class StockDBdataViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
+  class StockDBdataViewHolder(
+    val binding: DbStockdbdataTypeItemBinding
+  ) : BaseViewHolder<DBData>(binding.root) {
     override fun bind(item: DBData) {
     }
-
-    val db_stockdbdata_layout: ConstraintLayout = itemView.findViewById(id.db_stockdbdata_layout)
-    val db_stockdbdata_symbol: TextView = itemView.findViewById(id.db_stockdbdata_symbol)
-    val db_stockdbdata_portfolio: TextView = itemView.findViewById(id.db_stockdbdata_portfolio)
-    val db_stockdbdata_data: TextView = itemView.findViewById(id.db_stockdbdata_data)
-    val db_stockdbdata_groupColor: TextView = itemView.findViewById(id.db_stockdbdata_groupColor)
-    val db_stockdbdata_note: TextView = itemView.findViewById(id.db_stockdbdata_note)
-    val db_stockdbdata_dividendNote: TextView =
-      itemView.findViewById(id.db_stockdbdata_dividendNote)
-    val db_stockdbdata_annualDividendRate: TextView =
-      itemView.findViewById(id.db_stockdbdata_annualDividendRate)
-    val db_stockdbdata_alertAbove: TextView = itemView.findViewById(id.db_stockdbdata_alertAbove)
-    val db_stockdbdata_alertAboveNote: TextView =
-      itemView.findViewById(id.db_stockdbdata_alertAboveNote)
-    val db_stockdbdata_alertBelow: TextView = itemView.findViewById(id.db_stockdbdata_alertBelow)
-    val db_stockdbdata_alertBelowNote: TextView =
-      itemView.findViewById(id.db_stockdbdata_alertBelowNote)
   }
 
-  class GroupViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
+  class GroupViewHolder(
+    val binding: DbGroupTypeItemBinding
+  ) : BaseViewHolder<DBData>(binding.root) {
     override fun bind(item: DBData) {
     }
-
-    val db_group_layout: ConstraintLayout = itemView.findViewById(id.db_group_layout)
-    val db_group_color: TextView = itemView.findViewById(id.db_group_color)
-    val db_group_name: TextView = itemView.findViewById(id.db_group_name)
   }
 
-  class AssetViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
+  class AssetViewHolder(
+    val binding: DbAssetTypeItemBinding
+  ) : BaseViewHolder<DBData>(binding.root) {
     override fun bind(item: DBData) {
     }
-
-    val db_asset_layout: ConstraintLayout = itemView.findViewById(id.db_asset_layout)
-    val db_asset_id: TextView = itemView.findViewById(id.db_asset_id)
-    val db_asset_symbol: TextView = itemView.findViewById(id.db_asset_symbol)
-    val db_asset_quantity: TextView = itemView.findViewById(id.db_asset_quantity)
-    val db_asset_price: TextView = itemView.findViewById(id.db_asset_price)
-    val db_asset_type: TextView = itemView.findViewById(id.db_asset_type)
-    val db_asset_note: TextView = itemView.findViewById(id.db_asset_note)
-    val db_asset_date: TextView = itemView.findViewById(id.db_asset_date)
-    val db_asset_sharesPerQuantity: TextView = itemView.findViewById(id.db_asset_sharesPerQuantity)
-    val db_asset_expirationDate: TextView = itemView.findViewById(id.db_asset_expirationDate)
-    val db_asset_premium: TextView = itemView.findViewById(id.db_asset_premium)
-    val db_asset_commission: TextView = itemView.findViewById(id.db_asset_commission)
   }
 
-  class EventViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
+  class EventViewHolder(
+    val binding: DbEventTypeItemBinding
+  ) : BaseViewHolder<DBData>(binding.root) {
     override fun bind(item: DBData) {
     }
-
-    val db_event_layout: ConstraintLayout = itemView.findViewById(id.db_event_layout)
-    val db_event_id: TextView = itemView.findViewById(id.db_event_id)
-    val db_event_symbol: TextView = itemView.findViewById(id.db_event_symbol)
-    val db_event_title: TextView = itemView.findViewById(id.db_event_title)
-    val db_event_datetime: TextView = itemView.findViewById(id.db_event_datetime)
-    val db_event_type: TextView = itemView.findViewById(id.db_event_type)
-    val db_event_note: TextView = itemView.findViewById(id.db_event_note)
   }
 
-  class DividendViewHolder(itemView: View) : BaseViewHolder<DBData>(itemView) {
+  class DividendViewHolder(
+    val binding: DbDividendTypeItemBinding
+  ) : BaseViewHolder<DBData>(binding.root) {
     override fun bind(item: DBData) {
     }
-
-    val db_dividend_layout: ConstraintLayout = itemView.findViewById(id.db_dividend_layout)
-    val db_dividend_id: TextView = itemView.findViewById(id.db_dividend_id)
-    val db_dividend_symbol: TextView = itemView.findViewById(id.db_dividend_symbol)
-    val db_dividend_amount: TextView = itemView.findViewById(id.db_dividend_amount)
-    val db_dividend_cycle: TextView = itemView.findViewById(id.db_dividend_cycle)
-    val db_dividend_paydate: TextView = itemView.findViewById(id.db_dividend_paydate)
-    val db_dividend_type: TextView = itemView.findViewById(id.db_dividend_type)
-    val db_dividend_exdate: TextView = itemView.findViewById(id.db_dividend_exdate)
-    val db_dividend_note: TextView = itemView.findViewById(id.db_dividend_note)
   }
 
   override fun onCreateViewHolder(
@@ -186,40 +149,35 @@ class ListDBAdapter(
   ): BaseViewHolder<*> {
 
     return when (viewType) {
-      db_type_headline -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.db_type_headline_item, parent, false)
-        HeadlineViewHolder(view)
+      db_headline_type -> {
+        val binding = DbHeadlineTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        HeadlineViewHolder(binding)
       }
 
       db_stockdbdata_type -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.db_stockdbdata_type_item, parent, false)
-        StockDBdataViewHolder(view)
+        val binding =
+          DbStockdbdataTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        StockDBdataViewHolder(binding)
       }
 
       db_group_type -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.db_group_type_item, parent, false)
-        GroupViewHolder(view)
+        val binding = DbGroupTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        GroupViewHolder(binding)
       }
 
       db_asset_type -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.db_asset_type_item, parent, false)
-        AssetViewHolder(view)
+        val binding = DbAssetTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        AssetViewHolder(binding)
       }
 
       db_event_type -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.db_event_type_item, parent, false)
-        EventViewHolder(view)
+        val binding = DbEventTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        EventViewHolder(binding)
       }
 
       db_dividend_type -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.db_dividend_type_item, parent, false)
-        DividendViewHolder(view)
+        val binding = DbDividendTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        DividendViewHolder(binding)
       }
 
       else -> throw IllegalArgumentException("Invalid view type")
@@ -239,50 +197,50 @@ class ListDBAdapter(
       is HeadlineViewHolder -> {
         holder.bind(data)
 
-        holder.db_type_headline.text = data.title
+        holder.binding.dbHeadline.text = data.title
       }
 
       is StockDBdataViewHolder -> {
         holder.bind(data)
 
         if (data.isHeader) {
-          holder.db_stockdbdata_layout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.db_stockdbdata_symbol.text = getHeaderStr("symbol")
-          holder.db_stockdbdata_portfolio.text = getHeaderStr("portfolio")
-          holder.db_stockdbdata_data.text = getHeaderStr("data")
-          holder.db_stockdbdata_groupColor.text = getHeaderStr("groupColor")
-          holder.db_stockdbdata_note.text = getHeaderStr("note")
-          holder.db_stockdbdata_dividendNote.text = getHeaderStr("dividendNote")
-          holder.db_stockdbdata_annualDividendRate.text = getHeaderStr("annualDividendRate")
-          holder.db_stockdbdata_alertAbove.text = getHeaderStr("alertAbove")
-          holder.db_stockdbdata_alertAboveNote.text = getHeaderStr("alertAboveNote")
-          holder.db_stockdbdata_alertBelow.text = getHeaderStr("alertBelow")
-          holder.db_stockdbdata_alertBelowNote.text = getHeaderStr("alertBelowNote")
+          holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+          holder.binding.dbStockdbdataSymbol.text = getHeaderStr("symbol")
+          holder.binding.dbStockdbdataPortfolio.text = getHeaderStr("portfolio")
+          holder.binding.dbStockdbdataData.text = getHeaderStr("data")
+          holder.binding.dbStockdbdataGroupColor.text = getHeaderStr("groupColor")
+          holder.binding.dbStockdbdataNote.text = getHeaderStr("note")
+          holder.binding.dbStockdbdataDividendNote.text = getHeaderStr("dividendNote")
+          holder.binding.dbStockdbdataAnnualDividendRate.text = getHeaderStr("annualDividendRate")
+          holder.binding.dbStockdbdataAlertAbove.text = getHeaderStr("alertAbove")
+          holder.binding.dbStockdbdataAlertAboveNote.text = getHeaderStr("alertAboveNote")
+          holder.binding.dbStockdbdataAlertBelow.text = getHeaderStr("alertBelow")
+          holder.binding.dbStockdbdataAlertBelowNote.text = getHeaderStr("alertBelowNote")
         } else {
-          holder.db_stockdbdata_layout.setBackgroundColor(Color.rgb(0, 148, 255))
-          holder.db_stockdbdata_symbol.text = data.symbol
-          holder.db_stockdbdata_portfolio.text = data.portfolio
-          holder.db_stockdbdata_data.text = data.data
-          holder.db_stockdbdata_groupColor.text = getColorStr(data.groupColor)
-          holder.db_stockdbdata_note.text = data.note
-          holder.db_stockdbdata_dividendNote.text = data.dividendNote
-          holder.db_stockdbdata_annualDividendRate.text = if (data.annualDividendRate >= 0.0) {
+          holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(0, 148, 255))
+          holder.binding.dbStockdbdataSymbol.text = data.symbol
+          holder.binding.dbStockdbdataPortfolio.text = data.portfolio
+          holder.binding.dbStockdbdataData.text = data.data
+          holder.binding.dbStockdbdataGroupColor.text = getColorStr(data.groupColor)
+          holder.binding.dbStockdbdataNote.text = data.note
+          holder.binding.dbStockdbdataDividendNote.text = data.dividendNote
+          holder.binding.dbStockdbdataAnnualDividendRate.text = if (data.annualDividendRate >= 0.0) {
             DecimalFormat(DecimalFormat2To4Digits).format(data.annualDividendRate)
           } else {
             ""
           }
-          holder.db_stockdbdata_alertAbove.text = if (data.alertAbove > 0.0) {
+          holder.binding.dbStockdbdataAlertAbove.text = if (data.alertAbove > 0.0) {
             DecimalFormat(DecimalFormat2To4Digits).format(data.alertAbove)
           } else {
             ""
           }
-          holder.db_stockdbdata_alertAboveNote.text = data.alertAboveNote
-          holder.db_stockdbdata_alertBelow.text = if (data.alertBelow > 0.0) {
+          holder.binding.dbStockdbdataAlertAboveNote.text = data.alertAboveNote
+          holder.binding.dbStockdbdataAlertBelow.text = if (data.alertBelow > 0.0) {
             DecimalFormat(DecimalFormat2To4Digits).format(data.alertBelow)
           } else {
             ""
           }
-          holder.db_stockdbdata_alertBelowNote.text = data.alertBelowNote
+          holder.binding.dbStockdbdataAlertBelowNote.text = data.alertBelowNote
         }
       }
 
@@ -290,13 +248,13 @@ class ListDBAdapter(
         holder.bind(data)
 
         if (data.isHeader) {
-          holder.db_group_layout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.db_group_color.text = getHeaderStr("color")
-          holder.db_group_name.text = getHeaderStr("name")
+          holder.binding.dbGroupLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+          holder.binding.dbGroupColor.text = getHeaderStr("color")
+          holder.binding.dbGroupName.text = getHeaderStr("name")
         } else {
-          holder.db_group_layout.setBackgroundColor(Color.rgb(255, 127, 182))
-          holder.db_group_color.text = getColorStr(data.color)
-          holder.db_group_name.text = data.name
+          holder.binding.dbGroupLayout.setBackgroundColor(Color.rgb(255, 127, 182))
+          holder.binding.dbGroupColor.text = getColorStr(data.color)
+          holder.binding.dbGroupName.text = data.name
         }
 
 //      groupTableRowsCount = items.size
@@ -314,33 +272,38 @@ class ListDBAdapter(
         holder.bind(data)
 
         if (data.isHeader) {
-          holder.db_asset_layout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.db_asset_id.text = getHeaderStr("id")
-          holder.db_asset_symbol.text = getHeaderStr("symbol")
-          holder.db_asset_quantity.text = getHeaderStr("quantity")
-          holder.db_asset_price.text = getHeaderStr("price")
-          holder.db_asset_type.text = getHeaderStr("type")
-          holder.db_asset_note.text = getHeaderStr("note")
-          holder.db_asset_date.text = getHeaderStr("date")
-          holder.db_asset_sharesPerQuantity.text = getHeaderStr("sharesPerQuantity")
-          holder.db_asset_expirationDate.text = getHeaderStr("expirationDate")
-          holder.db_asset_premium.text = getHeaderStr("premium")
-          holder.db_asset_commission.text = getHeaderStr("commission")
+          holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+          holder.binding.dbAssetId.text = getHeaderStr("id")
+          holder.binding.dbAssetSymbol.text = getHeaderStr("symbol")
+          holder.binding.dbAssetQuantity.text = getHeaderStr("quantity")
+          holder.binding.dbAssetPrice.text = getHeaderStr("price")
+          holder.binding.dbAssetType.text = getHeaderStr("type")
+          holder.binding.dbAssetNote.text = getHeaderStr("note")
+          holder.binding.dbAssetDate.text = getHeaderStr("date")
+          holder.binding.dbAssetSharesPerQuantity.text = getHeaderStr("sharesPerQuantity")
+          holder.binding.dbAssetExpirationDate.text = getHeaderStr("expirationDate")
+          holder.binding.dbAssetPremium.text = getHeaderStr("premium")
+          holder.binding.dbAssetCommission.text = getHeaderStr("commission")
         } else {
-          holder.db_asset_layout.setBackgroundColor(Color.rgb(255, 106, 0))
-          holder.db_asset_id.text = data.id?.toString() ?: ""
-          holder.db_asset_symbol.text = data.symbol
-          holder.db_asset_quantity.text = DecimalFormat(DecimalFormat0To4Digits).format(data.quantity)
-          holder.db_asset_price.text = DecimalFormat(DecimalFormat0To4Digits).format(data.price)
-          holder.db_asset_type.text = data.type.toString()
-          holder.db_asset_note.text = data.note
-          holder.db_asset_date.text = getDateTimeStr(data.date)
-          holder.db_asset_sharesPerQuantity.text = "${data.sharesPerQuantity}"
-          holder.db_asset_expirationDate.text = getDateStr(data.expirationDate)
-          holder.db_asset_premium.text =
-            if (data.premium > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(data.premium) else ""
-          holder.db_asset_commission.text =
-            if (data.commission > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(data.commission) else ""
+          holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(255, 106, 0))
+          holder.binding.dbAssetId.text = data.id?.toString() ?: ""
+          holder.binding.dbAssetSymbol.text = data.symbol
+          holder.binding.dbAssetQuantity.text =
+            DecimalFormat(DecimalFormat0To4Digits).format(data.quantity)
+          holder.binding.dbAssetPrice.text = DecimalFormat(DecimalFormat0To4Digits).format(data.price)
+          holder.binding.dbAssetType.text = data.type.toString()
+          holder.binding.dbAssetNote.text = data.note
+          holder.binding.dbAssetDate.text = getDateTimeStr(data.date)
+          holder.binding.dbAssetSharesPerQuantity.text = "${data.sharesPerQuantity}"
+          holder.binding.dbAssetExpirationDate.text = getDateStr(data.expirationDate)
+          holder.binding.dbAssetPremium.text =
+            if (data.premium > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
+                data.premium
+            ) else ""
+          holder.binding.dbAssetCommission.text =
+            if (data.commission > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
+                data.commission
+            ) else ""
         }
 //      assetTableRowsCount = items.size
 //
@@ -370,21 +333,21 @@ class ListDBAdapter(
         holder.bind(data)
 
         if (data.isHeader) {
-          holder.db_event_layout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.db_event_id.text = getHeaderStr("id")
-          holder.db_event_symbol.text = getHeaderStr("symbol")
-          holder.db_event_title.text = getHeaderStr("title")
-          holder.db_event_datetime.text = getHeaderStr("datetime")
-          holder.db_event_type.text = getHeaderStr("type")
-          holder.db_event_note.text = getHeaderStr("note")
+          holder.binding.dbEventLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+          holder.binding.dbEventId.text = getHeaderStr("id")
+          holder.binding.dbEventSymbol.text = getHeaderStr("symbol")
+          holder.binding.dbEventTitle.text = getHeaderStr("title")
+          holder.binding.dbEventDatetime.text = getHeaderStr("datetime")
+          holder.binding.dbEventType.text = getHeaderStr("type")
+          holder.binding.dbEventNote.text = getHeaderStr("note")
         } else {
-          holder.db_event_layout.setBackgroundColor(Color.rgb(127, 255, 197))
-          holder.db_event_id.text = data.id?.toString() ?: ""
-          holder.db_event_symbol.text = data.symbol
-          holder.db_event_title.text = data.title
-          holder.db_event_datetime.text = getDateTimeStr(data.datetime)
-          holder.db_event_type.text = data.type.toString()
-          holder.db_event_note.text = data.note
+          holder.binding.dbEventLayout.setBackgroundColor(Color.rgb(127, 255, 197))
+          holder.binding.dbEventId.text = data.id?.toString() ?: ""
+          holder.binding.dbEventSymbol.text = data.symbol
+          holder.binding.dbEventTitle.text = data.title
+          holder.binding.dbEventDatetime.text = getDateTimeStr(data.datetime)
+          holder.binding.dbEventType.text = data.type.toString()
+          holder.binding.dbEventNote.text = data.note
         }
 
 //      eventTableRowsCount = items.size
@@ -406,25 +369,26 @@ class ListDBAdapter(
         holder.bind(data)
 
         if (data.isHeader) {
-          holder.db_dividend_layout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.db_dividend_id.text = getHeaderStr("id")
-          holder.db_dividend_symbol.text = getHeaderStr("symbol")
-          holder.db_dividend_amount.text = getHeaderStr("amount")
-          holder.db_dividend_cycle.text = getHeaderStr("cycle")
-          holder.db_dividend_paydate.text = getHeaderStr("paydate")
-          holder.db_dividend_type.text = getHeaderStr("type")
-          holder.db_dividend_exdate.text = getHeaderStr("exdate")
-          holder.db_dividend_note.text = getHeaderStr("note")
+          holder.binding.dbDividendLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+          holder.binding.dbDividendId.text = getHeaderStr("id")
+          holder.binding.dbDividendSymbol.text = getHeaderStr("symbol")
+          holder.binding.dbDividendAmount.text = getHeaderStr("amount")
+          holder.binding.dbDividendCycle.text = getHeaderStr("cycle")
+          holder.binding.dbDividendPaydate.text = getHeaderStr("paydate")
+          holder.binding.dbDividendType.text = getHeaderStr("type")
+          holder.binding.dbDividendExdate.text = getHeaderStr("exdate")
+          holder.binding.dbDividendNote.text = getHeaderStr("note")
         } else {
-          holder.db_dividend_layout.setBackgroundColor(Color.rgb(255, 233, 127))
-          holder.db_dividend_id.text = data.id?.toString() ?: ""
-          holder.db_dividend_symbol.text = data.symbol
-          holder.db_dividend_amount.text = DecimalFormat(DecimalFormat2To4Digits).format(data.amount)
-          holder.db_dividend_cycle.text = data.cycle.toString()
-          holder.db_dividend_paydate.text = getDateStr(data.paydate)
-          holder.db_dividend_type.text = data.type.toString()
-          holder.db_dividend_exdate.text = getDateStr(data.exdate)
-          holder.db_dividend_note.text = data.note
+          holder.binding.dbDividendLayout.setBackgroundColor(Color.rgb(255, 233, 127))
+          holder.binding.dbDividendId.text = data.id?.toString() ?: ""
+          holder.binding.dbDividendSymbol.text = data.symbol
+          holder.binding.dbDividendAmount.text =
+            DecimalFormat(DecimalFormat2To4Digits).format(data.amount)
+          holder.binding.dbDividendCycle.text = data.cycle.toString()
+          holder.binding.dbDividendPaydate.text = getDateStr(data.paydate)
+          holder.binding.dbDividendType.text = data.type.toString()
+          holder.binding.dbDividendExdate.text = getDateStr(data.exdate)
+          holder.binding.dbDividendNote.text = data.note
         }
 
 //      dividendTableRowsCount = items.size
@@ -539,7 +503,7 @@ class ListDBAdapter(
 
     this.dbDataMap["0_stock_table"] = mutableListOf(
         DBData(
-            viewType = db_type_headline,
+            viewType = db_headline_type,
             title = "\nstock_table (${data.size})"
         ),
         DBData(
@@ -575,7 +539,7 @@ class ListDBAdapter(
 
     this.dbDataMap["1_group_table"] = mutableListOf(
         DBData(
-            viewType = db_type_headline,
+            viewType = db_headline_type,
             title = "\ngroup_table (${data.size})"
         ),
         DBData(
@@ -599,7 +563,7 @@ class ListDBAdapter(
 
     this.dbDataMap["2_asset_table"] = mutableListOf(
         DBData(
-            viewType = db_type_headline,
+            viewType = db_headline_type,
             title = "\nasset_table (${data.size})"
         ),
         DBData(
@@ -635,7 +599,7 @@ class ListDBAdapter(
 
     this.dbDataMap["3_event_table"] = mutableListOf(
         DBData(
-            viewType = db_type_headline,
+            viewType = db_headline_type,
             title = "\nevent_table (${data.size})"
         ),
         DBData(
@@ -666,7 +630,7 @@ class ListDBAdapter(
 
     this.dbDataMap["4_dividend_table"] = mutableListOf(
         DBData(
-            viewType = db_type_headline,
+            viewType = db_headline_type,
             title = "\ndividend_table (${data.size})"
         ),
         DBData(

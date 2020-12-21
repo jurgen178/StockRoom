@@ -44,7 +44,6 @@ class DividendReceivedListAdapter internal constructor(
   private val clickListenerDelete: (String?, Dividend?, List<Dividend>?) -> Unit
 ) : RecyclerView.Adapter<DividendReceivedListAdapter.DividendReceivedViewHolder>() {
 
-  private lateinit var binding: DividendReceivedViewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var dividendList = mutableListOf<Dividend>()
 
@@ -80,7 +79,8 @@ class DividendReceivedListAdapter internal constructor(
     parent: ViewGroup,
     viewType: Int
   ): DividendReceivedViewHolder {
-    binding = DividendReceivedViewItemBinding.inflate(inflater, parent, false)
+
+    val binding = DividendReceivedViewItemBinding.inflate(inflater, parent, false)
     return DividendReceivedViewHolder(binding)
   }
 

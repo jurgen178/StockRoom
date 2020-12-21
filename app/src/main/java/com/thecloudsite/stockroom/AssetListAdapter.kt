@@ -23,9 +23,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
@@ -52,7 +49,6 @@ class AssetListAdapter internal constructor(
   private val clickListenerDelete: (String?, Asset?) -> Unit
 ) : RecyclerView.Adapter<AssetListAdapter.AssetViewHolder>() {
 
-  private lateinit var binding: AssetviewItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var assetList = mutableListOf<Asset>()
   private var assetsCopy = listOf<Asset>()
@@ -82,7 +78,7 @@ class AssetListAdapter internal constructor(
     viewType: Int
   ): AssetViewHolder {
 
-    binding = AssetviewItemBinding.inflate(inflater, parent, false)
+    val binding = AssetviewItemBinding.inflate(inflater, parent, false)
     return AssetViewHolder(binding)
   }
 

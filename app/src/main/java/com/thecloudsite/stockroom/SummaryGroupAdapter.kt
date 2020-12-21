@@ -20,15 +20,15 @@ import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
+import com.thecloudsite.stockroom.databinding.SummarygroupAllItemsBinding
+import com.thecloudsite.stockroom.databinding.SummarygroupItemBinding
 import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
@@ -56,28 +56,26 @@ class SummaryGroupAdapter internal constructor(
   val context: Context
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
+  private lateinit var bindingAllItems: SummarygroupAllItemsBinding
+  private lateinit var bindingItem: SummarygroupItemBinding
   private val groupStandardName = context.getString(R.string.standard_group)
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<SummaryData>()
   private var stockItemsList: List<StockItem> = emptyList()
   private var groupList: List<Group> = emptyList()
 
-  class OnlineDataAllViewHolder(itemView: View) : BaseViewHolder<SummaryData>(itemView) {
+  class OnlineDataAllViewHolder(
+    val binding: SummarygroupAllItemsBinding
+  ) : BaseViewHolder<SummaryData>(binding.root) {
     override fun bind(item: SummaryData) {
     }
-
-    val summaryItemDataDesc: TextView = itemView.findViewById(R.id.summaryItemDataDesc)
-    val summaryItemData: TextView = itemView.findViewById(R.id.summaryItemData)
   }
 
-  class OnlineDataViewHolder(itemView: View) : BaseViewHolder<SummaryData>(itemView) {
+  class OnlineDataViewHolder(
+    val binding: SummarygroupItemBinding
+  ) : BaseViewHolder<SummaryData>(binding.root) {
     override fun bind(item: SummaryData) {
     }
-
-    val summaryItemDataDesc: TextView = itemView.findViewById(R.id.summaryItemDataDesc)
-    val summaryItemData1: TextView = itemView.findViewById(R.id.summaryItemData1)
-    val summaryItemData2: TextView = itemView.findViewById(R.id.summaryItemData2)
-    val summaryItemGroup: TextView = itemView.findViewById(R.id.summaryItemGroup)
   }
 
   override fun onCreateViewHolder(
@@ -87,12 +85,12 @@ class SummaryGroupAdapter internal constructor(
 
     return when (viewType) {
       summarygroup_all_items -> {
-        val itemView = inflater.inflate(R.layout.summarygroup_all_items, parent, false)
-        OnlineDataAllViewHolder(itemView)
+        bindingAllItems = SummarygroupAllItemsBinding.inflate(inflater, parent, false)
+        OnlineDataAllViewHolder(bindingAllItems)
       }
       summarygroup_item -> {
-        val itemView = inflater.inflate(R.layout.summarygroup_item, parent, false)
-        OnlineDataViewHolder(itemView)
+        bindingItem = SummarygroupItemBinding.inflate(inflater, parent, false)
+        OnlineDataViewHolder(bindingItem)
       }
       else -> throw IllegalArgumentException("Invalid view type")
     }
@@ -109,8 +107,8 @@ class SummaryGroupAdapter internal constructor(
       is OnlineDataAllViewHolder -> {
         holder.bind(current)
 
-        holder.summaryItemDataDesc.text = current.desc
-        holder.summaryItemData.text = current.text1.append("\n")
+        holder.binding.summaryItemDataDesc.text = current.desc
+        holder.binding.summaryItemData.text = current.text1.append("\n")
             .append(current.text2)
       }
 
@@ -121,11 +119,11 @@ class SummaryGroupAdapter internal constructor(
         if (color == 0) {
           color = context.getColor(R.color.backgroundListColor)
         }
-        setBackgroundColor(holder.summaryItemGroup, color)
+        setBackgroundColor(holder.binding.summaryItemGroup, color)
 
-        holder.summaryItemDataDesc.text = current.desc
-        holder.summaryItemData1.text = current.text1
-        holder.summaryItemData2.text = current.text2
+        holder.binding.summaryItemDataDesc.text = current.desc
+        holder.binding.summaryItemData1.text = current.text1
+        holder.binding.summaryItemData2.text = current.text2
       }
 
       else -> {

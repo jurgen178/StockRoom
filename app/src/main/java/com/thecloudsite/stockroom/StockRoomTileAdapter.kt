@@ -20,12 +20,9 @@ import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.databinding.StockroomTileItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
@@ -38,7 +35,6 @@ class StockRoomTileAdapter internal constructor(
   private val clickListenerListItem: (StockItem) -> Unit
 ) : RecyclerView.Adapter<StockRoomTileAdapter.OnlineDataViewHolder>() {
 
-  private lateinit var binding: StockroomTileItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var stockItems: List<StockItem> = listOf()
 
@@ -51,17 +47,6 @@ class StockRoomTileAdapter internal constructor(
     ) {
       binding.stockRoomTileItemLayout.setOnClickListener { clickListener(stockItem) }
     }
-
-    val itemSymbol: TextView = itemView.findViewById(R.id.stockRoomTileItemSymbol)
-    val itemMarketPrice: TextView =
-      itemView.findViewById(R.id.stockRoomTileItemMarketPrice)
-    val itemMarketChange: TextView =
-      itemView.findViewById(R.id.stockRoomTileItemMarketChange)
-    val itemCapital: TextView =
-      itemView.findViewById(R.id.stockRoomTileItemCapital)
-    val itemAssetChange: TextView =
-      itemView.findViewById(R.id.stockRoomTileItemAssetChange)
-    val itemGroup: TextView = itemView.findViewById(R.id.stockRoomTileItemGroup)
   }
 
   override fun onCreateViewHolder(
@@ -69,7 +54,7 @@ class StockRoomTileAdapter internal constructor(
     viewType: Int
   ): OnlineDataViewHolder {
 
-    binding = AssetviewItemBinding.inflate(inflater, parent, false)
+    val binding = StockroomTileItemBinding.inflate(inflater, parent, false)
     return OnlineDataViewHolder(binding)
   }
 
@@ -80,14 +65,13 @@ class StockRoomTileAdapter internal constructor(
     val current = stockItems[position]
 
     holder.bind(current, clickListenerListItem)
-
-    holder.itemSymbol.text = current.stockDBdata.symbol
+    holder.binding.stockRoomTileItemSymbol.text = current.stockDBdata.symbol
 
     var color = current.stockDBdata.groupColor
     if (color == 0) {
       color = context.getColor(R.color.backgroundListColor)
     }
-    setBackgroundColor(holder.itemGroup, color)
+    setBackgroundColor(holder.binding.stockRoomTileItemGroup, color)
 
     val (quantity, asset) = getAssets(current.assets)
 
@@ -108,13 +92,13 @@ class StockRoomTileAdapter internal constructor(
       val marketChange = "${marketValues.second} ${marketValues.third}"
 
       if (current.onlineMarketData.postMarketData) {
-        holder.itemMarketPrice.text = SpannableStringBuilder()
+        holder.binding.stockRoomTileItemMarketPrice.text = SpannableStringBuilder()
             .italic { append(marketValues.first) }
-        holder.itemMarketChange.text = SpannableStringBuilder()
+        holder.binding.stockRoomTileItemMarketChange.text = SpannableStringBuilder()
             .italic { append(marketChange) }
       } else {
-        holder.itemMarketPrice.text = marketValues.first
-        holder.itemMarketChange.text = marketChange
+        holder.binding.stockRoomTileItemMarketPrice.text = marketValues.first
+        holder.binding.stockRoomTileItemMarketChange.text = marketChange
       }
 
       var capital: Double = 0.0
@@ -125,13 +109,13 @@ class StockRoomTileAdapter internal constructor(
 //          it.quantity * current.onlineMarketData.marketPrice
 //        }
 
-        holder.itemCapital.text = DecimalFormat(DecimalFormat2Digits).format(capital)
+        holder.binding.stockRoomTileItemCapital.text = DecimalFormat(DecimalFormat2Digits).format(capital)
       } else {
         // Don't own any quantity of this stock.
-        holder.itemCapital.text = ""
+        holder.binding.stockRoomTileItemCapital.text = ""
       }
 
-      holder.itemAssetChange.text =
+      holder.binding.stockRoomTileItemAssetChange.text =
         getAssetChange(
             current.assets,
             current.onlineMarketData.marketPrice,
@@ -141,14 +125,14 @@ class StockRoomTileAdapter internal constructor(
         ).second
     } else {
       // offline
-      holder.itemMarketPrice.text = ""
-      holder.itemMarketChange.text = ""
-      holder.itemAssetChange.text = ""
+      holder.binding.stockRoomTileItemMarketPrice.text = ""
+      holder.binding.stockRoomTileItemMarketChange.text = ""
+      holder.binding.stockRoomTileItemAssetChange.text = ""
 
       if (asset > 0.0) {
-        holder.itemCapital.text = DecimalFormat(DecimalFormat2Digits).format(asset)
+        holder.binding.stockRoomTileItemCapital.text = DecimalFormat(DecimalFormat2Digits).format(asset)
       } else {
-        holder.itemCapital.text = ""
+        holder.binding.stockRoomTileItemCapital.text = ""
       }
     }
   }

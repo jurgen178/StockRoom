@@ -163,7 +163,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
 
     // Setup chart data update every 5min/24h.
     onlineChartHandler = Handler(Looper.getMainLooper())

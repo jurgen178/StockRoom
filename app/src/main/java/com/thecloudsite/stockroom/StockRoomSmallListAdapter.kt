@@ -38,7 +38,6 @@ class StockRoomSmallListAdapter internal constructor(
     StockRoomDiffCallback()
 ) {
 
-  private lateinit var binding: StockroomSmalllistItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
   class StockRoomViewHolder(
@@ -57,7 +56,7 @@ class StockRoomSmallListAdapter internal constructor(
     viewType: Int
   ): StockRoomViewHolder {
 
-    binding = StockroomSmalllistItemBinding.inflate(inflater, parent, false)
+    val binding = StockroomSmalllistItemBinding.inflate(inflater, parent, false)
     return StockRoomViewHolder(binding)
   }
 

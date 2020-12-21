@@ -52,7 +52,6 @@ class StockRoomChartAdapter internal constructor(
   private val clickListenerSummary: (StockItem) -> Unit,
 ) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
-  private lateinit var binding: StockroomChartItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
 
   private var chartOverlaySymbol: String = ""
@@ -74,8 +73,8 @@ class StockRoomChartAdapter internal constructor(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      binding.itemSummary1.setOnClickListener { clickListener(stockItem) }
-      binding.itemSummary2.setOnClickListener { clickListener(stockItem) }
+      binding.itemSummary.setOnClickListener { clickListener(stockItem) }
+      binding.itemRedGreen.setOnClickListener { clickListener(stockItem) }
     }
   }
 
@@ -84,7 +83,7 @@ class StockRoomChartAdapter internal constructor(
     viewType: Int
   ): StockRoomViewHolder {
 
-    binding = StockroomChartItemBinding.inflate(inflater, parent, false)
+    val binding = StockroomChartItemBinding.inflate(inflater, parent, false)
     return StockRoomViewHolder(binding)
   }
 
@@ -136,7 +135,7 @@ class StockRoomChartAdapter internal constructor(
         holder.binding.lineChart.visibility = View.GONE
       }
 
-      holder.binding.itemSummary1.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
       holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
       holder.binding.textViewName.text = getName(current.onlineMarketData)
@@ -165,7 +164,7 @@ class StockRoomChartAdapter internal constructor(
       }
 
       // set background to market change
-      holder.binding.itemSummary2.setBackgroundColor(
+      holder.binding.itemRedGreen.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
               current.onlineMarketData.postMarketData,

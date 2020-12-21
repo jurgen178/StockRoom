@@ -22,8 +22,6 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
@@ -64,7 +62,6 @@ class StockRoomListAdapter internal constructor(
   private val clickListenerSummary: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
-  private lateinit var binding: StockroomListItemBinding
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var defaultTextColor: Int? = null
 
@@ -82,7 +79,7 @@ class StockRoomListAdapter internal constructor(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      binding.itemSummary1.setOnClickListener { clickListener(stockItem) }
+      binding.itemSummary.setOnClickListener { clickListener(stockItem) }
       binding.itemRedGreen.setOnClickListener { clickListener(stockItem) }
     }
   }
@@ -92,7 +89,7 @@ class StockRoomListAdapter internal constructor(
     viewType: Int
   ): StockRoomViewHolder {
 
-    binding = StockroomListItemBinding.inflate(inflater, parent, false)
+    val binding = StockroomListItemBinding.inflate(inflater, parent, false)
     return StockRoomViewHolder(binding)
   }
 
@@ -110,7 +107,7 @@ class StockRoomListAdapter internal constructor(
       holder.bindGroup(current, clickListenerGroup)
       holder.bindSummary(current, clickListenerSummary)
 
-      holder.binding.itemSummary1.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+      holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
       holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
       holder.binding.textViewName.text = getName(current.onlineMarketData)

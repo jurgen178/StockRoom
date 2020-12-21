@@ -21,13 +21,14 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
-import com.thecloudsite.stockroom.R.id
-import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.databinding.GooglenewsviewItemBinding
+import com.thecloudsite.stockroom.databinding.NasdaqnewsviewItemBinding
+import com.thecloudsite.stockroom.databinding.NewsheadlineItemBinding
+import com.thecloudsite.stockroom.databinding.YahoonewsviewItemBinding
 import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -130,40 +131,32 @@ class NewsAdapter(
   }
 
   // https://medium.com/@ivancse.58/android-and-kotlin-recyclerview-with-multiple-view-types-65285a254393
-  class NewsHeadlineViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+  class NewsHeadlineViewHolder(
+    val binding: NewsheadlineItemBinding
+  ) : BaseViewHolder<NewsData>(binding.root) {
     override fun bind(item: NewsData) {
     }
-
-    val newsHeadline: TextView = itemView.findViewById(id.newsHeadline)
   }
 
-  class YahooNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+  class YahooNewsViewHolder(
+    val binding: YahoonewsviewItemBinding
+  ) : BaseViewHolder<NewsData>(binding.root) {
     override fun bind(item: NewsData) {
     }
-
-    val yahooNewsItemTitle: TextView = itemView.findViewById(id.yahooNewsItemTitle)
-    val yahooNewsItemDate: TextView = itemView.findViewById(id.yahooNewsItemDate)
-    val yahooNewsItemLink: TextView = itemView.findViewById(id.yahooNewsItemLink)
-    val yahooNewsItemText: TextView = itemView.findViewById(id.yahooNewsItemText)
   }
 
-  class GoogleNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+  class GoogleNewsViewHolder(
+    val binding: GooglenewsviewItemBinding
+  ) : BaseViewHolder<NewsData>(binding.root) {
     override fun bind(item: NewsData) {
     }
-
-    val googleNewsItemTitle: TextView = itemView.findViewById(id.googleNewsItemTitle)
-    val googleNewsItemDate: TextView = itemView.findViewById(id.googleNewsItemDate)
-    val googleNewsItemPreviewText: TextView = itemView.findViewById(id.googleNewsItemPreviewText)
   }
 
-  class NasdaqNewsViewHolder(itemView: View) : BaseViewHolder<NewsData>(itemView) {
+  class NasdaqNewsViewHolder(
+    val binding: NasdaqnewsviewItemBinding
+  ) : BaseViewHolder<NewsData>(binding.root) {
     override fun bind(item: NewsData) {
     }
-
-    val nasdaqNewsItemTitle: TextView = itemView.findViewById(id.nasdaqNewsItemTitle)
-    val nasdaqNewsItemDate: TextView = itemView.findViewById(id.nasdaqNewsItemDate)
-    val nasdaqNewsItemLink: TextView = itemView.findViewById(id.nasdaqNewsItemLink)
-    val nasdaqNewsItemText: TextView = itemView.findViewById(id.nasdaqNewsItemText)
   }
 
   override fun onCreateViewHolder(
@@ -173,24 +166,20 @@ class NewsAdapter(
 
     return when (viewType) {
       news_type_headline -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.newsheadline_item, parent, false)
-        NewsHeadlineViewHolder(view)
+        val binding = NewsheadlineItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        NewsHeadlineViewHolder(binding)
       }
       news_type_yahoo -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.yahoonewsview_item, parent, false)
-        YahooNewsViewHolder(view)
+        val binding = YahoonewsviewItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        YahooNewsViewHolder(binding)
       }
       news_type_google -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.googlenewsview_item, parent, false)
-        GoogleNewsViewHolder(view)
+        val binding = GooglenewsviewItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        GoogleNewsViewHolder(binding)
       }
       news_type_nasdaq -> {
-        val view = LayoutInflater.from(context)
-            .inflate(layout.nasdaqnewsview_item, parent, false)
-        NasdaqNewsViewHolder(view)
+        val binding = NasdaqnewsviewItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        NasdaqNewsViewHolder(binding)
       }
       else -> throw IllegalArgumentException("Invalid view type")
     }
@@ -217,60 +206,60 @@ class NewsAdapter(
       is NewsHeadlineViewHolder -> {
         holder.bind(current)
 
-        holder.newsHeadline.text = current.title
+        holder.binding.newsHeadline.text = current.title
       }
 
       is YahooNewsViewHolder -> {
         holder.bind(current)
 
-        holder.yahooNewsItemTitle.text =
+        holder.binding.yahooNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
-        holder.yahooNewsItemDate.text = getTimeDateStr(current.date)
+        holder.binding.yahooNewsItemDate.text = getTimeDateStr(current.date)
 
-        holder.yahooNewsItemLink.text = HtmlCompat.fromHtml(
+        holder.binding.yahooNewsItemLink.text = HtmlCompat.fromHtml(
             "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-        holder.yahooNewsItemLink.setLinkTextColor(
+        holder.binding.yahooNewsItemLink.setLinkTextColor(
             context.getColor(color.material_on_background_emphasis_medium)
         )
-        holder.yahooNewsItemText.text =
+        holder.binding.yahooNewsItemText.text =
           HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
         // Make links clickable.
-        holder.yahooNewsItemLink.movementMethod = LinkMovementMethod.getInstance()
+        holder.binding.yahooNewsItemLink.movementMethod = LinkMovementMethod.getInstance()
       }
 
       is GoogleNewsViewHolder -> {
         holder.bind(current)
 
-        holder.googleNewsItemTitle.text =
+        holder.binding.googleNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
-        holder.googleNewsItemDate.text = getTimeDateStr(current.date)
+        holder.binding.googleNewsItemDate.text = getTimeDateStr(current.date)
 
-        holder.googleNewsItemPreviewText.text =
+        holder.binding.googleNewsItemPreviewText.text =
           HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
         // Make links clickable.
-        holder.googleNewsItemPreviewText.movementMethod = LinkMovementMethod.getInstance()
+        holder.binding.googleNewsItemPreviewText.movementMethod = LinkMovementMethod.getInstance()
       }
 
       is NasdaqNewsViewHolder -> {
         holder.bind(current)
 
-        holder.nasdaqNewsItemTitle.text =
+        holder.binding.nasdaqNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
-        holder.nasdaqNewsItemDate.text = getTimeDateStr(current.date)
+        holder.binding.nasdaqNewsItemDate.text = getTimeDateStr(current.date)
 
-        holder.nasdaqNewsItemLink.text = HtmlCompat.fromHtml(
+        holder.binding.nasdaqNewsItemLink.text = HtmlCompat.fromHtml(
             "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-        holder.nasdaqNewsItemLink.setLinkTextColor(
+        holder.binding.nasdaqNewsItemLink.setLinkTextColor(
             context.getColor(color.material_on_background_emphasis_medium)
         )
-        holder.nasdaqNewsItemText.text =
+        holder.binding.nasdaqNewsItemText.text =
           HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
         // Make links clickable.
-        holder.nasdaqNewsItemLink.movementMethod = LinkMovementMethod.getInstance()
+        holder.binding.nasdaqNewsItemLink.movementMethod = LinkMovementMethod.getInstance()
       }
 
       else -> {

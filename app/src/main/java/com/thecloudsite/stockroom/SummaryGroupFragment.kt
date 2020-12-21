@@ -44,8 +44,6 @@ import com.thecloudsite.stockroom.databinding.FragmentSummarygroupBinding
 import com.thecloudsite.stockroom.invaders.InvadersActivity
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssets
-import kotlinx.android.synthetic.main.fragment_summarygroup.view.imageView
-import kotlinx.android.synthetic.main.fragment_summarygroup.view.summaryPieChart
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -111,7 +109,7 @@ class SummaryGroupFragment : Fragment() {
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItems ->
         summaryGroupAdapter.updateData(stockItems)
-        updatePieData(view, stockItems)
+        updatePieData(stockItems)
       }
     })
 
@@ -123,7 +121,7 @@ class SummaryGroupFragment : Fragment() {
 
     longPressedCounter = 0
 
-    view.summaryPieChart.onChartGestureListener = object : OnChartGestureListener {
+    binding.summaryPieChart.onChartGestureListener = object : OnChartGestureListener {
       override fun onChartGestureStart(
         me: MotionEvent?,
         lastPerformedGesture: ChartGesture?
@@ -140,8 +138,8 @@ class SummaryGroupFragment : Fragment() {
         longPressedCounter++
 
         if (longPressedCounter == 2) {
-          view.summaryPieChart.visibility = View.GONE
-          view.imageView.visibility = View.VISIBLE
+          binding.summaryPieChart.visibility = View.GONE
+          binding.imageView.visibility = View.VISIBLE
         }
       }
 
@@ -174,7 +172,7 @@ class SummaryGroupFragment : Fragment() {
       }
     }
 
-    view.imageView.setOnClickListener {
+    binding.imageView.setOnClickListener {
       AlertDialog.Builder(context)
           // https://convertcodes.com/unicode-converter-encode-decode-utf/
           .setTitle(
@@ -185,19 +183,19 @@ class SummaryGroupFragment : Fragment() {
           )
           .setNegativeButton("\u004c\u0061\u0074\u0065\u0072") { dialog, _ ->
             dialog.dismiss()
-            view.summaryPieChart.visibility = View.VISIBLE
-            view.imageView.visibility = View.GONE
+            binding.summaryPieChart.visibility = View.VISIBLE
+            binding.imageView.visibility = View.GONE
           }
           .setPositiveButton("\u004e\u006f\u0077") { dialog, _ ->
             val intent = Intent(activity, InvadersActivity::class.java)
             activity?.startActivity(intent)
             dialog.dismiss()
-            view.summaryPieChart.visibility = View.VISIBLE
-            view.imageView.visibility = View.GONE
+            binding.summaryPieChart.visibility = View.VISIBLE
+            binding.imageView.visibility = View.GONE
           }
           .setOnCancelListener {
-            view.summaryPieChart.visibility = View.VISIBLE
-            view.imageView.visibility = View.GONE
+            binding.summaryPieChart.visibility = View.VISIBLE
+            binding.imageView.visibility = View.GONE
           }
           .show()
 
@@ -226,7 +224,6 @@ class SummaryGroupFragment : Fragment() {
   }
 
   private fun updatePieData(
-    view: View,
     stockItems: List<StockItem>
   ) {
     val listPie = ArrayList<PieEntry>()
@@ -317,27 +314,27 @@ class SummaryGroupFragment : Fragment() {
     pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
 
     val pieData = PieData(pieDataSet)
-    view.summaryPieChart.data = pieData
+    binding.summaryPieChart.data = pieData
 
     //view.summaryPieChart.setUsePercentValues(true)
-    view.summaryPieChart.isDrawHoleEnabled = true
+    binding.summaryPieChart.isDrawHoleEnabled = true
 
     val centerText = SpannableStringBuilder()
         .append("${context?.getString(R.string.summary_total_assets)} ")
         .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
-    view.summaryPieChart.centerText = centerText
+    binding.summaryPieChart.centerText = centerText
 
-    view.summaryPieChart.description.isEnabled = false
-    view.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
-    view.summaryPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+    binding.summaryPieChart.description.isEnabled = false
+    binding.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+    binding.summaryPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
 
-    view.summaryPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
+    binding.summaryPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
 
     //val legendList: MutableList<LegendEntry> = mutableListOf()
     //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
     //view.summaryPieChart.legend.setCustom(legendList)
 
-    view.summaryPieChart.invalidate()
+    binding.summaryPieChart.invalidate()
   }
 }
 

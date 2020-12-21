@@ -26,14 +26,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
-import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.StockRoomViewModel
+import com.thecloudsite.stockroom.databinding.FragmentNewsBinding
 import com.thecloudsite.stockroom.getName
-import kotlinx.android.synthetic.main.fragment_news.newsRecyclerview
-import kotlinx.android.synthetic.main.fragment_news.swipeRefreshLayout
 import java.util.Locale
 
 class NewsFragment : Fragment() {
+
+  private var _binding: FragmentNewsBinding? = null
+
+  // This property is only valid between onCreateView and
+  // onDestroyView.
+  private val binding get() = _binding!!
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private lateinit var yahooNewsViewModel: YahooNewsViewModel
@@ -59,7 +63,7 @@ class NewsFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
 
     symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
     yahooNewsQuery = symbol
@@ -67,7 +71,13 @@ class NewsFragment : Fragment() {
     nasdaqNewsQuery = symbol
 
     // Inflate the layout for this fragment
-    return inflater.inflate(layout.fragment_news, container, false)
+    _binding = FragmentNewsBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   override fun onViewCreated(
@@ -77,8 +87,8 @@ class NewsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     newsAdapter = NewsAdapter(requireContext())
-    newsRecyclerview.adapter = newsAdapter
-    newsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+    binding.newsRecyclerview.adapter = newsAdapter
+    binding.newsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
 
     yahooNewsViewModel = ViewModelProvider(this).get(YahooNewsViewModel::class.java)
     googleNewsViewModel = ViewModelProvider(this).get(GoogleNewsViewModel::class.java)
@@ -136,9 +146,9 @@ class NewsFragment : Fragment() {
 
     nasdaqNewsViewModel.getNewsData(nasdaqNewsQuery)
 
-    swipeRefreshLayout.setOnRefreshListener {
+    binding.swipeRefreshLayout.setOnRefreshListener {
       updateData()
-      swipeRefreshLayout.isRefreshing = false
+      binding.swipeRefreshLayout.isRefreshing = false
     }
   }
 

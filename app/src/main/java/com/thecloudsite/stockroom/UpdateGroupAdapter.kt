@@ -19,14 +19,11 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
-import kotlinx.android.synthetic.main.groupview_item.view.groupItemName
-import kotlinx.android.synthetic.main.groupview_item.view.textViewGroupDelete
+import com.thecloudsite.stockroom.databinding.GroupviewItemBinding
 import java.util.Locale
 
 data class GroupData(
@@ -46,32 +43,31 @@ class UpdateGroupAdapter internal constructor(
   private var stockDBdataList: List<StockDBdata> = emptyList()
   private var groupDatalist: List<GroupData> = emptyList()
 
-  class UpdateGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class UpdateGroupViewHolder(
+    val binding: GroupviewItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       group: GroupData,
       clickListenerUpdate: (GroupData) -> Unit
     ) {
-      itemView.groupItemName.setOnClickListener { clickListenerUpdate(group) }
+      binding.groupItemName.setOnClickListener { clickListenerUpdate(group) }
     }
 
     fun bindDelete(
       group: GroupData,
       clickListenerDelete: (GroupData) -> Unit
     ) {
-      itemView.textViewGroupDelete.setOnClickListener { clickListenerDelete(group) }
+      binding.textViewGroupDelete.setOnClickListener { clickListenerDelete(group) }
     }
-
-    val groupItemName: TextView = itemView.findViewById(R.id.groupItemName)
-    val groupItemStats: TextView = itemView.findViewById(R.id.groupItemStats)
-    val groupItemGroup: TextView = itemView.findViewById(R.id.groupItemGroup)
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): UpdateGroupViewHolder {
-    val itemView = inflater.inflate(R.layout.groupview_item, parent, false)
-    return UpdateGroupViewHolder(itemView)
+
+    val binding = GroupviewItemBinding.inflate(inflater, parent, false)
+    return UpdateGroupViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -83,18 +79,18 @@ class UpdateGroupAdapter internal constructor(
     holder.bindUpdate(current, clickListenerUpdate)
     holder.bindDelete(current, clickListenerDelete)
 
-    holder.groupItemName.text = current.name
-    holder.groupItemStats.text = "[${current.stats}]"
+    holder.binding.groupItemName.text = current.name
+    holder.binding.groupItemStats.text = "[${current.stats}]"
 
     var color = current.color
     if (color == 0) {
       color = context.getColor(R.color.backgroundListColor)
     }
-    setBackgroundColor(holder.groupItemGroup, color)
+    setBackgroundColor(holder.binding.groupItemGroup, color)
 
     val background = TypedValue()
     context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
-    holder.groupItemName.setBackgroundResource(background.resourceId)
+    holder.binding.groupItemName.setBackgroundResource(background.resourceId)
   }
 
   private fun mergeData() {

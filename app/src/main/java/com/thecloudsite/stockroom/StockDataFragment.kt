@@ -586,7 +586,7 @@ class StockDataFragment : Fragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
 
     symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
 

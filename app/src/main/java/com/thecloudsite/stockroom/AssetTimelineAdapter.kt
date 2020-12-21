@@ -42,8 +42,6 @@ class AssetTimelineAdapter(
   private val clickListenerCardItem: (AssetTimelineElement) -> Unit
 ) : RecyclerView.Adapter<AssetTimelineAdapter.ViewHolder>() {
 
-  private lateinit var binding: TimelineAssetItemBinding
-
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var timelineElementList: List<AssetTimelineElement> = listOf()
 
@@ -64,7 +62,7 @@ class AssetTimelineAdapter(
     viewType: Int
   ): ViewHolder {
 
-    binding = TimelineAssetItemBinding.inflate(inflater, parent, false)
+    val binding = TimelineAssetItemBinding.inflate(inflater, parent, false)
     return ViewHolder(binding)
   }
 

@@ -18,12 +18,9 @@ package com.thecloudsite.stockroom.list
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.R.id
-import com.thecloudsite.stockroom.R.layout
+import com.thecloudsite.stockroom.databinding.DebugItemBinding
 import com.thecloudsite.stockroom.list.ListLogAdapter.DebugDataViewHolder
 
 data class DebugData(
@@ -38,17 +35,18 @@ class ListLogAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = listOf<DebugData>()
 
-  class DebugDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val debugItemTimeStamp: TextView = itemView.findViewById(id.debugItemTimeStamp)
-    val debugItemData: TextView = itemView.findViewById(id.debugItemData)
+  class DebugDataViewHolder(
+    val binding: DebugItemBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
   }
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): DebugDataViewHolder {
-    val itemView = inflater.inflate(layout.debug_item, parent, false)
-    return DebugDataViewHolder(itemView)
+
+    val binding = DebugItemBinding.inflate(inflater, parent, false)
+    return DebugDataViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -57,8 +55,8 @@ class ListLogAdapter internal constructor(
   ) {
     val current: DebugData = data[position]
 
-    holder.debugItemTimeStamp.text = current.timeStamp
-    holder.debugItemData.text = current.data
+    holder.binding.debugItemTimeStamp.text = current.timeStamp
+    holder.binding.debugItemData.text = current.data
   }
 
   fun updateData(debugDataList: List<DebugData>) {

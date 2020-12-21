@@ -32,7 +32,6 @@ import com.thecloudsite.stockroom.treemap.TreeModel
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
-import kotlinx.android.synthetic.main.fragment_treemap.view.treemap_view
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
 
@@ -118,7 +117,7 @@ class StockRoomTreemapFragment : Fragment() {
     view: View,
     stockItems: List<StockItem>
   ) {
-    val treemapView = view.treemap_view
+    val treemapView = binding.treemapView
 
     // Gets displayed if no items are added to the root item.
     val noAssetsStr = context?.getString(R.string.no_assets)
