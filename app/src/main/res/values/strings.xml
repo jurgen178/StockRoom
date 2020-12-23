@@ -14,13 +14,12 @@ limitations under the License. -->
 
 <resources>
   <!-- App name -->
-  <string name="app_name" translatable="false">Stock Room</string>
-
-  <!-- Plurals -->
   <plurals name="events_in_list">
     <item quantity="one">%1$d Event:</item>
     <item quantity="other">%1$d Events:</item>
   </plurals>
+
+  <!-- Plurals -->
   <plurals name="asset_added">
     <item quantity="one">%1$s stock for %2$s was added to the portfolio.</item>
     <item quantity="other">%1$s stocks for %2$s were added to the portfolio.</item>
@@ -53,46 +52,23 @@ limitations under the License. -->
     <item quantity="one">Are you sure you want to delete the %1$s share at the purchase price of %2$s from your portfolio?</item>
     <item quantity="other">Are you sure you want to delete the %1$s shares at the purchase price of %2$s from your portfolio?</item>
   </plurals>
+  <string name="app_name" translatable="false">Stock Room</string>
 
   <!-- string-array -->
-  <string-array name="predefined_groups">
-    <item>Buy</item>
-    <item>Sell</item>
-    <item>Watch</item>
-    <item>Give away for free</item>
-    <item>Ask the cat</item>
-    <item>Stop looking at</item>
-    <item>Buy more</item>
-    <item>Group 1</item>
-    <item>Group 2</item>
-    <item>Group 3</item>
-    <item>Group 4</item>
-    <item>Group 5</item>
-  </string-array>
+  <string name="title_activity_settings">Settings</string>
 
-  <string-array name="dividend_cycles">
-    <item>Monthly</item>
-    <item>Quarterly</item>
-    <item>Semi Annual</item>
-    <item>Annual</item>
-  </string-array>
+  <string name="general_header">General</string>
 
-  <string-array name="filter_mode_items">
-    <item>All filters must match (&amp;&amp;)</item>
-    <item>At least one filter match (||)</item>
-  </string-array>
+  <string name="display_header">Display</string>
 
   <!-- Preference Titles -->
-  <string name="title_activity_settings">Settings</string>
-  <string name="general_header">General</string>
-  <string name="display_header">Display</string>
   <string name="feedback_header">Feedback</string>
   <string name="menu_sync">Update</string>
   <string name="menu_sort">Sort</string>
-
   <string name="hint_add_stock">Stock symbol</string>
   <string name="button_add">Add</string>
   <string name="sort_change_percentage">Sort by Change \u0025</string>
+
   <string name="sort_name">Sort by Name</string>
   <string name="sort_assets">Sort by Assets</string>
   <string name="sort_profit">Sort by Gain</string>
@@ -100,10 +76,10 @@ limitations under the License. -->
   <string name="sort_dividend_percentage">Sort by Dividend \u0025</string>
   <string name="sort_group">Sort by Group</string>
   <string name="sort_activity">Sort by Activity Date</string>
-
   <string name="ok">OK</string>
   <string name="cancel">Cancel</string>
   <string name="one_day_range">Daily</string>
+
   <string name="five_days_range">Weekly</string>
   <string name="one_month_range">Monthly</string>
   <string name="three_month_range">Quarterly</string>
@@ -266,6 +242,7 @@ limitations under the License. -->
   <string name="onlinedata_fiftyTwoWeekRange">52 week range</string>
   <string name="onlinedata_regularMarketDayRange">Day range</string>
   <string name="onlinedata_regularMarketVolume">Market volume</string>
+  <string name="onlinedata_sharesOutstanding">Shares outstanding</string>
   <string name="onlinedata_marketCap">Market cap.</string>
   <string name="onlinedata_trailingPE">Trailing PE</string>
   <string name="onlinedata_priceEpsCurrentYear">Price/EPS</string>
@@ -464,4 +441,28 @@ limitations under the License. -->
   <string name="filter_mode">Filter mode</string>
   <string name="delayed_quote">Delayed Quote</string>
   <string name="nasdaq_real_time_price">Nasdaq Real Time Price</string>
+  <string-array name="predefined_groups">
+    <item>Buy</item>
+    <item>Sell</item>
+    <item>Watch</item>
+    <item>Give away for free</item>
+    <item>Ask the cat</item>
+    <item>Stop looking at</item>
+    <item>Buy more</item>
+    <item>Group 1</item>
+    <item>Group 2</item>
+    <item>Group 3</item>
+    <item>Group 4</item>
+    <item>Group 5</item>
+  </string-array>
+  <string-array name="dividend_cycles">
+    <item>Monthly</item>
+    <item>Quarterly</item>
+    <item>Semi Annual</item>
+    <item>Annual</item>
+  </string-array>
+  <string-array name="filter_mode_items">
+    <item>All filters must match (&amp;&amp;)</item>
+    <item>At least one filter match (||)</item>
+  </string-array>
 </resources>

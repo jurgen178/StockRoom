@@ -291,7 +291,7 @@ class MainActivity : AppCompatActivity() {
         //take action when network connection is gained
       }
 
-      override fun onLost(network: Network) {
+      override fun onLost(network: Network) {sha
         //take action when network connection is lost
       }
     })
@@ -303,7 +303,7 @@ class MainActivity : AppCompatActivity() {
     // Setup event handler every 5s.
     eventHandler = Handler(Looper.getMainLooper())
 
-    //supportActionBar?.title = "test title"
+    //supportActionBar?.title = "test\n123"
   }
 
   private fun updateRemoteConfig() {

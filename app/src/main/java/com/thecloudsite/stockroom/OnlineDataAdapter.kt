@@ -345,8 +345,10 @@ class OnlineDataAdapter internal constructor(
     val rangeList = rangeStr.split(delimiter)
 
     if (rangeList.size == 2) {
-      val rangeStr1 = DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[0]))
-      val rangeStr2 = DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[1]))
+      val rangeStr1 =
+        DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[0]))
+      val rangeStr2 =
+        DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[1]))
       return "$rangeStr1$delimiter$rangeStr2"
     }
 
@@ -365,7 +367,9 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.regularMarketPreviousClose)
+                  DecimalFormat(DecimalFormat2To4Digits).format(
+                      onlineMarketData.regularMarketPreviousClose
+                  )
               )
             }
         )
@@ -427,6 +431,14 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_regularMarketVolume),
             text = SpannableStringBuilder().bold {
               append(formatInt(onlineMarketData.regularMarketVolume).first)
+            }
+        )
+    )
+    data.add(
+        OnlineData(
+            desc = context.getString(R.string.onlinedata_sharesOutstanding),
+            text = SpannableStringBuilder().bold {
+              append(formatInt(onlineMarketData.sharesOutstanding).first)
             }
         )
     )
