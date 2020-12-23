@@ -426,14 +426,14 @@ data class OnlineMarketData(
 
   var quoteSourceName: String = "",
   var sharesOutstanding: Long = Long.MIN_VALUE,
-  var fiftyDayAverage: Double = 0.0,
-  var twoHundredDayAverage: Double = 0.0,
+  var fiftyDayAverage: Double = Double.NaN,
+  var twoHundredDayAverage: Double = Double.NaN,
   var fiftyTwoWeekRange: String = "",
   var marketCap: Long = Long.MIN_VALUE,
   var regularMarketDayRange: String = "",
   var regularMarketVolume: Long = Long.MIN_VALUE,
-  var regularMarketPreviousClose: Double = 0.0,
-  var regularMarketOpen: Double = 0.0,
+  var regularMarketPreviousClose: Double = Double.NaN,
+  var regularMarketOpen: Double = Double.NaN,
 
   var epsTrailingTwelveMonths: Double = Double.NaN,
   var epsCurrentYear: Double = Double.NaN,
