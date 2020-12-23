@@ -279,6 +279,7 @@ limitations under the License. -->
   <string name="onlinedata_messageBoardId">Board-Id</string>
   <string name="onlinedata_financialCurrency">Währung</string>
   <string name="onlinedata_marketState">Marktstatus</string>
+  <string name="onlinedata_not_applicable">n.v.</string>
   <string name="json_default_filename">Aktien %1$s</string>
   <string name="news_headline">Nachrichten für %1$s</string>
   <string name="all_news_headline">Neueste Finanznachrichten</string>
@@ -462,5 +463,4 @@ limitations under the License. -->
   <string name="filter_mode">Filterart</string>
   <string name="delayed_quote">Verzögerter Aktienpreis</string>
   <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
-  <string name="not_applicable">n.v.</string>
 </resources>

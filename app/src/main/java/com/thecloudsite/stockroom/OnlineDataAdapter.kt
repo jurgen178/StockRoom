@@ -60,7 +60,7 @@ class OnlineDataAdapter internal constructor(
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
   // requested value is not in the data JSON
-  private val stringNA = context.getString(R.string.not_applicable)
+  private val stringNA = context.getString(R.string.onlinedata_not_applicable)
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
