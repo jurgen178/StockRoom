@@ -441,6 +441,7 @@ limitations under the License. -->
   <string name="filter_mode">Filter mode</string>
   <string name="delayed_quote">Delayed Quote</string>
   <string name="nasdaq_real_time_price">Nasdaq Real Time Price</string>
+  <string name="not_applicable">n/a</string>
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>

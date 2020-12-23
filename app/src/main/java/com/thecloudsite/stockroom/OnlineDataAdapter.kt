@@ -59,6 +59,9 @@ class OnlineDataAdapter internal constructor(
   val context: Context
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
+  // requested value is not in the data JSON
+  private val stringNA = context.getString(R.string.not_applicable)
+
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
 
@@ -316,6 +319,9 @@ class OnlineDataAdapter internal constructor(
 
         Pair(formattedStr, " ($formattedStr)")
       }
+      value == Long.MIN_VALUE -> {
+        Pair(stringNA, "")
+      }
       else -> {
         Pair(DecimalFormat(DecimalFormat0To2Digits).format(value), "")
       }
@@ -324,6 +330,9 @@ class OnlineDataAdapter internal constructor(
 
   private fun formatDoubleToSpannableString(value: Double): SpannableStringBuilder {
     // only negative values in red
+    if (value.isNaN()) {
+      return SpannableStringBuilder().append(stringNA)
+    }
     val str = DecimalFormat(DecimalFormat2Digits).format(value)
     return if (value < 0.0) {
       SpannableStringBuilder().bold {
@@ -333,6 +342,17 @@ class OnlineDataAdapter internal constructor(
       }
     } else {
       SpannableStringBuilder().bold { append(str) }
+    }
+  }
+
+  private fun formatDouble(
+    formatStr: String,
+    value: Double
+  ): String {
+    return if (value.isNaN()) {
+      stringNA
+    } else {
+      DecimalFormat(formatStr).format(value)
     }
   }
 
@@ -367,8 +387,8 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat(DecimalFormat2To4Digits).format(
-                      onlineMarketData.regularMarketPreviousClose
+                  formatDouble(
+                      DecimalFormat2To4Digits, onlineMarketData.regularMarketPreviousClose
                   )
               )
             }
@@ -379,7 +399,9 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_regularMarketOpen),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.regularMarketOpen)
+                  formatDouble(
+                      DecimalFormat2To4Digits, onlineMarketData.regularMarketOpen
+                  )
               )
             }
         )
@@ -389,7 +411,7 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_fiftyDayAverage),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat(DecimalFormat2Digits).format(onlineMarketData.fiftyDayAverage)
+                  formatDouble(DecimalFormat2Digits, onlineMarketData.fiftyDayAverage)
               )
             }
         )
@@ -399,7 +421,7 @@ class OnlineDataAdapter internal constructor(
             desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
             text = SpannableStringBuilder().bold {
               append(
-                  DecimalFormat(DecimalFormat2Digits).format(onlineMarketData.twoHundredDayAverage)
+                  formatDouble(DecimalFormat2Digits, onlineMarketData.twoHundredDayAverage)
               )
             }
         )

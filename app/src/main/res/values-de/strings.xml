@@ -263,7 +263,7 @@ limitations under the License. -->
   <string name="onlinedata_fiftyTwoWeekRange">Jahresbereich</string>
   <string name="onlinedata_regularMarketDayRange">Tagesbereich</string>
   <string name="onlinedata_regularMarketVolume">Marktvolumen</string>
-  <string name="onlinedata_sharesOutstanding">Ausstehende Aktien</string>
+  <string name="onlinedata_sharesOutstanding">Ausst. Aktien</string>
   <string name="onlinedata_marketCap">Marktkap.</string>
   <string name="onlinedata_trailingPE">Vergangenes P/E</string>
   <string name="onlinedata_priceEpsCurrentYear">Diesjähriges P/E</string>
@@ -462,4 +462,5 @@ limitations under the License. -->
   <string name="filter_mode">Filterart</string>
   <string name="delayed_quote">Verzögerter Aktienpreis</string>
   <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
+  <string name="not_applicable">n.v.</string>
 </resources>
