@@ -59,8 +59,9 @@ class OnlineDataAdapter internal constructor(
   val context: Context
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
-  // requested value is not in the data JSON
-  private val stringNA = context.getString(R.string.onlinedata_not_applicable)
+  // requested value is not in the JSON data
+  // TODO crash on loading
+  private var stringNA = "n.v." //context.getString(R.string.onlinedata_not_applicable)
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
