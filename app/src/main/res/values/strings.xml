@@ -280,7 +280,6 @@ limitations under the License. -->
   <string name="onlinedata_messageBoardId">Board Id</string>
   <string name="onlinedata_financialCurrency">Currency</string>
   <string name="onlinedata_marketState">Market state</string>
-  <string name="onlinedata_not_applicable">n/a</string>
   <string name="json_default_filename">Portfolio %1$s</string>
   <string name="news_headline">News for %1$s</string>
   <string name="all_news_headline">Latest Finance News</string>
