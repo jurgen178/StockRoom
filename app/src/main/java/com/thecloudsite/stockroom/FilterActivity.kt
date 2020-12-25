@@ -591,7 +591,8 @@ class FilterActivity : AppCompatActivity() {
       viewMap["textViewFilterTextTypeVisibility"] = ViewSet(dialogBinding.textViewFilterTextType)
       viewMap["textInputLayoutFilterTextTypeVisibility"] =
         ViewSet(dialogBinding.textInputLayoutFilterTextType)
-      viewMap["textViewFilterDoubleTypeVisibility"] = ViewSet(dialogBinding.textViewFilterDoubleType)
+      viewMap["textViewFilterDoubleTypeVisibility"] =
+        ViewSet(dialogBinding.textViewFilterDoubleType)
       viewMap["textInputLayoutFilterDoubleTypeVisibility"] =
         ViewSet(dialogBinding.textInputLayoutFilterDoubleType)
       viewMap["textViewFilterIntTypeVisibility"] = ViewSet(dialogBinding.textViewFilterIntType)
@@ -768,6 +769,30 @@ class FilterActivity : AppCompatActivity() {
             }
             NoType -> {
               ""
+            }
+          }
+
+          // Check regex
+
+          // TODO resource
+          //<string name="filter_regex_error_msg">The filter regex \'%1$s\' is not valid.</string>
+//   <string name="filter_regex_error_msg">Der reguläre Ausdruck \'%1$s\' für den Filter ist ungültig.</string>
+
+          if (subType == FilterSubTypeEnum.MatchRegexTextType
+              || subType == FilterSubTypeEnum.NotMatchRegexTextType
+          ) {
+            try {
+              newFilterType.data.toRegex(regexOption)
+                  .containsMatchIn("test")
+            } catch (e: Exception) {
+              Toast.makeText(
+                  //this, getString(R.string.filter_regex_error_msg, newFilterType.data),
+                  this, "Der reguläre Ausdruck '${newFilterType.data}' für den Filter ist ungültig",
+                  Toast.LENGTH_LONG
+              )
+                  .show()
+
+              return@setPositiveButton
             }
           }
 

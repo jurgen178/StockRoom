@@ -969,35 +969,40 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     if (filterList.isEmpty()) {
       stockItems
     } else {
-      when (filterMode) {
+      try {
+        when (filterMode) {
 
-        FilterModeTypeEnum.AndType -> {
-          stockItems.filter { item ->
-            var match = true
-            // All filters must return true to match.
-            for (filterType in filterList) {
-              if (!filterType.filter(item)) {
-                match = false
-                break
+          FilterModeTypeEnum.AndType -> {
+            stockItems.filter { item ->
+              var match = true
+              // All filters must return true to match.
+              for (filterType in filterList) {
+                if (!filterType.filter(item)) {
+                  match = false
+                  break
+                }
               }
+              match
             }
-            match
+          }
+
+          FilterModeTypeEnum.OrType -> {
+            stockItems.filter { item ->
+              var match = false
+              // First filter match return true.
+              for (filterType in filterList) {
+                if (filterType.filter(item)) {
+                  match = true
+                  break
+                }
+              }
+              match
+            }
           }
         }
-
-        FilterModeTypeEnum.OrType -> {
-          stockItems.filter { item ->
-            var match = false
-            // First filter match return true.
-            for (filterType in filterList) {
-              if (filterType.filter(item)) {
-                match = true
-                break
-              }
-            }
-            match
-          }
-        }
+      } catch (e: Exception) {
+        // Return no results in case of exception (for example wrong regex).
+        emptyList()
       }
     }
 
