@@ -755,6 +755,10 @@ class StockDataFragment : Fragment() {
               linkType = LinkType.WebsiteType,
               link = "https://www.thestreet.com/quote/$symbol"
           ),
+          "Real Money (TheStreet)" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://realmoney.thestreet.com/quote/$symbol"
+          ),
           "Zacks" to LinkListEntry(
               linkType = LinkType.WebsiteType,
               link = "https://www.zacks.com/stock/quote/$symbol"

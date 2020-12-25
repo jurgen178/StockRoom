@@ -288,7 +288,7 @@ class OnlineDataAdapter internal constructor(
 
   // first: abbr
   // second: add optional (abbr)
-  private fun formatInt(value: Long): Pair<String, String> {
+  private fun formatInt(value: Long): Pair<SpannableStringBuilder, String> {
     return when {
       value >= 1000000000000L -> {
         val formattedStr =
@@ -298,7 +298,9 @@ class OnlineDataAdapter internal constructor(
             )
           }"
 
-        Pair(formattedStr, " ($formattedStr)")
+        Pair(SpannableStringBuilder().bold {
+          append(formattedStr)
+        }, " ($formattedStr)")
       }
       value >= 1000000000L -> {
         val formattedStr =
@@ -308,7 +310,9 @@ class OnlineDataAdapter internal constructor(
             )
           }"
 
-        Pair(formattedStr, " ($formattedStr)")
+        Pair(SpannableStringBuilder().bold {
+          append(formattedStr)
+        }, " ($formattedStr)")
       }
       value >= 1000000L -> {
         val formattedStr =
@@ -318,13 +322,17 @@ class OnlineDataAdapter internal constructor(
             )
           }"
 
-        Pair(formattedStr, " ($formattedStr)")
+        Pair(SpannableStringBuilder().bold {
+          append(formattedStr)
+        }, " ($formattedStr)")
       }
       value == Long.MIN_VALUE -> {
-        Pair(stringNA, "")
+        Pair(SpannableStringBuilder().append(stringNA), "")
       }
       else -> {
-        Pair(DecimalFormat(DecimalFormat0To2Digits).format(value), "")
+        Pair(SpannableStringBuilder().bold {
+          append(DecimalFormat(DecimalFormat0To2Digits).format(value))
+        }, "")
       }
     }
   }
@@ -349,15 +357,17 @@ class OnlineDataAdapter internal constructor(
   private fun formatDouble(
     formatStr: String,
     value: Double
-  ): String {
+  ): SpannableStringBuilder {
     return if (value.isNaN()) {
-      stringNA
+      SpannableStringBuilder().append(stringNA)
     } else {
-      DecimalFormat(formatStr).format(value)
+      SpannableStringBuilder().bold {
+        append(DecimalFormat(formatStr).format(value))
+      }
     }
   }
 
-  private fun convertRangeStr(rangeStr: String): String {
+  private fun convertRangeStr(rangeStr: String): SpannableStringBuilder {
 
     // "1.23 - 4.56" = "1,23 - 4,56"
     // "1.0E-4 - 2.00" = "0,0001 - 2,00"
@@ -370,10 +380,12 @@ class OnlineDataAdapter internal constructor(
         DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[0]))
       val rangeStr2 =
         DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[1]))
-      return "$rangeStr1$delimiter$rangeStr2"
+      return SpannableStringBuilder().bold {
+        append("$rangeStr1$delimiter$rangeStr2")
+      }
     }
 
-    return rangeStr
+    return SpannableStringBuilder().append(rangeStr)
   }
 
   fun updateData(onlineMarketData: OnlineMarketData) {
@@ -386,91 +398,61 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
-            text = SpannableStringBuilder().bold {
-              append(
-                  formatDouble(
-                      DecimalFormat2To4Digits, onlineMarketData.regularMarketPreviousClose
-                  )
-              )
-            }
+            text = formatDouble(
+                DecimalFormat2To4Digits, onlineMarketData.regularMarketPreviousClose
+            )
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketOpen),
-            text = SpannableStringBuilder().bold {
-              append(
-                  formatDouble(
-                      DecimalFormat2To4Digits, onlineMarketData.regularMarketOpen
-                  )
-              )
-            }
+            text = formatDouble(
+                DecimalFormat2To4Digits, onlineMarketData.regularMarketOpen
+            )
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_fiftyDayAverage),
-            text = SpannableStringBuilder().bold {
-              append(
-                  formatDouble(DecimalFormat2Digits, onlineMarketData.fiftyDayAverage)
-              )
-            }
+            text = formatDouble(DecimalFormat2Digits, onlineMarketData.fiftyDayAverage)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
-            text = SpannableStringBuilder().bold {
-              append(
-                  formatDouble(DecimalFormat2Digits, onlineMarketData.twoHundredDayAverage)
-              )
-            }
+            text = formatDouble(DecimalFormat2Digits, onlineMarketData.twoHundredDayAverage)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
-            text = SpannableStringBuilder().bold {
-              append(
-                  convertRangeStr(onlineMarketData.fiftyTwoWeekRange)
-                  //onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
-              )
-            }
+            text = convertRangeStr(onlineMarketData.fiftyTwoWeekRange)
+            //onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketDayRange),
-            text = SpannableStringBuilder().bold {
-              append(
-                  convertRangeStr(onlineMarketData.regularMarketDayRange)
-                  //onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
-              )
-            }
+            text = convertRangeStr(onlineMarketData.regularMarketDayRange)
+            //onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_regularMarketVolume),
-            text = SpannableStringBuilder().bold {
-              append(formatInt(onlineMarketData.regularMarketVolume).first)
-            }
+            text = formatInt(onlineMarketData.regularMarketVolume).first
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_sharesOutstanding),
-            text = SpannableStringBuilder().bold {
-              append(formatInt(onlineMarketData.sharesOutstanding).first)
-            }
+            text = formatInt(onlineMarketData.sharesOutstanding).first
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_marketCap),
-            text = SpannableStringBuilder().bold {
-              append(formatInt(onlineMarketData.marketCap).first)
-            }
+            text = formatInt(onlineMarketData.marketCap).first
         )
     )
 
