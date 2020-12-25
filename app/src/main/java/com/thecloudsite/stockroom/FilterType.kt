@@ -178,6 +178,7 @@ object FilterFactory {
 
 interface IFilterType {
   fun filter(stockItem: StockItem): Boolean
+  fun dataReady()
   val typeId: FilterTypeEnum
   val dataType: FilterDataTypeEnum
   val subTypeList: List<FilterSubTypeEnum>
@@ -192,6 +193,9 @@ interface IFilterType {
 open class FilterBaseType : IFilterType {
   override fun filter(stockItem: StockItem): Boolean {
     return false
+  }
+
+  override fun dataReady() {
   }
 
   override val typeId = FilterTypeEnum.FilterNullType
@@ -226,6 +230,24 @@ open class FilterTextBaseType : FilterBaseType() {
         else -> super.displayData
       }
     }
+}
+
+open class FilterRegexTextType : FilterTextBaseType() {
+
+  var regex: Regex = "".toRegex()
+
+  // Setup the regex when the data is ready to avoid creating a regex
+  // from the string for each comparison.
+  override fun dataReady() {
+    if (subType == FilterSubTypeEnum.MatchRegexTextType
+        || subType == FilterSubTypeEnum.NotMatchRegexTextType
+    ) {
+      try {
+        regex = data.toRegex(regexOption)
+      } catch (e: Exception) {
+      }
+    }
+  }
 }
 
 open class FilterDoubleBaseType : FilterBaseType() {
@@ -439,7 +461,7 @@ class FilterPercentageChangeType(
 
 class FilterSymbolNameType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -461,12 +483,10 @@ class FilterSymbolNameType(
         !stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
-        data.toRegex(regexOption)
-            .containsMatchIn(stockItem.stockDBdata.symbol)
+        regex.containsMatchIn(stockItem.stockDBdata.symbol)
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
-        !data.toRegex(regexOption)
-            .containsMatchIn(stockItem.stockDBdata.symbol)
+        !regex.containsMatchIn(stockItem.stockDBdata.symbol)
       }
       else -> false
     }
@@ -490,7 +510,7 @@ class FilterSymbolNameType(
 
 class FilterDisplayNameType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -500,12 +520,10 @@ class FilterDisplayNameType(
         !getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
-        data.toRegex(regexOption)
-            .containsMatchIn(getName(stockItem.onlineMarketData))
+        regex.containsMatchIn(getName(stockItem.onlineMarketData))
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
-        !data.toRegex(regexOption)
-            .containsMatchIn(getName(stockItem.onlineMarketData))
+        !regex.containsMatchIn(getName(stockItem.onlineMarketData))
       }
       else -> false
     }
@@ -525,7 +543,7 @@ class FilterDisplayNameType(
 
 class FilterStockExchangeNameType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -535,12 +553,10 @@ class FilterStockExchangeNameType(
         !stockItem.onlineMarketData.fullExchangeName.contains(data, ignoreCase = true)
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
-        data.toRegex(regexOption)
-            .containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
+        regex.containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
-        !data.toRegex(regexOption)
-            .containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
+        !regex.containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
       }
       else -> false
     }
@@ -580,7 +596,7 @@ class FilterGroupType(
 
 class FilterNoteType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -596,12 +612,10 @@ class FilterNoteType(
         stockItem.stockDBdata.note.isNotEmpty()
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
-        data.toRegex(regexOption)
-            .containsMatchIn(stockItem.stockDBdata.note)
+        regex.containsMatchIn(stockItem.stockDBdata.note)
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
-        !data.toRegex(regexOption)
-            .containsMatchIn(stockItem.stockDBdata.note)
+        !regex.containsMatchIn(stockItem.stockDBdata.note)
       }
       else -> false
     }
@@ -623,7 +637,7 @@ class FilterNoteType(
 
 class FilterDividendNoteType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -639,12 +653,10 @@ class FilterDividendNoteType(
         stockItem.stockDBdata.dividendNote.isNotEmpty()
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
-        data.toRegex(regexOption)
-            .containsMatchIn(stockItem.stockDBdata.dividendNote)
+        regex.containsMatchIn(stockItem.stockDBdata.dividendNote)
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
-        !data.toRegex(regexOption)
-            .containsMatchIn(stockItem.stockDBdata.dividendNote)
+        !regex.containsMatchIn(stockItem.stockDBdata.dividendNote)
       }
       else -> false
     }
@@ -666,7 +678,7 @@ class FilterDividendNoteType(
 
 class FilterAssetNoteType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -691,14 +703,12 @@ class FilterAssetNoteType(
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
         stockItem.assets.find { asset ->
-          data.toRegex(regexOption)
-              .containsMatchIn(asset.note)
+          regex.containsMatchIn(asset.note)
         } != null
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
         stockItem.assets.find { asset ->
-          data.toRegex(regexOption)
-              .containsMatchIn(asset.note)
+          regex.containsMatchIn(asset.note)
         } == null
       }
       else -> false
@@ -721,7 +731,7 @@ class FilterAssetNoteType(
 
 class FilterAlertNoteType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -741,12 +751,10 @@ class FilterAlertNoteType(
             || stockItem.stockDBdata.alertBelowNote.isNotEmpty()
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
-        val regex = data.toRegex(regexOption)
         regex.containsMatchIn(stockItem.stockDBdata.alertAboveNote)
             || regex.containsMatchIn(stockItem.stockDBdata.alertBelowNote)
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
-        val regex = data.toRegex(regexOption)
         !(regex.containsMatchIn(stockItem.stockDBdata.alertAboveNote)
             || regex.containsMatchIn(stockItem.stockDBdata.alertBelowNote))
       }
@@ -770,7 +778,7 @@ class FilterAlertNoteType(
 
 class FilterEventDetailType(
   context: Context
-) : FilterTextBaseType() {
+) : FilterRegexTextType() {
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.ContainsTextType -> {
@@ -799,14 +807,12 @@ class FilterEventDetailType(
       }
       FilterSubTypeEnum.MatchRegexTextType -> {
         stockItem.events.find { event ->
-          val regex = data.toRegex(regexOption)
           regex.containsMatchIn(event.title) ||
               regex.containsMatchIn(event.note)
         } != null
       }
       FilterSubTypeEnum.NotMatchRegexTextType -> {
         stockItem.events.find { event ->
-          val regex = data.toRegex(regexOption)
           regex.containsMatchIn(event.title) ||
               regex.containsMatchIn(event.note)
         } == null

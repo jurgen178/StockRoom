@@ -101,6 +101,8 @@ class Filters(
       // Create new filter.
       map[selectedFilter] = FilterSet(list = mutableListOf(filterType))
     }
+
+    filterType.dataReady()
   }
 
   fun update(
@@ -110,6 +112,7 @@ class Filters(
     if (map.containsKey(selectedFilter)) {
       if (index >= 0 && index < map[selectedFilter]?.list?.size ?: 0) {
         map[selectedFilter]?.list?.set(index, filterType)
+        filterType.dataReady()
       }
     }
   }
@@ -209,6 +212,7 @@ class FilterDataRepository(val context: Context) {
           val filterType = FilterFactory.create(filterTypeJson.typeId, context)
           filterType.data = filterTypeJson.data
           filterType.subType = filterTypeJson.subType
+          filterType.dataReady()
           list.add(filterType)
           map[filterTypeJson.name] = FilterSet(list = list, mode = filterTypeJson.mode)
         }
