@@ -20,6 +20,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.thecloudsite.stockroom.list.ListDBAdapter
 import kotlin.math.roundToInt
 
 class StockRoomTableFragment : StockRoomBaseFragment() {
@@ -39,15 +41,7 @@ class StockRoomTableFragment : StockRoomBaseFragment() {
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter
-
-    // Set column number depending on screen width.
-    val scale = 494
-    val spanCount =
-      (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
-
-    recyclerView.layoutManager = GridLayoutManager(context,
-        Integer.min(Integer.max(spanCount, 1), 10)
-    )
+    recyclerView.layoutManager = LinearLayoutManager(this)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let {

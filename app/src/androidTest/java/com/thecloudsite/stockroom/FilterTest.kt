@@ -37,6 +37,9 @@ class FilterTest {
       return stockItem.stockDBdata.symbol == "s1"
     }
 
+    override fun dataReady() {
+    }
+
     override val typeId = FilterTypeEnum.FilterNullType
     override val displayName = "test1"
     override val desc = ""
