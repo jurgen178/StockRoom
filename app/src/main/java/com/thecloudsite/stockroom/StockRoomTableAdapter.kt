@@ -45,8 +45,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
 import kotlin.math.absoluteValue
 
-// https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
-
 class StockRoomTableAdapter internal constructor(
   val context: Context,
   private val clickListenerSummary: (StockItem) -> Unit
@@ -86,18 +84,29 @@ class StockRoomTableAdapter internal constructor(
     if (current != null) {
       // Header item is symbol = ""
       if (current.stockDBdata.symbol.isEmpty()) {
-        holder.binding.tableDataSymbol.text = getHeaderStr("header")
+        holder.binding.tableDataSymbol.text = getHeaderStr("symbol")
+        holder.binding.tableStockdbdataPortfolio.text = getHeaderStr("portfolio")
+        holder.binding.tableStockdbdataData.text = getHeaderStr("data")
+        holder.binding.tableStockdbdataGroupColor.text = getHeaderStr("groupColor")
+        holder.binding.tableStockdbdataNote.text = getHeaderStr("note")
+        holder.binding.tableStockdbdataDividendNote.text = getHeaderStr("dividendNote")
+        holder.binding.tableStockdbdataAnnualDividendRate.text = getHeaderStr("annualDividendRate")
+        holder.binding.tableStockdbdataAlertAbove.text = getHeaderStr("alertAbove")
+        holder.binding.tableStockdbdataAlertAboveNote.text = getHeaderStr("alertAboveNote")
+        holder.binding.tableStockdbdataAlertBelow.text = getHeaderStr("alertBelow")
+        holder.binding.tableStockdbdataAlertBelowNote.text = getHeaderStr("alertBelowNote")
       } else {
         holder.bindSummary(current, clickListenerSummary)
 
         holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
+        holder.binding.tableStockdbdataAlertBelow.text = current.stockDBdata.alertBelow.toString()
       }
     }
   }
 
   private fun getHeaderStr(text: String): SpannableStringBuilder =
     SpannableStringBuilder()
-        .color(Color.WHITE) {
+        .color(Color.BLUE) {
           bold { append(text) }
         }
 
@@ -115,6 +124,7 @@ class StockRoomTableAdapter internal constructor(
 
     this.stockItems.addAll(stockItems)
 
+    submitList(this.stockItems)
     notifyDataSetChanged()
   }
 }

@@ -19,10 +19,7 @@ package com.thecloudsite.stockroom
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.thecloudsite.stockroom.list.ListDBAdapter
-import kotlin.math.roundToInt
 
 class StockRoomTableFragment : StockRoomBaseFragment() {
 
@@ -41,7 +38,7 @@ class StockRoomTableFragment : StockRoomBaseFragment() {
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter
-    recyclerView.layoutManager = LinearLayoutManager(this)
+    recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let {
