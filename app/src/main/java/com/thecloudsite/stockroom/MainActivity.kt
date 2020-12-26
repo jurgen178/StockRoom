@@ -216,22 +216,25 @@ class MainActivity : AppCompatActivity() {
           "04_StockRoomSmallTileFragment" -> {
             StockRoomSmallTileFragment.newInstance()
           }
-          "05_StockRoomTreemapFragment" -> {
+          "05_StockRoomTableFragment" -> {
+            StockRoomTableFragment.newInstance()
+          }
+          "06_StockRoomTreemapFragment" -> {
             StockRoomTreemapFragment.newInstance()
           }
-          "06_SummaryGroupFragment" -> {
+          "07_SummaryGroupFragment" -> {
             SummaryGroupFragment.newInstance()
           }
-          "07_AllNewsFragment" -> {
+          "08_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "08_AssetTimelineFragment" -> {
+          "09_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "09_EventTimelineFragment" -> {
+          "10_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "10_DividendTimelineFragment" -> {
+          "11_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
           }
           else -> {

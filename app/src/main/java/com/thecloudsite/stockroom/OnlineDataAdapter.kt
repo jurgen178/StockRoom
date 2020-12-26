@@ -60,8 +60,7 @@ class OnlineDataAdapter internal constructor(
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
 
   // requested value is not in the JSON data
-  // TODO wenn onlinedata_not_applicable ist in resourcen, stimmt die zuordnung der anderen werte nicht mehr
-  private var stringNA = "n.v." //context.getString(R.string.onlinedata_not_applicable)
+  private var stringNA = context.getString(R.string.onlinedata_not_applicable)
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()

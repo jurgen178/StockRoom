@@ -6,6 +6,7 @@
     <item>Übersicht</item>
     <item>Kleine Liste</item>
     <item>Kleine Übersicht</item>
+    <item>Tabelle</item>
     <item>Blockansicht</item>
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
@@ -19,6 +20,7 @@
     <item>Übersicht</item>
     <item>Kleine Liste</item>
     <item>Kleine Übersicht</item>
+    <item>Tabelle</item>
     <item>Blockansicht</item>
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
@@ -32,17 +34,18 @@
     <item>02_StockRoomTileFragment</item>
     <item>03_StockRoomSmallListFragment</item>
     <item>04_StockRoomSmallTileFragment</item>
-    <item>05_StockRoomTreemapFragment</item>
-    <item>06_SummaryGroupFragment</item>
-    <item>07_AllNewsFragment</item>
-    <item>08_AssetTimelineFragment</item>
-    <item>09_EventTimelineFragment</item>
-    <item>10_DividendTimelineFragment</item>
+    <item>05_StockRoomTableFragment</item>
+    <item>06_StockRoomTreemapFragment</item>
+    <item>07_SummaryGroupFragment</item>
+    <item>08_AllNewsFragment</item>
+    <item>09_AssetTimelineFragment</item>
+    <item>10_EventTimelineFragment</item>
+    <item>11_DividendTimelineFragment</item>
   </string-array>
   <string-array name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>
     <item>01_StockRoomListFragment</item>
     <item>02_StockRoomTileFragment</item>
-    <item>06_SummaryGroupFragment</item>
+    <item>07_SummaryGroupFragment</item>
   </string-array>
 </resources>

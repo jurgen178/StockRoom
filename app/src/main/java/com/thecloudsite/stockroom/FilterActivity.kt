@@ -773,11 +773,6 @@ class FilterActivity : AppCompatActivity() {
           }
 
           // Check regex
-
-          // TODO resource
-          //<string name="filter_regex_error_msg">The filter regex \'%1$s\' is not valid.</string>
-//   <string name="filter_regex_error_msg">Der reguläre Ausdruck \'%1$s\' für den Filter ist ungültig.</string>
-
           if (subType == FilterSubTypeEnum.MatchRegexTextType
               || subType == FilterSubTypeEnum.NotMatchRegexTextType
           ) {
@@ -786,8 +781,7 @@ class FilterActivity : AppCompatActivity() {
                   .containsMatchIn("test")
             } catch (e: Exception) {
               Toast.makeText(
-                  //this, getString(R.string.filter_regex_error_msg, newFilterType.data),
-                  this, "Der reguläre Ausdruck '${newFilterType.data}' für den Filter ist ungültig",
+                 this, getString(R.string.filter_regex_error_msg, newFilterType.data),
                   Toast.LENGTH_LONG
               )
                   .show()
