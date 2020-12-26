@@ -22,10 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.StockRoomTableAdapter.BaseViewHolder
-import com.thecloudsite.stockroom.list.DBData
-import com.thecloudsite.stockroom.list.ListDBAdapter
-import com.thecloudsite.stockroom.list.db_dividend_type
-import com.thecloudsite.stockroom.list.db_headline_type
+import com.thecloudsite.stockroom.databinding.StockroomTableHeadlineItemBinding
+import com.thecloudsite.stockroom.databinding.StockroomTableDataItemBinding
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -44,37 +42,29 @@ class StockRoomTableAdapter internal constructor(
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 //  ) : ListAdapter<StockItem, StockRoomTableAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
-  private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var stockDataItems: MutableList<StockData> = mutableListOf()
-  private var defaultTextColor: Int? = null
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
     abstract fun bind(item: T)
   }
 
   class TableHeadlineViewHolder(
-    val binding: StockRoomTableHeadlineItemBinding
-  ) : ListDBAdapter.BaseViewHolder<DBData>(binding.root) {
-    override fun bind(item: DBData) {
+    val binding: StockroomTableHeadlineItemBinding
+  ) : StockRoomTableAdapter.BaseViewHolder<StockData>(binding.root) {
+    override fun bind(item: StockData) {
     }
   }
 
   class TableDataViewHolder(
-    val binding: StockRoomTableHeadlineItemBinding
-  ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindGroup(
-      stockItem: StockItem,
-      clickListener: (StockItem, View) -> Unit
-    ) {
-      binding.itemviewGroup.setOnClickListener { clickListener(stockItem, itemView) }
+    val binding: StockroomTableDataItemBinding
+  ) : StockRoomTableAdapter.BaseViewHolder<StockData>(binding.root) {
+    override fun bind(item: StockData) {
     }
-
     fun bindSummary(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
-      binding.itemSummary.setOnClickListener { clickListener(stockItem) }
-      binding.itemRedGreen.setOnClickListener { clickListener(stockItem) }
+      binding.tableDataLayout.setOnClickListener { clickListener(stockItem) }
     }
   }
 
@@ -86,13 +76,13 @@ class StockRoomTableAdapter internal constructor(
     return when (viewType) {
       table_headline_type -> {
         val binding =
-          StockRoomTableHeadlineItemBinding.inflate(LayoutInflater.from(context), parent, false)
+          StockroomTableHeadlineItemBinding.inflate(LayoutInflater.from(context), parent, false)
         TableHeadlineViewHolder(binding)
       }
 
       table_data_type -> {
         val binding =
-          StockRoomTableDataItemBinding.inflate(LayoutInflater.from(context), parent, false)
+          StockroomTableDataItemBinding.inflate(LayoutInflater.from(context), parent, false)
         TableDataViewHolder(binding)
       }
 
@@ -105,15 +95,26 @@ class StockRoomTableAdapter internal constructor(
     position: Int
   ) {
 
-//    val data: DBData = dbDataList[position]
-//
-//    when (holder) {
-//
-//      is HeadlineViewHolder -> {
-//        holder.bind(data)
-//
-//        holder.binding.dbHeadline.text = data.title
-//      }
+    //       holder.bindSummary(current, clickListenerSummary)
+
+
+    val stockData: StockData = stockDataItems[position]
+
+    when (holder) {
+
+      is TableHeadlineViewHolder -> {
+        holder.bind(stockData)
+
+        holder.binding.tableHeadline.text = stockData.title
+      }
+
+      is TableDataViewHolder -> {
+        holder.bind(stockData)
+
+        stockData.stockItem?.let { holder.bindSummary(it, clickListenerSummary) }
+      }
+    }
+
 //
 //      is StockDBdataViewHolder -> {
 //        holder.bind(data)
