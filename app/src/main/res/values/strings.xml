@@ -465,4 +465,5 @@ limitations under the License. -->
   <string name="delayed_quote">Delayed Quote</string>
   <string name="nasdaq_real_time_price">Nasdaq Real Time Price</string>
   <string name="filter_regex_error_msg">The filter regex \'%1$s\' is not valid.</string>
+  <string name="table_symbol_column">Symbol</string>
 </resources>

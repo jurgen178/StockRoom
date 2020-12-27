@@ -84,8 +84,8 @@ class StockRoomTableAdapter internal constructor(
     if (current != null) {
       // Header item is symbol = ""
       if (current.stockDBdata.symbol.isEmpty()) {
-        holder.binding.tableDataSymbol.text = getHeaderStr("symbol")
-        holder.binding.tableStockdbdataPortfolio.text = getHeaderStr("portfolio")
+        holder.binding.tableDataSymbol.text = getHeaderStr(context.getString(R.string.table_symbol_column))
+        holder.binding.tableStockdbdataPortfolio.text = getHeaderStr("bestand")
         holder.binding.tableStockdbdataData.text = getHeaderStr("data")
         holder.binding.tableStockdbdataGroupColor.text = getHeaderStr("groupColor")
         holder.binding.tableStockdbdataNote.text = getHeaderStr("note")

@@ -464,4 +464,5 @@ limitations under the License. -->
   <string name="delayed_quote">Verzögerter Aktienpreis</string>
   <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
   <string name="filter_regex_error_msg">Der reguläre Ausdruck \'%1$s\' für den Filter ist ungültig.</string>
+  <string name="table_symbol_column">Aktienkürzel</string>
 </resources>
