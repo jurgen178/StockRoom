@@ -19,6 +19,7 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.bold
@@ -52,6 +53,7 @@ class StockRoomTableAdapter internal constructor(
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var stockItems: MutableList<StockItem> = mutableListOf()
+  private var defaultTextColor: Int? = null
 
   class StockRoomTableViewHolder(
     val binding: StockroomTableItemBinding
@@ -79,11 +81,34 @@ class StockRoomTableAdapter internal constructor(
   ) {
     val current = getItem(position)
 
+    if (defaultTextColor == null) {
+      defaultTextColor = holder.binding.tableDataMarketPrice.currentTextColor
+    }
+
     if (current != null) {
       holder.bindSummary(current, clickListenerSummary)
 
       // Header item is symbol = ""
-      if (current.stockDBdata.symbol.isEmpty()) {
+      val isHeader = current.stockDBdata.symbol.isEmpty()
+
+      val alignmentNumbers = if (isHeader) Gravity.CENTER_HORIZONTAL else Gravity.END
+      holder.binding.tableDataMarketPrice.gravity = alignmentNumbers
+      holder.binding.tableDataMarketChange.gravity = alignmentNumbers
+      holder.binding.tableDataQuantity.gravity = alignmentNumbers
+      holder.binding.tableDataPurchaseprice.gravity = alignmentNumbers
+      holder.binding.tableDataAsset.gravity = alignmentNumbers
+      holder.binding.tableDataAssetChange.gravity = alignmentNumbers
+      holder.binding.tableDataDividend.gravity = alignmentNumbers
+
+      val alignmentText = if (isHeader) Gravity.CENTER_HORIZONTAL else Gravity.START
+      holder.binding.tableDataSymbol.gravity = alignmentText
+      holder.binding.tableDataName.gravity = alignmentText
+      holder.binding.tableDataAlertAbove.gravity = alignmentText
+      holder.binding.tableDataAlertBelow.gravity = alignmentText
+      holder.binding.tableDataEvents.gravity = alignmentText
+      holder.binding.tableDataNote.gravity = alignmentText
+
+      if (isHeader) {
 
         holder.binding.tableDataLayout.setBackgroundColor(Color.LTGRAY)
 
@@ -123,11 +148,15 @@ class StockRoomTableAdapter internal constructor(
             context.getColor(R.color.backgroundListColor)
         )
 
+        val backgroundColor = context.getColor(R.color.backgroundListColor)
         var color = current.stockDBdata.groupColor
         if (color == 0) {
-          color = context.getColor(R.color.backgroundListColor)
+          color = backgroundColor
         }
         setBackgroundColor(holder.binding.tableDataGroup, color)
+
+        holder.binding.tableDataMarketPrice.setBackgroundColor(backgroundColor)
+        holder.binding.tableDataMarketChange.setBackgroundColor(backgroundColor)
 
         holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
         holder.binding.tableDataName.text = getName(current.onlineMarketData)
@@ -168,33 +197,51 @@ class StockRoomTableAdapter internal constructor(
         holder.binding.tableDataAssetChange.text = assetChange.second
 
         if (current.onlineMarketData.marketPrice > 0.0) {
+
+          val marketColor = getChangeColor(
+              current.onlineMarketData.marketChange,
+              current.onlineMarketData.postMarketData,
+              defaultTextColor!!,
+              context
+          )
+
           val marketValues = getMarketValues(current.onlineMarketData)
           val marketChange = "${marketValues.second} ${marketValues.third}"
 
           if (current.onlineMarketData.postMarketData) {
             holder.binding.tableDataMarketPrice.text = SpannableStringBuilder()
-                .italic { append(marketValues.first) }
+                .color(marketColor)
+                { italic { append(marketValues.first) } }
             holder.binding.tableDataMarketChange.text = SpannableStringBuilder()
-                .italic { append(marketChange) }
+                .color(marketColor)
+                { italic { append(marketChange) } }
           } else {
-            holder.binding.tableDataMarketPrice.text = marketValues.first
-            holder.binding.tableDataMarketChange.text = marketChange
+            holder.binding.tableDataMarketPrice.text = SpannableStringBuilder()
+                .color(marketColor)
+                { append(marketValues.first) }
+            holder.binding.tableDataMarketChange.text = SpannableStringBuilder()
+                .color(marketColor)
+                { append(marketChange) }
           }
         } else {
           holder.binding.tableDataMarketPrice.text = ""
           holder.binding.tableDataMarketChange.text = ""
         }
 
-        val marketColor = getChangeColor(
-            current.onlineMarketData.marketChange,
-            current.onlineMarketData.postMarketData,
-            context.getColor(R.color.backgroundListColor),
-            context
-        )
-        holder.binding.tableDataMarketPrice.setBackgroundColor(marketColor)
-        holder.binding.tableDataMarketChange.setBackgroundColor(marketColor)
+//        val marketColor = getChangeColor(
+//            current.onlineMarketData.marketChange,
+//            current.onlineMarketData.postMarketData,
+//            context.getColor(R.color.backgroundListColor),
+//            context
+//        )
+//        holder.binding.tableDataMarketPrice.setBackgroundColor(marketColor)
+//        holder.binding.tableDataMarketChange.setBackgroundColor(marketColor)
 
-        holder.binding.tableDataDividend.text = getDividendStr(current)
+        var dividendStr = getDividendStr(current)
+        if (current.stockDBdata.dividendNote.isNotEmpty()) {
+          dividendStr += "\n${current.stockDBdata.dividendNote}"
+        }
+        holder.binding.tableDataDividend.text = dividendStr
 
         var alertAboveText = ""
         if (current.stockDBdata.alertAbove > 0.0) {
