@@ -1974,7 +1974,8 @@ class StockDataFragment : Fragment() {
           }
 
           val assetChange = getAssetChange(
-              assets,
+              totalQuantity,
+              totalPrice,
               value,
               data.onlineMarketData?.postMarketData!!,
               Color.DKGRAY,

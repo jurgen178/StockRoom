@@ -49,6 +49,18 @@ class AssetTest {
 
   @Test
   @Throws(Exception::class)
+  fun test1() {
+    data class pairs(
+      var x: Int,
+      var y: Int,
+    )
+
+    val liste: MutableList<pairs> = mutableListOf()
+    liste.add(pairs(x=1, y=1))
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun optionFormat() {
 
     //    The OCC option symbol consists of four parts:

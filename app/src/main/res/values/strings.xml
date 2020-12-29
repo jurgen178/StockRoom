@@ -465,5 +465,17 @@ limitations under the License. -->
   <string name="delayed_quote">Delayed Quote</string>
   <string name="nasdaq_real_time_price">Nasdaq Real Time Price</string>
   <string name="filter_regex_error_msg">The filter regex \'%1$s\' is not valid.</string>
-  <string name="table_symbol_column">Symbol</string>
+  <string name="table_column_symbol">Symbol</string>
+  <string name="table_column_Name">Name</string>
+  <string name="table_column_MarketPrice">Market price</string>
+  <string name="table_column_MarketChange">Market change</string>
+  <string name="table_column_Quantity">Quantity</string>
+  <string name="table_column_Capital">Capital</string>
+  <string name="table_column_Asset">Asset</string>
+  <string name="table_column_AssetChange">Asset change</string>
+  <string name="table_column_Dividend">Dividend</string>
+  <string name="table_column_AlertAbove">Alert Above</string>
+  <string name="table_column_AlertBelow">Alert Below</string>
+  <string name="table_column_Events">Events</string>
+  <string name="table_column_Note">Note</string>
 </resources>

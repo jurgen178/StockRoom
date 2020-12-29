@@ -19,23 +19,23 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
+import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
+import android.view.MotionEvent
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.R.color
-import com.thecloudsite.stockroom.StockRoomListAdapter.StockRoomViewHolder
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.StockroomTableItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
-import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import java.text.DecimalFormat
@@ -43,7 +43,21 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
-import kotlin.math.absoluteValue
+import kotlin.text.StringBuilder
+
+// Enable scrolling by disable parent scrolling
+class HorizontalScrollViewTest(
+  context: Context?,
+  attrs: AttributeSet?
+) :
+    HorizontalScrollView(context, attrs) {
+  override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+    if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+      parent?.requestDisallowInterceptTouchEvent(true)
+    }
+    return false
+  }
+}
 
 class StockRoomTableAdapter internal constructor(
   val context: Context,
@@ -82,24 +96,146 @@ class StockRoomTableAdapter internal constructor(
     val current = getItem(position)
 
     if (current != null) {
+      holder.bindSummary(current, clickListenerSummary)
+
       // Header item is symbol = ""
       if (current.stockDBdata.symbol.isEmpty()) {
-        holder.binding.tableDataSymbol.text = getHeaderStr(context.getString(R.string.table_symbol_column))
-        holder.binding.tableStockdbdataPortfolio.text = getHeaderStr("bestand")
-        holder.binding.tableStockdbdataData.text = getHeaderStr("data")
-        holder.binding.tableStockdbdataGroupColor.text = getHeaderStr("groupColor")
-        holder.binding.tableStockdbdataNote.text = getHeaderStr("note")
-        holder.binding.tableStockdbdataDividendNote.text = getHeaderStr("dividendNote")
-        holder.binding.tableStockdbdataAnnualDividendRate.text = getHeaderStr("annualDividendRate")
-        holder.binding.tableStockdbdataAlertAbove.text = getHeaderStr("alertAbove")
-        holder.binding.tableStockdbdataAlertAboveNote.text = getHeaderStr("alertAboveNote")
-        holder.binding.tableStockdbdataAlertBelow.text = getHeaderStr("alertBelow")
-        holder.binding.tableStockdbdataAlertBelowNote.text = getHeaderStr("alertBelowNote")
+
+        setBackgroundColor(
+            holder.binding.tableDataGroup, Color.TRANSPARENT
+        )
+        holder.binding.tableDataSymbol.text =
+          getHeaderStr(context.getString(R.string.table_column_symbol))
+        holder.binding.tableDataName.text = getHeaderStr(context.getString(R.string.table_column_Name))
+        holder.binding.tableDataMarketPrice.text = getHeaderStr(context.getString(R.string.table_column_MarketPrice))
+        holder.binding.tableDataMarketChange.text = getHeaderStr(context.getString(R.string.table_column_MarketChange))
+        holder.binding.tableDataQuantity.text = getHeaderStr(context.getString(R.string.table_column_Quantity))
+        holder.binding.tableDataCapital.text = getHeaderStr(context.getString(R.string.table_column_Capital))
+        holder.binding.tableDataAsset.text = getHeaderStr(context.getString(R.string.table_column_Asset))
+        holder.binding.tableDataAssetChange.text = getHeaderStr(context.getString(R.string.table_column_AssetChange))
+        holder.binding.tableDataDividend.text = getHeaderStr(context.getString(R.string.table_column_Dividend))
+        holder.binding.tableDataAlertAbove.text = getHeaderStr(context.getString(R.string.table_column_AlertAbove))
+        holder.binding.tableDataAlertBelow.text = getHeaderStr(context.getString(R.string.table_column_AlertBelow))
+        holder.binding.tableDataEvents.text = getHeaderStr(context.getString(R.string.table_column_Events))
+        holder.binding.tableDataNote.text = getHeaderStr(context.getString(R.string.table_column_Note))
       } else {
-        holder.bindSummary(current, clickListenerSummary)
+
+        var color = current.stockDBdata.groupColor
+        if (color == 0) {
+          color = context.getColor(R.color.backgroundListColor)
+        }
+        setBackgroundColor(holder.binding.tableDataGroup, color)
 
         holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
-        holder.binding.tableStockdbdataAlertBelow.text = current.stockDBdata.alertBelow.toString()
+        holder.binding.tableDataName.text = getName(current.onlineMarketData)
+
+        val (quantity, asset) = getAssets(current.assets)
+
+        var capital: Double = 0.0
+
+        if (quantity > 0.0 && asset > 0.0) {
+          capital = quantity * current.onlineMarketData.marketPrice
+//        capital = current.assets.sumByDouble {
+//          it.quantity * current.onlineMarketData.marketPrice
+//        }
+
+          holder.binding.tableDataCapital.text = DecimalFormat(DecimalFormat2Digits).format(capital)
+          holder.binding.tableDataQuantity.text =
+            "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
+              DecimalFormat(DecimalFormat2To4Digits).format(
+                  asset / quantity
+              )
+            }"
+          holder.binding.tableDataAsset.text = DecimalFormat(
+              DecimalFormat2Digits
+          ).format(asset)
+        } else {
+          // Don't own any quantity of this stock.
+          holder.binding.tableDataCapital.text = ""
+          holder.binding.tableDataQuantity.text = ""
+          holder.binding.tableDataAsset.text = ""
+        }
+
+        val assetChange =
+          getAssetChange(
+              quantity,
+              asset,
+              current.onlineMarketData.marketPrice,
+              current.onlineMarketData.postMarketData,
+              Color.DKGRAY,
+              context,
+              false
+          )
+        holder.binding.tableDataAssetChange.text = assetChange.second
+
+        if (current.onlineMarketData.marketPrice > 0.0) {
+          val marketValues = getMarketValues(current.onlineMarketData)
+          val marketChange = "${marketValues.second} ${marketValues.third}"
+
+          if (current.onlineMarketData.postMarketData) {
+            holder.binding.tableDataMarketPrice.text = SpannableStringBuilder()
+                .italic { append(marketValues.first) }
+            holder.binding.tableDataMarketChange.text = SpannableStringBuilder()
+                .italic { append(marketChange) }
+          } else {
+            holder.binding.tableDataMarketPrice.text = marketValues.first
+            holder.binding.tableDataMarketChange.text = marketChange
+          }
+        } else {
+          holder.binding.tableDataMarketPrice.text = ""
+          holder.binding.tableDataMarketChange.text = ""
+        }
+
+        holder.binding.tableDataDividend.text = getDividendStr(current, context)
+
+        var alertAboveText = ""
+        if (current.stockDBdata.alertAbove > 0.0) {
+          alertAboveText = DecimalFormat(
+              DecimalFormat2To4Digits
+          ).format(current.stockDBdata.alertAbove)
+          if (current.stockDBdata.alertAboveNote.isNotEmpty()) {
+            alertAboveText += "\n${current.stockDBdata.alertAboveNote}"
+          }
+        }
+        holder.binding.tableDataAlertAbove.text = alertAboveText
+
+        var alertBelowText = ""
+        if (current.stockDBdata.alertBelow > 0.0) {
+          alertBelowText = DecimalFormat(
+              DecimalFormat2To4Digits
+          ).format(current.stockDBdata.alertBelow)
+          if (current.stockDBdata.alertBelowNote.isNotEmpty()) {
+            alertBelowText += "\n${current.stockDBdata.alertBelowNote}"
+          }
+        }
+
+        holder.binding.tableDataAlertBelow.text = alertBelowText
+
+        holder.binding.tableDataEvents.text = if (current.events.isNotEmpty()) {
+          val events: StringBuilder = StringBuilder()
+          val count = current.events.size
+          val eventStr =
+            context.resources.getQuantityString(R.plurals.events_in_list, count, count)
+
+          events.append(eventStr)
+          current.events.forEach {
+            val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
+            val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
+            events.append(
+                "\n${
+                  context.getString(
+                      R.string.event_datetime_format, it.title, datetime
+                  )
+                }"
+            )
+          }
+
+          events.toString()
+        } else {
+          ""
+        }
+
+        holder.binding.tableDataNote.text = current.stockDBdata.note
       }
     }
   }
@@ -109,7 +245,6 @@ class StockRoomTableAdapter internal constructor(
         .color(Color.BLUE) {
           bold { append(text) }
         }
-
 
   internal fun setStockItems(stockItems: List<StockItem>) {
     this.stockItems = mutableListOf(

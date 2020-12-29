@@ -117,7 +117,8 @@ class StockRoomTileAdapter internal constructor(
 
       holder.binding.stockRoomTileItemAssetChange.text =
         getAssetChange(
-            current.assets,
+            quantity,
+            asset,
             current.onlineMarketData.marketPrice,
             current.onlineMarketData.postMarketData,
             Color.DKGRAY,
@@ -129,6 +130,7 @@ class StockRoomTileAdapter internal constructor(
       holder.binding.stockRoomTileItemMarketChange.text = ""
       holder.binding.stockRoomTileItemAssetChange.text = ""
 
+      // Show asset instead of capital.
       if (asset > 0.0) {
         holder.binding.stockRoomTileItemCapital.text = DecimalFormat(DecimalFormat2Digits).format(asset)
       } else {

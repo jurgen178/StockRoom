@@ -464,5 +464,17 @@ limitations under the License. -->
   <string name="delayed_quote">Verzögerter Aktienpreis</string>
   <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
   <string name="filter_regex_error_msg">Der reguläre Ausdruck \'%1$s\' für den Filter ist ungültig.</string>
-  <string name="table_symbol_column">Aktienkürzel</string>
+  <string name="table_column_symbol">Aktienkürzel</string>
+  <string name="table_column_Name">Name</string>
+  <string name="table_column_MarketPrice">Marktpreis</string>
+  <string name="table_column_MarketChange">Markänderung</string>
+  <string name="table_column_Quantity">Anzahl</string>
+  <string name="table_column_Capital">Kapital</string>
+  <string name="table_column_Asset">Bestand</string>
+  <string name="table_column_AssetChange">Bestandsänderung</string>
+  <string name="table_column_Dividend">Dividende</string>
+  <string name="table_column_AlertAbove">Benachrichtigung über</string>
+  <string name="table_column_AlertBelow">Benachrichtigung unter</string>
+  <string name="table_column_Events">Ereignisse</string>
+  <string name="table_column_Note">Anmerkung</string>
 </resources>
