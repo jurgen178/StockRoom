@@ -19,11 +19,8 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.graphics.Color
 import android.text.SpannableStringBuilder
-import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
@@ -36,6 +33,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import java.text.DecimalFormat
@@ -44,20 +42,6 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
 import kotlin.text.StringBuilder
-
-// Enable scrolling by disable parent scrolling
-class HorizontalScrollViewTest(
-  context: Context?,
-  attrs: AttributeSet?
-) :
-    HorizontalScrollView(context, attrs) {
-  override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-    if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
-      parent?.requestDisallowInterceptTouchEvent(true)
-    }
-    return false
-  }
-}
 
 class StockRoomTableAdapter internal constructor(
   val context: Context,
@@ -101,24 +85,43 @@ class StockRoomTableAdapter internal constructor(
       // Header item is symbol = ""
       if (current.stockDBdata.symbol.isEmpty()) {
 
-        setBackgroundColor(
-            holder.binding.tableDataGroup, Color.TRANSPARENT
-        )
+        holder.binding.tableDataLayout.setBackgroundColor(Color.LTGRAY)
+
+        setBackgroundColor(holder.binding.tableDataGroup, Color.TRANSPARENT)
+        holder.binding.tableDataMarketPrice.setBackgroundColor(Color.LTGRAY)
+        holder.binding.tableDataMarketChange.setBackgroundColor(Color.LTGRAY)
+
         holder.binding.tableDataSymbol.text =
           getHeaderStr(context.getString(R.string.table_column_symbol))
-        holder.binding.tableDataName.text = getHeaderStr(context.getString(R.string.table_column_Name))
-        holder.binding.tableDataMarketPrice.text = getHeaderStr(context.getString(R.string.table_column_MarketPrice))
-        holder.binding.tableDataMarketChange.text = getHeaderStr(context.getString(R.string.table_column_MarketChange))
-        holder.binding.tableDataQuantity.text = getHeaderStr(context.getString(R.string.table_column_Quantity))
-        holder.binding.tableDataCapital.text = getHeaderStr(context.getString(R.string.table_column_Capital))
-        holder.binding.tableDataAsset.text = getHeaderStr(context.getString(R.string.table_column_Asset))
-        holder.binding.tableDataAssetChange.text = getHeaderStr(context.getString(R.string.table_column_AssetChange))
-        holder.binding.tableDataDividend.text = getHeaderStr(context.getString(R.string.table_column_Dividend))
-        holder.binding.tableDataAlertAbove.text = getHeaderStr(context.getString(R.string.table_column_AlertAbove))
-        holder.binding.tableDataAlertBelow.text = getHeaderStr(context.getString(R.string.table_column_AlertBelow))
-        holder.binding.tableDataEvents.text = getHeaderStr(context.getString(R.string.table_column_Events))
-        holder.binding.tableDataNote.text = getHeaderStr(context.getString(R.string.table_column_Note))
+        holder.binding.tableDataName.text =
+          getHeaderStr(context.getString(R.string.table_column_Name))
+        holder.binding.tableDataMarketPrice.text =
+          getHeaderStr(context.getString(R.string.table_column_MarketPrice))
+        holder.binding.tableDataMarketChange.text =
+          getHeaderStr(context.getString(R.string.table_column_MarketChange))
+        holder.binding.tableDataQuantity.text =
+          getHeaderStr(context.getString(R.string.table_column_Quantity))
+        holder.binding.tableDataPurchaseprice.text =
+          getHeaderStr(context.getString(R.string.table_column_Purchaseprice))
+        holder.binding.tableDataAsset.text =
+          getHeaderStr(context.getString(R.string.table_column_Asset))
+        holder.binding.tableDataAssetChange.text =
+          getHeaderStr(context.getString(R.string.table_column_AssetChange))
+        holder.binding.tableDataDividend.text =
+          getHeaderStr(context.getString(R.string.table_column_Dividend))
+        holder.binding.tableDataAlertAbove.text =
+          getHeaderStr(context.getString(R.string.table_column_AlertAbove))
+        holder.binding.tableDataAlertBelow.text =
+          getHeaderStr(context.getString(R.string.table_column_AlertBelow))
+        holder.binding.tableDataEvents.text =
+          getHeaderStr(context.getString(R.string.table_column_Events))
+        holder.binding.tableDataNote.text =
+          getHeaderStr(context.getString(R.string.table_column_Note))
       } else {
+
+        holder.binding.tableDataLayout.setBackgroundColor(
+            context.getColor(R.color.backgroundListColor)
+        )
 
         var color = current.stockDBdata.groupColor
         if (color == 0) {
@@ -131,27 +134,23 @@ class StockRoomTableAdapter internal constructor(
 
         val (quantity, asset) = getAssets(current.assets)
 
-        var capital: Double = 0.0
-
         if (quantity > 0.0 && asset > 0.0) {
-          capital = quantity * current.onlineMarketData.marketPrice
-//        capital = current.assets.sumByDouble {
-//          it.quantity * current.onlineMarketData.marketPrice
-//        }
-
-          holder.binding.tableDataCapital.text = DecimalFormat(DecimalFormat2Digits).format(capital)
+          holder.binding.tableDataPurchaseprice.text =
+            DecimalFormat(DecimalFormat2Digits).format(asset)
           holder.binding.tableDataQuantity.text =
             "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
               DecimalFormat(DecimalFormat2To4Digits).format(
                   asset / quantity
               )
             }"
+
+          val purchasePrice = quantity * current.onlineMarketData.marketPrice
           holder.binding.tableDataAsset.text = DecimalFormat(
               DecimalFormat2Digits
-          ).format(asset)
+          ).format(purchasePrice)
         } else {
           // Don't own any quantity of this stock.
-          holder.binding.tableDataCapital.text = ""
+          holder.binding.tableDataPurchaseprice.text = ""
           holder.binding.tableDataQuantity.text = ""
           holder.binding.tableDataAsset.text = ""
         }
@@ -186,7 +185,16 @@ class StockRoomTableAdapter internal constructor(
           holder.binding.tableDataMarketChange.text = ""
         }
 
-        holder.binding.tableDataDividend.text = getDividendStr(current, context)
+        val marketColor = getChangeColor(
+            current.onlineMarketData.marketChange,
+            current.onlineMarketData.postMarketData,
+            context.getColor(R.color.backgroundListColor),
+            context
+        )
+        holder.binding.tableDataMarketPrice.setBackgroundColor(marketColor)
+        holder.binding.tableDataMarketChange.setBackgroundColor(marketColor)
+
+        holder.binding.tableDataDividend.text = getDividendStr(current)
 
         var alertAboveText = ""
         if (current.stockDBdata.alertAbove > 0.0) {
@@ -242,7 +250,7 @@ class StockRoomTableAdapter internal constructor(
 
   private fun getHeaderStr(text: String): SpannableStringBuilder =
     SpannableStringBuilder()
-        .color(Color.BLUE) {
+        .color(Color.WHITE) {
           bold { append(text) }
         }
 

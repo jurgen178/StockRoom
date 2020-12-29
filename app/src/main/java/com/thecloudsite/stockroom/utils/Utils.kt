@@ -346,8 +346,7 @@ fun getAssetChangeText(
 }
 
 fun getDividendStr(
-  stockItem: StockItem,
-  context: Context
+  stockItem: StockItem
 ): String {
   var annualDividendRate: Double = 0.0
   var annualDividendYield: Double = 0.0
@@ -366,11 +365,29 @@ fun getDividendStr(
   }
 
   return if (annualDividendRate > 0.0) {
-    "${context.getString(R.string.dividend_in_list)} ${
+    "${
       DecimalFormat(DecimalFormat2To4Digits).format(annualDividendRate)
     } (${
       DecimalFormat(DecimalFormat1Digit).format(annualDividendYield * 100.0)
     }%)"
+  } else {
+    ""
+  }
+}
+
+fun getDividendStr(
+  stockItem: StockItem,
+  context: Context
+): String {
+
+  val annualDividendRate = if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
+    stockItem.stockDBdata.annualDividendRate
+  } else {
+    stockItem.onlineMarketData.annualDividendRate
+  }
+
+  return if (annualDividendRate > 0.0) {
+    "${context.getString(R.string.dividend_in_list)} ${getDividendStr(stockItem)}"
   } else {
     ""
   }

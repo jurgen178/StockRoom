@@ -7,7 +7,7 @@
     android:layout_margin="4dp"
     >
 
-  <com.thecloudsite.stockroom.HorizontalScrollViewTest
+  <HorizontalScrollView
       android:fillViewport="true"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -24,6 +24,6 @@
         android:layout_height="match_parent"
         android:padding="@dimen/small_padding" />
 
-  </com.thecloudsite.stockroom.HorizontalScrollViewTest>
+  </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -470,7 +470,7 @@ limitations under the License. -->
   <string name="table_column_MarketPrice">Market price</string>
   <string name="table_column_MarketChange">Market change</string>
   <string name="table_column_Quantity">Quantity</string>
-  <string name="table_column_Capital">Capital</string>
+  <string name="table_column_Purchaseprice">Purchase price</string>
   <string name="table_column_Asset">Asset</string>
   <string name="table_column_AssetChange">Asset change</string>
   <string name="table_column_Dividend">Dividend</string>
