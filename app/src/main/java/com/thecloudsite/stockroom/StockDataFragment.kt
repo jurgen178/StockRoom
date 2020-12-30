@@ -727,6 +727,10 @@ class StockDataFragment : Fragment() {
               linkType = LinkType.WebsiteType,
               link = "http://money.cnn.com/quote/quote.html?symb=$symbol"
           ),
+          "Fidelity" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://quotes.fidelity.com/webxpress/get_quote?QUOTE_TYPE=D&SID_VALUE_ID=$symbol"
+          ),
           "FinViz" to LinkListEntry(
               linkType = LinkType.WebsiteType,
               link = "https://finviz.com/quote.ashx?t=$symbol"
