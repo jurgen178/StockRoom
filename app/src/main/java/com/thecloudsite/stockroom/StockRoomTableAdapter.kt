@@ -282,6 +282,8 @@ class StockRoomTableAdapter internal constructor(
 
         val textScale = 0.75f
 
+        val assetStr = SpannableStringBuilder()
+
         if (current.assets.isNotEmpty()) {
           // Sort assets in the list by date.
           val sortedList = current.assets.sortedBy { assetItem ->
@@ -289,8 +291,6 @@ class StockRoomTableAdapter internal constructor(
           }
 
           // List each asset
-          val assetStr = SpannableStringBuilder()
-
           sortedList.forEach { assetItem ->
 
             assetStr.scale(textScale) {
@@ -331,7 +331,7 @@ class StockRoomTableAdapter internal constructor(
             }
 
             if (assetItem.note.isNotEmpty()) {
-              assetStr.scale(textScale) { "   '${append(assetItem.note)}'" }
+              assetStr.scale(textScale) { append("   '${assetItem.note}'") }
             }
             assetStr.scale(textScale) { append("\n") }
           }
@@ -361,9 +361,9 @@ class StockRoomTableAdapter internal constructor(
                   }
             }
           }
-
-          holder.binding.tableDataAssets.text = assetStr
         }
+
+        holder.binding.tableDataAssets.text = assetStr
 
         // Add Events
         holder.binding.tableDataEvents.text = if (current.events.isNotEmpty()) {
