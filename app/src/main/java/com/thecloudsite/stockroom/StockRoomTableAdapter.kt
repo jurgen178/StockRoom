@@ -22,9 +22,11 @@ import android.text.SpannableStringBuilder
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.text.scale
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.StockDBdata
@@ -34,14 +36,19 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
+import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
+import com.thecloudsite.stockroom.utils.obsoleteAssetType
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
+import kotlin.math.absoluteValue
 import kotlin.text.StringBuilder
 
 class StockRoomTableAdapter internal constructor(
@@ -91,7 +98,11 @@ class StockRoomTableAdapter internal constructor(
       // Header item is symbol = ""
       val isHeader = current.stockDBdata.symbol.isEmpty()
 
-      val alignmentNumbers = if (isHeader) Gravity.CENTER_HORIZONTAL else Gravity.END
+      val alignmentNumbers = if (isHeader) {
+        Gravity.CENTER_HORIZONTAL
+      } else {
+        Gravity.END or Gravity.TOP
+      }
       holder.binding.tableDataMarketPrice.gravity = alignmentNumbers
       holder.binding.tableDataMarketChange.gravity = alignmentNumbers
       holder.binding.tableDataQuantity.gravity = alignmentNumbers
@@ -99,12 +110,17 @@ class StockRoomTableAdapter internal constructor(
       holder.binding.tableDataAsset.gravity = alignmentNumbers
       holder.binding.tableDataAssetChange.gravity = alignmentNumbers
       holder.binding.tableDataDividend.gravity = alignmentNumbers
+      holder.binding.tableDataAlertAbove.gravity = alignmentNumbers
+      holder.binding.tableDataAlertBelow.gravity = alignmentNumbers
 
-      val alignmentText = if (isHeader) Gravity.CENTER_HORIZONTAL else Gravity.START
+      val alignmentText = if (isHeader) {
+        Gravity.CENTER_HORIZONTAL
+      } else {
+        Gravity.START
+      }
       holder.binding.tableDataSymbol.gravity = alignmentText
       holder.binding.tableDataName.gravity = alignmentText
-      holder.binding.tableDataAlertAbove.gravity = alignmentText
-      holder.binding.tableDataAlertBelow.gravity = alignmentText
+      holder.binding.tableDataAssets.gravity = alignmentText
       holder.binding.tableDataEvents.gravity = alignmentText
       holder.binding.tableDataNote.gravity = alignmentText
 
@@ -138,6 +154,8 @@ class StockRoomTableAdapter internal constructor(
           getHeaderStr(context.getString(R.string.table_column_AlertAbove))
         holder.binding.tableDataAlertBelow.text =
           getHeaderStr(context.getString(R.string.table_column_AlertBelow))
+        holder.binding.tableDataAssets.text =
+          getHeaderStr(context.getString(R.string.table_column_Assets))
         holder.binding.tableDataEvents.text =
           getHeaderStr(context.getString(R.string.table_column_Events))
         holder.binding.tableDataNote.text =
@@ -237,20 +255,16 @@ class StockRoomTableAdapter internal constructor(
 //        holder.binding.tableDataMarketPrice.setBackgroundColor(marketColor)
 //        holder.binding.tableDataMarketChange.setBackgroundColor(marketColor)
 
-        var dividendStr = getDividendStr(current)
-        if (current.stockDBdata.dividendNote.isNotEmpty()) {
-          dividendStr += "\n${current.stockDBdata.dividendNote}"
-        }
-        holder.binding.tableDataDividend.text = dividendStr
+        holder.binding.tableDataDividend.text = getDividendStr(current)
 
         var alertAboveText = ""
         if (current.stockDBdata.alertAbove > 0.0) {
           alertAboveText = DecimalFormat(
               DecimalFormat2To4Digits
           ).format(current.stockDBdata.alertAbove)
-          if (current.stockDBdata.alertAboveNote.isNotEmpty()) {
-            alertAboveText += "\n${current.stockDBdata.alertAboveNote}"
-          }
+//          if (current.stockDBdata.alertAboveNote.isNotEmpty()) {
+//            alertAboveText += "\n${current.stockDBdata.alertAboveNote}"
+//          }
         }
         holder.binding.tableDataAlertAbove.text = alertAboveText
 
@@ -259,35 +273,122 @@ class StockRoomTableAdapter internal constructor(
           alertBelowText = DecimalFormat(
               DecimalFormat2To4Digits
           ).format(current.stockDBdata.alertBelow)
-          if (current.stockDBdata.alertBelowNote.isNotEmpty()) {
-            alertBelowText += "\n${current.stockDBdata.alertBelowNote}"
-          }
+//          if (current.stockDBdata.alertBelowNote.isNotEmpty()) {
+//            alertBelowText += "\n${current.stockDBdata.alertBelowNote}"
+//          }
         }
 
         holder.binding.tableDataAlertBelow.text = alertBelowText
 
+        val textScale = 0.75f
+
+        if (current.assets.isNotEmpty()) {
+          // Sort assets in the list by date.
+          val sortedList = current.assets.sortedBy { assetItem ->
+            assetItem.date
+          }
+
+          // List each asset
+          val assetStr = SpannableStringBuilder()
+
+          sortedList.forEach { assetItem ->
+
+            assetStr.scale(textScale) {
+              append(
+                  DecimalFormat(DecimalFormat0To4Digits).format(assetItem.quantity)
+              )
+            }
+            assetStr.scale(textScale) {
+              append(
+                  if (assetItem.price > 0.0) {
+                    "@${DecimalFormat(DecimalFormat2To4Digits).format(assetItem.price)}"
+                  } else {
+                    ""
+                  }
+              )
+            }
+            assetStr.scale(textScale) {
+              append(
+                  if (assetItem.price > 0.0) {
+                    "=${
+                      DecimalFormat(DecimalFormat2Digits).format(
+                          assetItem.quantity.absoluteValue * assetItem.price
+                      )
+                    }"
+                  } else {
+                    ""
+                  }
+              )
+            }
+
+            val datetime: LocalDateTime =
+              LocalDateTime.ofEpochSecond(assetItem.date, 0, ZoneOffset.UTC)
+            assetStr.scale(textScale) { append("   ") }
+            assetStr.scale(textScale) {
+              append(
+                  datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+              )
+            }
+
+            if (assetItem.note.isNotEmpty()) {
+              assetStr.scale(textScale) { "   '${append(assetItem.note)}'" }
+            }
+            assetStr.scale(textScale) { append("\n") }
+          }
+
+          // Add summary
+          val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
+          val (capitalGain, capitalLoss) = getAssetsCapitalGain(current.assets)
+          val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
+          assetStr.scale(textScale) {
+            append("\n${context.getString(R.string.summary_capital_gain)} ")
+                .append(capitalGainLossText)
+          }
+
+          // Add summary text
+          if (totalQuantity > 0.0 && totalPrice > 0.0) {
+            assetStr.scale(textScale) {
+              backgroundColor(Color.YELLOW)
+              {
+                append("\n${context.getString(R.string.asset_summary_text)}")
+                    .append(
+                        "\n${
+                          DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
+                        }@${
+                          DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity)
+                        } = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
+                    )
+              }
+            }
+          }
+
+          holder.binding.tableDataAssets.text = assetStr
+        }
+
+        // Add Events
         holder.binding.tableDataEvents.text = if (current.events.isNotEmpty()) {
-          val events: StringBuilder = StringBuilder()
+          val events: SpannableStringBuilder = SpannableStringBuilder()
           val count = current.events.size
           val eventStr =
             context.resources.getQuantityString(R.plurals.events_in_list, count, count)
 
-          events.append(eventStr)
+          events.scale(textScale) { append(eventStr) }
           current.events.forEach {
             val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
             val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
-            events.append(
-                "\n${
-                  context.getString(
-                      R.string.event_datetime_format, it.title, datetime
-                  )
-                }"
-            )
+            events.scale(textScale) {
+              append(
+                  "\n${
+                    context.getString(
+                        R.string.event_datetime_format, it.title, datetime
+                    )
+                  }"
+              )
+            }
           }
-
-          events.toString()
+          events
         } else {
-          ""
+          SpannableStringBuilder()
         }
 
         holder.binding.tableDataNote.text = current.stockDBdata.note

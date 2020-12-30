@@ -476,6 +476,7 @@ limitations under the License. -->
   <string name="table_column_Dividend">Dividend</string>
   <string name="table_column_AlertAbove">Alert Above</string>
   <string name="table_column_AlertBelow">Alert Below</string>
+  <string name="table_column_Assets">Assets</string>
   <string name="table_column_Events">Events</string>
   <string name="table_column_Note">Note</string>
 </resources>

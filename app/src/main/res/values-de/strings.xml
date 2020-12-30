@@ -475,6 +475,7 @@ limitations under the License. -->
   <string name="table_column_Dividend">Dividende</string>
   <string name="table_column_AlertAbove">Benachrichtigung über</string>
   <string name="table_column_AlertBelow">Benachrichtigung unter</string>
+  <string name="table_column_Assets">Aktienbestände</string>
   <string name="table_column_Events">Ereignisse</string>
   <string name="table_column_Note">Anmerkung</string>
 </resources>
