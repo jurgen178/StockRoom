@@ -348,17 +348,17 @@ class StockRoomTableAdapter internal constructor(
           // Add summary text
           if (totalQuantity > 0.0 && totalPrice > 0.0) {
             assetStr.scale(textScale) {
-              backgroundColor(Color.YELLOW)
-              {
-                append("\n${context.getString(R.string.asset_summary_text)}")
-                    .append(
+              append("\n${context.getString(R.string.asset_summary_text)}")
+                  .backgroundColor(Color.YELLOW)
+                  {
+                    append(
                         "\n${
                           DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
                         }@${
                           DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity)
                         } = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
                     )
-              }
+                  }
             }
           }
 
