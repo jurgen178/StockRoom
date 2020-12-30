@@ -16,6 +16,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
       android:fadeScrollbars="false"
+      android:scrollbarSize="20dp"
       >
 
     <androidx.recyclerview.widget.RecyclerView

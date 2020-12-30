@@ -73,14 +73,12 @@ data class StockOptionData(
   var type: Int = AssetType.UnknownOption.value
 )
 
-/*
-enum class DividendCycle(val value: Int) {
-  Monthly(12),
-  Quarterly(4),
+enum class DividendCycleStrIndex(val value: Int) {
+  Monthly(0),
+  Quarterly(1),
   SemiAnnual(2),
-  Annual(1),
+  Annual(3)
 }
-*/
 
 fun openNewTabWindow(
   url: String,

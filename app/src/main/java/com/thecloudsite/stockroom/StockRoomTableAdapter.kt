@@ -29,11 +29,13 @@ import androidx.core.text.italic
 import androidx.core.text.scale
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.StockroomTableItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.DividendCycleStrIndex
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -255,7 +257,45 @@ class StockRoomTableAdapter internal constructor(
 //        holder.binding.tableDataMarketPrice.setBackgroundColor(marketColor)
 //        holder.binding.tableDataMarketChange.setBackgroundColor(marketColor)
 
-        holder.binding.tableDataDividend.text = getDividendStr(current)
+        val dividendStr = SpannableStringBuilder().append(getDividendStr(current))
+
+        val dividendRate = if (current.stockDBdata.annualDividendRate >= 0.0) {
+          current.stockDBdata.annualDividendRate
+        } else {
+          current.onlineMarketData.annualDividendRate
+        }
+
+        if (dividendRate > 0.0 && quantity > 0.0) {
+          val totalDividend = quantity * dividendRate
+
+          val dividendCycleList = context.resources.getStringArray(array.dividend_cycles)
+          val textScale = 0.75f
+
+          dividendStr
+              .scale(textScale)
+              {
+                // monthly
+                append("\n${dividendCycleList[DividendCycleStrIndex.Monthly.value]} ")
+                    .bold {
+                      append(
+                          DecimalFormat(DecimalFormat2Digits).format(totalDividend / 12.0)
+                      )
+                    }
+                    // quarterly
+                    .append("\n${dividendCycleList[DividendCycleStrIndex.Quarterly.value]} ")
+                    .bold {
+                      append(
+                          DecimalFormat(DecimalFormat2Digits).format(totalDividend / 4.0)
+                      )
+                    }
+                    // annual
+                    .append("\n${dividendCycleList[DividendCycleStrIndex.Annual.value]} ")
+                    .bold {
+                      append(DecimalFormat(DecimalFormat2Digits).format(totalDividend))
+                    }
+              }
+        }
+        holder.binding.tableDataDividend.text = dividendStr
 
         var alertAboveText = ""
         if (current.stockDBdata.alertAbove > 0.0) {
