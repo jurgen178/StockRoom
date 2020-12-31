@@ -563,7 +563,7 @@ fun getAssetsRemoveOldestFirst(
 
     // Mark all removed entry with the obsolete flag.
     for (i in assetListSorted2.indices) {
-      if (tagObsoleteAssetType != 0 && assetListSorted2[i].quantity2 < epsilon) {
+      if (tagObsoleteAssetType != 0 && assetListSorted2[i].quantity2 < 0.0001) {
         // Set the type in the original list (not in assetListSorted2).
         assetListSorted[i].type = assetListSorted2[i].type or tagObsoleteAssetType
       }

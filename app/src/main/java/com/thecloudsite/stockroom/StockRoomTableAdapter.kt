@@ -321,6 +321,8 @@ class StockRoomTableAdapter internal constructor(
         holder.binding.tableDataAlertBelow.text = alertBelowText
 
         val textScale = 0.75f
+        val colorNegativeAsset = context.getColor(R.color.negativeAsset)
+        val colorObsoleteAsset = context.getColor(R.color.obsoleteAsset)
 
         val assetStr = SpannableStringBuilder()
 
@@ -330,54 +332,64 @@ class StockRoomTableAdapter internal constructor(
             assetItem.date
           }
 
+          val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
+
           // List each asset
           sortedList.forEach { assetItem ->
 
-            assetStr.scale(textScale) {
-              append(
-                  DecimalFormat(DecimalFormat0To4Digits).format(assetItem.quantity)
-              )
-            }
-            assetStr.scale(textScale) {
-              append(
-                  if (assetItem.price > 0.0) {
-                    "@${DecimalFormat(DecimalFormat2To4Digits).format(assetItem.price)}"
-                  } else {
-                    ""
-                  }
-              )
-            }
-            assetStr.scale(textScale) {
-              append(
-                  if (assetItem.price > 0.0) {
-                    "=${
-                      DecimalFormat(DecimalFormat2Digits).format(
-                          assetItem.quantity.absoluteValue * assetItem.price
-                      )
-                    }"
-                  } else {
-                    ""
-                  }
-              )
-            }
-
             val datetime: LocalDateTime =
               LocalDateTime.ofEpochSecond(assetItem.date, 0, ZoneOffset.UTC)
-            assetStr.scale(textScale) { append("   ") }
-            assetStr.scale(textScale) {
-              append(
-                  datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-              )
-            }
+
+            val assetEntry = SpannableStringBuilder()
+                .scale(textScale) {
+                  append(
+                      DecimalFormat(DecimalFormat0To4Digits).format(assetItem.quantity)
+                  )
+                      .append(
+                          if (assetItem.price > 0.0) {
+                            "@${DecimalFormat(DecimalFormat2To4Digits).format(assetItem.price)}"
+                          } else {
+                            ""
+                          }
+                      )
+                      .append(
+                          if (assetItem.price > 0.0) {
+                            "=${
+                              DecimalFormat(DecimalFormat2Digits).format(
+                                  assetItem.quantity.absoluteValue * assetItem.price
+                              )
+                            }"
+                          } else {
+                            ""
+                          }
+                      )
+                      .append("   ")
+                      .append(
+                          datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+                      )
+                }
 
             if (assetItem.note.isNotEmpty()) {
-              assetStr.scale(textScale) { append("   '${assetItem.note}'") }
+              assetEntry.scale(textScale) { append("   '${assetItem.note}'") }
             }
-            assetStr.scale(textScale) { append("\n") }
+            assetEntry.scale(textScale) { append("\n") }
+
+            when {
+              // Sold (negative) values are in italic.
+              assetItem.quantity < 0.0 -> {
+                assetStr.color(colorNegativeAsset) { italic { append(assetEntry) } }
+              }
+              // Removed and obsolete entries are colored gray.
+              assetItem.type and obsoleteAssetType != 0 -> {
+                assetStr.color(colorObsoleteAsset) { append(assetEntry) }
+              }
+              else -> {
+                assetStr.append(assetEntry)
+              }
+            }
           }
 
           // Add summary
-          val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
           val (capitalGain, capitalLoss) = getAssetsCapitalGain(current.assets)
           val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
           assetStr.scale(textScale) {
@@ -395,7 +407,9 @@ class StockRoomTableAdapter internal constructor(
                         "\n${
                           DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
                         }@${
-                          DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity)
+                          DecimalFormat(DecimalFormat2To4Digits).format(
+                              totalPrice / totalQuantity
+                          )
                         } = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
                     )
                   }
