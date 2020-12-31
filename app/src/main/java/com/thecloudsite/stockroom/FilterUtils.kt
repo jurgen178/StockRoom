@@ -84,6 +84,9 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.ContainsTextType.value = context.getString(R.string.filter_ContainsTextType)
   FilterSubTypeEnum.NotContainsTextType.value =
     context.getString(R.string.filter_NotContainsTextType)
+  FilterSubTypeEnum.SimilarTextType.value = context.getString(R.string.filter_SimilarTextType)
+  FilterSubTypeEnum.NotSimilarTextType.value =
+    context.getString(R.string.filter_NotSimilarTextType)
   FilterSubTypeEnum.IsEmptyTextType.value = context.getString(R.string.filter_IsEmptyTextType)
   FilterSubTypeEnum.IsNotEmptyTextType.value = context.getString(R.string.filter_IsNotEmptyTextType)
   FilterSubTypeEnum.StartsWithTextType.value = context.getString(R.string.filter_StartsWithTextType)
@@ -93,7 +96,8 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.IsType.value = context.getString(R.string.filter_IsType)
   FilterSubTypeEnum.IsNotType.value = context.getString(R.string.filter_IsNotType)
   FilterSubTypeEnum.MatchRegexTextType.value = context.getString(R.string.filter_MatchRegexTextType)
-  FilterSubTypeEnum.NotMatchRegexTextType.value = context.getString(R.string.filter_NotMatchRegexTextType)
+  FilterSubTypeEnum.NotMatchRegexTextType.value =
+    context.getString(R.string.filter_NotMatchRegexTextType)
   FilterSubTypeEnum.IsPresentType.value = context.getString(R.string.filter_IsPresentType)
   FilterSubTypeEnum.IsNotPresentType.value = context.getString(R.string.filter_IsNotPresentType)
   FilterSubTypeEnum.IsUsedType.value = context.getString(R.string.filter_IsUsedType)

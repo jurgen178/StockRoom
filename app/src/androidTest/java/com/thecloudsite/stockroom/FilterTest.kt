@@ -88,13 +88,30 @@ class FilterTest {
   @Test
   @Throws(Exception::class)
   fun filterStringMatch() {
+
+    // empty
     val d1 = getLevenshteinDistance("", "")
     assertEquals(0.0, d1, epsilon)
 
+    // identical
     val d2 = getLevenshteinDistance("a", "a")
     assertEquals(0.0, d2, epsilon)
 
+    // totally different
     val d3 = getLevenshteinDistance("a", "bb")
     assertEquals(1.0, d3, epsilon)
+
+    // 3 out of 4 chars different
+    val d4 = getLevenshteinDistance("abcd", "aaaa")
+    assertEquals(0.75, d4, epsilon)
+
+    // 1 out of 4 chars different
+    val d5 = getLevenshteinDistance("abcd", "abcc")
+    assertEquals(0.25, d5, epsilon)
+
+    // 1 out of 4 chars different with different casing
+    // expect same result as d5
+    val d6 = getLevenshteinDistance("ABCD", "abcc")
+    assertEquals(0.25, d6, epsilon)
   }
 }

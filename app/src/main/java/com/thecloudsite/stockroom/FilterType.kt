@@ -85,6 +85,8 @@ enum class FilterSubTypeEnum(var value: String) {
   AfterDateType(""),
   ContainsTextType(""),
   NotContainsTextType(""),
+  SimilarTextType(""),
+  NotSimilarTextType(""),
   IsEmptyTextType(""),
   IsNotEmptyTextType(""),
   StartsWithTextType(""),
@@ -102,6 +104,7 @@ enum class FilterSubTypeEnum(var value: String) {
 }
 
 val regexOption = setOf(IGNORE_CASE, DOT_MATCHES_ALL)
+val similarDistance = 0.3
 
 object SharedFilterGroupList {
   var groups: List<Group> = emptyList()
@@ -482,6 +485,14 @@ class FilterSymbolNameType(
       FilterSubTypeEnum.IsNotTextType -> {
         !stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
       }
+      FilterSubTypeEnum.SimilarTextType -> {
+         // 0.0: identical, 1.0: different
+         getLevenshteinDistance(stockItem.stockDBdata.symbol, data) < similarDistance
+      }
+      FilterSubTypeEnum.NotSimilarTextType -> {
+        // 0.0: identical, 1.0: different
+        getLevenshteinDistance(stockItem.stockDBdata.symbol, data) >= similarDistance
+      }
       FilterSubTypeEnum.MatchRegexTextType -> {
         regex.containsMatchIn(stockItem.stockDBdata.symbol)
       }
@@ -500,6 +511,8 @@ class FilterSymbolNameType(
         FilterSubTypeEnum.EndsWithTextType,
         FilterSubTypeEnum.IsTextType,
         FilterSubTypeEnum.IsNotTextType,
+        FilterSubTypeEnum.SimilarTextType,
+        FilterSubTypeEnum.NotSimilarTextType,
         FilterSubTypeEnum.MatchRegexTextType,
         FilterSubTypeEnum.NotMatchRegexTextType,
     )

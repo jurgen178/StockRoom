@@ -446,6 +446,8 @@ limitations under the License. -->
   <string name="filter_AfterDateType">nach Datum</string>
   <string name="filter_ContainsTextType">enthält</string>
   <string name="filter_NotContainsTextType">enthält nicht</string>
+  <string name="filter_SimilarTextType">ist ähnlich zu</string>
+  <string name="filter_NotSimilarTextType">ist nicht ähnlich zu</string>
   <string name="filter_IsEmptyTextType">ist leer</string>
   <string name="filter_IsNotEmptyTextType">ist nicht leer</string>
   <string name="filter_StartsWithTextType">beginnt mit</string>
