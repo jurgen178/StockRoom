@@ -33,9 +33,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.PopupMenu
-import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -476,7 +474,7 @@ class StockDataFragment : Fragment() {
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogAddEventBinding.inflate(inflater)
-    dialogBinding.eventHeadline.setText(getString(R.string.update_event))
+    dialogBinding.eventHeadline.text = getString(R.string.update_event)
     dialogBinding.textInputEditEventTitle.setText(event.title)
     dialogBinding.textInputEditEventNote.setText(event.note)
     val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)

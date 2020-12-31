@@ -50,13 +50,13 @@ class AssetTest {
   @Test
   @Throws(Exception::class)
   fun test1() {
-    data class pairs(
+    data class Pairs(
       var x: Int,
       var y: Int,
     )
 
-    val liste: MutableList<pairs> = mutableListOf()
-    liste.add(pairs(x=1, y=1))
+    val liste: MutableList<Pairs> = mutableListOf()
+    liste.add(Pairs(x=1, y=1))
   }
 
   @Test

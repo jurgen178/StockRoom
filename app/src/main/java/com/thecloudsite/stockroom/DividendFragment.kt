@@ -27,8 +27,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
@@ -48,7 +46,6 @@ import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.DialogAddDividendBinding
-import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
 import com.thecloudsite.stockroom.databinding.DialogAddNoteBinding
 import com.thecloudsite.stockroom.databinding.DialogSetAnnualDividendBinding
 import com.thecloudsite.stockroom.databinding.FragmentDividendBinding
@@ -672,7 +669,7 @@ class DividendFragment : Fragment() {
       // Pass null as the parent view because its going in the dialog layout
       val dialogBinding = DialogAddDividendBinding.inflate(inflater)
 
-      dialogBinding.addUpdateDividendHeadline.setText(getString(R.string.add_dividend))
+      dialogBinding.addUpdateDividendHeadline.text = getString(R.string.add_dividend)
       dialogBinding.textViewDividendCycleSpinner.setSelection(
           dividendCycleToSelection(Quarterly.value)
       )

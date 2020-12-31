@@ -51,7 +51,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 import kotlin.math.absoluteValue
-import kotlin.text.StringBuilder
 
 class StockRoomTableAdapter internal constructor(
   val context: Context,
@@ -375,11 +374,11 @@ class StockRoomTableAdapter internal constructor(
             assetEntry.scale(textScale) { append("\n") }
 
             when {
-              // Sold (negative) values are in italic.
+              // Sold (negative) values are in italic and colored gray.
               assetItem.quantity < 0.0 -> {
                 assetStr.color(colorNegativeAsset) { italic { append(assetEntry) } }
               }
-              // Removed and obsolete entries are colored gray.
+              // Obsolete entries are colored gray.
               assetItem.type and obsoleteAssetType != 0 -> {
                 assetStr.color(colorObsoleteAsset) { append(assetEntry) }
               }
