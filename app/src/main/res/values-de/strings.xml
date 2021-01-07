@@ -141,6 +141,9 @@ limitations under the License. -->
   <string name="price">Kaufpreis</string>
   <string name="quantity">Anzahl</string>
   <string name="value">Wert</string>
+  <string name="marketchange">Marktpreisänderung</string>
+  <string name="marketvalue">Marktpreis</string>
+  <string name="date">Datum</string>
   <string name="no_total_quantity">Kaufen Sie zuerst einige Aktien.</string>
   <string name="remove_quantity_exceeds_total_quantity">Die Anzahl muss kleiner als die Gesamtanzahl sein.</string>
   <string name="dividend_in_list">Dividende:</string>
@@ -354,7 +357,6 @@ limitations under the License. -->
   <string name="set_annual_dividend_label">Neuer jährlicher Dividendensatz</string>
   <string name="onlineAnnualDividendData">Onlinedaten</string>
   <string name="no_dividend_data">Keine Online-Dividendendaten vorhanden.</string>
-  <string name="date">Datum</string>
   <string name="community_search_links">Community und Such-Links</string>
   <string name="price_preview_header">Gewinnvorschau</string>
   <string name="no_assets">Keine Aktienbestände</string>

@@ -23,13 +23,16 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
@@ -43,6 +46,11 @@ import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
+data class AssetListData(
+  var asset: Asset,
+  var onlineMarketData: OnlineMarketData?
+)
+
 class AssetListAdapter internal constructor(
   private val context: Context,
   private val clickListenerUpdate: (Asset) -> Unit,
@@ -50,7 +58,7 @@ class AssetListAdapter internal constructor(
 ) : RecyclerView.Adapter<AssetListAdapter.AssetViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var assetList = mutableListOf<Asset>()
+  private var assetList = mutableListOf<AssetListData>()
   private var assetsCopy = listOf<Asset>()
   private var defaultTextColor: Int? = null
 
@@ -86,7 +94,7 @@ class AssetListAdapter internal constructor(
     holder: AssetViewHolder,
     position: Int
   ) {
-    val current: Asset = assetList[position]
+    val current: AssetListData = assetList[position]
 
     if (defaultTextColor == null) {
       defaultTextColor = holder.binding.textViewAssetQuantity.currentTextColor
@@ -97,6 +105,8 @@ class AssetListAdapter internal constructor(
       holder.binding.textViewAssetQuantity.text = context.getString(R.string.quantity)
       holder.binding.textViewAssetPrice.text = context.getString(R.string.price)
       holder.binding.textViewAssetTotal.text = context.getString(R.string.value)
+      holder.binding.textViewAssetMarketChange.text = context.getString(R.string.marketchange)
+      holder.binding.textViewAssetMarketValue.text = context.getString(R.string.marketvalue)
       holder.binding.textViewAssetDate.text = context.getString(R.string.date)
       holder.binding.textViewAssetNote.text = context.getString(R.string.note)
       holder.binding.textViewAssetDelete.visibility = View.GONE
@@ -111,23 +121,27 @@ class AssetListAdapter internal constructor(
       // Last entry is summary.
       if (position == assetList.size - 1) {
         // handler for delete all
-        holder.bindDelete(current.symbol, null, clickListenerDelete)
+        holder.bindDelete(current.asset.symbol, null, clickListenerDelete)
 
-        val isSum = current.quantity > 0.0 && current.price > 0.0
+        val isSum = current.asset.quantity > 0.0 && current.asset.price > 0.0
 
         holder.binding.textViewAssetQuantity.text = if (isSum) {
-          DecimalFormat(DecimalFormat0To4Digits).format(current.quantity)
+          DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity)
         } else {
           ""
         }
 
         holder.binding.textViewAssetPrice.text = if (isSum) {
-          DecimalFormat(DecimalFormat2To4Digits).format(current.price / current.quantity)
+          DecimalFormat(DecimalFormat2To4Digits).format(
+              current.asset.price / current.asset.quantity
+          )
         } else {
           ""
         }
         holder.binding.textViewAssetTotal.text =
-          DecimalFormat(DecimalFormat2Digits).format(current.price)
+          DecimalFormat(DecimalFormat2Digits).format(current.asset.price)
+        holder.binding.textViewAssetMarketChange.text = ""
+        holder.binding.textViewAssetMarketValue.text = ""
         holder.binding.textViewAssetDate.text = ""
         holder.binding.textViewAssetNote.text = ""
 
@@ -157,22 +171,22 @@ class AssetListAdapter internal constructor(
         holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
       } else {
         // Asset items
-        holder.bindUpdate(current, clickListenerUpdate)
-        holder.bindDelete(null, current, clickListenerDelete)
+        holder.bindUpdate(current.asset, clickListenerUpdate)
+        holder.bindDelete(null, current.asset, clickListenerDelete)
 
         val colorNegativeAsset = context.getColor(R.color.negativeAsset)
         val colorObsoleteAsset = context.getColor(R.color.obsoleteAsset)
 
         // Removed and obsolete entries are colored gray.
         when {
-          current.quantity < 0.0 -> {
+          current.asset.quantity < 0.0 -> {
             holder.binding.textViewAssetQuantity.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetPrice.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetTotal.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetDate.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetNote.setTextColor(colorNegativeAsset)
           }
-          current.type and obsoleteAssetType != 0 -> {
+          current.asset.type and obsoleteAssetType != 0 -> {
             holder.binding.textViewAssetQuantity.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetPrice.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetTotal.setTextColor(colorObsoleteAsset)
@@ -188,31 +202,65 @@ class AssetListAdapter internal constructor(
           }
         }
 
-        val itemViewQuantityText = DecimalFormat(DecimalFormat0To4Digits).format(current.quantity)
-        val itemViewPriceText = if (current.price > 0.0) {
-          DecimalFormat(DecimalFormat2To4Digits).format(current.price)
+        val itemViewQuantityText =
+          DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity)
+        val itemViewPriceText = if (current.asset.price > 0.0) {
+          DecimalFormat(DecimalFormat2To4Digits).format(current.asset.price)
         } else {
           ""
         }
-        val itemViewTotalText = if (current.price > 0.0) {
-          DecimalFormat(DecimalFormat2Digits).format(current.quantity.absoluteValue * current.price)
+        val itemViewTotalText = if (current.asset.price > 0.0) {
+          DecimalFormat(DecimalFormat2Digits).format(
+              current.asset.quantity.absoluteValue * current.asset.price
+          )
         } else {
           ""
         }
+        val itemViewMarketChangeText =
+          if (current.asset.price > 0.0 && current.onlineMarketData != null) {
+            getAssetChange(
+                current.asset.quantity,
+                current.asset.quantity * current.asset.price,
+                current.onlineMarketData!!.marketPrice,
+                current.onlineMarketData!!.postMarketData,
+                Color.DKGRAY,
+                context
+            ).second
+          } else {
+            ""
+          }
+        val itemViewMarketValueText =
+          if (current.asset.price > 0.0 && current.onlineMarketData != null) {
+            val marketPrice = current.onlineMarketData!!.marketPrice
+            SpannableStringBuilder()
+                .bold {
+                  append(
+                      DecimalFormat(DecimalFormat2Digits).format(
+                          current.asset.quantity * marketPrice
+                      )
+                  )
+                }
+          } else {
+            ""
+          }
         val datetime: LocalDateTime =
-          LocalDateTime.ofEpochSecond(current.date, 0, ZoneOffset.UTC)
+          LocalDateTime.ofEpochSecond(current.asset.date, 0, ZoneOffset.UTC)
         val itemViewDateText =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        val itemViewNoteText = current.note
+        val itemViewNoteText = current.asset.note
 
         // Negative values in italic.
-        if (current.quantity < 0.0) {
+        if (current.asset.quantity < 0.0) {
           holder.binding.textViewAssetQuantity.text =
             SpannableStringBuilder().italic { append(itemViewQuantityText) }
           holder.binding.textViewAssetPrice.text =
             SpannableStringBuilder().italic { append(itemViewPriceText) }
           holder.binding.textViewAssetTotal.text =
             SpannableStringBuilder().italic { append(itemViewTotalText) }
+          holder.binding.textViewAssetMarketChange.text =
+            SpannableStringBuilder().italic { append(itemViewMarketChangeText) }
+          holder.binding.textViewAssetMarketValue.text =
+            SpannableStringBuilder().italic { append(itemViewMarketValueText) }
           holder.binding.textViewAssetDate.text =
             SpannableStringBuilder().italic { append(itemViewDateText) }
           holder.binding.textViewAssetNote.text =
@@ -221,6 +269,8 @@ class AssetListAdapter internal constructor(
           holder.binding.textViewAssetQuantity.text = itemViewQuantityText
           holder.binding.textViewAssetPrice.text = itemViewPriceText
           holder.binding.textViewAssetTotal.text = itemViewTotalText
+          holder.binding.textViewAssetMarketChange.text = itemViewMarketChangeText
+          holder.binding.textViewAssetMarketValue.text = itemViewMarketValueText
           holder.binding.textViewAssetDate.text = itemViewDateText
           holder.binding.textViewAssetNote.text = itemViewNoteText
         }
@@ -236,26 +286,34 @@ class AssetListAdapter internal constructor(
     }
   }
 
-  internal fun updateAssets(assets: List<Asset>) {
-    assetsCopy = assets
+  internal fun updateAssets(assetData: StockAssetsLiveData) {
+    if (assetData.assets != null) {
+      assetsCopy = assetData.assets!!.assets
 
-    // Headline placeholder
-    assetList = mutableListOf(
-        Asset(
-            symbol = "",
-            quantity = 0.0,
-            price = 0.0
-        )
-    )
+      // Headline placeholder
+      assetList = mutableListOf(
+          AssetListData(
+              Asset(
+                  symbol = "",
+                  quantity = 0.0,
+                  price = 0.0
+              ),
+              null
+          )
+      )
 
-    // Sort assets in the list by date.
-    val sortedList = assets.sortedBy { asset ->
-      asset.date
-    }
+      // Sort assets in the list by date.
+      val sortedList = assetData.assets!!.assets.sortedBy { asset ->
+        asset.date
+      }
 
-    val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
+      val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
 
-    assetList.addAll(sortedList)
+      val sortedDataList = sortedList.map {
+        AssetListData(asset = it, onlineMarketData = assetData.onlineMarketData)
+      }
+
+      assetList.addAll(sortedDataList)
 
 //    val totalQuantity = assetList.sumByDouble {
 //      it.shares
@@ -265,16 +323,20 @@ class AssetListAdapter internal constructor(
 //      it.shares * it.price
 //    }
 
-    // Summary
-    val symbol: String = assets.firstOrNull()?.symbol ?: ""
-    assetList.add(
-        Asset(
-            id = null,
-            symbol = symbol,
-            quantity = totalQuantity,
-            price = totalPrice
-        )
-    )
+      // Summary
+      val symbol: String = assetData.assets!!.assets.firstOrNull()?.symbol ?: ""
+      assetList.add(
+          AssetListData(
+              Asset(
+                  id = null,
+                  symbol = symbol,
+                  quantity = totalQuantity,
+                  price = totalPrice
+              ),
+              null
+          )
+      )
+    }
 
     notifyDataSetChanged()
   }

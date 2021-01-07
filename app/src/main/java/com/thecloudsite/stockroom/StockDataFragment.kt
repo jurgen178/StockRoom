@@ -927,7 +927,7 @@ class StockDataFragment : Fragment() {
     val assetsLiveData: LiveData<Assets> = stockRoomViewModel.getAssetsLiveData(symbol)
     assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
-        assetAdapter.updateAssets(data.assets)
+        // assetAdapter.updateAssets(data.assets)
 
         // Reset when assets are changed.
         binding.pickerKnob.setValue(0.0, 100.0, 0.0)
@@ -979,9 +979,10 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    assetChangeLiveData.observe(viewLifecycleOwner, Observer { item ->
-      if (item != null) {
-        updateAssetChange(item)
+    assetChangeLiveData.observe(viewLifecycleOwner, Observer { stockAssetsLiveData ->
+      if (stockAssetsLiveData != null) {
+        assetAdapter.updateAssets(stockAssetsLiveData)
+        updateAssetChange(stockAssetsLiveData)
       }
     })
 
@@ -2020,15 +2021,17 @@ class StockDataFragment : Fragment() {
 
         // min, max, start
         binding.pickerKnob.setValue(marketPrice / 10, 4 * marketPrice, marketPrice)
-      } else {
-        binding.pricePreviewDivider.visibility = View.GONE
-        binding.pricePreviewTextview.visibility = View.GONE
-        binding.pricePreviewLayout.visibility = View.GONE
 
-        binding.textViewPurchasePrice.visibility = View.GONE
-        binding.textViewAssetChange.visibility = View.GONE
+        return
       }
     }
+
+    binding.pricePreviewDivider.visibility = View.GONE
+    binding.pricePreviewTextview.visibility = View.GONE
+    binding.pricePreviewLayout.visibility = View.GONE
+
+    binding.textViewPurchasePrice.visibility = View.GONE
+    binding.textViewAssetChange.visibility = View.GONE
   }
 
   private fun updateAlerts() {
