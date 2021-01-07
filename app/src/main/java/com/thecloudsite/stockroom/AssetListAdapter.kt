@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
@@ -31,7 +32,6 @@ import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
-import com.thecloudsite.stockroom.utils.getAddedDeletedAssets
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -48,7 +48,7 @@ import kotlin.math.absoluteValue
 
 data class AssetListData(
   var asset: Asset,
-  var gainLossText: SpannableStringBuilder = SpannableStringBuilder(),
+  var assetChangeText: SpannableStringBuilder = SpannableStringBuilder(),
   var onlineMarketData: OnlineMarketData? = null
 )
 
@@ -141,7 +141,7 @@ class AssetListAdapter internal constructor(
         }
         holder.binding.textViewAssetTotal.text =
           DecimalFormat(DecimalFormat2Digits).format(current.asset.price)
-        holder.binding.textViewAssetChange.text = current.gainLossText
+        holder.binding.textViewAssetChange.text = current.assetChangeText
         holder.binding.textViewAssetValue.text = ""
         holder.binding.textViewAssetDate.text = ""
         holder.binding.textViewAssetNote.text = ""
@@ -328,6 +328,17 @@ class AssetListAdapter internal constructor(
 
       // Summary
       val symbol: String = assetData.assets!!.assets.firstOrNull()?.symbol ?: ""
+      val assetChange = if (assetData.onlineMarketData != null) {
+        getAssetChange(
+            assetData.assets!!.assets,
+            assetData.onlineMarketData!!.marketPrice,
+            assetData.onlineMarketData!!.postMarketData,
+            Color.DKGRAY,
+            context
+        ).second
+      } else {
+        SpannableStringBuilder()
+      }
 
       assetList.add(
           AssetListData(
@@ -336,7 +347,8 @@ class AssetListAdapter internal constructor(
                   symbol = symbol,
                   quantity = totalQuantity,
                   price = totalPrice
-              )
+              ),
+              assetChange
           )
       )
     }
