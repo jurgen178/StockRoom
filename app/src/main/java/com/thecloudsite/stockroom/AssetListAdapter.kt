@@ -27,7 +27,6 @@ import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
@@ -48,7 +47,8 @@ import kotlin.math.absoluteValue
 
 data class AssetListData(
   var asset: Asset,
-  var onlineMarketData: OnlineMarketData?
+  var capitalGainLossText: SpannableStringBuilder = SpannableStringBuilder(),
+  var onlineMarketData: OnlineMarketData? = null
 )
 
 class AssetListAdapter internal constructor(
@@ -102,13 +102,13 @@ class AssetListAdapter internal constructor(
 
     // First entry is headline.
     if (position == 0) {
-      holder.binding.textViewAssetQuantity.text = context.getString(R.string.quantity)
-      holder.binding.textViewAssetPrice.text = context.getString(R.string.price)
-      holder.binding.textViewAssetTotal.text = context.getString(R.string.value)
-      holder.binding.textViewAssetMarketChange.text = context.getString(R.string.marketchange)
-      holder.binding.textViewAssetMarketValue.text = context.getString(R.string.marketvalue)
-      holder.binding.textViewAssetDate.text = context.getString(R.string.date)
-      holder.binding.textViewAssetNote.text = context.getString(R.string.note)
+      holder.binding.textViewAssetQuantity.text = context.getString(R.string.assetlistquantity)
+      holder.binding.textViewAssetPrice.text = context.getString(R.string.assetlistprice)
+      holder.binding.textViewAssetTotal.text = context.getString(R.string.assetlisttotal)
+      holder.binding.textViewAssetChange.text = context.getString(R.string.assetlistchange)
+      holder.binding.textViewAssetValue.text = context.getString(R.string.assetlistvalue)
+      holder.binding.textViewAssetDate.text = context.getString(R.string.assetlistdate)
+      holder.binding.textViewAssetNote.text = context.getString(R.string.assetlistnote)
       holder.binding.textViewAssetDelete.visibility = View.GONE
       holder.binding.assetSummaryView.visibility = View.GONE
       holder.binding.textViewAssetLayout.setBackgroundColor(
@@ -140,8 +140,8 @@ class AssetListAdapter internal constructor(
         }
         holder.binding.textViewAssetTotal.text =
           DecimalFormat(DecimalFormat2Digits).format(current.asset.price)
-        holder.binding.textViewAssetMarketChange.text = ""
-        holder.binding.textViewAssetMarketValue.text = ""
+        holder.binding.textViewAssetChange.text = current.capitalGainLossText
+        holder.binding.textViewAssetValue.text = ""
         holder.binding.textViewAssetDate.text = ""
         holder.binding.textViewAssetNote.text = ""
 
@@ -216,7 +216,7 @@ class AssetListAdapter internal constructor(
         } else {
           ""
         }
-        val itemViewMarketChangeText =
+        val itemViewChangeText =
           if (current.asset.price > 0.0 && current.onlineMarketData != null) {
             getAssetChange(
                 current.asset.quantity,
@@ -229,7 +229,7 @@ class AssetListAdapter internal constructor(
           } else {
             ""
           }
-        val itemViewMarketValueText =
+        val itemViewValueText =
           if (current.asset.price > 0.0 && current.onlineMarketData != null) {
             val marketPrice = current.onlineMarketData!!.marketPrice
             SpannableStringBuilder()
@@ -257,10 +257,10 @@ class AssetListAdapter internal constructor(
             SpannableStringBuilder().italic { append(itemViewPriceText) }
           holder.binding.textViewAssetTotal.text =
             SpannableStringBuilder().italic { append(itemViewTotalText) }
-          holder.binding.textViewAssetMarketChange.text =
-            SpannableStringBuilder().italic { append(itemViewMarketChangeText) }
-          holder.binding.textViewAssetMarketValue.text =
-            SpannableStringBuilder().italic { append(itemViewMarketValueText) }
+          holder.binding.textViewAssetChange.text =
+            SpannableStringBuilder().italic { append(itemViewChangeText) }
+          holder.binding.textViewAssetValue.text =
+            SpannableStringBuilder().italic { append(itemViewValueText) }
           holder.binding.textViewAssetDate.text =
             SpannableStringBuilder().italic { append(itemViewDateText) }
           holder.binding.textViewAssetNote.text =
@@ -269,8 +269,8 @@ class AssetListAdapter internal constructor(
           holder.binding.textViewAssetQuantity.text = itemViewQuantityText
           holder.binding.textViewAssetPrice.text = itemViewPriceText
           holder.binding.textViewAssetTotal.text = itemViewTotalText
-          holder.binding.textViewAssetMarketChange.text = itemViewMarketChangeText
-          holder.binding.textViewAssetMarketValue.text = itemViewMarketValueText
+          holder.binding.textViewAssetChange.text = itemViewChangeText
+          holder.binding.textViewAssetValue.text = itemViewValueText
           holder.binding.textViewAssetDate.text = itemViewDateText
           holder.binding.textViewAssetNote.text = itemViewNoteText
         }
@@ -297,8 +297,7 @@ class AssetListAdapter internal constructor(
                   symbol = "",
                   quantity = 0.0,
                   price = 0.0
-              ),
-              null
+              )
           )
       )
 
@@ -310,7 +309,10 @@ class AssetListAdapter internal constructor(
       val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
 
       val sortedDataList = sortedList.map {
-        AssetListData(asset = it, onlineMarketData = assetData.onlineMarketData)
+        AssetListData(
+            asset = it,
+            onlineMarketData = assetData.onlineMarketData
+        )
       }
 
       assetList.addAll(sortedDataList)
@@ -325,6 +327,9 @@ class AssetListAdapter internal constructor(
 
       // Summary
       val symbol: String = assetData.assets!!.assets.firstOrNull()?.symbol ?: ""
+      val (capitalGain, capitalLoss) = getAssetsCapitalGain(assetData.assets!!.assets)
+      val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
+
       assetList.add(
           AssetListData(
               Asset(
@@ -333,7 +338,7 @@ class AssetListAdapter internal constructor(
                   quantity = totalQuantity,
                   price = totalPrice
               ),
-              null
+              capitalGainLossText
           )
       )
     }
