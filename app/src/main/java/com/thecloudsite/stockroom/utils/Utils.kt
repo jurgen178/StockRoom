@@ -601,6 +601,27 @@ fun getAddedAssets(
   return Pair(totalQuantity, totalPrice)
 }
 
+fun getAddedDeletedAssets(
+  assetList: List<Asset>?,
+  onlineMarketData: OnlineMarketData
+): Pair<Double, Double> {
+
+  var gain: Double = 0.0
+  var loss: Double = 0.0
+
+  assetList?.forEach { asset ->
+    val marketChange = onlineMarketData.marketPrice - asset.price
+    if (marketChange > 0.0) {
+      gain += asset.quantity * marketChange
+    }
+    if (marketChange < 0.0) {
+      loss -= asset.quantity * marketChange
+    }
+  }
+
+  return Pair(gain, loss)
+}
+
 fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
 
   var totalQuantity: Double = 0.0

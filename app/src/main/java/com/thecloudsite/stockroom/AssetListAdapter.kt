@@ -31,6 +31,7 @@ import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.getAddedDeletedAssets
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -47,7 +48,7 @@ import kotlin.math.absoluteValue
 
 data class AssetListData(
   var asset: Asset,
-  var capitalGainLossText: SpannableStringBuilder = SpannableStringBuilder(),
+  var gainLossText: SpannableStringBuilder = SpannableStringBuilder(),
   var onlineMarketData: OnlineMarketData? = null
 )
 
@@ -140,7 +141,7 @@ class AssetListAdapter internal constructor(
         }
         holder.binding.textViewAssetTotal.text =
           DecimalFormat(DecimalFormat2Digits).format(current.asset.price)
-        holder.binding.textViewAssetChange.text = current.capitalGainLossText
+        holder.binding.textViewAssetChange.text = current.gainLossText
         holder.binding.textViewAssetValue.text = ""
         holder.binding.textViewAssetDate.text = ""
         holder.binding.textViewAssetNote.text = ""
@@ -327,8 +328,6 @@ class AssetListAdapter internal constructor(
 
       // Summary
       val symbol: String = assetData.assets!!.assets.firstOrNull()?.symbol ?: ""
-      val (capitalGain, capitalLoss) = getAssetsCapitalGain(assetData.assets!!.assets)
-      val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
 
       assetList.add(
           AssetListData(
@@ -337,8 +336,7 @@ class AssetListAdapter internal constructor(
                   symbol = symbol,
                   quantity = totalQuantity,
                   price = totalPrice
-              ),
-              capitalGainLossText
+              )
           )
       )
     }
