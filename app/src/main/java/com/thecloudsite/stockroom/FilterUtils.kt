@@ -18,6 +18,8 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import java.text.NumberFormat
+import kotlin.math.max
+import kotlin.math.min
 
 // Levenshtein score between candidate string and reference string
 fun getLevenshteinDistance(
@@ -66,14 +68,11 @@ fun getLevenshteinDistance(
       val replaced = distance[previousRow][j - 1] + different
 
       // Update with the minimal distance.
-      distance[currentRow][j] = Math.min(Math.min(deleted, added), replaced)
+      distance[currentRow][j] = min(min(deleted, added), replaced)
     }
   }
 
-  val N = Math.max(n, m)
-      .toDouble()
-
-  return distance[currentRow][m] / N
+  return distance[currentRow][m] / max(n, m).toDouble()
 }
 
 fun initSubTypeList(context: Context) {

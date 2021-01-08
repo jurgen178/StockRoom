@@ -104,7 +104,7 @@ enum class FilterSubTypeEnum(var value: String) {
 }
 
 val regexOption = setOf(IGNORE_CASE, DOT_MATCHES_ALL)
-val similarDistance = 0.3
+const val similarDistance = 0.3
 
 object SharedFilterGroupList {
   var groups: List<Group> = emptyList()
