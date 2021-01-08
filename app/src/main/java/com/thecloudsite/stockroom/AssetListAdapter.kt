@@ -47,8 +47,9 @@ import kotlin.math.absoluteValue
 
 data class AssetListData(
   var asset: Asset,
+  var onlineMarketData: OnlineMarketData? = null,
   var assetChangeText: SpannableStringBuilder = SpannableStringBuilder(),
-  var onlineMarketData: OnlineMarketData? = null
+  var assetText: SpannableStringBuilder = SpannableStringBuilder()
 )
 
 class AssetListAdapter internal constructor(
@@ -141,7 +142,7 @@ class AssetListAdapter internal constructor(
         holder.binding.textViewAssetTotal.text =
           DecimalFormat(DecimalFormat2Digits).format(current.asset.price)
         holder.binding.textViewAssetChange.text = current.assetChangeText
-        holder.binding.textViewAssetValue.text = ""
+        holder.binding.textViewAssetValue.text = current.assetText
         holder.binding.textViewAssetDate.text = ""
         holder.binding.textViewAssetNote.text = ""
 
@@ -219,8 +220,8 @@ class AssetListAdapter internal constructor(
         val itemViewChangeText =
           if (current.asset.price > 0.0 && current.onlineMarketData != null) {
             getAssetChange(
-                current.asset.quantity,
-                current.asset.quantity * current.asset.price,
+                current.asset.quantity.absoluteValue,
+                current.asset.quantity.absoluteValue * current.asset.price,
                 current.onlineMarketData!!.marketPrice,
                 current.onlineMarketData!!.postMarketData,
                 Color.DKGRAY,
@@ -293,7 +294,7 @@ class AssetListAdapter internal constructor(
       // Headline placeholder
       assetList = mutableListOf(
           AssetListData(
-              Asset(
+              asset = Asset(
                   symbol = "",
                   quantity = 0.0,
                   price = 0.0
@@ -317,14 +318,6 @@ class AssetListAdapter internal constructor(
 
       assetList.addAll(sortedDataList)
 
-//    val totalQuantity = assetList.sumByDouble {
-//      it.shares
-//    }
-//
-//    val totalPrice = assetList.sumByDouble {
-//      it.shares * it.price
-//    }
-
       // Summary
       val symbol: String = assetData.assets!!.assets.firstOrNull()?.symbol ?: ""
       val assetChange = if (assetData.onlineMarketData != null) {
@@ -339,15 +332,29 @@ class AssetListAdapter internal constructor(
         SpannableStringBuilder()
       }
 
+      val asset = if (assetData.onlineMarketData != null) {
+        SpannableStringBuilder()
+            .bold {
+              append(
+                  DecimalFormat(DecimalFormat2Digits).format(
+                      totalQuantity * assetData.onlineMarketData!!.marketPrice
+                  )
+              )
+            }
+      } else {
+        SpannableStringBuilder()
+      }
+
       assetList.add(
           AssetListData(
-              Asset(
+              asset = Asset(
                   id = null,
                   symbol = symbol,
                   quantity = totalQuantity,
                   price = totalPrice
               ),
-              assetChange
+              assetChangeText = assetChange,
+              assetText = asset
           )
       )
     }
