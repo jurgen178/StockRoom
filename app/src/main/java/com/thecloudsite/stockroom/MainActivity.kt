@@ -200,7 +200,13 @@ class MainActivity : AppCompatActivity() {
     binding.viewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
 
-        return when (SharedRepository.displayedViewsList[position]) {
+        val displayedViewsList = SharedRepository.displayedViewsList
+
+        if (position < 0 || position >= displayedViewsList.size) {
+          return StockRoomListFragment.newInstance()
+        }
+
+        return when (displayedViewsList[position]) {
           "00_StockRoomChartFragment" -> {
             StockRoomChartFragment.newInstance()
           }
