@@ -2,15 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "262898255255095cfb798d122f53ef1f",
+    "identityHash": "0c04d79f4d6679666b927929948acae2",
     "entities": [
       {
         "tableName": "store_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `data` TEXT NOT NULL, `value` REAL NOT NULL, `datetime` INTEGER NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL, PRIMARY KEY(`key`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`keyId` TEXT NOT NULL, `data` TEXT NOT NULL, `value` REAL NOT NULL, `datetime` INTEGER NOT NULL, `type` INTEGER NOT NULL, `note` TEXT NOT NULL, PRIMARY KEY(`keyId`))",
         "fields": [
           {
-            "fieldPath": "key",
-            "columnName": "key",
+            "fieldPath": "keyId",
+            "columnName": "keyId",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -47,7 +47,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "key"
+            "keyId"
           ],
           "autoGenerate": false
         },
@@ -356,7 +356,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '262898255255095cfb798d122f53ef1f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0c04d79f4d6679666b927929948acae2')"
     ]
   }
 }

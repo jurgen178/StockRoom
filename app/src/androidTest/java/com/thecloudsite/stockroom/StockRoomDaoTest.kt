@@ -79,7 +79,7 @@ class StockRoomDaoTest {
   @Test
   @Throws(Exception::class)
   fun addStoreData() {
-    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+    val storeData = StoreData(keyId = "key1", data = "data1", value = 1.2)
 
     val storeData1 = stockRoomDao.getStoreData("key1")
 
@@ -114,7 +114,7 @@ class StockRoomDaoTest {
   @Test
   @Throws(Exception::class)
   fun deleteStoreDataByKey() {
-    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+    val storeData = StoreData(keyId = "key1", data = "data1", value = 1.2)
 
     // insert data
     stockRoomDao.insertStoreData(storeData)
@@ -138,7 +138,7 @@ class StockRoomDaoTest {
   @Test
   @Throws(Exception::class)
   fun deleteStoreDataByStoreData() {
-    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+    val storeData = StoreData(keyId = "key1", data = "data1", value = 1.2)
 
     // insert data
     stockRoomDao.insertStoreData(storeData)
@@ -170,7 +170,7 @@ class StockRoomDaoTest {
   @Test
   @Throws(Exception::class)
   fun deleteAllStoreData() {
-    val storeData = StoreData(key = "key1", data = "data1", value = 1.2)
+    val storeData = StoreData(keyId = "key1", data = "data1", value = 1.2)
 
     // insert data
     stockRoomDao.insertStoreData(storeData)

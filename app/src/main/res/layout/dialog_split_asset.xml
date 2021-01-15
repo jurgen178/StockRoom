@@ -71,8 +71,8 @@
       <TextView
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal|center_vertical"
           android:layout_weight="0.2"
+          android:textAlignment="center"
           android:text=":"
           />
 

@@ -41,18 +41,25 @@ class ListActivity : AppCompatActivity() {
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    binding.debugswitch.isChecked = sharedPreferences.getBoolean("list", false)
+    // Only valid for the current App run. Will be reset the next time the app starts.
 
+//    val sharedPreferences =
+//      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+//
+//    binding.debugswitch.isChecked = sharedPreferences.getBoolean("list", false)
+//
+//    binding.debugswitch.setOnCheckedChangeListener { _, isChecked ->
+//      sharedPreferences
+//          .edit()
+//          .putBoolean("list", isChecked)
+//          .apply()
+//    }
+
+    binding.debugswitch.isChecked = Companion.debugList
     binding.debugswitch.setOnCheckedChangeListener { _, isChecked ->
-      sharedPreferences
-          .edit()
-          .putBoolean("list", isChecked)
-          .apply()
+      Companion.debugList = isChecked
     }
 
-    // Only valid for the current App run. Will be reset the next time the app starts.
     binding.realtimeswitch.isChecked = Companion.realtimeOverride
     binding.realtimeswitch.setOnCheckedChangeListener { _, isChecked ->
       Companion.realtimeOverride = isChecked

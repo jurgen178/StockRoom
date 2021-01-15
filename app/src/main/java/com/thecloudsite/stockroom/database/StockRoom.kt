@@ -35,7 +35,7 @@ import androidx.room.Relation
 
 @Entity(tableName = "store_table")
 data class StoreData(
-  @PrimaryKey var key: String,
+  @PrimaryKey var keyId: String,
   var data: String,
   var value: Double,
   var datetime: Long = 0L,

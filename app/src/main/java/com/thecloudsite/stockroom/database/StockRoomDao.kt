@@ -109,14 +109,14 @@ interface StockRoomDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertStoreData(storeData: StoreData)
 
-  @Query("SELECT * FROM store_table WHERE key = :key")
-  fun getStoreData(key: String): StoreData
+  @Query("SELECT * FROM store_table WHERE keyId = :keyId")
+  fun getStoreData(keyId: String): StoreData
 
   @Query("SELECT * FROM store_table")
   fun getAllStoreLiveData(): LiveData<List<StoreData>>
 
-  @Query("DELETE FROM store_table WHERE key = :key")
-  fun deleteStoreData(key: String)
+  @Query("DELETE FROM store_table WHERE keyId = :keyId")
+  fun deleteStoreData(keyId: String)
 
   @Delete
   fun deleteStoreData(storeData: StoreData)

@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity() {
     private const val USER_MSG = "userMsg"
 
     const val onlineDataTimerDelay: Long = 2000L
+    var debugList: Boolean = false
     var realtimeOverride: Boolean = false
   }
 
@@ -422,8 +423,8 @@ class MainActivity : AppCompatActivity() {
 
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    val debug: Boolean = sharedPreferences.getBoolean("list", false)
-    binding.recyclerViewDebug.visibility = if (debug) {
+//    val debug: Boolean = sharedPreferences.getBoolean("list", false)
+    binding.recyclerViewDebug.visibility = if (Companion.debugList) {
       View.VISIBLE
     } else {
       View.GONE
