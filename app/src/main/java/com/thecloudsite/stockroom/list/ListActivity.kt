@@ -16,11 +16,10 @@
 
 package com.thecloudsite.stockroom.list
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.MainActivity.Companion
 import com.thecloudsite.stockroom.StockRoomViewModel

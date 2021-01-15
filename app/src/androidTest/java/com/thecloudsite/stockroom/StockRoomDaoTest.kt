@@ -106,7 +106,7 @@ class StockRoomDaoTest {
     val allStoreData = stockRoomDao.getAllStoreLiveData()
         .waitForValue()
     assertEquals(1, allStoreData.size)
-    assertEquals("key1", allStoreData[0].key)
+    assertEquals("key1", allStoreData[0].keyId)
     assertEquals("data3", allStoreData[0].data)
     assertEquals(1.3, allStoreData[0].value, epsilon)
   }
