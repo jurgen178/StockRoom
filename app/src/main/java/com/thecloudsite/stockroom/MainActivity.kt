@@ -19,6 +19,7 @@ package com.thecloudsite.stockroom
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -176,6 +177,8 @@ class MainActivity : AppCompatActivity() {
         SharedFilterGroupList.groups = groups.sortedBy { group ->
           group.name.toLowerCase(Locale.ROOT)
         }
+
+        updateFilterList()
       }
     })
 
@@ -438,12 +441,7 @@ class MainActivity : AppCompatActivity() {
         View.GONE
       }
 
-    val selectedFilter = sharedPreferences.getString("selectedFilter", "")
-    val filterActive = sharedPreferences.getBoolean("filterActive", false)
-    val filterData = sharedPreferences.getString("filterSetting", "")
-    if (filterData != null) {
-      filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
-    }
+    updateFilterList(sharedPreferences)
   }
 
   private var filterMenuIdMap: MutableMap<Int, String> = mutableMapOf()
@@ -770,5 +768,18 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         }
       }
     }
+  }
+
+  private fun updateFilterList(preferences: SharedPreferences? = null) {
+
+    val sharedPreferences =
+      preferences ?: PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+    val selectedFilter = sharedPreferences.getString("selectedFilter", "")
+    val filterActive = sharedPreferences.getBoolean("filterActive", false)
+    val filterData = sharedPreferences.getString("filterSetting", "")
+    if (filterData != null) {
+      filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
+    }
+
   }
 }

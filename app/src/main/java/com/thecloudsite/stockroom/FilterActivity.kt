@@ -22,7 +22,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,15 +42,14 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DateType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.DoubleType
-import com.thecloudsite.stockroom.FilterDataTypeEnum.GroupType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.IntType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.NoType
+import com.thecloudsite.stockroom.FilterDataTypeEnum.SelectionType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.databinding.ActivityFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
-import com.thecloudsite.stockroom.utils.getGroupsMenuList
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -505,16 +503,6 @@ class FilterActivity : AppCompatActivity() {
       ArrayAdapter(this, android.R.layout.simple_list_item_1, subTypeData)
     dialogBinding.textViewSubTypeSpinner.adapter = subTypeSpinnerAdapter
 
-    val groupData: List<SpannableString> = getGroupsMenuList(
-        SharedFilterGroupList.groups,
-        0,
-        getString(string.standard_group)
-    )
-
-    val groupSpinnerAdapter =
-      ArrayAdapter(this, android.R.layout.simple_list_item_1, groupData)
-    dialogBinding.groupSpinnerFilter.adapter = groupSpinnerAdapter
-
     // Update or Add?
     if (index >= 0) {
       // Update
@@ -543,24 +531,32 @@ class FilterActivity : AppCompatActivity() {
               localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
           )
         }
-        GroupType -> {
-          val groupColor = try {
+//        GroupType -> {
+//          val groupColor = try {
+//            filterType.data.toInt()
+//          } catch (e: Exception) {
+//            0
+//          }
+//          val selectedGroup = SharedFilterGroupList.groups.find { group ->
+//            group.color == groupColor
+//          }
+//          dialogBinding.groupSpinnerFilter.setSelection(
+//              if (selectedGroup != null) {
+//                val selectedIndex = SharedFilterGroupList.groups.indexOf(selectedGroup)
+//                selectedIndex
+//              } else {
+//                // not-assigned color is added to the group list as last entry
+//                SharedFilterGroupList.groups.size
+//              }
+//          )
+//        }
+        SelectionType -> {
+          val selection = try {
             filterType.data.toInt()
           } catch (e: Exception) {
             0
           }
-          val selectedGroup = SharedFilterGroupList.groups.find { group ->
-            group.color == groupColor
-          }
-          dialogBinding.groupSpinnerFilter.setSelection(
-              if (selectedGroup != null) {
-                val selectedIndex = SharedFilterGroupList.groups.indexOf(selectedGroup)
-                selectedIndex
-              } else {
-                // not-assigned color is added to the group list as last entry
-                SharedFilterGroupList.groups.size
-              }
-          )
+          dialogBinding.selectionSpinnerFilter.setSelection(selection)
         }
         NoType -> {
         }
@@ -593,8 +589,9 @@ class FilterActivity : AppCompatActivity() {
       viewMap["textInputLayoutFilterIntTypeVisibility"] =
         ViewSet(dialogBinding.textInputLayoutFilterIntType)
       viewMap["datePickerFilterDateViewVisibility"] = ViewSet(dialogBinding.datePickerFilter)
-      viewMap["textViewFilterGroupTypeVisibility"] = ViewSet(dialogBinding.textViewFilterGroupType)
-      viewMap["groupSpinnerFilterVisibility"] = ViewSet(dialogBinding.groupSpinnerFilter)
+      viewMap["textViewFilterSelectionTypeVisibility"] =
+        ViewSet(dialogBinding.textViewFilterSelectionType)
+      viewMap["selectionSpinnerFilterVisibility"] = ViewSet(dialogBinding.selectionSpinnerFilter)
 
       fun allGone() {
         viewMap.forEach { (view, _) ->
@@ -618,9 +615,9 @@ class FilterActivity : AppCompatActivity() {
         DateType -> {
           viewMap["datePickerFilterDateViewVisibility"]?.visibility = View.VISIBLE
         }
-        GroupType -> {
-          viewMap["textViewFilterGroupTypeVisibility"]?.visibility = View.VISIBLE
-          viewMap["groupSpinnerFilterVisibility"]?.visibility = View.VISIBLE
+        SelectionType -> {
+          viewMap["textViewFilterSelectionTypeVisibility"]?.visibility = View.VISIBLE
+          viewMap["selectionSpinnerFilterVisibility"]?.visibility = View.VISIBLE
         }
         NoType -> {
           allGone()
@@ -646,72 +643,87 @@ class FilterActivity : AppCompatActivity() {
       }
     }
 
-    dialogBinding.textViewFilterSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-      }
-
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View?,
-        position: Int,
-        id: Long
-      ) {
-        // Preserve sub type if possible when filter is changed.
-        val subType = filterType.subType
-        filterType = FilterFactory.create(position, applicationContext)
-        if (filterType.subTypeList.indexOf(subType) != -1) {
-          filterType.subType = subType
+    dialogBinding.textViewFilterSpinner.onItemSelectedListener =
+      object : OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
         }
-        dialogBinding.textViewFilterDesc.text = filterType.desc
-        dialogBinding.textViewFilterDesc.visibility =
-          if (filterType.desc.isEmpty()) View.GONE else View.VISIBLE
 
-        subTypeData.clear()
-        subTypeData.addAll(filterType.subTypeList.map { type ->
-          type.value
-        })
+        override fun onItemSelected(
+          parent: AdapterView<*>?,
+          view: View?,
+          position: Int,
+          id: Long
+        ) {
+          // Preserve sub type if possible when filter is changed.
+          val subType = filterType.subType
+          filterType = FilterFactory.create(position, applicationContext)
+          if (filterType.subTypeList.indexOf(subType) != -1) {
+            filterType.subType = subType
+          }
+          dialogBinding.textViewFilterDesc.text = filterType.desc
+          dialogBinding.textViewFilterDesc.visibility =
+            if (filterType.desc.isEmpty()) View.GONE else View.VISIBLE
 
-        setUI(filterType)
-
-        dialogBinding.textViewSubTypeSpinner.visibility =
-          if (subTypeData.isEmpty()) View.GONE else View.VISIBLE
-        subTypeSpinnerAdapter.notifyDataSetChanged()
-
-        // Reset selection if filter type changed and the filter sub type is not available.
-        val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
-        dialogBinding.textViewSubTypeSpinner.setSelection(
-            if (subTypeIndex != -1) {
-              subTypeIndex
-            } else {
-              0
-            }
-        )
-      }
-    }
-
-    dialogBinding.textViewSubTypeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-      }
-
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View?,
-        position: Int,
-        id: Long
-      ) {
-        if (position >= 0 && position < filterType.subTypeList.size) {
-          filterType.subType = filterType.subTypeList[position]
+          subTypeData.clear()
+          subTypeData.addAll(filterType.subTypeList.map { type ->
+            type.value
+          })
 
           setUI(filterType)
+
+          if (view != null) {
+            val selection = dialogBinding.selectionSpinnerFilter.selectedItemPosition
+            dialogBinding.selectionSpinnerFilter.adapter =
+              ArrayAdapter(
+                  view.context, android.R.layout.simple_list_item_1, filterType.selectionList
+              )
+
+            if (selection >= 0 && selection < filterType.selectionList.size) {
+              dialogBinding.selectionSpinnerFilter.setSelection(selection)
+            }
+          }
+
+          dialogBinding.textViewSubTypeSpinner.visibility =
+            if (subTypeData.isEmpty()) View.GONE else View.VISIBLE
+          subTypeSpinnerAdapter.notifyDataSetChanged()
+
+          // Reset selection if filter type changed and the filter sub type is not available.
+          val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
+          dialogBinding.textViewSubTypeSpinner.setSelection(
+              if (subTypeIndex != -1) {
+                subTypeIndex
+              } else {
+                0
+              }
+          )
         }
       }
-    }
+
+    dialogBinding.textViewSubTypeSpinner.onItemSelectedListener =
+      object : OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+
+        override fun onItemSelected(
+          parent: AdapterView<*>?,
+          view: View?,
+          position: Int,
+          id: Long
+        ) {
+          if (position >= 0 && position < filterType.subTypeList.size) {
+            filterType.subType = filterType.subTypeList[position]
+
+            setUI(filterType)
+          }
+        }
+      }
 
     builder.setView(dialogBinding.root)
         // Add action buttons
         .setPositiveButton(
             if (index >= 0) string.update else string.add
-        ) { _, _ ->
+        )
+        { _, _ ->
           val filterIndex = dialogBinding.textViewFilterSpinner.selectedItemPosition
           val newFilterType = FilterFactory.create(filterIndex, applicationContext)
 
@@ -750,16 +762,9 @@ class FilterActivity : AppCompatActivity() {
               val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
               date.toString()
             }
-            GroupType -> {
-              val group = dialogBinding.groupSpinnerFilter.selectedItemPosition
-              val color = if (group >= 0 && group < SharedFilterGroupList.groups.size) {
-                SharedFilterGroupList.groups[group].color
-              } else if (group == SharedFilterGroupList.groups.size) {
-                0 // not-assigned entry added as last entry selected
-              } else {
-                -1
-              }
-              color.toString()
+            SelectionType -> {
+              val selection = dialogBinding.selectionSpinnerFilter.selectedItemPosition
+              selection.toString()
             }
             NoType -> {
               ""
@@ -775,7 +780,7 @@ class FilterActivity : AppCompatActivity() {
                   .containsMatchIn("test")
             } catch (e: Exception) {
               Toast.makeText(
-                 this, getString(R.string.filter_regex_error_msg, newFilterType.data),
+                  this, getString(R.string.filter_regex_error_msg, newFilterType.data),
                   Toast.LENGTH_LONG
               )
                   .show()
@@ -807,7 +812,8 @@ class FilterActivity : AppCompatActivity() {
         }
         .setNegativeButton(
             string.cancel
-        ) { _, _ ->
+        )
+        { _, _ ->
         }
     builder
         .create()

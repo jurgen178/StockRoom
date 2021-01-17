@@ -48,4 +48,9 @@
     <item>02_StockRoomTileFragment</item>
     <item>07_SummaryGroupFragment</item>
   </string-array>
+  <string-array name="quoteTypes">
+    <item>Aktie</item>
+    <item>ETF</item>
+    <item>Option</item>
+  </string-array>
 </resources>

@@ -185,20 +185,19 @@
       </com.google.android.material.textfield.TextInputLayout>
 
       <TextView
-          android:id="@+id/textViewFilterGroupType"
+          android:id="@+id/textViewFilterSelectionType"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:text="@string/filter_value_group"
+          android:text="@string/filter_value_selection"
           android:visibility="gone"
-          app:layout_constraintBottom_toBottomOf="@+id/groupSpinnerFilter"
+          app:layout_constraintBottom_toBottomOf="@+id/selectionSpinnerFilter"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintHorizontal_bias="0.0"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="@+id/groupSpinnerFilter"
-          app:layout_constraintVertical_bias="1.0"
+          app:layout_constraintTop_toTopOf="@+id/selectionSpinnerFilter"
           />
       <Spinner
-          android:id="@+id/groupSpinnerFilter"
+          android:id="@+id/selectionSpinnerFilter"
           android:visibility="gone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
@@ -215,7 +214,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="16dp"
           android:datePickerMode="calendar"
-          app:layout_constraintTop_toBottomOf="@+id/groupSpinnerFilter"
+          app:layout_constraintTop_toBottomOf="@+id/selectionSpinnerFilter"
           />
 
       <androidx.constraintlayout.widget.Guideline

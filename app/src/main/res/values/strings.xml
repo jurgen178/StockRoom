@@ -376,7 +376,7 @@ limitations under the License. -->
   <string name="filter_type">Filter</string>
   <string name="filter_value_text">Text value</string>
   <string name="filter_value_double">Number value</string>
-  <string name="filter_value_group">Gruppe</string>
+  <string name="filter_value_selection">Selection</string>
   <string name="update_filter">Update filter</string>
   <string name="add_filter_msg">The filter \'%1$s\' was added.</string>
   <string name="update_filter_msg">The filter \'%1$s\' was updated.</string>
@@ -388,6 +388,8 @@ limitations under the License. -->
   <string name="filter_symbolname_desc"></string>
   <string name="filter_displayname_name">Display name</string>
   <string name="filter_displayname_desc"></string>
+  <string name="filter_quotetype_name">Quote type</string>
+  <string name="filter_quotetype_desc"></string>
   <string name="filter_stockexchangename_name">Stock exchange name</string>
   <string name="filter_stockexchangename_desc"></string>
   <string name="filter_group_name">Group</string>

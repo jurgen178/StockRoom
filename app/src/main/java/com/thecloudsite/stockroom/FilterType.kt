@@ -20,11 +20,14 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import androidx.core.text.backgroundColor
 import androidx.core.text.color
+import com.thecloudsite.stockroom.R.array
+import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
+import com.thecloudsite.stockroom.utils.getGroupsMenuList
 import com.thecloudsite.stockroom.utils.isWhiteColor
 import java.text.DecimalFormat
 import java.time.LocalDateTime
@@ -39,7 +42,8 @@ enum class FilterTypeEnum {
   FilterPercentageChangeType,
   FilterSymbolNameType,
   FilterDisplayNameType,
-  FilterStockExchangeName,
+  FilterQuoteType,
+  FilterStockExchangeNameType,
   FilterGroupType,
   FilterNoteType,
   FilterDividendNoteType,
@@ -69,7 +73,7 @@ enum class FilterDataTypeEnum(val value: Int) {
   DoubleType(2),
   DateType(3),
   IntType(4),
-  GroupType(5),
+  SelectionType(5),
 }
 
 enum class FilterModeTypeEnum(val value: Int) {
@@ -120,7 +124,8 @@ object FilterFactory {
       FilterTypeEnum.FilterPercentageChangeType -> FilterPercentageChangeType(context)
       FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
       FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
-      FilterTypeEnum.FilterStockExchangeName -> FilterStockExchangeNameType(context)
+      FilterTypeEnum.FilterQuoteType -> FilterQuoteType(context)
+      FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
       FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
       FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
       FilterTypeEnum.FilterDividendNoteType -> FilterDividendNoteType(context)
@@ -185,6 +190,7 @@ interface IFilterType {
   val typeId: FilterTypeEnum
   val dataType: FilterDataTypeEnum
   val subTypeList: List<FilterSubTypeEnum>
+  val selectionList: List<SpannableStringBuilder>
   var subType: FilterSubTypeEnum
   val displayName: String
   val desc: String
@@ -204,6 +210,7 @@ open class FilterBaseType : IFilterType {
   override val typeId = FilterTypeEnum.FilterNullType
   override val dataType = FilterDataTypeEnum.NoType
   override val subTypeList = listOf<FilterSubTypeEnum>()
+  override val selectionList = listOf<SpannableStringBuilder>()
   override var subType = FilterSubTypeEnum.NoType
     set(value) {
       field = if (subTypeList.contains(value)) {
@@ -334,28 +341,93 @@ open class FilterDateBaseType : FilterBaseType() {
     get() = filterDateValue.toString()
 }
 
-open class FilterGroupBaseType(val context: Context) : FilterBaseType() {
+open class FilterSelectionBaseType(open val context: Context) : FilterBaseType() {
 
-  var filterGroupValue: Int = 0
+  var filterSelectionIndex: Int = 0
 
-  override val dataType = FilterDataTypeEnum.GroupType
+  override val dataType = FilterDataTypeEnum.SelectionType
   override val subTypeList =
     listOf(
         FilterSubTypeEnum.IsType,
         FilterSubTypeEnum.IsNotType
     )
+}
+
+open class FilterQuoteTypeBaseType(override val context: Context) : FilterSelectionBaseType(context) {
+
+  var filterQuoteValue: String = ""
+
+  override val selectionList: List<SpannableStringBuilder>
+    get() {
+      val quoteTypeNames = context.resources.getStringArray(array.quoteTypes)
+      return quoteTypeNames.map {
+        SpannableStringBuilder().append(it)
+      }
+    }
   override var data: String = ""
-    get() = filterGroupValue.toString()
+    get() = filterSelectionIndex.toString()
     set(value) {
       field = value
-      filterGroupValue = strToInt(value)
+      filterSelectionIndex = strToInt(value)
+
+      val quoteTypeNames = context.resources.getStringArray(array.quoteTypeNames)
+      filterQuoteValue =
+        if (filterSelectionIndex >= 0 && filterSelectionIndex < quoteTypeNames.size) {
+          quoteTypeNames[filterSelectionIndex]
+        } else {
+          ""
+        }
     }
 
   override val displayData: SpannableStringBuilder
     get() {
-      val group = SharedFilterGroupList.groups.find { group ->
-        group.color == filterGroupValue
+      val quoteTypes = context.resources.getStringArray(array.quoteTypes)
+
+      return if (filterSelectionIndex >= 0 && filterSelectionIndex < quoteTypes.size) {
+        SpannableStringBuilder().append(quoteTypes[filterSelectionIndex])
+      } else {
+        SpannableStringBuilder()
       }
+    }
+}
+
+open class FilterGroupBaseType(override val context: Context) : FilterSelectionBaseType(context) {
+
+  var filterGroupColorValue: Int = 0
+
+  override val selectionList: List<SpannableStringBuilder>
+    get() {
+      return getGroupsMenuList(
+          SharedFilterGroupList.groups,
+          0,
+          context.getString(string.standard_group)
+      ).map {
+        SpannableStringBuilder().append(it)
+      }
+    }
+
+  override var data: String = ""
+    get() = filterSelectionIndex.toString()
+    set(value) {
+      field = value
+      filterSelectionIndex = strToInt(value)
+
+      filterGroupColorValue =
+        if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterGroupList.groups.size) {
+          SharedFilterGroupList.groups[filterSelectionIndex].color
+        } else {
+          0
+        }
+    }
+
+  override val displayData: SpannableStringBuilder
+    get() {
+      val group =
+        if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterGroupList.groups.size) {
+          SharedFilterGroupList.groups[filterSelectionIndex]
+        } else {
+          null
+        }
       return if (group != null) {
         if (isWhiteColor(group.color)) {
           SpannableStringBuilder().backgroundColor(context.getColor(R.color.colorPrimary)) {
@@ -486,8 +558,8 @@ class FilterSymbolNameType(
         !stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
       }
       FilterSubTypeEnum.SimilarTextType -> {
-         // 0.0: identical, 1.0: different
-         getLevenshteinDistance(stockItem.stockDBdata.symbol, data) < similarDistance
+        // 0.0: identical, 1.0: different
+        getLevenshteinDistance(stockItem.stockDBdata.symbol, data) < similarDistance
       }
       FilterSubTypeEnum.NotSimilarTextType -> {
         // 0.0: identical, 1.0: different
@@ -582,9 +654,29 @@ class FilterStockExchangeNameType(
         FilterSubTypeEnum.MatchRegexTextType,
         FilterSubTypeEnum.NotMatchRegexTextType
     )
-  override val typeId = FilterTypeEnum.FilterStockExchangeName
+  override val typeId = FilterTypeEnum.FilterStockExchangeNameType
   override val displayName = context.getString(R.string.filter_stockexchangename_name)
   override val desc = context.getString(R.string.filter_stockexchangename_desc)
+}
+
+class FilterQuoteType(
+  context: Context
+) : FilterQuoteTypeBaseType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    return when (subType) {
+      FilterSubTypeEnum.IsType -> {
+        stockItem.onlineMarketData.quoteType == filterQuoteValue
+      }
+      FilterSubTypeEnum.IsNotType -> {
+        stockItem.onlineMarketData.quoteType != filterQuoteValue
+      }
+      else -> false
+    }
+  }
+
+  override val typeId = FilterTypeEnum.FilterQuoteType
+  override val displayName = context.getString(R.string.filter_quotetype_name)
+  override val desc = context.getString(R.string.filter_quotetype_desc)
 }
 
 class FilterGroupType(
@@ -593,10 +685,10 @@ class FilterGroupType(
   override fun filter(stockItem: StockItem): Boolean {
     return when (subType) {
       FilterSubTypeEnum.IsType -> {
-        stockItem.stockDBdata.groupColor == filterGroupValue
+        stockItem.stockDBdata.groupColor == filterGroupColorValue
       }
       FilterSubTypeEnum.IsNotType -> {
-        stockItem.stockDBdata.groupColor != filterGroupValue
+        stockItem.stockDBdata.groupColor != filterGroupColorValue
       }
       else -> false
     }

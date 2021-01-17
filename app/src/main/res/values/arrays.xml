@@ -48,4 +48,14 @@
     <item>02_StockRoomTileFragment</item>
     <item>07_SummaryGroupFragment</item>
   </string-array>
+  <string-array name="quoteTypeNames" translatable="false">
+    <item>EQUITY</item>
+    <item>ETF</item>
+    <item>OPTION</item>
+  </string-array>
+  <string-array name="quoteTypes">
+    <item>Stock</item>
+    <item>ETF</item>
+    <item>Option</item>
+  </string-array>
 </resources>
