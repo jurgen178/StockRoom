@@ -970,7 +970,7 @@ class FilterPurchasePriceType(
         totalPrice > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        totalPrice < filterValue
+        totalPrice > 0.0 && totalPrice < filterValue
       }
       else -> false
     }
@@ -1055,7 +1055,7 @@ class FilterAssetType(
         asset > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        asset < filterValue
+        asset > 0.0 && asset < filterValue
       }
       FilterSubTypeEnum.IsPresentType -> {
         stockItem.assets.isNotEmpty()
@@ -1119,7 +1119,7 @@ class FilterDividendPercentageType(
         dividendPercentage > filterPercentageValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        dividendPercentage < filterPercentageValue
+        dividendPercentage > 0.0 && dividendPercentage < filterPercentageValue
       }
       else -> false
     }
@@ -1147,7 +1147,7 @@ class FilterDividendPayedType(
         totalDividendPayed > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        totalDividendPayed < filterValue
+        totalDividendPayed > 0.0 && totalDividendPayed < filterValue
       }
       else -> false
     }
@@ -1176,7 +1176,7 @@ class FilterDividendPayedYTDType(
         totalDividendPayedYTD > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        totalDividendPayedYTD < filterValue
+        totalDividendPayedYTD > 0.0 && totalDividendPayedYTD < filterValue
       }
       else -> false
     }
@@ -1199,7 +1199,7 @@ class FilterQuantityType(
         totalQuantity > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        totalQuantity < filterValue
+        totalQuantity > 0.0 && totalQuantity < filterValue
       }
       else -> false
     }
