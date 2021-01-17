@@ -398,7 +398,7 @@ limitations under the License. -->
   <string name="filter_dividendnote_name">Dividendenanmerkung</string>
   <string name="filter_dividendnote_desc"></string>
   <string name="filter_alert_name">Benachrichtigung</string>
-  <string name="filter_alert_desc">Mit diesem Filter wird festgelegt, ob Aktien Benachrichtigungen haben.</string>
+  <string name="filter_alert_desc">Mit diesem Filter wird festgelegt, ob Aktien Benachrichtigungen haben wenn der Aktienpreis überschritten oder unterschritten wird.</string>
   <string name="filter_alertnote_name">Benachrichtigungsanmerkung</string>
   <string name="filter_alertnote_desc"></string>
   <string name="filter_event_name">Ereignis</string>
@@ -417,6 +417,10 @@ limitations under the License. -->
   <string name="filter_assetnote_desc"></string>
   <string name="filter_dividendpercentage_name">Dividende %</string>
   <string name="filter_dividendpercentage_desc"></string>
+  <string name="filter_dividendpayed_name">Ausgezahlte Dividende</string>
+  <string name="filter_dividendpayed_desc"></string>
+  <string name="filter_dividendpayedytd_name">Ausgezahlte Dividende YTD</string>
+  <string name="filter_dividendpayedytd_desc"></string>
   <string name="filter_firstassetsold_name">Früheste Aktien verkauft</string>
   <string name="filter_firstassetsold_desc"></string>
   <string name="filter_firstassetbought_name">Früheste Aktien gekauft</string>

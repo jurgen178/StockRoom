@@ -97,29 +97,29 @@ class DividendTimelineFragment : Fragment() {
       if (dividends != null) {
         val hashMap: HashMap<String, HashMap<String, MutableList<Dividend>>> = hashMapOf()
 
-        dividends.forEach { dividend ->
-          if (dividend.type == DividendType.Received.value && dividend.paydate > 0) {
-
-            val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
-            val yearMonth: YearMonth = YearMonth.from(localDateTime)
-            val dateYM = yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
-            val dateYMlong = context?.getString(
-                R.string.timeline_dividend_headline,
-                localDateTime.format(DateTimeFormatter.ofPattern("MMMM u"))
-            )!!
-
-            if (hashMap[dateYM] == null) {
-              hashMap[dateYM] = hashMapOf()
-            }
-
-            if (hashMap[dateYM]?.get(dateYMlong) == null) {
-              hashMap[dateYM]?.set(dateYMlong, mutableListOf())
-            }
-
-            hashMap[dateYM]?.get(dateYMlong)
-                ?.add(dividend)
-          }
+        dividends.filter { dividend ->
+          dividend.type == DividendType.Received.value && dividend.paydate > 0
         }
+            .forEach { dividend ->
+              val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
+              val yearMonth: YearMonth = YearMonth.from(localDateTime)
+              val dateYM = yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
+              val dateYMlong = context?.getString(
+                  R.string.timeline_dividend_headline,
+                  localDateTime.format(DateTimeFormatter.ofPattern("MMMM u"))
+              )!!
+
+              if (hashMap[dateYM] == null) {
+                hashMap[dateYM] = hashMapOf()
+              }
+
+              if (hashMap[dateYM]?.get(dateYMlong) == null) {
+                hashMap[dateYM]?.set(dateYMlong, mutableListOf())
+              }
+
+              hashMap[dateYM]?.get(dateYMlong)
+                  ?.add(dividend)
+            }
 
         val dividendList: MutableList<DividendTimelineElement> = mutableListOf()
 
@@ -143,13 +143,12 @@ class DividendTimelineFragment : Fragment() {
               val dividendTotal =
                 DecimalFormat(DecimalFormat2Digits).format(
                     dividendlist.sumByDouble { (dividenddate, list) ->
-                      list.sumByDouble { dividend ->
-                        if (dividend.type == DividendType.Received.value) {
-                          dividend.amount
-                        } else {
-                          0.0
-                        }
+                      list.filter { dividend ->
+                        dividend.type == DividendType.Received.value
                       }
+                          .sumByDouble { dividend ->
+                            dividend.amount
+                          }
                     })
 
               // add dividend total to the date header for each item

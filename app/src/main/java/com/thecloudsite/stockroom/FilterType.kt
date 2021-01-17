@@ -57,6 +57,8 @@ enum class FilterTypeEnum {
   FilterAssetType,
   FilterAssetNoteType,
   FilterDividendPercentageType,
+  FilterDividendPayedType,
+  FilterDividendPayedYTDType,
   FilterQuantityType,
   FilterCapitalGainType,
   FilterPostMarketType,
@@ -137,6 +139,8 @@ object FilterFactory {
       FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
       FilterTypeEnum.FilterAssetNoteType -> FilterAssetNoteType(context)
       FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
+      FilterTypeEnum.FilterDividendPayedType -> FilterDividendPayedType(context)
+      FilterTypeEnum.FilterDividendPayedYTDType -> FilterDividendPayedYTDType(context)
       FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
       FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
       FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
@@ -353,7 +357,9 @@ open class FilterSelectionBaseType(open val context: Context) : FilterBaseType()
     )
 }
 
-open class FilterQuoteTypeBaseType(override val context: Context) : FilterSelectionBaseType(context) {
+open class FilterQuoteTypeBaseType(override val context: Context) : FilterSelectionBaseType(
+    context
+) {
 
   var filterQuoteValue: String = ""
 
@@ -461,6 +467,18 @@ open class FilterBooleanBaseType(val context: Context) : FilterBaseType() {
 
   // Boolean uses the subType for the bool content.
   override var data: String = ""
+}
+
+open class FilterDividendBaseType() : FilterDoubleBaseType() {
+
+  var secondsYTD: Long = 0L
+
+  override fun dataReady() {
+    super.dataReady()
+
+    val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0)
+    secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
+  }
 }
 
 //class FilterTestType(override val typeId: FilterTypeEnum) : IFilterType {
@@ -1110,6 +1128,63 @@ class FilterDividendPercentageType(
   override val typeId = FilterTypeEnum.FilterDividendPercentageType
   override val displayName = context.getString(R.string.filter_dividendpercentage_name)
   override val desc = context.getString(R.string.filter_dividendpercentage_desc)
+}
+
+// Dividend Payed
+class FilterDividendPayedType(
+  context: Context
+) : FilterDividendBaseType() {
+  override fun filter(stockItem: StockItem): Boolean {
+    val totalDividendPayed: Double = stockItem.dividends.filter { dividend ->
+      dividend.type == DividendType.Received.value
+    }
+        .sumByDouble { dividend ->
+          dividend.amount
+        }
+
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
+        totalDividendPayed > filterValue
+      }
+      FilterSubTypeEnum.LessThanType -> {
+        totalDividendPayed < filterValue
+      }
+      else -> false
+    }
+  }
+
+  override val typeId = FilterTypeEnum.FilterDividendPayedType
+  override val displayName = context.getString(R.string.filter_dividendpayed_name)
+  override val desc = context.getString(R.string.filter_dividendpayed_desc)
+}
+
+// Dividend Payed YTD
+class FilterDividendPayedYTDType(
+  context: Context
+) : FilterDividendBaseType() {
+  override fun filter(stockItem: StockItem): Boolean {
+    val totalDividendPayedYTD: Double = stockItem.dividends.filter { dividend ->
+      dividend.type == DividendType.Received.value
+          && dividend.paydate >= secondsYTD
+    }
+        .sumByDouble { dividend ->
+          dividend.amount
+        }
+
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
+        totalDividendPayedYTD > filterValue
+      }
+      FilterSubTypeEnum.LessThanType -> {
+        totalDividendPayedYTD < filterValue
+      }
+      else -> false
+    }
+  }
+
+  override val typeId = FilterTypeEnum.FilterDividendPayedYTDType
+  override val displayName = context.getString(R.string.filter_dividendpayedytd_name)
+  override val desc = context.getString(R.string.filter_dividendpayedytd_desc)
 }
 
 // Quantity

@@ -262,14 +262,15 @@ class SummaryGroupAdapter internal constructor(
         asset.quantity < 0.0
       }.size
 
-      stockItem.dividends.forEach { dividend ->
-        if (dividend.type == DividendType.Received.value) {
-          totalDividendPayed += dividend.amount
-          if (dividend.paydate >= secondsYTD) {
-            totalDividendPayedYTD += dividend.amount
-          }
-        }
+      stockItem.dividends.filter { dividend ->
+        dividend.type == DividendType.Received.value
       }
+          .forEach { dividend ->
+            totalDividendPayed += dividend.amount
+            if (dividend.paydate >= secondsYTD) {
+              totalDividendPayedYTD += dividend.amount
+            }
+          }
 
       if (stockItem.stockDBdata.alertAbove > 0.0) {
         totalAlerts++

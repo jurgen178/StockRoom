@@ -110,7 +110,8 @@ class DividendReceivedListAdapter internal constructor(
         // handler for delete all
         holder.bindDelete(current.symbol, null, dividendList, clickListenerDelete)
 
-        holder.binding.textViewDividendReceivedAmount.text = DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
+        holder.binding.textViewDividendReceivedAmount.text =
+          DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
         holder.binding.textViewDividendReceivedDate.text = ""
         holder.binding.textViewDividendReceivedCycle.text = ""
         holder.binding.textViewDividendReceivedNote.text = ""

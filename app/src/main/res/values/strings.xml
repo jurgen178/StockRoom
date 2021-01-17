@@ -399,7 +399,7 @@ limitations under the License. -->
   <string name="filter_dividendnote_name">Dividend note</string>
   <string name="filter_dividendnote_desc"></string>
   <string name="filter_alert_name">Alert</string>
-  <string name="filter_alert_desc">With this Filter you select if stocks have alerts.</string>
+  <string name="filter_alert_desc">With this Filter you select if stocks have alerts if the stock price is above or below.</string>
   <string name="filter_alertnote_name">Alert note</string>
   <string name="filter_alertnote_desc"></string>
   <string name="filter_event_name">Event</string>
@@ -418,6 +418,10 @@ limitations under the License. -->
   <string name="filter_assetnote_desc"></string>
   <string name="filter_dividendpercentage_name">Dividend %</string>
   <string name="filter_dividendpercentage_desc"></string>
+  <string name="filter_dividendpayed_name">Dividend payed</string>
+  <string name="filter_dividendpayed_desc"></string>
+  <string name="filter_dividendpayedytd_name">Dividend payed YTD</string>
+  <string name="filter_dividendpayedytd_desc"></string>
   <string name="filter_firstassetsold_name">First asset sold</string>
   <string name="filter_firstassetsold_desc"></string>
   <string name="filter_firstassetbought_name">First asset bought</string>
