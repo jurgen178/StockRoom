@@ -388,7 +388,7 @@ limitations under the License. -->
   <string name="filter_displayname_name">Anzeigename</string>
   <string name="filter_displayname_desc"></string>
   <string name="filter_marketcap_name">Marktkapitalisierung</string>
-  <string name="filter_marketcap_desc">Der Wert der Marktkapitalisierung ist in Millionen.\nZum Beispiel 40 entspricht 40000000 = 40Mio.</string>
+  <string name="filter_marketcap_desc">Der Wert der Marktkapitalisierung ist in Millionen.\nZum Beispiel 42 entspricht 42000000 = 42Mio.</string>
   <string name="filter_quotetype_name">Wertpapiertyp</string>
   <string name="filter_quotetype_desc"></string>
   <string name="filter_stockexchangename_name">Börsenname</string>

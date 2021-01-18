@@ -389,7 +389,7 @@ limitations under the License. -->
   <string name="filter_displayname_name">Display name</string>
   <string name="filter_displayname_desc"></string>
   <string name="filter_marketcap_name">Market Capitalization</string>
-  <string name="filter_marketcap_desc">Market Capitalization is in Millions.\nFor example 40 is 40000000 = 40M Market Cap.</string>
+  <string name="filter_marketcap_desc">Market Capitalization is in Millions.\nFor example 42 is 42000000 = 42M Market Cap.</string>
   <string name="filter_quotetype_name">Quote type</string>
   <string name="filter_quotetype_desc"></string>
   <string name="filter_stockexchangename_name">Stock exchange name</string>
