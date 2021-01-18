@@ -161,6 +161,65 @@ fun enNumberStrToDouble(str: String): Double {
   return value
 }
 
+// first: abbr
+// second: add optional (abbr)
+fun formatInt(
+  value: Long,
+  context: Context
+): Pair<SpannableStringBuilder, String> {
+  return when {
+    value >= 1000000000000L -> {
+      val formattedStr =
+        "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
+          context.getString(
+              R.string.trillion_abbr
+          )
+        }"
+
+      Pair(SpannableStringBuilder().bold {
+        append(formattedStr)
+      }, " ($formattedStr)")
+    }
+    value >= 1000000000L -> {
+      val formattedStr =
+        "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
+          context.getString(
+              R.string.billion_abbr
+          )
+        }"
+
+      Pair(SpannableStringBuilder().bold {
+        append(formattedStr)
+      }, " ($formattedStr)")
+    }
+    value >= 1000000L -> {
+      val formattedStr =
+        "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
+          context.getString(
+              R.string.million_abbr
+          )
+        }"
+
+      Pair(SpannableStringBuilder().bold {
+        append(formattedStr)
+      }, " ($formattedStr)")
+    }
+    value == Long.MIN_VALUE -> {
+      // requested value is not in the JSON data
+      Pair(
+          SpannableStringBuilder().append(
+              context.getString(R.string.onlinedata_not_applicable)
+          ), ""
+      )
+    }
+    else -> {
+      Pair(SpannableStringBuilder().bold {
+        append(DecimalFormat(DecimalFormat0To2Digits).format(value))
+      }, "")
+    }
+  }
+}
+
 fun Resources.getRawTextFile(@RawRes id: Int) =
   openRawResource(id).bufferedReader()
       .use { it.readText() }

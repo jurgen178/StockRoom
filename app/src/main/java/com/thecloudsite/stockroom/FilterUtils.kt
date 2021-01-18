@@ -78,6 +78,7 @@ fun getLevenshteinDistance(
 fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.GreaterThanType.value = context.getString(R.string.filter_GreaterThanType)
   FilterSubTypeEnum.LessThanType.value = context.getString(R.string.filter_LessThanType)
+  FilterSubTypeEnum.EqualType.value = context.getString(R.string.filter_EqualType)
   FilterSubTypeEnum.BeforeDateType.value = context.getString(R.string.filter_BeforeDateType)
   FilterSubTypeEnum.AfterDateType.value = context.getString(R.string.filter_AfterDateType)
   FilterSubTypeEnum.ContainsTextType.value = context.getString(R.string.filter_ContainsTextType)

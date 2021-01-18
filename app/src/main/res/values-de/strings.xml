@@ -387,6 +387,8 @@ limitations under the License. -->
   <string name="filter_symbolname_desc"></string>
   <string name="filter_displayname_name">Anzeigename</string>
   <string name="filter_displayname_desc"></string>
+  <string name="filter_marketcap_name">Marktkapitalisierung</string>
+  <string name="filter_marketcap_desc">Der Wert der Marktkapitalisierung ist in Millionen.\nZum Beispiel 40 entspricht 40000000 = 40Mio.</string>
   <string name="filter_quotetype_name">Wertpapiertyp</string>
   <string name="filter_quotetype_desc"></string>
   <string name="filter_stockexchangename_name">Börsenname</string>
@@ -452,6 +454,7 @@ limitations under the License. -->
   <string name="load_filter_error">Der Filter konnte nicht geladen werden:\n%1$s</string>
   <string name="filter_GreaterThanType">größer als</string>
   <string name="filter_LessThanType">kleiner als</string>
+  <string name="filter_EqualType">ist gleich</string>
   <string name="filter_BeforeDateType">bevor Datum</string>
   <string name="filter_AfterDateType">nach Datum</string>
   <string name="filter_ContainsTextType">enthält</string>

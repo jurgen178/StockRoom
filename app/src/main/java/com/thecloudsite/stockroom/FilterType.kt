@@ -25,6 +25,7 @@ import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.formatInt
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getGroupsMenuList
@@ -44,6 +45,7 @@ enum class FilterTypeEnum {
   FilterDisplayNameType,
   FilterQuoteType,
   FilterStockExchangeNameType,
+  FilterMarketCapType,
   FilterGroupType,
   FilterNoteType,
   FilterDividendNoteType,
@@ -87,6 +89,7 @@ enum class FilterSubTypeEnum(var value: String) {
   NoType(""),
   GreaterThanType(""),
   LessThanType(""),
+  EqualType(""),
   BeforeDateType(""),
   AfterDateType(""),
   ContainsTextType(""),
@@ -126,6 +129,7 @@ object FilterFactory {
       FilterTypeEnum.FilterPercentageChangeType -> FilterPercentageChangeType(context)
       FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
       FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
+      FilterTypeEnum.FilterMarketCapType -> FilterMarketCapType(context)
       FilterTypeEnum.FilterQuoteType -> FilterQuoteType(context)
       FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
       FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
@@ -310,7 +314,8 @@ open class FilterIntBaseType : FilterBaseType() {
   override val subTypeList =
     listOf(
         FilterSubTypeEnum.GreaterThanType,
-        FilterSubTypeEnum.LessThanType
+        FilterSubTypeEnum.LessThanType,
+        FilterSubTypeEnum.EqualType
     )
   override var data: String = ""
     get() = filterValue.toString()
@@ -675,6 +680,41 @@ class FilterStockExchangeNameType(
   override val typeId = FilterTypeEnum.FilterStockExchangeNameType
   override val displayName = context.getString(R.string.filter_stockexchangename_name)
   override val desc = context.getString(R.string.filter_stockexchangename_desc)
+}
+
+// Market Cap
+class FilterMarketCapType(
+  val context: Context
+) : FilterIntBaseType() {
+  override fun filter(stockItem: StockItem): Boolean {
+
+    // MarketCap is in Millions
+    val filterValueInM: Long = filterValue * 1000000L
+
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
+        stockItem.onlineMarketData.marketCap > filterValueInM
+      }
+      FilterSubTypeEnum.LessThanType -> {
+        stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < filterValueInM
+      }
+      else -> false
+    }
+  }
+
+  override val subTypeList =
+    listOf(
+        FilterSubTypeEnum.GreaterThanType,
+        FilterSubTypeEnum.LessThanType
+    )
+
+  override val typeId = FilterTypeEnum.FilterMarketCapType
+  override val displayName = context.getString(R.string.filter_marketcap_name)
+  override val desc = context.getString(R.string.filter_marketcap_desc)
+  override val displayData: SpannableStringBuilder
+    get() = SpannableStringBuilder()
+        .append(data)
+        .append(formatInt(filterValue * 1000000L, context).second)
 }
 
 class FilterQuoteType(
@@ -1200,6 +1240,9 @@ class FilterQuantityType(
       }
       FilterSubTypeEnum.LessThanType -> {
         totalQuantity > 0.0 && totalQuantity < filterValue
+      }
+      FilterSubTypeEnum.EqualType -> {
+        totalQuantity.toInt() == filterValue
       }
       else -> false
     }

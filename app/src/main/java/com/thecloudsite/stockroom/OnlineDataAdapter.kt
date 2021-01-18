@@ -40,6 +40,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.enNumberStrToDouble
+import com.thecloudsite.stockroom.utils.formatInt
 import com.thecloudsite.stockroom.utils.isOnline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -58,9 +59,6 @@ data class OnlineData(
 class OnlineDataAdapter internal constructor(
   val context: Context
 ) : RecyclerView.Adapter<OnlineDataAdapter.OnlineDataViewHolder>() {
-
-  // requested value is not in the JSON data
-  private var stringNA = context.getString(R.string.onlinedata_not_applicable)
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
@@ -288,58 +286,14 @@ class OnlineDataAdapter internal constructor(
   // first: abbr
   // second: add optional (abbr)
   private fun formatInt(value: Long): Pair<SpannableStringBuilder, String> {
-    return when {
-      value >= 1000000000000L -> {
-        val formattedStr =
-          "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
-            context.getString(
-                R.string.trillion_abbr
-            )
-          }"
-
-        Pair(SpannableStringBuilder().bold {
-          append(formattedStr)
-        }, " ($formattedStr)")
-      }
-      value >= 1000000000L -> {
-        val formattedStr =
-          "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
-            context.getString(
-                R.string.billion_abbr
-            )
-          }"
-
-        Pair(SpannableStringBuilder().bold {
-          append(formattedStr)
-        }, " ($formattedStr)")
-      }
-      value >= 1000000L -> {
-        val formattedStr =
-          "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
-            context.getString(
-                R.string.million_abbr
-            )
-          }"
-
-        Pair(SpannableStringBuilder().bold {
-          append(formattedStr)
-        }, " ($formattedStr)")
-      }
-      value == Long.MIN_VALUE -> {
-        Pair(SpannableStringBuilder().append(stringNA), "")
-      }
-      else -> {
-        Pair(SpannableStringBuilder().bold {
-          append(DecimalFormat(DecimalFormat0To2Digits).format(value))
-        }, "")
-      }
-    }
+    return formatInt(value, context)
   }
 
   private fun formatDoubleToSpannableString(value: Double): SpannableStringBuilder {
     // only negative values in red
     if (value.isNaN()) {
-      return SpannableStringBuilder().append(stringNA)
+      // requested value is not in the JSON data
+      return SpannableStringBuilder().append(context.getString(R.string.onlinedata_not_applicable))
     }
     val str = DecimalFormat(DecimalFormat2Digits).format(value)
     return if (value < 0.0) {
@@ -358,7 +312,8 @@ class OnlineDataAdapter internal constructor(
     value: Double
   ): SpannableStringBuilder {
     return if (value.isNaN()) {
-      SpannableStringBuilder().append(stringNA)
+      // requested value is not in the JSON data
+      SpannableStringBuilder().append(context.getString(R.string.onlinedata_not_applicable))
     } else {
       SpannableStringBuilder().bold {
         append(DecimalFormat(formatStr).format(value))
