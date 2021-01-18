@@ -64,10 +64,8 @@ enum class FilterTypeEnum {
   FilterQuantityType,
   FilterCapitalGainType,
   FilterPostMarketType,
-  FilterFirstAssetSoldType,
-  FilterFirstAssetBoughtType,
-  FilterLastAssetSoldType,
-  FilterLastAssetBoughtType,
+  FilterAssetSoldDateType,
+  FilterAssetBoughtDateType,
   FilterLongTermType,
 }
 
@@ -150,10 +148,8 @@ object FilterFactory {
       FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
       FilterTypeEnum.FilterAlertType -> FilterAlertType(context)
       FilterTypeEnum.FilterEventType -> FilterEventType(context)
-      FilterTypeEnum.FilterFirstAssetSoldType -> FilterFirstAssetSoldType(context)
-      FilterTypeEnum.FilterFirstAssetBoughtType -> FilterFirstAssetBoughtType(context)
-      FilterTypeEnum.FilterLastAssetSoldType -> FilterLastAssetSoldType(context)
-      FilterTypeEnum.FilterLastAssetBoughtType -> FilterLastAssetBoughtType(context)
+      FilterTypeEnum.FilterAssetSoldDateType -> FilterAssetSoldDateType(context)
+      FilterTypeEnum.FilterAssetBoughtDateType -> FilterAssetBoughtDateType(context)
       FilterTypeEnum.FilterLongTermType -> FilterLongTermType(context)
     }
 
@@ -1360,7 +1356,7 @@ class FilterEventType(
   override val desc = context.getString(R.string.filter_event_desc)
 }
 
-class FilterFirstAssetSoldType(
+class FilterAssetSoldDateType(
   context: Context
 ) : FilterDateBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
@@ -1369,78 +1365,19 @@ class FilterFirstAssetSoldType(
     }
 
     return if (assetSold.isNotEmpty()) {
-      val firstAssetDate = assetSold.minOf { asset ->
-        asset.date
-      }
 
       when (subType) {
         FilterSubTypeEnum.BeforeDateType -> {
-          firstAssetDate > 0 && firstAssetDate < filterDateValue
+          val firstAssetDate = assetSold.minOf { asset ->
+            asset.date
+          }
+          // firstAssetDate > 0 && firstAssetDate < filterDateValue
+          firstAssetDate in 1 until filterDateValue
         }
         FilterSubTypeEnum.AfterDateType -> {
-          firstAssetDate > filterDateValue
-        }
-        else -> false
-      }
-    } else {
-      false
-    }
-  }
-
-  override val typeId = FilterTypeEnum.FilterFirstAssetSoldType
-  override val displayName = context.getString(R.string.filter_firstassetsold_name)
-  override val desc = context.getString(R.string.filter_firstassetsold_desc)
-}
-
-class FilterFirstAssetBoughtType(
-  context: Context
-) : FilterDateBaseType() {
-  override fun filter(stockItem: StockItem): Boolean {
-    val assetBought = stockItem.assets.filter { asset ->
-      asset.quantity > 0.0
-    }
-
-    return if (assetBought.isNotEmpty()) {
-      val firstAssetDate = assetBought.minOf { asset ->
-        asset.date
-      }
-
-      when (subType) {
-        FilterSubTypeEnum.BeforeDateType -> {
-          firstAssetDate > 0 && firstAssetDate < filterDateValue
-        }
-        FilterSubTypeEnum.AfterDateType -> {
-          firstAssetDate > filterDateValue
-        }
-        else -> false
-      }
-    } else {
-      false
-    }
-  }
-
-  override val typeId = FilterTypeEnum.FilterFirstAssetBoughtType
-  override val displayName = context.getString(R.string.filter_firstassetbought_name)
-  override val desc = context.getString(R.string.filter_firstassetbought_desc)
-}
-
-class FilterLastAssetSoldType(
-  context: Context
-) : FilterDateBaseType() {
-  override fun filter(stockItem: StockItem): Boolean {
-    val assetSold = stockItem.assets.filter { asset ->
-      asset.quantity < 0.0
-    }
-
-    return if (assetSold.isNotEmpty()) {
-      val lastAssetDate = assetSold.maxOf { asset ->
-        asset.date
-      }
-      when (subType) {
-        FilterSubTypeEnum.BeforeDateType -> {
-          lastAssetDate > 0 && lastAssetDate < filterDateValue
-        }
-        FilterSubTypeEnum.AfterDateType -> {
+          val lastAssetDate = assetSold.maxOf { asset ->
+            asset.date
+          }
           lastAssetDate > filterDateValue
         }
         else -> false
@@ -1450,12 +1387,12 @@ class FilterLastAssetSoldType(
     }
   }
 
-  override val typeId = FilterTypeEnum.FilterLastAssetSoldType
-  override val displayName = context.getString(R.string.filter_lastassetsold_name)
-  override val desc = context.getString(R.string.filter_lastassetsold_desc)
+  override val typeId = FilterTypeEnum.FilterAssetSoldDateType
+  override val displayName = context.getString(R.string.filter_assetsolddate_name)
+  override val desc = context.getString(R.string.filter_assetsolddate_desc)
 }
 
-class FilterLastAssetBoughtType(
+class FilterAssetBoughtDateType(
   context: Context
 ) : FilterDateBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
@@ -1464,14 +1401,19 @@ class FilterLastAssetBoughtType(
     }
 
     return if (assetBought.isNotEmpty()) {
-      val lastAssetDate = assetBought.maxOf { asset ->
-        asset.date
-      }
+
       when (subType) {
         FilterSubTypeEnum.BeforeDateType -> {
-          lastAssetDate > 0 && lastAssetDate < filterDateValue
+          val firstAssetDate = assetBought.minOf { asset ->
+            asset.date
+          }
+          // firstAssetDate > 0 && firstAssetDate < filterDateValue
+          firstAssetDate in 1 until filterDateValue
         }
         FilterSubTypeEnum.AfterDateType -> {
+          val lastAssetDate = assetBought.maxOf { asset ->
+            asset.date
+          }
           lastAssetDate > filterDateValue
         }
         else -> false
@@ -1481,9 +1423,9 @@ class FilterLastAssetBoughtType(
     }
   }
 
-  override val typeId = FilterTypeEnum.FilterLastAssetBoughtType
-  override val displayName = context.getString(R.string.filter_lastassetbought_name)
-  override val desc = context.getString(R.string.filter_lastassetbought_desc)
+  override val typeId = FilterTypeEnum.FilterAssetBoughtDateType
+  override val displayName = context.getString(R.string.filter_assetboughtdate_name)
+  override val desc = context.getString(R.string.filter_assetboughtdate_desc)
 }
 
 // Stocks are at least one year old.
