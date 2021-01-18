@@ -1375,7 +1375,7 @@ class FilterFirstAssetSoldType(
 
       when (subType) {
         FilterSubTypeEnum.BeforeDateType -> {
-          firstAssetDate < filterDateValue
+          firstAssetDate > 0 && firstAssetDate < filterDateValue
         }
         FilterSubTypeEnum.AfterDateType -> {
           firstAssetDate > filterDateValue
@@ -1407,7 +1407,7 @@ class FilterFirstAssetBoughtType(
 
       when (subType) {
         FilterSubTypeEnum.BeforeDateType -> {
-          firstAssetDate < filterDateValue
+          firstAssetDate > 0 && firstAssetDate < filterDateValue
         }
         FilterSubTypeEnum.AfterDateType -> {
           firstAssetDate > filterDateValue
@@ -1438,7 +1438,7 @@ class FilterLastAssetSoldType(
       }
       when (subType) {
         FilterSubTypeEnum.BeforeDateType -> {
-          lastAssetDate < filterDateValue
+          lastAssetDate > 0 && lastAssetDate < filterDateValue
         }
         FilterSubTypeEnum.AfterDateType -> {
           lastAssetDate > filterDateValue
@@ -1469,7 +1469,7 @@ class FilterLastAssetBoughtType(
       }
       when (subType) {
         FilterSubTypeEnum.BeforeDateType -> {
-          lastAssetDate < filterDateValue
+          lastAssetDate > 0 && lastAssetDate < filterDateValue
         }
         FilterSubTypeEnum.AfterDateType -> {
           lastAssetDate > filterDateValue
