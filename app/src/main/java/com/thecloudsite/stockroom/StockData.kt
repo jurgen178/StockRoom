@@ -367,11 +367,15 @@ Now, as @Yago notes, you can append chart/ and you can also append options/
  */
 
 fun getName(onlineMarketData: OnlineMarketData): String {
-  return if (onlineMarketData.name1.isNotEmpty()) {
+  return (if (onlineMarketData.name1.isNotEmpty()) {
     onlineMarketData.name1
   } else {
     onlineMarketData.name2
-  }
+  })
+      .replace("&amp;", "&")
+      .replace("&quot;", "'")
+      .replace("&lt;", "<")
+      .replace("&gt;", ">")
 }
 
 // Data Model
