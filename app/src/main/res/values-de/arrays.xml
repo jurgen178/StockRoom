@@ -52,5 +52,8 @@
     <item>Aktie</item>
     <item>ETF</item>
     <item>Option</item>
+    <item>Index</item>
+    <item>Bond</item>
+    <item>Future</item>
   </string-array>
 </resources>
