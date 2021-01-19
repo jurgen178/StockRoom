@@ -753,6 +753,10 @@ class StockDataFragment : Fragment() {
               linkType = LinkType.WebsiteType,
               link = "https://otcmarkets.com/stock/$symbol/overview"
           ),
+          "Seeking Alpha" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
+              link = "https://seekingalpha.com/symbol/$symbol"
+          ),
           "TD Ameritrade" to LinkListEntry(
               linkType = LinkType.WebsiteType,
               link = "https://research.tdameritrade.com/grid/public/research/stocks/calendar?symbol=$symbol"
