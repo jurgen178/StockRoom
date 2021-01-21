@@ -727,6 +727,10 @@ class StockDataFragment : Fragment() {
           ),
           "ETF.COM" to LinkListEntry(
               linkType = LinkType.WebsiteType,
+              link = "https://www.etf.com/stock/$symbol"
+          ),
+          "ETF.COM (ETF)" to LinkListEntry(
+              linkType = LinkType.WebsiteType,
               link = "https://www.etf.com/$symbol"
           ),
           "Fidelity" to LinkListEntry(
