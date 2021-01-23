@@ -23,7 +23,6 @@ limitations under the License. -->
   </style>
 
   <style name="stock_item_text">
-    <item name="android:layout_width">match_parent</item>
     <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
   </style>
 

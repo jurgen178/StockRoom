@@ -280,7 +280,6 @@ limitations under the License. -->
   <string name="onlinedata_priceToBook">Preis/Buchwert</string>
   <string name="onlinedata_market">Markt</string>
   <string name="onlinedata_fullExchangeName">Börsenname</string>
-  <string name="onlinedata_financialCurrency">Währung</string>
   <string name="onlinedata_marketState">Marktstatus</string>
   <string name="onlinedata_not_applicable">n.v.</string>
   <string name="json_default_filename">Aktien %1$s</string>
@@ -487,4 +486,10 @@ limitations under the License. -->
   <string name="table_column_Assets">Aktienbestände</string>
   <string name="table_column_Events">Ereignisse</string>
   <string name="table_column_Note">Anmerkung</string>
+  <string name="marketStatePRE">Vorbörse</string>
+  <string name="marketStatePREPRE">Bevor Vorbörse</string>
+  <string name="marketStateREGULAR">Normal</string>
+  <string name="marketStatePOST">Nachbörse</string>
+  <string name="marketStatePOSTPOST">Nach Nachbörse</string>
+  <string name="marketStateCLOSED">Geschlossen</string>
 </resources>

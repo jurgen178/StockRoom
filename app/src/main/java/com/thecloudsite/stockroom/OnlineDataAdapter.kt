@@ -479,7 +479,11 @@ class OnlineDataAdapter internal constructor(
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_market),
-            text = SpannableStringBuilder().bold { append(onlineMarketData.market) }
+            text = SpannableStringBuilder().bold {
+              append(
+                  onlineMarketData.market.replace('_', ' ')
+              )
+            }
         )
     )
     data.add(
@@ -490,14 +494,12 @@ class OnlineDataAdapter internal constructor(
     )
     data.add(
         OnlineData(
-            desc = context.getString(R.string.onlinedata_financialCurrency),
-            text = SpannableStringBuilder().bold { append(onlineMarketData.financialCurrency) }
-        )
-    )
-    data.add(
-        OnlineData(
             desc = context.getString(R.string.onlinedata_marketState),
-            text = SpannableStringBuilder().bold { append(onlineMarketData.marketState) }
+            text = SpannableStringBuilder().bold {
+              append(
+                  getMarketText(context, onlineMarketData.marketState)
+              )
+            }
         )
     )
 

@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.content.Context
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.squareup.moshi.Json
@@ -424,7 +425,7 @@ data class OnlineMarketData(
 
   var market: String = "",
   var fullExchangeName: String = "",
-  var financialCurrency: String = "",
+  var currency: String = "",
 
   var quoteType: String = "",
   var quoteSourceName: String = "",
@@ -460,6 +461,35 @@ enum class MarketState(val value: String) {
   NO_NETWORK("NO_NETWORK"),
   NO_SYMBOL("NO_SYMBOL"),
   UNKNOWN("")
+}
+
+fun getMarketText(
+  context: Context,
+  marketStateStr: String
+): String {
+  return when (marketStateStr) {
+    MarketState.PRE.value -> {
+      context.getString(R.string.marketStatePRE)
+    }
+    MarketState.PREPRE.value -> {
+      context.getString(R.string.marketStatePREPRE)
+    }
+    MarketState.REGULAR.value -> {
+      context.getString(R.string.marketStateREGULAR)
+    }
+    MarketState.POST.value -> {
+      context.getString(R.string.marketStatePOST)
+    }
+    MarketState.POSTPOST.value -> {
+      context.getString(R.string.marketStatePOSTPOST)
+    }
+    MarketState.CLOSED.value -> {
+      context.getString(R.string.marketStateCLOSED)
+    }
+    else -> {
+      marketStateStr
+    }
+  }
 }
 
 fun <K> Enum.Companion.toString(marketState: K): String {

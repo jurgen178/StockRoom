@@ -281,7 +281,6 @@ limitations under the License. -->
   <string name="onlinedata_priceToBook">Price/Book</string>
   <string name="onlinedata_market">Market</string>
   <string name="onlinedata_fullExchangeName">Exchange name</string>
-  <string name="onlinedata_financialCurrency">Currency</string>
   <string name="onlinedata_marketState">Market state</string>
   <string name="onlinedata_not_applicable">n/a</string>
   <string name="json_default_filename">Portfolio %1$s</string>
@@ -488,4 +487,10 @@ limitations under the License. -->
   <string name="table_column_Assets">Assets</string>
   <string name="table_column_Events">Events</string>
   <string name="table_column_Note">Note</string>
+  <string name="marketStatePRE">Pre-Market</string>
+  <string name="marketStatePREPRE">Before Pre-Market</string>
+  <string name="marketStateREGULAR">Regular</string>
+  <string name="marketStatePOST">Post-Market</string>
+  <string name="marketStatePOSTPOST">After Post-Market</string>
+  <string name="marketStateCLOSED">Closed</string>
 </resources>

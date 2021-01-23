@@ -30,6 +30,7 @@
             android:id="@+id/textViewSymbol"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="0.0"
             style="@style/stock_item_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -40,6 +41,7 @@
             android:id="@+id/textViewName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guidelineVert"
             app:layout_constraintTop_toBottomOf="@+id/textViewSymbol"
@@ -47,16 +49,27 @@
             />
 
         <TextView
-            android:id="@+id/textViewMarketPrice"
-            android:layout_width="0dp"
+           android:id="@+id/textViewMarketPrice"
+            android:layout_width="wrap_content"
             style="@style/stock_item_text"
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintVertical_bias="0.0"
-            android:gravity="end"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textViewMarketCurrency"
             app:layout_constraintStart_toEndOf="@+id/guidelineVert"
             app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/textViewMarketCurrency"
+            android:layout_width="wrap_content"
+            android:textSize="13sp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="1.0"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintTop_toTopOf="@id/textViewMarketPrice"
+            app:layout_constraintBottom_toBottomOf="@id/textViewMarketPrice"
+            app:layout_constraintEnd_toEndOf="parent"
             />
 
         <TextView
@@ -64,10 +77,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="13sp"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@id/guidelineVert"
             app:layout_constraintTop_toBottomOf="@+id/textViewMarketPrice"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             />
 
         <TextView
@@ -75,7 +88,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
-            android:gravity="end"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guidelineVert"
@@ -87,6 +99,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="13sp"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guidelineVert"
@@ -107,8 +120,8 @@
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/guidelineVert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:barrierDirection="start"
             />
 

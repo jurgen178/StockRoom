@@ -1921,6 +1921,7 @@ class StockDataFragment : Fragment() {
   private fun updateHeader(onlineMarketData: OnlineMarketData?) {
     var name: String = ""
     val marketPrice = SpannableStringBuilder()
+    val marketCurrency = SpannableStringBuilder()
     val marketChange = SpannableStringBuilder()
 
     if (onlineMarketData != null) {
@@ -1937,18 +1938,29 @@ class StockDataFragment : Fragment() {
           )
       ) { append("${marketValues.second} ${marketValues.third}") }
 
+      // Currency
+      val currency = onlineMarketData.currency
+      val marketCurrencyValue = if (currency.isNotEmpty()) {
+        " $currency"
+      } else {
+        ""
+      }
+
       if (onlineMarketData.postMarketData) {
         marketPrice.italic { append(marketValues.first) }
         marketChange.italic { append(marketChangeStr) }
+        marketCurrency.italic { append(marketCurrencyValue) }
       } else {
         marketPrice.append(marketValues.first)
         marketChange.append(marketChangeStr)
+        marketCurrency.append(marketCurrencyValue)
       }
     }
 
     binding.textViewName.text = name
     binding.textViewMarketPrice.text = marketPrice
     binding.textViewChange.text = marketChange
+    binding.textViewMarketCurrency.text = marketCurrency
 
     val quoteSourceName = onlineMarketData?.quoteSourceName ?: ""
     binding.textViewMarketPriceDelayed.text = when (quoteSourceName) {
