@@ -476,6 +476,7 @@ limitations under the License. -->
   <string name="table_column_Name">Name</string>
   <string name="table_column_MarketPrice">Marktpreis</string>
   <string name="table_column_MarketChange">Marktpreisänderung</string>
+  <string name="table_column_MarketCurrency">Währung</string>
   <string name="table_column_Quantity">Anzahl</string>
   <string name="table_column_Purchaseprice">Kaufpreis</string>
   <string name="table_column_Asset">Bestand</string>

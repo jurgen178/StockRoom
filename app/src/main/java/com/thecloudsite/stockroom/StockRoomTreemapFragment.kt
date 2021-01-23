@@ -149,7 +149,10 @@ class StockRoomTreemapFragment : Fragment() {
                 AndroidMapItem(
                     assets,
                     stockItem.stockDBdata.symbol,
-                    DecimalFormat(DecimalFormat2Digits).format(assets),
+                    DecimalFormat(DecimalFormat2Digits).format(assets)
+                    // add currency?
+                    // + getCurrency(stockItem.onlineMarketData)
+                    ,
                     assetChange,
                     color
                 )

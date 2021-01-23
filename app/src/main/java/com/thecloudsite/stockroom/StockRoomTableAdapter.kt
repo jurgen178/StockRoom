@@ -106,6 +106,7 @@ class StockRoomTableAdapter internal constructor(
       }
       holder.binding.tableDataMarketPrice.gravity = alignmentNumbers
       holder.binding.tableDataMarketChange.gravity = alignmentNumbers
+      holder.binding.tableDataMarketCurrency.gravity = alignmentNumbers
       holder.binding.tableDataQuantity.gravity = alignmentNumbers
       holder.binding.tableDataPurchaseprice.gravity = alignmentNumbers
       holder.binding.tableDataAsset.gravity = alignmentNumbers
@@ -122,6 +123,7 @@ class StockRoomTableAdapter internal constructor(
       holder.binding.tableDataSymbol.gravity = alignmentText
       holder.binding.tableDataName.gravity = alignmentText
       holder.binding.tableDataAssets.gravity = alignmentText
+      holder.binding.tableDataMarketCurrency.gravity = alignmentText
       holder.binding.tableDataEvents.gravity = alignmentText
       holder.binding.tableDataNote.gravity = alignmentText
 
@@ -132,6 +134,7 @@ class StockRoomTableAdapter internal constructor(
         setBackgroundColor(holder.binding.tableDataGroup, Color.TRANSPARENT)
         holder.binding.tableDataMarketPrice.setBackgroundColor(Color.LTGRAY)
         holder.binding.tableDataMarketChange.setBackgroundColor(Color.LTGRAY)
+        holder.binding.tableDataMarketCurrency.setBackgroundColor(Color.LTGRAY)
 
         holder.binding.tableDataSymbol.text =
           getHeaderStr(context.getString(R.string.table_column_symbol))
@@ -141,6 +144,8 @@ class StockRoomTableAdapter internal constructor(
           getHeaderStr(context.getString(R.string.table_column_MarketPrice))
         holder.binding.tableDataMarketChange.text =
           getHeaderStr(context.getString(R.string.table_column_MarketChange))
+        holder.binding.tableDataMarketCurrency.text =
+          getHeaderStr(context.getString(R.string.table_column_MarketCurrency))
         holder.binding.tableDataQuantity.text =
           getHeaderStr(context.getString(R.string.table_column_Quantity))
         holder.binding.tableDataPurchaseprice.text =
@@ -176,6 +181,7 @@ class StockRoomTableAdapter internal constructor(
 
         holder.binding.tableDataMarketPrice.setBackgroundColor(backgroundColor)
         holder.binding.tableDataMarketChange.setBackgroundColor(backgroundColor)
+        holder.binding.tableDataMarketCurrency.setBackgroundColor(backgroundColor)
 
         holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
         holder.binding.tableDataName.text = getName(current.onlineMarketData)
@@ -214,6 +220,7 @@ class StockRoomTableAdapter internal constructor(
               false
           )
         holder.binding.tableDataAssetChange.text = assetChange.second
+        holder.binding.tableDataMarketCurrency.text = getCurrency(current.onlineMarketData)
 
         if (current.onlineMarketData.marketPrice > 0.0) {
 
