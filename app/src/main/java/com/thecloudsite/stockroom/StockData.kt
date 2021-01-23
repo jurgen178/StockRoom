@@ -379,6 +379,23 @@ fun getName(onlineMarketData: OnlineMarketData): String {
       .replace("&gt;", ">")
 }
 
+fun getCurrency(onlineMarketData: OnlineMarketData): String {
+
+  // Yahoo lists a currency for index.
+  if (onlineMarketData.symbol.startsWith("^")
+      || onlineMarketData.symbol.endsWith("=f", true)
+  ) {
+    return ""
+  }
+
+  val currency = onlineMarketData.currency
+  if (currency.isNotEmpty()) {
+    return " $currency"
+  }
+
+  return ""
+}
+
 // Data Model
 @JsonClass(generateAdapter = true)
 data class OnlineMarketData(

@@ -21,6 +21,7 @@ import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.databinding.StockroomTileItemBinding
@@ -109,7 +110,12 @@ class StockRoomTileAdapter internal constructor(
 //          it.quantity * current.onlineMarketData.marketPrice
 //        }
 
-        holder.binding.stockRoomTileItemCapital.text = DecimalFormat(DecimalFormat2Digits).format(capital)
+        val capitalStr = SpannableStringBuilder().bold {
+          append(DecimalFormat(DecimalFormat2Digits).format(capital))
+        }
+        capitalStr.append(getCurrency(current.onlineMarketData))
+
+        holder.binding.stockRoomTileItemCapital.text = capitalStr
       } else {
         // Don't own any quantity of this stock.
         holder.binding.stockRoomTileItemCapital.text = ""
@@ -132,7 +138,9 @@ class StockRoomTileAdapter internal constructor(
 
       // Show asset instead of capital.
       if (asset > 0.0) {
-        holder.binding.stockRoomTileItemCapital.text = DecimalFormat(DecimalFormat2Digits).format(asset)
+        holder.binding.stockRoomTileItemCapital.text = SpannableStringBuilder().bold {
+          append(DecimalFormat(DecimalFormat2Digits).format(asset))
+        }
       } else {
         holder.binding.stockRoomTileItemCapital.text = ""
       }

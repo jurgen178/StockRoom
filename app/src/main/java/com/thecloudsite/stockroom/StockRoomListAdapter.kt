@@ -213,6 +213,7 @@ class StockRoomListAdapter internal constructor(
 
           assets.append(" = ")
           assets.bold { append(DecimalFormat(DecimalFormat2Digits).format(capital)) }
+          assets.append(getCurrency(current.onlineMarketData))
         }
       }
 

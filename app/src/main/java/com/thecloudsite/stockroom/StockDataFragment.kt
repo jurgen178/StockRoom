@@ -1938,13 +1938,7 @@ class StockDataFragment : Fragment() {
           )
       ) { append("${marketValues.second} ${marketValues.third}") }
 
-      // Currency
-      val currency = onlineMarketData.currency
-      val marketCurrencyValue = if (currency.isNotEmpty()) {
-        " $currency"
-      } else {
-        ""
-      }
+      val marketCurrencyValue = getCurrency(onlineMarketData)
 
       if (onlineMarketData.postMarketData) {
         marketPrice.italic { append(marketValues.first) }
