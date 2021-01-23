@@ -27,6 +27,7 @@ import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.italic
@@ -461,6 +462,13 @@ class MainActivity : AppCompatActivity() {
 //    val menuFilterItem = menu.findItem(R.id.menu_filter)
 //    menuFilterItem.title = SpannableStringBuilder()
 //        .bold { append(getString(R.string.menu_filter)) }
+
+    // long click on sync menu
+//    val menuItemSync = menu.findItem(R.id.menu_sync)
+//    menuItemSync.actionView = ImageButton(this) // this is a Context.class object
+//    menuItemSync.actionView.setOnLongClickListener {
+//      false
+//    }
 
     val menuItem = menu.findItem(R.id.menu_sort)
     val filterActive = filterDataViewModel.filterActive

@@ -422,10 +422,8 @@ data class OnlineMarketData(
   var postMarketPrice: Double = 0.0,
   var postMarketChange: Double = 0.0,
 
-  var region: String = "",
-  var language: String = "",
+  var market: String = "",
   var fullExchangeName: String = "",
-  var messageBoardId: String = "",
   var financialCurrency: String = "",
 
   var quoteType: String = "",

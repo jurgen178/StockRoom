@@ -278,10 +278,8 @@ limitations under the License. -->
   <string name="onlinedata_epsForward">Zukünftige EPS</string>
   <string name="onlinedata_bookValue">Buchwert</string>
   <string name="onlinedata_priceToBook">Preis/Buchwert</string>
-  <string name="onlinedata_region">Region</string>
-  <string name="onlinedata_language">Sprachabkürzung</string>
+  <string name="onlinedata_market">Markt</string>
   <string name="onlinedata_fullExchangeName">Börsenname</string>
-  <string name="onlinedata_messageBoardId">Board-Id</string>
   <string name="onlinedata_financialCurrency">Währung</string>
   <string name="onlinedata_marketState">Marktstatus</string>
   <string name="onlinedata_not_applicable">n.v.</string>

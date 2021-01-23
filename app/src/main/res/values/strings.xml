@@ -279,10 +279,8 @@ limitations under the License. -->
   <string name="onlinedata_epsForward">EPS forward</string>
   <string name="onlinedata_bookValue">Book value</string>
   <string name="onlinedata_priceToBook">Price/Book</string>
-  <string name="onlinedata_region">Region</string>
-  <string name="onlinedata_language">Language</string>
+  <string name="onlinedata_market">Market</string>
   <string name="onlinedata_fullExchangeName">Exchange name</string>
-  <string name="onlinedata_messageBoardId">Board Id</string>
   <string name="onlinedata_financialCurrency">Currency</string>
   <string name="onlinedata_marketState">Market state</string>
   <string name="onlinedata_not_applicable">n/a</string>

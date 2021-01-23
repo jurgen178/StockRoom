@@ -478,26 +478,14 @@ class OnlineDataAdapter internal constructor(
 
     data.add(
         OnlineData(
-            desc = context.getString(R.string.onlinedata_region),
-            text = SpannableStringBuilder().bold { append(onlineMarketData.region) }
-        )
-    )
-    data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_language),
-            text = SpannableStringBuilder().bold { append(onlineMarketData.language) }
+            desc = context.getString(R.string.onlinedata_market),
+            text = SpannableStringBuilder().bold { append(onlineMarketData.market) }
         )
     )
     data.add(
         OnlineData(
             desc = context.getString(R.string.onlinedata_fullExchangeName),
             text = SpannableStringBuilder().bold { append(onlineMarketData.fullExchangeName) }
-        )
-    )
-    data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_messageBoardId),
-            text = SpannableStringBuilder().bold { append(onlineMarketData.messageBoardId) }
         )
     )
     data.add(
