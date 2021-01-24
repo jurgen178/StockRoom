@@ -381,10 +381,14 @@ fun getName(onlineMarketData: OnlineMarketData): String {
 
 fun getCurrency(onlineMarketData: OnlineMarketData): String {
 
-  // Yahoo lists a currency for index.
-  if (onlineMarketData.symbol.startsWith("^")
-      || onlineMarketData.symbol.endsWith("=f", true)
-  ) {
+//  // Yahoo lists a currency for index.
+//  if (onlineMarketData.symbol.startsWith("^")
+//      || onlineMarketData.symbol.endsWith("=f", true)
+//  ) {
+//    return ""
+//  }
+
+  if (onlineMarketData.financialCurrency.isEmpty()) {
     return ""
   }
 
@@ -443,6 +447,7 @@ data class OnlineMarketData(
   var market: String = "",
   var fullExchangeName: String = "",
   var currency: String = "",
+  var financialCurrency: String = "",
 
   var quoteType: String = "",
   var quoteSourceName: String = "",

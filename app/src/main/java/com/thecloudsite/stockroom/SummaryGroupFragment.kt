@@ -256,6 +256,11 @@ class SummaryGroupFragment : Fragment() {
     }
 
     if (totalAssets > 0.0) {
+
+      binding.summarySectionHeader.visibility = View.VISIBLE
+      binding.summaryPieChart.visibility = View.VISIBLE
+      binding.summaryDivider.visibility = View.VISIBLE
+
       val sortedAssetList = assetList.filter { assetSummary ->
         assetSummary.assets > 0.0
       }
@@ -293,57 +298,59 @@ class SummaryGroupFragment : Fragment() {
           )
           listColors.add(Color.GRAY)
         }
-    }
 
-    val pieDataSet = PieDataSet(listPie, "")
-    pieDataSet.colors = listColors
-    pieDataSet.valueTextSize = 10f
-    // pieDataSet.valueFormatter = DefaultValueFormatter(2)
-    pieDataSet.valueFormatter = object : ValueFormatter() {
-      override fun getFormattedValue(value: Float) =
-        DecimalFormat(DecimalFormat2Digits).format(value)
-    }
+      val pieDataSet = PieDataSet(listPie, "")
+      pieDataSet.colors = listColors
+      pieDataSet.valueTextSize = 10f
+      // pieDataSet.valueFormatter = DefaultValueFormatter(2)
+      pieDataSet.valueFormatter = object : ValueFormatter() {
+        override fun getFormattedValue(value: Float) =
+          DecimalFormat(DecimalFormat2Digits).format(value)
+      }
 
-    // Line start
-    pieDataSet.valueLinePart1OffsetPercentage = 80f
-    // Radial length
-    pieDataSet.valueLinePart1Length = 0.4f
-    // Horizontal length
-    pieDataSet.valueLinePart2Length = .2f
-    pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+      // Line start
+      pieDataSet.valueLinePart1OffsetPercentage = 80f
+      // Radial length
+      pieDataSet.valueLinePart1Length = 0.4f
+      // Horizontal length
+      pieDataSet.valueLinePart2Length = .2f
+      pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
 
-    val pieData = PieData(pieDataSet)
-    binding.summaryPieChart.data = pieData
+      val pieData = PieData(pieDataSet)
+      binding.summaryPieChart.data = pieData
 
-    //view.summaryPieChart.setUsePercentValues(true)
-    binding.summaryPieChart.isDrawHoleEnabled = true
+      //view.summaryPieChart.setUsePercentValues(true)
+      binding.summaryPieChart.isDrawHoleEnabled = true
 
-    val centerText = if (totalAssets > 0.0) {
-      SpannableStringBuilder()
-          .append("${context?.getString(R.string.summary_total_assets)} ")
-          .underline {
-            bold {
-              append(
-                  DecimalFormat(DecimalFormat2Digits).format(totalAssets)
-              )
+      val centerText =
+        SpannableStringBuilder()
+            .append("${context?.getString(R.string.summary_total_assets)} ")
+            .underline {
+              bold {
+                append(
+                    DecimalFormat(DecimalFormat2Digits).format(totalAssets)
+                )
+              }
             }
-          }
+
+      binding.summaryPieChart.centerText = centerText
+
+      binding.summaryPieChart.description.isEnabled = false
+      binding.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+      binding.summaryPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+
+      binding.summaryPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
+
+      //val legendList: MutableList<LegendEntry> = mutableListOf()
+      //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
+      //view.summaryPieChart.legend.setCustom(legendList)
+
+      binding.summaryPieChart.invalidate()
     } else {
-      ""
+      binding.summarySectionHeader.visibility = View.GONE
+      binding.summaryPieChart.visibility = View.GONE
+      binding.summaryDivider.visibility = View.GONE
     }
-    binding.summaryPieChart.centerText = centerText
-
-    binding.summaryPieChart.description.isEnabled = false
-    binding.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
-    binding.summaryPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
-
-    binding.summaryPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
-
-    //val legendList: MutableList<LegendEntry> = mutableListOf()
-    //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
-    //view.summaryPieChart.legend.setCustom(legendList)
-
-    binding.summaryPieChart.invalidate()
   }
 }
 
