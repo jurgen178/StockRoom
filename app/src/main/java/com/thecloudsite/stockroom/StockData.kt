@@ -381,20 +381,15 @@ fun getName(onlineMarketData: OnlineMarketData): String {
 
 fun getCurrency(onlineMarketData: OnlineMarketData): String {
 
-//  // Yahoo lists a currency for index.
-//  if (onlineMarketData.symbol.startsWith("^")
-//      || onlineMarketData.symbol.endsWith("=f", true)
-//  ) {
-//    return ""
-//  }
-
-  if (onlineMarketData.financialCurrency.isEmpty()) {
-    return ""
-  }
-
-  val currency = onlineMarketData.currency
-  if (currency.isNotEmpty()) {
-    return " $currency"
+  if (onlineMarketData.quoteType == "EQUITY"
+      || onlineMarketData.quoteType == "ETF"
+      || onlineMarketData.quoteType == "OPTION"
+      || onlineMarketData.quoteType == "MUTUALFUND"
+  ) {
+    val currency = onlineMarketData.currency
+    if (currency.isNotEmpty()) {
+      return " $currency"
+    }
   }
 
   return ""
