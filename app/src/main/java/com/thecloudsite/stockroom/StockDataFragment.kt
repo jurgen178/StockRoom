@@ -19,6 +19,7 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -53,6 +54,9 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.github.mikephil.charting.charts.CandleStickChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -1927,6 +1931,8 @@ class StockDataFragment : Fragment() {
     val marketCurrency = SpannableStringBuilder()
     val marketChange = SpannableStringBuilder()
 
+    binding.imageViewSymbol.visibility = View.GONE
+
     if (onlineMarketData != null) {
       name = getName(onlineMarketData)
 
@@ -1955,11 +1961,7 @@ class StockDataFragment : Fragment() {
 
       // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"
       val imgUrl = onlineMarketData.coinImageUrl
-      if (imgUrl.isEmpty()) {
-        binding.imageViewSymbol.visibility = View.GONE
-      } else {
-        binding.imageViewSymbol.visibility = View.VISIBLE
-
+      if (imgUrl.isNotEmpty()) {
         val imgView: ImageView = binding.imageViewSymbol
         val imgUri = imgUrl.toUri()
             .buildUpon()
@@ -1968,10 +1970,29 @@ class StockDataFragment : Fragment() {
 
         Glide.with(imgView.context)
             .load(imgUri)
+            .listener(object : RequestListener<Drawable> {
+              override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                isFirstResource: Boolean
+              ): Boolean {
+                return false
+              }
+
+              override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+              ): Boolean {
+                binding.imageViewSymbol.visibility = View.VISIBLE
+                return false
+              }
+            })
             .into(imgView)
       }
-    } else {
-      binding.imageViewSymbol.visibility = View.GONE
     }
 
     binding.textViewName.text = name
