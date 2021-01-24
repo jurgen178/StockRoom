@@ -1964,9 +1964,10 @@ class StockDataFragment : Fragment() {
       if (imgUrl.isNotEmpty()) {
         val imgView: ImageView = binding.imageViewSymbol
         val imgUri = imgUrl.toUri()
-            .buildUpon()
-            .scheme("https")
-            .build()
+        // use imgUrl as it is, no need to build upon the https scheme (https://...)
+        //.buildUpon()
+        //.scheme("https")
+        //.build()
 
         Glide.with(imgView.context)
             .load(imgUri)
