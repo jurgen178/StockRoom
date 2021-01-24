@@ -321,12 +321,18 @@ class SummaryGroupAdapter internal constructor(
           it.events.size
         }
 
-    var totalAssetsStr = SpannableStringBuilder().append(
-        "\n${context.getString(R.string.summary_total_purchase_price)} "
-    )
-        .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}\n") }
-        .append("${context.getString(R.string.summary_total_assets)} ")
-        .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
+    var totalAssetsStr =
+      SpannableStringBuilder().append(
+          "\n${context.getString(R.string.summary_total_purchase_price)} "
+      )
+          .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}\n") }
+
+    if (totalAssets > 0.0) {
+      totalAssetsStr.append(
+          "${context.getString(R.string.summary_total_assets)} "
+      )
+          .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
+    }
 
     // Print the summary assets in larger font.
     if (all) {

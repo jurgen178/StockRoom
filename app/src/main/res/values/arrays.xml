@@ -55,6 +55,7 @@
     <item>INDEX</item>
     <item>MUTUALFUND</item>
     <item>FUTURE</item>
+    <item>CURRENCY</item>
   </string-array>
   <string-array name="quoteTypes">
     <item>Stock</item>
@@ -63,5 +64,6 @@
     <item>Index</item>
     <item>Bond</item>
     <item>Future</item>
+    <item>Currency</item>
   </string-array>
 </resources>

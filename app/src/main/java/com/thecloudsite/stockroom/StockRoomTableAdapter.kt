@@ -198,10 +198,14 @@ class StockRoomTableAdapter internal constructor(
               )
             }"
 
-          val purchasePrice = quantity * current.onlineMarketData.marketPrice
-          holder.binding.tableDataAsset.text = DecimalFormat(
-              DecimalFormat2Digits
-          ).format(purchasePrice)
+          holder.binding.tableDataAsset.text =
+            if (quantity > 0.0 && current.onlineMarketData.marketPrice > 0.0) {
+              DecimalFormat(
+                  DecimalFormat2Digits
+              ).format(quantity * current.onlineMarketData.marketPrice)
+            } else {
+              ""
+            }
         } else {
           // Don't own any quantity of this stock.
           holder.binding.tableDataPurchaseprice.text = ""

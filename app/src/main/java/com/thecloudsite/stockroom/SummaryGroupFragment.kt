@@ -318,9 +318,19 @@ class SummaryGroupFragment : Fragment() {
     //view.summaryPieChart.setUsePercentValues(true)
     binding.summaryPieChart.isDrawHoleEnabled = true
 
-    val centerText = SpannableStringBuilder()
-        .append("${context?.getString(R.string.summary_total_assets)} ")
-        .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
+    val centerText = if (totalAssets > 0.0) {
+      SpannableStringBuilder()
+          .append("${context?.getString(R.string.summary_total_assets)} ")
+          .underline {
+            bold {
+              append(
+                  DecimalFormat(DecimalFormat2Digits).format(totalAssets)
+              )
+            }
+          }
+    } else {
+      ""
+    }
     binding.summaryPieChart.centerText = centerText
 
     binding.summaryPieChart.description.isEnabled = false
