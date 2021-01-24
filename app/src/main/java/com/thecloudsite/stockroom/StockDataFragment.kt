@@ -33,10 +33,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
@@ -50,6 +52,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.github.mikephil.charting.charts.CandleStickChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -1949,6 +1952,26 @@ class StockDataFragment : Fragment() {
         marketChange.append(marketChangeStr)
         marketCurrency.append(marketCurrencyValue)
       }
+
+      // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"
+      val imgUrl = onlineMarketData.coinImageUrl
+      if (imgUrl.isEmpty()) {
+        binding.imageViewSymbol.visibility = View.GONE
+      } else {
+        binding.imageViewSymbol.visibility = View.VISIBLE
+
+        val imgView: ImageView = binding.imageViewSymbol
+        val imgUri = imgUrl.toUri()
+            .buildUpon()
+            .scheme("https")
+            .build()
+
+        Glide.with(imgView.context)
+            .load(imgUri)
+            .into(imgView)
+      }
+    } else {
+      binding.imageViewSymbol.visibility = View.GONE
     }
 
     binding.textViewName.text = name

@@ -385,6 +385,8 @@ fun getCurrency(onlineMarketData: OnlineMarketData): String {
       || onlineMarketData.quoteType == "ETF"
       || onlineMarketData.quoteType == "OPTION"
       || onlineMarketData.quoteType == "MUTUALFUND"
+      || onlineMarketData.quoteType == "CURRENCY"
+      || onlineMarketData.quoteType == "CRYPTOCURRENCY"
   ) {
     val currency = onlineMarketData.currency
     if (currency.isNotEmpty()) {
@@ -443,6 +445,7 @@ data class OnlineMarketData(
   var fullExchangeName: String = "",
   var currency: String = "",
   var financialCurrency: String = "",
+  var coinImageUrl: String = "",
 
   var quoteType: String = "",
   var quoteSourceName: String = "",

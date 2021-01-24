@@ -129,6 +129,9 @@ dependencies {
   // FlowLayout
   implementation 'org.apmem.tools:layouts:1.10@aar'
 
+  // Glide image
+  implementation "com.github.bumptech.glide:glide:4.11.0"
+
   // Dependencies for working with Architecture components
   // You'll probably have to update the version numbers in build.gradle (Project)
 
