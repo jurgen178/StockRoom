@@ -33,14 +33,28 @@
       app:layout_constraintStart_toStartOf="@+id/guideline"
       app:layout_constraintBottom_toBottomOf="parent"
       >
+
+    <ImageView
+        android:id="@+id/imageViewSymbol"
+        android:visibility="gone"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewSymbol"
+        app:layout_constraintBottom_toBottomOf="@id/textViewSymbol"
+        app:layout_constraintEnd_toStartOf="@id/textViewSymbol"
+        />
+
     <TextView
         android:id="@+id/textViewSymbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageViewSymbol"
         app:layout_constraintTop_toTopOf="@+id/textViewName"
         style="@style/stock_item_text"
         />
+
     <TextView
         android:id="@+id/textViewName"
         android:layout_width="0dp"

@@ -17,17 +17,24 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomListItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
@@ -110,6 +117,44 @@ class StockRoomListAdapter internal constructor(
       holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
       holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
+
+      holder.binding.imageViewSymbol.visibility = View.GONE
+      // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"
+      val imgUrl = current.onlineMarketData.coinImageUrl
+      if (imgUrl.isNotEmpty()) {
+        val imgView: ImageView = holder.binding.imageViewSymbol
+        val imgUri = imgUrl.toUri()
+        // use imgUrl as it is, no need to build upon the https scheme (https://...)
+        //.buildUpon()
+        //.scheme("https")
+        //.build()
+
+        Glide.with(imgView.context)
+            .load(imgUri)
+            .listener(object : RequestListener<Drawable> {
+              override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                isFirstResource: Boolean
+              ): Boolean {
+                return false
+              }
+
+              override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+              ): Boolean {
+                holder.binding.imageViewSymbol.visibility = View.VISIBLE
+                return false
+              }
+            })
+            .into(imgView)
+      }
+
       holder.binding.textViewName.text = getName(current.onlineMarketData)
 
       if (current.onlineMarketData.marketPrice > 0.0) {

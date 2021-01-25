@@ -1959,6 +1959,7 @@ class StockDataFragment : Fragment() {
         marketCurrency.append(marketCurrencyValue)
       }
 
+      //binding.imageViewSymbol.visibility = View.GONE
       // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"
       val imgUrl = onlineMarketData.coinImageUrl
       if (imgUrl.isNotEmpty()) {
