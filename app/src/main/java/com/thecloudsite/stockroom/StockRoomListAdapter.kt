@@ -28,6 +28,7 @@ import androidx.core.net.toUri
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.text.scale
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -258,7 +259,7 @@ class StockRoomListAdapter internal constructor(
 
           assets.append(" = ")
           assets.bold { append(DecimalFormat(DecimalFormat2Digits).format(capital)) }
-          assets.append(getCurrency(current.onlineMarketData))
+          assets.scale(currencyScale) { append(getCurrency(current.onlineMarketData)) }
         }
       }
 

@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.bold
 import androidx.core.text.italic
+import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.databinding.StockroomTileItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
@@ -113,7 +114,7 @@ class StockRoomTileAdapter internal constructor(
         val capitalStr = SpannableStringBuilder().bold {
           append(DecimalFormat(DecimalFormat2Digits).format(capital))
         }
-        capitalStr.append(getCurrency(current.onlineMarketData))
+        capitalStr.scale(currencyScale) { append(getCurrency(current.onlineMarketData)) }
 
         holder.binding.stockRoomTileItemCapital.text = capitalStr
       } else {
