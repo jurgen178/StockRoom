@@ -46,6 +46,7 @@ class FilterTest {
     override val dataType = FilterDataTypeEnum.NoType
     override val subTypeList: List<FilterSubTypeEnum> = listOf()
     override var subType: FilterSubTypeEnum = FilterSubTypeEnum.NoType
+    override val selectionList = listOf<SpannableStringBuilder>()
     override var data = ""
     override val serializedData = ""
     override val displayData: SpannableStringBuilder = SpannableStringBuilder()

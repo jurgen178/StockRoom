@@ -57,23 +57,12 @@
       android:layout_marginStart="4dp"
       android:layout_marginEnd="2dp"
       android:textSize="12sp"
+      android:gravity="end"
       app:layout_constraintTop_toBottomOf="@+id/guideline3"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="1.0"
       />
-  <TextView
-      android:id="@+id/stockRoomTileItemCapital"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="4dp"
-      android:layout_marginEnd="2dp"
-      android:textSize="12sp"
-      app:layout_constraintTop_toBottomOf="@+id/stockRoomTileItemMarketChange"
-      app:layout_constraintStart_toEndOf="@+id/guideline1"
-      app:layout_constraintEnd_toEndOf="parent"
-      />
-
   <TextView
       android:id="@+id/stockRoomTileItemAssetChange"
       android:layout_width="0dp"
@@ -85,11 +74,26 @@
       android:textSize="12sp"
       app:layout_constraintVertical_bias="1.0"
       app:layout_constraintHorizontal_bias="1.0"
-      app:layout_constraintTop_toBottomOf="@+id/stockRoomTileItemCapital"
+      app:layout_constraintTop_toBottomOf="@+id/stockRoomTileItemMarketChange"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
+      app:layout_constraintEnd_toEndOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/stockRoomTileItemCapital"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="2dp"
+      android:textSize="12sp"
+      android:gravity="end"
+      app:layout_constraintVertical_bias="1.0"
+      app:layout_constraintTop_toBottomOf="@+id/stockRoomTileItemAssetChange"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
       />
+
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline1"
       android:layout_width="wrap_content"

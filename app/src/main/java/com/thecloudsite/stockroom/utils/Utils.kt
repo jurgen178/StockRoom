@@ -45,6 +45,7 @@ import com.thecloudsite.stockroom.database.Group
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -681,49 +682,109 @@ fun getAddedDeletedAssets(
   return Pair(gain, loss)
 }
 
-fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
+//fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
+//
+//  var totalQuantity: Double = 0.0
+//  var totalGain: Double = 0.0
+//  var totalLoss: Double = 0.0
+//  var bought: Double = 0.0
+//  var sold: Double = 0.0
+//
+//  val epsilon = 0.0001
+//
+//  assetList?.sortedBy { asset ->
+//    asset.date
+//  }
+//      ?.forEach { asset ->
+//        if (asset.quantity > 0.0) {
+//          bought += asset.quantity * asset.price
+//        }
+//        if (asset.quantity < 0.0) {
+//          sold += -asset.quantity * asset.price
+//        }
+//        totalQuantity += asset.quantity
+//
+//        if ((totalQuantity <= -epsilon)) {
+//          // Error, more shares sold than owned
+//          return Pair(0.0, 0.0)
+//        }
+//        if (totalQuantity < epsilon) {
+//          // totalQuantity is 0: -epsilon < totalQuantity < epsilon
+//          // reset if all shares are sold
+//          val gain = sold - bought
+//          if (gain > 0.0) {
+//            totalGain += gain
+//          } else
+//            if (gain < 0.0) {
+//              totalLoss -= gain
+//            }
+//          sold = 0.0
+//          bought = 0.0
+//        }
+//      }
+//
+//  return Pair(totalGain, totalLoss)
+//}
 
-  var totalQuantity: Double = 0.0
-  var totalGain: Double = 0.0
-  var totalLoss: Double = 0.0
-  var bought: Double = 0.0
-  var sold: Double = 0.0
+  data class GainLoss(
+    var gain: Double = 0.0,
+    var loss: Double = 0.0,
+  )
 
-  val epsilon = 0.0001
+  fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
 
-  assetList?.sortedBy { asset ->
-    asset.date
-  }
-      ?.forEach { asset ->
-        if (asset.quantity > 0.0) {
-          bought += asset.quantity * asset.price
-        }
-        if (asset.quantity < 0.0) {
-          sold += -asset.quantity * asset.price
-        }
-        totalQuantity += asset.quantity
+    var totalQuantity: Double = 0.0
+    var totalGain: Double = 0.0
+    var totalLoss: Double = 0.0
+    var bought: Double = 0.0
+    var sold: Double = 0.0
 
-        if ((totalQuantity <= -epsilon)) {
-          // Error, more shares sold than owned
-          return Pair(0.0, 0.0)
-        }
-        if (totalQuantity < epsilon) {
-          // totalQuantity is 0: -epsilon < totalQuantity < epsilon
-          // reset if all shares are sold
-          val gain = sold - bought
-          if (gain > 0.0) {
-            totalGain += gain
-          } else
-            if (gain < 0.0) {
-              totalLoss -= gain
+    val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
+
+    val epsilon = 0.0001
+
+    assetList?.sortedBy { asset ->
+      asset.date
+    }
+        ?.forEach { asset ->
+          if (asset.quantity > 0.0) {
+            bought += asset.quantity * asset.price
+          }
+          if (asset.quantity < 0.0) {
+            sold += -asset.quantity * asset.price
+          }
+          totalQuantity += asset.quantity
+
+          if ((totalQuantity <= -epsilon)) {
+            // Error, more shares sold than owned
+            return Triple(0.0, 0.0, hashMapOf())
+          }
+          if (totalQuantity < epsilon) {
+            // totalQuantity is 0: -epsilon < totalQuantity < epsilon
+            // reset if all shares are sold
+            val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+            val year = localDateTime.year
+            if (!totalGainLossMap.containsKey(year)) {
+              totalGainLossMap[year] = GainLoss()
             }
-          sold = 0.0
-          bought = 0.0
-        }
-      }
 
-  return Pair(totalGain, totalLoss)
-}
+            val gain = sold - bought
+            if (gain > 0.0) {
+              totalGain += gain
+              totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + gain
+            } else
+              if (gain < 0.0) {
+                totalLoss -= gain
+                totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! - gain
+              }
+
+            sold = 0.0
+            bought = 0.0
+          }
+        }
+
+    return Triple(totalGain, totalLoss, totalGainLossMap)
+  }
 
 fun getCapitalGainLossText(
   context: Context,

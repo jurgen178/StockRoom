@@ -400,7 +400,7 @@ class StockRoomTableAdapter internal constructor(
           }
 
           // Add summary
-          val (capitalGain, capitalLoss) = getAssetsCapitalGain(current.assets)
+          val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(current.assets)
           val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
           assetStr.scale(textScale) {
             append("\n${context.getString(R.string.summary_capital_gain)} ")

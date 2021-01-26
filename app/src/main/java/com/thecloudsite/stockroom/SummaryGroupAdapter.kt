@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.core.text.italic
 import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@ import com.thecloudsite.stockroom.databinding.SummarygroupItemBinding
 import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.GainLoss
 import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -233,13 +235,15 @@ class SummaryGroupAdapter internal constructor(
     var boughtAssets: Int = 0
     var soldAssets: Int = 0
 
+    val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
+
     stockItemsSelected.forEach { stockItem ->
       val (quantity, price) = getAssets(stockItem.assets)
 
       totalPurchasePrice += price
       totalQuantity += quantity
 
-      val (gain, loss) = getAssetsCapitalGain(stockItem.assets)
+      val (gain, loss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
       // Merge gain and loss of the individual stock to one gain/loss to prevent
       // having individual loss/gain reported in the summary.
       val capitalGainLoss = gain - loss
@@ -252,6 +256,14 @@ class SummaryGroupAdapter internal constructor(
         }
         else -> {
         }
+      }
+
+      gainLossMap.forEach { (year, map) ->
+        if (!totalGainLossMap.containsKey(year)) {
+          totalGainLossMap[year] = GainLoss()
+        }
+        totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + map.gain
+        totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! + map.loss
       }
 
       boughtAssets += stockItem.assets.filter { asset ->
@@ -306,8 +318,28 @@ class SummaryGroupAdapter internal constructor(
       }
     }
 
-    val capitalGainLossText =
-      getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
+    val capitalGainLossText = SpannableStringBuilder()
+
+    // Add single year to the summary text.
+    if (totalGainLossMap.size == 1) {
+      val year = totalGainLossMap.keys.first()
+      capitalGainLossText.italic { append("$year ") }
+    }
+
+    capitalGainLossText.append(
+        getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
+    )
+
+    // Multiple years gets added to the summary.
+    if (totalGainLossMap.size > 1) {
+      // Add yearly details.
+      totalGainLossMap.forEach { (year, map) ->
+        capitalGainLossText.italic { append("\n$year: ") }
+        capitalGainLossText.append(
+            getCapitalGainLossText(context, map.gain, map.loss, 0.0, "-", "\n")
+        )
+      }
+    }
 
     val boughtSoldText = "${boughtAssets}/${soldAssets}"
 

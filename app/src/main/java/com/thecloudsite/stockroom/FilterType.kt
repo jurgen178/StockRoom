@@ -1254,7 +1254,7 @@ class FilterCapitalGainType(
   context: Context
 ) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val (capitalGain, capitalLoss) = getAssetsCapitalGain(stockItem.assets)
+    val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {

@@ -156,7 +156,7 @@ class AssetListAdapter internal constructor(
         holder.binding.assetSummaryView.visibility = View.VISIBLE
 
         if (assetsCopy.isNotEmpty()) {
-          val (capitalGain, capitalLoss) = getAssetsCapitalGain(assetsCopy)
+          val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetsCopy)
           val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
           holder.binding.assetSummaryTextView.text = SpannableStringBuilder()
               .append("${context.getString(R.string.summary_capital_gain)} ")

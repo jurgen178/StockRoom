@@ -18,6 +18,7 @@ package com.thecloudsite.stockroom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.utils.GainLoss
 import com.thecloudsite.stockroom.utils.getAssetUseLastAverage
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -56,7 +57,7 @@ class AssetTest {
     )
 
     val liste: MutableList<Pairs> = mutableListOf()
-    liste.add(Pairs(x=1, y=1))
+    liste.add(Pairs(x = 1, y = 1))
   }
 
   @Test
@@ -563,7 +564,7 @@ class AssetTest {
             date = 5
         )
     )
-    val (capitalGain1, capitalLoss1) = getAssetsCapitalGain(assetList1)
+    val (capitalGain1, capitalLoss1, gainLossMap1) = getAssetsCapitalGain(assetList1)
     assertEquals(1800.0, capitalGain1 - capitalLoss1, epsilon)
 
     val assetList2 = listOf(
@@ -586,7 +587,7 @@ class AssetTest {
             date = 3
         )
     )
-    val (capitalGain2, capitalLoss2) = getAssetsCapitalGain(assetList2)
+    val (capitalGain2, capitalLoss2, gainLossMap2) = getAssetsCapitalGain(assetList2)
     assertEquals(0.0, capitalGain2 - capitalLoss2, epsilon)
 
     val assetList3 = listOf(
@@ -621,7 +622,97 @@ class AssetTest {
             date = 5
         )
     )
-    val (capitalGain3, capitalLoss3) = getAssetsCapitalGain(assetList3)
+    val (capitalGain3, capitalLoss3, gainLossMap3) = getAssetsCapitalGain(assetList3)
     assertEquals(-400.0 + 4.0, capitalGain3 - capitalLoss3, epsilon)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun assetCapitalGainDateTest() {
+
+    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0)
+    val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
+
+    val localDateTime = LocalDateTime.ofEpochSecond(seconds2020, 0, ZoneOffset.UTC)
+
+    assertEquals(2020, localDateTime.year)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun assetCapitalGainTotalGainsTest() {
+
+    val totalGains: MutableMap<Int, GainLoss> = mutableMapOf()
+
+    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0)
+    val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
+    val localDateTime = LocalDateTime.ofEpochSecond(seconds2020, 0, ZoneOffset.UTC)
+    val year = localDateTime.year
+    totalGains[year] = GainLoss(1.0, 2.0)
+    totalGains[year]?.gain = totalGains[year]?.gain!! + 1.0
+    totalGains[year]?.loss = totalGains[year]?.loss!! + 2.0
+
+    val gains1 = totalGains[year]
+    assertEquals(2.0, gains1?.gain)
+    assertEquals(4.0, gains1?.loss)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun assetCapitalGainDate() {
+
+    val localDateTime2020 = LocalDateTime.of(2022, 1, 1, 0, 0)
+    val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
+
+    val localDateTime2021 = LocalDateTime.of(2021, 1, 1, 0, 0)
+    val seconds2021 = localDateTime2021.toEpochSecond(ZoneOffset.UTC)
+
+    val assetList1 = listOf(
+        Asset(
+            symbol = "s1",
+            quantity = 1.0,
+            price = 20.0,
+            date = seconds2020
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = 1.0,
+            price = 50.0,
+            date = seconds2020
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = -2.0,
+            price = 70.0,
+            date = seconds2020
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = 1.0,
+            price = 100.0,
+            date = seconds2021
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = -1.0,
+            price = 10.0,
+            date = seconds2021
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = 1.0,
+            price = 10.0,
+            date = seconds2021
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = -1.0,
+            price = 1.0,
+            date = seconds2021
+        )
+    )
+
+    val (capitalGain1, capitalLoss1, totalGains) = getAssetsCapitalGain(assetList1)
+    assertEquals(2, totalGains.size)
   }
 }

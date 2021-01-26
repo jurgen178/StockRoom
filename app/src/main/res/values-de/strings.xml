@@ -469,7 +469,7 @@ limitations under the License. -->
   <string name="filter_IsType">ist</string>
   <string name="filter_IsNotType">ist nicht</string>
   <string name="filter_mode">Filterart</string>
-  <string name="delayed_quote">Verzögerter Aktienpreis</string>
+  <string name="delayed_quote">Verzögerter Preis</string>
   <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
   <string name="filter_regex_error_msg">Der reguläre Ausdruck \'%1$s\' für den Filter ist ungültig.</string>
   <string name="table_column_symbol">Aktien- kürzel</string>
