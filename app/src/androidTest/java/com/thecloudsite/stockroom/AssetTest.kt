@@ -659,7 +659,7 @@ class AssetTest {
 
   @Test
   @Throws(Exception::class)
-  fun assetCapitalGainDate() {
+  fun assetCapitalGainDate1() {
 
     val localDateTime2020 = LocalDateTime.of(2022, 1, 1, 0, 0)
     val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
@@ -714,5 +714,47 @@ class AssetTest {
 
     val (capitalGain1, capitalLoss1, totalGains) = getAssetsCapitalGain(assetList1)
     assertEquals(2, totalGains.size)
+    assertEquals(0.0, totalGains[2021]?.gain)
+    assertEquals(99.0, totalGains[2021]?.loss)
+    assertEquals(70.0, totalGains[2022]?.gain)
+    assertEquals(0.0, totalGains[2022]?.loss)
+  }
+
+
+  @Test
+  @Throws(Exception::class)
+  fun assetCapitalGainDate2() {
+
+    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0)
+    val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
+
+    val localDateTime2021 = LocalDateTime.of(2021, 1, 1, 0, 0)
+    val seconds2021 = localDateTime2021.toEpochSecond(ZoneOffset.UTC)
+
+    val assetList1 = listOf(
+        Asset(
+            symbol = "s1",
+            quantity = 1.0,
+            price = 20.0,
+            date = seconds2020
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = 1.0,
+            price = 50.0,
+            date = seconds2020
+        ),
+        Asset(
+            symbol = "s1",
+            quantity = -2.0,
+            price = 70.0,
+            date = seconds2021
+        ),
+    )
+
+    val (capitalGain1, capitalLoss1, totalGains) = getAssetsCapitalGain(assetList1)
+    assertEquals(1, totalGains.size)
+    assertEquals(70.0, totalGains[2021]?.gain)
+    assertEquals(0.0, totalGains[2021]?.loss)
   }
 }

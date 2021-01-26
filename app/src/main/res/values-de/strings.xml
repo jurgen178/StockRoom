@@ -326,7 +326,6 @@ limitations under the License. -->
   <string name="dividend_headline">Dividende</string>
   <string name="dividend_exdate">Ex-Dividend</string>
   <string name="totaldividend_payed">Ausgezahlte Dividende</string>
-  <string name="totaldividend_payedYTD">Ausgezahlte Dividende YTD</string>
   <string name="reset_portfolios_title">Portfolios zurücksetzen</string>
   <string name="reset_portfolios_desc">Setzt alle Portfolios zum Standard-Portfolio zurück.</string>
   <string name="reset_portfolios_confirm">Sind Sie sich sicher, dass Sie alle Portfolios zum Standard-Portfolio zurücksetzen wollen?</string>

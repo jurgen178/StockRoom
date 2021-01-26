@@ -216,13 +216,13 @@ class SummaryGroupAdapter internal constructor(
     var totalQuantity = 0.0
     var totalDividendAssets = 0.0
     var totalDividend = 0.0
-    var totalDividendPayed = 0.0
-    var totalDividendPayedYTD = 0.0
+    // var totalDividendPayed = 0.0
+    // var totalDividendPayedYTD = 0.0
     var totalAlerts: Int = 0
     var totalNotes: Int = 0
 
-    val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0)
-    val secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
+    // val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0)
+    // val secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
 
     val stockItemsSelected =
       stockItems.filter {
@@ -236,6 +236,7 @@ class SummaryGroupAdapter internal constructor(
     var soldAssets: Int = 0
 
     val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
+    val totalDividendPayedMap: MutableMap<Int, Double> = mutableMapOf()
 
     stockItemsSelected.forEach { stockItem ->
       val (quantity, price) = getAssets(stockItem.assets)
@@ -277,11 +278,23 @@ class SummaryGroupAdapter internal constructor(
       stockItem.dividends.filter { dividend ->
         dividend.type == DividendType.Received.value
       }
+          .sortedBy { dividend ->
+            dividend.paydate
+          }
           .forEach { dividend ->
-            totalDividendPayed += dividend.amount
-            if (dividend.paydate >= secondsYTD) {
-              totalDividendPayedYTD += dividend.amount
+
+            val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
+            val year = localDateTime.year
+            if (!totalDividendPayedMap.containsKey(year)) {
+              totalDividendPayedMap[year] = 0.0
             }
+
+            totalDividendPayedMap[year] = totalDividendPayedMap[year]!! + dividend.amount
+
+//            totalDividendPayed += dividend.amount
+//            if (dividend.paydate >= secondsYTD) {
+//              totalDividendPayedYTD += dividend.amount
+//            }
           }
 
       if (stockItem.stockDBdata.alertAbove > 0.0) {
@@ -333,7 +346,7 @@ class SummaryGroupAdapter internal constructor(
     // Multiple years gets added to the summary.
     if (totalGainLossMap.size > 1) {
       // Add yearly details.
-      totalGainLossMap.forEach { (year, map) ->
+      totalGainLossMap.toSortedMap().forEach { (year, map) ->
         capitalGainLossText.italic { append("\n$year: ") }
         capitalGainLossText.append(
             getCapitalGainLossText(context, map.gain, map.loss, 0.0, "-", "\n")
@@ -480,37 +493,54 @@ class SummaryGroupAdapter internal constructor(
           )
         }
         .append("${context.getString(R.string.totaldividend_payed)} ")
-        .bold {
-          if (totalDividendPayed > 0.0) {
-            color(context.getColor(R.color.green))
-            {
-              append(
-                  "${
-                    DecimalFormat(DecimalFormat2Digits)
-                        .format(totalDividendPayed)
-                  }\n"
-              )
-            }
-          } else {
-            append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
-          }
+
+    // Add single year to the summary text.
+    if (totalDividendPayedMap.size == 1) {
+      val year = totalDividendPayedMap.keys.first()
+      summaryGroup1.italic { append("$year") }
+    }
+
+    var totalDividendPayed = 0.0
+    totalDividendPayedMap.forEach { (year, dividend) ->
+      totalDividendPayed += dividend
+    }
+
+    summaryGroup1.bold {
+      if (totalDividendPayed > 0.0) {
+        color(context.getColor(R.color.green))
+        {
+          append(
+              "${
+                DecimalFormat(DecimalFormat2Digits)
+                    .format(totalDividendPayed)
+              }\n"
+          )
         }
-        .append("${context.getString(R.string.totaldividend_payedYTD)} ")
-        .bold {
-          if (totalDividendPayedYTD > 0.0) {
-            color(context.getColor(R.color.green))
-            {
-              append(
-                  "${
-                    DecimalFormat(DecimalFormat2Digits)
-                        .format(totalDividendPayedYTD)
-                  }\n"
-              )
-            }
-          } else {
-            append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
+      } else {
+        append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
+      }
+    }
+
+    // Multiple years gets added to the summary.
+    if (totalDividendPayedMap.size > 1) {
+      // Add yearly details.
+      totalDividendPayedMap.toSortedMap().forEach { (year, dividend) ->
+        summaryGroup1.italic { append(" $year: ") }
+        if (dividend > 0.0) {
+          summaryGroup1.color(context.getColor(R.color.green))
+          {
+            append(
+                "${
+                  DecimalFormat(DecimalFormat2Digits)
+                      .format(dividend)
+                }\n"
+            )
           }
+        } else {
+          summaryGroup1.append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
         }
+      }
+    }
 
     // summaryGroup1: Gain, loss, dividend
     // summaryGroup2: Stock summary, properties, assets
