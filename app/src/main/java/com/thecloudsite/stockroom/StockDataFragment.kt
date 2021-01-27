@@ -1225,14 +1225,15 @@ class StockDataFragment : Fragment() {
 
     binding.splitAssetsButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val (totalQuantity, totalPrice) = getAssets(assets?.assets)
+//      val (totalQuantity, totalPrice) = getAssets(assets?.assets)
 
 //      val totalQuantity = assets?.assets?.sumByDouble {
 //        it.shares
 //      }
 //          ?: 0.0
 
-      if (totalQuantity == 0.0) {
+//    if (totalQuantity == 0.0) {
+      if (assets?.assets?.size == 0) {
         Toast.makeText(
             requireContext(), getString(R.string.no_total_quantity), Toast.LENGTH_LONG
         )

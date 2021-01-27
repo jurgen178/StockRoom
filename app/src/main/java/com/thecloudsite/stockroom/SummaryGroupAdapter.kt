@@ -235,7 +235,8 @@ class SummaryGroupAdapter internal constructor(
     var boughtAssets: Int = 0
     var soldAssets: Int = 0
 
-    val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
+    //val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
+    val capitalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
     val totalDividendPayedMap: MutableMap<Int, Double> = mutableMapOf()
 
     stockItemsSelected.forEach { stockItem ->
@@ -260,11 +261,15 @@ class SummaryGroupAdapter internal constructor(
       }
 
       gainLossMap.forEach { (year, map) ->
-        if (!totalGainLossMap.containsKey(year)) {
-          totalGainLossMap[year] = GainLoss()
+        if (!capitalGainLossMap.containsKey(year)) {
+          capitalGainLossMap[year] = GainLoss()
         }
-        totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + map.gain
-        totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! + map.loss
+        val gainloss = map.gain - map.loss
+        if (gainloss >= 0.0) {
+          capitalGainLossMap[year]?.gain = capitalGainLossMap[year]?.gain!! + gainloss
+        } else {
+          capitalGainLossMap[year]?.loss = capitalGainLossMap[year]?.loss!! - gainloss
+        }
       }
 
       boughtAssets += stockItem.assets.filter { asset ->
@@ -310,6 +315,15 @@ class SummaryGroupAdapter internal constructor(
       if (stockItem.onlineMarketData.marketPrice > 0.0) {
         val assetsPrice = quantity * stockItem.onlineMarketData.marketPrice
         val gainLoss = assetsPrice - price
+
+//        val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+//        val year = localDateTime.year
+//        if (!totalGainLossMap.containsKey(year)) {
+//          totalGainLossMap[year] = GainLoss()
+//        }
+//        totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + map.gain
+//        totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! + map.loss
+
         if (gainLoss > 0.0) {
           totalGain += gainLoss
         } //else {
@@ -334,8 +348,8 @@ class SummaryGroupAdapter internal constructor(
     val capitalGainLossText = SpannableStringBuilder()
 
     // Add single year to the summary text.
-    if (totalGainLossMap.size == 1) {
-      val year = totalGainLossMap.keys.first()
+    if (capitalGainLossMap.size == 1) {
+      val year = capitalGainLossMap.keys.first()
       capitalGainLossText.italic { append("$year ") }
     }
 
@@ -344,14 +358,15 @@ class SummaryGroupAdapter internal constructor(
     )
 
     // Multiple years gets added to the summary.
-    if (totalGainLossMap.size > 1) {
+    if (capitalGainLossMap.size > 1) {
       // Add yearly details.
-      totalGainLossMap.toSortedMap().forEach { (year, map) ->
-        capitalGainLossText.italic { append("\n$year: ") }
-        capitalGainLossText.append(
-            getCapitalGainLossText(context, map.gain, map.loss, 0.0, "-", "\n")
-        )
-      }
+      capitalGainLossMap.toSortedMap()
+          .forEach { (year, map) ->
+            capitalGainLossText.italic { append("\n$year: ") }
+            capitalGainLossText.append(
+                getCapitalGainLossText(context, map.gain, map.loss, 0.0, "-", "\n")
+            )
+          }
     }
 
     val boughtSoldText = "${boughtAssets}/${soldAssets}"
@@ -497,7 +512,7 @@ class SummaryGroupAdapter internal constructor(
     // Add single year to the summary text.
     if (totalDividendPayedMap.size == 1) {
       val year = totalDividendPayedMap.keys.first()
-      summaryGroup1.italic { append("$year") }
+      summaryGroup1.italic { append("$year ") }
     }
 
     var totalDividendPayed = 0.0
@@ -524,22 +539,23 @@ class SummaryGroupAdapter internal constructor(
     // Multiple years gets added to the summary.
     if (totalDividendPayedMap.size > 1) {
       // Add yearly details.
-      totalDividendPayedMap.toSortedMap().forEach { (year, dividend) ->
-        summaryGroup1.italic { append(" $year: ") }
-        if (dividend > 0.0) {
-          summaryGroup1.color(context.getColor(R.color.green))
-          {
-            append(
-                "${
-                  DecimalFormat(DecimalFormat2Digits)
-                      .format(dividend)
-                }\n"
-            )
+      totalDividendPayedMap.toSortedMap()
+          .forEach { (year, dividend) ->
+            summaryGroup1.italic { append(" $year: ") }
+            if (dividend > 0.0) {
+              summaryGroup1.color(context.getColor(R.color.green))
+              {
+                append(
+                    "${
+                      DecimalFormat(DecimalFormat2Digits)
+                          .format(dividend)
+                    }\n"
+                )
+              }
+            } else {
+              summaryGroup1.append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
+            }
           }
-        } else {
-          summaryGroup1.append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
-        }
-      }
     }
 
     // summaryGroup1: Gain, loss, dividend
