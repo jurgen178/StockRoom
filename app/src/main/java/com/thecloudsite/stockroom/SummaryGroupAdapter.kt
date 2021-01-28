@@ -362,7 +362,7 @@ class SummaryGroupAdapter internal constructor(
       // Add yearly details.
       capitalGainLossMap.toSortedMap()
           .forEach { (year, map) ->
-            capitalGainLossText.italic { append("\n$year: ") }
+            capitalGainLossText.italic { append("$year: ") }
             capitalGainLossText.append(
                 getCapitalGainLossText(context, map.gain, map.loss, 0.0, "-", "\n")
             )

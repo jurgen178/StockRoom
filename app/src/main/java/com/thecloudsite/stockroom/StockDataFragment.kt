@@ -719,7 +719,7 @@ class StockDataFragment : Fragment() {
           ),
           "Google" to LinkListEntry(
               linkType = LinkType.SearchType,
-              link = "https://www.google.com/finance?q=$symbol"
+              link = "https://www.google.com/finance?q=$symbol stock"
           ),
           "Yahoo" to LinkListEntry(
               linkType = LinkType.SearchType,
