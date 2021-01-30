@@ -86,10 +86,10 @@ class StockRoomOverviewFragment : Fragment() {
     val clickListenerSummary = { stockItem: StockItem -> clickListenerOverview(stockItem) }
 
     // Use the small list adapter for display.
-    val adapter = StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
+    val stockRoomOverviewAdapter = StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
 
     val recyclerView = binding.recyclerview
-    recyclerView.adapter = adapter
+    recyclerView.adapter = stockRoomOverviewAdapter
 
     // Set column number depending on screen width.
     val scale = 494
@@ -140,9 +140,14 @@ class StockRoomOverviewFragment : Fragment() {
           sortedList
         }
 
-        adapter.setStockItems(filteredList)
+        stockRoomOverviewAdapter.setStockItems(filteredList)
       }
     })
+  }
+
+  override fun onResume() {
+    super.onResume()
+    stockRoomViewModel.runOnlineTaskNow()
   }
 
   private fun updateSummary(stockitemList: List<StockItem>) {
