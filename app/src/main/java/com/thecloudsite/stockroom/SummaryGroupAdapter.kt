@@ -143,14 +143,23 @@ class SummaryGroupAdapter internal constructor(
 
   private fun updateData() {
     data.clear()
-    val (text1, text2) = getTotal(0, true, stockItemsList)
+    val (allText1, allText2) = getTotal(0, true, stockItemsList)
     val portfolio = SharedRepository.selectedPortfolio.value ?: ""
     val overview = if (portfolio.isEmpty()) {
       context.getString(R.string.overview_headline_standard_portfolio)
     } else {
       context.getString(R.string.overview_headline_portfolio, portfolio)
     }
-    data.add(SummaryData(overview, "", text1, text2, Color.WHITE, summarygroup_all_items))
+    data.add(
+        SummaryData(
+            overview,
+            "",
+            allText1,
+            allText2,
+            Color.WHITE,
+            summarygroup_all_items
+        )
+    )
 
     // Get all groups.
     val groupSet = HashSet<Int>()

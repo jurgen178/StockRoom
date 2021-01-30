@@ -342,8 +342,8 @@ limitations under the License. -->
   <string name="data_provider_details_sorted">[Sorted]</string>
   <string name="data_provider_details_unsorted">[Unsorted]</string>
   <string name="remove_price">Sell price</string>
-  <string name="timeline_asset_bought">%1$s@%2$s (%3$s), Bought am %4$s.</string>
-  <string name="timeline_asset_sold">%1$s@%2$s (%3$s), Sold am %4$s.</string>
+  <string name="timeline_asset_bought">Bought on %1$s. : %2$s@%3$s (%4$s)</string>
+  <string name="timeline_asset_sold">Sold on %1$s. : %2$s@%3$s (%4$s)</string>
   <string name="timeline_event">%1$s - Event \'%2$s\' for stock \'%3$s\'</string>
   <string name="timeline_dividend_headline">Dividend %1$s</string>
   <string name="timeline_dividend">%1$s - %2$s %3$s for stock \'%4$s\'</string>
