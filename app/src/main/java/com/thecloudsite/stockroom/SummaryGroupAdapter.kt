@@ -48,6 +48,7 @@ const val summarygroup_item: Int = 1
 
 data class SummaryData(
   val desc: String,
+  val subdesc: String,
   val text1: SpannableStringBuilder,
   val text2: SpannableStringBuilder,
   val color: Int,
@@ -124,6 +125,7 @@ class SummaryGroupAdapter internal constructor(
         setBackgroundColor(holder.binding.summaryItemGroup, color)
 
         holder.binding.summaryItemDataDesc.text = current.desc
+        holder.binding.summaryItemDataSubDesc.text = current.subdesc
         holder.binding.summaryItemData1.text = current.text1
         holder.binding.summaryItemData2.text = current.text2
       }
@@ -148,7 +150,7 @@ class SummaryGroupAdapter internal constructor(
     } else {
       context.getString(R.string.overview_headline_portfolio, portfolio)
     }
-    data.add(SummaryData(overview, text1, text2, Color.WHITE, summarygroup_all_items))
+    data.add(SummaryData(overview, "", text1, text2, Color.WHITE, summarygroup_all_items))
 
     // Get all groups.
     val groupSet = HashSet<Int>()
@@ -175,9 +177,28 @@ class SummaryGroupAdapter internal constructor(
       }
           .forEach { group ->
             val (text1, text2) = getTotal(group.color, false, stockItemsList)
+
+            // Get all symbols in that group as a comma separated string.
+            val symbolsList = stockItemsList.filter { stockItem ->
+              stockItem.stockDBdata.groupColor == group.color
+            }
+                .map { stockItem ->
+                  stockItem.stockDBdata.symbol
+                }
+                .sorted()
+                .joinToString(
+                    prefix = "(",
+                    separator = ",",
+                    postfix = ")"
+                )
+
             data.add(
                 SummaryData(
-                    context.getString(R.string.group_name, group.name), text1, text2, group.color,
+                    context.getString(R.string.group_name, group.name),
+                    symbolsList,
+                    text1,
+                    text2,
+                    group.color,
                     summarygroup_item
                 )
             )
