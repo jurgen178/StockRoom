@@ -346,7 +346,7 @@ limitations under the License. -->
   <string name="timeline_asset_sold">Sold on %1$s. : %2$s@%3$s (%4$s)</string>
   <string name="timeline_event">%1$s - Event \'%2$s\' for stock \'%3$s\'</string>
   <string name="timeline_dividend_headline">Dividend %1$s</string>
-  <string name="timeline_dividend">%1$s - %2$s %3$s for stock \'%4$s\'</string>
+  <string name="timeline_dividend">%1$s - %2$s %3$s for \'%4$s\'</string>
   <string name="timeline_unknown_date">Date not specified</string>
   <string name="displayed_views">Displayed views</string>
   <string name="displayed_views_summary">Select what is on display.</string>
@@ -493,4 +493,6 @@ limitations under the License. -->
   <string name="marketStatePOST">Post-Market</string>
   <string name="marketStatePOSTPOST">After Post-Market</string>
   <string name="marketStateCLOSED">Closed</string>
+  <string name="summaryTopBottom">Top and Bottom 5 entries sorted by Change:</string>
+  <string name="summaryOverview">Entries sorted by Change:</string>
 </resources>

@@ -2,6 +2,7 @@
 <resources>
   <string-array name="displayed_views_entries">
     <item>Diagramme</item>
+    <item>Kurze Zusammenfassung</item>
     <item>Liste</item>
     <item>Übersicht</item>
     <item>Kleine Liste</item>
@@ -16,6 +17,7 @@
   </string-array>
   <string-array name="displayed_views_headers">
     <item>Diagramme</item>
+    <item>Kurze Zusammenfassung</item>
     <item>Liste</item>
     <item>Übersicht</item>
     <item>Kleine Liste</item>
@@ -27,26 +29,6 @@
     <item>Kauf/Verkauf</item>
     <item>Ereignisse</item>
     <item>Dividenden</item>
-  </string-array>
-  <string-array name="displayed_views_entries_values">
-    <item>00_StockRoomChartFragment</item>
-    <item>01_StockRoomListFragment</item>
-    <item>02_StockRoomTileFragment</item>
-    <item>03_StockRoomSmallListFragment</item>
-    <item>04_StockRoomSmallTileFragment</item>
-    <item>05_StockRoomTableFragment</item>
-    <item>06_StockRoomTreemapFragment</item>
-    <item>07_SummaryGroupFragment</item>
-    <item>08_AllNewsFragment</item>
-    <item>09_AssetTimelineFragment</item>
-    <item>10_EventTimelineFragment</item>
-    <item>11_DividendTimelineFragment</item>
-  </string-array>
-  <string-array name="displayed_views_entries_defaults">
-    <item>00_StockRoomChartFragment</item>
-    <item>01_StockRoomListFragment</item>
-    <item>02_StockRoomTileFragment</item>
-    <item>07_SummaryGroupFragment</item>
   </string-array>
   <string-array name="quoteTypes">
     <item>Aktie</item>

@@ -124,24 +124,25 @@ object SharedHandler {
 
 val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf(
     "00_StockRoomChartFragment",
-    "01_StockRoomListFragment",
-    "02_StockRoomTileFragment",
-    "07_SummaryGroupFragment"
+    "02_StockRoomListFragment",
+    "03_StockRoomTileFragment",
+    "08_SummaryGroupFragment"
 )
 
 val displayedViewsSet: MutableSet<String> = mutableSetOf(
     "00_StockRoomChartFragment",
-    "01_StockRoomListFragment",
-    "02_StockRoomTileFragment",
-    "03_StockRoomSmallListFragment",
-    "04_StockRoomSmallTileFragment",
-    "05_StockRoomTableFragment",
-    "06_StockRoomTreemapFragment",
-    "07_SummaryGroupFragment",
-    "08_AllNewsFragment",
-    "09_AssetTimelineFragment",
-    "10_EventTimelineFragment",
-    "11_DividendTimelineFragment"
+    "01_StockRoomOverviewFragment",
+    "02_StockRoomListFragment",
+    "03_StockRoomTileFragment",
+    "04_StockRoomSmallListFragment",
+    "05_StockRoomSmallTileFragment",
+    "06_StockRoomTableFragment",
+    "07_StockRoomTreemapFragment",
+    "08_SummaryGroupFragment",
+    "09_AllNewsFragment",
+    "10_AssetTimelineFragment",
+    "11_EventTimelineFragment",
+    "12_DividendTimelineFragment"
 )
 
 object SharedRepository {
@@ -306,7 +307,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       if (SharedRepository.displayedViewsList.isEmpty()) {
-        SharedRepository.displayedViewsList.add("01_StockRoomListFragment")
+        SharedRepository.displayedViewsList.add("02_StockRoomListFragment")
       }
 
       sharedPreferences.edit()

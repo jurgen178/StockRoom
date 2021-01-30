@@ -2,6 +2,7 @@
 <resources>
   <string-array name="displayed_views_entries">
     <item>Chart</item>
+    <item>Short Summary</item>
     <item>List</item>
     <item>Tile</item>
     <item>Small list</item>
@@ -16,6 +17,7 @@
   </string-array>
   <string-array name="displayed_views_headers">
     <item>Chart</item>
+    <item>Short Summary</item>
     <item>List</item>
     <item>Tile</item>
     <item>Small list</item>
@@ -28,25 +30,26 @@
     <item>Events</item>
     <item>Dividends</item>
   </string-array>
-  <string-array name="displayed_views_entries_values">
+  <string-array translatable="false" name="displayed_views_entries_values">
     <item>00_StockRoomChartFragment</item>
-    <item>01_StockRoomListFragment</item>
-    <item>02_StockRoomTileFragment</item>
-    <item>03_StockRoomSmallListFragment</item>
-    <item>04_StockRoomSmallTileFragment</item>
-    <item>05_StockRoomTableFragment</item>
-    <item>06_StockRoomTreemapFragment</item>
-    <item>07_SummaryGroupFragment</item>
-    <item>08_AllNewsFragment</item>
-    <item>09_AssetTimelineFragment</item>
-    <item>10_EventTimelineFragment</item>
-    <item>11_DividendTimelineFragment</item>
+    <item>01_StockRoomOverviewFragment</item>
+    <item>02_StockRoomListFragment</item>
+    <item>03_StockRoomTileFragment</item>
+    <item>04_StockRoomSmallListFragment</item>
+    <item>05_StockRoomSmallTileFragment</item>
+    <item>06_StockRoomTableFragment</item>
+    <item>07_StockRoomTreemapFragment</item>
+    <item>08_SummaryGroupFragment</item>
+    <item>09_AllNewsFragment</item>
+    <item>10_AssetTimelineFragment</item>
+    <item>11_EventTimelineFragment</item>
+    <item>12_DividendTimelineFragment</item>
   </string-array>
-  <string-array name="displayed_views_entries_defaults">
+  <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>
-    <item>01_StockRoomListFragment</item>
-    <item>02_StockRoomTileFragment</item>
-    <item>07_SummaryGroupFragment</item>
+    <item>02_StockRoomListFragment</item>
+    <item>03_StockRoomTileFragment</item>
+    <item>08_SummaryGroupFragment</item>
   </string-array>
   <string-array name="quoteTypeNames" translatable="false">
     <item>EQUITY</item>

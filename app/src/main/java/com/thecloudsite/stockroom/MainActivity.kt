@@ -215,37 +215,40 @@ class MainActivity : AppCompatActivity() {
           "00_StockRoomChartFragment" -> {
             StockRoomChartFragment.newInstance()
           }
-          "01_StockRoomListFragment" -> {
+          "01_StockRoomOverviewFragment" -> {
+            StockRoomOverviewFragment.newInstance()
+          }
+          "02_StockRoomListFragment" -> {
             StockRoomListFragment.newInstance()
           }
-          "02_StockRoomTileFragment" -> {
+          "03_StockRoomTileFragment" -> {
             StockRoomTileFragment.newInstance()
           }
-          "03_StockRoomSmallListFragment" -> {
+          "04_StockRoomSmallListFragment" -> {
             StockRoomSmallListFragment.newInstance()
           }
-          "04_StockRoomSmallTileFragment" -> {
+          "05_StockRoomSmallTileFragment" -> {
             StockRoomSmallTileFragment.newInstance()
           }
-          "05_StockRoomTableFragment" -> {
+          "06_StockRoomTableFragment" -> {
             StockRoomTableFragment.newInstance()
           }
-          "06_StockRoomTreemapFragment" -> {
+          "07_StockRoomTreemapFragment" -> {
             StockRoomTreemapFragment.newInstance()
           }
-          "07_SummaryGroupFragment" -> {
+          "08_SummaryGroupFragment" -> {
             SummaryGroupFragment.newInstance()
           }
-          "08_AllNewsFragment" -> {
+          "09_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "09_AssetTimelineFragment" -> {
+          "10_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "10_EventTimelineFragment" -> {
+          "11_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "11_DividendTimelineFragment" -> {
+          "12_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
           }
           else -> {
@@ -263,7 +266,7 @@ class MainActivity : AppCompatActivity() {
     TabLayoutMediator(binding.mainTabLayout, binding.viewpager) { tab, position ->
 
       if (position >= 0 && position < SharedRepository.displayedViewsList.size) {
-        // 00_StockRoomChartFragment, 01_StockRoomListFragment, ... 10_DividendTimelineFragment
+        // 00_StockRoomChartFragment, 01_StockRoomOverviewFragment, ... 12_DividendTimelineFragment
         val viewlistEntry = SharedRepository.displayedViewsList[position].subSequence(0, 2)
             .toString()
         val index = viewlistEntry.toInt()
@@ -275,8 +278,8 @@ class MainActivity : AppCompatActivity() {
     }.attach()
 
     binding.viewpager.setCurrentItem(
-        if (SharedRepository.displayedViewsList.contains("01_StockRoomListFragment")) {
-          SharedRepository.displayedViewsList.indexOf("01_StockRoomListFragment")
+        if (SharedRepository.displayedViewsList.contains("02_StockRoomListFragment")) {
+          SharedRepository.displayedViewsList.indexOf("02_StockRoomListFragment")
         } else {
           0
         }, false
