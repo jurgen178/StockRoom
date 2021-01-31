@@ -325,7 +325,7 @@ limitations under the License. -->
   <string name="dividend_received_summary_text">Gesamtdividendenbetrag</string>
   <string name="dividend_headline">Dividende</string>
   <string name="dividend_exdate">Ex-Dividend</string>
-  <string name="totaldividend_payed">Ausgezahlte Dividende</string>
+  <string name="totaldividend_paid">Ausgezahlte Dividende</string>
   <string name="reset_portfolios_title">Portfolios zurücksetzen</string>
   <string name="reset_portfolios_desc">Setzt alle Portfolios zum Standard-Portfolio zurück.</string>
   <string name="reset_portfolios_confirm">Sind Sie sich sicher, dass Sie alle Portfolios zum Standard-Portfolio zurücksetzen wollen?</string>
@@ -415,10 +415,10 @@ limitations under the License. -->
   <string name="filter_assetnote_desc"></string>
   <string name="filter_dividendpercentage_name">Dividende %</string>
   <string name="filter_dividendpercentage_desc"></string>
-  <string name="filter_dividendpayed_name">Ausgezahlte Dividende</string>
-  <string name="filter_dividendpayed_desc"></string>
-  <string name="filter_dividendpayedytd_name">Ausgezahlte Dividende YTD</string>
-  <string name="filter_dividendpayedytd_desc"></string>
+  <string name="filter_dividendpaid_name">Ausgezahlte Dividende</string>
+  <string name="filter_dividendpaid_desc"></string>
+  <string name="filter_dividendpaidytd_name">Ausgezahlte Dividende YTD</string>
+  <string name="filter_dividendpaidytd_desc"></string>
   <string name="filter_assetsolddate_name">Wertpapierverkaufsdatum</string>
   <string name="filter_assetsolddate_desc"></string>
   <string name="filter_assetboughtdate_name">Wertpapierkaufdatum</string>

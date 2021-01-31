@@ -246,8 +246,8 @@ class SummaryGroupAdapter internal constructor(
     var totalQuantity = 0.0
     var totalDividendAssets = 0.0
     var totalDividend = 0.0
-    // var totalDividendPayed = 0.0
-    // var totalDividendPayedYTD = 0.0
+    // var totalDividendPaid = 0.0
+    // var totalDividendPaidYTD = 0.0
     var totalAlerts: Int = 0
     var totalNotes: Int = 0
 
@@ -267,7 +267,7 @@ class SummaryGroupAdapter internal constructor(
 
     //val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
     val capitalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
-    val totalDividendPayedMap: MutableMap<Int, Double> = mutableMapOf()
+    val totalDividendPaidMap: MutableMap<Int, Double> = mutableMapOf()
 
     stockItemsSelected.forEach { stockItem ->
       val (quantity, price) = getAssets(stockItem.assets)
@@ -320,15 +320,15 @@ class SummaryGroupAdapter internal constructor(
 
             val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
             val year = localDateTime.year
-            if (!totalDividendPayedMap.containsKey(year)) {
-              totalDividendPayedMap[year] = 0.0
+            if (!totalDividendPaidMap.containsKey(year)) {
+              totalDividendPaidMap[year] = 0.0
             }
 
-            totalDividendPayedMap[year] = totalDividendPayedMap[year]!! + dividend.amount
+            totalDividendPaidMap[year] = totalDividendPaidMap[year]!! + dividend.amount
 
-//            totalDividendPayed += dividend.amount
+//            totalDividendPaid += dividend.amount
 //            if (dividend.paydate >= secondsYTD) {
-//              totalDividendPayedYTD += dividend.amount
+//              totalDividendPaidYTD += dividend.amount
 //            }
           }
 
@@ -537,27 +537,27 @@ class SummaryGroupAdapter internal constructor(
               }%)\n"
           )
         }
-        .append("${context.getString(R.string.totaldividend_payed)} ")
+        .append("${context.getString(R.string.totaldividend_paid)} ")
 
     // Add single year to the summary text.
-    if (totalDividendPayedMap.size == 1) {
-      val year = totalDividendPayedMap.keys.first()
+    if (totalDividendPaidMap.size == 1) {
+      val year = totalDividendPaidMap.keys.first()
       summaryGroup1.italic { append("$year ") }
     }
 
-    var totalDividendPayed = 0.0
-    totalDividendPayedMap.forEach { (year, dividend) ->
-      totalDividendPayed += dividend
+    var totalDividendPaid = 0.0
+    totalDividendPaidMap.forEach { (year, dividend) ->
+      totalDividendPaid += dividend
     }
 
     summaryGroup1.bold {
-      if (totalDividendPayed > 0.0) {
+      if (totalDividendPaid > 0.0) {
         color(context.getColor(R.color.green))
         {
           append(
               "${
                 DecimalFormat(DecimalFormat2Digits)
-                    .format(totalDividendPayed)
+                    .format(totalDividendPaid)
               }\n"
           )
         }
@@ -567,9 +567,9 @@ class SummaryGroupAdapter internal constructor(
     }
 
     // Multiple years gets added to the summary.
-    if (totalDividendPayedMap.size > 1) {
+    if (totalDividendPaidMap.size > 1) {
       // Add yearly details.
-      totalDividendPayedMap.toSortedMap()
+      totalDividendPaidMap.toSortedMap()
           .forEach { (year, dividend) ->
             summaryGroup1.italic { append(" $year: ") }
             if (dividend > 0.0) {

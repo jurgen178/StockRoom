@@ -59,8 +59,8 @@ enum class FilterTypeEnum {
   FilterAssetType,
   FilterAssetNoteType,
   FilterDividendPercentageType,
-  FilterDividendPayedType,
-  FilterDividendPayedYTDType,
+  FilterDividendPaidType,
+  FilterDividendPaidYTDType,
   FilterQuantityType,
   FilterCapitalGainType,
   FilterPostMarketType,
@@ -141,8 +141,8 @@ object FilterFactory {
       FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
       FilterTypeEnum.FilterAssetNoteType -> FilterAssetNoteType(context)
       FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
-      FilterTypeEnum.FilterDividendPayedType -> FilterDividendPayedType(context)
-      FilterTypeEnum.FilterDividendPayedYTDType -> FilterDividendPayedYTDType(context)
+      FilterTypeEnum.FilterDividendPaidType -> FilterDividendPaidType(context)
+      FilterTypeEnum.FilterDividendPaidYTDType -> FilterDividendPaidYTDType(context)
       FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
       FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
       FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
@@ -1166,12 +1166,12 @@ class FilterDividendPercentageType(
   override val desc = context.getString(R.string.filter_dividendpercentage_desc)
 }
 
-// Dividend Payed
-class FilterDividendPayedType(
+// Dividend Paid
+class FilterDividendPaidType(
   context: Context
 ) : FilterDividendBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val totalDividendPayed: Double = stockItem.dividends.filter { dividend ->
+    val totalDividendPaid: Double = stockItem.dividends.filter { dividend ->
       dividend.type == DividendType.Received.value
     }
         .sumByDouble { dividend ->
@@ -1180,26 +1180,26 @@ class FilterDividendPayedType(
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {
-        totalDividendPayed > filterValue
+        totalDividendPaid > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        totalDividendPayed > 0.0 && totalDividendPayed < filterValue
+        totalDividendPaid > 0.0 && totalDividendPaid < filterValue
       }
       else -> false
     }
   }
 
-  override val typeId = FilterTypeEnum.FilterDividendPayedType
-  override val displayName = context.getString(R.string.filter_dividendpayed_name)
-  override val desc = context.getString(R.string.filter_dividendpayed_desc)
+  override val typeId = FilterTypeEnum.FilterDividendPaidType
+  override val displayName = context.getString(R.string.filter_dividendpaid_name)
+  override val desc = context.getString(R.string.filter_dividendpaid_desc)
 }
 
-// Dividend Payed YTD
-class FilterDividendPayedYTDType(
+// Dividend Paid YTD
+class FilterDividendPaidYTDType(
   context: Context
 ) : FilterDividendBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val totalDividendPayedYTD: Double = stockItem.dividends.filter { dividend ->
+    val totalDividendPaidYTD: Double = stockItem.dividends.filter { dividend ->
       dividend.type == DividendType.Received.value
           && dividend.paydate >= secondsYTD
     }
@@ -1209,18 +1209,18 @@ class FilterDividendPayedYTDType(
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {
-        totalDividendPayedYTD > filterValue
+        totalDividendPaidYTD > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        totalDividendPayedYTD > 0.0 && totalDividendPayedYTD < filterValue
+        totalDividendPaidYTD > 0.0 && totalDividendPaidYTD < filterValue
       }
       else -> false
     }
   }
 
-  override val typeId = FilterTypeEnum.FilterDividendPayedYTDType
-  override val displayName = context.getString(R.string.filter_dividendpayedytd_name)
-  override val desc = context.getString(R.string.filter_dividendpayedytd_desc)
+  override val typeId = FilterTypeEnum.FilterDividendPaidYTDType
+  override val displayName = context.getString(R.string.filter_dividendpaidytd_name)
+  override val desc = context.getString(R.string.filter_dividendpaidytd_desc)
 }
 
 // Quantity

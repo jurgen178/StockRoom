@@ -326,7 +326,7 @@ limitations under the License. -->
   <string name="dividend_received_summary_text">Total dividends received</string>
   <string name="dividend_headline">Dividend</string>
   <string name="dividend_exdate">Ex-Dividend</string>
-  <string name="totaldividend_payed">Dividend paid</string>
+  <string name="totaldividend_paid">Dividend paid</string>
   <string name="reset_portfolios_title">Reset Portfolios</string>
   <string name="reset_portfolios_desc">Reset all Portfolios back to the Standard Portfolio.</string>
   <string name="reset_portfolios_confirm">Are you sure to reset all Portfolios back to the Standard Portfolio?</string>
@@ -416,10 +416,10 @@ limitations under the License. -->
   <string name="filter_assetnote_desc"></string>
   <string name="filter_dividendpercentage_name">Dividend %</string>
   <string name="filter_dividendpercentage_desc"></string>
-  <string name="filter_dividendpayed_name">Dividend paid</string>
-  <string name="filter_dividendpayed_desc"></string>
-  <string name="filter_dividendpayedytd_name">Dividend paid YTD</string>
-  <string name="filter_dividendpayedytd_desc"></string>
+  <string name="filter_dividendpaid_name">Dividend paid</string>
+  <string name="filter_dividendpaid_desc"></string>
+  <string name="filter_dividendpaidytd_name">Dividend paid YTD</string>
+  <string name="filter_dividendpaidytd_desc"></string>
   <string name="filter_assetsolddate_name">Asset sold date</string>
   <string name="filter_assetsolddate_desc"></string>
   <string name="filter_assetboughtdate_name">Asset bought date</string>
