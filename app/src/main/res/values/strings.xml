@@ -493,6 +493,4 @@ limitations under the License. -->
   <string name="marketStatePOST">Post-Market</string>
   <string name="marketStatePOSTPOST">After Post-Market</string>
   <string name="marketStateCLOSED">Closed</string>
-  <string name="summaryTopBottom">Top and bottom 5 entries sorted by Change:</string>
-  <string name="summaryOverview">Entries sorted by Change:</string>
 </resources>

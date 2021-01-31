@@ -492,6 +492,4 @@ limitations under the License. -->
   <string name="marketStatePOST">Nachbörse</string>
   <string name="marketStatePOSTPOST">Nachbörse geschlossen</string>
   <string name="marketStateCLOSED">Geschlossen</string>
-  <string name="summaryTopBottom">Die oberen und unteren 5 Einträge nach Änderung sortiert:</string>
-  <string name="summaryOverview">Nach Änderung sortiert:</string>
 </resources>

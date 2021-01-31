@@ -116,8 +116,6 @@ class StockRoomOverviewFragment : Fragment() {
         // For more than 10 items show the top/bottom 5 only.
         val filteredList = if (sortedList.size > 10) {
 
-          binding.textViewListText.text = context?.getString(R.string.summaryTopBottom)
-
           // top 5
           val list = mutableListOf<StockItem>()
           list.addAll(sortedList.take(5))
@@ -138,7 +136,6 @@ class StockRoomOverviewFragment : Fragment() {
 
           list
         } else {
-          binding.textViewListText.text = context?.getString(R.string.summaryOverview)
           sortedList
         }
 
