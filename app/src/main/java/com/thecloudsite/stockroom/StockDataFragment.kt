@@ -43,7 +43,6 @@ import androidx.core.net.toUri
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
-import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment

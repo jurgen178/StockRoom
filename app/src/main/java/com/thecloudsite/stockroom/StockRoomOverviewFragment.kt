@@ -49,6 +49,8 @@ class StockRoomOverviewFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
+  private val separatorSymbol = "  ⋮"
+
   companion object {
     fun newInstance() = StockRoomOverviewFragment()
   }
@@ -123,8 +125,8 @@ class StockRoomOverviewFragment : Fragment() {
           // separator item
           list.add(
               StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = ""),
-                  stockDBdata = StockDBdata(symbol = ""),
+                  onlineMarketData = OnlineMarketData(symbol = separatorSymbol),
+                  stockDBdata = StockDBdata(symbol = separatorSymbol),
                   assets = emptyList(),
                   events = emptyList(),
                   dividends = emptyList()
@@ -249,7 +251,7 @@ class StockRoomOverviewFragment : Fragment() {
   }
 
   private fun clickListenerOverview(stockItem: StockItem) {
-    if (stockItem.stockDBdata.symbol.isNotEmpty()) {
+    if (stockItem.stockDBdata.symbol != separatorSymbol) {
       val intent = Intent(context, StockDataActivity::class.java)
       intent.putExtra("symbol", stockItem.onlineMarketData.symbol)
       //stockRoomViewModel.runOnlineTaskNow()

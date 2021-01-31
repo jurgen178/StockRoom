@@ -36,7 +36,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
 import com.thecloudsite.stockroom.databinding.OnlinedataviewItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.enNumberStrToDouble

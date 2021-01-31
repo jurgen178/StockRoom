@@ -379,7 +379,7 @@ fun getName(onlineMarketData: OnlineMarketData): String {
       .replace("&gt;", ">")
 }
 
-val currencyScale = 0.8f
+const val currencyScale = 0.8f
 fun getCurrency(onlineMarketData: OnlineMarketData): String {
 
   if (onlineMarketData.quoteType == "EQUITY"

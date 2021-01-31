@@ -416,9 +416,9 @@ limitations under the License. -->
   <string name="filter_assetnote_desc"></string>
   <string name="filter_dividendpercentage_name">Dividend %</string>
   <string name="filter_dividendpercentage_desc"></string>
-  <string name="filter_dividendpayed_name">Dividend payed</string>
+  <string name="filter_dividendpayed_name">Dividend paid</string>
   <string name="filter_dividendpayed_desc"></string>
-  <string name="filter_dividendpayedytd_name">Dividend payed YTD</string>
+  <string name="filter_dividendpayedytd_name">Dividend paid YTD</string>
   <string name="filter_dividendpayedytd_desc"></string>
   <string name="filter_assetsolddate_name">Asset sold date</string>
   <string name="filter_assetsolddate_desc"></string>
