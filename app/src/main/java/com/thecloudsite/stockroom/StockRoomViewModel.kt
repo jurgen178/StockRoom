@@ -2255,6 +2255,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.updateGroupName(color, name)
   }
 
+  fun renameSymbolSync(
+    symbolOld: String,
+    symbolNew: String
+  ): Boolean {
+    var renamed: Boolean = false
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        renamed = repository.renameSymbol(symbolOld, symbolNew)
+      }
+    }
+
+    return renamed
+  }
+
   fun updateStockGroupColors(
     colorOld: Int,
     colorNew: Int

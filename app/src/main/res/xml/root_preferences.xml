@@ -70,14 +70,21 @@
         app:icon="@drawable/ic_action_export"
         />
 
-<!--
     <Preference
-        app:key="export_cloud"
-        app:title="@string/export_cloud"
-        app:summary="@string/export_cloud_desc"
-        app:icon="@drawable/ic_action_export"
+        app:key="rename_symbol"
+        app:title="@string/rename_symbol_title"
+        app:summary="@string/rename_symbol_desc"
+        app:icon="@drawable/ic_action_rename_symbol"
         />
--->
+
+    <!--
+        <Preference
+            app:key="export_cloud"
+            app:title="@string/export_cloud"
+            app:summary="@string/export_cloud_desc"
+            app:icon="@drawable/ic_action_export"
+            />
+    -->
 
     <Preference
         app:key="reset_portfolios"

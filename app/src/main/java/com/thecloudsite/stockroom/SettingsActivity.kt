@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.R.layout
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -23,8 +24,11 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -36,17 +40,20 @@ import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
+import com.thecloudsite.stockroom.databinding.DialogRenameSymbolBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
+import java.util.Locale
 
 const val exportListActivityRequestCode = 3
 //const val authActivityRequestCode = 4
 
 class SettingsActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
-  
+
   private lateinit var binding: ActivitySettingsBinding
   private lateinit var sharedPreferences: SharedPreferences
   private lateinit var stockRoomViewModel: StockRoomViewModel
@@ -162,7 +169,7 @@ class SettingsActivity : AppCompatActivity(),
       "displayed_views" -> {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.displayed_views_dialog_title))
-            .setMessage(getString(R.string.displayed_views_dialog_message))
+            .setMessage(getString(R.string.app_needs_restart_message))
             .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
             .show()
       }
@@ -274,6 +281,75 @@ class SettingsActivity : AppCompatActivity(),
         buttonExportList.onPreferenceClickListener =
           OnPreferenceClickListener {
             onExportList()
+            true
+          }
+      }
+
+      val buttonRenameSymbol: Preference? = findPreference("rename_symbol")
+      if (buttonRenameSymbol != null) {
+        buttonRenameSymbol.onPreferenceClickListener =
+          OnPreferenceClickListener {
+
+            val builder = android.app.AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val inflater = LayoutInflater.from(requireContext())
+            val dialogBinding = DialogRenameSymbolBinding.inflate(inflater)
+
+            stockRoomViewModel.allProperties.observe(this, Observer { items ->
+              if (items != null) {
+                val spinnerData = items.map { stockItem ->
+                  stockItem.symbol
+                }
+                    .sorted()
+
+                dialogBinding.textViewSymbolSpinner.adapter =
+                  ArrayAdapter(requireContext(), layout.simple_list_item_1, spinnerData)
+              }
+            })
+
+            builder.setView(dialogBinding.root)
+                .setTitle(R.string.rename_symbol_title)
+                // Add action buttons
+                .setPositiveButton(R.string.rename) { _, _ ->
+                  val symbolOld = dialogBinding.textViewSymbolSpinner.selectedItem.toString()
+                  // Add () to avoid cast exception.
+                  val symbolNew = (dialogBinding.symbolNew.text).toString()
+                      .trim()
+                      .toUpperCase(Locale.ROOT)
+                  if (symbolNew.isEmpty() || symbolNew.contains(" ")) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(string.symbol_name_not_valid),
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                    return@setPositiveButton
+                  }
+
+                  // Sync method to get the return value
+                  val renamed = stockRoomViewModel.renameSymbolSync(symbolOld, symbolNew)
+
+                  Toast.makeText(
+                      requireContext(),
+
+                      if (renamed) {
+                        getString(string.symbol_renamed, symbolOld, symbolNew)
+                      } else {
+                        getString(string.symbol_not_renamed, symbolOld, symbolNew)
+                      },
+
+                      Toast.LENGTH_LONG
+                  )
+                      .show()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { _, _ ->
+                }
+            builder
+                .create()
+                .show()
+
             true
           }
       }

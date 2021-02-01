@@ -742,4 +742,39 @@ class StockRoomDaoTest {
         .waitForValue()
     assertTrue(allStockDBdata.isEmpty())
   }
+
+  @Test
+  @Throws(Exception::class)
+  fun renameSymbol() {
+    val stockDBdata1 = StockDBdata("symbol1")
+    stockRoomDao.insert(stockDBdata1)
+    val stockDBdata2 = StockDBdata("symbol2")
+    stockRoomDao.insert(stockDBdata2)
+    val stockDBdata3 = StockDBdata("symbol3")
+    stockRoomDao.insert(stockDBdata3)
+
+    // test symbol aready exists
+    val stockDBdataExists = stockRoomDao.getStockDBdata("symbol2")
+    assertNotEquals(null, stockDBdataExists)
+
+    // should not be renamed as symbol2 already exist
+    val rename1 = stockRoomDao.renameSymbol("symbol1", "symbol2")
+    assertTrue(!rename1)
+    val allStockDBdata1 = stockRoomDao.getAllProperties()
+        .waitForValue()
+    assertEquals(3, allStockDBdata1.size)
+    assertEquals("symbol1", allStockDBdata1[0].symbol)
+
+    // test symbol4 not exists
+    val stockDBdataNotExists = stockRoomDao.getStockDBdata("symbol4")
+    assertEquals(null, stockDBdataNotExists)
+
+    // rename symbol1 to symbol4
+    val rename2 = stockRoomDao.renameSymbol("symbol1", "symbol4")
+    assertTrue(rename2)
+    val allStockDBdata2 = stockRoomDao.getAllProperties()
+        .waitForValue()
+    assertEquals(3, allStockDBdata2.size)
+    assertEquals("symbol4", allStockDBdata2[0].symbol)
+  }
 }

@@ -326,6 +326,9 @@ limitations under the License. -->
   <string name="dividend_headline">Dividende</string>
   <string name="dividend_exdate">Ex-Dividend</string>
   <string name="totaldividend_paid">Ausgezahlte Dividende</string>
+  <string name="rename_symbol_title">Wertpapier umbenennen</string>
+  <string name="rename_symbol_desc">Benennt das Wertpapier in einem anderen Namen um.</string>
+  <string name="rename_symbol_confirm">Sind sie sicher, dass Sie das Wertpapier umbenennen wollen?</string>
   <string name="reset_portfolios_title">Portfolios zurücksetzen</string>
   <string name="reset_portfolios_desc">Setzt alle Portfolios zum Standard-Portfolio zurück.</string>
   <string name="reset_portfolios_confirm">Sind Sie sich sicher, dass Sie alle Portfolios zum Standard-Portfolio zurücksetzen wollen?</string>
@@ -350,7 +353,7 @@ limitations under the License. -->
   <string name="displayed_views">Angezeigte Darstellungen</string>
   <string name="displayed_views_summary">Wählen Sie aus was angezeigt werden soll.</string>
   <string name="displayed_views_dialog_title">Einstellungsänderung</string>
-  <string name="displayed_views_dialog_message">Für diese Einstellung muss die App neu gestartet werden.</string>
+  <string name="app_needs_restart_message">Für diese Einstellung muss die App neu gestartet werden.</string>
   <string name="annual_dividend_headline">Jährlicher Dividendensatz</string>
   <string name="set_annual_dividend_label">Neuer jährlicher Dividendensatz</string>
   <string name="onlineAnnualDividendData">Onlinedaten</string>
@@ -492,4 +495,9 @@ limitations under the License. -->
   <string name="marketStatePOST">Nachbörse</string>
   <string name="marketStatePOSTPOST">Nachbörse geschlossen</string>
   <string name="marketStateCLOSED">Geschlossen</string>
+  <string name="new_symbol">Neuer Wertpapiername</string>
+  <string name="select_symbol">Wertpapier auswählen</string>
+  <string name="symbol_name_not_valid">Geben Sie einen gültigen Wertpapiernamen ein.</string>
+  <string name="symbol_renamed">Das Wertpapier \'%1$s\' wurde in \'%2$s\' umbenannt.</string>
+  <string name="symbol_not_renamed">Das Wertpapier \'%1$s\' konnte nicht in \'%2$s\' umbenannt werden.</string>
 </resources>

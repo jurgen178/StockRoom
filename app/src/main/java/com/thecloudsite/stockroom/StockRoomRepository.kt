@@ -290,6 +290,15 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun renameSymbol(
+    symbolOld: String,
+    symbolNew: String
+  ): Boolean {
+    return stockRoomDao.renameSymbol(symbolOld, symbolNew)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun updateStockGroupColors(
     colorOld: Int,
     colorNew: Int

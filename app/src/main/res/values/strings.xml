@@ -327,6 +327,9 @@ limitations under the License. -->
   <string name="dividend_headline">Dividend</string>
   <string name="dividend_exdate">Ex-Dividend</string>
   <string name="totaldividend_paid">Dividend paid</string>
+  <string name="rename_symbol_title">Rename symbol</string>
+  <string name="rename_symbol_desc">Rename a symbol to a different name when the security changed.</string>
+  <string name="rename_symbol_confirm">Are you sure to rename the symbol?</string>
   <string name="reset_portfolios_title">Reset Portfolios</string>
   <string name="reset_portfolios_desc">Reset all Portfolios back to the Standard Portfolio.</string>
   <string name="reset_portfolios_confirm">Are you sure to reset all Portfolios back to the Standard Portfolio?</string>
@@ -351,7 +354,7 @@ limitations under the License. -->
   <string name="displayed_views">Displayed views</string>
   <string name="displayed_views_summary">Select what is on display.</string>
   <string name="displayed_views_dialog_title">Settings change</string>
-  <string name="displayed_views_dialog_message">You need to restart the app for this setting.</string>
+  <string name="app_needs_restart_message">You need to restart the app for this setting.</string>
   <string name="annual_dividend_headline">Annual dividend rate</string>
   <string name="set_annual_dividend_label">New annual dividend rate</string>
   <string name="onlineAnnualDividendData">Online data</string>
@@ -493,4 +496,9 @@ limitations under the License. -->
   <string name="marketStatePOST">Post-Market</string>
   <string name="marketStatePOSTPOST">After Post-Market</string>
   <string name="marketStateCLOSED">Closed</string>
+  <string name="new_symbol">New symbol name</string>
+  <string name="select_symbol">Select symbol</string>
+  <string name="symbol_name_not_valid">Enter a valid symbol name.</string>
+  <string name="symbol_renamed">The symbol \'%1$s\' was renamed to \'%2$s\'.</string>
+  <string name="symbol_not_renamed">The symbol \'%1$s\' could not be renamed to \'%2$s\'.</string>
 </resources>

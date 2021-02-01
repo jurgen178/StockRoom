@@ -188,6 +188,28 @@ interface StockRoomDao {
     name: String
   )
 
+  @Query("UPDATE stock_table SET symbol = :symbolNew WHERE symbol = :symbolOld")
+  fun renameStocktableSymbol(
+    symbolOld: String,
+    symbolNew: String
+  )
+
+  @Transaction
+  fun renameSymbol(
+    symbolOld: String,
+    symbolNew: String
+  ): Boolean {
+    val stockData = getStockDBdata(symbolNew)
+
+    // do not rename if symbol aready exists in the stock table
+    val replace = stockData == null
+    if (replace) {
+      renameStocktableSymbol(symbolOld, symbolNew)
+    }
+
+    return replace
+  }
+
   @Query("UPDATE stock_table SET group_color = :colorNew WHERE group_color = :colorOld")
   fun updateStockGroupColors(
     colorOld: Int,
@@ -248,14 +270,18 @@ interface StockRoomDao {
     color: Int
   )
 
-  @Query("UPDATE stock_table SET alert_above = :alertAbove, alert_above_note = :alertAboveNote WHERE symbol = :symbol")
+  @Query(
+      "UPDATE stock_table SET alert_above = :alertAbove, alert_above_note = :alertAboveNote WHERE symbol = :symbol"
+  )
   fun updateAlertAbove(
     symbol: String,
     alertAbove: Double,
     alertAboveNote: String
   )
 
-  @Query("UPDATE stock_table SET alert_below = :alertBelow, alert_below_note = :alertBelowNote WHERE symbol = :symbol")
+  @Query(
+      "UPDATE stock_table SET alert_below = :alertBelow, alert_below_note = :alertBelowNote WHERE symbol = :symbol"
+  )
   fun updateAlertBelow(
     symbol: String,
     alertBelow: Double,
