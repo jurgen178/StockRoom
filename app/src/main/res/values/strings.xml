@@ -498,6 +498,7 @@ limitations under the License. -->
   <string name="marketStateCLOSED">Closed</string>
   <string name="new_symbol">New symbol name</string>
   <string name="select_symbol">Select symbol</string>
+  <string name="no_symbols_available">No symbol to rename available.</string>
   <string name="symbol_name_not_valid">Enter a valid symbol name.</string>
   <string name="symbol_renamed">The symbol \'%1$s\' was renamed to \'%2$s\'.</string>
   <string name="symbol_not_renamed">The symbol \'%1$s\' could not be renamed to \'%2$s\'.</string>

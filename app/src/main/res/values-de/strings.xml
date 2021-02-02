@@ -497,6 +497,7 @@ limitations under the License. -->
   <string name="marketStateCLOSED">Geschlossen</string>
   <string name="new_symbol">Neuer Wertpapiername</string>
   <string name="select_symbol">Wertpapier auswählen</string>
+  <string name="no_symbols_available">Keine Wertpapiere zum umbenennen vorhanden.</string>
   <string name="symbol_name_not_valid">Geben Sie einen gültigen Wertpapiernamen ein.</string>
   <string name="symbol_renamed">Das Wertpapier \'%1$s\' wurde in \'%2$s\' umbenannt.</string>
   <string name="symbol_not_renamed">Das Wertpapier \'%1$s\' konnte nicht in \'%2$s\' umbenannt werden.</string>

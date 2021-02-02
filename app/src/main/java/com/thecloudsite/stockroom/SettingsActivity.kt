@@ -34,6 +34,8 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.scale
+import androidx.core.view.isEmpty
+import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
@@ -311,6 +313,17 @@ class SettingsActivity : AppCompatActivity(),
                 .setTitle(R.string.rename_symbol_title)
                 // Add action buttons
                 .setPositiveButton(R.string.rename) { _, _ ->
+
+                  if (dialogBinding.textViewSymbolSpinner.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(string.no_symbols_available),
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                    return@setPositiveButton
+                  }
+
                   val symbolOld = dialogBinding.textViewSymbolSpinner.selectedItem.toString()
                   // Add () to avoid cast exception.
                   val symbolNew = (dialogBinding.symbolNew.text).toString()
