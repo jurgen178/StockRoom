@@ -745,7 +745,7 @@ class StockRoomDaoTest {
 
   @Test
   @Throws(Exception::class)
-  fun renameSymbol() {
+  fun renameSymbolStockDBdata() {
     val stockDBdata1 = StockDBdata("symbol1")
     stockRoomDao.insert(stockDBdata1)
     val stockDBdata2 = StockDBdata("symbol2")
@@ -776,5 +776,51 @@ class StockRoomDaoTest {
         .waitForValue()
     assertEquals(3, allStockDBdata2.size)
     assertEquals("symbol4", allStockDBdata2[0].symbol)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun renameSymbolAsset() {
+    val stockDBdata1 = StockDBdata("symbol1")
+    stockRoomDao.insert(stockDBdata1)
+    val asset1 = Asset(symbol = "symbol1", quantity = 10.0, price = 123.0, date = 0L)
+    stockRoomDao.addAsset(asset1)
+
+    val rename1 = stockRoomDao.renameSymbol("symbol1", "symbol2")
+    assertTrue(rename1)
+    val assets1 = stockRoomDao.getAssets("symbol2")
+    assertEquals(1, assets1.assets.size)
+    assertEquals("symbol2", assets1.assets[0].symbol)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun renameSymbolEvent() {
+    val stockDBdata1 = StockDBdata("symbol1")
+    stockRoomDao.insert(stockDBdata1)
+    val event1 =
+      Event(symbol = "symbol1", type = 1, title = "title1", note = "note1", datetime = 1)
+    stockRoomDao.addEvent(event1)
+
+    val rename1 = stockRoomDao.renameSymbol("symbol1", "symbol2")
+    assertTrue(rename1)
+    val events1 = stockRoomDao.getEvents("symbol2")
+    assertEquals(1, events1.events.size)
+    assertEquals("symbol2", events1.events[0].symbol)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun renameSymbolDividend() {
+    val stockDBdata1 = StockDBdata("symbol1")
+    stockRoomDao.insert(stockDBdata1)
+    val dividend1 = Dividend(symbol = "symbol1", amount = 11.0, type = 21, cycle = 1, paydate = 21L, exdate = 31L)
+    stockRoomDao.addDividend(dividend1)
+
+    val rename1 = stockRoomDao.renameSymbol("symbol1", "symbol2")
+    assertTrue(rename1)
+    val dividends1 = stockRoomDao.getDividends("symbol2")
+    assertEquals(1, dividends1.dividends.size)
+    assertEquals("symbol2", dividends1.dividends[0].symbol)
   }
 }

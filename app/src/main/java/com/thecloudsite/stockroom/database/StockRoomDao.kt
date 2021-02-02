@@ -189,7 +189,25 @@ interface StockRoomDao {
   )
 
   @Query("UPDATE stock_table SET symbol = :symbolNew WHERE symbol = :symbolOld")
-  fun renameStocktableSymbol(
+  fun renameStockTableSymbol(
+    symbolOld: String,
+    symbolNew: String
+  )
+
+  @Query("UPDATE asset_table SET symbol = :symbolNew WHERE symbol = :symbolOld")
+  fun renameAssetTableSymbol(
+    symbolOld: String,
+    symbolNew: String
+  )
+
+  @Query("UPDATE event_table SET symbol = :symbolNew WHERE symbol = :symbolOld")
+  fun renameEventTableSymbol(
+    symbolOld: String,
+    symbolNew: String
+  )
+
+  @Query("UPDATE dividend_table SET symbol = :symbolNew WHERE symbol = :symbolOld")
+  fun renameDividendTableSymbol(
     symbolOld: String,
     symbolNew: String
   )
@@ -201,10 +219,13 @@ interface StockRoomDao {
   ): Boolean {
     val stockData = getStockDBdata(symbolNew)
 
-    // do not rename if symbol aready exists in the stock table
+    // do not rename if symbol already exists in the stock table
     val replace = stockData == null
     if (replace) {
-      renameStocktableSymbol(symbolOld, symbolNew)
+      renameStockTableSymbol(symbolOld, symbolNew)
+      renameAssetTableSymbol(symbolOld, symbolNew)
+      renameEventTableSymbol(symbolOld, symbolNew)
+      renameDividendTableSymbol(symbolOld, symbolNew)
     }
 
     return replace
