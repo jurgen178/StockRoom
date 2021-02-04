@@ -100,7 +100,7 @@ data class DividendJson(
 )
 
 data class StockItemJson
-(
+  (
   var symbol: String,
   val portfolio: String,
   val data: String?,
@@ -123,26 +123,26 @@ object SharedHandler {
 }
 
 val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf(
-    "00_StockRoomChartFragment",
-    "02_StockRoomListFragment",
-    "03_StockRoomTileFragment",
-    "08_SummaryGroupFragment"
+  "00_StockRoomChartFragment",
+  "02_StockRoomListFragment",
+  "03_StockRoomTileFragment",
+  "08_SummaryGroupFragment"
 )
 
 val displayedViewsSet: MutableSet<String> = mutableSetOf(
-    "00_StockRoomChartFragment",
-    "01_StockRoomOverviewFragment",
-    "02_StockRoomListFragment",
-    "03_StockRoomTileFragment",
-    "04_StockRoomSmallListFragment",
-    "05_StockRoomSmallTileFragment",
-    "06_StockRoomTableFragment",
-    "07_StockRoomTreemapFragment",
-    "08_SummaryGroupFragment",
-    "09_AllNewsFragment",
-    "10_AssetTimelineFragment",
-    "11_EventTimelineFragment",
-    "12_DividendTimelineFragment"
+  "00_StockRoomChartFragment",
+  "01_StockRoomOverviewFragment",
+  "02_StockRoomListFragment",
+  "03_StockRoomTileFragment",
+  "04_StockRoomSmallListFragment",
+  "05_StockRoomSmallTileFragment",
+  "06_StockRoomTableFragment",
+  "07_StockRoomTreemapFragment",
+  "08_SummaryGroupFragment",
+  "09_AllNewsFragment",
+  "10_AssetTimelineFragment",
+  "11_EventTimelineFragment",
+  "12_DividendTimelineFragment"
 )
 
 object SharedRepository {
@@ -275,7 +275,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   init {
     val stockRoomDao = StockRoomDatabase.getDatabase(application, viewModelScope)
-        .stockRoomDao()
+      .stockRoomDao()
 
     repository = StockRoomRepository(stockRoomDao)
     allProperties = repository.allProperties
@@ -297,13 +297,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       if (displayedViews != null && displayedViews!!.isNotEmpty()) {
         SharedRepository.displayedViewsList =
           displayedViews?.toMutableList()
-              ?.filter { fragment ->
-                displayedViewsSet.contains(fragment)
-              }
-              ?.sortedBy { fragment ->
-                fragment
-              }
-              ?.toMutableList()!!
+            ?.filter { fragment ->
+              displayedViewsSet.contains(fragment)
+            }
+            ?.sortedBy { fragment ->
+              fragment
+            }
+            ?.toMutableList()!!
       }
 
       if (SharedRepository.displayedViewsList.isEmpty()) {
@@ -311,8 +311,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }
 
       sharedPreferences.edit()
-          .putStringSet("displayed_views", SharedRepository.displayedViewsList.toSet())
-          .apply()
+        .putStringSet("displayed_views", SharedRepository.displayedViewsList.toSet())
+        .apply()
     }
 
     // sharedPreferences.getBoolean("postmarket", true) doesn't work here anymore?
@@ -435,14 +435,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           ""
         } else {
           SharedRepository.lastStatsCounters.filter { it >= 0 }
-              .joinToString(
-                  prefix = "[",
-                  separator = ",",
-                  postfix = "]"
-              )
+            .joinToString(
+              prefix = "[",
+              separator = ",",
+              postfix = "]"
+            )
         }
         logDebug(
-            "Internet access count $count/min $lastCounts[${SharedRepository.statsCounterMax}]"
+          "Internet access count $count/min $lastCounts[${SharedRepository.statsCounterMax}]"
         )
         SharedRepository.lastStatsCounters.forEachIndexed { i, _ ->
           val reverseIndex = SharedRepository.lastStatsCounters.size - i - 1
@@ -655,13 +655,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           dataStoreItem.stockDBdata = data
         } else {
           dataStore.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = data.symbol),
-                  stockDBdata = data,
-                  assets = emptyList(),
-                  events = emptyList(),
-                  dividends = emptyList()
-              )
+            StockItem(
+              onlineMarketData = OnlineMarketData(symbol = data.symbol),
+              stockDBdata = data,
+              assets = emptyList(),
+              events = emptyList(),
+              dividends = emptyList()
+            )
           )
         }
       }
@@ -715,13 +715,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           val portfolio = SharedRepository.selectedPortfolio.value ?: ""
           if (asset.stockDBdata.portfolio == portfolio) {
             dataStore.add(
-                StockItem(
-                    onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
-                    stockDBdata = asset.stockDBdata,
-                    assets = asset.assets,
-                    events = emptyList(),
-                    dividends = emptyList()
-                )
+              StockItem(
+                onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
+                stockDBdata = asset.stockDBdata,
+                assets = asset.assets,
+                events = emptyList(),
+                dividends = emptyList()
+              )
             )
           }
         }
@@ -761,13 +761,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           val portfolio = SharedRepository.selectedPortfolio.value ?: ""
           if (event.stockDBdata.portfolio == portfolio) {
             dataStore.add(
-                StockItem(
-                    onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
-                    stockDBdata = event.stockDBdata,
-                    assets = emptyList(),
-                    events = event.events,
-                    dividends = emptyList()
-                )
+              StockItem(
+                onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
+                stockDBdata = event.stockDBdata,
+                assets = emptyList(),
+                events = event.events,
+                dividends = emptyList()
+              )
             )
           }
         }
@@ -807,13 +807,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           val portfolio = SharedRepository.selectedPortfolio.value ?: ""
           if (dividend.stockDBdata.portfolio == portfolio) {
             dataStore.add(
-                StockItem(
-                    onlineMarketData = OnlineMarketData(symbol = dividend.stockDBdata.symbol),
-                    stockDBdata = dividend.stockDBdata,
-                    assets = emptyList(),
-                    events = emptyList(),
-                    dividends = dividend.dividends
-                )
+              StockItem(
+                onlineMarketData = OnlineMarketData(symbol = dividend.stockDBdata.symbol),
+                stockDBdata = dividend.stockDBdata,
+                assets = emptyList(),
+                events = emptyList(),
+                dividends = dividend.dividends
+              )
             )
           }
         }
@@ -832,16 +832,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       // Work off a read-only copy to avoid the java.util.ConcurrentModificationException
       // while the next update.
       onlineMarketDataList.toImmutableList()
-          .forEach { onlineMarketDataItem ->
-            val symbol = onlineMarketDataItem.symbol
+        .forEach { onlineMarketDataItem ->
+          val symbol = onlineMarketDataItem.symbol
 
-            val dataStoreItem =
-              dataStore.find { ds ->
-                symbol == ds.stockDBdata.symbol
-              }
+          val dataStoreItem =
+            dataStore.find { ds ->
+              symbol == ds.stockDBdata.symbol
+            }
 
-            if (dataStoreItem != null) {
-              dataStoreItem.onlineMarketData = onlineMarketDataItem
+          if (dataStoreItem != null) {
+            dataStoreItem.onlineMarketData = onlineMarketDataItem
 
 /*
               if (postMarket) {
@@ -870,8 +870,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   }
               }
 */
-            }
           }
+        }
 
       _dataStore.value = dataStore
     }
@@ -907,28 +907,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       if (marketPrice > 0.0 && SharedRepository.alertsData.value != null) {
         if (SharedRepository.alertsData.value!!.find {
-              it.symbol == stockItem.stockDBdata.symbol
-            } == null) {
+            it.symbol == stockItem.stockDBdata.symbol
+          } == null) {
 
           if (stockItem.stockDBdata.alertAbove > 0.0 && stockItem.stockDBdata.alertAbove < marketPrice) {
             val alertDataAbove = AlertData(
-                symbol = stockItem.stockDBdata.symbol,
-                name = getName(stockItem.onlineMarketData),
+              symbol = stockItem.stockDBdata.symbol,
+              name = getName(stockItem.onlineMarketData),
 
-                alertAbove = stockItem.stockDBdata.alertAbove,
-                alertAboveNote = stockItem.stockDBdata.alertAboveNote,
-                marketPrice = marketPrice
+              alertAbove = stockItem.stockDBdata.alertAbove,
+              alertAboveNote = stockItem.stockDBdata.alertAboveNote,
+              marketPrice = marketPrice
             )
             newAlerts.add(alertDataAbove)
           } else
             if (stockItem.stockDBdata.alertBelow > 0.0 && stockItem.stockDBdata.alertBelow > marketPrice) {
               val alertDataBelow = AlertData(
-                  symbol = stockItem.stockDBdata.symbol,
-                  name = getName(stockItem.onlineMarketData),
+                symbol = stockItem.stockDBdata.symbol,
+                name = getName(stockItem.onlineMarketData),
 
-                  alertBelow = stockItem.stockDBdata.alertBelow,
-                  alertBelowNote = stockItem.stockDBdata.alertBelowNote,
-                  marketPrice = marketPrice
+                alertBelow = stockItem.stockDBdata.alertBelow,
+                alertBelowNote = stockItem.stockDBdata.alertBelowNote,
+                marketPrice = marketPrice
               )
               newAlerts.add(alertDataBelow)
             }
@@ -1087,24 +1087,24 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItems.sortedBy { item ->
           item.stockDBdata.symbol
         }
-            // Sort by HUE color. Put items with no color to the end.
-            // Items with groupColor = 0 would be at the beginning.
-            .sortedByDescending { item ->
-              if (item.stockDBdata.groupColor == 0) {
-                //Int.MIN_VALUE
+          // Sort by HUE color. Put items with no color to the end.
+          // Items with groupColor = 0 would be at the beginning.
+          .sortedByDescending { item ->
+            if (item.stockDBdata.groupColor == 0) {
+              //Int.MIN_VALUE
 
-                -1f
-              } else {
-                //item.stockDBdata.groupColor
+              -1f
+            } else {
+              //item.stockDBdata.groupColor
 
-                val hsv = FloatArray(3)
-                Color.colorToHSV(item.stockDBdata.groupColor, hsv)
-                // hsv[0] --> hue
-                // hsv[1] --> saturation
-                // hsv[2] --> value
-                hsv[0]
-              }
+              val hsv = FloatArray(3)
+              Color.colorToHSV(item.stockDBdata.groupColor, hsv)
+              // hsv[0] --> hue
+              // hsv[1] --> saturation
+              // hsv[2] --> value
+              hsv[0]
             }
+          }
       }
       SortMode.ByActivity -> {
         stockItems.sortedByDescending { item ->
@@ -1237,7 +1237,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       logDebug("Import JSONObject '$jsonObj'")
 
       val symbol = jsonObj.getString("symbol")
-          .toUpperCase(Locale.ROOT)
+        .toUpperCase(Locale.ROOT)
 
       if (isValidSymbol(symbol)) {
         var portfolio = SharedRepository.selectedPortfolio.value ?: ""
@@ -1276,46 +1276,46 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               val price = assetsObj.getDouble("price").absoluteValue
               if (quantity > 0.0 && price > 0.0 || quantity < 0.0) {
                 assets.add(
-                    Asset(
-                        symbol = symbol,
-                        quantity = quantity,
-                        price = price,
-                        note = if (assetsObj.has("note")) {
-                          assetsObj.getString("note")
-                        } else {
-                          ""
-                        },
-                        type = if (assetsObj.has("type")) {
-                          assetsObj.getInt("type")
-                        } else {
-                          0
-                        },
-                        date = if (assetsObj.has("date")) {
-                          assetsObj.getLong("date")
-                        } else {
-                          0L
-                        },
-                        sharesPerQuantity = if (assetsObj.has("sharesPerQuantity")) {
-                          assetsObj.getInt("sharesPerQuantity")
-                        } else {
-                          1
-                        },
-                        expirationDate = if (assetsObj.has("expirationDate")) {
-                          assetsObj.getLong("expirationDate")
-                        } else {
-                          0L
-                        },
-                        premium = if (assetsObj.has("premium")) {
-                          assetsObj.getDouble("premium")
-                        } else {
-                          0.0
-                        },
-                        commission = if (assetsObj.has("commission")) {
-                          assetsObj.getDouble("commission")
-                        } else {
-                          0.0
-                        }
-                    )
+                  Asset(
+                    symbol = symbol,
+                    quantity = quantity,
+                    price = price,
+                    note = if (assetsObj.has("note")) {
+                      assetsObj.getString("note")
+                    } else {
+                      ""
+                    },
+                    type = if (assetsObj.has("type")) {
+                      assetsObj.getInt("type")
+                    } else {
+                      0
+                    },
+                    date = if (assetsObj.has("date")) {
+                      assetsObj.getLong("date")
+                    } else {
+                      0L
+                    },
+                    sharesPerQuantity = if (assetsObj.has("sharesPerQuantity")) {
+                      assetsObj.getInt("sharesPerQuantity")
+                    } else {
+                      1
+                    },
+                    expirationDate = if (assetsObj.has("expirationDate")) {
+                      assetsObj.getLong("expirationDate")
+                    } else {
+                      0L
+                    },
+                    premium = if (assetsObj.has("premium")) {
+                      assetsObj.getDouble("premium")
+                    } else {
+                      0.0
+                    },
+                    commission = if (assetsObj.has("commission")) {
+                      assetsObj.getDouble("commission")
+                    } else {
+                      0.0
+                    }
+                  )
                 )
               }
             }
@@ -1339,11 +1339,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 val price = holdingObj.getDouble("price")
                 if (shares > 0.0 && price > 0.0) {
                   assets.add(
-                      Asset(
-                          symbol = symbol,
-                          quantity = shares,
-                          price = price
-                      )
+                    Asset(
+                      symbol = symbol,
+                      quantity = shares,
+                      price = price
+                    )
                   )
                 }
               }
@@ -1374,24 +1374,24 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
             if (eventsObj.has("datetime") && eventsObj.has("title")) {
               val title = eventsObj.getString("title")
-                  .trim()
+                .trim()
               if (title.isNotEmpty()) {
                 events.add(
-                    Event(
-                        symbol = symbol,
-                        datetime = eventsObj.getLong("datetime"),
-                        note = if (eventsObj.has("note")) {
-                          eventsObj.getString("note")
-                        } else {
-                          ""
-                        },
-                        title = title,
-                        type = if (eventsObj.has("type")) {
-                          eventsObj.getInt("type")
-                        } else {
-                          0
-                        }
-                    )
+                  Event(
+                    symbol = symbol,
+                    datetime = eventsObj.getLong("datetime"),
+                    note = if (eventsObj.has("note")) {
+                      eventsObj.getString("note")
+                    } else {
+                      ""
+                    },
+                    title = title,
+                    type = if (eventsObj.has("type")) {
+                      eventsObj.getInt("type")
+                    } else {
+                      0
+                    }
+                  )
                 )
               }
             }
@@ -1415,29 +1415,29 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
               if (amount > 0.0 && paydate > 0L) {
                 val dividend = Dividend(
-                    symbol = symbol,
-                    amount = amount,
-                    paydate = paydate,
-                    type = if (dividendsObj.has("type")) {
-                      dividendsObj.getInt("type")
-                    } else {
-                      0
-                    },
-                    cycle = if (dividendsObj.has("cycle")) {
-                      dividendsObj.getInt("cycle")
-                    } else {
-                      Quarterly.value
-                    },
-                    exdate = if (dividendsObj.has("exdate")) {
-                      dividendsObj.getLong("exdate")
-                    } else {
-                      0L
-                    },
-                    note = if (dividendsObj.has("note")) {
-                      dividendsObj.getString("note")
-                    } else {
-                      ""
-                    },
+                  symbol = symbol,
+                  amount = amount,
+                  paydate = paydate,
+                  type = if (dividendsObj.has("type")) {
+                    dividendsObj.getInt("type")
+                  } else {
+                    0
+                  },
+                  cycle = if (dividendsObj.has("cycle")) {
+                    dividendsObj.getInt("cycle")
+                  } else {
+                    Quarterly.value
+                  },
+                  exdate = if (dividendsObj.has("exdate")) {
+                    dividendsObj.getLong("exdate")
+                  } else {
+                    0L
+                  },
+                  note = if (dividendsObj.has("note")) {
+                    dividendsObj.getString("note")
+                  } else {
+                    ""
+                  },
                 )
 
                 updateDividend(dividend)
@@ -1448,7 +1448,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (jsonObj.has("data")) {
           val data = jsonObj.getString("data")
-              .trim()
+            .trim()
           if (data.isNotEmpty()) {
             setData(symbol = symbol, data = data)
           }
@@ -1460,7 +1460,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           // Get matching group name.
           if (groupColor != 0 && jsonObj.has("groupName")) {
             val groupName = jsonObj.getString("groupName")
-                .trim()
+              .trim()
             if (groupName.isNotEmpty()) {
               setGroup(symbol = symbol, color = groupColor, name = groupName)
             }
@@ -1554,27 +1554,27 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     val msg = getApplication<Application>().getString(
-        R.string.import_msg, imported.toString()
+      R.string.import_msg, imported.toString()
     )
     logDebug("Import JSON  '$msg'")
 
     Toast.makeText(
-        context, msg, Toast.LENGTH_LONG
+      context, msg, Toast.LENGTH_LONG
     )
-        .show()
+      .show()
   }
 
   private fun csvStrToDouble(str: String)
       : Double {
     val s = str.replace("$", "")
-        .replace(",", "")
+      .replace(",", "")
     var value: Double
     try {
       value = s.toDouble()
       if (value == 0.0) {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
         value = numberFormat.parse(s)!!
-            .toDouble()
+          .toDouble()
       }
     } catch (e: Exception) {
       value = 0.0
@@ -1609,15 +1609,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     if (symbolColumn == -1) {
       val msg =
         getApplication<Application>().getString(
-            R.string.import_csv_column_error, "Symbol|Name"
+          R.string.import_csv_column_error, "Symbol|Name"
         )
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
-          context, msg,
-          Toast.LENGTH_LONG
+        context, msg,
+        Toast.LENGTH_LONG
       )
-          .show()
+        .show()
       return
     }
 
@@ -1630,15 +1630,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     if (sharesColumn == -1) {
       val msg =
         getApplication<Application>().getString(
-            R.string.import_csv_column_error, "Shares|Quantity"
+          R.string.import_csv_column_error, "Shares|Quantity"
         )
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
-          context, msg,
-          Toast.LENGTH_LONG
+        context, msg,
+        Toast.LENGTH_LONG
       )
-          .show()
+        .show()
       return
     }
 
@@ -1650,15 +1650,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     if (priceColumn == -1) {
       val msg = getApplication<Application>().getString(
-          R.string.import_csv_column_error, "Price|Cost Basis Per Share"
+        R.string.import_csv_column_error, "Price|Cost Basis Per Share"
       )
       logDebug("Import CSV  '$msg'")
 
       Toast.makeText(
-          context, msg,
-          Toast.LENGTH_LONG
+        context, msg,
+        Toast.LENGTH_LONG
       )
-          .show()
+        .show()
       return
     }
 
@@ -1666,29 +1666,29 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     // skip header row
     rows.drop(1)
-        .forEach { row ->
-          val symbol = row[symbolColumn].toUpperCase(Locale.ROOT)
-          if (symbol.isNotEmpty() && isValidSymbol(symbol)) {
-            val shares = csvStrToDouble(row[sharesColumn])
-            val price = csvStrToDouble(row[priceColumn])
+      .forEach { row ->
+        val symbol = row[symbolColumn].toUpperCase(Locale.ROOT)
+        if (symbol.isNotEmpty() && isValidSymbol(symbol)) {
+          val shares = csvStrToDouble(row[sharesColumn])
+          val price = csvStrToDouble(row[priceColumn])
 
-            if (shares > 0.0 && price > 0.0) {
-              val asset = Asset(
-                  symbol = symbol,
-                  quantity = shares,
-                  price = price
-              )
+          if (shares > 0.0 && price > 0.0) {
+            val asset = Asset(
+              symbol = symbol,
+              quantity = shares,
+              price = price
+            )
 
-              if (assetItems.containsKey(symbol)) {
-                val list = assetItems[symbol]!!.toMutableList()
-                list.add(asset)
-                assetItems[symbol] = list
-              } else {
-                assetItems[symbol] = listOf(asset)
-              }
+            if (assetItems.containsKey(symbol)) {
+              val list = assetItems[symbol]!!.toMutableList()
+              list.add(asset)
+              assetItems[symbol] = list
+            } else {
+              assetItems[symbol] = listOf(asset)
             }
           }
         }
+      }
 
     // Limit import to 100.
     var imported: Int = 0
@@ -1703,14 +1703,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     val msg = getApplication<Application>().getString(
-        R.string.import_msg, imported.toString()
+      R.string.import_msg, imported.toString()
     )
     logDebug("Import CSV  '$msg'")
 
     Toast.makeText(
-        context, msg, Toast.LENGTH_LONG
+      context, msg, Toast.LENGTH_LONG
     )
-        .show()
+      .show()
   }
 
   private fun importText(
@@ -1725,30 +1725,30 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     val portfolio = SharedRepository.selectedPortfolio.value ?: ""
     symbols.map { symbol ->
       symbol.replace("\"", "")
-          .toUpperCase(Locale.ROOT)
+        .toUpperCase(Locale.ROOT)
     }
-        // only a-z from 1..7 chars in length
+      // only a-z from 1..7 chars in length
 //        .filter { symbol ->
 //          symbol.matches("[A-Z]{1,7}".toRegex())
 //        }
-        .distinct()
-        .take(100)
-        .forEach { symbol ->
-          if (isValidSymbol(symbol)) {
-            insert(symbol = symbol, portfolio = portfolio)
-            imported++
-          }
+      .distinct()
+      .take(100)
+      .forEach { symbol ->
+        if (isValidSymbol(symbol)) {
+          insert(symbol = symbol, portfolio = portfolio)
+          imported++
         }
+      }
 
     val msg = getApplication<Application>().getString(
-        R.string.import_msg, imported.toString()
+      R.string.import_msg, imported.toString()
     )
     logDebug("Import TXT  '$msg'")
 
     Toast.makeText(
-        context, msg, Toast.LENGTH_LONG
+      context, msg, Toast.LENGTH_LONG
     )
-        .show()
+      .show()
   }
 
   fun importList(
@@ -1757,39 +1757,39 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ) {
     try {
       context.contentResolver.openInputStream(uri)
-          ?.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-              val text: String = reader.readText()
+        ?.use { inputStream ->
+          BufferedReader(InputStreamReader(inputStream)).use { reader ->
+            val text: String = reader.readText()
 
-              // https://developer.android.com/training/secure-file-sharing/retrieve-info
+            // https://developer.android.com/training/secure-file-sharing/retrieve-info
 
-              when (val type = context.contentResolver.getType(uri)) {
-                "application/json", "text/x-json" -> {
-                  importJSON(context, text)
-                }
-                "text/csv",
-                "text/comma-separated-values",
-                "application/octet-stream" -> {
-                  importCSV(context, text)
-                }
-                "text/plain" -> {
-                  importText(context, text)
-                }
-                else -> {
-                  val msg = getApplication<Application>().getString(
-                      R.string.import_mimetype_error, type
-                  )
-                  throw IllegalArgumentException(msg)
-                }
+            when (val type = context.contentResolver.getType(uri)) {
+              "application/json", "text/x-json" -> {
+                importJSON(context, text)
+              }
+              "text/csv",
+              "text/comma-separated-values",
+              "application/octet-stream" -> {
+                importCSV(context, text)
+              }
+              "text/plain" -> {
+                importText(context, text)
+              }
+              else -> {
+                val msg = getApplication<Application>().getString(
+                  R.string.import_mimetype_error, type
+                )
+                throw IllegalArgumentException(msg)
               }
             }
           }
+        }
     } catch (e: Exception) {
       Toast.makeText(
-          context, getApplication<Application>().getString(R.string.import_error, e.message),
-          Toast.LENGTH_LONG
+        context, getApplication<Application>().getString(R.string.import_error, e.message),
+        Toast.LENGTH_LONG
       )
-          .show()
+        .show()
       Log.d("Import error", "Exception: $e")
       logDebug("Import Exception: $e")
     }
@@ -1820,11 +1820,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
       StockItem(
-          onlineMarketData = OnlineMarketData(symbol = data.symbol),
-          stockDBdata = data,
-          assets = assetItem?.assets ?: emptyList(),
-          events = eventItem?.events ?: emptyList(),
-          dividends = dividendItem?.dividends ?: emptyList()
+        onlineMarketData = OnlineMarketData(symbol = data.symbol),
+        stockDBdata = data,
+        assets = assetItem?.assets ?: emptyList(),
+        events = eventItem?.events ?: emptyList(),
+        dividends = dividendItem?.dividends ?: emptyList()
       )
     }
   }
@@ -1908,21 +1908,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItem.assets.sortedBy { item ->
           item.date
         }
-            .map { asset ->
-              AssetJson(
-                  quantity = validateDouble(asset.quantity),
-                  price = validateDouble(asset.price),
-                  type = if (asset.type != 0) asset.type else null,
-                  note = if (asset.note.isNotEmpty()) asset.note else null,
-                  date = if (asset.date != 0L) asset.date else null,
-                  sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
-                  expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
-                  premium = if (asset.premium > 0.0) validateDouble(asset.premium) else null,
-                  commission = if (asset.commission > 0.0) validateDouble(
-                      asset.commission
-                  ) else null,
-              )
-            }
+          .map { asset ->
+            AssetJson(
+              quantity = validateDouble(asset.quantity),
+              price = validateDouble(asset.price),
+              type = if (asset.type != 0) asset.type else null,
+              note = if (asset.note.isNotEmpty()) asset.note else null,
+              date = if (asset.date != 0L) asset.date else null,
+              sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
+              expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
+              premium = if (asset.premium > 0.0) validateDouble(asset.premium) else null,
+              commission = if (asset.commission > 0.0) validateDouble(
+                asset.commission
+              ) else null,
+            )
+          }
       }
 
       val eventsValue = if (stockItem.events.isEmpty()) {
@@ -1931,14 +1931,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItem.events.sortedBy { item ->
           item.datetime
         }
-            .map { event ->
-              EventJson(
-                  title = event.title,
-                  datetime = event.datetime,
-                  type = if (event.type != 0) event.type else null,
-                  note = if (event.note.isNotEmpty()) event.note else null
-              )
-            }
+          .map { event ->
+            EventJson(
+              title = event.title,
+              datetime = event.datetime,
+              type = if (event.type != 0) event.type else null,
+              note = if (event.note.isNotEmpty()) event.note else null
+            )
+          }
       }
 
       val dividendsValue = if (stockItem.dividends.isEmpty()) {
@@ -1947,68 +1947,68 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItem.dividends.sortedBy { item ->
           item.paydate
         }
-            .map { dividend ->
-              DividendJson(
-                  amount = validateDouble(dividend.amount),
-                  cycle = dividend.cycle,
-                  paydate = dividend.paydate,
-                  type = if (dividend.type != 0) dividend.type else null,
-                  exdate = if (dividend.exdate != 0L) dividend.exdate else null,
-                  note = if (dividend.note.isNotEmpty()) dividend.note else null
-              )
-            }
+          .map { dividend ->
+            DividendJson(
+              amount = validateDouble(dividend.amount),
+              cycle = dividend.cycle,
+              paydate = dividend.paydate,
+              type = if (dividend.type != 0) dividend.type else null,
+              exdate = if (dividend.exdate != 0L) dividend.exdate else null,
+              note = if (dividend.note.isNotEmpty()) dividend.note else null
+            )
+          }
       }
 
       StockItemJson(
-          symbol = stockItem.stockDBdata.symbol,
-          // Empty portfolio is the default portfolio, don't exclude from the export with a null value.
-          // Otherwise importing would set the current portfolio to missing portfolio json entries.
-          portfolio = stockItem.stockDBdata.portfolio,
+        symbol = stockItem.stockDBdata.symbol,
+        // Empty portfolio is the default portfolio, don't exclude from the export with a null value.
+        // Otherwise importing would set the current portfolio to missing portfolio json entries.
+        portfolio = stockItem.stockDBdata.portfolio,
 
-          data = dataValue,
-          groupColor = groupColorValue,
-          groupName = groupNameValue,
-          note = noteValue,
-          dividendNote = dividendNoteValue,
-          annualDividendRate = annualDividendRateValue,
-          alertAbove = alertAboveValue,
-          alertAboveNote = alertAboveNoteValue,
-          alertBelow = alertBelowValue,
-          alertBelowNote = alertBelowNoteValue,
-          assets = assetsValue,
-          events = eventsValue,
-          dividends = dividendsValue
+        data = dataValue,
+        groupColor = groupColorValue,
+        groupName = groupNameValue,
+        note = noteValue,
+        dividendNote = dividendNoteValue,
+        annualDividendRate = annualDividendRateValue,
+        alertAbove = alertAboveValue,
+        alertAboveNote = alertAboveNoteValue,
+        alertBelow = alertBelowValue,
+        alertBelowNote = alertBelowNoteValue,
+        assets = assetsValue,
+        events = eventsValue,
+        dividends = dividendsValue
       )
     }
 
     // Convert to a json string.
     val gson: Gson = GsonBuilder()
-        .setPrettyPrinting()
-        .create()
+      .setPrettyPrinting()
+      .create()
     val jsonString = gson.toJson(stockItemsJson)
 
     // Write the json string.
     try {
       context.contentResolver.openOutputStream(exportJsonUri)
-          ?.use { output ->
-            output as FileOutputStream
-            output.channel.truncate(0)
-            output.write(jsonString.toByteArray())
-          }
+        ?.use { output ->
+          output as FileOutputStream
+          output.channel.truncate(0)
+          output.write(jsonString.toByteArray())
+        }
 
       val msg =
         getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size)
       logDebug("Export JSON '$msg'")
 
       Toast.makeText(context, msg, Toast.LENGTH_LONG)
-          .show()
+        .show()
 
     } catch (e: Exception) {
       Toast.makeText(
-          context, getApplication<Application>().getString(R.string.export_error, e.message),
-          Toast.LENGTH_LONG
+        context, getApplication<Application>().getString(R.string.export_error, e.message),
+        Toast.LENGTH_LONG
       )
-          .show()
+        .show()
       Log.d("Export JSON error", "Exception: $e")
       logDebug("Export JSON Exception: $e")
     }
@@ -2030,10 +2030,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.insert(
-          StockDBdata(
-              symbol = symbol.toUpperCase(Locale.ROOT),
-              portfolio = portfolio
-          )
+        StockDBdata(
+          symbol = symbol.toUpperCase(Locale.ROOT),
+          portfolio = portfolio
+        )
       )
     }
   }
@@ -2054,7 +2054,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       withContext(Dispatchers.IO) {
         if (symbol.isNotEmpty()) {
           repository.updateAlertAbove(
-              symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote
+            symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote
           )
         }
       }
@@ -2070,7 +2070,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       withContext(Dispatchers.IO) {
         if (symbol.isNotEmpty()) {
           repository.updateAlertBelow(
-              symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote
+            symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote
           )
         }
       }
@@ -2176,9 +2176,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     runBlocking {
       withContext(Dispatchers.IO) {
         groups = repository.getGroups()
-            .sortedBy { group ->
-              group.name.toLowerCase(Locale.ROOT)
-            }
+          .sortedBy { group ->
+            group.name.toLowerCase(Locale.ROOT)
+          }
       }
     }
 
@@ -2211,7 +2211,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     val symbollistStr = symbols.take(5)
-        .joinToString(",")
+      .joinToString(",")
 
     when {
       symbols.size > 5 -> {
@@ -2343,12 +2343,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.addAsset(
-          Asset(
-              symbol = symbol.toUpperCase(Locale.ROOT),
-              quantity = quantity,
-              price = price,
-              date = date
-          )
+        Asset(
+          symbol = symbol.toUpperCase(Locale.ROOT),
+          quantity = quantity,
+          price = price,
+          date = date
+        )
       )
     }
   }
@@ -2474,8 +2474,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   fun logDebug(value: String) {
     val time: LocalDateTime = LocalDateTime.now()
     val t = time.format(
-        DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)
-            .withZone(ZoneOffset.UTC)
+      DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)
+        .withZone(ZoneOffset.UTC)
     ) ?: time.toString()
     SharedRepository.debugList.add(DebugData("${t}>", value))
     SharedRepository.debugLiveData.value = SharedRepository.debugList

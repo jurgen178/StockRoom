@@ -181,7 +181,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataAlertAbove"
+      android:id="@+id/tableDataAlertBelow"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline11"
@@ -197,7 +197,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataAlertBelow"
+      android:id="@+id/tableDataAlertAbove"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline12"

@@ -292,7 +292,7 @@ interface StockRoomDao {
   )
 
   @Query(
-      "UPDATE stock_table SET alert_above = :alertAbove, alert_above_note = :alertAboveNote WHERE symbol = :symbol"
+    "UPDATE stock_table SET alert_above = :alertAbove, alert_above_note = :alertAboveNote WHERE symbol = :symbol"
   )
   fun updateAlertAbove(
     symbol: String,
@@ -301,7 +301,7 @@ interface StockRoomDao {
   )
 
   @Query(
-      "UPDATE stock_table SET alert_below = :alertBelow, alert_below_note = :alertBelowNote WHERE symbol = :symbol"
+    "UPDATE stock_table SET alert_below = :alertBelow, alert_below_note = :alertBelowNote WHERE symbol = :symbol"
   )
   fun updateAlertBelow(
     symbol: String,
@@ -353,7 +353,7 @@ interface StockRoomDao {
 //    fun getAllAssets(): LiveData<List<Assets>> = getAllAssets1().getDistinct()
 
   @Query(
-      "DELETE FROM asset_table WHERE symbol = :symbol AND quantity = :quantity AND price = :price"
+    "DELETE FROM asset_table WHERE symbol = :symbol AND quantity = :quantity AND price = :price"
   )
   fun deleteAsset(
     symbol: String,
@@ -488,13 +488,13 @@ interface StockRoomDao {
   @Transaction
   fun updateDividend(dividend: Dividend) {
     deleteDividend(
-        symbol = dividend.symbol,
-        amount = dividend.amount,
-        type = dividend.type,
-        cycle = dividend.cycle,
-        paydate = dividend.paydate,
-        exdate = dividend.exdate,
-        note = dividend.note
+      symbol = dividend.symbol,
+      amount = dividend.amount,
+      type = dividend.type,
+      cycle = dividend.cycle,
+      paydate = dividend.paydate,
+      exdate = dividend.exdate,
+      note = dividend.note
     )
     addDividend(dividend)
   }
@@ -505,13 +505,13 @@ interface StockRoomDao {
     dividendNew: Dividend
   ) {
     deleteDividend(
-        symbol = dividendOld.symbol,
-        amount = dividendOld.amount,
-        type = dividendOld.type,
-        cycle = dividendOld.cycle,
-        paydate = dividendOld.paydate,
-        exdate = dividendOld.exdate,
-        note = dividendOld.note
+      symbol = dividendOld.symbol,
+      amount = dividendOld.amount,
+      type = dividendOld.type,
+      cycle = dividendOld.cycle,
+      paydate = dividendOld.paydate,
+      exdate = dividendOld.exdate,
+      note = dividendOld.note
     )
     addDividend(dividendNew)
   }
@@ -524,7 +524,7 @@ interface StockRoomDao {
 //  fun deleteDividend(dividend: Dividend)
 
   @Query(
-      "DELETE FROM dividend_table WHERE symbol = :symbol AND amount = :amount AND type = :type AND cycle = :cycle AND paydate = :paydate AND exdate = :exdate AND note = :note"
+    "DELETE FROM dividend_table WHERE symbol = :symbol AND amount = :amount AND type = :type AND cycle = :cycle AND paydate = :paydate AND exdate = :exdate AND note = :note"
   )
   fun deleteDividend(
     symbol: String,
