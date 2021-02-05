@@ -35,7 +35,6 @@ import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.scale
 import androidx.core.view.isEmpty
-import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
