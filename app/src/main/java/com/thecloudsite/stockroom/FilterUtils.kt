@@ -99,6 +99,8 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.NotMatchRegexTextType.value =
     context.getString(R.string.filter_NotMatchRegexTextType)
   FilterSubTypeEnum.IsPresentType.value = context.getString(R.string.filter_IsPresentType)
+  FilterSubTypeEnum.IsOnePresentType.value = context.getString(R.string.filter_IsOnePresentType)
+  FilterSubTypeEnum.IsAllPresentType.value = context.getString(R.string.filter_IsAllPresentType)
   FilterSubTypeEnum.IsNotPresentType.value = context.getString(R.string.filter_IsNotPresentType)
   FilterSubTypeEnum.IsUsedType.value = context.getString(R.string.filter_IsUsedType)
   FilterSubTypeEnum.IsNotUsedType.value = context.getString(R.string.filter_IsNotUsedType)
@@ -111,9 +113,9 @@ fun getFilterTypeList(context: Context): List<String> {
 //      .filter { type ->
 //        type != FilterTypeEnum.FilterNullType
 //      }
-      .forEach { filter ->
-        filterList.add(FilterFactory.create(filter, context).displayName)
-      }
+    .forEach { filter ->
+      filterList.add(FilterFactory.create(filter, context).displayName)
+    }
 
   return filterList
 }
@@ -123,7 +125,7 @@ fun strToDouble(str: String): Double {
   try {
     val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
     value = numberFormat.parse(str)!!
-        .toDouble()
+      .toDouble()
   } catch (e: Exception) {
   }
 
@@ -135,7 +137,7 @@ fun strToInt(str: String): Int {
   try {
     val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
     value = numberFormat.parse(str)!!
-        .toInt()
+      .toInt()
   } catch (e: Exception) {
   }
 

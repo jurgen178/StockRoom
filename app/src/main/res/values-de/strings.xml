@@ -268,7 +268,7 @@ limitations under the License. -->
   <string name="onlinedata_fiftyTwoWeekRange">Jahresbereich</string>
   <string name="onlinedata_regularMarketDayRange">Tagesbereich</string>
   <string name="onlinedata_regularMarketVolume">Marktvolumen</string>
-  <string name="onlinedata_sharesOutstanding">Ausst. Wertpapiere</string>
+  <string name="onlinedata_sharesOutstanding">Ausst. Wertp.</string>
   <string name="onlinedata_marketCap">Marktkap.</string>
   <string name="onlinedata_trailingPE">Vergangenes P/E</string>
   <string name="onlinedata_priceEpsCurrentYear">Diesjähriges P/E</string>
@@ -465,6 +465,8 @@ limitations under the License. -->
   <string name="filter_MatchRegexTextType">passt zum regulären Ausdruck</string>
   <string name="filter_NotMatchRegexTextType">passt nicht zum regulären Ausdruck</string>
   <string name="filter_IsPresentType">ist vorhanden</string>
+  <string name="filter_IsOnePresentType">ist nur eine vorhanden</string>
+  <string name="filter_IsAllPresentType">sind alle vorhanden</string>
   <string name="filter_IsNotPresentType">ist nicht vorhanden</string>
   <string name="filter_IsUsedType">wird verwendet</string>
   <string name="filter_IsNotUsedType">wird nicht verwendet</string>
