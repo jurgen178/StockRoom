@@ -388,7 +388,7 @@ limitations under the License. -->
   <string name="filter_displayname_name">Display name</string>
   <string name="filter_displayname_desc"></string>
   <string name="filter_marketcap_name">Market Capitalization</string>
-  <string name="filter_marketcap_desc">Market Capitalization is in Millions.\nFor example 42 is 42000000 = 42M Market Cap.</string>
+  <string name="filter_marketcap_desc">Market Capitalization is in Millions.\nFor example 42 is 42000000 = 42M Market Cap.\n\nNano-Cap is below 50M\nMicro-Cap is between 50M and 300M\nSmall-Cap is between 300M and 2B\nMid-Cap is between 2B and 10B\nLarge-Cap is more than 10B</string>
   <string name="filter_quotetype_name">Quote type</string>
   <string name="filter_quotetype_desc"></string>
   <string name="filter_stockexchangename_name">Stock exchange name</string>
@@ -448,11 +448,11 @@ limitations under the License. -->
   <string name="filter_default_name">Standard Filter</string>
   <string name="save_filter_error">The filter could not be saved:\n%1$s</string>
   <string name="load_filter_error">The filter could not be loaded:\n%1$s</string>
-  <string name="filter_GreaterThanType">greater than</string>
-  <string name="filter_LessThanType">less than</string>
+  <string name="filter_GreaterThanType">is greater than</string>
+  <string name="filter_LessThanType">is less than</string>
   <string name="filter_EqualType">equals</string>
-  <string name="filter_BeforeDateType">before date</string>
-  <string name="filter_AfterDateType">after date</string>
+  <string name="filter_BeforeDateType">is before date</string>
+  <string name="filter_AfterDateType">is after date</string>
   <string name="filter_ContainsTextType">contains</string>
   <string name="filter_NotContainsTextType">not contains</string>
   <string name="filter_SimilarTextType">is similar to</string>
@@ -473,6 +473,11 @@ limitations under the License. -->
   <string name="filter_IsNotUsedType">is not used</string>
   <string name="filter_IsType">is</string>
   <string name="filter_IsNotType">is not</string>
+  <string name="filter_IsMarketNanoCapType">is Nano-Cap</string>
+  <string name="filter_IsMarketMicroCapType">is Micro-Cap</string>
+  <string name="filter_IsMarketMidCapType">is Mid-Cap</string>
+  <string name="filter_IsMarketSmallCapType">is Small-Cap</string>
+  <string name="filter_IsMarketLargeCapType">is Large-Cap</string>
   <string name="filter_mode">Filter mode</string>
   <string name="delayed_quote">Delayed Quote</string>
   <string name="nasdaq_real_time_price">Nasdaq Real Time Price</string>

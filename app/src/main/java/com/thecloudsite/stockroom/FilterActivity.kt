@@ -78,7 +78,7 @@ class FilterActivity : AppCompatActivity() {
 
     val filterClickListenerUpdate = { filterType: IFilterType, index: Int ->
       filterItemUpdateClicked(
-          filterType, index
+        filterType, index
       )
     }
     val filterClickListenerDelete =
@@ -125,10 +125,10 @@ class FilterActivity : AppCompatActivity() {
       binding.textViewFilterModeSpinner.visibility = filterModeVisibility
 
       binding.textViewFilterModeSpinner.setSelection(
-          when (filter.filterMode) {
-            FilterModeTypeEnum.AndType -> 0
-            FilterModeTypeEnum.OrType -> 1
-          }
+        when (filter.filterMode) {
+          FilterModeTypeEnum.AndType -> 0
+          FilterModeTypeEnum.OrType -> 1
+        }
       )
     })
 
@@ -151,36 +151,36 @@ class FilterActivity : AppCompatActivity() {
       var menuIndex: Int = Menu.FIRST
 
       filterDataViewModel.filterNameList
-          .forEach { filtername ->
-            popupMenu.menu.add(0, menuIndex++, Menu.NONE, filtername)
-          }
+        .forEach { filtername ->
+          popupMenu.menu.add(0, menuIndex++, Menu.NONE, filtername)
+        }
 
       // Last-3 item is to add a new filter
       val addFilterSet = SpannableStringBuilder()
-          .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.add_filter_set)) }
-          }
+        .color(getColor(R.color.colorAccent)) {
+          bold { append(getString(R.string.add_filter_set)) }
+        }
       popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addFilterSet)
 
       // Last-2 item is to delete all filter
       val deleteFilterSetItem = SpannableStringBuilder()
-          .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.delete_filter_set)) }
-          }
+        .color(getColor(R.color.colorAccent)) {
+          bold { append(getString(R.string.delete_filter_set)) }
+        }
       popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, deleteFilterSetItem)
 
       // Last-1 item is to load filter
       val loadFilterSetItem = SpannableStringBuilder()
-          .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.menu_load_filter_set)) }
-          }
+        .color(getColor(R.color.colorAccent)) {
+          bold { append(getString(R.string.menu_load_filter_set)) }
+        }
       popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, loadFilterSetItem)
 
       // Last item is to save the filter
       val saveFilterSetItem = SpannableStringBuilder()
-          .color(getColor(R.color.colorAccent)) {
-            bold { append(getString(R.string.menu_save_filter_set)) }
-          }
+        .color(getColor(R.color.colorAccent)) {
+          bold { append(getString(R.string.menu_save_filter_set)) }
+        }
       popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, saveFilterSetItem)
 
       popupMenu.show()
@@ -212,47 +212,47 @@ class FilterActivity : AppCompatActivity() {
             dialogBinding.filterHeader.text = getString(R.string.add_filter_set)
 
             builder.setView(dialogBinding.root)
-                // Add action buttons
-                .setPositiveButton(R.string.add) { _, _ ->
-                  // Add () to avoid cast exception.
-                  val filterName = (dialogBinding.addFilterName.text).toString()
-                      .trim()
-                  if (filterName.isEmpty()) {
-                    Toast.makeText(
-                        this, getString(R.string.filter_name_not_empty),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                    return@setPositiveButton
-                  }
+              // Add action buttons
+              .setPositiveButton(R.string.add) { _, _ ->
+                // Add () to avoid cast exception.
+                val filterName = (dialogBinding.addFilterName.text).toString()
+                  .trim()
+                if (filterName.isEmpty()) {
+                  Toast.makeText(
+                    this, getString(R.string.filter_name_not_empty),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
 
-                  dialogBinding.addFilterName.setText(filterName)
-                  filterDataViewModel.selectedFilter = filterName
-                }
-                .setNegativeButton(
-                    R.string.cancel
-                ) { _, _ ->
-                }
+                dialogBinding.addFilterName.setText(filterName)
+                filterDataViewModel.selectedFilter = filterName
+              }
+              .setNegativeButton(
+                R.string.cancel
+              ) { _, _ ->
+              }
             builder
-                .create()
-                .show()
+              .create()
+              .show()
           }
           deleteSelected -> {
             AlertDialog.Builder(this)
-                .setTitle(R.string.delete_all_filter_title)
-                .setMessage(getString(R.string.delete_all_filter_confirm))
-                .setPositiveButton(R.string.delete) { _, _ ->
-                  filterDataViewModel.deleteAllData()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+              .setTitle(R.string.delete_all_filter_title)
+              .setMessage(getString(R.string.delete_all_filter_confirm))
+              .setPositiveButton(R.string.delete) { _, _ ->
+                filterDataViewModel.deleteAllData()
+              }
+              .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+              .show()
           }
           loadSelected -> {
             // match importList()
             val mimeTypes = arrayOf(
-                // .json
-                "application/json",
-                "text/x-json",
+              // .json
+              "application/json",
+              "text/x-json",
             )
 
             val intent = Intent()
@@ -261,29 +261,29 @@ class FilterActivity : AppCompatActivity() {
             intent.action = Intent.ACTION_OPEN_DOCUMENT
 
             startActivityForResult(
-                Intent.createChooser(intent, getString(R.string.import_select_file)),
-                loadFilterActivityRequestCode
+              Intent.createChooser(intent, getString(R.string.import_select_file)),
+              loadFilterActivityRequestCode
             )
           }
           saveSelected -> {
             // Set default filename.
             val date = LocalDateTime.now()
-                .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-                .replace(":", "_")
+              .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+              .replace(":", "_")
             val jsonFileName = this.getString(R.string.json_default_filter_filename, date)
             val intent = Intent()
-                .setType("application/json")
-                .setAction(Intent.ACTION_CREATE_DOCUMENT)
-                .addCategory(Intent.CATEGORY_OPENABLE)
-                .putExtra(Intent.EXTRA_TITLE, jsonFileName)
+              .setType("application/json")
+              .setAction(Intent.ACTION_CREATE_DOCUMENT)
+              .addCategory(Intent.CATEGORY_OPENABLE)
+              .putExtra(Intent.EXTRA_TITLE, jsonFileName)
             startActivityForResult(
-                Intent.createChooser(intent, getString(R.string.export_select_file)),
-                saveFilterActivityRequestCode
+              Intent.createChooser(intent, getString(R.string.export_select_file)),
+              saveFilterActivityRequestCode
             )
           }
           else -> {
             val filterName = menuitem.title.trim()
-                .toString()
+              .toString()
             binding.textViewFilterSelection.text = getString(R.string.filter_set, filterName)
 
             filterDataViewModel.selectedFilter = filterName
@@ -298,10 +298,10 @@ class FilterActivity : AppCompatActivity() {
     }
 
     binding.textViewFilterModeSpinner.setSelection(
-        when (filterDataViewModel.filterMode) {
-          FilterModeTypeEnum.AndType -> 0
-          FilterModeTypeEnum.OrType -> 1
-        }
+      when (filterDataViewModel.filterMode) {
+        FilterModeTypeEnum.AndType -> 0
+        FilterModeTypeEnum.OrType -> 1
+      }
     )
 
     binding.textViewFilterModeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
@@ -331,7 +331,7 @@ class FilterActivity : AppCompatActivity() {
 
     if (resultCode == Activity.RESULT_OK) {
       val resultCodeShort = requestCode.toShort()
-          .toInt()
+        .toInt()
       if (requestCode == loadFilterActivityRequestCode) {
         resultData?.data?.also { uri ->
 
@@ -378,38 +378,38 @@ class FilterActivity : AppCompatActivity() {
   ) {
     try {
       context.contentResolver.openInputStream(uri)
-          ?.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-              val text: String = reader.readText()
+        ?.use { inputStream ->
+          BufferedReader(InputStreamReader(inputStream)).use { reader ->
+            val text: String = reader.readText()
 
-              // https://developer.android.com/training/secure-file-sharing/retrieve-info
+            // https://developer.android.com/training/secure-file-sharing/retrieve-info
 
-              when (val type = context.contentResolver.getType(uri)) {
-                "application/json", "text/x-json" -> {
-                  filterDataViewModel.setSerializedStr(text)
-                  storeFilters()
+            when (val type = context.contentResolver.getType(uri)) {
+              "application/json", "text/x-json" -> {
+                filterDataViewModel.setSerializedStr(text)
+                storeFilters()
 
-                  val msg = application.getString(
-                      R.string.load_filter_msg, filterDataViewModel.filterNameList.size
-                  )
-                  Toast.makeText(context, msg, Toast.LENGTH_LONG)
-                      .show()
-                }
-                else -> {
-                  val msg = application.getString(
-                      R.string.import_mimetype_error, type
-                  )
-                  throw IllegalArgumentException(msg)
-                }
+                val msg = application.getString(
+                  R.string.load_filter_msg, filterDataViewModel.filterNameList.size
+                )
+                Toast.makeText(context, msg, Toast.LENGTH_LONG)
+                  .show()
+              }
+              else -> {
+                val msg = application.getString(
+                  R.string.import_mimetype_error, type
+                )
+                throw IllegalArgumentException(msg)
               }
             }
           }
+        }
     } catch (e: Exception) {
       Toast.makeText(
-          context, application.getString(R.string.import_error, e.message),
-          Toast.LENGTH_LONG
+        context, application.getString(R.string.import_error, e.message),
+        Toast.LENGTH_LONG
       )
-          .show()
+        .show()
     }
   }
 
@@ -422,25 +422,25 @@ class FilterActivity : AppCompatActivity() {
     // Write the json string.
     try {
       context.contentResolver.openOutputStream(exportJsonUri)
-          ?.use { output ->
-            output as FileOutputStream
-            output.channel.truncate(0)
-            output.write(jsonString.toByteArray())
-          }
+        ?.use { output ->
+          output as FileOutputStream
+          output.channel.truncate(0)
+          output.write(jsonString.toByteArray())
+        }
 
       val msg = application.getString(
-          R.string.save_filter_msg, filterDataViewModel.filterNameList.size
+        R.string.save_filter_msg, filterDataViewModel.filterNameList.size
       )
 
       Toast.makeText(context, msg, Toast.LENGTH_LONG)
-          .show()
+        .show()
 
     } catch (e: Exception) {
       Toast.makeText(
-          context, application.getString(R.string.export_error, e.message),
-          Toast.LENGTH_LONG
+        context, application.getString(R.string.export_error, e.message),
+        Toast.LENGTH_LONG
       )
-          .show()
+        .show()
       Log.d("Export JSON error", "Exception: $e")
     }
   }
@@ -457,24 +457,24 @@ class FilterActivity : AppCompatActivity() {
     index: Int
   ) {
     android.app.AlertDialog.Builder(this)
-        .setTitle(R.string.delete_filter)
-        .setMessage(
-            getString(
-                R.string.delete_filter_confirm, filterType.displayName
-            )
+      .setTitle(R.string.delete_filter)
+      .setMessage(
+        getString(
+          R.string.delete_filter_confirm, filterType.displayName
         )
-        .setPositiveButton(R.string.delete) { _, _ ->
+      )
+      .setPositiveButton(R.string.delete) { _, _ ->
 
-          filterDataViewModel.deleteData(index)
+        filterDataViewModel.deleteData(index)
 
-          Toast.makeText(
-              this, getString(R.string.delete_filter_msg, filterType.displayName),
-              Toast.LENGTH_LONG
-          )
-              .show()
-        }
-        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-        .show()
+        Toast.makeText(
+          this, getString(R.string.delete_filter_msg, filterType.displayName),
+          Toast.LENGTH_LONG
+        )
+          .show()
+      }
+      .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+      .show()
   }
 
   private fun addUpdateFilter(
@@ -528,7 +528,7 @@ class FilterActivity : AppCompatActivity() {
           val localDateTime = LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.UTC)
           // month is starting from zero
           dialogBinding.datePickerFilter.updateDate(
-              localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
+            localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
           )
         }
 //        GroupType -> {
@@ -572,7 +572,7 @@ class FilterActivity : AppCompatActivity() {
       filterType: IFilterType
     ) {
       data class ViewSet
-      (
+        (
         var view: View,
         var visibility: Int = View.GONE,
       )
@@ -631,7 +631,13 @@ class FilterActivity : AppCompatActivity() {
         FilterSubTypeEnum.IsUsedType,
         FilterSubTypeEnum.IsNotUsedType,
         FilterSubTypeEnum.IsEmptyTextType,
-        FilterSubTypeEnum.IsNotEmptyTextType -> {
+        FilterSubTypeEnum.IsNotEmptyTextType,
+        FilterSubTypeEnum.IsMarketNanoCapType,
+        FilterSubTypeEnum.IsMarketMicroCapType,
+        FilterSubTypeEnum.IsMarketSmallCapType,
+        FilterSubTypeEnum.IsMarketMidCapType,
+        FilterSubTypeEnum.IsMarketLargeCapType,
+        -> {
           allGone()
         }
         else -> {
@@ -675,7 +681,7 @@ class FilterActivity : AppCompatActivity() {
             val selection = dialogBinding.selectionSpinnerFilter.selectedItemPosition
             dialogBinding.selectionSpinnerFilter.adapter =
               ArrayAdapter(
-                  view.context, android.R.layout.simple_list_item_1, filterType.selectionList
+                view.context, android.R.layout.simple_list_item_1, filterType.selectionList
               )
 
             if (selection >= 0 && selection < filterType.selectionList.size) {
@@ -690,11 +696,11 @@ class FilterActivity : AppCompatActivity() {
           // Reset selection if filter type changed and the filter sub type is not available.
           val subTypeIndex = filterType.subTypeList.indexOf(filterType.subType)
           dialogBinding.textViewSubTypeSpinner.setSelection(
-              if (subTypeIndex != -1) {
-                subTypeIndex
-              } else {
-                0
-              }
+            if (subTypeIndex != -1) {
+              subTypeIndex
+            } else {
+              0
+            }
           )
         }
       }
@@ -719,105 +725,105 @@ class FilterActivity : AppCompatActivity() {
       }
 
     builder.setView(dialogBinding.root)
-        // Add action buttons
-        .setPositiveButton(
-            if (index >= 0) string.update else string.add
-        )
-        { _, _ ->
-          val filterIndex = dialogBinding.textViewFilterSpinner.selectedItemPosition
-          val newFilterType = FilterFactory.create(filterIndex, applicationContext)
+      // Add action buttons
+      .setPositiveButton(
+        if (index >= 0) string.update else string.add
+      )
+      { _, _ ->
+        val filterIndex = dialogBinding.textViewFilterSpinner.selectedItemPosition
+        val newFilterType = FilterFactory.create(filterIndex, applicationContext)
 
-          val subType =
-            if (dialogBinding.textViewSubTypeSpinner.selectedItemPosition >= 0
-                && dialogBinding.textViewSubTypeSpinner.selectedItemPosition < newFilterType.subTypeList.size
-            ) {
-              newFilterType.subTypeList[dialogBinding.textViewSubTypeSpinner.selectedItemPosition]
-            } else {
-              FilterSubTypeEnum.NoType
-            }
-          newFilterType.subType = subType
-
-          newFilterType.data = when (newFilterType.dataType) {
-            TextType -> {
-              // Add () to avoid cast exception.
-              (dialogBinding.filterTextValue.text).toString()
-                  .trim()
-            }
-            DoubleType -> {
-              // Add () to avoid cast exception.
-              (dialogBinding.filterDoubleValue.text).toString()
-                  .trim()
-            }
-            IntType -> {
-              // Add () to avoid cast exception.
-              (dialogBinding.filterIntValue.text).toString()
-                  .trim()
-            }
-            DateType -> {
-              val localDateTime: LocalDateTime = LocalDateTime.of(
-                  dialogBinding.datePickerFilter.year,
-                  dialogBinding.datePickerFilter.month + 1,
-                  dialogBinding.datePickerFilter.dayOfMonth, 0, 0
-              )
-              val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
-              date.toString()
-            }
-            SelectionType -> {
-              val selection = dialogBinding.selectionSpinnerFilter.selectedItemPosition
-              selection.toString()
-            }
-            NoType -> {
-              ""
-            }
-          }
-
-          // Check regex
-          if (subType == FilterSubTypeEnum.MatchRegexTextType
-              || subType == FilterSubTypeEnum.NotMatchRegexTextType
+        val subType =
+          if (dialogBinding.textViewSubTypeSpinner.selectedItemPosition >= 0
+            && dialogBinding.textViewSubTypeSpinner.selectedItemPosition < newFilterType.subTypeList.size
           ) {
-            try {
-              newFilterType.data.toRegex(regexOption)
-                  .containsMatchIn("test")
-            } catch (e: Exception) {
-              Toast.makeText(
-                  this, getString(R.string.filter_regex_error_msg, newFilterType.data),
-                  Toast.LENGTH_LONG
-              )
-                  .show()
-
-              return@setPositiveButton
-            }
-          }
-
-          // Update or Add?
-          if (index >= 0) {
-            // Update
-            filterDataViewModel.updateData(newFilterType, index)
-
-            Toast.makeText(
-                this, getString(R.string.update_filter_msg, newFilterType.displayName),
-                Toast.LENGTH_LONG
-            )
-                .show()
+            newFilterType.subTypeList[dialogBinding.textViewSubTypeSpinner.selectedItemPosition]
           } else {
-            // Add
-            filterDataViewModel.addData(newFilterType)
+            FilterSubTypeEnum.NoType
+          }
+        newFilterType.subType = subType
 
-            Toast.makeText(
-                this, getString(R.string.add_filter_msg, newFilterType.displayName),
-                Toast.LENGTH_LONG
+        newFilterType.data = when (newFilterType.dataType) {
+          TextType -> {
+            // Add () to avoid cast exception.
+            (dialogBinding.filterTextValue.text).toString()
+              .trim()
+          }
+          DoubleType -> {
+            // Add () to avoid cast exception.
+            (dialogBinding.filterDoubleValue.text).toString()
+              .trim()
+          }
+          IntType -> {
+            // Add () to avoid cast exception.
+            (dialogBinding.filterIntValue.text).toString()
+              .trim()
+          }
+          DateType -> {
+            val localDateTime: LocalDateTime = LocalDateTime.of(
+              dialogBinding.datePickerFilter.year,
+              dialogBinding.datePickerFilter.month + 1,
+              dialogBinding.datePickerFilter.dayOfMonth, 0, 0
             )
-                .show()
+            val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+            date.toString()
+          }
+          SelectionType -> {
+            val selection = dialogBinding.selectionSpinnerFilter.selectedItemPosition
+            selection.toString()
+          }
+          NoType -> {
+            ""
           }
         }
-        .setNegativeButton(
-            string.cancel
-        )
-        { _, _ ->
+
+        // Check regex
+        if (subType == FilterSubTypeEnum.MatchRegexTextType
+          || subType == FilterSubTypeEnum.NotMatchRegexTextType
+        ) {
+          try {
+            newFilterType.data.toRegex(regexOption)
+              .containsMatchIn("test")
+          } catch (e: Exception) {
+            Toast.makeText(
+              this, getString(R.string.filter_regex_error_msg, newFilterType.data),
+              Toast.LENGTH_LONG
+            )
+              .show()
+
+            return@setPositiveButton
+          }
         }
+
+        // Update or Add?
+        if (index >= 0) {
+          // Update
+          filterDataViewModel.updateData(newFilterType, index)
+
+          Toast.makeText(
+            this, getString(R.string.update_filter_msg, newFilterType.displayName),
+            Toast.LENGTH_LONG
+          )
+            .show()
+        } else {
+          // Add
+          filterDataViewModel.addData(newFilterType)
+
+          Toast.makeText(
+            this, getString(R.string.add_filter_msg, newFilterType.displayName),
+            Toast.LENGTH_LONG
+          )
+            .show()
+        }
+      }
+      .setNegativeButton(
+        string.cancel
+      )
+      { _, _ ->
+      }
     builder
-        .create()
-        .show()
+      .create()
+      .show()
   }
 }
 
