@@ -26,7 +26,7 @@ limitations under the License. -->
         android:minHeight="@dimen/min_height"
         android:fontFamily="sans-serif-light"
         android:hint="@string/hint_add_stock"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapCharacters"
         android:layout_margin="@dimen/big_padding"
         android:textSize="18sp"
         />
