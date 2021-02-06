@@ -39,9 +39,6 @@ var responseCounter = 0
   responseCounter++
 }
 
-// Get online data in blocks.
-const val blockSize = 32
-
 class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : BaseRepository() {
 
   private val _data = MutableLiveData<List<OnlineMarketData>>()
@@ -57,7 +54,6 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
       return Pair(MarketState.NO_SYMBOL, "")
     }
 
-    var errorMsg = ""
     val api: YahooApiMarketData? = api()
 
     if (api != null) {
@@ -77,38 +73,11 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 //      val onlineMarketDataResultList: List<OnlineMarketData> = quoteResponse?.quoteResponse?.result
 //          ?: emptyList()
 
-      // Get online data in blocks.
-      val quoteResponses: MutableList<YahooResponse?> = mutableListOf()
-      var symbolsCopy = symbols
-      do {
-        // Get the first number of blockSize symbols.
-        val blockSymbols: List<String> = symbolsCopy.take(blockSize)
-        symbolsCopy = symbolsCopy.drop(blockSize)
-
-        val quoteResponse: YahooResponse? = try {
-          safeApiCall(
-            call = {
-              updateCounter()
-              api.getStockDataAsync(blockSymbols.joinToString(","))
-                .await()
-            }, errorMessage = "Error getting finance data."
-          )
-        } catch (e: Exception) {
-          errorMsg = "StockMarketDataRepository.getStockData(symbols) failed, Exception=$e"
-          null
-        }
-
-        quoteResponses.add(quoteResponse)
-      } while (symbolsCopy.isNotEmpty())
+      val result = getStockDataInBlocks(api, symbols)
 
       // Get all results.
-      val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
-      quoteResponses.forEach { quoteResponse ->
-        onlineMarketDataResultList.addAll(
-          quoteResponse?.quoteResponse?.result
-            ?: emptyList()
-        )
-      }
+      val onlineMarketDataResultList = result.first
+      val errorMsg = result.second
 
       if (onlineMarketDataResultList.isEmpty()) {
         // no _data.value because this is a background thread
@@ -207,6 +176,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
   }
 
   suspend fun getStockData2(symbols: List<String>): List<OnlineMarketData> {
+
     val api: YahooApiMarketData = api() ?: return emptyList()
 
 //    val quoteResponse: YahooResponse? = try {
@@ -224,9 +194,23 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 //
 //    return quoteResponse?.quoteResponse?.result ?: emptyList()
 
+    val result = getStockDataInBlocks(api, symbols)
+    return result.first
+  }
+
+  private suspend fun getStockDataInBlocks(
+    api: YahooApiMarketData,
+    symbols: List<String>
+  ): Pair<List<OnlineMarketData>, String> {
+
+    // Get blockSize symbol data at a time.
+    val blockSize = 32
+    var errorMsg = ""
+
     // Get online data in blocks.
-    val quoteResponses: MutableList<YahooResponse?> = mutableListOf()
+    val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
     var symbolsCopy = symbols
+
     do {
       // Get the first number of blockSize symbols.
       val blockSymbols: List<String> = symbolsCopy.take(blockSize)
@@ -241,26 +225,23 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
           }, errorMessage = "Error getting finance data."
         )
       } catch (e: Exception) {
-        Log.d("StockMarketDataRepository.getStockData2 failed", "Exception=$e")
+        errorMsg = "StockMarketDataRepository.getStockDataInBlocks failed, Exception=$e"
+        Log.d("StockMarketDataRepository.getStockDataInBlocks failed", "Exception=$e")
         null
       }
 
-      quoteResponses.add(quoteResponse)
-    } while (symbolsCopy.isNotEmpty())
-
-    // Get all results.
-    val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
-    quoteResponses.forEach { quoteResponse ->
+      // Add the result.
       onlineMarketDataResultList.addAll(
         quoteResponse?.quoteResponse?.result
           ?: emptyList()
       )
-    }
+    } while (symbolsCopy.isNotEmpty())
 
-    return onlineMarketDataResultList
+    return Pair(onlineMarketDataResultList, errorMsg)
   }
 
   suspend fun getStockData(symbol: String): OnlineMarketData? {
+
     val api: YahooApiMarketData? = api()
 
     if (symbol.isNotEmpty() && api != null) {
@@ -294,6 +275,7 @@ class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?
 //    get() = _data
 
   suspend fun getStockRawData(symbol: String): String {
+
     val api: YahooApiRawMarketData? = api()
 
     if (symbol.isNotEmpty() && api != null) {
