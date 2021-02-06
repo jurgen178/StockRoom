@@ -94,6 +94,7 @@ class StockRoomTableAdapter internal constructor(
     }
 
     if (current != null) {
+
       holder.bindSummary(current, clickListenerSummary)
 
       // Header item is symbol = ""

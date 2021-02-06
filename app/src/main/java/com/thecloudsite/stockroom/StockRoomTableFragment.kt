@@ -42,10 +42,12 @@ class StockRoomTableFragment : Fragment() {
   }
 
   fun clickListenerSummary(stockItem: StockItem) {
-    val intent = Intent(context, StockDataActivity::class.java)
-    intent.putExtra("symbol", stockItem.onlineMarketData.symbol)
-    //stockRoomViewModel.runOnlineTaskNow()
-    startActivity(intent)
+    if (stockItem.stockDBdata.symbol.isNotEmpty()) {
+      val intent = Intent(context, StockDataActivity::class.java)
+      intent.putExtra("symbol", stockItem.onlineMarketData.symbol)
+      //stockRoomViewModel.runOnlineTaskNow()
+      startActivity(intent)
+    }
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
