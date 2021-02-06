@@ -25,6 +25,7 @@ import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
 import com.thecloudsite.stockroom.databinding.ActivityAddBinding
 import com.thecloudsite.stockroom.list.ListActivity
+import java.util.Locale
 
 /*
  * Activity for entering a new symbol.
@@ -74,7 +75,7 @@ class AddActivity : AppCompatActivity() {
             .trim()
 
         // https://convertcodes.com/unicode-converter-encode-decode-utf/
-        if (symbol == "\u0064\u0065\u0062\u0075\u0067") {
+        if (symbol.toLowerCase(Locale.ROOT) == "\u0064\u0065\u0062\u0075\u0067") {
           val intent = Intent(this@AddActivity, ListActivity::class.java)
           startActivity(intent)
           setResult(Activity.RESULT_CANCELED, replyIntent)
