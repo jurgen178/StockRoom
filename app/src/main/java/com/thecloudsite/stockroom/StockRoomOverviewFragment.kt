@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -42,6 +43,7 @@ import kotlin.math.roundToInt
 class StockRoomOverviewFragment : Fragment() {
 
   private var _binding: FragmentOverviewBinding? = null
+  private var clickCounter = 10
 
   // This property is only valid between onCreateView and
   // onDestroyView.
@@ -99,8 +101,8 @@ class StockRoomOverviewFragment : Fragment() {
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
     recyclerView.layoutManager = GridLayoutManager(
-        context,
-        Integer.min(Integer.max(spanCount, 1), 10)
+      context,
+      Integer.min(Integer.max(spanCount, 1), 10)
     )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
@@ -122,13 +124,13 @@ class StockRoomOverviewFragment : Fragment() {
 
           // separator item
           list.add(
-              StockItem(
-                  onlineMarketData = OnlineMarketData(symbol = separatorSymbol),
-                  stockDBdata = StockDBdata(symbol = separatorSymbol),
-                  assets = emptyList(),
-                  events = emptyList(),
-                  dividends = emptyList()
-              )
+            StockItem(
+              onlineMarketData = OnlineMarketData(symbol = separatorSymbol),
+              stockDBdata = StockDBdata(symbol = separatorSymbol),
+              assets = emptyList(),
+              events = emptyList(),
+              dividends = emptyList()
+            )
           )
 
           // bottom 5
@@ -146,6 +148,8 @@ class StockRoomOverviewFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
+
+    clickCounter = 10
     stockRoomViewModel.runOnlineTaskNow()
   }
 
@@ -218,32 +222,32 @@ class StockRoomOverviewFragment : Fragment() {
     }
 
     val gainLossText = SpannableStringBuilder().append(
-        "${requireContext().getString(R.string.summary_gain_loss)}  "
+      "${requireContext().getString(R.string.summary_gain_loss)}  "
     )
-        .append(
-            getCapitalGainLossText(requireContext(), gain, loss, total, "-", "\n")
-        )
+      .append(
+        getCapitalGainLossText(requireContext(), gain, loss, total, "-", "\n")
+      )
 
     val totalAssetsStr =
       SpannableStringBuilder().append(
-          "\n${requireContext().getString(R.string.summary_total_purchase_price)} "
+        "\n${requireContext().getString(R.string.summary_total_purchase_price)} "
       )
-          .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}") }
+        .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}") }
 
     if (totalAssets > 0.0) {
       totalAssetsStr.append(
-          "\n${requireContext().getString(R.string.summary_total_assets)} "
+        "\n${requireContext().getString(R.string.summary_total_assets)} "
       )
-          .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
+        .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
     }
 
     val summaryStr = SpannableStringBuilder()
-        .append("${requireContext().getString(R.string.summary_stocks)} ")
-        .bold { append("${stockitemList.size}\n\n") }
-        .scale(1.4f) {
-          append(gainLossText)
-              .append(totalAssetsStr)
-        }
+      .append("${requireContext().getString(R.string.summary_stocks)} ")
+      .bold { append("${stockitemList.size}\n\n") }
+      .scale(1.4f) {
+        append(gainLossText)
+          .append(totalAssetsStr)
+      }
     binding.textViewOverview.text = summaryStr
   }
 
@@ -253,6 +257,21 @@ class StockRoomOverviewFragment : Fragment() {
       intent.putExtra("symbol", stockItem.onlineMarketData.symbol)
       //stockRoomViewModel.runOnlineTaskNow()
       startActivity(intent)
+    } else {
+      clickCounter--
+
+      if (clickCounter == 0) {
+        AlertDialog.Builder(requireContext())
+          // https://convertcodes.com/unicode-converter-encode-decode-utf/
+          .setTitle(
+            "\u0044\u0069\u0064\u0020\u0079\u006f\u0075\u0020\u0067\u0065\u0074\u0020\u0074\u0068\u0065\u0020\u0041\u006c\u0069\u0065\u006e\u0073\u003f"
+          )
+          .setMessage(
+            "\u004c\u006f\u006f\u006b\u0020\u006f\u0075\u0074\u0020\u0066\u006f\u0072\u0020\u0074\u0068\u0065\u006d\u002e"
+          )
+          .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+          .show()
+      }
     }
   }
 }

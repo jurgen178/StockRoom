@@ -209,18 +209,17 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
     // Get online data in blocks.
     val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
-    var symbolsCopy = symbols
+    var remainingSymbolsToQuery = symbols
 
     do {
       // Get the first number of blockSize symbols.
-      val blockSymbols: List<String> = symbolsCopy.take(blockSize)
-      symbolsCopy = symbolsCopy.drop(blockSize)
+      val symbolsToQuery: List<String> = remainingSymbolsToQuery.take(blockSize)
 
       val quoteResponse: YahooResponse? = try {
         safeApiCall(
           call = {
             updateCounter()
-            api.getStockDataAsync(blockSymbols.joinToString(","))
+            api.getStockDataAsync(symbolsToQuery.joinToString(","))
               .await()
           }, errorMessage = "Error getting finance data."
         )
@@ -235,7 +234,11 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
         quoteResponse?.quoteResponse?.result
           ?: emptyList()
       )
-    } while (symbolsCopy.isNotEmpty())
+
+      // Remove the queried symbols.
+      remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
+
+    } while (remainingSymbolsToQuery.isNotEmpty())
 
     return Pair(onlineMarketDataResultList, errorMsg)
   }
