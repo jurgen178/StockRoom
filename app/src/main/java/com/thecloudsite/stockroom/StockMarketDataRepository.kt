@@ -26,7 +26,7 @@ import com.thecloudsite.stockroom.database.StockDBdata
 
 // Data from the DB and online data fields.
 data class StockItem
-(
+  (
   var onlineMarketData: OnlineMarketData,
   var stockDBdata: StockDBdata,
   var assets: List<Asset>,
@@ -38,6 +38,9 @@ var responseCounter = 0
 @Synchronized fun updateCounter() {
   responseCounter++
 }
+
+// Get online data in blocks.
+const val blockSize = 32
 
 class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : BaseRepository() {
 
@@ -58,21 +61,54 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
     val api: YahooApiMarketData? = api()
 
     if (api != null) {
-      val quoteResponse: YahooResponse? = try {
-        safeApiCall(
+//      val quoteResponse: YahooResponse? = try {
+//        safeApiCall(
+//            call = {
+//              updateCounter()
+//              api.getStockDataAsync(symbols.joinToString(","))
+//                  .await()
+//            }, errorMessage = "Error getting finance data."
+//        )
+//      } catch (e: Exception) {
+//        errorMsg = "StockMarketDataRepository.getStockData(symbols) failed, Exception=$e"
+//        null
+//      }
+//
+//      val onlineMarketDataResultList: List<OnlineMarketData> = quoteResponse?.quoteResponse?.result
+//          ?: emptyList()
+
+      // Get online data in blocks.
+      val quoteResponses: MutableList<YahooResponse?> = mutableListOf()
+      var symbolsCopy = symbols
+      do {
+        // Get the first number of blockSize symbols.
+        val blockSymbols: List<String> = symbolsCopy.take(blockSize)
+        symbolsCopy = symbolsCopy.drop(blockSize)
+
+        val quoteResponse: YahooResponse? = try {
+          safeApiCall(
             call = {
               updateCounter()
-              api.getStockDataAsync(symbols.joinToString(","))
-                  .await()
+              api.getStockDataAsync(blockSymbols.joinToString(","))
+                .await()
             }, errorMessage = "Error getting finance data."
-        )
-      } catch (e: Exception) {
-        errorMsg = "StockMarketDataRepository.getStockData(symbols) failed, Exception=$e"
-        null
-      }
+          )
+        } catch (e: Exception) {
+          errorMsg = "StockMarketDataRepository.getStockData(symbols) failed, Exception=$e"
+          null
+        }
 
-      val onlineMarketDataResultList: List<OnlineMarketData> = quoteResponse?.quoteResponse?.result
-          ?: emptyList()
+        quoteResponses.add(quoteResponse)
+      } while (symbolsCopy.isNotEmpty())
+
+      // Get all results.
+      val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
+      quoteResponses.forEach { quoteResponse ->
+        onlineMarketDataResultList.addAll(
+          quoteResponse?.quoteResponse?.result
+            ?: emptyList()
+        )
+      }
 
       if (onlineMarketDataResultList.isEmpty()) {
         // no _data.value because this is a background thread
@@ -91,10 +127,10 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
           onlineMarketData2.postMarketData = false
 
           if ((onlineMarketData.marketState == MarketState.POST.value
-                  || onlineMarketData.marketState == MarketState.POSTPOST.value
-                  || onlineMarketData.marketState == MarketState.PREPRE.value
-                  || onlineMarketData.marketState == MarketState.CLOSED.value)
-              && onlineMarketData.postMarketPrice > 0.0
+                || onlineMarketData.marketState == MarketState.POSTPOST.value
+                || onlineMarketData.marketState == MarketState.PREPRE.value
+                || onlineMarketData.marketState == MarketState.CLOSED.value)
+            && onlineMarketData.postMarketPrice > 0.0
           ) {
             onlineMarketData2.postMarketData = true
             onlineMarketData2.marketPrice =
@@ -105,7 +141,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
               onlineMarketData.postMarketChangePercent
           } else
             if ((onlineMarketData.marketState == MarketState.PRE.value)
-                && onlineMarketData.preMarketPrice > 0.0
+              && onlineMarketData.preMarketPrice > 0.0
             ) {
               onlineMarketData2.postMarketData = true
               onlineMarketData2.marketPrice =
@@ -173,20 +209,55 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
   suspend fun getStockData2(symbols: List<String>): List<OnlineMarketData> {
     val api: YahooApiMarketData = api() ?: return emptyList()
 
-    val quoteResponse: YahooResponse? = try {
-      safeApiCall(
+//    val quoteResponse: YahooResponse? = try {
+//      safeApiCall(
+//        call = {
+//          updateCounter()
+//          api.getStockDataAsync(symbols.joinToString(","))
+//            .await()
+//        }, errorMessage = "Error getting finance data."
+//      )
+//    } catch (e: Exception) {
+//      Log.d("StockMarketDataRepository.getStockData2 failed", "Exception=$e")
+//      null
+//    }
+//
+//    return quoteResponse?.quoteResponse?.result ?: emptyList()
+
+    // Get online data in blocks.
+    val quoteResponses: MutableList<YahooResponse?> = mutableListOf()
+    var symbolsCopy = symbols
+    do {
+      // Get the first number of blockSize symbols.
+      val blockSymbols: List<String> = symbolsCopy.take(blockSize)
+      symbolsCopy = symbolsCopy.drop(blockSize)
+
+      val quoteResponse: YahooResponse? = try {
+        safeApiCall(
           call = {
             updateCounter()
-            api.getStockDataAsync(symbols.joinToString(","))
-                .await()
+            api.getStockDataAsync(blockSymbols.joinToString(","))
+              .await()
           }, errorMessage = "Error getting finance data."
+        )
+      } catch (e: Exception) {
+        Log.d("StockMarketDataRepository.getStockData2 failed", "Exception=$e")
+        null
+      }
+
+      quoteResponses.add(quoteResponse)
+    } while (symbolsCopy.isNotEmpty())
+
+    // Get all results.
+    val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
+    quoteResponses.forEach { quoteResponse ->
+      onlineMarketDataResultList.addAll(
+        quoteResponse?.quoteResponse?.result
+          ?: emptyList()
       )
-    } catch (e: Exception) {
-      Log.d("StockMarketDataRepository.getStockData2 failed", "Exception=$e")
-      null
     }
 
-    return quoteResponse?.quoteResponse?.result ?: emptyList()
+    return onlineMarketDataResultList
   }
 
   suspend fun getStockData(symbol: String): OnlineMarketData? {
@@ -196,12 +267,12 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
       val quoteResponse: YahooResponse? = try {
         safeApiCall(
-            call = {
-              updateCounter()
-              api.getStockDataAsync(symbol)
-                  .await()
-            },
-            errorMessage = "Error getting finance data."
+          call = {
+            updateCounter()
+            api.getStockDataAsync(symbol)
+              .await()
+          },
+          errorMessage = "Error getting finance data."
         )
       } catch (e: Exception) {
         Log.d("StockMarketDataRepository.getStockData($symbol) failed", "Exception=$e")
@@ -215,7 +286,8 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
   }
 }
 
-class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?) : BaseRepository() {
+class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?) :
+  BaseRepository() {
 
 //  private val _data = MutableLiveData<List<OnlineMarketData>>()
 //  val onlineMarketDataList: LiveData<List<OnlineMarketData>>
@@ -228,12 +300,12 @@ class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?
 
       val quoteResponse: String? = try {
         safeApiCall(
-            call = {
-              updateCounter()
-              api.getStockDataAsync(symbol)
-                  .await()
-            },
-            errorMessage = "Error getting finance data."
+          call = {
+            updateCounter()
+            api.getStockDataAsync(symbol)
+              .await()
+          },
+          errorMessage = "Error getting finance data."
         )
       } catch (e: Exception) {
         Log.d("StockRawMarketDataRepository.getStockRawData($symbol) failed", "Exception=$e")
