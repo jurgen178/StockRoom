@@ -58,7 +58,6 @@
       app:layout_constraintTop_toBottomOf="@+id/colorPicker"
       />
 
-<!--
   <com.larswerkman.holocolorpicker.SaturationBar
       android:id="@+id/colorPickerSaturationbar"
       android:layout_width="0dp"
@@ -76,7 +75,8 @@
       app:layout_constraintStart_toStartOf="@+id/guideline1"
       app:layout_constraintTop_toBottomOf="@+id/colorPickerSaturationbar"
       />
--->
+      <!--
+      -->
 
   <TextView
       android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="@+id/guideline1"
-      app:layout_constraintTop_toBottomOf="@+id/colorPickerSV"
+      app:layout_constraintTop_toBottomOf="@+id/colorPickerValuebar"
       app:endIconMode="clear_text"
       >
     <com.google.android.material.textfield.TextInputEditText

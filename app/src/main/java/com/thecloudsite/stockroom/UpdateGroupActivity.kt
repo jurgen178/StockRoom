@@ -48,16 +48,14 @@ class UpdateGroupActivity : AppCompatActivity() {
 
     dialogBinding.addUpdateGroupsHeadline.text = getString(R.string.update_groups_dialog_headline, group.name)
 
-//      val saturationbarView = dialogView.findViewById<SaturationBar>(R.id.colorPickerSaturationbar)
-//      val valuebarView = dialogView.findViewById<ValueBar>(R.id.colorPickerValuebar)
     dialogBinding.colorPicker.addSVBar(dialogBinding.colorPickerSV)
+    dialogBinding.colorPicker.addSaturationBar(dialogBinding.colorPickerSaturationbar)
+    dialogBinding.colorPicker.addValueBar(dialogBinding.colorPickerValuebar)
 
     val clr = group.color
     dialogBinding.colorPicker.color = clr
     dialogBinding.colorPicker.oldCenterColor = clr
     dialogBinding.colorPicker.setNewCenterColor(clr)
-//      colorView.addSaturationBar(saturationbarView)
-//      colorView.addValueBar(valuebarView)
 
     dialogBinding.addName.setText(group.name)
 
