@@ -153,7 +153,7 @@ fun enNumberStrToDouble(str: String): Double {
     if (value == 0.0) {
       val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
       value = numberFormat.parse(str)!!
-          .toDouble()
+        .toDouble()
     }
   } catch (e: Exception) {
     value = 0.0
@@ -173,7 +173,7 @@ fun formatInt(
       val formattedStr =
         "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
           context.getString(
-              R.string.trillion_abbr
+            R.string.trillion_abbr
           )
         }"
 
@@ -185,7 +185,7 @@ fun formatInt(
       val formattedStr =
         "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
           context.getString(
-              R.string.billion_abbr
+            R.string.billion_abbr
           )
         }"
 
@@ -197,7 +197,7 @@ fun formatInt(
       val formattedStr =
         "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
           context.getString(
-              R.string.million_abbr
+            R.string.million_abbr
           )
         }"
 
@@ -208,9 +208,9 @@ fun formatInt(
     value == Long.MIN_VALUE -> {
       // requested value is not in the JSON data
       Pair(
-          SpannableStringBuilder().append(
-              context.getString(R.string.onlinedata_not_applicable)
-          ), ""
+        SpannableStringBuilder().append(
+          context.getString(R.string.onlinedata_not_applicable)
+        ), ""
       )
     }
     else -> {
@@ -223,7 +223,7 @@ fun formatInt(
 
 fun Resources.getRawTextFile(@RawRes id: Int) =
   openRawResource(id).bufferedReader()
-      .use { it.readText() }
+    .use { it.readText() }
 
 fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, String> {
 
@@ -243,7 +243,7 @@ fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, 
     "${signStr}${DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.marketChange)}"
   val changePercent = "($signStr${
     DecimalFormat(DecimalFormat2Digits).format(
-        onlineMarketData.marketChangePercent
+      onlineMarketData.marketChangePercent
     )
   }%)"
 
@@ -298,13 +298,13 @@ fun getAssetChange(
   val (quantity, asset) = getAssets(assets)
 
   return getAssetChange(
-      quantity,
-      asset,
-      marketPrice,
-      isPostMarket,
-      neutralColor,
-      context,
-      bold
+    quantity,
+    asset,
+    marketPrice,
+    isPostMarket,
+    neutralColor,
+    context,
+    bold
   )
 }
 
@@ -334,9 +334,9 @@ fun getAssetChange(
         }
       }${
         DecimalFormat(
-            DecimalFormat2Digits
+          DecimalFormat2Digits
         ).format(
-            change
+          change
         )
       }"
 
@@ -468,30 +468,30 @@ fun getAssetUseLastAverage(
   assetList?.sortedBy { item ->
     item.date
   }
-      ?.forEach { asset ->
+    ?.forEach { asset ->
 
-        // added shares
-        if (asset.quantity > 0.0) {
-          totalQuantity += asset.quantity
-          totalPrice += asset.quantity * asset.price
-        } else
-        // removed shares
-          if (asset.quantity < 0.0) {
-            // removed all?
-            if (-asset.quantity >= (totalQuantity - epsilon)) {
-              // reset if more removed than owned
-              totalQuantity = 0.0
-              totalPrice = 0.0
-            } else {
-              // adjust the total price for the removed shares
-              if (totalQuantity > epsilon) {
-                val averageSharePrice = totalPrice / totalQuantity
-                totalQuantity += asset.quantity
-                totalPrice = totalQuantity * averageSharePrice
-              }
+      // added shares
+      if (asset.quantity > 0.0) {
+        totalQuantity += asset.quantity
+        totalPrice += asset.quantity * asset.price
+      } else
+      // removed shares
+        if (asset.quantity < 0.0) {
+          // removed all?
+          if (-asset.quantity >= (totalQuantity - epsilon)) {
+            // reset if more removed than owned
+            totalQuantity = 0.0
+            totalPrice = 0.0
+          } else {
+            // adjust the total price for the removed shares
+            if (totalQuantity > epsilon) {
+              val averageSharePrice = totalPrice / totalQuantity
+              totalQuantity += asset.quantity
+              totalPrice = totalQuantity * averageSharePrice
             }
           }
-      }
+        }
+    }
 
   return Pair(totalQuantity, totalPrice)
 }
@@ -563,13 +563,6 @@ fun getAssetUseLastAverage(
   return Pair(totalQuantity, totalPrice)
 }
 
-data class Asset2(
-  var price: Double,
-  var quantity: Double,
-  var quantity2: Double,
-  var type: Int = 0,
-)
-
 fun getAssetsRemoveOldestFirst(
   assetList: List<Asset>?,
   tagObsoleteAssetType: Int = 0
@@ -583,32 +576,32 @@ fun getAssetsRemoveOldestFirst(
       asset.date
     }
 
-    // list with second quantity
+    // Deep copy list.
     // Sold values (negative quantities) will be subtracted from the quantities from the beginning.
-    val assetListSorted2 = assetListSorted.map { asset ->
-      Asset2(
-          price = asset.price,
-          quantity = asset.quantity,
-          quantity2 = asset.quantity,
-          type = asset.type and tagObsoleteAssetType.inv()
+    val assetListSortedCopy = assetListSorted.map { asset ->
+      Asset(
+        symbol = "",
+        price = asset.price,
+        quantity = asset.quantity,
+        type = asset.type and tagObsoleteAssetType.inv()
       )
     }
 
     var k = 0
-    for (i in assetListSorted2.indices) {
+    for (i in assetListSortedCopy.indices) {
 
-      val asset = assetListSorted2[i]
+      val asset = assetListSortedCopy[i]
 
       // remove shares from the beginning
-      if (asset.quantity2 < 0.0) {
-        var quantityToRemove = -asset.quantity2
+      if (asset.quantity < 0.0) {
+        var quantityToRemove = -asset.quantity
         for (j in k until i) {
-          if (assetListSorted2[j].quantity2 > 0.0) {
-            if (quantityToRemove > assetListSorted2[j].quantity2) {
-              quantityToRemove -= assetListSorted2[j].quantity2
-              assetListSorted2[j].quantity2 = 0.0
+          if (assetListSortedCopy[j].quantity > 0.0) {
+            if (quantityToRemove > assetListSortedCopy[j].quantity) {
+              quantityToRemove -= assetListSortedCopy[j].quantity
+              assetListSortedCopy[j].quantity = 0.0
             } else {
-              assetListSorted2[j].quantity2 -= quantityToRemove
+              assetListSortedCopy[j].quantity -= quantityToRemove
               // Start with the index in the next iteration where it left off.
               k = j
               break
@@ -617,21 +610,21 @@ fun getAssetsRemoveOldestFirst(
         }
 
         // Sold entry is subtracted already. Set to 0.
-        assetListSorted2[i].quantity2 = 0.0
+        assetListSortedCopy[i].quantity = 0.0
       }
     }
 
     // Mark all removed entry with the obsolete flag.
-    for (i in assetListSorted2.indices) {
-      if (tagObsoleteAssetType != 0 && assetListSorted2[i].quantity2 < 0.0001) {
+    for (i in assetListSortedCopy.indices) {
+      if (tagObsoleteAssetType != 0 && assetListSortedCopy[i].quantity < 0.0001) {
         // Set the type in the original list (not in assetListSorted2).
-        assetListSorted[i].type = assetListSorted2[i].type or tagObsoleteAssetType
+        assetListSorted[i].type = assetListSortedCopy[i].type or tagObsoleteAssetType
       }
     }
 
-    assetListSorted2.forEach { asset ->
-      totalQuantity += asset.quantity2
-      totalPrice += asset.quantity2 * asset.price
+    assetListSortedCopy.forEach { asset ->
+      totalQuantity += asset.quantity
+      totalPrice += asset.quantity * asset.price
     }
   }
 
@@ -726,65 +719,134 @@ fun getAddedDeletedAssets(
 //  return Pair(totalGain, totalLoss)
 //}
 
-  data class GainLoss(
-    var gain: Double = 0.0,
-    var loss: Double = 0.0,
-  )
+data class GainLoss(
+  var gain: Double = 0.0,
+  var loss: Double = 0.0,
+)
 
-  fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
+fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
 
-    var totalQuantity: Double = 0.0
-    var totalGain: Double = 0.0
-    var totalLoss: Double = 0.0
-    var bought: Double = 0.0
-    var sold: Double = 0.0
+  var totalQuantity: Double = 0.0
+  var totalGain: Double = 0.0
+  var totalLoss: Double = 0.0
+  var bought: Double = 0.0
+  var sold: Double = 0.0
 
-    val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
+  // gain/loss for each year
+  val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
 
-    val epsilon = 0.0001
+  val epsilon = 0.0001
 
-    assetList?.sortedBy { asset ->
-      asset.date
-    }
-        ?.forEach { asset ->
-          if (asset.quantity > 0.0) {
-            bought += asset.quantity * asset.price
-          }
-          if (asset.quantity < 0.0) {
-            sold += -asset.quantity * asset.price
-          }
-          totalQuantity += asset.quantity
+  assetList?.sortedBy { asset ->
+    asset.date
+  }
+    ?.forEach { asset ->
+      if (asset.quantity > 0.0) {
+        bought += asset.quantity * asset.price
+      }
+      if (asset.quantity < 0.0) {
+        sold += -asset.quantity * asset.price
+      }
+      totalQuantity += asset.quantity
 
-          if ((totalQuantity <= -epsilon)) {
-            // Error, more shares sold than owned
-            return Triple(0.0, 0.0, hashMapOf())
-          }
-          if (totalQuantity < epsilon) {
-            // totalQuantity is 0: -epsilon < totalQuantity < epsilon
-            // reset if all shares are sold
-            val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
-            val year = localDateTime.year
-            if (!totalGainLossMap.containsKey(year)) {
-              totalGainLossMap[year] = GainLoss()
-            }
-
-            val gain = sold - bought
-            if (gain > 0.0) {
-              totalGain += gain
-              totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + gain
-            } else
-              if (gain < 0.0) {
-                totalLoss -= gain
-                totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! - gain
-              }
-
-            sold = 0.0
-            bought = 0.0
-          }
+      if ((totalQuantity <= -epsilon)) {
+        // Error, more shares sold than owned
+        return Triple(0.0, 0.0, hashMapOf())
+      }
+      if (totalQuantity < epsilon) {
+        // totalQuantity is 0: -epsilon < totalQuantity < epsilon
+        // reset if all shares are sold
+        val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+        val year = localDateTime.year
+        if (!totalGainLossMap.containsKey(year)) {
+          totalGainLossMap[year] = GainLoss()
         }
 
-    return Triple(totalGain, totalLoss, totalGainLossMap)
+        val gain = sold - bought
+        if (gain > 0.0) {
+          totalGain += gain
+          totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + gain
+        } else
+          if (gain < 0.0) {
+            totalLoss -= gain
+            totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! - gain
+          }
+
+        sold = 0.0
+        bought = 0.0
+      }
+    }
+
+  return Triple(totalGain, totalLoss, totalGainLossMap)
+}
+
+fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
+
+  if (assetList == null) {
+    return Triple(0.0, 0.0, hashMapOf())
   }
+
+  var totalGain: Double = 0.0
+  var totalLoss: Double = 0.0
+  var bought: Double = 0.0
+  var sold: Double = 0.0
+
+  // gain/loss for each year
+  val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
+
+  // Deep copy of the list.
+  val assetListCopy: List<Asset> =
+    assetList.sortedBy { asset ->
+      asset.date
+    }.map { it.copy() }
+
+  // Each neg quantity triggers a gain/loss
+  var k = 0
+  for (i in assetListCopy.indices) {
+
+    val asset = assetListCopy[i]
+    if (asset.quantity < 0.0) {
+      sold = -asset.quantity * asset.price
+      bought = 0.0
+      var quantityToRemove = -asset.quantity
+
+      for (j in k until i) {
+        if (assetListCopy[j].quantity > 0.0) {
+          // Start removing the quantity from the beginning.
+          if (quantityToRemove > assetListCopy[j].quantity) {
+            bought += assetListCopy[j].quantity * assetListCopy[j].price
+            quantityToRemove -= assetListCopy[j].quantity
+            assetListCopy[j].quantity = 0.0
+          } else {
+            assetListCopy[j].quantity -= quantityToRemove
+            bought += quantityToRemove * assetListCopy[j].price
+            // Start with the index in the next iteration where it left off.
+            k = j
+            break
+          }
+        }
+      }
+
+      val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+      val year = localDateTime.year
+      if (!totalGainLossMap.containsKey(year)) {
+        totalGainLossMap[year] = GainLoss()
+      }
+
+      val gain = sold - bought
+      if (gain > 0.0) {
+        totalGain += gain
+        totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + gain
+      } else
+        if (gain < 0.0) {
+          totalLoss -= gain
+          totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! - gain
+        }
+    }
+  }
+
+  return Triple(totalGain, totalLoss, totalGainLossMap)
+}
 
 fun getCapitalGainLossText(
   context: Context,
@@ -816,45 +878,45 @@ fun getCapitalGainLossText(
     }
     capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain > capitalLoss -> {
       SpannableStringBuilder()
-          .color(context.getColor(R.color.green)) {
-            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
+        .color(context.getColor(R.color.green)) {
+          bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
+        }
+        .color(context.getColor(R.color.red)) {
+          bold {
+            append(
+              "$formatConcat${
+                DecimalFormat(DecimalFormat2Digits).format(
+                  capitalLoss
+                )
+              }$formatEnd"
+            )
           }
-          .color(context.getColor(R.color.red)) {
-            bold {
-              append(
-                  "$formatConcat${
-                    DecimalFormat(DecimalFormat2Digits).format(
-                        capitalLoss
-                    )
-                  }$formatEnd"
-              )
-            }
-          }
-          .append(" = ")
-          .color(context.getColor(R.color.green)) {
-            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
-          }
+        }
+        .append(" = ")
+        .color(context.getColor(R.color.green)) {
+          bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
+        }
     }
     capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain < capitalLoss -> {
       SpannableStringBuilder()
-          .color(context.getColor(R.color.green)) {
-            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
+        .color(context.getColor(R.color.green)) {
+          bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
+        }
+        .color(context.getColor(R.color.red)) {
+          bold {
+            append(
+              "$formatConcat${
+                DecimalFormat(DecimalFormat2Digits).format(
+                  capitalLoss
+                )
+              }$formatEnd"
+            )
           }
-          .color(context.getColor(R.color.red)) {
-            bold {
-              append(
-                  "$formatConcat${
-                    DecimalFormat(DecimalFormat2Digits).format(
-                        capitalLoss
-                    )
-                  }$formatEnd"
-              )
-            }
-          }
-          .append(" = ")
-          .color(context.getColor(R.color.red)) {
-            bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
-          }
+        }
+        .append(" = ")
+        .color(context.getColor(R.color.red)) {
+          bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
+        }
     }
     else -> {
       SpannableStringBuilder().bold {
@@ -870,7 +932,7 @@ fun parseStockOption(symbol: String): StockOptionData {
 
   // named groups are not yet supported
   val match = "([A-Z.]+)(7?)\\s*(\\d+)([A-Z])(\\d+)".toRegex()
-      .matchEntire(symbol.toUpperCase(Locale.ROOT))
+    .matchEntire(symbol.toUpperCase(Locale.ROOT))
 
   if (match != null && match.groups.size == 6) {
     val sym = match.groups[1]?.value
@@ -885,8 +947,8 @@ fun parseStockOption(symbol: String): StockOptionData {
     try {
       stockOption.expirationDate =
         LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
-            .atStartOfDay(ZoneOffset.UTC)
-            .toEpochSecond()
+          .atStartOfDay(ZoneOffset.UTC)
+          .toEpochSecond()
     } catch (e: Exception) {
     }
 
@@ -900,7 +962,7 @@ fun parseStockOption(symbol: String): StockOptionData {
     }
 
     stockOption.strikePrice = match.groups[5]?.value?.toInt()
-        ?.div(1000.0) ?: 0.0
+      ?.div(1000.0) ?: 0.0
   }
 
   return stockOption

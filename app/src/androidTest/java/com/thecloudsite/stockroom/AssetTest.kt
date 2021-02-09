@@ -531,99 +531,138 @@ class AssetTest {
 
   @Test
   @Throws(Exception::class)
-  fun assetCapitalGain() {
+  fun assetCapitalGainTest1() {
     val assetList1 = listOf(
-        Asset(
-            symbol = "s1",
-            quantity = 10.0,
-            price = 20.0,
-            date = 1
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = 20.0,
-            price = 50.0,
-            date = 2
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = -30.0,
-            price = 100.0,
-            date = 3
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = 100.0,
-            price = 20.0,
-            date = 4
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = -50.0,
-            price = 0.0,
-            date = 5
-        )
+      Asset(
+        symbol = "s1",
+        quantity = 10.0,
+        price = 5.0,
+        date = 1
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -10.0,
+        price = 10.0,
+        date = 2
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = 5.0,
+        price = 1.0,
+        date = 3
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -2.0,
+        price = 2.0,
+        date = 4
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -3.0,
+        price = 10.0,
+        date = 5
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = 10.0,
+        price = 1.0,
+        date = 6
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -10.0,
+        price = 0.10,
+        date = 7
+      )
     )
     val (capitalGain1, capitalLoss1, gainLossMap1) = getAssetsCapitalGain(assetList1)
     assertEquals(1800.0, capitalGain1 - capitalLoss1, epsilon)
 
     val assetList2 = listOf(
-        Asset(
-            symbol = "s1",
-            quantity = 0.0,
-            price = 0.0,
-            date = 1
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = -20.0,
-            price = 50.0,
-            date = 2
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = 20.0,
-            price = 2.0,
-            date = 3
-        )
+      Asset(
+        symbol = "s1",
+        quantity = 0.0,
+        price = 0.0,
+        date = 1
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -20.0,
+        price = 50.0,
+        date = 2
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = 20.0,
+        price = 2.0,
+        date = 3
+      )
     )
     val (capitalGain2, capitalLoss2, gainLossMap2) = getAssetsCapitalGain(assetList2)
     assertEquals(0.0, capitalGain2 - capitalLoss2, epsilon)
 
     val assetList3 = listOf(
-        Asset(
-            symbol = "s1",
-            quantity = 20.0,
-            price = 30.0,
-            date = 1
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = -20.0,
-            price = 10.0,
-            date = 2
-        ),  // 400.0 loss
-        Asset(
-            symbol = "s1",
-            quantity = 2.0,
-            price = 3.0,
-            date = 3
-        ),
-        Asset(
-            symbol = "s1",
-            quantity = -2.0,
-            price = 5.0,
-            date = 4
-        ),  // 4.0 gain
-        Asset(
-            symbol = "s1",
-            quantity = 2.0,
-            price = 5.0,
-            date = 5
-        )
+      Asset(
+        symbol = "s1",
+        quantity = 20.0,
+        price = 30.0,
+        date = 1
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -20.0,
+        price = 10.0,
+        date = 2
+      ),  // 400.0 loss
+      Asset(
+        symbol = "s1",
+        quantity = 2.0,
+        price = 3.0,
+        date = 3
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -2.0,
+        price = 5.0,
+        date = 4
+      ),  // 4.0 gain
+      Asset(
+        symbol = "s1",
+        quantity = 2.0,
+        price = 5.0,
+        date = 5
+      )
     )
     val (capitalGain3, capitalLoss3, gainLossMap3) = getAssetsCapitalGain(assetList3)
     assertEquals(-400.0 + 4.0, capitalGain3 - capitalLoss3, epsilon)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun assetCapitalGainTest2() {
+    val assetList1 = listOf(
+      Asset(
+        symbol = "s1",
+        quantity = 1500.0,
+        price = 6.6011,
+        date = 1
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = 2000.0,
+        price = 7.105,
+        date = 2
+      ),
+      Asset(
+        symbol = "s1",
+        quantity = -2683.0,
+        price = 8.65,
+        date = 3
+      )
+    )
+    val (capitalGain1, capitalLoss1, gainLossMap1) = getAssetsCapitalGain(assetList1)
+    assertEquals(7501.515, capitalGain1 - capitalLoss1, epsilon)
   }
 
   @Test
