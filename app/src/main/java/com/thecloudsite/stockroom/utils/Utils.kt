@@ -814,10 +814,14 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
         if (assetListCopy[j].quantity > 0.0) {
           // Start removing the quantity from the beginning.
           if (quantityToRemove > assetListCopy[j].quantity) {
+            // more quantities left than bought with this transaction
+            // add the (quantity) * (price) to the bought value
             bought += assetListCopy[j].quantity * assetListCopy[j].price
             quantityToRemove -= assetListCopy[j].quantity
             assetListCopy[j].quantity = 0.0
           } else {
+            // less quantities left than bought with this transaction,
+            // add the (remaining quantity) * (price) to the bought value
             assetListCopy[j].quantity -= quantityToRemove
             bought += quantityToRemove * assetListCopy[j].price
             // Start with the index in the next iteration where it left off.
@@ -833,6 +837,7 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
         totalGainLossMap[year] = GainLoss()
       }
 
+      // sold and bought are for the same quantity
       val gain = sold - bought
       if (gain > 0.0) {
         totalGain += gain
