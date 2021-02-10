@@ -27,11 +27,7 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
   private val stockChartDataRepository: StockChartDataRepository =
     StockChartDataRepository { StockChartDataApiFactory.yahooApi }
 
-  val chartData: LiveData<StockChartData>
-
-  init {
-    chartData = stockChartDataRepository.chartData
-  }
+  val chartData: LiveData<StockChartData> = stockChartDataRepository.chartData
 
   private fun getChartData(
     symbol: String,
