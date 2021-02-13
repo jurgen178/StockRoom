@@ -49,6 +49,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.absoluteValue
 
 // https://developer.android.com/reference/java/text/DecimalFormat
 // #,## add thousand separator: 1.234,56
@@ -62,7 +63,7 @@ const val DecimalFormat2To4Digits = "#,##0.00##"
 const val DecimalFormat2To6Digits = "#,##0.00####"
 
 // Rounding error
-const val epsilon = 0.0000001
+const val epsilon = 0.000001
 
 // asset.type
 const val obsoleteAssetType: Int = 0x0001
@@ -871,12 +872,12 @@ fun getCapitalGainLossText(
     }
 
   return when {
-    capitalLoss == 0.0 && capitalGain > 0.0 -> {
+    capitalLoss.absoluteValue < 0.001 && capitalGain > 0.0 -> {
       SpannableStringBuilder().color(context.getColor(R.color.green)) {
         bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
       }
     }
-    capitalGain == 0.0 && capitalLoss > 0.0 -> {
+    capitalGain.absoluteValue < 0.001 && capitalLoss > 0.0 -> {
       SpannableStringBuilder().color(context.getColor(R.color.red)) {
         bold { append("${DecimalFormat(DecimalFormat2Digits).format(-capitalLoss)}$formatEnd") }
       }
