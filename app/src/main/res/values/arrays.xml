@@ -6,7 +6,8 @@
     <item>List</item>
     <item>Tile</item>
     <item>Small List</item>
-    <item>Small Tile</item>
+    <item>Small Tile 1</item>
+    <item>Small Tile 2</item>
     <item>Table</item>
     <item>Block</item>
     <item>Summary</item>
@@ -21,7 +22,8 @@
     <item>List</item>
     <item>Tile</item>
     <item>Small List</item>
-    <item>Small Tile</item>
+    <item>Small Tile 1</item>
+    <item>Small Tile 2</item>
     <item>Table</item>
     <item>Block</item>
     <item>Summary</item>
@@ -36,20 +38,21 @@
     <item>02_StockRoomListFragment</item>
     <item>03_StockRoomTileFragment</item>
     <item>04_StockRoomSmallListFragment</item>
-    <item>05_StockRoomSmallTileFragment</item>
-    <item>06_StockRoomTableFragment</item>
-    <item>07_StockRoomTreemapFragment</item>
-    <item>08_SummaryGroupFragment</item>
-    <item>09_AllNewsFragment</item>
-    <item>10_AssetTimelineFragment</item>
-    <item>11_EventTimelineFragment</item>
-    <item>12_DividendTimelineFragment</item>
+    <item>05_StockRoomSmallTile1Fragment</item>
+    <item>06_StockRoomSmallTile2Fragment</item>
+    <item>07_StockRoomTableFragment</item>
+    <item>08_StockRoomTreemapFragment</item>
+    <item>09_SummaryGroupFragment</item>
+    <item>10_AllNewsFragment</item>
+    <item>11_AssetTimelineFragment</item>
+    <item>12_EventTimelineFragment</item>
+    <item>13_DividendTimelineFragment</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>
     <item>02_StockRoomListFragment</item>
     <item>03_StockRoomTileFragment</item>
-    <item>08_SummaryGroupFragment</item>
+    <item>09_SummaryGroupFragment</item>
   </string-array>
   <string-array name="quoteTypeNames" translatable="false">
     <item>EQUITY</item>

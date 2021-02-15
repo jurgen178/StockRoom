@@ -126,7 +126,7 @@ val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf(
   "00_StockRoomChartFragment",
   "02_StockRoomListFragment",
   "03_StockRoomTileFragment",
-  "08_SummaryGroupFragment"
+  "09_SummaryGroupFragment"
 )
 
 val displayedViewsSet: MutableSet<String> = mutableSetOf(
@@ -135,14 +135,15 @@ val displayedViewsSet: MutableSet<String> = mutableSetOf(
   "02_StockRoomListFragment",
   "03_StockRoomTileFragment",
   "04_StockRoomSmallListFragment",
-  "05_StockRoomSmallTileFragment",
-  "06_StockRoomTableFragment",
-  "07_StockRoomTreemapFragment",
-  "08_SummaryGroupFragment",
-  "09_AllNewsFragment",
-  "10_AssetTimelineFragment",
-  "11_EventTimelineFragment",
-  "12_DividendTimelineFragment"
+  "05_StockRoomSmallTile1Fragment",
+  "06_StockRoomSmallTile2Fragment",
+  "07_StockRoomTableFragment",
+  "08_StockRoomTreemapFragment",
+  "09_SummaryGroupFragment",
+  "10_AllNewsFragment",
+  "11_AssetTimelineFragment",
+  "12_EventTimelineFragment",
+  "13_DividendTimelineFragment"
 )
 
 object SharedRepository {
