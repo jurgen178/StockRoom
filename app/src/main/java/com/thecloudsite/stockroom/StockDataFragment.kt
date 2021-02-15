@@ -133,6 +133,7 @@ enum class LinkType(val value: Int) {
   CommunityType(1),
   SearchType(2),
   WebsiteType(3),
+  WebsiteGeneralType(4),
 }
 
 data class StockAssetsLiveData(
@@ -785,6 +786,10 @@ class StockDataFragment : Fragment() {
         "Zacks" to LinkListEntry(
           linkType = LinkType.WebsiteType,
           link = "https://www.zacks.com/stock/quote/$symbol"
+        ),
+        "Yahoo Daily Gainers" to LinkListEntry(
+          linkType = LinkType.WebsiteGeneralType,
+          link = "https://finance.yahoo.com/gainers"
         )
       )
 

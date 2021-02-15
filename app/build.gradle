@@ -99,7 +99,7 @@ dependencies {
   def moshiVersion = '1.9.3'
   def retrofit2_version = '2.9.0'
   def okhttp3_version = '4.8.0'
-  def kotlinCoroutineVersion = "1.0.1"
+  def kotlinCoroutineVersion = "1.4.1"
 
   //Moshi
   implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
@@ -141,7 +141,7 @@ dependencies {
   androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 
   // Lifecycle components
-  implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
+  implementation "androidx.lifecycle:lifecycle-extensions:${archLifecycleVersion}"
   implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.archLifecycleVersion"
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.archLifecycleVersion"
 
