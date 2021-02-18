@@ -8,6 +8,45 @@ class KotlinExamples {
 
   @Test
   @Throws(Exception::class)
+  fun arrayTest() {
+
+    val intArray1 = IntArray(5) { -1 }
+    val intArray2 = intArrayOf(-1, 0, 1, 2, 3)
+
+    fun getInts(intArray: IntArray): String {
+      return intArray.filter { it > 0 }
+        .joinToString(
+          prefix = "[",
+          separator = ",",
+          postfix = "]"
+        )
+    }
+
+    val ints1 = getInts(intArray1)
+    assertEquals("[]", ints1)
+
+    val ints2 = getInts(intArray2)
+    assertEquals("[1,2,3]", ints2)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun pairsTest() {
+
+    data class Pairs(
+      var x: Int,
+      var y: Int,
+    )
+
+    val liste: MutableList<Pairs> = mutableListOf()
+    liste.add(Pairs(x = 1, y = 1))
+
+    // item added
+    assertEquals(1, liste.size)
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun conditionalsTest() {
 
     val str = "test"
@@ -51,42 +90,6 @@ class KotlinExamples {
     }
 
     assertEquals("match", result)
-  }
-
-  @Test
-  @Throws(Exception::class)
-  fun arrayTest() {
-
-    val intArray1 = IntArray(5) { -1 }
-    val intArray2 = intArrayOf(-1, 0, 1, 2, 3)
-
-    fun getInts(intArray: IntArray): String {
-      return intArray.filter { it > 0 }
-        .joinToString(
-          prefix = "[",
-          separator = ",",
-          postfix = "]"
-        )
-    }
-
-    val ints1 = getInts(intArray1)
-    assertEquals("[]", ints1)
-
-    val ints2 = getInts(intArray2)
-    assertEquals("[1,2,3]", ints2)
-  }
-
-  @Test
-  @Throws(Exception::class)
-  fun pairsTest() {
-
-    data class Pairs(
-      var x: Int,
-      var y: Int,
-    )
-
-    val liste: MutableList<Pairs> = mutableListOf()
-    liste.add(Pairs(x = 1, y = 1))
   }
 
   @Test
@@ -138,11 +141,6 @@ class KotlinExamples {
     data class Person(
       var firstName: String,
       var lastName: String,
-      var order: Int,
-    )
-
-    data class Person2(
-      var fullName: String,
       var order: Int,
     )
 
