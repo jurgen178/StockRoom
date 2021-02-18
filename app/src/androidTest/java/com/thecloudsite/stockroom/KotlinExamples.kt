@@ -49,6 +49,8 @@ class KotlinExamples {
         ""
       }
     }
+
+    assertEquals("match", result)
   }
 
   @Test
@@ -107,6 +109,26 @@ class KotlinExamples {
 
     // 0+1+2
     assertEquals(3, sum)
+
+    val timestamps = intArrayOf(1, 10, 20, 3, 8)
+    sum = 0
+    // timestamps.indices = 0..4
+    for (i in timestamps.indices) {
+      sum += timestamps[i]
+    }
+
+    assertEquals(42, sum)
+
+    sum = 0
+    timestamps.forEachIndexed { i, timestamp ->
+      // timestamp == timestamps[i]
+      sum += timestamp
+    }
+
+    assertEquals(42, sum)
+
+    sum = timestamps.sum()
+    assertEquals(42, sum)
   }
 
   @Test
@@ -171,7 +193,7 @@ class KotlinExamples {
 
     val symbols = text.split("[ ,;\r\n\t]".toRegex())
 
-    assertEquals(symbols.size, 7)
+    assertEquals(symbols.size, 13)
   }
 
   enum class FilterTypeEnum {
@@ -205,10 +227,14 @@ class KotlinExamples {
 
     open class FilterIntType : FilterBaseType() {
 
+      override fun filter(value: Int): Boolean {
+        data = "$value"
+        return value == 1
+      }
       override val typeId = FilterTypeEnum.FilterIntType
       override var data: String = ""
         set(value) {
-          field = "$value - 1"
+          field = "[$value]"
         }
         get() {
           return if (field.isNotEmpty()) {
@@ -220,8 +246,14 @@ class KotlinExamples {
     }
 
     val test: FilterIntType = FilterIntType()
-    if (test.filter(1)) {
+
+    val result = if (test.filter(1)) {
       test.dataReady()
+      test.data
+    } else {
+      ""
     }
+
+    assertEquals("FilterIntTypeData", result)
   }
 }
