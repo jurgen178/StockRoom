@@ -170,7 +170,7 @@ class StockRoomOverviewFragment : Fragment() {
 
         // Add selected items.
         val overviewSelection: Set<String> =
-          sharedPreferences.getStringSet("overview_selection", emptySet()) ?: setOf()
+          sharedPreferences.getStringSet("overview_selection", emptySet()) ?: emptySet()
         val selectedList = stockitemList.filter { item ->
           overviewSelection.contains(item.stockDBdata.symbol)
         }
@@ -199,7 +199,11 @@ class StockRoomOverviewFragment : Fragment() {
 //      })
 
       // add portfolio symbols
-      val spinnerData = stockitemListCopy.map { stockItem ->
+      val overviewSelection: Set<String> =
+        sharedPreferences.getStringSet("overview_selection", emptySet()) ?: emptySet()
+      val spinnerData = stockitemListCopy.filter { item ->
+        !overviewSelection.contains(item.stockDBdata.symbol)
+      }.map { stockItem ->
         stockItem.stockDBdata.symbol
       }
         .sorted()
@@ -227,7 +231,7 @@ class StockRoomOverviewFragment : Fragment() {
 
           val overviewSelection: MutableSet<String> = mutableSetOf()
           overviewSelection.addAll(
-            sharedPreferences.getStringSet("overview_selection", emptySet()) ?: setOf()
+            sharedPreferences.getStringSet("overview_selection", emptySet()) ?: emptySet()
           )
           overviewSelection.add(symbol)
           sharedPreferences
