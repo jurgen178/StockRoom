@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.R.layout
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -23,14 +24,20 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.text.bold
 import androidx.core.text.scale
 import androidx.core.text.underline
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.DialogAddRemoveSelectionBinding
 import com.thecloudsite.stockroom.databinding.FragmentOverviewBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.epsilon
@@ -52,6 +59,7 @@ class StockRoomOverviewFragment : Fragment() {
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   private val separatorSymbol = "  ⋮"
+  private var stockitemListCopy: List<StockItem> = emptyList()
 
   companion object {
     fun newInstance() = StockRoomOverviewFragment()
@@ -91,9 +99,14 @@ class StockRoomOverviewFragment : Fragment() {
 
     // Use the small list adapter for display.
     val stockRoomOverviewAdapter = StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
+    val stockRoomOverviewSelectionAdapter =
+      StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = stockRoomOverviewAdapter
+
+    val recyclerViewSelection = binding.recyclerviewSelection
+    recyclerViewSelection.adapter = stockRoomOverviewSelectionAdapter
 
     // Set column number depending on screen width.
     val scale = 494
@@ -105,11 +118,23 @@ class StockRoomOverviewFragment : Fragment() {
       Integer.min(Integer.max(spanCount, 1), 10)
     )
 
+    recyclerViewSelection.layoutManager = GridLayoutManager(
+      context,
+      Integer.min(Integer.max(spanCount, 1), 10)
+    )
+
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockitemList ->
 
+        // used by the selection
+        stockitemListCopy = stockitemList
+
         updateSummary(stockitemList)
 
+        // Add top/bottom items.
         // sort the list by change %
         val sortedList = stockitemList.sortedByDescending { item ->
           item.onlineMarketData.marketChangePercent
@@ -142,8 +167,146 @@ class StockRoomOverviewFragment : Fragment() {
         }
 
         stockRoomOverviewAdapter.setStockItems(filteredList)
+
+        // Add selected items.
+        val overviewSelection: Set<String> =
+          sharedPreferences.getStringSet("overview_selection", emptySet()) ?: setOf()
+        val selectedList = stockitemList.filter { item ->
+          overviewSelection.contains(item.stockDBdata.symbol)
+        }
+
+        stockRoomOverviewSelectionAdapter.setStockItems(selectedList)
       }
     })
+
+    binding.addSelectionButton.setOnClickListener {
+      val builder = android.app.AlertDialog.Builder(requireContext())
+      // Get the layout inflater
+      val inflater = LayoutInflater.from(requireContext())
+      val dialogBinding = DialogAddRemoveSelectionBinding.inflate(inflater)
+
+      // add all symbols
+//      stockRoomViewModel.allProperties.observe(requireActivity(), Observer { items ->
+//        if (items != null) {
+//          val spinnerData = items.map { stockItem ->
+//            stockItem.symbol
+//          }
+//            .sorted()
+//
+//          dialogBinding.textViewSymbolSpinner.adapter =
+//            ArrayAdapter(requireContext(), layout.simple_list_item_1, spinnerData)
+//        }
+//      })
+
+      // add portfolio symbols
+      val spinnerData = stockitemListCopy.map { stockItem ->
+        stockItem.stockDBdata.symbol
+      }
+        .sorted()
+
+      dialogBinding.textViewSymbolSpinner.adapter =
+        ArrayAdapter(requireContext(), layout.simple_list_item_1, spinnerData)
+
+      builder.setView(dialogBinding.root)
+        .setTitle(R.string.add_selection)
+        // Add action buttons
+        .setPositiveButton(R.string.add)
+        { _, _ ->
+
+          if (dialogBinding.textViewSymbolSpinner.isEmpty()) {
+            Toast.makeText(
+              requireContext(),
+              getString(string.no_symbols_available),
+              Toast.LENGTH_LONG
+            )
+              .show()
+            return@setPositiveButton
+          }
+
+          val symbol = dialogBinding.textViewSymbolSpinner.selectedItem.toString()
+
+          val overviewSelection: MutableSet<String> = mutableSetOf()
+          overviewSelection.addAll(
+            sharedPreferences.getStringSet("overview_selection", emptySet()) ?: setOf()
+          )
+          overviewSelection.add(symbol)
+          sharedPreferences
+            .edit()
+            .putStringSet("overview_selection", overviewSelection)
+            .apply()
+
+          val selectedList = stockitemListCopy.filter { item ->
+            overviewSelection.contains(item.stockDBdata.symbol)
+          }
+          stockRoomOverviewSelectionAdapter.setStockItems(selectedList)
+        }
+        .setNegativeButton(
+          R.string.cancel
+        )
+        { _, _ ->
+        }
+      builder
+        .create()
+        .show()
+    }
+
+    binding.removeSelectionButton.setOnClickListener {
+      val builder = android.app.AlertDialog.Builder(requireContext())
+      // Get the layout inflater
+      val inflater = LayoutInflater.from(requireContext())
+      val dialogBinding = DialogAddRemoveSelectionBinding.inflate(inflater)
+
+      val overviewSelection: MutableSet<String> =
+        sharedPreferences.getStringSet("overview_selection", emptySet()) ?: mutableSetOf()
+      val selectedList = stockitemListCopy.filter { item ->
+        overviewSelection.contains(item.stockDBdata.symbol)
+      }.map { item ->
+        item.stockDBdata.symbol
+      }.sorted()
+
+      val spinnerData: List<String> = selectedList
+
+      dialogBinding.textViewSymbolSpinner.adapter =
+        ArrayAdapter(requireContext(), layout.simple_list_item_1, spinnerData)
+
+      builder.setView(dialogBinding.root)
+        .setTitle(R.string.remove_selection)
+        // Add action buttons
+        .setPositiveButton(R.string.delete) { _, _ ->
+
+          if (dialogBinding.textViewSymbolSpinner.isEmpty()) {
+            Toast.makeText(
+              requireContext(),
+              getString(string.no_symbols_available),
+              Toast.LENGTH_LONG
+            )
+              .show()
+            return@setPositiveButton
+          }
+
+          val symbol = dialogBinding.textViewSymbolSpinner.selectedItem.toString()
+          val overviewSelection: MutableSet<String> = mutableSetOf()
+          overviewSelection.addAll(
+            sharedPreferences.getStringSet("overview_selection", emptySet()) ?: mutableSetOf()
+          )
+          overviewSelection.remove(symbol)
+          sharedPreferences
+            .edit()
+            .putStringSet("overview_selection", overviewSelection)
+            .apply()
+          val selectedList = stockitemListCopy.filter { item ->
+            overviewSelection.contains(item.stockDBdata.symbol)
+          }
+          stockRoomOverviewSelectionAdapter.setStockItems(selectedList)
+        }
+        .setNegativeButton(
+          R.string.cancel
+        ) { _, _ ->
+        }
+      builder
+        .create()
+        .show()
+    }
   }
 
   override fun onResume() {
