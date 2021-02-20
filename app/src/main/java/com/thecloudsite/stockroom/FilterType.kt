@@ -693,7 +693,7 @@ class FilterMarketCapType(
   override fun filter(stockItem: StockItem): Boolean {
 
     // MarketCap is in Millions
-    val filterValueM: Long = filterValue * 1000000L
+    val filterValueM: Long = filterValue * 1_000_000L
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {
@@ -704,23 +704,23 @@ class FilterMarketCapType(
       }
       // Large-cap is more than 10B
       FilterSubTypeEnum.IsMarketLargeCapType -> {
-        stockItem.onlineMarketData.marketCap > 10000000000L
+        stockItem.onlineMarketData.marketCap > 10_000_000_000L
       }
       // Mid-cap is between 2B and 10B
       FilterSubTypeEnum.IsMarketMidCapType -> {
-        stockItem.onlineMarketData.marketCap in 2000000001L..10000000000L
+        stockItem.onlineMarketData.marketCap in 2_000_000_001L..10_000_000_000L
       }
       // Small-cap is between 300M and 2B
       FilterSubTypeEnum.IsMarketSmallCapType -> {
-        stockItem.onlineMarketData.marketCap in 300000001L..2000000000L
+        stockItem.onlineMarketData.marketCap in 300_000_001L..2_000_000_000L
       }
       // Micro-cap is between 50M and 300M
       FilterSubTypeEnum.IsMarketMicroCapType -> {
-        stockItem.onlineMarketData.marketCap in 50000000L..300000000L
+        stockItem.onlineMarketData.marketCap in 50_000_000L..300_000_000L
       }
       // Nano-cap is below 50M
       FilterSubTypeEnum.IsMarketNanoCapType -> {
-        stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < 50000000L
+        stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < 50_000_000L
       }
       else -> false
     }
@@ -747,7 +747,7 @@ class FilterMarketCapType(
       ) {
         return SpannableStringBuilder()
           .append(data)
-          .append(formatInt(filterValue * 1000000L, context).second)
+          .append(formatInt(filterValue * 1_000_000L, context).second)
       }
 
       return SpannableStringBuilder()
