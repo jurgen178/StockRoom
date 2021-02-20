@@ -18,18 +18,6 @@
         >
 
       <TextView
-          android:id="@+id/eventHeadline"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:layout_margin="8dp"
-          style="@style/section_header"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          />
-
-      <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/event_title"
@@ -47,7 +35,7 @@
           android:layout_margin="8dp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toEndOf="@+id/guideline1"
-          app:layout_constraintTop_toBottomOf="@+id/eventHeadline"
+          app:layout_constraintTop_toTopOf="parent"
           >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputEditEventTitle"

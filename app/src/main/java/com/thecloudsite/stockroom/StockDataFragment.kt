@@ -261,7 +261,6 @@ class StockDataFragment : Fragment() {
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogAddAssetBinding.inflate(inflater)
 
-    dialogBinding.addUpdateQuantityHeadline.text = getString(R.string.update_asset)
     dialogBinding.addQuantity.setText(
       DecimalFormat(DecimalFormat0To6Digits).format(asset.quantity.absoluteValue)
     )
@@ -285,6 +284,7 @@ class StockDataFragment : Fragment() {
     )
 
     builder.setView(dialogBinding.root)
+      .setTitle(R.string.update_asset)
       // Add action buttons
       .setPositiveButton(
         R.string.update
@@ -484,7 +484,6 @@ class StockDataFragment : Fragment() {
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogAddEventBinding.inflate(inflater)
-    dialogBinding.eventHeadline.text = getString(R.string.update_event)
     dialogBinding.textInputEditEventTitle.setText(event.title)
     dialogBinding.textInputEditEventNote.setText(event.note)
     val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
@@ -496,6 +495,7 @@ class StockDataFragment : Fragment() {
     dialogBinding.datePickerEventTime.minute = localDateTime.minute
 
     builder.setView(dialogBinding.root)
+      .setTitle(R.string.update_event)
       // Add action buttons
       .setPositiveButton(
         R.string.update
@@ -1080,14 +1080,19 @@ class StockDataFragment : Fragment() {
             }
 
           if (addSelected) {
-            dialogBinding.portfolioHeader.text = getString(R.string.add_portfolio)
             dialogBinding.portfolioTextView.text = getString(R.string.portfolio_name_text)
           } else {
-            dialogBinding.portfolioHeader.text =
-              getString(R.string.rename_portfolio_header, selectedPortfolio)
+            getString(R.string.rename_portfolio_header, selectedPortfolio)
             dialogBinding.portfolioTextView.text = getString(R.string.portfolio_rename_text)
           }
           builder.setView(dialogBinding.root)
+            .setTitle(
+              if (addSelected) {
+                getString(R.string.add_portfolio)
+              } else {
+                getString(R.string.rename_portfolio_header, selectedPortfolio)
+              }
+            )
             // Add action buttons
             .setPositiveButton(
               if (addSelected) {
@@ -1254,6 +1259,7 @@ class StockDataFragment : Fragment() {
         dialogBinding.splitRatioZ.setText("1")
 
         builder.setView(dialogBinding.root)
+          .setTitle(R.string.split_asset)
           // Add action buttons
           .setPositiveButton(
             R.string.split
@@ -1352,9 +1358,8 @@ class StockDataFragment : Fragment() {
       // Pass null as the parent view because its going in the dialog layout
       val dialogBinding = DialogAddAssetBinding.inflate(inflater)
 
-      dialogBinding.addUpdateQuantityHeadline.text = getString(R.string.add_asset)
-
       builder.setView(dialogBinding.root)
+        .setTitle(R.string.add_asset)
         // Add action buttons
         .setPositiveButton(
           R.string.add
@@ -1482,6 +1487,7 @@ class StockDataFragment : Fragment() {
         val dialogBinding = DialogRemoveAssetBinding.inflate(inflater)
 
         builder.setView(dialogBinding.root)
+          .setTitle(R.string.delete_asset)
           // Add action buttons
           .setPositiveButton(
             R.string.delete
@@ -1691,10 +1697,8 @@ class StockDataFragment : Fragment() {
       // Inflate and set the layout for the dialog
       // Pass null as the parent view because its going in the dialog layout
       val dialogBinding = DialogAddEventBinding.inflate(inflater)
-
-      dialogBinding.eventHeadline.text = getString(R.string.add_event)
-
       builder.setView(dialogBinding.root)
+        .setTitle(R.string.add_event)
         // Add action buttons
         .setPositiveButton(
           R.string.add
@@ -1898,6 +1902,7 @@ class StockDataFragment : Fragment() {
     dialogBinding.textInputEditNote.setText(note)
 
     builder.setView(dialogBinding.root)
+      .setTitle(R.string.note)
       // Add action buttons
       .setPositiveButton(
         R.string.add

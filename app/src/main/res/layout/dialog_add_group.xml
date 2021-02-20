@@ -19,17 +19,6 @@
         android:padding="8dp"
         >
 
-    <TextView
-      android:id="@+id/addUpdateGroupsHeadline"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      style="@style/section_header"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      />
-
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -46,7 +35,7 @@
       android:layout_height="wrap_content"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
-      app:layout_constraintTop_toBottomOf="@+id/addUpdateGroupsHeadline"
+      app:layout_constraintTop_toTopOf="parent"
       />
 
   <com.larswerkman.holocolorpicker.SVBar

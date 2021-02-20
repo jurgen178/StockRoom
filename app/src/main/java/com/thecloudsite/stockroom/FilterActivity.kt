@@ -209,9 +209,8 @@ class FilterActivity : AppCompatActivity() {
 //            val addFilterNameView =
 //              dialogView.findViewById<TextView>(R.id.addFilterName)
 
-            dialogBinding.filterHeader.text = getString(R.string.add_filter_set)
-
             builder.setView(dialogBinding.root)
+              .setTitle(R.string.add_filter_set)
               // Add action buttons
               .setPositiveButton(R.string.add) { _, _ ->
                 // Add () to avoid cast exception.
@@ -507,7 +506,6 @@ class FilterActivity : AppCompatActivity() {
     if (index >= 0) {
       // Update
       dialogBinding.textViewFilterSpinner.setSelection(spinnerData.indexOf(filterType.displayName))
-      dialogBinding.addUpdateFilterHeadline.text = getString(string.update_filter)
 
       when (filterType.dataType) {
         TextType -> {
@@ -561,9 +559,6 @@ class FilterActivity : AppCompatActivity() {
         NoType -> {
         }
       }
-    } else {
-      // Add
-      dialogBinding.addUpdateFilterHeadline.text = getString(string.add_filter)
     }
 
     dialogBinding.textViewFilterDesc.text = filterType.desc
@@ -725,6 +720,13 @@ class FilterActivity : AppCompatActivity() {
       }
 
     builder.setView(dialogBinding.root)
+      .setTitle(
+        if (index >= 0) {
+          R.string.update_filter
+        } else {
+          R.string.add_filter
+        }
+      )
       // Add action buttons
       .setPositiveButton(
         if (index >= 0) string.update else string.add

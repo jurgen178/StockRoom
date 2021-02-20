@@ -203,7 +203,7 @@ limitations under the License. -->
   <string name="event_empty">Geben Sie ein Ereignis ein.</string>
   <string name="event_updated">Das Ereignis \'%1$s\' am %2$s wurde aktualisiert.</string>
   <string name="event_added">Das Ereignis \'%1$s\' am %2$s wurde hinzugefügt.</string>
-  <string name="delete_event">Ereignis löschen</string>
+  <string name="delete_event">Ereignis entfernen</string>
   <string name="delete_event_confirm">Sind Sie sicher, dass Sie das Ereignis \'%1$s\' am %2$s entfernen möchten?</string>
   <string name="delete_event_msg">Ereignis \'%1$s\' am %2$s wurde entfernt.</string>
   <string name="group_name">Gruppe \'%1$s\'</string>

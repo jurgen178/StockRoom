@@ -46,8 +46,6 @@ class UpdateGroupActivity : AppCompatActivity() {
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogAddGroupBinding.inflate(inflater)
 
-    dialogBinding.addUpdateGroupsHeadline.text = getString(R.string.update_groups_dialog_headline, group.name)
-
     dialogBinding.colorPicker.addSVBar(dialogBinding.colorPickerSV)
     dialogBinding.colorPicker.addSaturationBar(dialogBinding.colorPickerSaturationbar)
     dialogBinding.colorPicker.addValueBar(dialogBinding.colorPickerValuebar)
@@ -60,32 +58,33 @@ class UpdateGroupActivity : AppCompatActivity() {
     dialogBinding.addName.setText(group.name)
 
     builder.setView(dialogBinding.root)
-        // Add action buttons
-        .setPositiveButton(
-            R.string.update
-        ) { _, _ ->
-          val color = dialogBinding.colorPicker.color
-          if (clr != color) {
-            // Change color of all stocks from the old color 'clr' to the new color.
-            stockRoomViewModel.updateStockGroupColors(clr, color)
-            // Delete the old color.
-            stockRoomViewModel.deleteGroup(clr)
-            // Add the new color.
-            stockRoomViewModel.setGroup(color = color, name = group.name)
-          }
-          // Add () to avoid cast exception.
-          val nameText = (dialogBinding.addName.text).toString()
-              .trim()
+      .setTitle(getString(R.string.update_groups_dialog_headline, group.name))
+      // Add action buttons
+      .setPositiveButton(
+        R.string.update
+      ) { _, _ ->
+        val color = dialogBinding.colorPicker.color
+        if (clr != color) {
+          // Change color of all stocks from the old color 'clr' to the new color.
+          stockRoomViewModel.updateStockGroupColors(clr, color)
+          // Delete the old color.
+          stockRoomViewModel.deleteGroup(clr)
+          // Add the new color.
+          stockRoomViewModel.setGroup(color = color, name = group.name)
+        }
+        // Add () to avoid cast exception.
+        val nameText = (dialogBinding.addName.text).toString()
+          .trim()
 
-          // Check if color is used
-          val colorUsed = groupList.find { group ->
-            group.color == color
-          } != null
-          if (colorUsed) {
-            Toast.makeText(this, getString(R.string.group_color_in_use), Toast.LENGTH_LONG)
-                .show()
-            return@setPositiveButton
-          }
+        // Check if color is used
+        val colorUsed = groupList.find { group ->
+          group.color == color
+        } != null
+        if (colorUsed) {
+          Toast.makeText(this, getString(R.string.group_color_in_use), Toast.LENGTH_LONG)
+            .show()
+          return@setPositiveButton
+        }
 
 //          val nameUsed = groupList.find { group ->
 //            group.color != clr && group.name == nameText
@@ -96,46 +95,46 @@ class UpdateGroupActivity : AppCompatActivity() {
 //            return@setPositiveButton
 //          }
 
-          if (group.name != nameText && nameText.isNotEmpty()) {
-            // Add or update the group with color/name.
-            stockRoomViewModel.setGroup(color = color, name = nameText)
-          }
+        if (group.name != nameText && nameText.isNotEmpty()) {
+          // Add or update the group with color/name.
+          stockRoomViewModel.setGroup(color = color, name = nameText)
         }
-        .setNegativeButton(
-            R.string.cancel
-        ) { _, _ ->
-        }
+      }
+      .setNegativeButton(
+        R.string.cancel
+      ) { _, _ ->
+      }
     builder
-        .create()
-        .show()
+      .create()
+      .show()
   }
 
   private fun groupItemDeleteClicked(group: GroupData) {
     AlertDialog.Builder(this)
-        .setTitle(getString(R.string.delete_group_title, group.name))
-        .setMessage(
-            if (group.stats == 0) {
-              getString(R.string.delete_group_confirm, group.name)
-            } else {
-              getString(R.string.delete_group_confirm2, group.name, group.stats)
-            }
-        )
-        .setPositiveButton(R.string.delete) { _, _ ->
-          stockDBdataList.forEach { data ->
-            if (data.groupColor == group.color) {
-              // reset color
-              stockRoomViewModel.setStockGroupColor(data.symbol, 0)
-            }
-          }
-          stockRoomViewModel.deleteGroup(group.color)
-
-          Toast.makeText(
-              this, getString(R.string.delete_group_msg, group.name), Toast.LENGTH_LONG
-          )
-              .show()
+      .setTitle(getString(R.string.delete_group_title, group.name))
+      .setMessage(
+        if (group.stats == 0) {
+          getString(R.string.delete_group_confirm, group.name)
+        } else {
+          getString(R.string.delete_group_confirm2, group.name, group.stats)
         }
-        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-        .show()
+      )
+      .setPositiveButton(R.string.delete) { _, _ ->
+        stockDBdataList.forEach { data ->
+          if (data.groupColor == group.color) {
+            // reset color
+            stockRoomViewModel.setStockGroupColor(data.symbol, 0)
+          }
+        }
+        stockRoomViewModel.deleteGroup(group.color)
+
+        Toast.makeText(
+          this, getString(R.string.delete_group_msg, group.name), Toast.LENGTH_LONG
+        )
+          .show()
+      }
+      .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+      .show()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,8 +183,6 @@ class UpdateGroupActivity : AppCompatActivity() {
       // Pass null as the parent view because its going in the dialog layout
       val dialogBinding = DialogAddGroupBinding.inflate(inflater)
 
-      dialogBinding.addUpdateGroupsHeadline.text = getString(R.string.add_group)
-
 //      val saturationbarView = dialogView.findViewById<SaturationBar>(R.id.colorPickerSaturationbar)
 //      val valuebarView = dialogView.findViewById<ValueBar>(R.id.colorPickerValuebar)
       dialogBinding.colorPicker.addSVBar(dialogBinding.colorPickerSV)
@@ -198,31 +195,32 @@ class UpdateGroupActivity : AppCompatActivity() {
 //      colorView.addValueBar(valuebarView)
 
       builder.setView(dialogBinding.root)
-          // Add action buttons
-          .setPositiveButton(
-              R.string.add
-          ) { _, _ ->
-            // Add () to avoid cast exception.
-            val nameText = (dialogBinding.addName.text).toString()
-                .trim()
-            if (nameText.isEmpty()) {
-              Toast.makeText(
-                  this, getString(R.string.group_name_not_empty), Toast.LENGTH_LONG
-              )
-                  .show()
-              return@setPositiveButton
-            }
+        .setTitle(R.string.add_group)
+        // Add action buttons
+        .setPositiveButton(
+          R.string.add
+        ) { _, _ ->
+          // Add () to avoid cast exception.
+          val nameText = (dialogBinding.addName.text).toString()
+            .trim()
+          if (nameText.isEmpty()) {
+            Toast.makeText(
+              this, getString(R.string.group_name_not_empty), Toast.LENGTH_LONG
+            )
+              .show()
+            return@setPositiveButton
+          }
 
-            val color = dialogBinding.colorPicker.color
-            // Check if color is used
-            val colorUsed = groupList.find { group ->
-              group.color == color
-            } != null
-            if (colorUsed) {
-              Toast.makeText(this, getString(R.string.group_color_in_use), Toast.LENGTH_LONG)
-                  .show()
-              return@setPositiveButton
-            }
+          val color = dialogBinding.colorPicker.color
+          // Check if color is used
+          val colorUsed = groupList.find { group ->
+            group.color == color
+          } != null
+          if (colorUsed) {
+            Toast.makeText(this, getString(R.string.group_color_in_use), Toast.LENGTH_LONG)
+              .show()
+            return@setPositiveButton
+          }
 
 //            val nameUsed = groupList.find { group ->
 //              group.name == nameText
@@ -235,49 +233,49 @@ class UpdateGroupActivity : AppCompatActivity() {
 //              return@setPositiveButton
 //            }
 
-            // Add the group with color/name.
-            stockRoomViewModel.setGroup(color = color, name = nameText)
-          }
-          .setNegativeButton(
-              R.string.cancel
-          ) { _, _ ->
-          }
+          // Add the group with color/name.
+          stockRoomViewModel.setGroup(color = color, name = nameText)
+        }
+        .setNegativeButton(
+          R.string.cancel
+        ) { _, _ ->
+        }
       builder
-          .create()
-          .show()
+        .create()
+        .show()
     }
 
     binding.addPredefinedGroupsButton.setOnClickListener {
       AlertDialog.Builder(this)
-          .setTitle(R.string.add_predef_groups_title)
-          .setMessage(getString(R.string.add_predef_groups_confirm))
-          .setPositiveButton(R.string.add) { _, _ ->
-            stockRoomViewModel.setPredefinedGroups()
-            Toast.makeText(this, getString(R.string.add_predef_groups_msg), Toast.LENGTH_LONG)
-                .show()
-          }
-          .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-          .show()
+        .setTitle(R.string.add_predef_groups_title)
+        .setMessage(getString(R.string.add_predef_groups_confirm))
+        .setPositiveButton(R.string.add) { _, _ ->
+          stockRoomViewModel.setPredefinedGroups()
+          Toast.makeText(this, getString(R.string.add_predef_groups_msg), Toast.LENGTH_LONG)
+            .show()
+        }
+        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+        .show()
     }
 
     binding.deleteAllGroupButton.setOnClickListener {
       AlertDialog.Builder(this)
-          .setTitle(R.string.delete_allgroups_title)
-          .setMessage(getString(R.string.delete_all_groups_confirm))
-          .setPositiveButton(R.string.delete) { _, _ ->
-            // Remove color form all stocks.
-            stockDBdataList.forEach { data ->
-              if (data.groupColor != 0) {
-                // reset color
-                stockRoomViewModel.setStockGroupColor(data.symbol, 0)
-              }
+        .setTitle(R.string.delete_allgroups_title)
+        .setMessage(getString(R.string.delete_all_groups_confirm))
+        .setPositiveButton(R.string.delete) { _, _ ->
+          // Remove color form all stocks.
+          stockDBdataList.forEach { data ->
+            if (data.groupColor != 0) {
+              // reset color
+              stockRoomViewModel.setStockGroupColor(data.symbol, 0)
             }
-            stockRoomViewModel.deleteAllGroups()
-            Toast.makeText(this, getString(R.string.delete_all_groups_msg), Toast.LENGTH_LONG)
-                .show()
           }
-          .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-          .show()
+          stockRoomViewModel.deleteAllGroups()
+          Toast.makeText(this, getString(R.string.delete_all_groups_msg), Toast.LENGTH_LONG)
+            .show()
+        }
+        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+        .show()
     }
   }
 
