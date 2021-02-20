@@ -693,14 +693,14 @@ class FilterMarketCapType(
   override fun filter(stockItem: StockItem): Boolean {
 
     // MarketCap is in Millions
-    val filterValueInM: Long = filterValue * 1000000L
+    val filterValueM: Long = filterValue * 1000000L
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {
-        stockItem.onlineMarketData.marketCap > filterValueInM
+        stockItem.onlineMarketData.marketCap > filterValueM
       }
       FilterSubTypeEnum.LessThanType -> {
-        stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < filterValueInM
+        stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < filterValueM
       }
       // Large-cap is more than 10B
       FilterSubTypeEnum.IsMarketLargeCapType -> {
