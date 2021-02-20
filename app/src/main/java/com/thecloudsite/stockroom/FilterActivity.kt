@@ -627,11 +627,11 @@ class FilterActivity : AppCompatActivity() {
         FilterSubTypeEnum.IsNotUsedType,
         FilterSubTypeEnum.IsEmptyTextType,
         FilterSubTypeEnum.IsNotEmptyTextType,
-        FilterSubTypeEnum.IsMarketNanoCapType,
-        FilterSubTypeEnum.IsMarketMicroCapType,
-        FilterSubTypeEnum.IsMarketSmallCapType,
-        FilterSubTypeEnum.IsMarketMidCapType,
         FilterSubTypeEnum.IsMarketLargeCapType,
+        FilterSubTypeEnum.IsMarketMidCapType,
+        FilterSubTypeEnum.IsMarketSmallCapType,
+        FilterSubTypeEnum.IsMarketMicroCapType,
+        FilterSubTypeEnum.IsMarketNanoCapType,
         -> {
           allGone()
         }

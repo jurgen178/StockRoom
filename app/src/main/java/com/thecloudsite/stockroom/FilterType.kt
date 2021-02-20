@@ -111,11 +111,11 @@ enum class FilterSubTypeEnum(var value: String) {
   IsNotPresentType(""),
   IsUsedType(""),
   IsNotUsedType(""),
-  IsMarketNanoCapType(""),
-  IsMarketMicroCapType(""),
-  IsMarketMidCapType(""),
-  IsMarketSmallCapType(""),
   IsMarketLargeCapType(""),
+  IsMarketSmallCapType(""),
+  IsMarketMidCapType(""),
+  IsMarketMicroCapType(""),
+  IsMarketNanoCapType(""),
 }
 
 val regexOption = setOf(IGNORE_CASE, DOT_MATCHES_ALL)
@@ -702,25 +702,25 @@ class FilterMarketCapType(
       FilterSubTypeEnum.LessThanType -> {
         stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < filterValueInM
       }
-      // Nano-cap is below 50M
-      FilterSubTypeEnum.IsMarketNanoCapType -> {
-        stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < 50000000L
-      }
-      // Micro-cap is between 50M and 300M
-      FilterSubTypeEnum.IsMarketMicroCapType -> {
-        stockItem.onlineMarketData.marketCap in 50000000L..300000000L
-      }
-      // Small-cap is between 300M and 2B
-      FilterSubTypeEnum.IsMarketSmallCapType -> {
-        stockItem.onlineMarketData.marketCap in 300000001L..2000000000L
+      // Large-cap is more than 10B
+      FilterSubTypeEnum.IsMarketLargeCapType -> {
+        stockItem.onlineMarketData.marketCap > 10000000000L
       }
       // Mid-cap is between 2B and 10B
       FilterSubTypeEnum.IsMarketMidCapType -> {
         stockItem.onlineMarketData.marketCap in 2000000001L..10000000000L
       }
-      // Large-cap is more than 10B
-      FilterSubTypeEnum.IsMarketLargeCapType -> {
-        stockItem.onlineMarketData.marketCap > 10000000000L
+      // Small-cap is between 300M and 2B
+      FilterSubTypeEnum.IsMarketSmallCapType -> {
+        stockItem.onlineMarketData.marketCap in 300000001L..2000000000L
+      }
+      // Micro-cap is between 50M and 300M
+      FilterSubTypeEnum.IsMarketMicroCapType -> {
+        stockItem.onlineMarketData.marketCap in 50000000L..300000000L
+      }
+      // Nano-cap is below 50M
+      FilterSubTypeEnum.IsMarketNanoCapType -> {
+        stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < 50000000L
       }
       else -> false
     }
@@ -730,11 +730,11 @@ class FilterMarketCapType(
     listOf(
       FilterSubTypeEnum.GreaterThanType,
       FilterSubTypeEnum.LessThanType,
-      FilterSubTypeEnum.IsMarketNanoCapType,
-      FilterSubTypeEnum.IsMarketMicroCapType,
-      FilterSubTypeEnum.IsMarketSmallCapType,
-      FilterSubTypeEnum.IsMarketMidCapType,
       FilterSubTypeEnum.IsMarketLargeCapType,
+      FilterSubTypeEnum.IsMarketMidCapType,
+      FilterSubTypeEnum.IsMarketSmallCapType,
+      FilterSubTypeEnum.IsMarketMicroCapType,
+      FilterSubTypeEnum.IsMarketNanoCapType,
     )
 
   override val typeId = FilterTypeEnum.FilterMarketCapType

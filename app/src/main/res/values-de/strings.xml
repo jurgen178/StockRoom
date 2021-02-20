@@ -387,7 +387,7 @@ limitations under the License. -->
   <string name="filter_displayname_name">Anzeigename</string>
   <string name="filter_displayname_desc"></string>
   <string name="filter_marketcap_name">Marktkapitalisierung</string>
-  <string name="filter_marketcap_desc">Der Wert der Marktkapitalisierung ist in Millionen.\nZum Beispiel 42 entspricht 42000000 = 42Mio.\n\nNano-Cap ist kleiner 50Mio\nMicro-Cap ist 50Mio bis 300Mio\nSmall-Cap ist 300Mio bis 2Mrd\nMid-Cap ist 2Mrd bis 10Mrd\nLarge-Cap ist größer 10Mrd</string>
+  <string name="filter_marketcap_desc">Der Wert der Marktkapitalisierung ist in Millionen.\nZum Beispiel 42 entspricht 42000000 = 42Mio.\n\nLarge-Cap ist größer 10Mrd\nMid-Cap ist 2Mrd bis 10Mrd\nSmall-Cap ist 300Mio bis 2Mrd\nMicro-Cap ist 50Mio bis 300Mio\nNano-Cap ist kleiner 50Mio</string>
   <string name="filter_quotetype_name">Wertpapiertyp</string>
   <string name="filter_quotetype_desc"></string>
   <string name="filter_stockexchangename_name">Börsenname</string>
@@ -472,11 +472,11 @@ limitations under the License. -->
   <string name="filter_IsNotUsedType">wird nicht verwendet</string>
   <string name="filter_IsType">ist</string>
   <string name="filter_IsNotType">ist nicht</string>
-  <string name="filter_IsMarketNanoCapType">ist Nano-Cap</string>
-  <string name="filter_IsMarketMicroCapType">ist Micro-Cap</string>
-  <string name="filter_IsMarketMidCapType">ist Mid-Cap</string>
-  <string name="filter_IsMarketSmallCapType">ist Small-Cap</string>
   <string name="filter_IsMarketLargeCapType">ist Large-Cap</string>
+  <string name="filter_IsMarketSmallCapType">ist Small-Cap</string>
+  <string name="filter_IsMarketMidCapType">ist Mid-Cap</string>
+  <string name="filter_IsMarketMicroCapType">ist Micro-Cap</string>
+  <string name="filter_IsMarketNanoCapType">ist Nano-Cap</string>
   <string name="filter_mode">Filterart</string>
   <string name="delayed_quote">Verzögerter Preis</string>
   <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
