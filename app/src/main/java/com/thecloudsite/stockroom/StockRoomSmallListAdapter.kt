@@ -104,7 +104,7 @@ class StockRoomSmallListAdapter internal constructor(
         changeText.append(dividendStr)
 
       // set the background color to the market change
-      holder.binding.smalllistTextViewMarketPriceLayout.setBackgroundColor(
+      holder.binding.smalllistTextViewMarketPrice.setBackgroundColor(
           getChangeColor(
               current.onlineMarketData.marketChange,
               current.onlineMarketData.postMarketData,
