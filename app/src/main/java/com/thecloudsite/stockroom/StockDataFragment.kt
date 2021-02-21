@@ -1169,7 +1169,8 @@ class StockDataFragment : Fragment() {
 
       var menuIndex: Int = Menu.FIRST
       stockRoomViewModel.getGroupsMenuList(
-        getString(R.string.standard_group)
+        getString(R.string.standard_group),
+        context?.getColor(R.color.black) ?: 0
       )
         .forEach {
           popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)

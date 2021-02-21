@@ -1018,6 +1018,7 @@ fun checkUrl(url: String): String {
 fun getGroupsMenuList(
   groups: List<Group>,
   backgroundListColor: Int,
+  colorRef: Int,
   standardGroupName: String
 ): List<SpannableString> {
   val menuStrings: MutableList<SpannableString> = mutableListOf()
@@ -1034,8 +1035,9 @@ fun getGroupsMenuList(
     s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
 
     // backgroundListColor is light color, make the group name readable
-    val textColor = if (isWhiteColor(grp.color, SharedRepository.blackColor) || grp.color == backgroundListColor) {
-      SharedRepository.blackColor
+    //val textColor = if (isWhiteColor(grp.color, SharedRepository.blackColor) || grp.color == backgroundListColor) {
+    val textColor = if (isWhiteColor(grp.color, colorRef) || grp.color == backgroundListColor) {
+      colorRef
     } else {
       grp.color
     }
@@ -1088,6 +1090,4 @@ fun setAppTheme(context: Context) {
       }
     }
   }
-
-  SharedRepository.blackColor = context.getColor(R.color.black)
 }

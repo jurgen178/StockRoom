@@ -415,6 +415,7 @@ open class FilterGroupBaseType(override val context: Context) : FilterSelectionB
       return getGroupsMenuList(
         SharedFilterGroupList.groups,
         0,
+        context.getColor(R.color.black),
         context.getString(string.standard_group)
       ).map {
         SpannableStringBuilder().append(it)

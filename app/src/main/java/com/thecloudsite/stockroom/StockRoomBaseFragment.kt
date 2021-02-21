@@ -58,10 +58,13 @@ open class StockRoomBaseFragment : Fragment() {
     val popupMenu = PopupMenu(context, itemView)
 
     var menuIndex: Int = Menu.FIRST
-    stockRoomViewModel.getGroupsMenuList(getString(string.standard_group))
-        .forEach {
-          popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
-        }
+    stockRoomViewModel.getGroupsMenuList(
+      getString(string.standard_group),
+      context?.getColor(R.color.black) ?: 0
+    )
+      .forEach {
+        popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
+      }
 
     popupMenu.show()
 

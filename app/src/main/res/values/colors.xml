@@ -29,9 +29,7 @@ limitations under the License. -->
 
   <color name="green">#32CD32</color>
   <color name="red">#DC143C</color>
-  <!-- post colors:
-       subtract 15 for V in HSV model
-  -->
+  <!-- post colors are V-15 in HSV model -->
   <color name="postGreen">#29A529</color>
   <color name="postRed">#B51232</color>
 

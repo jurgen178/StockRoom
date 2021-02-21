@@ -67,8 +67,13 @@ class FilterActivity : AppCompatActivity() {
   //private lateinit var stockRoomViewModel: StockRoomViewModel
   //private lateinit var groups: MutableList<Group>
 
+  // used by listener for FilterFactory.create because applicationContext cannot be used
+  lateinit var thisCopy: FilterActivity
+
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    thisCopy = this
 
     binding = ActivityFilterBinding.inflate(layoutInflater)
     val view = binding.root
@@ -657,7 +662,10 @@ class FilterActivity : AppCompatActivity() {
         ) {
           // Preserve sub type if possible when filter is changed.
           val subType = filterType.subType
-          filterType = FilterFactory.create(position, applicationContext)
+
+          // cannot use applicationContext because the context does not update
+          // when dark mode (resource color.black is used by the filter) is switched
+          filterType = FilterFactory.create(position, thisCopy)
           if (filterType.subTypeList.indexOf(subType) != -1) {
             filterType.subType = subType
           }

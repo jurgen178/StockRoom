@@ -8,6 +8,12 @@
   <color name="tableHeaderBackground">#FF6A00</color>
   <color name="chartLine">#00a1ff</color>
 
+  <color name="green">#269926</color>
+  <color name="red">#CC1439</color>
+  <!-- post colors are V-15 in HSV model -->
+  <color name="postGreen">#1C721C</color>
+  <color name="postRed">#A51030</color>
+
   <color name="white">#000000</color>
   <color name="black">#ffffff</color>
 

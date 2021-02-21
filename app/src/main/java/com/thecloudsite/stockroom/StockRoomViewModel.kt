@@ -182,8 +182,6 @@ object SharedRepository {
   var statsCounterMax = 0
   var responseCounterStart = 0
   var lastStatsCounters = IntArray(5) { -1 }
-
-  var blackColor: Int = 0
 }
 
 class StockRoomViewModel(application: Application) : AndroidViewModel(application) {
@@ -2018,9 +2016,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   // Get the colored menu entries for the groups.
-  fun getGroupsMenuList(standardGroupName: String): List<SpannableString> {
+  fun getGroupsMenuList(standardGroupName: String, colorRef: Int): List<SpannableString> {
     val groups: MutableList<Group> = getGroupsSync().toMutableList()
-    return getGroupsMenuList(groups, backgroundListColor, standardGroupName)
+    return getGroupsMenuList(
+      groups,
+      backgroundListColor,
+      colorRef,
+      standardGroupName
+    )
   }
 
   /*
