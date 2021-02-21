@@ -55,8 +55,8 @@ data class AssetListData(
 
 class AssetListAdapter internal constructor(
   private val context: Context,
-  private val clickListenerUpdate: (Asset) -> Unit,
-  private val clickListenerDelete: (String?, Asset?) -> Unit
+  private val clickListenerUpdateLambda: (Asset) -> Unit,
+  private val clickListenerDeleteLambda: (String?, Asset?) -> Unit
 ) : RecyclerView.Adapter<AssetListAdapter.AssetViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -69,17 +69,17 @@ class AssetListAdapter internal constructor(
   ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       asset: Asset,
-      clickListenerUpdate: (Asset) -> Unit
+      clickListenerUpdateLambda: (Asset) -> Unit
     ) {
-      binding.textViewAssetItemsLayout.setOnClickListener { clickListenerUpdate(asset) }
+      binding.textViewAssetItemsLayout.setOnClickListener { clickListenerUpdateLambda(asset) }
     }
 
     fun bindDelete(
       symbol: String?,
       asset: Asset?,
-      clickListenerDelete: (String?, Asset?) -> Unit
+      clickListenerDeleteLambda: (String?, Asset?) -> Unit
     ) {
-      binding.textViewAssetDelete.setOnClickListener { clickListenerDelete(symbol, asset) }
+      binding.textViewAssetDelete.setOnClickListener { clickListenerDeleteLambda(symbol, asset) }
     }
   }
 
@@ -123,7 +123,7 @@ class AssetListAdapter internal constructor(
       // Last entry is summary.
       if (position == assetList.size - 1) {
         // handler for delete all
-        holder.bindDelete(current.asset.symbol, null, clickListenerDelete)
+        holder.bindDelete(current.asset.symbol, null, clickListenerDeleteLambda)
 
         val isSum = current.asset.quantity > 0.0 && current.asset.price > 0.0
 
@@ -187,8 +187,8 @@ class AssetListAdapter internal constructor(
         holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
       } else {
         // Asset items
-        holder.bindUpdate(current.asset, clickListenerUpdate)
-        holder.bindDelete(null, current.asset, clickListenerDelete)
+        holder.bindUpdate(current.asset, clickListenerUpdateLambda)
+        holder.bindDelete(null, current.asset, clickListenerDeleteLambda)
 
         val colorNegativeAsset = context.getColor(R.color.negativeAsset)
         val colorObsoleteAsset = context.getColor(R.color.obsoleteAsset)

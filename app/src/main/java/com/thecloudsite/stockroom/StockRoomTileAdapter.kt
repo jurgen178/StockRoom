@@ -34,7 +34,7 @@ import java.text.DecimalFormat
 
 class StockRoomTileAdapter internal constructor(
   val context: Context,
-  private val clickListenerListItem: (StockItem) -> Unit
+  private val clickListenerListItemLambda: (StockItem) -> Unit
 ) : RecyclerView.Adapter<StockRoomTileAdapter.OnlineDataViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -45,9 +45,9 @@ class StockRoomTileAdapter internal constructor(
   ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
       stockItem: StockItem,
-      clickListener: (StockItem) -> Unit
+      clickListenerLambda: (StockItem) -> Unit
     ) {
-      binding.stockRoomTileItemLayout.setOnClickListener { clickListener(stockItem) }
+      binding.stockRoomTileItemLayout.setOnClickListener { clickListenerLambda(stockItem) }
     }
   }
 
@@ -66,7 +66,7 @@ class StockRoomTileAdapter internal constructor(
   ) {
     val current = stockItems[position]
 
-    holder.bind(current, clickListenerListItem)
+    holder.bind(current, clickListenerListItemLambda)
     holder.binding.stockRoomTileItemSymbol.text = current.stockDBdata.symbol
 
     var color = current.stockDBdata.groupColor

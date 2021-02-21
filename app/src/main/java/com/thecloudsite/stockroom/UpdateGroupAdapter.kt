@@ -34,8 +34,8 @@ data class GroupData(
 
 class UpdateGroupAdapter internal constructor(
   private val context: Context,
-  private val clickListenerUpdate: (GroupData) -> Unit,
-  private val clickListenerDelete: (GroupData) -> Unit
+  private val clickListenerUpdateLambda: (GroupData) -> Unit,
+  private val clickListenerDeleteLambda: (GroupData) -> Unit
 ) : RecyclerView.Adapter<UpdateGroupAdapter.UpdateGroupViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -48,16 +48,16 @@ class UpdateGroupAdapter internal constructor(
   ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       group: GroupData,
-      clickListenerUpdate: (GroupData) -> Unit
+      clickListenerUpdateLambda: (GroupData) -> Unit
     ) {
-      binding.groupItemName.setOnClickListener { clickListenerUpdate(group) }
+      binding.groupItemName.setOnClickListener { clickListenerUpdateLambda(group) }
     }
 
     fun bindDelete(
       group: GroupData,
-      clickListenerDelete: (GroupData) -> Unit
+      clickListenerDeleteLambda: (GroupData) -> Unit
     ) {
-      binding.textViewGroupDelete.setOnClickListener { clickListenerDelete(group) }
+      binding.textViewGroupDelete.setOnClickListener { clickListenerDeleteLambda(group) }
     }
   }
 
@@ -76,8 +76,8 @@ class UpdateGroupAdapter internal constructor(
   ) {
     val current: GroupData = groupDatalist[position]
 
-    holder.bindUpdate(current, clickListenerUpdate)
-    holder.bindDelete(current, clickListenerDelete)
+    holder.bindUpdate(current, clickListenerUpdateLambda)
+    holder.bindDelete(current, clickListenerDeleteLambda)
 
     holder.binding.groupItemName.text = current.name
     holder.binding.groupItemStats.text = "[${current.stats}]"

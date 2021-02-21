@@ -66,8 +66,8 @@ fun setBackgroundColor(
 
 class StockRoomListAdapter internal constructor(
   val context: Context,
-  private val clickListenerGroup: (StockItem, View) -> Unit,
-  private val clickListenerSummary: (StockItem) -> Unit
+  private val clickListenerGroupLambda: (StockItem, View) -> Unit,
+  private val clickListenerSymbolLambda: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -76,19 +76,19 @@ class StockRoomListAdapter internal constructor(
   class StockRoomViewHolder(
     val binding: StockroomListItemBinding
   ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindGroup(
+    fun bindGroupOnClickListener(
       stockItem: StockItem,
-      clickListener: (StockItem, View) -> Unit
+      clickListenerLambda: (StockItem, View) -> Unit
     ) {
-      binding.itemviewGroup.setOnClickListener { clickListener(stockItem, itemView) }
+      binding.itemviewGroup.setOnClickListener { clickListenerLambda(stockItem, itemView) }
     }
 
-    fun bindSummary(
+    fun bindSummaryOnClickListener(
       stockItem: StockItem,
-      clickListener: (StockItem) -> Unit
+      clickListenerLambda: (StockItem) -> Unit
     ) {
-      binding.itemSummary.setOnClickListener { clickListener(stockItem) }
-      binding.itemRedGreen.setOnClickListener { clickListener(stockItem) }
+      binding.itemSummary.setOnClickListener { clickListenerLambda(stockItem) }
+      binding.itemRedGreen.setOnClickListener { clickListenerLambda(stockItem) }
     }
   }
 
@@ -112,8 +112,8 @@ class StockRoomListAdapter internal constructor(
     }
 
     if (current != null) {
-      holder.bindGroup(current, clickListenerGroup)
-      holder.bindSummary(current, clickListenerSummary)
+      holder.bindGroupOnClickListener(current, clickListenerGroupLambda)
+      holder.bindSummaryOnClickListener(current, clickListenerSymbolLambda)
 
       holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 

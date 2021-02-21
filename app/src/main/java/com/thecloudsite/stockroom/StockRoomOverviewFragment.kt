@@ -95,12 +95,12 @@ class StockRoomOverviewFragment : Fragment() {
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
-    val clickListenerSummary = { stockItem: StockItem -> clickListenerOverview(stockItem) }
+    val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerOverview(stockItem) }
 
     // Use the small list adapter for display.
-    val stockRoomOverviewAdapter = StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
+    val stockRoomOverviewAdapter = StockRoomSmallListAdapter(requireContext(), clickListenerSymbolLambda)
     val stockRoomOverviewSelectionAdapter =
-      StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
+      StockRoomSmallListAdapter(requireContext(), clickListenerSymbolLambda)
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = stockRoomOverviewAdapter

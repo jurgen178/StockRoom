@@ -34,8 +34,8 @@ import java.time.format.FormatStyle.SHORT
 
 class EventListAdapter internal constructor(
   private val context: Context,
-  private val clickListenerUpdate: (Event) -> Unit,
-  private val clickListenerDelete: (Event) -> Unit
+  private val clickListenerUpdateLambda: (Event) -> Unit,
+  private val clickListenerDeleteLambda: (Event) -> Unit
 ) : RecyclerView.Adapter<EventListAdapter.EventViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -46,16 +46,16 @@ class EventListAdapter internal constructor(
   ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       event: Event,
-      clickListenerUpdate: (Event) -> Unit
+      clickListenerUpdateLambda: (Event) -> Unit
     ) {
-      binding.textViewEventItemsLayout.setOnClickListener { clickListenerUpdate(event) }
+      binding.textViewEventItemsLayout.setOnClickListener { clickListenerUpdateLambda(event) }
     }
 
     fun bindDelete(
       event: Event,
-      clickListenerDelete: (Event) -> Unit
+      clickListenerDeleteLambda: (Event) -> Unit
     ) {
-      binding.textViewEventDelete.setOnClickListener { clickListenerDelete(event) }
+      binding.textViewEventDelete.setOnClickListener { clickListenerDeleteLambda(event) }
     }
   }
 
@@ -85,8 +85,8 @@ class EventListAdapter internal constructor(
       val background = TypedValue()
       holder.binding.textViewEventItemsLayout.setBackgroundResource(background.resourceId)
     } else {
-      holder.bindUpdate(current, clickListenerUpdate)
-      holder.bindDelete(current, clickListenerDelete)
+      holder.bindUpdate(current, clickListenerUpdateLambda)
+      holder.bindDelete(current, clickListenerDeleteLambda)
 
       holder.binding.textViewEventTitle.text = current.title
       holder.binding.textViewEventNote.text = current.note

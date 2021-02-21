@@ -100,13 +100,13 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val clickListenerGroup =
+    val clickListenerGroupLambda =
       { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
-    val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
+    val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
     val adapter = StockRoomChartAdapter(
         requireContext(),
-        clickListenerGroup,
-        clickListenerSummary
+        clickListenerGroupLambda,
+        clickListenerSymbolLambda
     )
 
     val recyclerView = binding.recyclerview

@@ -34,8 +34,8 @@ class StockRoomSmallListFragment : StockRoomBaseFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
-    val adapter = StockRoomSmallListAdapter(requireContext(), clickListenerSummary)
+    val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
+    val adapter = StockRoomSmallListAdapter(requireContext(), clickListenerSymbolLambda)
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter

@@ -34,8 +34,8 @@ class StockRoomSmallTile2Fragment : StockRoomBaseFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
-    val adapter = StockRoomSmallTile2Adapter(requireContext(), clickListenerSummary)
+    val clickListener = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
+    val adapter = StockRoomSmallTile2Adapter(requireContext(), clickListener)
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter

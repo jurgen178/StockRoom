@@ -38,7 +38,7 @@ data class AssetTimelineElement(
 
 class AssetTimelineAdapter(
   private val context: Context,
-  private val clickListenerCardItem: (AssetTimelineElement) -> Unit
+  private val clickListenerCardItemLambda: (AssetTimelineElement) -> Unit
 ) : RecyclerView.Adapter<AssetTimelineAdapter.ViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -50,9 +50,9 @@ class AssetTimelineAdapter(
 
     fun bind(
       timelineElement: AssetTimelineElement,
-      clickListener: (AssetTimelineElement) -> Unit
+      clickListenerLambda: (AssetTimelineElement) -> Unit
     ) {
-      binding.timelineCardView.setOnClickListener { clickListener(timelineElement) }
+      binding.timelineCardView.setOnClickListener { clickListenerLambda(timelineElement) }
     }
   }
 
@@ -71,7 +71,7 @@ class AssetTimelineAdapter(
   ) {
     val timelineElement = timelineElementList[position]
 
-    holder.bind(timelineElement, clickListenerCardItem)
+    holder.bind(timelineElement, clickListenerCardItemLambda)
     holder.binding.timelineHeader.text = timelineElement.symbol
 
     var stockTransactions = ""

@@ -56,7 +56,7 @@ import com.thecloudsite.stockroom.utils.getMarketValues
 class StockRoomChartAdapter internal constructor(
   val context: Context,
   private val clickListenerGroup: (StockItem, View) -> Unit,
-  private val clickListenerSummary: (StockItem) -> Unit,
+  private val clickListenerSymbol: (StockItem) -> Unit,
 ) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -69,14 +69,14 @@ class StockRoomChartAdapter internal constructor(
   class StockRoomViewHolder(
     val binding: StockroomChartItemBinding
   ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindGroup(
+    fun bindGroupOnClickListener(
       stockItem: StockItem,
       clickListener: (StockItem, View) -> Unit
     ) {
       binding.itemviewGroup.setOnClickListener { clickListener(stockItem, itemView) }
     }
 
-    fun bindSummary(
+    fun bindSummaryOnClickListener(
       stockItem: StockItem,
       clickListener: (StockItem) -> Unit
     ) {
@@ -100,8 +100,8 @@ class StockRoomChartAdapter internal constructor(
   ) {
     val current = getItem(position)
     if (current != null) {
-      holder.bindGroup(current, clickListenerGroup)
-      holder.bindSummary(current, clickListenerSummary)
+      holder.bindGroupOnClickListener(current, clickListenerGroup)
+      holder.bindSummaryOnClickListener(current, clickListenerSymbol)
 
       val stockDataEntries: List<StockDataEntry>? =
         chartDataItems[current.onlineMarketData.symbol]

@@ -54,7 +54,7 @@ import kotlin.math.absoluteValue
 
 class StockRoomTableAdapter internal constructor(
   val context: Context,
-  private val clickListenerSummary: (StockItem) -> Unit
+  private val clickListenerSymbolLambda: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomTableAdapter.StockRoomTableViewHolder>(
   StockRoomDiffCallback()
 ) {
@@ -66,11 +66,11 @@ class StockRoomTableAdapter internal constructor(
   class StockRoomTableViewHolder(
     val binding: StockroomTableItemBinding
   ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindSummary(
+    fun bindOnClickListener(
       stockItem: StockItem,
-      clickListener: (StockItem) -> Unit
+      clickListenerLambda: (StockItem) -> Unit
     ) {
-      binding.tableDataLayout.setOnClickListener { clickListener(stockItem) }
+      binding.tableDataLayout.setOnClickListener { clickListenerLambda(stockItem) }
     }
   }
 
@@ -95,7 +95,7 @@ class StockRoomTableAdapter internal constructor(
 
     if (current != null) {
 
-      holder.bindSummary(current, clickListenerSummary)
+      holder.bindOnClickListener(current, clickListenerSymbolLambda)
 
       // Header item is symbol = ""
       val isHeader = current.stockDBdata.symbol.isEmpty()

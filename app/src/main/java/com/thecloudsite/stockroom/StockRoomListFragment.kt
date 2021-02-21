@@ -36,8 +36,8 @@ class StockRoomListFragment : StockRoomBaseFragment() {
 
     val clickListenerGroup =
       { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
-    val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
-    val adapter = StockRoomListAdapter(requireContext(), clickListenerGroup, clickListenerSummary)
+    val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
+    val adapter = StockRoomListAdapter(requireContext(), clickListenerGroup, clickListenerSymbolLambda)
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter

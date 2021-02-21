@@ -30,7 +30,7 @@ import com.thecloudsite.stockroom.utils.getMarketValues
 
 class StockRoomSmallTile2Adapter internal constructor(
   val context: Context,
-  private val clickListenerSummary: (StockItem) -> Unit
+  private val clickListenerSymbolLambda: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomSmallTile2Adapter.StockRoomViewHolder>(
     StockRoomDiffCallback()
 ) {
@@ -40,11 +40,11 @@ class StockRoomSmallTile2Adapter internal constructor(
   class StockRoomViewHolder(
     val binding: StockroomSmalltile2ItemBinding
   ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindSummary(
+    fun bindOnClickListener(
       stockItem: StockItem,
-      clickListener: (StockItem) -> Unit
+      clickListenerLambda: (StockItem) -> Unit
     ) {
-      binding.smalltileItemLayout.setOnClickListener { clickListener(stockItem) }
+      binding.smalltileItemLayout.setOnClickListener { clickListenerLambda(stockItem) }
     }
   }
 
@@ -63,7 +63,7 @@ class StockRoomSmallTile2Adapter internal constructor(
   ) {
     val current = getItem(position)
     if (current != null) {
-      holder.bindSummary(current, clickListenerSummary)
+      holder.bindOnClickListener(current, clickListenerSymbolLambda)
 
       holder.binding.smalltileItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
       holder.binding.smalltileTextViewSymbol.text = current.onlineMarketData.symbol

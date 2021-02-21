@@ -29,8 +29,8 @@ import com.thecloudsite.stockroom.databinding.FilterviewItemBinding
 
 class FilterListAdapter internal constructor(
   context: Context,
-  private val clickListenerUpdate: (IFilterType, Int) -> Unit,
-  private val clickListenerDelete: (IFilterType, Int) -> Unit
+  private val clickListenerUpdateLambda: (IFilterType, Int) -> Unit,
+  private val clickListenerDeleteLambda: (IFilterType, Int) -> Unit
 ) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -42,17 +42,17 @@ class FilterListAdapter internal constructor(
     fun bindUpdate(
       filterType: IFilterType,
       index: Int,
-      clickListenerUpdate: (IFilterType, Int) -> Unit
+      clickListenerUpdateLambda: (IFilterType, Int) -> Unit
     ) {
-      binding.filterTextLayout.setOnClickListener { clickListenerUpdate(filterType, index) }
+      binding.filterTextLayout.setOnClickListener { clickListenerUpdateLambda(filterType, index) }
     }
 
     fun bindDelete(
       filterType: IFilterType,
       index: Int,
-      clickListenerDelete: (IFilterType, Int) -> Unit
+      clickListenerDeleteLambda: (IFilterType, Int) -> Unit
     ) {
-      binding.filterDelete.setOnClickListener { clickListenerDelete(filterType, index) }
+      binding.filterDelete.setOnClickListener { clickListenerDeleteLambda(filterType, index) }
     }
   }
 
@@ -71,8 +71,8 @@ class FilterListAdapter internal constructor(
   ) {
     val current: IFilterType = filterList[position]
 
-    holder.bindUpdate(current, position, clickListenerUpdate)
-    holder.bindDelete(current, position, clickListenerDelete)
+    holder.bindUpdate(current, position, clickListenerUpdateLambda)
+    holder.bindDelete(current, position, clickListenerDeleteLambda)
 
     val subType =
       if (current.subType != FilterSubTypeEnum.NoType) {

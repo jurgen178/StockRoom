@@ -42,8 +42,8 @@ import java.time.format.FormatStyle.MEDIUM
 
 class DividendReceivedListAdapter internal constructor(
   private val context: Context,
-  private val clickListenerUpdate: (Dividend) -> Unit,
-  private val clickListenerDelete: (String?, Dividend?, List<Dividend>?) -> Unit
+  private val clickListenerUpdateLambda: (Dividend) -> Unit,
+  private val clickListenerDeleteLambda: (String?, Dividend?, List<Dividend>?) -> Unit
 ) : RecyclerView.Adapter<DividendReceivedListAdapter.DividendReceivedViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -58,19 +58,19 @@ class DividendReceivedListAdapter internal constructor(
   ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       dividend: Dividend,
-      clickListenerUpdate: (Dividend) -> Unit
+      clickListenerUpdateLambda: (Dividend) -> Unit
     ) {
-      binding.dividendReceivedLinearLayout.setOnClickListener { clickListenerUpdate(dividend) }
+      binding.dividendReceivedLinearLayout.setOnClickListener { clickListenerUpdateLambda(dividend) }
     }
 
     fun bindDelete(
       symbol: String?,
       dividend: Dividend?,
       dividendList: List<Dividend>?,
-      clickListenerDelete: (String?, Dividend?, List<Dividend>?) -> Unit
+      clickListenerDeleteLambda: (String?, Dividend?, List<Dividend>?) -> Unit
     ) {
       binding.textViewDividendReceivedDelete.setOnClickListener {
-        clickListenerDelete(
+        clickListenerDeleteLambda(
           symbol, dividend, dividendList
         )
       }
@@ -110,7 +110,7 @@ class DividendReceivedListAdapter internal constructor(
       // Last entry is summary.
       if (position == dividendList.size - 1) {
         // handler for delete all
-        holder.bindDelete(current.symbol, null, dividendList, clickListenerDelete)
+        holder.bindDelete(current.symbol, null, dividendList, clickListenerDeleteLambda)
 
         // Summary line is always black on yellow
         holder.binding.textViewDividendReceivedAmount.text =
@@ -135,8 +135,8 @@ class DividendReceivedListAdapter internal constructor(
         val background = TypedValue()
         holder.binding.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
       } else {
-        holder.bindUpdate(current, clickListenerUpdate)
-        holder.bindDelete(null, current, null, clickListenerDelete)
+        holder.bindUpdate(current, clickListenerUpdateLambda)
+        holder.bindDelete(null, current, null, clickListenerDeleteLambda)
 
         val dividendYield =
           if ((current.cycle == DividendCycle.Monthly.value

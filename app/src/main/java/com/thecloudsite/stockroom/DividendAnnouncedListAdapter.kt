@@ -37,8 +37,8 @@ import java.time.format.FormatStyle.MEDIUM
 
 class DividendAnnouncedListAdapter internal constructor(
   private val context: Context,
-  private val clickListenerUpdate: (Dividend) -> Unit,
-  private val clickListenerDelete: (String?, Dividend?) -> Unit
+  private val clickListenerUpdateLambda: (Dividend) -> Unit,
+  private val clickListenerDeleteLambda: (String?, Dividend?) -> Unit
 ) : RecyclerView.Adapter<DividendAnnouncedListAdapter.DividendAnnouncedViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -49,18 +49,18 @@ class DividendAnnouncedListAdapter internal constructor(
   ) : RecyclerView.ViewHolder(binding.root) {
     fun bindUpdate(
       dividend: Dividend,
-      clickListenerUpdate: (Dividend) -> Unit
+      clickListenerUpdateLambda: (Dividend) -> Unit
     ) {
-      binding.dividendAnnouncedLinearLayout.setOnClickListener { clickListenerUpdate(dividend) }
+      binding.dividendAnnouncedLinearLayout.setOnClickListener { clickListenerUpdateLambda(dividend) }
     }
 
     fun bindDelete(
       symbol: String?,
       dividend: Dividend?,
-      clickListenerDelete: (String?, Dividend?) -> Unit
+      clickListenerDeleteLambda: (String?, Dividend?) -> Unit
     ) {
       binding.textViewDividendAnnouncedDelete.setOnClickListener {
-        clickListenerDelete(
+        clickListenerDeleteLambda(
             symbol, dividend
         )
       }
@@ -100,8 +100,8 @@ class DividendAnnouncedListAdapter internal constructor(
       val background = TypedValue()
       holder.binding.dividendAnnouncedLinearLayout.setBackgroundResource(background.resourceId)
     } else {
-      holder.bindUpdate(current, clickListenerUpdate)
-      holder.bindDelete(null, current, clickListenerDelete)
+      holder.bindUpdate(current, clickListenerUpdateLambda)
+      holder.bindDelete(null, current, clickListenerDeleteLambda)
 
       holder.binding.textViewDividendAnnouncedAmount.text = if (current.amount > 0.0) {
         DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
