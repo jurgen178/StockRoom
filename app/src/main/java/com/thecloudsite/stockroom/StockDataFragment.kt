@@ -2314,10 +2314,12 @@ class StockDataFragment : Fragment() {
     candleStickChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
     candleStickChart.xAxis.setDrawAxisLine(true)
     candleStickChart.xAxis.setDrawGridLines(false)
+    candleStickChart.xAxis.textColor = context?.getColor(R.color.black)!!
 
     candleStickChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
     candleStickChart.axisRight.setDrawAxisLine(true)
     candleStickChart.axisRight.setDrawGridLines(true)
+    candleStickChart.axisRight.textColor = context?.getColor(R.color.black)!!
     candleStickChart.axisRight.isEnabled = true
 
     candleStickChart.axisLeft.setDrawGridLines(false)
@@ -2398,10 +2400,12 @@ class StockDataFragment : Fragment() {
     lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
     lineChart.xAxis.setDrawAxisLine(true)
     lineChart.xAxis.setDrawGridLines(false)
+    lineChart.xAxis.textColor = context?.getColor(R.color.black)!!
 
     lineChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
     lineChart.axisRight.setDrawAxisLine(true)
     lineChart.axisRight.setDrawGridLines(true)
+    lineChart.axisRight.textColor = context?.getColor(R.color.black)!!
     lineChart.axisRight.isEnabled = true
 
     lineChart.axisLeft.setDrawAxisLine(false)
@@ -2436,6 +2440,8 @@ class StockDataFragment : Fragment() {
     series.setDrawValues(false)
     series.setDrawFilled(true)
     series.setDrawCircles(false)
+    series.color = context?.getColor(R.color.chartLine)!!
+    series.fillColor = context?.getColor(R.color.chartLine)!!
 
     seriesList.add(series)
 

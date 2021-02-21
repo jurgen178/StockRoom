@@ -183,16 +183,14 @@ class UpdateGroupActivity : AppCompatActivity() {
       // Pass null as the parent view because its going in the dialog layout
       val dialogBinding = DialogAddGroupBinding.inflate(inflater)
 
-//      val saturationbarView = dialogView.findViewById<SaturationBar>(R.id.colorPickerSaturationbar)
-//      val valuebarView = dialogView.findViewById<ValueBar>(R.id.colorPickerValuebar)
       dialogBinding.colorPicker.addSVBar(dialogBinding.colorPickerSV)
+      dialogBinding.colorPicker.addSaturationBar(dialogBinding.colorPickerSaturationbar)
+      dialogBinding.colorPicker.addValueBar(dialogBinding.colorPickerValuebar)
 
       val clr = Color.BLUE
       dialogBinding.colorPicker.color = clr
       dialogBinding.colorPicker.oldCenterColor = clr
       dialogBinding.colorPicker.setNewCenterColor(clr)
-//      colorView.addSaturationBar(saturationbarView)
-//      colorView.addValueBar(valuebarView)
 
       builder.setView(dialogBinding.root)
         .setTitle(R.string.add_group)

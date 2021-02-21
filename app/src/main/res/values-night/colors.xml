@@ -6,6 +6,7 @@
   <color name="textInputEditText"></color>
 
   <color name="tableHeaderBackground">#FF6A00</color>
+  <color name="chartLine">#00a1ff</color>
 
   <color name="white">#000000</color>
   <color name="black">#ffffff</color>

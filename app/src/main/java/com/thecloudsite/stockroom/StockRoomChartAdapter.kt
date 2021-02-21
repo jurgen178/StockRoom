@@ -354,6 +354,7 @@ class StockRoomChartAdapter internal constructor(
     lineChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
     lineChart.axisRight.setDrawAxisLine(true)
     lineChart.axisRight.setDrawGridLines(true)
+    lineChart.axisRight.textColor = context.getColor(R.color.black)
     lineChart.axisRight.isEnabled = true
 
     lineChart.axisLeft.setDrawGridLines(false)
@@ -396,6 +397,8 @@ class StockRoomChartAdapter internal constructor(
     series.setDrawValues(false)
     series.setDrawFilled(true)
     series.setDrawCircles(false)
+    series.color = context.getColor(R.color.chartLine)
+    series.fillColor = context.getColor(R.color.chartLine)
 
     // Get the ref chart data.
     if (symbolRef.isNotEmpty() && stockDataEntriesRef != null) {

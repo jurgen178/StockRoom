@@ -1054,7 +1054,7 @@ fun isWhiteColor(color: Int, colorRef: Int): Boolean {
   val rr = colorRef shr 16 and 0xff
   val gr = colorRef shr 8 and 0xff
   val br = colorRef and 0xff
-  return (rr - r).absoluteValue + (gr - g).absoluteValue + (br - b).absoluteValue > 700
+  return (rr - r).absoluteValue + (gr - g).absoluteValue + (br - b).absoluteValue > 650
 }
 
 fun isSimilarColor(color: Int, colorRef: Int): Boolean {

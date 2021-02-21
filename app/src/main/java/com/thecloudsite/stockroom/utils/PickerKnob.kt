@@ -30,6 +30,7 @@ import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
 import androidx.annotation.NonNull
+import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.styleable
 import java.text.DecimalFormat
 import kotlin.math.abs
@@ -203,7 +204,7 @@ class PickerKnob : View {
 
     if (attrs != null) {
       val attrsArray = intArrayOf(
-          attr.color
+        attr.color
       )
       var styleAttributes: TypedArray =
         context.theme.obtainStyledAttributes(attrs, attrsArray, 0, 0)
@@ -214,29 +215,33 @@ class PickerKnob : View {
       styleAttributes = context.theme.obtainStyledAttributes(attrs, styleable.PickerKnob, 0, 0)
       textSize = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_size, 12)
       viewHeight = TypedValue.applyDimension(
-          TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_IN_DP.toFloat(),
-          context.resources.displayMetrics
+        TypedValue.COMPLEX_UNIT_DIP, MIN_HEIGHT_IN_DP.toFloat(),
+        context.resources.displayMetrics
       )
-          .toInt() + styleAttributes.getDimensionPixelSize(
-          styleable.PickerKnob_picker_view_height, 12
+        .toInt() + styleAttributes.getDimensionPixelSize(
+        styleable.PickerKnob_picker_view_height, 12
       )
       textPadding =
         styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_text_padding, 10)
       dashGap = styleAttributes.getDimensionPixelSize(styleable.PickerKnob_picker_dash_gap, 20)
-      textColor = styleAttributes.getColor(styleable.PickerKnob_picker_text_color, Color.BLACK)
+      textColor = styleAttributes.getColor(
+        styleable.PickerKnob_picker_text_color, context.getColor(
+          R.color.black
+        )
+      )
       dashCount = styleAttributes.getInteger(styleable.PickerKnob_picker_dash_count, dashCount)
       deceleration =
         styleAttributes.getFloat(styleable.PickerKnob_picker_friction, deceleration.toFloat())
-            .toDouble()
+          .toDouble()
       styleAttributes.recycle()
     }
 
     paint.textSize = textSize.toFloat()
     viewWidth = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, MIN_WIDTH_IN_DP.toFloat(),
-        context.resources.displayMetrics
+      TypedValue.COMPLEX_UNIT_DIP, MIN_WIDTH_IN_DP.toFloat(),
+      context.resources.displayMetrics
     )
-        .toInt()
+      .toInt()
 
     midrectPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     midrectPaint.style = Style.STROKE
@@ -321,7 +326,7 @@ class PickerKnob : View {
     radius = measuredWidth / 2.0
     totalDashCount = (maxValue - minValue).toInt()
     val visibleDashCount = ceil(Math.PI * radius / dashGap)
-        .toInt()
+      .toInt()
     maxRotation = totalDashCount * Math.PI / visibleDashCount - Math.PI / 2.0
     knobRotation = dashGap * (startValue - minValue) / radius - Math.PI / 2.0
   }
@@ -338,7 +343,11 @@ class PickerKnob : View {
     val midrectX = width / 2f
     val midrectsize = 4f
     canvas.drawRect(
-        midrectX - midrectsize, (textSize + textPadding).toFloat(), midrectX + midrectsize, viewHeight.toFloat(), midrectPaint
+      midrectX - midrectsize,
+      (textSize + textPadding).toFloat(),
+      midrectX + midrectsize,
+      viewHeight.toFloat(),
+      midrectPaint
     )
 
     while (true) {
@@ -374,9 +383,9 @@ class PickerKnob : View {
       oldX = x
       paint.color = lineColor
       canvas.drawLine(
-          x,
-          ((if (startPosition % (dashCount + 1) == 0) 0 else dashHeight / 2) + textSize + textPadding).toFloat(),
-          x, viewHeight.toFloat(), paint
+        x,
+        ((if (startPosition % (dashCount + 1) == 0) 0 else dashHeight / 2) + textSize + textPadding).toFloat(),
+        x, viewHeight.toFloat(), paint
       )
       startPosition++
     }
@@ -471,9 +480,9 @@ class PickerKnob : View {
     val xPos = event.x
     val yPos = event.y
     if (xPos < touchStartX - TOUCH_SCROLL_THRESHOLD
-        || xPos > touchStartX + TOUCH_SCROLL_THRESHOLD
-        || yPos < touchStartY - TOUCH_SCROLL_THRESHOLD
-        || yPos > touchStartY + TOUCH_SCROLL_THRESHOLD
+      || xPos > touchStartX + TOUCH_SCROLL_THRESHOLD
+      || yPos < touchStartY - TOUCH_SCROLL_THRESHOLD
+      || yPos > touchStartY + TOUCH_SCROLL_THRESHOLD
     ) {
       // we've moved far enough for this to be a scroll
       touchState = TOUCH_STATE_SCROLL

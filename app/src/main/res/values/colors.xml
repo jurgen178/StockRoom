@@ -25,6 +25,7 @@ limitations under the License. -->
   <color name="textInputEditText">@color/design_default_color_background</color>
 
   <color name="tableHeaderBackground">#CCCCCC</color>
+  <color name="chartLine">#00a1ff</color>
 
   <color name="green">#32CD32</color>
   <color name="red">#DC143C</color>

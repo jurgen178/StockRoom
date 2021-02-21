@@ -446,7 +446,7 @@
               app:picker_text_size="10sp"
               app:picker_view_height="24dp"
               app:picker_dash_gap="12dp"
-              app:picker_text_color="@android:color/black"
+              app:picker_text_color="@color/black"
               app:layout_constraintTop_toTopOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
