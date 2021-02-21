@@ -206,10 +206,17 @@ class SummaryGroupFragment : Fragment() {
     stockRoomViewModel.resetAlerts()
   }
 
+  override fun onPause() {
+    super.onPause()
+
+    longPressedCounter = 0
+    binding.summaryPieChart.visibility = View.VISIBLE
+    binding.imageView.visibility = View.GONE
+  }
+
   override fun onResume() {
     super.onResume()
     stockRoomViewModel.runOnlineTaskNow()
-    longPressedCounter = 0
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
