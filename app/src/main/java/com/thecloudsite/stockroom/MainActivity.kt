@@ -29,6 +29,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -54,6 +55,7 @@ import com.thecloudsite.stockroom.notification.NotificationFactory
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
+import com.thecloudsite.stockroom.utils.setAppTheme
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -102,6 +104,9 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    setAppTheme(this)
+    delegate.applyDayNight()
 
     binding = ActivityMainBinding.inflate(layoutInflater)
     val view = binding.root
@@ -190,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         // to the bottom for each update.
         if (!s) {
           binding.recyclerViewDebug.adapter?.itemCount?.minus(1)
-              ?.let { binding.recyclerViewDebug.scrollToPosition(it) }
+            ?.let { binding.recyclerViewDebug.scrollToPosition(it) }
         }
       }
     })
@@ -270,7 +275,7 @@ class MainActivity : AppCompatActivity() {
       if (position >= 0 && position < SharedRepository.displayedViewsList.size) {
         // 00_StockRoomChartFragment, 01_StockRoomOverviewFragment, ... 12_DividendTimelineFragment
         val viewlistEntry = SharedRepository.displayedViewsList[position].subSequence(0, 2)
-            .toString()
+          .toString()
         val index = viewlistEntry.toInt()
         val headers = this.resources.getStringArray(array.displayed_views_headers)
         if (index >= 0 && index < headers.size) {
@@ -280,11 +285,11 @@ class MainActivity : AppCompatActivity() {
     }.attach()
 
     binding.viewpager.setCurrentItem(
-        if (SharedRepository.displayedViewsList.contains("02_StockRoomListFragment")) {
-          SharedRepository.displayedViewsList.indexOf("02_StockRoomListFragment")
-        } else {
-          0
-        }, false
+      if (SharedRepository.displayedViewsList.contains("02_StockRoomListFragment")) {
+        SharedRepository.displayedViewsList.indexOf("02_StockRoomListFragment")
+      } else {
+        0
+      }, false
     )
 
     // Update the menu when filter data changed.
@@ -356,19 +361,19 @@ class MainActivity : AppCompatActivity() {
 
     // [START fetch_config_with_callback]
     remoteConfig.fetchAndActivate()
-        .addOnCompleteListener(this) { task ->
-          if (task.isSuccessful) {
-            //val updated = task.result
-            stockRoomViewModel.logDebug("Config activated.")
+      .addOnCompleteListener(this) { task ->
+        if (task.isSuccessful) {
+          //val updated = task.result
+          stockRoomViewModel.logDebug("Config activated.")
 
-            // Update configuration
-            val marketDataUrl = remoteConfig[STOCKMARKETDATA_URL].asString()
-            StockMarketDataApiFactory.update(marketDataUrl)
-            //stockRoomViewModel.logDebug("Remote Config [url=$marketDataUrl]")
+          // Update configuration
+          val marketDataUrl = remoteConfig[STOCKMARKETDATA_URL].asString()
+          StockMarketDataApiFactory.update(marketDataUrl)
+          //stockRoomViewModel.logDebug("Remote Config [url=$marketDataUrl]")
 
-            val chartDataUrl = remoteConfig[STOCKCHARTDATA_URL].asString()
-            StockChartDataApiFactory.update(chartDataUrl)
-            //stockRoomViewModel.logDebug("Remote Config [url=$chartDataUrl]")
+          val chartDataUrl = remoteConfig[STOCKCHARTDATA_URL].asString()
+          StockChartDataApiFactory.update(chartDataUrl)
+          //stockRoomViewModel.logDebug("Remote Config [url=$chartDataUrl]")
 
 //            val yahooNewsUrl = remoteConfig[YAHOONEWS_URL].asString()
 //            YahooNewsApiFactory.update(yahooNewsUrl)
@@ -386,19 +391,19 @@ class MainActivity : AppCompatActivity() {
 //            GoogleAllNewsApiFactory.update(googleAllNewsUrl)
 //            //stockRoomViewModel.logDebug("Remote Config [url=$googleNewsUrl]")
 
-            val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
-            val userMsg = remoteConfig[USER_MSG].asString()
-            if (userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
-              AlertDialog.Builder(this)
-                  .setTitle(userMsgTitle)
-                  .setMessage(userMsg)
-                  .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-                  .show()
-            }
-          } else {
-            stockRoomViewModel.logDebug("Config failed, using defaults.")
+          val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
+          val userMsg = remoteConfig[USER_MSG].asString()
+          if (userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
+            AlertDialog.Builder(this)
+              .setTitle(userMsgTitle)
+              .setMessage(userMsg)
+              .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+              .show()
           }
+        } else {
+          stockRoomViewModel.logDebug("Config failed, using defaults.")
         }
+      }
     // [END fetch_config_with_callback]
   }
 
@@ -484,7 +489,7 @@ class MainActivity : AppCompatActivity() {
     filterDataViewModel.filterNameList.forEach { filterSet ->
 
       val filterSetMenuName = SpannableStringBuilder()
-          .italic { append(filterSet) }
+        .italic { append(filterSet) }
 
       // Add the menu item to the group R.id.filter
       val newMenuFilterItem = menuItem.subMenu.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
@@ -593,30 +598,30 @@ class MainActivity : AppCompatActivity() {
         portfolios.sortedBy {
           it.toLowerCase(Locale.ROOT)
         }
-            .forEach { portfolio ->
-              val standardPortfolio = getString(R.string.standard_portfolio)
-              val portfolioName = if (portfolio.isEmpty()) {
-                standardPortfolio
-              } else {
-                portfolio
-              }
-              val subMenuItem = submenu?.add(portfolioName)
-
-              subMenuItem?.isCheckable = true
-              subMenuItem?.isChecked = portfolio == SharedRepository.selectedPortfolio.value
-
-              subMenuItem?.setOnMenuItemClickListener { item ->
-                if (item != null) {
-                  var itemText = item.toString()
-                  stockRoomViewModel.logDebug("Selected portfolio '$itemText'")
-                  if (itemText == standardPortfolio) {
-                    itemText = ""
-                  }
-                  SharedRepository.selectedPortfolio.value = itemText
-                }
-                true
-              }
+          .forEach { portfolio ->
+            val standardPortfolio = getString(R.string.standard_portfolio)
+            val portfolioName = if (portfolio.isEmpty()) {
+              standardPortfolio
+            } else {
+              portfolio
             }
+            val subMenuItem = submenu?.add(portfolioName)
+
+            subMenuItem?.isCheckable = true
+            subMenuItem?.isChecked = portfolio == SharedRepository.selectedPortfolio.value
+
+            subMenuItem?.setOnMenuItemClickListener { item ->
+              if (item != null) {
+                var itemText = item.toString()
+                stockRoomViewModel.logDebug("Selected portfolio '$itemText'")
+                if (itemText == standardPortfolio) {
+                  itemText = ""
+                }
+                SharedRepository.selectedPortfolio.value = itemText
+              }
+              true
+            }
+          }
       }
     }
 
@@ -661,12 +666,12 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
           val symbolList: List<String> = symbols.map { symbol ->
             symbol.replace("\"", "")
-                .toUpperCase(Locale.ROOT)
+              .toUpperCase(Locale.ROOT)
           }
-              .distinct()
-              .filter { symbol ->
-                isValidSymbol(symbol)
-              }
+            .distinct()
+            .filter { symbol ->
+              isValidSymbol(symbol)
+            }
 
           val portfolio = SharedRepository.selectedPortfolio.value ?: ""
           symbolList.forEach { symbol ->
@@ -676,11 +681,11 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
             stockRoomViewModel.logDebug("AddActivity '$msg'")
 
             Toast.makeText(
-                applicationContext,
-                msg,
-                Toast.LENGTH_LONG
+              applicationContext,
+              msg,
+              Toast.LENGTH_LONG
             )
-                .show()
+              .show()
           }
         }
       }
@@ -702,15 +707,15 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
     alerts.forEach { alert ->
       if (alert.alertAbove > 0.0) {
         val title = getString(
-            R.string.alert_above_notification_title, alert.symbol,
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+          R.string.alert_above_notification_title, alert.symbol,
+          DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
+          DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
         )
 
         var text = getString(
-            R.string.alert_above_notification, alert.symbol, alert.name,
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+          R.string.alert_above_notification, alert.symbol, alert.name,
+          DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
+          DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
         )
         if (alert.alertAboveNote.isNotEmpty()) {
           text += "\n───\n${alert.alertAboveNote}"  // '─' = \u2500
@@ -726,15 +731,15 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
       } else
         if (alert.alertBelow > 0.0) {
           val title = getString(
-              R.string.alert_below_notification_title, alert.symbol,
-              DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
-              DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+            R.string.alert_below_notification_title, alert.symbol,
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
           )
 
           var text = getString(
-              R.string.alert_below_notification, alert.symbol, alert.name,
-              DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
-              DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+            R.string.alert_below_notification, alert.symbol, alert.name,
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
+            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
           )
           if (alert.alertBelowNote.isNotEmpty()) {
             text += "\n───\n${alert.alertBelowNote}"
@@ -754,7 +759,7 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
   private fun checkEvents() {
     if (SharedRepository.notifications) {
       val datetimeNow = LocalDateTime.now()
-          .toEpochSecond(ZoneOffset.UTC)
+        .toEpochSecond(ZoneOffset.UTC)
 
       // Each stock item
       eventList.forEach { events ->

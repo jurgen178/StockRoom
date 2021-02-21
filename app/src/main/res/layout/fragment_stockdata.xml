@@ -537,7 +537,7 @@
               >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/alertAboveInputEditText"
-                android:background="@color/design_default_color_background"
+                android:background="@color/textInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -570,7 +570,7 @@
               >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/alertAboveNoteInputEditText"
-                android:background="@color/design_default_color_background"
+                android:background="@color/textInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -612,7 +612,7 @@
               >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/alertBelowInputEditText"
-                android:background="@color/design_default_color_background"
+                android:background="@color/textInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -645,7 +645,7 @@
               >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/alertBelowNoteInputEditText"
-                android:background="@color/design_default_color_background"
+                android:background="@color/textInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"

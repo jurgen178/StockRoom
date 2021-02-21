@@ -91,7 +91,7 @@ class StockRoomSmallTile1Adapter internal constructor(
       )
 
       holder.binding.smalltileTextViewSymbolLayout.setBackgroundColor(backgroundColor)
-      holder.binding.smalltileTextViewMarketPriceLayout.setBackgroundColor(backgroundColor)
+      // holder.binding.smalltileTextViewMarketPriceLayout.setBackgroundColor(backgroundColor)
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {

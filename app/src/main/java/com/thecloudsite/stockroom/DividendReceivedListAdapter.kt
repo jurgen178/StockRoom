@@ -18,10 +18,12 @@ package com.thecloudsite.stockroom
 
 import android.content.Context
 import android.graphics.Color
+import android.text.SpannableStringBuilder
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
@@ -69,7 +71,7 @@ class DividendReceivedListAdapter internal constructor(
     ) {
       binding.textViewDividendReceivedDelete.setOnClickListener {
         clickListenerDelete(
-            symbol, dividend, dividendList
+          symbol, dividend, dividendList
         )
       }
     }
@@ -99,7 +101,7 @@ class DividendReceivedListAdapter internal constructor(
       holder.binding.textViewDividendReceivedDelete.visibility = View.GONE
       holder.binding.dividendReceivedSummaryView.visibility = View.GONE
       holder.binding.dividendReceivedConstraintLayout.setBackgroundColor(
-          context.getColor(R.color.backgroundListColor)
+        context.getColor(R.color.backgroundListColor)
       )
 
       val background = TypedValue()
@@ -110,8 +112,12 @@ class DividendReceivedListAdapter internal constructor(
         // handler for delete all
         holder.bindDelete(current.symbol, null, dividendList, clickListenerDelete)
 
+        // Summary line is always black on yellow
         holder.binding.textViewDividendReceivedAmount.text =
-          DecimalFormat(DecimalFormat2To4Digits).format(current.amount)
+          SpannableStringBuilder()
+            .color(Color.BLACK) {
+              append(DecimalFormat(DecimalFormat2To4Digits).format(current.amount))
+            }
         holder.binding.textViewDividendReceivedDate.text = ""
         holder.binding.textViewDividendReceivedCycle.text = ""
         holder.binding.textViewDividendReceivedNote.text = ""
@@ -134,14 +140,14 @@ class DividendReceivedListAdapter internal constructor(
 
         val dividendYield =
           if ((current.cycle == DividendCycle.Monthly.value
-                  || current.cycle == DividendCycle.Quarterly.value
-                  || current.cycle == DividendCycle.SemiAnnual.value
-                  || current.cycle == DividendCycle.Annual.value)
-              && current.amount > 0.0 && marketValue > 0.0
+                || current.cycle == DividendCycle.Quarterly.value
+                || current.cycle == DividendCycle.SemiAnnual.value
+                || current.cycle == DividendCycle.Annual.value)
+            && current.amount > 0.0 && marketValue > 0.0
           ) {
             "\n${
               DecimalFormat(DecimalFormat2Digits).format(
-                  (current.cycle * 100.0 * current.amount / marketValue)
+                (current.cycle * 100.0 * current.amount / marketValue)
               )
             }% p. a."
           } else {
@@ -202,31 +208,33 @@ class DividendReceivedListAdapter internal constructor(
       // Headline placeholder
       dividendList =
         mutableListOf(
-            Dividend(symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
+          Dividend(symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, cycle = 0)
         )
       dividendList.addAll(dividends!!.dividends.filter { dividend ->
         dividend.type == DividendType.Received.value
       }
-          .sortedBy { dividend ->
-            dividend.paydate
-          })
+        .sortedBy { dividend ->
+          dividend.paydate
+        })
 
       val dividendTotal = dividendList.sumByDouble {
         it.amount
       }
 
       // Summary
-      val symbol: String = dividendList.firstOrNull()?.symbol ?: ""
-      dividendList.add(
+      if (dividendList.size > 1) {
+        val symbol: String = dividendList.firstOrNull()?.symbol ?: ""
+        dividendList.add(
           Dividend(
-              symbol = symbol,
-              amount = dividendTotal,
-              type = 0,
-              cycle = 0,
-              paydate = 0L,
-              exdate = 0L
+            symbol = symbol,
+            amount = dividendTotal,
+            type = 0,
+            cycle = 0,
+            paydate = 0L,
+            exdate = 0L
           )
-      )
+        )
+      }
     }
 
     notifyDataSetChanged()

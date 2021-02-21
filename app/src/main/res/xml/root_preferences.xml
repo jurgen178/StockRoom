@@ -3,6 +3,15 @@
 
   <PreferenceCategory app:title="@string/display_header">
 
+    <ListPreference
+        android:key="app_theme"
+        android:title="@string/app_theme"
+        android:defaultValue="0"
+        android:entryValues="@array/app_theme_values"
+        android:entries="@array/app_theme"
+        app:icon="@drawable/ic_action_app_theme"
+        />
+
     <SwitchPreferenceCompat
         app:key="notifications"
         app:title="@string/enable_notifications"

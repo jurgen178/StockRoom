@@ -43,7 +43,7 @@
             android:id="@+id/addQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
+            android:background="@color/textInputEditText"
             android:digits="0123456789.,"
             android:gravity="end"
             android:imeOptions="actionDone"
@@ -80,7 +80,7 @@
             android:id="@+id/addPrice"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/design_default_color_background"
+            android:background="@color/textInputEditText"
             android:digits="0123456789.,"
             android:gravity="end"
             android:imeOptions="actionDone"
@@ -115,7 +115,7 @@
             android:id="@+id/addNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
+            android:background="@color/textInputEditText"
             android:inputType="textMultiLine"
             />
       </com.google.android.material.textfield.TextInputLayout>

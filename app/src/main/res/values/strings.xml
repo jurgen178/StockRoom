@@ -511,4 +511,5 @@ limitations under the License. -->
   <string name="symbol_not_renamed">The symbol \'%1$s\' could not be renamed to \'%2$s\'.</string>
   <string name="add_selection">Add to the selection</string>
   <string name="remove_selection">Remove from the selection</string>
+  <string name="app_theme">App Theme</string>
 </resources>

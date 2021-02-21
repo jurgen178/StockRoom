@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License. -->
 
 <resources>
+
   <color name="colorPrimary">#3F51B5</color>
   <color name="colorPrimaryDark">#303F9F</color>
   <color name="colorAccent">#FF4081</color>
@@ -20,6 +21,10 @@ limitations under the License. -->
   <color name="backgroundListColor">#F0F0FF</color>
   <color name="negativeAsset">#A0A0A0</color>
   <color name="obsoleteAsset">#A0A0A0</color>
+  <color name="verticalLine">@color/cardview_dark_background</color>
+  <color name="textInputEditText">@color/design_default_color_background</color>
+
+  <color name="tableHeaderBackground">#CCCCCC</color>
 
   <color name="green">#32CD32</color>
   <color name="red">#DC143C</color>
@@ -29,6 +34,7 @@ limitations under the License. -->
   <color name="postGreen">#29A529</color>
   <color name="postRed">#B51232</color>
 
+  <color name="white">#ffffff</color>
   <color name="black">#000000</color>
   <color name="settingsblue">#33B5E5</color>
 

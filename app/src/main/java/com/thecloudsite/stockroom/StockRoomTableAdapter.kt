@@ -130,12 +130,9 @@ class StockRoomTableAdapter internal constructor(
 
       if (isHeader) {
 
-        holder.binding.tableDataLayout.setBackgroundColor(Color.LTGRAY)
+        holder.binding.tableDataLayout.setBackgroundColor(context.getColor(R.color.tableHeaderBackground))
 
         setBackgroundColor(holder.binding.tableDataGroup, Color.TRANSPARENT)
-        holder.binding.tableDataMarketPrice.setBackgroundColor(Color.LTGRAY)
-        holder.binding.tableDataMarketChange.setBackgroundColor(Color.LTGRAY)
-        holder.binding.tableDataMarketCurrency.setBackgroundColor(Color.LTGRAY)
 
         holder.binding.tableDataSymbol.text =
           getHeaderStr(context.getString(R.string.table_column_symbol))
@@ -169,20 +166,14 @@ class StockRoomTableAdapter internal constructor(
           getHeaderStr(context.getString(R.string.table_column_Note))
       } else {
 
-        holder.binding.tableDataLayout.setBackgroundColor(
-          context.getColor(R.color.backgroundListColor)
-        )
-
         val backgroundColor = context.getColor(R.color.backgroundListColor)
+        holder.binding.tableDataLayout.setBackgroundColor(backgroundColor)
+
         var color = current.stockDBdata.groupColor
         if (color == 0) {
           color = backgroundColor
         }
         setBackgroundColor(holder.binding.tableDataGroup, color)
-
-        holder.binding.tableDataMarketPrice.setBackgroundColor(backgroundColor)
-        holder.binding.tableDataMarketChange.setBackgroundColor(backgroundColor)
-        holder.binding.tableDataMarketCurrency.setBackgroundColor(backgroundColor)
 
         holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
         holder.binding.tableDataName.text = getName(current.onlineMarketData)
@@ -412,17 +403,19 @@ class StockRoomTableAdapter internal constructor(
           if (totalQuantity > 0.0 && totalPrice > 0.0) {
             assetStr.scale(textScale) {
               append("\n${context.getString(R.string.asset_summary_text)}")
-                .backgroundColor(Color.YELLOW)
-                {
-                  append(
-                    "\n${
-                      DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
-                    }@${
-                      DecimalFormat(DecimalFormat2To4Digits).format(
-                        totalPrice / totalQuantity
-                      )
-                    } = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
-                  )
+                .color(Color.BLACK) {
+                  backgroundColor(Color.YELLOW)
+                  {
+                    append(
+                      "\n${
+                        DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
+                      }@${
+                        DecimalFormat(DecimalFormat2To4Digits).format(
+                          totalPrice / totalQuantity
+                        )
+                      } = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
+                    )
+                  }
                 }
             }
           }

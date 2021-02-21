@@ -1168,7 +1168,9 @@ class StockDataFragment : Fragment() {
       val popupMenu = PopupMenu(requireContext(), viewLayout)
 
       var menuIndex: Int = Menu.FIRST
-      stockRoomViewModel.getGroupsMenuList(getString(R.string.standard_group))
+      stockRoomViewModel.getGroupsMenuList(
+        getString(R.string.standard_group)
+      )
         .forEach {
           popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
         }

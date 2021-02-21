@@ -29,7 +29,7 @@ import com.thecloudsite.stockroom.utils.formatInt
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getGroupsMenuList
-import com.thecloudsite.stockroom.utils.isWhiteColor
+import com.thecloudsite.stockroom.utils.isSimilarColor
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -444,7 +444,7 @@ open class FilterGroupBaseType(override val context: Context) : FilterSelectionB
           null
         }
       return if (group != null) {
-        if (isWhiteColor(group.color)) {
+        if (isSimilarColor(group.color, context.getColor(R.color.backgroundListColor))) {
           SpannableStringBuilder().backgroundColor(context.getColor(R.color.colorPrimary)) {
             color(group.color) {
               append(

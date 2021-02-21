@@ -101,8 +101,8 @@ class SummaryGroupFragment : Fragment() {
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
     summaryGroup.layoutManager = GridLayoutManager(
-        requireContext(),
-        Integer.min(Integer.max(spanCount, 1), 10)
+      requireContext(),
+      Integer.min(Integer.max(spanCount, 1), 10)
     )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
@@ -173,30 +173,30 @@ class SummaryGroupFragment : Fragment() {
 
     binding.imageView.setOnClickListener {
       AlertDialog.Builder(context)
-          // https://convertcodes.com/unicode-converter-encode-decode-utf/
-          .setTitle(
-              "\u0054\u0068\u0065\u0020\u0041\u006c\u0069\u0065\u006e\u0073\u0020\u0061\u0072\u0065\u0020\u0063\u006f\u006d\u0069\u006e\u0067"
-          )
-          .setMessage(
-              "\u0047\u0065\u0074\u0020\u0074\u0068\u0065\u006d"
-          )
-          .setNegativeButton("\u004c\u0061\u0074\u0065\u0072") { dialog, _ ->
-            dialog.dismiss()
-            binding.summaryPieChart.visibility = View.VISIBLE
-            binding.imageView.visibility = View.GONE
-          }
-          .setPositiveButton("\u004e\u006f\u0077") { dialog, _ ->
-            val intent = Intent(activity, InvadersActivity::class.java)
-            activity?.startActivity(intent)
-            dialog.dismiss()
-            binding.summaryPieChart.visibility = View.VISIBLE
-            binding.imageView.visibility = View.GONE
-          }
-          .setOnCancelListener {
-            binding.summaryPieChart.visibility = View.VISIBLE
-            binding.imageView.visibility = View.GONE
-          }
-          .show()
+        // https://convertcodes.com/unicode-converter-encode-decode-utf/
+        .setTitle(
+          "\u0054\u0068\u0065\u0020\u0041\u006c\u0069\u0065\u006e\u0073\u0020\u0061\u0072\u0065\u0020\u0063\u006f\u006d\u0069\u006e\u0067"
+        )
+        .setMessage(
+          "\u0047\u0065\u0074\u0020\u0074\u0068\u0065\u006d"
+        )
+        .setNegativeButton("\u004c\u0061\u0074\u0065\u0072") { dialog, _ ->
+          dialog.dismiss()
+          binding.summaryPieChart.visibility = View.VISIBLE
+          binding.imageView.visibility = View.GONE
+        }
+        .setPositiveButton("\u004e\u006f\u0077") { dialog, _ ->
+          val intent = Intent(activity, InvadersActivity::class.java)
+          activity?.startActivity(intent)
+          dialog.dismiss()
+          binding.summaryPieChart.visibility = View.VISIBLE
+          binding.imageView.visibility = View.GONE
+        }
+        .setOnCancelListener {
+          binding.summaryPieChart.visibility = View.VISIBLE
+          binding.imageView.visibility = View.GONE
+        }
+        .show()
 
       longPressedCounter = 0
     }
@@ -251,7 +251,7 @@ class SummaryGroupFragment : Fragment() {
       }
 
       assetList.add(
-          AssetSummary(stockItem.stockDBdata.symbol, assets, color!!)
+        AssetSummary(stockItem.stockDBdata.symbol, assets, color!!)
       )
     }
 
@@ -264,18 +264,18 @@ class SummaryGroupFragment : Fragment() {
       val sortedAssetList = assetList.filter { assetSummary ->
         assetSummary.assets > 0.0
       }
-          .sortedByDescending { assetSummary ->
-            assetSummary.assets
-          }
+        .sortedByDescending { assetSummary ->
+          assetSummary.assets
+        }
 
       // Display first 10 values from asset high to low.
       val n = 10
       sortedAssetList.take(n)
-          .forEach { assetItem ->
-            listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
-            //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
-            listColors.add(assetItem.color)
-          }
+        .forEach { assetItem ->
+          listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
+          //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
+          listColors.add(assetItem.color)
+        }
 
       // Add the sum of the remaining values.
       if (sortedAssetList.size == n + 1) {
@@ -291,16 +291,17 @@ class SummaryGroupFragment : Fragment() {
           }
 
           listPie.add(
-              PieEntry(
-                  otherAssets.toFloat(),
-                  "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
-              )
+            PieEntry(
+              otherAssets.toFloat(),
+              "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
+            )
           )
           listColors.add(Color.GRAY)
         }
 
       val pieDataSet = PieDataSet(listPie, "")
       pieDataSet.colors = listColors
+      pieDataSet.valueTextColor = requireContext().getColor(R.color.black)
       pieDataSet.valueTextSize = 10f
       // pieDataSet.valueFormatter = DefaultValueFormatter(2)
       pieDataSet.valueFormatter = object : ValueFormatter() {
@@ -324,14 +325,14 @@ class SummaryGroupFragment : Fragment() {
 
       val centerText =
         SpannableStringBuilder()
-            .append("${context?.getString(R.string.summary_total_assets)} ")
-            .underline {
-              bold {
-                append(
-                    DecimalFormat(DecimalFormat2Digits).format(totalAssets)
-                )
-              }
+          .append("${context?.getString(R.string.summary_total_assets)} ")
+          .underline {
+            bold {
+              append(
+                DecimalFormat(DecimalFormat2Digits).format(totalAssets)
+              )
             }
+          }
 
       binding.summaryPieChart.centerText = centerText
 
@@ -339,6 +340,10 @@ class SummaryGroupFragment : Fragment() {
       binding.summaryPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
       binding.summaryPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
 
+      binding.summaryPieChart.setCenterTextColor(requireContext().getColor(R.color.black))
+      binding.summaryPieChart.setHoleColor(requireContext().getColor(R.color.white))
+      binding.summaryPieChart.setBackgroundColor(requireContext().getColor(R.color.white))
+      binding.summaryPieChart.legend.textColor = requireContext().getColor(R.color.black)
       binding.summaryPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
 
       //val legendList: MutableList<LegendEntry> = mutableListOf()

@@ -510,4 +510,5 @@ limitations under the License. -->
   <string name="symbol_not_renamed">Das Wertpapier \'%1$s\' konnte nicht in \'%2$s\' umbenannt werden.</string>
   <string name="add_selection">Zur Auswahl hinzufügen</string>
   <string name="remove_selection">Von der Auswahl entfernen</string>
+  <string name="app_theme">Farbdesign</string>
 </resources>

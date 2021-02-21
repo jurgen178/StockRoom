@@ -182,6 +182,8 @@ object SharedRepository {
   var statsCounterMax = 0
   var responseCounterStart = 0
   var lastStatsCounters = IntArray(5) { -1 }
+
+  var blackColor: Int = 0
 }
 
 class StockRoomViewModel(application: Application) : AndroidViewModel(application) {

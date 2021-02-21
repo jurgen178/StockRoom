@@ -23,6 +23,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import com.thecloudsite.stockroom.R;
 
 public class MapLayoutView extends View {
 
@@ -99,7 +100,7 @@ public class MapLayoutView extends View {
 
     // Set up the Paint for the rectangle border
     mRectBorderPaint = new Paint();
-    mRectBorderPaint.setColor(Color.WHITE);
+    mRectBorderPaint.setColor(context.getColor(R.color.white));
     mRectBorderPaint.setStyle(Paint.Style.STROKE); // outline the rectangle
     mRectBorderPaint.setStrokeWidth(8);
 

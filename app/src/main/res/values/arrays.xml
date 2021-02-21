@@ -74,4 +74,16 @@
     <item>Currency</item>
     <item>Cryptocurrency</item>
   </string-array>
+  <string-array name="app_theme">
+    <item>System default</item>
+    <item>Light</item>
+    <item>Dark</item>
+    <item>Auto Battery</item>
+  </string-array>
+  <string-array translatable="false" name="app_theme_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+  </string-array>
 </resources>

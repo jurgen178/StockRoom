@@ -28,8 +28,10 @@ import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import androidx.annotation.RawRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.preference.PreferenceManager
 import com.thecloudsite.stockroom.DividendCycle.Annual
 import com.thecloudsite.stockroom.DividendCycle.Monthly
 import com.thecloudsite.stockroom.DividendCycle.Quarterly
@@ -38,6 +40,7 @@ import com.thecloudsite.stockroom.OnlineMarketData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.color
+import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
@@ -1031,8 +1034,8 @@ fun getGroupsMenuList(
     s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
 
     // backgroundListColor is light color, make the group name readable
-    val textColor = if (isWhiteColor(grp.color) || grp.color == backgroundListColor) {
-      Color.BLACK
+    val textColor = if (isWhiteColor(grp.color, SharedRepository.blackColor) || grp.color == backgroundListColor) {
+      SharedRepository.blackColor
     } else {
       grp.color
     }
@@ -1044,9 +1047,47 @@ fun getGroupsMenuList(
   return menuStrings
 }
 
-fun isWhiteColor(color: Int): Boolean {
+fun isWhiteColor(color: Int, colorRef: Int): Boolean {
   val r = color shr 16 and 0xff
   val g = color shr 8 and 0xff
   val b = color and 0xff
-  return r + g + b > 700
+  val rr = colorRef shr 16 and 0xff
+  val gr = colorRef shr 8 and 0xff
+  val br = colorRef and 0xff
+  return (rr - r).absoluteValue + (gr - g).absoluteValue + (br - b).absoluteValue > 700
+}
+
+fun isSimilarColor(color: Int, colorRef: Int): Boolean {
+  val r = color shr 16 and 0xff
+  val g = color shr 8 and 0xff
+  val b = color and 0xff
+  val rr = colorRef shr 16 and 0xff
+  val gr = colorRef shr 8 and 0xff
+  val br = colorRef and 0xff
+  return (rr - r).absoluteValue + (gr - g).absoluteValue + (br - b).absoluteValue < 100
+}
+
+fun setAppTheme(context: Context) {
+  val sharedPreferences =
+    PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+  val appTheme = sharedPreferences.getString("app_theme", "0")
+
+  if (appTheme != null) {
+    when (appTheme) {
+      "0" -> {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+      }
+      "1" -> {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+      }
+      "2" -> {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+      }
+      "3" -> {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+      }
+    }
+  }
+
+  SharedRepository.blackColor = context.getColor(R.color.black)
 }

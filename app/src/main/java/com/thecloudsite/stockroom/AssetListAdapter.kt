@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
@@ -113,7 +114,7 @@ class AssetListAdapter internal constructor(
       holder.binding.textViewAssetDelete.visibility = View.GONE
       holder.binding.assetSummaryView.visibility = View.GONE
       holder.binding.textViewAssetLayout.setBackgroundColor(
-          context.getColor(R.color.backgroundListColor)
+        context.getColor(R.color.backgroundListColor)
       )
 
       val background = TypedValue()
@@ -126,23 +127,37 @@ class AssetListAdapter internal constructor(
 
         val isSum = current.asset.quantity > 0.0 && current.asset.price > 0.0
 
-        holder.binding.textViewAssetQuantity.text = if (isSum) {
-          DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity)
-        } else {
-          ""
-        }
+        // Summary line is always black on yellow
+        holder.binding.textViewAssetQuantity.text = SpannableStringBuilder()
+          .color(Color.BLACK) {
+            append(
+              if (isSum) {
+                DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity)
+              } else {
+                ""
+              }
+            )
+          }
 
-        holder.binding.textViewAssetPrice.text = if (isSum) {
-          DecimalFormat(DecimalFormat2To4Digits).format(
-              current.asset.price / current.asset.quantity
-          )
-        } else {
-          ""
-        }
+        holder.binding.textViewAssetPrice.text = SpannableStringBuilder()
+          .color(Color.BLACK) {
+            append(
+              if (isSum) {
+                DecimalFormat(DecimalFormat2To4Digits).format(
+                  current.asset.price / current.asset.quantity
+                )
+              } else {
+                ""
+              }
+            )
+          }
+
         holder.binding.textViewAssetTotal.text =
-          DecimalFormat(DecimalFormat2Digits).format(current.asset.price)
+          SpannableStringBuilder()
+            .color(Color.BLACK) { append(DecimalFormat(DecimalFormat2Digits).format(current.asset.price)) }
         holder.binding.textViewAssetChange.text = current.assetChangeText
-        holder.binding.textViewAssetValue.text = current.assetText
+        holder.binding.textViewAssetValue.text = SpannableStringBuilder()
+          .color(Color.BLACK) { append(current.assetText) }
         holder.binding.textViewAssetDate.text = ""
         holder.binding.textViewAssetNote.text = ""
 
@@ -159,9 +174,9 @@ class AssetListAdapter internal constructor(
           val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetsCopy)
           val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
           holder.binding.assetSummaryTextView.text = SpannableStringBuilder()
-              .append("${context.getString(R.string.summary_capital_gain)} ")
-              .append(capitalGainLossText)
-              .append("\n${context.getString(R.string.asset_summary_text)}")
+            .append("${context.getString(R.string.summary_capital_gain)} ")
+            .append(capitalGainLossText)
+            .append("\n${context.getString(R.string.asset_summary_text)}")
         } else {
           holder.binding.assetSummaryTextView.text = context.getString(R.string.asset_summary_text)
         }
@@ -212,7 +227,7 @@ class AssetListAdapter internal constructor(
         }
         val itemViewTotalText = if (current.asset.price > 0.0) {
           DecimalFormat(DecimalFormat2Digits).format(
-              current.asset.quantity.absoluteValue * current.asset.price
+            current.asset.quantity.absoluteValue * current.asset.price
           )
         } else {
           ""
@@ -220,12 +235,12 @@ class AssetListAdapter internal constructor(
         val itemViewChangeText =
           if (current.asset.price > 0.0 && current.onlineMarketData != null) {
             getAssetChange(
-                current.asset.quantity.absoluteValue,
-                current.asset.quantity.absoluteValue * current.asset.price,
-                current.onlineMarketData!!.marketPrice,
-                current.onlineMarketData!!.postMarketData,
-                Color.DKGRAY,
-                context
+              current.asset.quantity.absoluteValue,
+              current.asset.quantity.absoluteValue * current.asset.price,
+              current.onlineMarketData!!.marketPrice,
+              current.onlineMarketData!!.postMarketData,
+              Color.DKGRAY,
+              context
             ).second
           } else {
             ""
@@ -234,13 +249,13 @@ class AssetListAdapter internal constructor(
           if (current.asset.price > 0.0 && current.onlineMarketData != null) {
             val marketPrice = current.onlineMarketData!!.marketPrice
             SpannableStringBuilder()
-                .bold {
-                  append(
-                      DecimalFormat(DecimalFormat2Digits).format(
-                          current.asset.quantity * marketPrice
-                      )
+              .bold {
+                append(
+                  DecimalFormat(DecimalFormat2Digits).format(
+                    current.asset.quantity * marketPrice
                   )
-                }
+                )
+              }
           } else {
             ""
           }
@@ -293,13 +308,13 @@ class AssetListAdapter internal constructor(
 
       // Headline placeholder
       assetList = mutableListOf(
-          AssetListData(
-              asset = Asset(
-                  symbol = "",
-                  quantity = 0.0,
-                  price = 0.0
-              )
+        AssetListData(
+          asset = Asset(
+            symbol = "",
+            quantity = 0.0,
+            price = 0.0
           )
+        )
       )
 
       // Sort assets in the list by date.
@@ -311,8 +326,8 @@ class AssetListAdapter internal constructor(
 
       val sortedDataList = sortedList.map {
         AssetListData(
-            asset = it,
-            onlineMarketData = assetData.onlineMarketData
+          asset = it,
+          onlineMarketData = assetData.onlineMarketData
         )
       }
 
@@ -322,11 +337,11 @@ class AssetListAdapter internal constructor(
       val symbol: String = assetData.assets!!.assets.firstOrNull()?.symbol ?: ""
       val assetChange = if (assetData.onlineMarketData != null) {
         getAssetChange(
-            assetData.assets!!.assets,
-            assetData.onlineMarketData!!.marketPrice,
-            assetData.onlineMarketData!!.postMarketData,
-            Color.DKGRAY,
-            context
+          assetData.assets!!.assets,
+          assetData.onlineMarketData!!.marketPrice,
+          assetData.onlineMarketData!!.postMarketData,
+          Color.DKGRAY,
+          context
         ).second
       } else {
         SpannableStringBuilder()
@@ -334,28 +349,28 @@ class AssetListAdapter internal constructor(
 
       val asset = if (assetData.onlineMarketData != null) {
         SpannableStringBuilder()
-            .bold {
-              append(
-                  DecimalFormat(DecimalFormat2Digits).format(
-                      totalQuantity * assetData.onlineMarketData!!.marketPrice
-                  )
+          .bold {
+            append(
+              DecimalFormat(DecimalFormat2Digits).format(
+                totalQuantity * assetData.onlineMarketData!!.marketPrice
               )
-            }
+            )
+          }
       } else {
         SpannableStringBuilder()
       }
 
       assetList.add(
-          AssetListData(
-              asset = Asset(
-                  id = null,
-                  symbol = symbol,
-                  quantity = totalQuantity,
-                  price = totalPrice
-              ),
-              assetChangeText = assetChange,
-              assetText = asset
-          )
+        AssetListData(
+          asset = Asset(
+            id = null,
+            symbol = symbol,
+            quantity = totalQuantity,
+            price = totalPrice
+          ),
+          assetChangeText = assetChange,
+          assetText = asset
+        )
       )
     }
 

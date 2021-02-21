@@ -17,7 +17,6 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
-import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -112,7 +111,7 @@ class SummaryGroupAdapter internal constructor(
 
         holder.binding.summaryItemDataDesc.text = current.desc
         holder.binding.summaryItemData.text = current.text1.append("\n")
-            .append(current.text2)
+          .append(current.text2)
       }
 
       is OnlineDataViewHolder -> {
@@ -151,14 +150,14 @@ class SummaryGroupAdapter internal constructor(
       context.getString(R.string.overview_headline_portfolio, portfolio)
     }
     data.add(
-        SummaryData(
-            overview,
-            "",
-            allText1,
-            allText2,
-            Color.WHITE,
-            summarygroup_all_items
-        )
+      SummaryData(
+        overview,
+        "",
+        allText1,
+        allText2,
+        context.getColor(R.color.white),
+        summarygroup_all_items
+      )
     )
 
     // Get all groups.
@@ -184,34 +183,34 @@ class SummaryGroupAdapter internal constructor(
       groups.sortedBy { group ->
         group.name.toLowerCase(Locale.ROOT)
       }
-          .forEach { group ->
-            val (text1, text2) = getTotal(group.color, false, stockItemsList)
+        .forEach { group ->
+          val (text1, text2) = getTotal(group.color, false, stockItemsList)
 
-            // Get all symbols in that group as a comma separated string.
-            val symbolsList = stockItemsList.filter { stockItem ->
-              stockItem.stockDBdata.groupColor == group.color
-            }
-                .map { stockItem ->
-                  stockItem.stockDBdata.symbol
-                }
-                .sorted()
-                .joinToString(
-                    prefix = "(",
-                    separator = ",",
-                    postfix = ")"
-                )
-
-            data.add(
-                SummaryData(
-                    context.getString(R.string.group_name, group.name),
-                    symbolsList,
-                    text1,
-                    text2,
-                    group.color,
-                    summarygroup_item
-                )
-            )
+          // Get all symbols in that group as a comma separated string.
+          val symbolsList = stockItemsList.filter { stockItem ->
+            stockItem.stockDBdata.groupColor == group.color
           }
+            .map { stockItem ->
+              stockItem.stockDBdata.symbol
+            }
+            .sorted()
+            .joinToString(
+              prefix = "(",
+              separator = ",",
+              postfix = ")"
+            )
+
+          data.add(
+            SummaryData(
+              context.getString(R.string.group_name, group.name),
+              symbolsList,
+              text1,
+              text2,
+              group.color,
+              summarygroup_item
+            )
+          )
+        }
     }
 
     notifyDataSetChanged()
@@ -313,24 +312,24 @@ class SummaryGroupAdapter internal constructor(
       stockItem.dividends.filter { dividend ->
         dividend.type == DividendType.Received.value
       }
-          .sortedBy { dividend ->
-            dividend.paydate
+        .sortedBy { dividend ->
+          dividend.paydate
+        }
+        .forEach { dividend ->
+
+          val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
+          val year = localDateTime.year
+          if (!totalDividendPaidMap.containsKey(year)) {
+            totalDividendPaidMap[year] = 0.0
           }
-          .forEach { dividend ->
 
-            val localDateTime = LocalDateTime.ofEpochSecond(dividend.paydate, 0, ZoneOffset.UTC)
-            val year = localDateTime.year
-            if (!totalDividendPaidMap.containsKey(year)) {
-              totalDividendPaidMap[year] = 0.0
-            }
-
-            totalDividendPaidMap[year] = totalDividendPaidMap[year]!! + dividend.amount
+          totalDividendPaidMap[year] = totalDividendPaidMap[year]!! + dividend.amount
 
 //            totalDividendPaid += dividend.amount
 //            if (dividend.paydate >= secondsYTD) {
 //              totalDividendPaidYTD += dividend.amount
 //            }
-          }
+        }
 
       if (stockItem.stockDBdata.alertAbove > 0.0) {
         totalAlerts++
@@ -384,19 +383,19 @@ class SummaryGroupAdapter internal constructor(
     }
 
     capitalGainLossText.append(
-        getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
+      getCapitalGainLossText(context, capitalGain, capitalLoss, 0.0, "-", "\n")
     )
 
     // Multiple years gets added to the summary.
     if (capitalGainLossMap.size > 1) {
       // Add yearly details.
       capitalGainLossMap.toSortedMap()
-          .forEach { (year, map) ->
-            capitalGainLossText.italic { append("$year: ") }
-            capitalGainLossText.append(
-                getCapitalGainLossText(context, map.gain, map.loss, 0.0, "-", "\n")
-            )
-          }
+        .forEach { (year, map) ->
+          capitalGainLossText.italic { append("$year: ") }
+          capitalGainLossText.append(
+            getCapitalGainLossText(context, map.gain, map.loss, 0.0, "-", "\n")
+          )
+        }
     }
 
     val boughtSoldText = "${boughtAssets}/${soldAssets}"
@@ -407,21 +406,21 @@ class SummaryGroupAdapter internal constructor(
     val stockEvents = stockItemsSelected.filter {
       it.events.isNotEmpty()
     }
-        .sumBy {
-          it.events.size
-        }
+      .sumBy {
+        it.events.size
+      }
 
     var totalAssetsStr =
       SpannableStringBuilder().append(
-          "\n${context.getString(R.string.summary_total_purchase_price)} "
+        "\n${context.getString(R.string.summary_total_purchase_price)} "
       )
-          .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}") }
+        .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}") }
 
     if (totalAssets > 0.0) {
       totalAssetsStr.append(
-          "\n${context.getString(R.string.summary_total_assets)} "
+        "\n${context.getString(R.string.summary_total_assets)} "
       )
-          .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
+        .underline { bold { append(DecimalFormat(DecimalFormat2Digits).format(totalAssets)) } }
     }
 
     // Print the summary assets in larger font.
@@ -432,23 +431,23 @@ class SummaryGroupAdapter internal constructor(
     }
 
     val summaryGroup2 = SpannableStringBuilder()
-        .append("${context.getString(R.string.summary_stocks)} ")
-        .bold { append("${stockItemsSelected.size}\n") }
-        .append("${context.getString(R.string.summary_stocks_with_assets)} ")
-        .bold { append("${stockAssets.size}\n") }
-        .append("${context.getString(R.string.summary_alerts)} ")
-        .bold { append("$totalAlerts\n") }
-        .append("${context.getString(R.string.summary_bought_sold)} ")
-        .bold { append("$boughtSoldText\n") }
-        .append("${context.getString(R.string.summary_events)} ")
-        .bold { append("$stockEvents\n") }
-        .append("${context.getString(R.string.summary_notes)} ")
-        .bold { append("$totalNotes\n") }
-        .append("${context.getString(R.string.summary_number_of_stocks)} ")
-        .bold { append("${DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)}\n\n") }
-        .append("${context.getString(R.string.summary_capital_gain)} ")
-        .append(capitalGainLossText)
-        .append(totalAssetsStr)
+      .append("${context.getString(R.string.summary_stocks)} ")
+      .bold { append("${stockItemsSelected.size}\n") }
+      .append("${context.getString(R.string.summary_stocks_with_assets)} ")
+      .bold { append("${stockAssets.size}\n") }
+      .append("${context.getString(R.string.summary_alerts)} ")
+      .bold { append("$totalAlerts\n") }
+      .append("${context.getString(R.string.summary_bought_sold)} ")
+      .bold { append("$boughtSoldText\n") }
+      .append("${context.getString(R.string.summary_events)} ")
+      .bold { append("$stockEvents\n") }
+      .append("${context.getString(R.string.summary_notes)} ")
+      .bold { append("$totalNotes\n") }
+      .append("${context.getString(R.string.summary_number_of_stocks)} ")
+      .bold { append("${DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)}\n\n") }
+      .append("${context.getString(R.string.summary_capital_gain)} ")
+      .append(capitalGainLossText)
+      .append(totalAssetsStr)
 
     /*
     val s = SpannableStringBuilder()
@@ -490,11 +489,11 @@ class SummaryGroupAdapter internal constructor(
     }
 
     var gainLossText = SpannableStringBuilder().append(
-        "${context.getString(R.string.summary_gain_loss)}  "
+      "${context.getString(R.string.summary_gain_loss)}  "
     )
-        .append(
-            getCapitalGainLossText(context, gain, loss, total, "-", "\n")
-        )
+      .append(
+        getCapitalGainLossText(context, gain, loss, total, "-", "\n")
+      )
 
     // Print the summary gain in larger font.
     if (all) {
@@ -504,40 +503,40 @@ class SummaryGroupAdapter internal constructor(
     }
 
     val summaryGroup1 = SpannableStringBuilder()
-        .append(gainLossText)
-        .append("\n${context.getString(R.string.summary_no_dividend_assets)} ")
-        .bold {
-          append(
-              "${
-                DecimalFormat(DecimalFormat2Digits)
-                    .format(totalAssets - totalDividendAssets)
-              }\n"
-          )
-        }
-        .append("${context.getString(R.string.summary_dividend_assets)} ")
-        .bold {
-          append(
-              "${
-                DecimalFormat(DecimalFormat2Digits)
-                    .format(totalDividendAssets)
-              }\n"
-          )
-        }
-        .append("${context.getString(R.string.summary_dividend_per_year)} ")
-        .bold {
-          append(
-              "${
-                DecimalFormat(DecimalFormat2Digits)
-                    .format(totalDividend)
-              } (${
-                DecimalFormat(DecimalFormat2Digits)
-                    .format(
-                        totalDividendChange * 100.0
-                    )
-              }%)\n"
-          )
-        }
-        .append("${context.getString(R.string.totaldividend_paid)} ")
+      .append(gainLossText)
+      .append("\n${context.getString(R.string.summary_no_dividend_assets)} ")
+      .bold {
+        append(
+          "${
+            DecimalFormat(DecimalFormat2Digits)
+              .format(totalAssets - totalDividendAssets)
+          }\n"
+        )
+      }
+      .append("${context.getString(R.string.summary_dividend_assets)} ")
+      .bold {
+        append(
+          "${
+            DecimalFormat(DecimalFormat2Digits)
+              .format(totalDividendAssets)
+          }\n"
+        )
+      }
+      .append("${context.getString(R.string.summary_dividend_per_year)} ")
+      .bold {
+        append(
+          "${
+            DecimalFormat(DecimalFormat2Digits)
+              .format(totalDividend)
+          } (${
+            DecimalFormat(DecimalFormat2Digits)
+              .format(
+                totalDividendChange * 100.0
+              )
+          }%)\n"
+        )
+      }
+      .append("${context.getString(R.string.totaldividend_paid)} ")
 
     // Add single year to the summary text.
     if (totalDividendPaidMap.size == 1) {
@@ -555,10 +554,10 @@ class SummaryGroupAdapter internal constructor(
         color(context.getColor(R.color.green))
         {
           append(
-              "${
-                DecimalFormat(DecimalFormat2Digits)
-                    .format(totalDividendPaid)
-              }\n"
+            "${
+              DecimalFormat(DecimalFormat2Digits)
+                .format(totalDividendPaid)
+            }\n"
           )
         }
       } else {
@@ -570,22 +569,22 @@ class SummaryGroupAdapter internal constructor(
     if (totalDividendPaidMap.size > 1) {
       // Add yearly details.
       totalDividendPaidMap.toSortedMap()
-          .forEach { (year, dividend) ->
-            summaryGroup1.italic { append(" $year: ") }
-            if (dividend > 0.0) {
-              summaryGroup1.color(context.getColor(R.color.green))
-              {
-                append(
-                    "${
-                      DecimalFormat(DecimalFormat2Digits)
-                          .format(dividend)
-                    }\n"
-                )
-              }
-            } else {
-              summaryGroup1.append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
+        .forEach { (year, dividend) ->
+          summaryGroup1.italic { append(" $year: ") }
+          if (dividend > 0.0) {
+            summaryGroup1.color(context.getColor(R.color.green))
+            {
+              append(
+                "${
+                  DecimalFormat(DecimalFormat2Digits)
+                    .format(dividend)
+                }\n"
+              )
             }
+          } else {
+            summaryGroup1.append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}\n")
           }
+        }
     }
 
     // summaryGroup1: Gain, loss, dividend

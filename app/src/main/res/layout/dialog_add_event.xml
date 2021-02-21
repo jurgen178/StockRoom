@@ -39,7 +39,7 @@
           >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputEditEventTitle"
-            android:background="@color/design_default_color_background"
+            android:background="@color/textInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textShortMessage"
@@ -70,7 +70,7 @@
             android:id="@+id/textInputEditEventNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
+            android:background="@color/textInputEditText"
             android:inputType="textMultiLine"
             />
       </com.google.android.material.textfield.TextInputLayout>

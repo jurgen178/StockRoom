@@ -44,6 +44,7 @@ import androidx.preference.PreferenceManager
 import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
 import com.thecloudsite.stockroom.databinding.DialogRenameSymbolBinding
+import com.thecloudsite.stockroom.utils.setAppTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -53,7 +54,7 @@ const val exportListActivityRequestCode = 3
 //const val authActivityRequestCode = 4
 
 class SettingsActivity : AppCompatActivity(),
-    SharedPreferences.OnSharedPreferenceChangeListener {
+  SharedPreferences.OnSharedPreferenceChangeListener {
 
   private lateinit var binding: ActivitySettingsBinding
   private lateinit var sharedPreferences: SharedPreferences
@@ -86,9 +87,9 @@ class SettingsActivity : AppCompatActivity(),
 */
 
     supportFragmentManager
-        .beginTransaction()
-        .replace(R.id.settings, SettingsFragment())
-        .commit()
+      .beginTransaction()
+      .replace(R.id.settings, SettingsFragment())
+      .commit()
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -115,7 +116,7 @@ class SettingsActivity : AppCompatActivity(),
     super.onActivityResult(requestCode, resultCode, data)
 
     val resultCodeShort = requestCode.toShort()
-        .toInt()
+      .toInt()
     if (resultCode == Activity.RESULT_OK) {
       if (resultCodeShort == exportListActivityRequestCode) {
         if (data != null && data.data is Uri) {
@@ -169,10 +170,14 @@ class SettingsActivity : AppCompatActivity(),
       }
       "displayed_views" -> {
         AlertDialog.Builder(this)
-            .setTitle(getString(R.string.displayed_views_dialog_title))
-            .setMessage(getString(R.string.app_needs_restart_message))
-            .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-            .show()
+          .setTitle(getString(R.string.displayed_views_dialog_title))
+          .setMessage(getString(R.string.app_needs_restart_message))
+          .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+          .show()
+      }
+      "app_theme" -> {
+        setAppTheme(this)
+        delegate.applyDayNight()
       }
     }
   }
@@ -185,15 +190,15 @@ class SettingsActivity : AppCompatActivity(),
 
   fun onSettings1(item: MenuItem) {
     AlertDialog.Builder(this)
-        // https://convertcodes.com/unicode-converter-encode-decode-utf/
-        .setTitle(
-            "\u0059\u006f\u0075\u0020\u0073\u0068\u006f\u0075\u006c\u0064\u0020\u006d\u0061\u006b\u0065"
-        )
-        .setMessage(
-            "\u0061\u0020\u0064\u0065\u0062\u0075\u0067\u0020\u0069\u006e\u0076\u0065\u0073\u0074\u006d\u0065\u006e\u0074\u002e"
-        )
-        .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-        .show()
+      // https://convertcodes.com/unicode-converter-encode-decode-utf/
+      .setTitle(
+        "\u0059\u006f\u0075\u0020\u0073\u0068\u006f\u0075\u006c\u0064\u0020\u006d\u0061\u006b\u0065"
+      )
+      .setMessage(
+        "\u0061\u0020\u0064\u0065\u0062\u0075\u0067\u0020\u0069\u006e\u0076\u0065\u0073\u0074\u006d\u0065\u006e\u0074\u002e"
+      )
+      .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+      .show()
 //    val intent = Intent(this@SettingsActivity, ListActivity::class.java)
 //    startActivity(intent)
   }
@@ -225,41 +230,41 @@ class SettingsActivity : AppCompatActivity(),
       }
       val version: Preference? = findPreference("version")
       val versionStr = SpannableStringBuilder()
-          .append("Version code")
-          .color(
-              context?.getColor(R.color.settingsblue)!!
-          ) { bold { append(" $versionCode $versionBuild") } }
+        .append("Version code")
+        .color(
+          context?.getColor(R.color.settingsblue)!!
+        ) { bold { append(" $versionCode $versionBuild") } }
 //          ) { bold { append(" \t\t$versionCode") } }
 //          .append("\nVersion name")
 //          .color(
 //              context?.getColor(R.color.settingsblue)!!
 //          ) { bold { append(" \t$versionName $versionBuild") } }
-          .italic {
-            scale(0.8f) {
-              color(0xffffbb33.toInt()) {
-                // https://convertcodes.com/unicode-converter-encode-decode-utf/
-                append(
-                    "\n\u006a\u0075\u0072\u0067\u0065\u006e\u0031\u0037\u0038\u002c\u0020\u0061\u0069\u0061\u006d\u0061\u006e\u002c\u0020\u006b\u0065\u006e\u0064\u0079\u002c\u0020\u0062\u006c\u0075\u006c\u0062\u0020\u0061\u006e\u0064\u0020\u0074\u0075\u006c\u0062\u0070\u0069\u0072"
-                )
-              }
+        .italic {
+          scale(0.8f) {
+            color(0xffffbb33.toInt()) {
+              // https://convertcodes.com/unicode-converter-encode-decode-utf/
+              append(
+                "\n\u006a\u0075\u0072\u0067\u0065\u006e\u0031\u0037\u0038\u002c\u0020\u0061\u0069\u0061\u006d\u0061\u006e\u002c\u0020\u006b\u0065\u006e\u0064\u0079\u002c\u0020\u0062\u006c\u0075\u006c\u0062\u0020\u0061\u006e\u0064\u0020\u0074\u0075\u006c\u0062\u0070\u0069\u0072"
+              )
             }
           }
+        }
       version?.summary = versionStr
 
       val titles: List<String> = listOf(
-          // https://convertcodes.com/unicode-converter-encode-decode-utf/
-          "\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072",
-          "\u004c\u006f\u006f\u006b",
-          "\u0054\u0068\u0065\u0020\u0063\u0068\u0061\u0072\u0074",
-          "\u004d\u0069\u006e\u0065"
+        // https://convertcodes.com/unicode-converter-encode-decode-utf/
+        "\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072",
+        "\u004c\u006f\u006f\u006b",
+        "\u0054\u0068\u0065\u0020\u0063\u0068\u0061\u0072\u0074",
+        "\u004d\u0069\u006e\u0065"
       )
 
       val messages: List<String> = listOf(
-          // https://convertcodes.com/unicode-converter-encode-decode-utf/
-          "\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e",
-          "\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074",
-          "\u006e\u0065\u0065\u0064\u0073\u0020\u0061\u0020\u0073\u0065\u0063\u006f\u006e\u0064\u0020\u006c\u006f\u006f\u006b\u002e",
-          "\u0074\u0068\u0065\u0020\u0064\u0065\u0074\u0061\u0069\u006c\u0020\u0064\u0061\u0074\u0061\u002e"
+        // https://convertcodes.com/unicode-converter-encode-decode-utf/
+        "\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e",
+        "\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074",
+        "\u006e\u0065\u0065\u0064\u0073\u0020\u0061\u0020\u0073\u0065\u0063\u006f\u006e\u0064\u0020\u006c\u006f\u006f\u006b\u002e",
+        "\u0074\u0068\u0065\u0020\u0064\u0065\u0074\u0061\u0069\u006c\u0020\u0064\u0061\u0074\u0061\u002e"
       )
 
       var versionClickCounter: Int = 0
@@ -269,10 +274,10 @@ class SettingsActivity : AppCompatActivity(),
           if (versionClickCounter % 10 == 0 && versionClickCounter <= 40) {
             val index = versionClickCounter / 10 - 1
             AlertDialog.Builder(requireContext())
-                .setTitle(titles[index])
-                .setMessage(messages[index])
-                .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-                .show()
+              .setTitle(titles[index])
+              .setMessage(messages[index])
+              .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+              .show()
           }
           true
         }
@@ -301,7 +306,7 @@ class SettingsActivity : AppCompatActivity(),
                 val spinnerData = items.map { stockItem ->
                   stockItem.symbol
                 }
-                    .sorted()
+                  .sorted()
 
                 dialogBinding.textViewSymbolSpinner.adapter =
                   ArrayAdapter(requireContext(), layout.simple_list_item_1, spinnerData)
@@ -309,58 +314,58 @@ class SettingsActivity : AppCompatActivity(),
             })
 
             builder.setView(dialogBinding.root)
-                .setTitle(R.string.rename_symbol_title)
-                // Add action buttons
-                .setPositiveButton(R.string.rename) { _, _ ->
+              .setTitle(R.string.rename_symbol_title)
+              // Add action buttons
+              .setPositiveButton(R.string.rename) { _, _ ->
 
-                  if (dialogBinding.textViewSymbolSpinner.isEmpty()) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(string.no_symbols_available),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                    return@setPositiveButton
-                  }
-
-                  val symbolOld = dialogBinding.textViewSymbolSpinner.selectedItem.toString()
-                  // Add () to avoid cast exception.
-                  val symbolNew = (dialogBinding.symbolNew.text).toString()
-                      .trim()
-                      .toUpperCase(Locale.ROOT)
-                  if (symbolNew.isEmpty() || symbolNew.contains(" ")) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(string.symbol_name_not_valid),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                    return@setPositiveButton
-                  }
-
-                  // Sync method to get the return value
-                  val renamed = stockRoomViewModel.renameSymbolSync(symbolOld, symbolNew)
-
+                if (dialogBinding.textViewSymbolSpinner.isEmpty()) {
                   Toast.makeText(
-                      requireContext(),
-
-                      if (renamed) {
-                        getString(string.symbol_renamed, symbolOld, symbolNew)
-                      } else {
-                        getString(string.symbol_not_renamed, symbolOld, symbolNew)
-                      },
-
-                      Toast.LENGTH_LONG
+                    requireContext(),
+                    getString(string.no_symbols_available),
+                    Toast.LENGTH_LONG
                   )
-                      .show()
+                    .show()
+                  return@setPositiveButton
                 }
-                .setNegativeButton(
-                    R.string.cancel
-                ) { _, _ ->
+
+                val symbolOld = dialogBinding.textViewSymbolSpinner.selectedItem.toString()
+                // Add () to avoid cast exception.
+                val symbolNew = (dialogBinding.symbolNew.text).toString()
+                  .trim()
+                  .toUpperCase(Locale.ROOT)
+                if (symbolNew.isEmpty() || symbolNew.contains(" ")) {
+                  Toast.makeText(
+                    requireContext(),
+                    getString(string.symbol_name_not_valid),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
                 }
+
+                // Sync method to get the return value
+                val renamed = stockRoomViewModel.renameSymbolSync(symbolOld, symbolNew)
+
+                Toast.makeText(
+                  requireContext(),
+
+                  if (renamed) {
+                    getString(string.symbol_renamed, symbolOld, symbolNew)
+                  } else {
+                    getString(string.symbol_not_renamed, symbolOld, symbolNew)
+                  },
+
+                  Toast.LENGTH_LONG
+                )
+                  .show()
+              }
+              .setNegativeButton(
+                R.string.cancel
+              ) { _, _ ->
+              }
             builder
-                .create()
-                .show()
+              .create()
+              .show()
 
             true
           }
@@ -371,16 +376,16 @@ class SettingsActivity : AppCompatActivity(),
         buttonResetPortfolios.onPreferenceClickListener =
           OnPreferenceClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle(R.string.reset_portfolios_title)
-                .setMessage(getString(R.string.reset_portfolios_confirm))
-                .setPositiveButton(R.string.reset) { _, _ ->
-                  stockRoomViewModel.resetPortfolios()
+              .setTitle(R.string.reset_portfolios_title)
+              .setMessage(getString(R.string.reset_portfolios_confirm))
+              .setPositiveButton(R.string.reset) { _, _ ->
+                stockRoomViewModel.resetPortfolios()
 
-                  // Leave settings activity.
-                  activity?.onBackPressed()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+                // Leave settings activity.
+                activity?.onBackPressed()
+              }
+              .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+              .show()
 
             true
           }
@@ -402,16 +407,16 @@ class SettingsActivity : AppCompatActivity(),
         buttonDeleteAll.onPreferenceClickListener =
           OnPreferenceClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle(R.string.delete_all_title)
-                .setMessage(getString(R.string.delete_all_confirm))
-                .setPositiveButton(R.string.delete) { _, _ ->
-                  stockRoomViewModel.deleteAll()
+              .setTitle(R.string.delete_all_title)
+              .setMessage(getString(R.string.delete_all_confirm))
+              .setPositiveButton(R.string.delete) { _, _ ->
+                stockRoomViewModel.deleteAll()
 
-                  // Leave settings activity.
-                  activity?.onBackPressed()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+                // Leave settings activity.
+                activity?.onBackPressed()
+              }
+              .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+              .show()
 
             true
           }
@@ -439,17 +444,17 @@ class SettingsActivity : AppCompatActivity(),
     private fun onExportList() {
       // Set default filename.
       val date = LocalDateTime.now()
-          .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
-          .replace(":", "_")
+        .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+        .replace(":", "_")
       val jsonFileName = context?.getString(R.string.json_default_filename, date)
       val intent = Intent()
-          .setType("application/json")
-          .setAction(Intent.ACTION_CREATE_DOCUMENT)
-          .addCategory(Intent.CATEGORY_OPENABLE)
-          .putExtra(Intent.EXTRA_TITLE, jsonFileName)
+        .setType("application/json")
+        .setAction(Intent.ACTION_CREATE_DOCUMENT)
+        .addCategory(Intent.CATEGORY_OPENABLE)
+        .putExtra(Intent.EXTRA_TITLE, jsonFileName)
       startActivityForResult(
-          Intent.createChooser(intent, getString(R.string.export_select_file)),
-          exportListActivityRequestCode
+        Intent.createChooser(intent, getString(R.string.export_select_file)),
+        exportListActivityRequestCode
       )
     }
 

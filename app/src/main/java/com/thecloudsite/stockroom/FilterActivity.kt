@@ -335,7 +335,7 @@ class FilterActivity : AppCompatActivity() {
         resultData?.data?.also { uri ->
 
           // Perform operations on the document using its URI.
-          loadFilter(applicationContext, uri)
+          loadFilter(this, uri)
           finish()
         }
       } else
@@ -343,7 +343,7 @@ class FilterActivity : AppCompatActivity() {
           resultData?.data?.also { uri ->
 
             // Perform operations on the document using its URI.
-            saveFilter(applicationContext, uri)
+            saveFilter(this, uri)
             finish()
           }
         }
@@ -490,7 +490,7 @@ class FilterActivity : AppCompatActivity() {
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogAddFilterBinding.inflate(inflater)
     //val dialogView = inflater.inflate(layout.dialog_add_filter, null)
-    val spinnerData = getFilterTypeList(applicationContext)
+    val spinnerData = getFilterTypeList(this)
     dialogBinding.textViewFilterSpinner.adapter =
       ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerData)
 
@@ -733,7 +733,7 @@ class FilterActivity : AppCompatActivity() {
       )
       { _, _ ->
         val filterIndex = dialogBinding.textViewFilterSpinner.selectedItemPosition
-        val newFilterType = FilterFactory.create(filterIndex, applicationContext)
+        val newFilterType = FilterFactory.create(filterIndex, this)
 
         val subType =
           if (dialogBinding.textViewSubTypeSpinner.selectedItemPosition >= 0
