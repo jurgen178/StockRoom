@@ -419,6 +419,8 @@ limitations under the License. -->
   <string name="filter_asset_desc"></string>
   <string name="filter_assetnote_name">Bestandsanmerkung</string>
   <string name="filter_assetnote_desc"></string>
+  <string name="filter_commission_name">Gebühr</string>
+  <string name="filter_commission_desc"></string>
   <string name="filter_dividendpercentage_name">Dividende %</string>
   <string name="filter_dividendpercentage_desc"></string>
   <string name="filter_dividendpaid_name">Ausgezahlte Dividende</string>

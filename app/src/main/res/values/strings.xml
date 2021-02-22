@@ -420,6 +420,8 @@ limitations under the License. -->
   <string name="filter_asset_desc"></string>
   <string name="filter_assetnote_name">Asset note</string>
   <string name="filter_assetnote_desc"></string>
+  <string name="filter_commission_name">Commission</string>
+  <string name="filter_commission_desc"></string>
   <string name="filter_dividendpercentage_name">Dividend %</string>
   <string name="filter_dividendpercentage_desc"></string>
   <string name="filter_dividendpaid_name">Dividend paid</string>

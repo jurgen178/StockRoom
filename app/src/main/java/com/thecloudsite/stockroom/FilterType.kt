@@ -58,6 +58,7 @@ enum class FilterTypeEnum {
   FilterProfitPercentageType,
   FilterAssetType,
   FilterAssetNoteType,
+  FilterCommissionType,
   FilterDividendPercentageType,
   FilterDividendPaidType,
   FilterDividendPaidYTDType,
@@ -148,6 +149,7 @@ object FilterFactory {
       FilterTypeEnum.FilterProfitPercentageType -> FilterProfitPercentageType(context)
       FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
       FilterTypeEnum.FilterAssetNoteType -> FilterAssetNoteType(context)
+      FilterTypeEnum.FilterCommissionType -> FilterCommissionType(context)
       FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
       FilterTypeEnum.FilterDividendPaidType -> FilterDividendPaidType(context)
       FilterTypeEnum.FilterDividendPaidYTDType -> FilterDividendPaidYTDType(context)
@@ -1168,6 +1170,64 @@ class FilterAssetType(
     }
   override val displayName = context.getString(R.string.filter_asset_name)
   override val desc = context.getString(R.string.filter_asset_desc)
+  override val displayData: SpannableStringBuilder
+    get() = when (subType) {
+      FilterSubTypeEnum.GreaterThanType,
+      FilterSubTypeEnum.LessThanType -> SpannableStringBuilder().append(data)
+      else -> SpannableStringBuilder().append("")
+    }
+}
+
+// Commission
+class FilterCommissionType(
+  val context: Context
+) : FilterDoubleBaseType() {
+  override fun filter(stockItem: StockItem): Boolean {
+    var commission = 0.0
+    stockItem.assets.forEach { item ->
+      commission += item.commission
+    }
+
+    return when (subType) {
+      FilterSubTypeEnum.GreaterThanType -> {
+        commission > filterValue
+      }
+      FilterSubTypeEnum.LessThanType -> {
+        commission > 0.0 && commission < filterValue
+      }
+      FilterSubTypeEnum.IsPresentType -> {
+        commission > 0.0
+      }
+      FilterSubTypeEnum.IsNotPresentType -> {
+        commission == 0.0
+      }
+      else -> false
+    }
+  }
+
+  override val subTypeList =
+    listOf(
+      FilterSubTypeEnum.GreaterThanType,
+      FilterSubTypeEnum.LessThanType,
+      FilterSubTypeEnum.IsPresentType,
+      FilterSubTypeEnum.IsNotPresentType,
+    )
+
+  override val typeId = FilterTypeEnum.FilterCommissionType
+  override var data: String = ""
+    get() = when (subType) {
+      FilterSubTypeEnum.GreaterThanType,
+      FilterSubTypeEnum.LessThanType -> DecimalFormat(DecimalFormat0To2Digits).format(
+        filterValue
+      )
+      else -> ""
+    }
+    set(value) {
+      field = value
+      filterValue = strToDouble(value)
+    }
+  override val displayName = context.getString(R.string.filter_commission_name)
+  override val desc = context.getString(R.string.filter_commission_desc)
   override val displayData: SpannableStringBuilder
     get() = when (subType) {
       FilterSubTypeEnum.GreaterThanType,
