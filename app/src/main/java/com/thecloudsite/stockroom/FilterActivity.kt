@@ -773,7 +773,10 @@ class FilterActivity : AppCompatActivity() {
             val localDateTime: LocalDateTime = LocalDateTime.of(
               dialogBinding.datePickerFilter.year,
               dialogBinding.datePickerFilter.month + 1,
-              dialogBinding.datePickerFilter.dayOfMonth, 0, 0
+              dialogBinding.datePickerFilter.dayOfMonth,
+              0,
+              0,
+              0
             )
             val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
             date.toString()

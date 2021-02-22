@@ -250,7 +250,7 @@ class SummaryGroupAdapter internal constructor(
     var totalAlerts: Int = 0
     var totalNotes: Int = 0
 
-    // val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0)
+    // val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0, 0)
     // val secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
 
     val stockItemsSelected =

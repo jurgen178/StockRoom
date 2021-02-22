@@ -486,7 +486,7 @@ open class FilterDividendBaseType() : FilterDoubleBaseType() {
   override fun dataReady() {
     super.dataReady()
 
-    val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0)
+    val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0, 0)
     secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
   }
 }

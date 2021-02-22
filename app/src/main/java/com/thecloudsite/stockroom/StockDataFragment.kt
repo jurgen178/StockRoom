@@ -271,6 +271,9 @@ class StockDataFragment : Fragment() {
 //    }
 
     dialogBinding.addPrice.setText(DecimalFormat(DecimalFormat2To6Digits).format(asset.price))
+    if (asset.commission > 0.0) {
+      dialogBinding.addCommission.setText(DecimalFormat(DecimalFormat2To6Digits).format(asset.commission))
+    }
     dialogBinding.addNote.setText(asset.note)
 
     val localDateTime = if (asset.date == 0L) {
@@ -337,11 +340,31 @@ class StockDataFragment : Fragment() {
           return@setPositiveButton
         }
 
+        val commissionText = (dialogBinding.addCommission.text).toString()
+          .trim()
+        var commission = 0.0
+        if (commissionText.isNotEmpty()) {
+          try {
+            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+            commission = numberFormat.parse(commissionText)!!
+              .toDouble()
+          } catch (e: Exception) {
+            Toast.makeText(
+              requireContext(), getString(R.string.asset_commission_not_valid), Toast.LENGTH_LONG
+            )
+              .show()
+            return@setPositiveButton
+          }
+        }
+
         // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
         val localDateTimeNew: LocalDateTime = LocalDateTime.of(
           dialogBinding.datePickerAssetDate.year,
           dialogBinding.datePickerAssetDate.month + 1,
-          dialogBinding.datePickerAssetDate.dayOfMonth, 0, 0
+          dialogBinding.datePickerAssetDate.dayOfMonth,
+          localDateTime.hour,
+          localDateTime.minute,
+          localDateTime.second
         )
         val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
 
@@ -349,10 +372,18 @@ class StockDataFragment : Fragment() {
           .trim()
 
         val assetNew =
-          Asset(symbol = symbol, quantity = quantity, price = price, date = date, note = noteText)
+          Asset(
+            symbol = symbol,
+            quantity = quantity,
+            price = price,
+            commission = commission,
+            date = date,
+            note = noteText
+          )
 
         if (asset.quantity != assetNew.quantity
           || asset.price != assetNew.price
+          || asset.commission != assetNew.commission
           || asset.date != assetNew.date
           || asset.note != assetNew.note
         ) {
@@ -514,7 +545,8 @@ class StockDataFragment : Fragment() {
             dialogBinding.datePickerEventDate.month + 1,
             dialogBinding.datePickerEventDate.dayOfMonth,
             dialogBinding.datePickerEventTime.hour,
-            dialogBinding.datePickerEventTime.minute
+            dialogBinding.datePickerEventTime.minute,
+            localDateTime.second
           )
           val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
           val eventNew =
@@ -1413,10 +1445,31 @@ class StockDataFragment : Fragment() {
             return@setPositiveButton
           }
 
+          val commissionText = (dialogBinding.addCommission.text).toString()
+            .trim()
+          var commission = 0.0
+          if (commissionText.isNotEmpty()) {
+            try {
+              val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+              commission = numberFormat.parse(commissionText)!!
+                .toDouble()
+            } catch (e: Exception) {
+              Toast.makeText(
+                requireContext(), getString(R.string.asset_commission_not_valid), Toast.LENGTH_LONG
+              )
+                .show()
+              return@setPositiveButton
+            }
+          }
+
+          val localDateTimeNow = LocalDateTime.now()
           val localDateTime: LocalDateTime = LocalDateTime.of(
             dialogBinding.datePickerAssetDate.year,
             dialogBinding.datePickerAssetDate.month + 1,
-            dialogBinding.datePickerAssetDate.dayOfMonth, 0, 0
+            dialogBinding.datePickerAssetDate.dayOfMonth,
+            localDateTimeNow.hour,
+            localDateTimeNow.minute,
+            localDateTimeNow.second
           )
           val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
 
@@ -1431,6 +1484,7 @@ class StockDataFragment : Fragment() {
               symbol = symbol,
               quantity = quantity,
               price = price,
+              commission = commission,
               date = date,
               note = noteText
             )
@@ -1553,10 +1607,14 @@ class StockDataFragment : Fragment() {
               quantity = totalQuantity
             }
 
+            val localDateTimeNow = LocalDateTime.now()
             val localDateTime: LocalDateTime = LocalDateTime.of(
               dialogBinding.datePickerAssetDate.year,
               dialogBinding.datePickerAssetDate.month + 1,
-              dialogBinding.datePickerAssetDate.dayOfMonth, 0, 0
+              dialogBinding.datePickerAssetDate.dayOfMonth,
+              localDateTimeNow.hour,
+              localDateTimeNow.minute,
+              localDateTimeNow.second
             )
             val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
 
@@ -1715,12 +1773,14 @@ class StockDataFragment : Fragment() {
               .show()
           } else {
             val note = (dialogBinding.textInputEditEventNote.text).toString()
+            val localDateTimeNow = LocalDateTime.now()
             val datetime: LocalDateTime = LocalDateTime.of(
               dialogBinding.datePickerEventDate.year,
               dialogBinding.datePickerEventDate.month + 1,
               dialogBinding.datePickerEventDate.dayOfMonth,
               dialogBinding.datePickerEventTime.hour,
-              dialogBinding.datePickerEventTime.minute
+              dialogBinding.datePickerEventTime.minute,
+              localDateTimeNow.second
             )
             val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
             stockRoomViewModel.addEvent(

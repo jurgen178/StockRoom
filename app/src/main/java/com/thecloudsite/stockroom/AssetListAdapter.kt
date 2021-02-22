@@ -109,6 +109,7 @@ class AssetListAdapter internal constructor(
       holder.binding.textViewAssetTotal.text = context.getString(R.string.assetlisttotal)
       holder.binding.textViewAssetChange.text = context.getString(R.string.assetlistchange)
       holder.binding.textViewAssetValue.text = context.getString(R.string.assetlistvalue)
+      holder.binding.textViewAssetCommission.text = context.getString(R.string.assetlistcommission)
       holder.binding.textViewAssetDate.text = context.getString(R.string.assetlistdate)
       holder.binding.textViewAssetNote.text = context.getString(R.string.assetlistnote)
       holder.binding.textViewAssetDelete.visibility = View.GONE
@@ -151,6 +152,19 @@ class AssetListAdapter internal constructor(
               }
             )
           }
+
+        holder.binding.textViewAssetCommission.text = if (current.asset.commission > 0.0) {
+          SpannableStringBuilder()
+            .color(Color.BLACK) {
+              append(
+                DecimalFormat(DecimalFormat2To4Digits).format(
+                  current.asset.commission
+                )
+              )
+            }
+        } else {
+          ""
+        }
 
         holder.binding.textViewAssetTotal.text =
           SpannableStringBuilder()
@@ -199,6 +213,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetQuantity.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetPrice.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetTotal.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetCommission.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetDate.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetNote.setTextColor(colorNegativeAsset)
           }
@@ -206,6 +221,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetQuantity.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetPrice.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetTotal.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetCommission.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetDate.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetNote.setTextColor(colorObsoleteAsset)
           }
@@ -213,6 +229,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetQuantity.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetPrice.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetTotal.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetCommission.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetDate.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetNote.setTextColor(defaultTextColor!!)
           }
@@ -259,6 +276,19 @@ class AssetListAdapter internal constructor(
           } else {
             ""
           }
+        val itemViewCommissionText =
+          if (current.asset.commission > 0.0) {
+            SpannableStringBuilder()
+              .bold {
+                append(
+                  DecimalFormat(DecimalFormat2Digits).format(
+                    current.asset.commission
+                  )
+                )
+              }
+          } else {
+            ""
+          }
         val datetime: LocalDateTime =
           LocalDateTime.ofEpochSecond(current.asset.date, 0, ZoneOffset.UTC)
         val itemViewDateText =
@@ -269,14 +299,16 @@ class AssetListAdapter internal constructor(
         if (current.asset.quantity < 0.0) {
           holder.binding.textViewAssetQuantity.text =
             SpannableStringBuilder().italic { append(itemViewQuantityText) }
-          holder.binding.textViewAssetPrice.text =
-            SpannableStringBuilder().italic { append(itemViewPriceText) }
           holder.binding.textViewAssetTotal.text =
             SpannableStringBuilder().italic { append(itemViewTotalText) }
           holder.binding.textViewAssetChange.text =
             SpannableStringBuilder().italic { append(itemViewChangeText) }
+          holder.binding.textViewAssetPrice.text =
+            SpannableStringBuilder().italic { append(itemViewPriceText) }
           holder.binding.textViewAssetValue.text =
             SpannableStringBuilder().italic { append(itemViewValueText) }
+          holder.binding.textViewAssetCommission.text =
+            SpannableStringBuilder().italic { append(itemViewCommissionText) }
           holder.binding.textViewAssetDate.text =
             SpannableStringBuilder().italic { append(itemViewDateText) }
           holder.binding.textViewAssetNote.text =
@@ -287,6 +319,7 @@ class AssetListAdapter internal constructor(
           holder.binding.textViewAssetTotal.text = itemViewTotalText
           holder.binding.textViewAssetChange.text = itemViewChangeText
           holder.binding.textViewAssetValue.text = itemViewValueText
+          holder.binding.textViewAssetCommission.text = itemViewCommissionText
           holder.binding.textViewAssetDate.text = itemViewDateText
           holder.binding.textViewAssetNote.text = itemViewNoteText
         }
@@ -360,13 +393,19 @@ class AssetListAdapter internal constructor(
         SpannableStringBuilder()
       }
 
+      var commission = 0.0
+      sortedList.forEach { item ->
+        commission += item.commission
+      }
+
       assetList.add(
         AssetListData(
           asset = Asset(
             id = null,
             symbol = symbol,
             quantity = totalQuantity,
-            price = totalPrice
+            price = totalPrice,
+            commission = commission,
           ),
           assetChangeText = assetChange,
           assetText = asset

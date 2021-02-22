@@ -94,7 +94,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/note"
+          android:text="@string/commission"
           app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintStart_toStartOf="parent"
@@ -112,6 +112,41 @@
           app:endIconMode="clear_text"
           >
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/addCommission"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/textInputEditText"
+            android:digits="0123456789.,"
+            android:gravity="end"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:maxLength="9"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/note"
+          app:layout_constraintBottom_toBottomOf="@+id/textInputLayout4"
+          app:layout_constraintEnd_toStartOf="@+id/guideline1"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="@+id/textInputLayout4"
+          app:layout_constraintHorizontal_bias="0.0"
+          />
+      <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/textInputLayout4"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_margin="8dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/guideline1"
+          app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+          app:endIconMode="clear_text"
+          >
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/addNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,7 +161,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="16dp"
           android:datePickerMode="calendar"
-          app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+          app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
           />
 
       <androidx.constraintlayout.widget.Barrier

@@ -669,7 +669,7 @@ class AssetTest {
   @Throws(Exception::class)
   fun assetCapitalGainDateTest() {
 
-    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0)
+    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0, 0)
     val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
 
     val localDateTime = LocalDateTime.ofEpochSecond(seconds2020, 0, ZoneOffset.UTC)
@@ -683,7 +683,7 @@ class AssetTest {
 
     val totalGains: MutableMap<Int, GainLoss> = mutableMapOf()
 
-    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0)
+    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0, 0)
     val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
     val localDateTime = LocalDateTime.ofEpochSecond(seconds2020, 0, ZoneOffset.UTC)
     val year = localDateTime.year
@@ -700,10 +700,10 @@ class AssetTest {
   @Throws(Exception::class)
   fun assetCapitalGainDate1() {
 
-    val localDateTime2020 = LocalDateTime.of(2022, 1, 1, 0, 0)
+    val localDateTime2020 = LocalDateTime.of(2022, 1, 1, 0, 0, 0)
     val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
 
-    val localDateTime2021 = LocalDateTime.of(2021, 1, 1, 0, 0)
+    val localDateTime2021 = LocalDateTime.of(2021, 1, 1, 0, 0, 0)
     val seconds2021 = localDateTime2021.toEpochSecond(ZoneOffset.UTC)
 
     val assetList1 = listOf(
@@ -764,10 +764,10 @@ class AssetTest {
   @Throws(Exception::class)
   fun assetCapitalGainDate2() {
 
-    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0)
+    val localDateTime2020 = LocalDateTime.of(2020, 1, 1, 0, 0, 0)
     val seconds2020 = localDateTime2020.toEpochSecond(ZoneOffset.UTC)
 
-    val localDateTime2021 = LocalDateTime.of(2021, 1, 1, 0, 0)
+    val localDateTime2021 = LocalDateTime.of(2021, 1, 1, 0, 0, 0)
     val seconds2021 = localDateTime2021.toEpochSecond(ZoneOffset.UTC)
 
     val assetList1 = listOf(

@@ -168,7 +168,10 @@ class DividendFragment : Fragment() {
             val datetime: LocalDateTime = LocalDateTime.of(
               dialogBinding.datePickerDividendDate.year,
               dialogBinding.datePickerDividendDate.month + 1,
-              dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
+              dialogBinding.datePickerDividendDate.dayOfMonth,
+              localDateTime.hour,
+              localDateTime.minute,
+              localDateTime.second
             )
             val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
@@ -315,14 +318,20 @@ class DividendFragment : Fragment() {
         val datetime: LocalDateTime = LocalDateTime.of(
           dialogBinding.datePickerDividendDate.year,
           dialogBinding.datePickerDividendDate.month + 1,
-          dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
+          dialogBinding.datePickerDividendDate.dayOfMonth,
+          localDateTime.hour,
+          localDateTime.minute,
+          localDateTime.second
         )
         val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
         val datetimeEx: LocalDateTime = LocalDateTime.of(
           dialogBinding.datePickerDividendExDate.year,
           dialogBinding.datePickerDividendExDate.month + 1,
-          dialogBinding.datePickerDividendExDate.dayOfMonth, 0, 0
+          dialogBinding.datePickerDividendExDate.dayOfMonth,
+          localDateTimeEx.hour,
+          localDateTimeEx.minute,
+          localDateTimeEx.second
         )
         val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 
@@ -571,10 +580,14 @@ class DividendFragment : Fragment() {
             }
 
             if (valid) {
+              val localDateTimeNow = LocalDateTime.now()
               val datetime: LocalDateTime = LocalDateTime.of(
                 dialogBinding.datePickerDividendDate.year,
                 dialogBinding.datePickerDividendDate.month + 1,
-                dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
+                dialogBinding.datePickerDividendDate.dayOfMonth,
+                localDateTimeNow.hour,
+                localDateTimeNow.minute,
+                localDateTimeNow.second
               )
               val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
@@ -692,17 +705,25 @@ class DividendFragment : Fragment() {
             }
           }
 
+          val localDateTimeNow = LocalDateTime.now()
+
           val datetime: LocalDateTime = LocalDateTime.of(
             dialogBinding.datePickerDividendDate.year,
             dialogBinding.datePickerDividendDate.month + 1,
-            dialogBinding.datePickerDividendDate.dayOfMonth, 0, 0
+            dialogBinding.datePickerDividendDate.dayOfMonth,
+            localDateTimeNow.hour,
+            localDateTimeNow.minute,
+            localDateTimeNow.second
           )
           val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
 
           val datetimeEx: LocalDateTime = LocalDateTime.of(
             dialogBinding.datePickerDividendExDate.year,
             dialogBinding.datePickerDividendExDate.month + 1,
-            dialogBinding.datePickerDividendExDate.dayOfMonth, 0, 0
+            dialogBinding.datePickerDividendExDate.dayOfMonth,
+            localDateTimeNow.hour,
+            localDateTimeNow.minute,
+            localDateTimeNow.second
           )
           val secondsEx = datetimeEx.toEpochSecond(ZoneOffset.UTC)
 

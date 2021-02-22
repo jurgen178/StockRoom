@@ -238,6 +238,7 @@ class StockRoomChartAdapter internal constructor(
     candleStickChart.axisRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
     candleStickChart.axisRight.setDrawAxisLine(true)
     candleStickChart.axisRight.setDrawGridLines(true)
+    candleStickChart.axisRight.textColor = context?.getColor(R.color.black)!!
     candleStickChart.axisRight.isEnabled = true
 
     candleStickChart.axisLeft.setDrawGridLines(false)
