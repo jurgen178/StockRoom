@@ -178,7 +178,7 @@ class StockRoomTableAdapter internal constructor(
         holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
         holder.binding.tableDataName.text = getName(current.onlineMarketData)
 
-        val (quantity, asset) = getAssets(current.assets)
+        val (quantity, asset, commission) = getAssets(current.assets)
 
         if (quantity > 0.0 && asset > 0.0) {
           holder.binding.tableDataPurchaseprice.text =
@@ -334,7 +334,7 @@ class StockRoomTableAdapter internal constructor(
             assetItem.date
           }
 
-          val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
+          val (totalQuantity, totalPrice, totalCommission) = getAssets(sortedList, obsoleteAssetType)
 
           // List each asset
           sortedList.forEach { assetItem ->

@@ -125,7 +125,7 @@ class StockRoomTreemapFragment : Fragment() {
     val treeModel = TreeModel(rootItem)
 
     stockItems.forEach { stockItem ->
-      val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+      val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
       if (totalQuantity > 0.0) {
         val assets = totalQuantity * stockItem.onlineMarketData.marketPrice

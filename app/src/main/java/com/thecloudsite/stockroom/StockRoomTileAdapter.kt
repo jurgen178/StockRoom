@@ -75,7 +75,7 @@ class StockRoomTileAdapter internal constructor(
     }
     setBackgroundColor(holder.binding.stockRoomTileItemGroup, color)
 
-    val (quantity, asset) = getAssets(current.assets)
+    val (quantity, asset, commission) = getAssets(current.assets)
 
 //    val quantity = current.assets.sumByDouble {
 //      it.quantity

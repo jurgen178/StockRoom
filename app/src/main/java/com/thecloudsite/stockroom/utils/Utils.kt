@@ -299,7 +299,7 @@ fun getAssetChange(
   bold: Boolean = true
 ): Triple<String, SpannableStringBuilder, Int> {
 
-  val (quantity, asset) = getAssets(assets)
+  val (quantity, asset, commission) = getAssets(assets)
 
   return getAssetChange(
     quantity,
@@ -457,7 +457,7 @@ fun getDividendStr(
 
 fun getAssets(
   assetList: List<Asset>?
-): Pair<Double, Double> {
+): Triple<Double, Double, Double> {
   //return getAssetUseLastAverage(assetList)
   return getAssetsRemoveOldestFirst(assetList)
 }
@@ -508,7 +508,7 @@ fun getAssetUseLastAverage(
 fun getAssets(
   assetList: List<Asset>?,
   tagObsoleteAssetType: Int
-): Pair<Double, Double> {
+): Triple<Double, Double, Double> {
   //return getAssetUseLastAverage(assetList, tagObsoleteAssetType)
   return getAssetsRemoveOldestFirst(assetList, tagObsoleteAssetType)
 }
@@ -577,7 +577,7 @@ fun getAssetUseLastAverage(
 fun getAssetsRemoveOldestFirst(
   assetList: List<Asset>?,
   tagObsoleteAssetType: Int = 0
-): Pair<Double, Double> {
+): Triple<Double, Double, Double> {
 
   var totalQuantity: Double = 0.0
   var totalPrice: Double = 0.0
@@ -638,7 +638,8 @@ fun getAssetsRemoveOldestFirst(
 
     assetListSortedCopy.forEach { asset ->
       totalQuantity += asset.quantity
-      totalPrice += asset.quantity * asset.price + asset.commission
+      totalPrice += asset.quantity * asset.price
+      totalCommission += asset.commission
     }
   }
 
@@ -647,7 +648,7 @@ fun getAssetsRemoveOldestFirst(
     totalPrice = 0.0
   }
 
-  return Pair(totalQuantity, totalPrice)
+  return Triple(totalQuantity, totalPrice + totalCommission, totalCommission)
 }
 
 // Only gets the assets that are added.

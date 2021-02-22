@@ -355,7 +355,7 @@ class AssetListAdapter internal constructor(
         asset.date
       }
 
-      val (totalQuantity, totalPrice) = getAssets(sortedList, obsoleteAssetType)
+      val (totalQuantity, totalPrice, totalCommission) = getAssets(sortedList, obsoleteAssetType)
 
       val sortedDataList = sortedList.map {
         AssetListData(

@@ -1522,7 +1522,7 @@ class StockDataFragment : Fragment() {
 
     binding.removeAssetButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val (totalQuantity, totalPrice) = getAssets(assets?.assets)
+      val (totalQuantity, totalPrice, totalCommission) = getAssets(assets?.assets)
 
 //      val totalQuantity = assets?.assets?.sumByDouble {
 //        it.shares
@@ -2096,7 +2096,7 @@ class StockDataFragment : Fragment() {
     if (data.assets != null && data.onlineMarketData != null) {
 
       val assets: List<Asset> = data.assets?.assets!!
-      val (totalQuantity, totalPrice) = getAssets(assets)
+      val (totalQuantity, totalPrice, totalCommission) = getAssets(assets)
 
       val marketPrice = data.onlineMarketData!!.marketPrice
 

@@ -331,7 +331,7 @@ class StockRoomOverviewFragment : Fragment() {
     var capitalLoss = 0.0
 
     stockitemList.forEach { stockItem ->
-      val (quantity, price) = getAssets(stockItem.assets)
+      val (quantity, price, commission) = getAssets(stockItem.assets)
 
       totalPurchasePrice += price
       totalQuantity += quantity

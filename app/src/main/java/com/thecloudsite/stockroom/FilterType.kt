@@ -1043,7 +1043,7 @@ class FilterPurchasePriceType(
   context: Context
 ) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {
@@ -1066,7 +1066,7 @@ class FilterProfitType(
   context: Context
 ) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
     val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
       totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice
     } else {
@@ -1094,7 +1094,7 @@ class FilterProfitPercentageType(
   context: Context
 ) : FilterDoublePercentageBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
     val profitPercentage =
       if (stockItem.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
         (totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice) / totalPrice
@@ -1123,7 +1123,7 @@ class FilterAssetType(
   val context: Context
 ) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
     val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
       totalQuantity * stockItem.onlineMarketData.marketPrice
     } else {
@@ -1183,23 +1183,25 @@ class FilterCommissionType(
   val context: Context
 ) : FilterDoubleBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    var commission = 0.0
-    stockItem.assets.forEach { item ->
-      commission += item.commission
-    }
+//    var commission = 0.0
+//    stockItem.assets.forEach { item ->
+//      commission += item.commission
+//    }
+
+    val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {
-        commission > filterValue
+        totalCommission > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        commission > 0.0 && commission < filterValue
+        totalCommission > 0.0 && totalCommission < filterValue
       }
       FilterSubTypeEnum.IsPresentType -> {
-        commission > 0.0
+        totalCommission > 0.0
       }
       FilterSubTypeEnum.IsNotPresentType -> {
-        commission == 0.0
+        totalCommission == 0.0
       }
       else -> false
     }
@@ -1330,7 +1332,7 @@ class FilterQuantityType(
   context: Context
 ) : FilterIntBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
-    val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+    val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
     return when (subType) {
       FilterSubTypeEnum.GreaterThanType -> {

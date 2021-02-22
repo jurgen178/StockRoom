@@ -269,7 +269,7 @@ class SummaryGroupAdapter internal constructor(
     val totalDividendPaidMap: MutableMap<Int, Double> = mutableMapOf()
 
     stockItemsSelected.forEach { stockItem ->
-      val (quantity, price) = getAssets(stockItem.assets)
+      val (quantity, price, commission) = getAssets(stockItem.assets)
 
       totalPurchasePrice += price
       totalQuantity += quantity

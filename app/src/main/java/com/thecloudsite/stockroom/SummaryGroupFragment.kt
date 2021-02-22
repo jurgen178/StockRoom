@@ -244,7 +244,7 @@ class SummaryGroupFragment : Fragment() {
     val assetList: MutableList<AssetSummary> = mutableListOf()
     var totalAssets = 0.0
     stockItems.forEach { stockItem ->
-      val (totalQuantity, totalPrice) = getAssets(stockItem.assets)
+      val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
 //      val totalShares: Double = stockItem.assets.sumByDouble { asset ->
 //        asset.shares

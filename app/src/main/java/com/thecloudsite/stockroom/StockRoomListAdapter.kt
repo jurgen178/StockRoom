@@ -182,7 +182,7 @@ class StockRoomListAdapter internal constructor(
         holder.binding.textViewAssets.text = ""
       }
 
-      val (quantity, asset) = getAssets(current.assets)
+      val (quantity, asset, commission) = getAssets(current.assets)
 //      val quantity = current.assets.sumByDouble {
 //        it.quantity
 //      }
