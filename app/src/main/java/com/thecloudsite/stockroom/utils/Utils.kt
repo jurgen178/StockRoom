@@ -613,6 +613,7 @@ fun getAssetsRemoveOldestFirst(
             if (quantityToRemove > assetListSortedCopy[j].quantity) {
               quantityToRemove -= assetListSortedCopy[j].quantity
               assetListSortedCopy[j].quantity = 0.0
+              assetListSortedCopy[j].commission = 0.0
             } else {
               assetListSortedCopy[j].quantity -= quantityToRemove
               // Start with the index in the next iteration where it left off.
@@ -637,8 +638,7 @@ fun getAssetsRemoveOldestFirst(
 
     assetListSortedCopy.forEach { asset ->
       totalQuantity += asset.quantity
-      totalPrice += asset.quantity * asset.price
-      totalCommission += asset.commission
+      totalPrice += asset.quantity * asset.price + asset.commission
     }
   }
 
@@ -647,7 +647,7 @@ fun getAssetsRemoveOldestFirst(
     totalPrice = 0.0
   }
 
-  return Pair(totalQuantity, totalPrice + totalCommission)
+  return Pair(totalQuantity, totalPrice)
 }
 
 // Only gets the assets that are added.
