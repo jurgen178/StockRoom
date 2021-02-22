@@ -112,6 +112,7 @@ class StockRoomTableAdapter internal constructor(
       holder.binding.tableDataPurchaseprice.gravity = alignmentNumbers
       holder.binding.tableDataAsset.gravity = alignmentNumbers
       holder.binding.tableDataAssetChange.gravity = alignmentNumbers
+      holder.binding.tableDataAssetCommission.gravity = alignmentNumbers
       holder.binding.tableDataDividend.gravity = alignmentNumbers
       holder.binding.tableDataAlertBelow.gravity = alignmentNumbers
       holder.binding.tableDataAlertAbove.gravity = alignmentNumbers
@@ -152,6 +153,8 @@ class StockRoomTableAdapter internal constructor(
           getHeaderStr(context.getString(R.string.table_column_Asset))
         holder.binding.tableDataAssetChange.text =
           getHeaderStr(context.getString(R.string.table_column_AssetChange))
+        holder.binding.tableDataAssetCommission.text =
+          getHeaderStr(context.getString(R.string.table_column_AssetCommission))
         holder.binding.tableDataDividend.text =
           getHeaderStr(context.getString(R.string.table_column_Dividend))
         holder.binding.tableDataAlertBelow.text =
@@ -216,6 +219,14 @@ class StockRoomTableAdapter internal constructor(
             false
           )
         holder.binding.tableDataAssetChange.text = assetChange.second
+        holder.binding.tableDataAssetCommission.text =
+          if (commission > 0.0) {
+            DecimalFormat(
+              DecimalFormat2To4Digits
+            ).format(commission)
+          } else {
+            ""
+          }
         holder.binding.tableDataMarketCurrency.text = getCurrency(current.onlineMarketData)
 
         if (current.onlineMarketData.marketPrice > 0.0) {
@@ -334,7 +345,10 @@ class StockRoomTableAdapter internal constructor(
             assetItem.date
           }
 
-          val (totalQuantity, totalPrice, totalCommission) = getAssets(sortedList, obsoleteAssetType)
+          val (totalQuantity, totalPrice, totalCommission) = getAssets(
+            sortedList,
+            obsoleteAssetType
+          )
 
           // List each asset
           sortedList.forEach { assetItem ->

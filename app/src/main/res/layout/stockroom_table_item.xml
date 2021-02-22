@@ -165,7 +165,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataDividend"
+      android:id="@+id/tableDataAssetCommission"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline10"
@@ -181,7 +181,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataAlertBelow"
+      android:id="@+id/tableDataDividend"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline11"
@@ -197,7 +197,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataAlertAbove"
+      android:id="@+id/tableDataAlertBelow"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline12"
@@ -213,7 +213,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataAssets"
+      android:id="@+id/tableDataAlertAbove"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline13"
@@ -229,7 +229,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataEvents"
+      android:id="@+id/tableDataAssets"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline14"
@@ -245,11 +245,27 @@
       />
 
   <TextView
-      android:id="@+id/tableDataNote"
+      android:id="@+id/tableDataEvents"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline15"
       app:layout_constraintEnd_toStartOf="@id/guideline16"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/table_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline16"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/tableDataNote"
+      style="@style/table_item_style"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline16"
+      app:layout_constraintEnd_toStartOf="@id/guideline17"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
@@ -338,7 +354,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1190dp"
+      app:layout_constraintGuide_begin="1160dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -362,7 +378,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1640dp"
+      app:layout_constraintGuide_begin="1490dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -370,7 +386,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1890dp"
+      app:layout_constraintGuide_begin="1740dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -378,7 +394,15 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="2140dp"
+      app:layout_constraintGuide_begin="1990dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline17"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="2240dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

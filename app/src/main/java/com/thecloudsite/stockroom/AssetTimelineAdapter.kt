@@ -80,38 +80,46 @@ class AssetTimelineAdapter(
     timelineElement.assets.sortedBy { asset ->
       asset.date
     }
-        .forEach { asset ->
-          val date = if (asset.date > 0) {
-            val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
-            localDateTime.format(DateTimeFormatter.ofPattern("d"))
-          } else {
-            "-"
-          }
-
-          if (!skipFirstline) {
-            stockTransactions += "\n"
-          } else {
-            skipFirstline = false
-          }
-
-          stockTransactions += if (asset.quantity > 0.0) {
-            context.getString(
-                R.string.timeline_asset_bought,
-                date,
-                DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity),
-                DecimalFormat(DecimalFormat2To4Digits).format(asset.price),
-                DecimalFormat(DecimalFormat2Digits).format(asset.quantity * asset.price)
-            )
-          } else {
-            context.getString(
-                R.string.timeline_asset_sold,
-                date,
-                DecimalFormat(DecimalFormat0To4Digits).format(-asset.quantity),
-                DecimalFormat(DecimalFormat2To4Digits).format(asset.price),
-                DecimalFormat(DecimalFormat2Digits).format(-asset.quantity * asset.price)
-            )
-          }
+      .forEach { asset ->
+        val date = if (asset.date > 0) {
+          val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+          localDateTime.format(DateTimeFormatter.ofPattern("d"))
+        } else {
+          "-"
         }
+
+        if (!skipFirstline) {
+          stockTransactions += "\n"
+        } else {
+          skipFirstline = false
+        }
+
+        stockTransactions += if (asset.quantity > 0.0) {
+          var price = DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
+          if (asset.commission > 0.0) {
+            price += "+${DecimalFormat(DecimalFormat2To4Digits).format(asset.commission)}"
+          }
+          context.getString(
+            R.string.timeline_asset_bought,
+            date,
+            DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity),
+            price,
+            DecimalFormat(DecimalFormat2Digits).format(asset.quantity * asset.price + asset.commission)
+          )
+        } else {
+          var price = DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
+          if (asset.commission > 0.0) {
+            price += "-${DecimalFormat(DecimalFormat2To4Digits).format(asset.commission)}"
+          }
+          context.getString(
+            R.string.timeline_asset_sold,
+            date,
+            DecimalFormat(DecimalFormat0To4Digits).format(-asset.quantity),
+            price,
+            DecimalFormat(DecimalFormat2Digits).format(-asset.quantity * asset.price - asset.commission)
+          )
+        }
+      }
 
     holder.binding.timelineDetails.text = stockTransactions
   }

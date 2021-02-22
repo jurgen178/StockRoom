@@ -496,6 +496,7 @@ limitations under the License. -->
   <string name="table_column_Purchaseprice">Purchase price</string>
   <string name="table_column_Asset">Asset</string>
   <string name="table_column_AssetChange">Asset change</string>
+  <string name="table_column_AssetCommission">Commission</string>
   <string name="table_column_Dividend">Dividend</string>
   <string name="table_column_AlertAbove">Alert Above</string>
   <string name="table_column_AlertBelow">Alert Below</string>
