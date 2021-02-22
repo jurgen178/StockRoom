@@ -500,7 +500,7 @@ fun getAssetUseLastAverage(
         }
     }
 
-  return Pair(totalQuantity, totalPrice - totalCommission)
+  return Pair(totalQuantity, totalPrice + totalCommission)
 }
 
 // Adds a marker for assets that are obsolete (bought and then sold)
@@ -570,7 +570,7 @@ fun getAssetUseLastAverage(
     }
   }
 
-  return Pair(totalQuantity, totalPrice - totalCommission)
+  return Pair(totalQuantity, totalPrice + totalCommission)
 }
 
 fun getAssetsRemoveOldestFirst(
@@ -594,6 +594,7 @@ fun getAssetsRemoveOldestFirst(
         symbol = "",
         price = asset.price,
         quantity = asset.quantity,
+        commission = asset.commission,
         type = asset.type and tagObsoleteAssetType.inv()
       )
     }
@@ -643,10 +644,9 @@ fun getAssetsRemoveOldestFirst(
   if (totalQuantity < 0.0001) {
     totalQuantity = 0.0
     totalPrice = 0.0
-    totalCommission = 0.0
   }
 
-  return Pair(totalQuantity, totalPrice - totalCommission)
+  return Pair(totalQuantity, totalPrice + totalCommission)
 }
 
 // Only gets the assets that are added.
@@ -666,7 +666,7 @@ fun getAddedAssets(
     }
   }
 
-  return Pair(totalQuantity, totalPrice - totalCommission)
+  return Pair(totalQuantity, totalPrice + totalCommission)
 }
 
 fun getAddedDeletedAssets(
