@@ -475,11 +475,12 @@ fun getAssetUseLastAverage(
   }
     ?.forEach { asset ->
 
+      totalCommission += asset.commission
+
       // added shares
       if (asset.quantity > 0.0) {
         totalQuantity += asset.quantity
         totalPrice += asset.quantity * asset.price
-        totalCommission += asset.commission
       } else
       // removed shares
         if (asset.quantity < 0.0) {
@@ -536,12 +537,12 @@ fun getAssetUseLastAverage(
     for (i in assetListSorted.indices) {
 
       val asset = assetListSorted[i]
+      totalCommission += asset.commission
 
       // added shares
       if (asset.quantity > 0.0) {
         totalQuantity += asset.quantity
         totalPrice += asset.quantity * asset.price
-        totalCommission += asset.commission
       } else
       // removed shares
         if (asset.quantity < 0.0) {
@@ -570,7 +571,7 @@ fun getAssetUseLastAverage(
     }
   }
 
-  return Pair(totalQuantity, totalPrice + totalCommission)
+  return Pair(totalQuantity, totalPrice - totalCommission)
 }
 
 fun getAssetsRemoveOldestFirst(
@@ -646,7 +647,7 @@ fun getAssetsRemoveOldestFirst(
     totalPrice = 0.0
   }
 
-  return Pair(totalQuantity, totalPrice + totalCommission)
+  return Pair(totalQuantity, totalPrice - totalCommission)
 }
 
 // Only gets the assets that are added.
@@ -666,7 +667,7 @@ fun getAddedAssets(
     }
   }
 
-  return Pair(totalQuantity, totalPrice + totalCommission)
+  return Pair(totalQuantity, totalPrice - totalCommission)
 }
 
 fun getAddedDeletedAssets(
