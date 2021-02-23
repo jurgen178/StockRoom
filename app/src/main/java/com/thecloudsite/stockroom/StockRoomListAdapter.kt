@@ -236,27 +236,11 @@ class StockRoomListAdapter internal constructor(
           )
           {
             assets.append(
-              "${
-                if (capital >= asset) {
-                  "+"
-                } else {
-                  "-"
-                }
-              } ${
-                DecimalFormat(DecimalFormat2Digits).format(
-                  (assetChange).absoluteValue
-                )
-              }"
+              "${DecimalFormat("+ $DecimalFormat2Digits;- $DecimalFormat2Digits").format(assetChange)}"
             )
             if (capitalPercent < 10000.0) {
               assets.append(
-                " (${
-                  if (capital >= asset) {
-                    "+"
-                  } else {
-                    ""
-                  }
-                }${DecimalFormat(DecimalFormat2Digits).format(capitalPercent)}%)"
+                " (${DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(capitalPercent)}%)"
               )
             }
           }

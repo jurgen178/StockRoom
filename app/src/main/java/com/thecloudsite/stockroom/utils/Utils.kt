@@ -231,22 +231,15 @@ fun Resources.getRawTextFile(@RawRes id: Int) =
 
 fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, String> {
 
-  val signStr =
-    if (onlineMarketData.marketChange > 0.0) {
-      "+"
-    } else {
-      ""
-    }
-
   val marketPrice = if (onlineMarketData.marketPrice > 5.0) {
     DecimalFormat(DecimalFormat2Digits).format(onlineMarketData.marketPrice)
   } else {
     DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.marketPrice)
   }
   val change =
-    "${signStr}${DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.marketChange)}"
-  val changePercent = "($signStr${
-    DecimalFormat(DecimalFormat2Digits).format(
+    "${DecimalFormat("+$DecimalFormat2To4Digits;-$DecimalFormat2To4Digits").format(onlineMarketData.marketChange)}"
+  val changePercent = "(${
+    DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
       onlineMarketData.marketChangePercent
     )
   }%)"
@@ -330,29 +323,15 @@ fun getAssetChange(
       val capital = quantity * marketPrice
 
       val change = capital - asset
-      changeStr += "${
-        if (change > 0.0) {
-          "+"
-        } else {
-          ""
-        }
-      }${
-        DecimalFormat(
-          DecimalFormat2Digits
-        ).format(
-          change
-        )
-      }"
+      changeStr += DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(change)
 
       val changePercent = change * 100.0 / asset
       if (changePercent < 10000.0) {
         changeStr += " (${
-          if (changePercent > 0.0) {
-            "+"
-          } else {
-            ""
-          }
-        }${DecimalFormat(DecimalFormat2Digits).format(changePercent)}%)"
+          DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
+            changePercent
+          )
+        }%)"
       }
 
       val assetChangeColor = getChangeColor(capital - asset, isPostMarket, neutralColor, context)
@@ -377,34 +356,6 @@ fun getAssetChange(
   }
 
   return Triple("", SpannableStringBuilder(), neutralColor)
-}
-
-// Gets the change string "asset (%changePercent)"
-fun getAssetChangeText(
-  assetStr: String,
-  changePercentStr: String,
-  changePercent: Double,
-): String {
-
-  var changeStr = "${
-    if (changePercent > 0.0) {
-      "+"
-    } else {
-      ""
-    }
-  }${assetStr}"
-
-  if (changePercent < 10000.0) {
-    changeStr += " (${
-      if (changePercent > 0.0) {
-        "+"
-      } else {
-        ""
-      }
-    }${changePercentStr}%)"
-  }
-
-  return changeStr
 }
 
 fun getDividendStr(
