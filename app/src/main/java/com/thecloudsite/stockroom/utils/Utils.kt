@@ -237,12 +237,9 @@ fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, 
     DecimalFormat(DecimalFormat2To4Digits).format(onlineMarketData.marketPrice)
   }
   val change =
-    "${DecimalFormat("+$DecimalFormat2To4Digits;-$DecimalFormat2To4Digits").format(onlineMarketData.marketChange)}"
-  val changePercent = "(${
-    DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
-      onlineMarketData.marketChangePercent
-    )
-  }%)"
+    DecimalFormat("+$DecimalFormat2To4Digits;-$DecimalFormat2To4Digits").format(onlineMarketData.marketChange)
+  val changePercent =
+    "(${DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(onlineMarketData.marketChangePercent)}%)"
 
   return Triple(marketPrice, change, changePercent)
 }

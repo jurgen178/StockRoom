@@ -98,7 +98,8 @@ class StockRoomOverviewFragment : Fragment() {
     val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerOverview(stockItem) }
 
     // Use the small list adapter for display.
-    val stockRoomOverviewAdapter = StockRoomSmallListAdapter(requireContext(), clickListenerSymbolLambda)
+    val stockRoomOverviewAdapter =
+      StockRoomSmallListAdapter(requireContext(), clickListenerSymbolLambda)
     val stockRoomOverviewSelectionAdapter =
       StockRoomSmallListAdapter(requireContext(), clickListenerSymbolLambda)
 
@@ -399,7 +400,7 @@ class StockRoomOverviewFragment : Fragment() {
       SpannableStringBuilder().append(
         "\n${requireContext().getString(R.string.summary_total_purchase_price)} "
       )
-        .bold { append("${DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)}") }
+        .bold { append(DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)) }
 
     if (totalAssets > 0.0) {
       totalAssetsStr.append(
