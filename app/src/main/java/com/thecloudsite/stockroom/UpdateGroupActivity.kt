@@ -76,24 +76,15 @@ class UpdateGroupActivity : AppCompatActivity() {
         val nameText = (dialogBinding.addName.text).toString()
           .trim()
 
-        // Check if color is used
+        // Check if color is used when a new color is chosen.
         val colorUsed = groupList.find { group ->
           group.color == color
         } != null
-        if (colorUsed) {
+        if (clr != color && colorUsed) {
           Toast.makeText(this, getString(R.string.group_color_in_use), Toast.LENGTH_LONG)
             .show()
           return@setPositiveButton
         }
-
-//          val nameUsed = groupList.find { group ->
-//            group.color != clr && group.name == nameText
-//          } != null
-//          if (nameUsed) {
-//            Toast.makeText(this, getString(R.string.group_name_in_use, nameText), Toast.LENGTH_LONG)
-//                .show()
-//            return@setPositiveButton
-//          }
 
         if (group.name != nameText && nameText.isNotEmpty()) {
           // Add or update the group with color/name.
