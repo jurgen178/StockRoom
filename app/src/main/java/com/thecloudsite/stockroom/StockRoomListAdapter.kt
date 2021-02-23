@@ -131,29 +131,29 @@ class StockRoomListAdapter internal constructor(
         //.build()
 
         Glide.with(imgView.context)
-            .load(imgUri)
-            .listener(object : RequestListener<Drawable> {
-              override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable?>?,
-                isFirstResource: Boolean
-              ): Boolean {
-                return false
-              }
+          .load(imgUri)
+          .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+              e: GlideException?,
+              model: Any?,
+              target: com.bumptech.glide.request.target.Target<Drawable?>?,
+              isFirstResource: Boolean
+            ): Boolean {
+              return false
+            }
 
-              override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-              ): Boolean {
-                holder.binding.imageViewSymbol.visibility = View.VISIBLE
-                return false
-              }
-            })
-            .into(imgView)
+            override fun onResourceReady(
+              resource: Drawable?,
+              model: Any?,
+              target: com.bumptech.glide.request.target.Target<Drawable>?,
+              dataSource: DataSource?,
+              isFirstResource: Boolean
+            ): Boolean {
+              holder.binding.imageViewSymbol.visibility = View.VISIBLE
+              return false
+            }
+          })
+          .into(imgView)
       }
 
       holder.binding.textViewName.text = getName(current.onlineMarketData)
@@ -163,13 +163,13 @@ class StockRoomListAdapter internal constructor(
 
         if (current.onlineMarketData.postMarketData) {
           holder.binding.textViewMarketPrice.text = SpannableStringBuilder()
-              .italic { append(marketValues.first) }
+            .italic { append(marketValues.first) }
 
           holder.binding.textViewChange.text = SpannableStringBuilder()
-              .italic { append(marketValues.second) }
+            .italic { append(marketValues.second) }
 
           holder.binding.textViewChangePercent.text = SpannableStringBuilder()
-              .italic { append(marketValues.third) }
+            .italic { append(marketValues.third) }
         } else {
           holder.binding.textViewMarketPrice.text = marketValues.first
           holder.binding.textViewChange.text = marketValues.second
@@ -198,12 +198,16 @@ class StockRoomListAdapter internal constructor(
 //        }
 
         assets.append(
-            "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
-              DecimalFormat(DecimalFormat2To4Digits).format(
-                  asset / quantity
-              )
-            }"
+          "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
+            DecimalFormat(DecimalFormat2To4Digits).format(
+              (asset - commission) / quantity
+            )
+          }"
         )
+
+        if (commission > 0.0) {
+          assets.append("+${DecimalFormat(DecimalFormat2To4Digits).format(commission)}")
+        }
 
         if (current.onlineMarketData.marketPrice > 0.0) {
           capital = quantity * current.onlineMarketData.marketPrice
@@ -212,47 +216,47 @@ class StockRoomListAdapter internal constructor(
 //          }
 
           assets.append(
-              "\n${
-                DecimalFormat(
-                    DecimalFormat2Digits
-                ).format(asset)
-              } "
+            "\n${
+              DecimalFormat(
+                DecimalFormat2Digits
+              ).format(asset)
+            } "
           )
 
           val assetChange = capital - asset
           val capitalPercent = assetChange * 100.0 / asset
 
           assets.color(
-              getChangeColor(
-                  assetChange,
-                  current.onlineMarketData.postMarketData,
-                  defaultTextColor!!,
-                  context
-              )
+            getChangeColor(
+              assetChange,
+              current.onlineMarketData.postMarketData,
+              defaultTextColor!!,
+              context
+            )
           )
           {
             assets.append(
-                "${
-                  if (capital >= asset) {
-                    "+"
-                  } else {
-                    "-"
-                  }
-                } ${
-                  DecimalFormat(DecimalFormat2Digits).format(
-                      (assetChange).absoluteValue
-                  )
-                }"
+              "${
+                if (capital >= asset) {
+                  "+"
+                } else {
+                  "-"
+                }
+              } ${
+                DecimalFormat(DecimalFormat2Digits).format(
+                  (assetChange).absoluteValue
+                )
+              }"
             )
             if (capitalPercent < 10000.0) {
               assets.append(
-                  " (${
-                    if (capital >= asset) {
-                      "+"
-                    } else {
-                      ""
-                    }
-                  }${DecimalFormat(DecimalFormat2Digits).format(capitalPercent)}%)"
+                " (${
+                  if (capital >= asset) {
+                    "+"
+                  } else {
+                    ""
+                  }
+                }${DecimalFormat(DecimalFormat2Digits).format(capitalPercent)}%)"
               )
             }
           }
@@ -269,12 +273,12 @@ class StockRoomListAdapter internal constructor(
 //      )
       // set background to market change
       holder.binding.itemRedGreen.setBackgroundColor(
-          getChangeColor(
-              current.onlineMarketData.marketChange,
-              current.onlineMarketData.postMarketData,
-              context.getColor(color.backgroundListColor),
-              context
-          )
+        getChangeColor(
+          current.onlineMarketData.marketChange,
+          current.onlineMarketData.postMarketData,
+          context.getColor(color.backgroundListColor),
+          context
+        )
       )
 
       val dividendStr = getDividendStr(current, context)
@@ -284,7 +288,7 @@ class StockRoomListAdapter internal constructor(
         }
 
         assets.append(
-            dividendStr
+          dividendStr
         )
       }
 
@@ -294,11 +298,11 @@ class StockRoomListAdapter internal constructor(
         }
 
         assets.append(
-            "${context.getString(R.string.alert_above_in_list)} ${
-              DecimalFormat(
-                  DecimalFormat2To4Digits
-              ).format(current.stockDBdata.alertAbove)
-            }"
+          "${context.getString(R.string.alert_above_in_list)} ${
+            DecimalFormat(
+              DecimalFormat2To4Digits
+            ).format(current.stockDBdata.alertAbove)
+          }"
         )
       }
       if (current.stockDBdata.alertBelow > 0.0) {
@@ -307,11 +311,11 @@ class StockRoomListAdapter internal constructor(
         }
 
         assets.append(
-            "${context.getString(R.string.alert_below_in_list)} ${
-              DecimalFormat(
-                  DecimalFormat2To4Digits
-              ).format(current.stockDBdata.alertBelow)
-            }"
+          "${context.getString(R.string.alert_below_in_list)} ${
+            DecimalFormat(
+              DecimalFormat2To4Digits
+            ).format(current.stockDBdata.alertBelow)
+          }"
         )
       }
       if (current.events.isNotEmpty()) {
@@ -328,11 +332,11 @@ class StockRoomListAdapter internal constructor(
           val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
           assets.append(
-              "\n${
-                context.getString(
-                    R.string.event_datetime_format, it.title, datetime
-                )
-              }"
+            "\n${
+              context.getString(
+                R.string.event_datetime_format, it.title, datetime
+              )
+            }"
           )
         }
       }
@@ -342,11 +346,11 @@ class StockRoomListAdapter internal constructor(
         }
 
         assets.append(
-            "${
-              context.getString(
-                  R.string.note_in_list
-              )
-            } ${current.stockDBdata.note}"
+          "${
+            context.getString(
+              R.string.note_in_list
+            )
+          } ${current.stockDBdata.note}"
         )
       }
 

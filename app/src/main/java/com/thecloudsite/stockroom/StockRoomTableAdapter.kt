@@ -186,12 +186,16 @@ class StockRoomTableAdapter internal constructor(
         if (quantity > 0.0 && asset > 0.0) {
           holder.binding.tableDataPurchaseprice.text =
             DecimalFormat(DecimalFormat2Digits).format(asset)
-          holder.binding.tableDataQuantity.text =
+          var tableDataQuantity =
             "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
               DecimalFormat(DecimalFormat2To4Digits).format(
-                asset / quantity
+                (asset - commission) / quantity
               )
             }"
+          if (commission > 0.0) {
+            tableDataQuantity += "+${DecimalFormat(DecimalFormat2To4Digits).format(commission)}"
+          }
+          holder.binding.tableDataQuantity.text = tableDataQuantity
 
           holder.binding.tableDataAsset.text =
             if (quantity > 0.0 && current.onlineMarketData.marketPrice > 0.0) {
