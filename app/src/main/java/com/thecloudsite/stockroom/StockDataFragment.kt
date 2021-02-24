@@ -2546,57 +2546,42 @@ class StockDataFragment : Fragment() {
 
     seriesList.add(series)
 
-/*
-    // Add vertical lines for transaction dates.
-    val transactionPoints = ArrayList<DataPoint>()
-    if (stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
-      var i: Int = 0
-
-      val tlist: MutableList<Long> = mutableListOf(1601683200L, 1602683200L, 1603683200L)
-
-      while (i < stockDataEntries!!.size - 1) {
-
-        if (tlist.isEmpty()) {
-          break
-        }
-
-        for (j in tlist.indices) {
-          val t: Long = tlist[j]
-          if (stockDataEntries!![i].dateTimePoint <= t && t < stockDataEntries!![i + 1].dateTimePoint) {
-            transactionPoints.add(
-              DataPoint(
-                stockDataEntries!![i].candleEntry.x,
-                0f
-              )
-            )
-            transactionPoints.add(
-              DataPoint(
-                stockDataEntries!![i].candleEntry.x,
-                stockDataEntries!![i].candleEntry.y
-              )
-            )
-            transactionPoints.add(
-              DataPoint(
-                stockDataEntries!![i].candleEntry.x,
-                0f
-              )
-            )
-
-            tlist.removeAt(j)
-            break
-          }
-        }
-
-        i++
-      }
-    }
-
-    val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
-    transactionSeries.color = Color.RED
-    transactionSeries.fillColor = Color.RED
-
-    seriesList.add(transactionSeries)
-*/
+//    // Add line points (circles) for transaction dates.
+//    if (stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
+//      var i: Int = 0
+//
+//      val tlist: MutableList<Long> = mutableListOf(1601683200L, 1602683200L, 1603683200L)
+//
+//      while (i < stockDataEntries!!.size - 1) {
+//
+//        if (tlist.isEmpty()) {
+//          break
+//        }
+//
+//        for (j in tlist.indices) {
+//          val t: Long = tlist[j]
+//          if (stockDataEntries!![i].dateTimePoint <= t && t < stockDataEntries!![i + 1].dateTimePoint) {
+//
+//            val transactionPoints = listOf(
+//              DataPoint(
+//                stockDataEntries!![i].candleEntry.x,
+//                stockDataEntries!![i].candleEntry.y
+//              )
+//            )
+//
+//            val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
+//            transactionSeries.setCircleColor(Color.RED)
+//
+//            seriesList.add(transactionSeries)
+//
+//            tlist.removeAt(j)
+//            break
+//          }
+//        }
+//
+//        i++
+//      }
+//    }
 
     val lineData = LineData(seriesList)
 
