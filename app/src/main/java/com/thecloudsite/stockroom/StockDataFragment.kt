@@ -1118,8 +1118,9 @@ class StockDataFragment : Fragment() {
           if (addSelected) {
             dialogBinding.portfolioTextView.text = getString(R.string.portfolio_name_text)
           } else {
-            getString(R.string.rename_portfolio_header, selectedPortfolio)
             dialogBinding.portfolioTextView.text = getString(R.string.portfolio_rename_text)
+            // set the current portfolio name as default
+            dialogBinding.addPortfolioName.setText(selectedPortfolio)
           }
           builder.setView(dialogBinding.root)
             .setTitle(
@@ -2201,15 +2202,16 @@ class StockDataFragment : Fragment() {
         }
         // min, max, start
         binding.pickerKnob.setValue(currentPrice / 10, 4 * currentPrice, currentPrice)
+        return
       }
-    } else {
-      binding.pricePreviewDivider.visibility = View.GONE
-      binding.pricePreviewTextview.visibility = View.GONE
-      binding.pricePreviewLayout.visibility = View.GONE
-
-      binding.textViewPurchasePrice.visibility = View.GONE
-      binding.textViewAssetChange.visibility = View.GONE
     }
+
+    binding.pricePreviewDivider.visibility = View.GONE
+    binding.pricePreviewTextview.visibility = View.GONE
+    binding.pricePreviewLayout.visibility = View.GONE
+
+    binding.textViewPurchasePrice.visibility = View.GONE
+    binding.textViewAssetChange.visibility = View.GONE
   }
 
   private fun updateAlerts() {
