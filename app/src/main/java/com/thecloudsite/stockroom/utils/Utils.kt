@@ -596,7 +596,7 @@ fun getAssetsRemoveOldestFirst(
     totalPrice = 0.0
   }
 
-  return Triple(totalQuantity, totalPrice + totalCommission, totalCommission)
+  return Triple(totalQuantity, totalPrice, totalCommission)
 }
 
 // Only gets the assets that are added.

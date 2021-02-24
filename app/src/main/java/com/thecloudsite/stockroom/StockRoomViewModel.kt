@@ -1034,7 +1034,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //                it.shares * item.onlineMarketData.marketPrice
 //              }
           } else {
-            totalPrice
+            totalPrice + totalCommission
 //              item.assets.sumByDouble {
 //                it.shares * it.price
 //              }
@@ -1045,7 +1045,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItems.sortedByDescending { item ->
           val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
           if (item.onlineMarketData.marketPrice > 0.0) {
-            totalQuantity * item.onlineMarketData.marketPrice - totalPrice
+            totalQuantity * item.onlineMarketData.marketPrice - totalPrice - totalCommission
 //              item.assets.sumByDouble {
 //                it.shares * (item.onlineMarketData.marketPrice - it.price)
 //              }
@@ -1061,7 +1061,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         stockItems.sortedByDescending { item ->
           val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
           if (item.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
-            (totalQuantity * item.onlineMarketData.marketPrice - totalPrice) / totalPrice
+            (totalQuantity * item.onlineMarketData.marketPrice - (totalPrice + totalCommission)) / (totalPrice + totalCommission)
           } else {
             totalPrice
           }
@@ -2259,6 +2259,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     name: String
   ) = scope.launch {
     repository.updateGroupName(color, name)
+  }
+
+  fun renamePortfolioSync(
+    portfolioOld: String,
+    portfolioNew: String
+  ): Boolean {
+    var renamed: Boolean = false
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        renamed = repository.renamePortfolio(portfolioOld, portfolioNew)
+      }
+    }
+
+    return renamed
   }
 
   fun renameSymbolSync(

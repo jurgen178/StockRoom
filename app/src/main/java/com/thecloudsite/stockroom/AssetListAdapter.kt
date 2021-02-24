@@ -393,11 +393,6 @@ class AssetListAdapter internal constructor(
         SpannableStringBuilder()
       }
 
-      var commission = 0.0
-      sortedList.forEach { item ->
-        commission += item.commission
-      }
-
       assetList.add(
         AssetListData(
           asset = Asset(
@@ -405,7 +400,7 @@ class AssetListAdapter internal constructor(
             symbol = symbol,
             quantity = totalQuantity,
             price = totalPrice,
-            commission = commission,
+            commission = totalCommission,
           ),
           assetChangeText = assetChange,
           assetText = asset

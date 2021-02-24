@@ -183,13 +183,13 @@ class StockRoomTableAdapter internal constructor(
 
         val (quantity, asset, commission) = getAssets(current.assets)
 
-        if (quantity > 0.0 && asset > 0.0) {
+        if (quantity > 0.0 && asset + commission > 0.0) {
           holder.binding.tableDataPurchaseprice.text =
-            DecimalFormat(DecimalFormat2Digits).format(asset)
+            DecimalFormat(DecimalFormat2Digits).format(asset + commission)
           var tableDataQuantity =
             "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
               DecimalFormat(DecimalFormat2To4Digits).format(
-                (asset - commission) / quantity
+                asset / quantity
               )
             }"
           if (commission > 0.0) {
@@ -418,21 +418,26 @@ class StockRoomTableAdapter internal constructor(
           }
 
           // Add summary text
-          if (totalQuantity > 0.0 && totalPrice > 0.0) {
+          if (totalQuantity > 0.0 && totalPrice + totalCommission > 0.0) {
+            var totalAssetStr =
+              "\n${
+                DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
+              }@${
+                DecimalFormat(DecimalFormat2To4Digits).format(
+                  totalPrice / totalQuantity
+                )
+              }"
+            if (totalCommission > 0.0) {
+              totalAssetStr += "+${DecimalFormat(DecimalFormat2To4Digits).format(totalCommission)}"
+            }
+            totalAssetStr += " = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
+
             assetStr.scale(textScale) {
               append("\n${context.getString(R.string.asset_summary_text)}")
                 .color(Color.BLACK) {
                   backgroundColor(Color.YELLOW)
                   {
-                    append(
-                      "\n${
-                        DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
-                      }@${
-                        DecimalFormat(DecimalFormat2To4Digits).format(
-                          totalPrice / totalQuantity
-                        )
-                      } = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
-                    )
+                    append(totalAssetStr)
                   }
                 }
             }

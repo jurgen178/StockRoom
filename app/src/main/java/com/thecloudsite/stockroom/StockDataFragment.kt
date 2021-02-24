@@ -2096,11 +2096,11 @@ class StockDataFragment : Fragment() {
     if (data.assets != null && data.onlineMarketData != null) {
 
       val assets: List<Asset> = data.assets?.assets!!
-      val (totalQuantity, totalPrice, totalCommission) = getAssets(assets)
+      var (totalQuantity, totalPrice, totalCommission) = getAssets(assets)
 
       val marketPrice = data.onlineMarketData!!.marketPrice
 
-      if (totalPrice > 0.0 && marketPrice > 0.0) {
+      if (totalPrice + totalCommission > 0.0 && marketPrice > 0.0) {
 
         binding.pricePreviewDivider.visibility = View.VISIBLE
         binding.pricePreviewTextview.visibility = View.VISIBLE
