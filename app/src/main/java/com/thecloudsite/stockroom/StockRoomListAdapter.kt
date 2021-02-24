@@ -218,19 +218,19 @@ class StockRoomListAdapter internal constructor(
           }
         }
 
+        assets.append(
+          "\n${
+            DecimalFormat(
+              DecimalFormat2Digits
+            ).format(asset)
+          } "
+        )
+
         if (current.onlineMarketData.marketPrice > 0.0) {
           capital = quantity * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
 //            it.quantity * current.onlineMarketData.marketPrice
 //          }
-
-          assets.append(
-            "\n${
-              DecimalFormat(
-                DecimalFormat2Digits
-              ).format(asset)
-            } "
-          )
 
           val assetChange = capital - asset
           val capitalPercent = assetChange * 100.0 / asset
