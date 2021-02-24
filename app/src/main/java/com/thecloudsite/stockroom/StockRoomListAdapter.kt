@@ -41,6 +41,7 @@ import com.thecloudsite.stockroom.databinding.StockroomListItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.commissionScale
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
@@ -206,7 +207,15 @@ class StockRoomListAdapter internal constructor(
         )
 
         if (commission > 0.0) {
-          assets.append("+${DecimalFormat(DecimalFormat2To4Digits).format(commission)}")
+          assets.scale(commissionScale) {
+            append(
+              "+${
+                DecimalFormat(DecimalFormat2To4Digits).format(
+                  commission
+                )
+              }"
+            )
+          }
         }
 
         if (current.onlineMarketData.marketPrice > 0.0) {

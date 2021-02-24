@@ -43,6 +43,7 @@ import androidx.core.net.toUri
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -93,6 +94,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To6Digits
 import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
 import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
+import com.thecloudsite.stockroom.utils.commissionScale
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getChangeColor
@@ -2135,12 +2137,33 @@ class StockDataFragment : Fragment() {
           binding.newTotalAsset.text = asset
         }
 
-        binding.textViewPurchasePrice.text = getString(
-          R.string.bought_for,
-          DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity),
-          DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity),
-          DecimalFormat(DecimalFormat2Digits).format(totalPrice)
+        // Bought for %1$s\n%2$s@%1$s%3$s = %4$s
+        val purchasePrice = SpannableStringBuilder()
+        purchasePrice.append(
+          getString(
+            R.string.bought_for
+          )
         )
+        // %1$s
+        val price = DecimalFormat(DecimalFormat2To4Digits).format(totalPrice / totalQuantity)
+        purchasePrice.append(" ")
+        purchasePrice.append(price)
+        purchasePrice.append("\n")
+        // %2$s
+        purchasePrice.append(DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity))
+        purchasePrice.append("@")
+        purchasePrice.append(price)
+        // %3$s
+        if (totalCommission > 0.0) {
+          purchasePrice.scale(commissionScale) {
+            append("+${DecimalFormat(DecimalFormat2To4Digits).format(totalCommission)}")
+          }
+        }
+        // %4$s
+        purchasePrice.append(" = ")
+        purchasePrice.append(DecimalFormat(DecimalFormat2Digits).format(totalPrice + totalCommission))
+
+        binding.textViewPurchasePrice.text = purchasePrice
 
         val assetChange = getAssetChange(
           assets,

@@ -68,6 +68,9 @@ const val DecimalFormat2To6Digits = "#,##0.00####"
 // Rounding error
 const val epsilon = 0.000001
 
+// SpannableStrings scale
+const val commissionScale = 0.8f
+
 // asset.type
 const val obsoleteAssetType: Int = 0x0001
 

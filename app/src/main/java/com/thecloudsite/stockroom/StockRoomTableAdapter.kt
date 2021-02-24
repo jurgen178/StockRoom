@@ -36,6 +36,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.DividendCycleStrIndex
+import com.thecloudsite.stockroom.utils.commissionScale
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
@@ -186,14 +187,21 @@ class StockRoomTableAdapter internal constructor(
         if (quantity > 0.0 && asset + commission > 0.0) {
           holder.binding.tableDataPurchaseprice.text =
             DecimalFormat(DecimalFormat2Digits).format(asset + commission)
-          var tableDataQuantity =
+
+          val tableDataQuantity = SpannableStringBuilder()
+          tableDataQuantity.append(
             "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
               DecimalFormat(DecimalFormat2To4Digits).format(
                 asset / quantity
               )
             }"
+          )
           if (commission > 0.0) {
-            tableDataQuantity += "+${DecimalFormat(DecimalFormat2To4Digits).format(commission)}"
+            tableDataQuantity.scale(commissionScale) {
+              append(
+                "+${DecimalFormat(DecimalFormat2To4Digits).format(commission)}"
+              )
+            }
           }
           holder.binding.tableDataQuantity.text = tableDataQuantity
 
@@ -418,7 +426,7 @@ class StockRoomTableAdapter internal constructor(
           }
 
           // Add summary text
-          if (totalQuantity > 0.0 && totalPrice + totalCommission > 0.0) {
+          if (totalQuantity > 0.0 && totalPrice > 0.0) {
             var totalAssetStr =
               "\n${
                 DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
@@ -427,9 +435,6 @@ class StockRoomTableAdapter internal constructor(
                   totalPrice / totalQuantity
                 )
               }"
-            if (totalCommission > 0.0) {
-              totalAssetStr += "+${DecimalFormat(DecimalFormat2To4Digits).format(totalCommission)}"
-            }
             totalAssetStr += " = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
 
             assetStr.scale(textScale) {
