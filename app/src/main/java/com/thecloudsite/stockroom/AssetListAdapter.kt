@@ -278,14 +278,7 @@ class AssetListAdapter internal constructor(
           }
         val itemViewCommissionText =
           if (current.asset.commission > 0.0) {
-            SpannableStringBuilder()
-              .bold {
-                append(
-                  DecimalFormat(DecimalFormat2Digits).format(
-                    current.asset.commission
-                  )
-                )
-              }
+            DecimalFormat(DecimalFormat2Digits).format(current.asset.commission)
           } else {
             ""
           }
