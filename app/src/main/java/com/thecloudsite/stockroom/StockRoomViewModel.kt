@@ -2261,20 +2261,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.updateGroupName(color, name)
   }
 
-  fun renamePortfolioSync(
-    portfolioOld: String,
-    portfolioNew: String
-  ): Boolean {
-    var renamed: Boolean = false
-    runBlocking {
-      withContext(Dispatchers.IO) {
-        renamed = repository.renamePortfolio(portfolioOld, portfolioNew)
-      }
-    }
-
-    return renamed
-  }
-
   fun renameSymbolSync(
     symbolOld: String,
     symbolNew: String
