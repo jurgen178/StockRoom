@@ -47,9 +47,10 @@ import com.thecloudsite.stockroom.database.AssetType
 import com.thecloudsite.stockroom.database.Group
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.absoluteValue
@@ -724,7 +725,8 @@ fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<
       if (totalQuantity < epsilon) {
         // totalQuantity is 0: -epsilon < totalQuantity < epsilon
         // reset if all shares are sold
-        val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+        val localDateTime =
+          ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZonedDateTime.now().zone)
         val year = localDateTime.year
         if (!totalGainLossMap.containsKey(year)) {
           totalGainLossMap[year] = GainLoss()
@@ -804,7 +806,8 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
         }
       }
 
-      val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+      val localDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZonedDateTime.now().zone)
       val year = localDateTime.year
       if (!totalGainLossMap.containsKey(year)) {
         totalGainLossMap[year] = GainLoss()

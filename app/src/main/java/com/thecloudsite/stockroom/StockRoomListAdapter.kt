@@ -47,8 +47,8 @@ import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
 import kotlin.math.absoluteValue
@@ -326,7 +326,7 @@ class StockRoomListAdapter internal constructor(
 
         assets.append(eventStr)
         current.events.forEach {
-          val localDateTime = LocalDateTime.ofEpochSecond(it.datetime, 0, ZoneOffset.UTC)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZonedDateTime.now().zone)
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
           assets.append(
             "\n${

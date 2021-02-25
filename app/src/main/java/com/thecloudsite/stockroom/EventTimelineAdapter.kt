@@ -22,8 +22,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.databinding.TimelineEventItemBinding
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
 
@@ -69,7 +69,7 @@ class EventTimelineAdapter(
       event.datetime
     }
         .forEach { event ->
-          val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
           val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
 
           if (!skipFirstline) {

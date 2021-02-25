@@ -26,8 +26,8 @@ import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 data class AssetTimelineElement(
@@ -82,7 +82,8 @@ class AssetTimelineAdapter(
     }
       .forEach { asset ->
         val date = if (asset.date > 0) {
-          val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+          val localDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZonedDateTime.now().zone)
           localDateTime.format(DateTimeFormatter.ofPattern("d"))
         } else {
           "-"

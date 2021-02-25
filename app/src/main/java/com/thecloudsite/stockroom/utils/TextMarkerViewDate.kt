@@ -27,8 +27,8 @@ import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.StockDataEntry
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class TextMarkerViewCandleChart(
@@ -50,15 +50,16 @@ class TextMarkerViewCandleChart(
       val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =
-          LocalDateTime.ofEpochSecond(
-              stockDataEntries[index].dateTimePoint, 0, ZoneOffset.UTC
+          ZonedDateTime.ofInstant(
+            Instant.ofEpochSecond(stockDataEntries[index].dateTimePoint),
+            ZonedDateTime.now().zone
           )
-              .format(dateTimeFormatter)
+            .format(dateTimeFormatter)
 
         if (entry.high != entry.low) {
           textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.low)}-${
             DecimalFormat(DecimalFormat2To4Digits).format(
-                entry.high
+              entry.high
             )
           }\n$date"
         } else {
@@ -95,10 +96,11 @@ class TextMarkerViewLineChart(
       val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =
-          LocalDateTime.ofEpochSecond(
-              stockDataEntries[index].dateTimePoint, 0, ZoneOffset.UTC
+          ZonedDateTime.ofInstant(
+            Instant.ofEpochSecond(stockDataEntries[index].dateTimePoint),
+            ZonedDateTime.now().zone
           )
-              .format(dateTimeFormatter)
+            .format(dateTimeFormatter)
 
         textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.y)}\n$date"
 

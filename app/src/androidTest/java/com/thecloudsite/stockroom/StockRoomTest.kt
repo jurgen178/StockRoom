@@ -32,17 +32,49 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
 import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
+import java.time.temporal.TemporalQueries.zoneId
 import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 class StockRoomTest {
+
+  @Test
+  @Throws(Exception::class)
+  fun timeZoneTest() {
+
+    val localDateTimeNow = LocalDateTime.now()
+    val zonedDateTimeNow = ZonedDateTime.now()
+
+    val localDateTimeNowSeconds1 = localDateTimeNow.toEpochSecond(ZoneOffset.UTC)
+    val localDateTimeNowSeconds2 = localDateTimeNow.toEpochSecond(ZonedDateTime.now().offset)
+    val zonedDateTimeNowSeconds = zonedDateTimeNow.toEpochSecond() // in GMT
+
+    val localDateTime1 = LocalDateTime.ofEpochSecond(localDateTimeNowSeconds1, 0, ZoneOffset.UTC)
+    val localDateTime2 = LocalDateTime.ofEpochSecond(localDateTimeNowSeconds2, 0, ZoneOffset.UTC)
+    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(zonedDateTimeNowSeconds), ZonedDateTime.now().zone)
+
+    val dateLocal = localDateTime1.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+    val dateZoned = zonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+
+    assertEquals(dateLocal, dateZoned)
+
+    val datetimeYTDlocal = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0, 0)
+    val secondsYTDlocal = datetimeYTDlocal.toEpochSecond(ZoneOffset.UTC)
+
+    val datetimeYTDzoned = ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone)
+    val secondsYTDzoned = datetimeYTDzoned.toEpochSecond()
+
+    assertEquals(secondsYTDlocal, secondsYTDzoned)
+  }
 
   @Test
   @Throws(Exception::class)
@@ -110,11 +142,11 @@ class StockRoomTest {
 
     fun getCounts(): String {
       return lastStatsCounters.filter { it >= 0 }
-          .joinToString(
-              prefix = "[",
-              separator = ",",
-              postfix = "]"
-          )
+        .joinToString(
+          prefix = "[",
+          separator = ",",
+          postfix = "]"
+        )
     }
 
     fun shiftRight() {
@@ -164,23 +196,23 @@ class StockRoomTest {
   @Throws(Exception::class)
   fun addmap() {
     val assetList = listOf(
-        Asset(
-            symbol = "s1",
-            quantity = 11.0,
-            price = 12.0
-        ), Asset(
+      Asset(
+        symbol = "s1",
+        quantity = 11.0,
+        price = 12.0
+      ), Asset(
         symbol = "s2",
         quantity = 21.0,
         price = 22.0
-    ), Asset(
+      ), Asset(
         symbol = "s2",
         quantity = 211.0,
         price = 222.0
-    ), Asset(
+      ), Asset(
         symbol = "s3",
         quantity = 21.0,
         price = 22.0
-    )
+      )
     )
 
     val assetItems = HashMap<String, List<Asset>>()
@@ -254,7 +286,7 @@ class StockRoomTest {
       if (value == 0.0) {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
         value = numberFormat.parse(str)!!
-            .toDouble()
+          .toDouble()
       }
     } catch (e: Exception) {
       value = 0.0
@@ -290,26 +322,26 @@ class StockRoomTest {
     // only a-z from 1..7 chars in length
     val symbolList: List<String> = symbols.map { symbol ->
       symbol.replace("\"", "")
-          .toUpperCase(Locale.ROOT)
+        .toUpperCase(Locale.ROOT)
     }
-        .filter { symbol ->
-          symbol.matches("[A-Z]{1,7}".toRegex())
-        }
-        .distinct()
+      .filter { symbol ->
+        symbol.matches("[A-Z]{1,7}".toRegex())
+      }
+      .distinct()
 
     assertEquals(symbolList.size, 7)
   }
 
   private fun csvStrToDouble(str: String): Double {
     val s = str.replace("$", "")
-        .replace(",", "")
+      .replace(",", "")
     var value: Double
     try {
       value = s.toDouble()
       if (value == 0.0) {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
         value = numberFormat.parse(s)!!
-            .toDouble()
+          .toDouble()
       }
     } catch (e: Exception) {
       value = 0.0
@@ -358,27 +390,27 @@ class StockRoomTest {
     val assetItems = HashMap<String, List<Asset>>()
 
     rows.drop(1)
-        .forEach { row ->
-          val symbol = row[symbolColumn].toUpperCase()
-          val amount = csvStrToDouble(row[sharesColumn])
-          val price = csvStrToDouble(row[priceColumn])
+      .forEach { row ->
+        val symbol = row[symbolColumn].toUpperCase()
+        val amount = csvStrToDouble(row[sharesColumn])
+        val price = csvStrToDouble(row[priceColumn])
 
-          if (symbol.isNotEmpty()) {
-            val asset = Asset(
-                symbol = symbol,
-                quantity = amount,
-                price = price
-            )
+        if (symbol.isNotEmpty()) {
+          val asset = Asset(
+            symbol = symbol,
+            quantity = amount,
+            price = price
+          )
 
-            if (assetItems.containsKey(symbol)) {
-              val list = assetItems[symbol]!!.toMutableList()
-              list.add(asset)
-              assetItems[symbol] = list
-            } else {
-              assetItems[symbol] = listOf(asset)
-            }
+          if (assetItems.containsKey(symbol)) {
+            val list = assetItems[symbol]!!.toMutableList()
+            list.add(asset)
+            assetItems[symbol] = list
+          } else {
+            assetItems[symbol] = listOf(asset)
           }
         }
+      }
 
     // only a-z from 1..7 chars in length
     val assetList: Map<String, List<Asset>> = assetItems.filter { map ->
@@ -457,7 +489,7 @@ var events: List<Event>
  */
 
   data class StockItemJson
-  (
+    (
     var symbol: String,
     val portfolio: String,
     val data: String?,
@@ -509,79 +541,79 @@ var events: List<Event>
     val stockItems: MutableList<StockItem> = mutableListOf()
 
     stockItems.add(
-        StockItem(
-            OnlineMarketData(symbol = "s1"),
-            StockDBdata(
-                symbol = "s1", groupColor = 123, alertAbove = 11.0, alertBelow = 12.0,
-                note = "note1"
-            ),
-            listOf(Asset(symbol = "s1", quantity = 1.0, price = 2.0)),
-            listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
-            listOf(
-                Dividend(
-                    symbol = "s1", amount = 0.0, type = 0, cycle = 0, exdate = 0L, paydate = 0L
-                )
-            )
+      StockItem(
+        OnlineMarketData(symbol = "s1"),
+        StockDBdata(
+          symbol = "s1", groupColor = 123, alertAbove = 11.0, alertBelow = 12.0,
+          note = "note1"
+        ),
+        listOf(Asset(symbol = "s1", quantity = 1.0, price = 2.0)),
+        listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
+        listOf(
+          Dividend(
+            symbol = "s1", amount = 0.0, type = 0, cycle = 0, exdate = 0L, paydate = 0L
+          )
         )
+      )
     )
     stockItems.add(
-        StockItem(
-            OnlineMarketData(symbol = "s2"),
-            StockDBdata(
-                symbol = "s2", groupColor = 223, alertAbove = 21.0, alertBelow = 22.0,
-                note = "note2"
-            ),
-            listOf(Asset(symbol = "s2", quantity = 3.0, price = 4.0)),
-            listOf(Event(symbol = "s2", type = 2, title = "ti2", note = "te2", datetime = 2L)),
-            listOf(
-                Dividend(
-                    symbol = "s1", amount = 0.0, type = 0, cycle = 0, exdate = 0L, paydate = 0L
-                )
-            )
+      StockItem(
+        OnlineMarketData(symbol = "s2"),
+        StockDBdata(
+          symbol = "s2", groupColor = 223, alertAbove = 21.0, alertBelow = 22.0,
+          note = "note2"
+        ),
+        listOf(Asset(symbol = "s2", quantity = 3.0, price = 4.0)),
+        listOf(Event(symbol = "s2", type = 2, title = "ti2", note = "te2", datetime = 2L)),
+        listOf(
+          Dividend(
+            symbol = "s1", amount = 0.0, type = 0, cycle = 0, exdate = 0L, paydate = 0L
+          )
         )
+      )
     )
 
     val stockItemsJson = stockItems.map { stockItem ->
       StockItemJson(symbol = stockItem.stockDBdata.symbol,
-          groupColor = stockItem.stockDBdata.groupColor,
-          groupName = "a",
-          portfolio = stockItem.stockDBdata.portfolio,
-          data = stockItem.stockDBdata.data,
-          alertAbove = stockItem.stockDBdata.alertAbove,
-          alertAboveNote = stockItem.stockDBdata.alertAboveNote,
-          alertBelow = stockItem.stockDBdata.alertBelow,
-          alertBelowNote = stockItem.stockDBdata.alertBelowNote,
-          note = stockItem.stockDBdata.note,
-          dividendNote = stockItem.stockDBdata.dividendNote,
-          annualDividendRate = stockItem.stockDBdata.annualDividendRate,
-          assets = stockItem.assets.map { asset ->
-            AssetJson(
-                quantity = asset.quantity,
-                price = asset.price,
-                note = asset.note,
-                date = asset.date,
-                type = asset.type,
-                sharesPerQuantity = asset.sharesPerQuantity,
-                expirationDate = asset.expirationDate,
-                premium = asset.premium,
-                commission = asset.commission
-            )
-          },
-          events = stockItem.events.map { event ->
-            EventJson(
-                type = event.type, title = event.title, note = event.note, datetime = event.datetime
-            )
-          },
-          dividends = stockItem.dividends.map { dividend ->
-            DividendJson(
-                amount = validateDouble(dividend.amount),
-                exdate = dividend.exdate,
-                paydate = dividend.paydate,
-                type = dividend.type,
-                cycle = dividend.cycle,
-                note = ""
-            )
-          }
+        groupColor = stockItem.stockDBdata.groupColor,
+        groupName = "a",
+        portfolio = stockItem.stockDBdata.portfolio,
+        data = stockItem.stockDBdata.data,
+        alertAbove = stockItem.stockDBdata.alertAbove,
+        alertAboveNote = stockItem.stockDBdata.alertAboveNote,
+        alertBelow = stockItem.stockDBdata.alertBelow,
+        alertBelowNote = stockItem.stockDBdata.alertBelowNote,
+        note = stockItem.stockDBdata.note,
+        dividendNote = stockItem.stockDBdata.dividendNote,
+        annualDividendRate = stockItem.stockDBdata.annualDividendRate,
+        assets = stockItem.assets.map { asset ->
+          AssetJson(
+            quantity = asset.quantity,
+            price = asset.price,
+            note = asset.note,
+            date = asset.date,
+            type = asset.type,
+            sharesPerQuantity = asset.sharesPerQuantity,
+            expirationDate = asset.expirationDate,
+            premium = asset.premium,
+            commission = asset.commission
+          )
+        },
+        events = stockItem.events.map { event ->
+          EventJson(
+            type = event.type, title = event.title, note = event.note, datetime = event.datetime
+          )
+        },
+        dividends = stockItem.dividends.map { dividend ->
+          DividendJson(
+            amount = validateDouble(dividend.amount),
+            exdate = dividend.exdate,
+            paydate = dividend.paydate,
+            type = dividend.type,
+            cycle = dividend.cycle,
+            note = ""
+          )
+        }
       )
     }
 

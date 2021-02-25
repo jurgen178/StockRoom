@@ -25,8 +25,7 @@ import com.thecloudsite.stockroom.Result.Success
 import com.thecloudsite.stockroom.updateCounter
 import retrofit2.Response
 import java.io.IOException
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 open class NewsRepository(
@@ -46,7 +45,7 @@ open class NewsRepository(
         data = result.data
       is Error -> {
         Log.d(
-            "NewsRepository safeApiCall failed", "$errorMessage & Exception - ${result.exception}"
+          "NewsRepository safeApiCall failed", "$errorMessage & Exception - ${result.exception}"
         )
       }
     }
@@ -63,7 +62,7 @@ open class NewsRepository(
       return Success(response.body()!!)
 
     return Error(
-        IOException("Error occurred during getting safe Api result, Custom ERROR - $errorMessage")
+      IOException("Error occurred during getting safe Api result, Custom ERROR - $errorMessage")
     )
   }
 
@@ -87,12 +86,12 @@ open class NewsRepository(
 
     try {
       val newsResponse = safeApiCall(
-          call = {
-            updateCounter()
-            api.getNewsDataAsync(newsQuery)
-                .await()
-          },
-          errorMessage = "Error getting news data."
+        call = {
+          updateCounter()
+          api.getNewsDataAsync(newsQuery)
+            .await()
+        },
+        errorMessage = "Error getting news data."
       )
 
       // Convert the response to a news data list.
@@ -100,33 +99,33 @@ open class NewsRepository(
         newsData = newsResponse.newsItems?.filter { newsItem ->
           newsItem.title.isNotEmpty()
         }
-            ?.map { newsItem ->
+          ?.map { newsItem ->
 
-              var date: Long = 0
-              // Convert pubDate field "Fri, 31 Jul 2020 14:54:54 GMT" to unix time
-              try {
-                val localDateTime =
-                  LocalDateTime.parse(newsItem.pubDate, DateTimeFormatter.RFC_1123_DATE_TIME)
-                date = localDateTime.toEpochSecond(ZoneOffset.UTC)
-              } catch (e: java.lang.Exception) {
-              }
-
-              if (date == 0L) {
-                date = LocalDateTime.now()
-                    .toEpochSecond(ZoneOffset.UTC)
-              }
-
-              NewsData(
-                  title = newsItem.title,
-                  text = newsItem.description,
-                  date = date,
-                  link = newsItem.link,
-                  type = newsType
-              )
+            var date: Long = 0
+            // Convert pubDate field "Fri, 31 Jul 2020 14:54:54 GMT" to unix time
+            try {
+              val localDateTime =
+                ZonedDateTime.parse(newsItem.pubDate, DateTimeFormatter.RFC_1123_DATE_TIME)
+              date = localDateTime.toEpochSecond()
+            } catch (e: java.lang.Exception) {
             }
-            ?.sortedByDescending { data ->
-              data.date
+
+            if (date == 0L) {
+              date = ZonedDateTime.now()
+                .toEpochSecond()
             }
+
+            NewsData(
+              title = newsItem.title,
+              text = newsItem.description,
+              date = date,
+              link = newsItem.link,
+              type = newsType
+            )
+          }
+          ?.sortedByDescending { data ->
+            data.date
+          }
       }
     } catch (e: Exception) {
       Log.d("getOnlineNewsData failed", "Exception - $e")

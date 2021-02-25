@@ -46,6 +46,7 @@ import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
 import com.thecloudsite.stockroom.databinding.DialogRenameSymbolBinding
 import com.thecloudsite.stockroom.utils.setAppTheme
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 import java.util.Locale
@@ -443,7 +444,7 @@ class SettingsActivity : AppCompatActivity(),
 
     private fun onExportList() {
       // Set default filename.
-      val date = LocalDateTime.now()
+      val date = ZonedDateTime.now()
         .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
         .replace(":", "_")
       val jsonFileName = context?.getString(R.string.json_default_filename, date)

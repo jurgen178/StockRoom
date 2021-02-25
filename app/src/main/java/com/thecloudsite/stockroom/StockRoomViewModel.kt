@@ -65,6 +65,7 @@ import java.io.InputStreamReader
 import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
@@ -2478,10 +2479,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   fun logDebug(value: String) {
-    val time: LocalDateTime = LocalDateTime.now()
+    val time: ZonedDateTime = ZonedDateTime.now()
     val t = time.format(
       DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)
-        .withZone(ZoneOffset.UTC)
     ) ?: time.toString()
     SharedRepository.debugList.add(DebugData("${t}>", value))
     SharedRepository.debugLiveData.value = SharedRepository.debugList

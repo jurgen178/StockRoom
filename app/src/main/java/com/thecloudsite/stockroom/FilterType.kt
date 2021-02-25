@@ -31,8 +31,8 @@ import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getGroupsMenuList
 import com.thecloudsite.stockroom.utils.isSimilarColor
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
 import kotlin.text.RegexOption.DOT_MATCHES_ALL
@@ -342,7 +342,10 @@ open class FilterDateBaseType : FilterBaseType() {
       FilterSubTypeEnum.AfterDateType
     )
   override var data: String = ""
-    get() = LocalDateTime.ofEpochSecond(filterDateValue, 0, ZoneOffset.UTC)
+    get() = ZonedDateTime.ofInstant(
+      Instant.ofEpochSecond(filterDateValue),
+      ZonedDateTime.now().zone
+    )
       .format(DateTimeFormatter.ofLocalizedDate(FULL))
     set(value) {
       field = value
@@ -488,8 +491,12 @@ open class FilterDividendBaseType() : FilterDoubleBaseType() {
   override fun dataReady() {
     super.dataReady()
 
-    val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0, 0)
-    secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
+//    val datetimeYTD = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0, 0)
+//    secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
+
+    val datetimeYTD =
+      ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone)
+    secondsYTD = datetimeYTD.toEpochSecond()
   }
 }
 
@@ -1550,8 +1557,8 @@ class FilterLongTermType(
     }
 
     return if (assetBought.isNotEmpty()) {
-      val secondsNow = LocalDateTime.now()
-        .toEpochSecond(ZoneOffset.UTC)
+      val secondsNow = ZonedDateTime.now()
+        .toEpochSecond()
       val lastAssetDate = assetBought.maxOf { asset ->
         asset.date
       }

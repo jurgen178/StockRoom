@@ -42,8 +42,8 @@ import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
@@ -221,11 +221,12 @@ class ListDBAdapter(
           holder.binding.dbStockdbdataGroupColor.text = getColorStr(data.groupColor)
           holder.binding.dbStockdbdataNote.text = data.note
           holder.binding.dbStockdbdataDividendNote.text = data.dividendNote
-          holder.binding.dbStockdbdataAnnualDividendRate.text = if (data.annualDividendRate >= 0.0) {
-            DecimalFormat(DecimalFormat2To4Digits).format(data.annualDividendRate)
-          } else {
-            ""
-          }
+          holder.binding.dbStockdbdataAnnualDividendRate.text =
+            if (data.annualDividendRate >= 0.0) {
+              DecimalFormat(DecimalFormat2To4Digits).format(data.annualDividendRate)
+            } else {
+              ""
+            }
           holder.binding.dbStockdbdataAlertAbove.text = if (data.alertAbove > 0.0) {
             DecimalFormat(DecimalFormat2To4Digits).format(data.alertAbove)
           } else {
@@ -287,7 +288,8 @@ class ListDBAdapter(
           holder.binding.dbAssetSymbol.text = data.symbol
           holder.binding.dbAssetQuantity.text =
             DecimalFormat(DecimalFormat0To4Digits).format(data.quantity)
-          holder.binding.dbAssetPrice.text = DecimalFormat(DecimalFormat0To4Digits).format(data.price)
+          holder.binding.dbAssetPrice.text =
+            DecimalFormat(DecimalFormat0To4Digits).format(data.price)
           holder.binding.dbAssetType.text = data.type.toString()
           holder.binding.dbAssetNote.text = data.note
           holder.binding.dbAssetDate.text = getDateTimeStr(data.date)
@@ -295,11 +297,11 @@ class ListDBAdapter(
           holder.binding.dbAssetExpirationDate.text = getDateStr(data.expirationDate)
           holder.binding.dbAssetPremium.text =
             if (data.premium > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
-                data.premium
+              data.premium
             ) else ""
           holder.binding.dbAssetCommission.text =
             if (data.commission > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
-                data.commission
+              data.commission
             ) else ""
         }
 //      assetTableRowsCount = items.size
@@ -418,7 +420,8 @@ class ListDBAdapter(
 
   private fun getDateStr(datetime: Long): String {
     return if (datetime != 0L) {
-      val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+      val localDateTime: ZonedDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZonedDateTime.now().zone)
       val dateTimeStr =
         "${datetime}\n${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
@@ -431,7 +434,8 @@ class ListDBAdapter(
 
   private fun getDateTimeStr(datetime: Long): String {
     return if (datetime != 0L) {
-      val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+      val localDateTime: ZonedDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZonedDateTime.now().zone)
       val dateTimeStr =
         "${datetime}\n${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
@@ -446,17 +450,17 @@ class ListDBAdapter(
 
   private fun getHeaderStr(text: String): SpannableStringBuilder =
     SpannableStringBuilder()
-        .color(Color.WHITE) {
-          bold { append(text) }
-        }
+      .color(Color.WHITE) {
+        bold { append(text) }
+      }
 
   private fun getHeaderStr2(text: String): SpannableStringBuilder =
     SpannableStringBuilder()
-        .backgroundColor(Color.rgb(139, 0, 0)) {
-          color(Color.WHITE) {
-            bold { append(text) }
-          }
+      .backgroundColor(Color.rgb(139, 0, 0)) {
+        color(Color.WHITE) {
+          bold { append(text) }
         }
+      }
 
   private fun getColorStr(color: Int): SpannableStringBuilder =
     if (color == 0) {
@@ -465,13 +469,13 @@ class ListDBAdapter(
       val hexStr = "0x${color.toHexString()}"
       val colorCode = hexStr.replace("0xff", "#")
       SpannableStringBuilder()
-          .append("$color\n")
-          .backgroundColor(Color.WHITE) {
-            color(color) {
-              append("▐█████▌\n")
-            }
+        .append("$color\n")
+        .backgroundColor(Color.WHITE) {
+          color(color) {
+            append("▐█████▌\n")
           }
-          .append(colorCode)
+        }
+        .append(colorCode)
     }
 
   private fun getHtmlColorStr(color: Int): String =
@@ -489,9 +493,9 @@ class ListDBAdapter(
 
     dbDataList.clear()
     dbDataMap.toSortedMap()
-        .forEach { (_, dbData) ->
-          dbDataList.addAll(dbData)
-        }
+      .forEach { (_, dbData) ->
+        dbDataList.addAll(dbData)
+      }
 
     notifyDataSetChanged()
   }
@@ -499,35 +503,35 @@ class ListDBAdapter(
   fun updateStockDBdata(data: List<StockDBdata>) {
 
     this.dbDataMap["0_stock_table"] = mutableListOf(
-        DBData(
-            viewType = db_headline_type,
-            title = "\nstock_table (${data.size})"
-        ),
-        DBData(
-            viewType = db_stockdbdata_type,
-            isHeader = true
-        )
+      DBData(
+        viewType = db_headline_type,
+        title = "\nstock_table (${data.size})"
+      ),
+      DBData(
+        viewType = db_stockdbdata_type,
+        isHeader = true
+      )
     )
 
     this.dbDataMap["0_stock_table"]?.addAll(
-        data
-            //.take(2)
-            .map { stockDBdata ->
-              DBData(
-                  viewType = db_stockdbdata_type,
-                  symbol = stockDBdata.symbol,
-                  portfolio = stockDBdata.portfolio,
-                  data = stockDBdata.data,
-                  groupColor = stockDBdata.groupColor,
-                  note = stockDBdata.note,
-                  dividendNote = stockDBdata.dividendNote,
-                  annualDividendRate = stockDBdata.annualDividendRate,
-                  alertAbove = stockDBdata.alertAbove,
-                  alertAboveNote = stockDBdata.alertAboveNote,
-                  alertBelow = stockDBdata.alertBelow,
-                  alertBelowNote = stockDBdata.alertBelowNote
-              )
-            })
+      data
+        //.take(2)
+        .map { stockDBdata ->
+          DBData(
+            viewType = db_stockdbdata_type,
+            symbol = stockDBdata.symbol,
+            portfolio = stockDBdata.portfolio,
+            data = stockDBdata.data,
+            groupColor = stockDBdata.groupColor,
+            note = stockDBdata.note,
+            dividendNote = stockDBdata.dividendNote,
+            annualDividendRate = stockDBdata.annualDividendRate,
+            alertAbove = stockDBdata.alertAbove,
+            alertAboveNote = stockDBdata.alertAboveNote,
+            alertBelow = stockDBdata.alertBelow,
+            alertBelowNote = stockDBdata.alertBelowNote
+          )
+        })
 
     updateList()
   }
@@ -535,21 +539,21 @@ class ListDBAdapter(
   fun updateGroup(data: List<Group>) {
 
     this.dbDataMap["1_group_table"] = mutableListOf(
-        DBData(
-            viewType = db_headline_type,
-            title = "\ngroup_table (${data.size})"
-        ),
-        DBData(
-            viewType = db_group_type,
-            isHeader = true
-        )
+      DBData(
+        viewType = db_headline_type,
+        title = "\ngroup_table (${data.size})"
+      ),
+      DBData(
+        viewType = db_group_type,
+        isHeader = true
+      )
     )
 
     this.dbDataMap["1_group_table"]?.addAll(data.map { group ->
       DBData(
-          viewType = db_group_type,
-          color = group.color,
-          name = group.name
+        viewType = db_group_type,
+        color = group.color,
+        name = group.name
       )
     })
 
@@ -559,35 +563,35 @@ class ListDBAdapter(
   fun updateAsset(data: List<Asset>) {
 
     this.dbDataMap["2_asset_table"] = mutableListOf(
-        DBData(
-            viewType = db_headline_type,
-            title = "\nasset_table (${data.size})"
-        ),
-        DBData(
-            viewType = db_asset_type,
-            isHeader = true
-        )
+      DBData(
+        viewType = db_headline_type,
+        title = "\nasset_table (${data.size})"
+      ),
+      DBData(
+        viewType = db_asset_type,
+        isHeader = true
+      )
     )
 
     this.dbDataMap["2_asset_table"]?.addAll(
-        data
-            //.take(2)
-            .map { asset ->
-              DBData(
-                  viewType = db_asset_type,
-                  id = asset.id,
-                  symbol = asset.symbol,
-                  quantity = asset.quantity,
-                  price = asset.price,
-                  type = asset.type,
-                  note = asset.note,
-                  date = asset.date,
-                  sharesPerQuantity = asset.sharesPerQuantity,
-                  expirationDate = asset.expirationDate,
-                  premium = asset.premium,
-                  commission = asset.commission
-              )
-            })
+      data
+        //.take(2)
+        .map { asset ->
+          DBData(
+            viewType = db_asset_type,
+            id = asset.id,
+            symbol = asset.symbol,
+            quantity = asset.quantity,
+            price = asset.price,
+            type = asset.type,
+            note = asset.note,
+            date = asset.date,
+            sharesPerQuantity = asset.sharesPerQuantity,
+            expirationDate = asset.expirationDate,
+            premium = asset.premium,
+            commission = asset.commission
+          )
+        })
 
     updateList()
   }
@@ -595,30 +599,30 @@ class ListDBAdapter(
   fun updateEvent(data: List<Event>) {
 
     this.dbDataMap["3_event_table"] = mutableListOf(
-        DBData(
-            viewType = db_headline_type,
-            title = "\nevent_table (${data.size})"
-        ),
-        DBData(
-            viewType = db_event_type,
-            isHeader = true
-        )
+      DBData(
+        viewType = db_headline_type,
+        title = "\nevent_table (${data.size})"
+      ),
+      DBData(
+        viewType = db_event_type,
+        isHeader = true
+      )
     )
 
     this.dbDataMap["3_event_table"]?.addAll(
-        data
-            //.take(2)
-            .map { event ->
-              DBData(
-                  viewType = db_event_type,
-                  id = event.id,
-                  symbol = event.symbol,
-                  title = event.title,
-                  datetime = event.datetime,
-                  type = event.type,
-                  note = event.note
-              )
-            })
+      data
+        //.take(2)
+        .map { event ->
+          DBData(
+            viewType = db_event_type,
+            id = event.id,
+            symbol = event.symbol,
+            title = event.title,
+            datetime = event.datetime,
+            type = event.type,
+            note = event.note
+          )
+        })
 
     updateList()
   }
@@ -626,32 +630,32 @@ class ListDBAdapter(
   fun updateDividend(data: List<Dividend>) {
 
     this.dbDataMap["4_dividend_table"] = mutableListOf(
-        DBData(
-            viewType = db_headline_type,
-            title = "\ndividend_table (${data.size})"
-        ),
-        DBData(
-            viewType = db_dividend_type,
-            isHeader = true
-        )
+      DBData(
+        viewType = db_headline_type,
+        title = "\ndividend_table (${data.size})"
+      ),
+      DBData(
+        viewType = db_dividend_type,
+        isHeader = true
+      )
     )
 
     this.dbDataMap["4_dividend_table"]?.addAll(
-        data
-            //.take(2)
-            .map { dividend ->
-              DBData(
-                  viewType = db_dividend_type,
-                  id = dividend.id,
-                  symbol = dividend.symbol,
-                  amount = dividend.amount,
-                  cycle = dividend.cycle,
-                  paydate = dividend.paydate,
-                  type = dividend.type,
-                  exdate = dividend.exdate,
-                  note = dividend.note
-              )
-            })
+      data
+        //.take(2)
+        .map { dividend ->
+          DBData(
+            viewType = db_dividend_type,
+            id = dividend.id,
+            symbol = dividend.symbol,
+            amount = dividend.amount,
+            cycle = dividend.cycle,
+            paydate = dividend.paydate,
+            type = dividend.type,
+            exdate = dividend.exdate,
+            note = dividend.note
+          )
+        })
 
     updateList()
   }

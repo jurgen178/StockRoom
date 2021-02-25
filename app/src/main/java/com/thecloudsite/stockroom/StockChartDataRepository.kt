@@ -68,7 +68,10 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
         val timestamps = yahooChartDataEntry.timestamp
         val yahooChartQuoteEntries = yahooChartDataEntry.indicators?.quote?.first()
         if (timestamps.size == yahooChartQuoteEntries?.close?.size && yahooChartQuoteEntries.close.size > 0) {
+
+          // default is -18000: NYSE and NASDAQ are -5hour (-18000=-5*60*60) from London GMT
           val gmtoffset: Long = yahooChartDataEntry.meta?.gmtoffset?.toLong() ?: -18000
+
           // Interpolate values in case value is missing to avoid zero points.
           interpolateData(yahooChartQuoteEntries.high)
           interpolateData(yahooChartQuoteEntries.low)

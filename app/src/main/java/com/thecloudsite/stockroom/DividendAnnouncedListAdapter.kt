@@ -28,8 +28,8 @@ import com.thecloudsite.stockroom.databinding.DividendAnnouncedViewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
@@ -109,12 +109,12 @@ class DividendAnnouncedListAdapter internal constructor(
         ""
       }
 
-      val datetimePay: LocalDateTime =
-        LocalDateTime.ofEpochSecond(current.paydate, 0, ZoneOffset.UTC)
+      val datetimePay: ZonedDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.paydate), ZonedDateTime.now().zone)
       holder.binding.textViewDividendAnnouncedPayDate.text =
         datetimePay.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-      val datetimeEx: LocalDateTime =
-        LocalDateTime.ofEpochSecond(current.exdate, 0, ZoneOffset.UTC)
+      val datetimeEx: ZonedDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.exdate), ZonedDateTime.now().zone)
       holder.binding.textViewDividendAnnouncedExDate.text =
         datetimeEx.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
       holder.binding.textViewDividendAnnouncedCycle.text = dividendCycleStr(current.cycle, context)

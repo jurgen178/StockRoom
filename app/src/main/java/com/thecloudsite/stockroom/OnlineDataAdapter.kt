@@ -45,8 +45,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
@@ -83,12 +83,12 @@ class OnlineDataAdapter internal constructor(
 
       // Remove all items.
       jsonObjCopy.entrySet()
-          .forEach { element ->
-            val key = element.key
-            val value = element.value
-            sortedMap[key] = value
-            jsonObj.remove(key)
-          }
+        .forEach { element ->
+          val key = element.key
+          val value = element.value
+          sortedMap[key] = value
+          jsonObj.remove(key)
+        }
 
       // Add back the items sorted.
       sortedMap.forEach { (key, jsonElement) ->
@@ -100,80 +100,84 @@ class OnlineDataAdapter internal constructor(
 
     // Enumerate all json objects.
     jsonObj.entrySet()
-        .forEach { element ->
+      .forEach { element ->
 
-          val key = element.key
-          val value = element.value
-          val valueString = value.toString()
+        val key = element.key
+        val value = element.value
+        val valueString = value.toString()
 
-          // Add date-time to time values.
-          val dateTimeKey = key.contains("time", true)
-              || key.contains("dividenddate", true)
-              || key == "startDate"
-              || key == "expireDate"
+        // Add date-time to time values.
+        val dateTimeKey = key.contains("time", true)
+            || key.contains("dividenddate", true)
+            || key == "startDate"
+            || key == "expireDate"
 
-          if (dateTimeKey && valueString.matches("^\\d+$".toRegex())
-          ) {
-            val datetime = valueString.toLong()
-            val gmtOffSet = gmtOffSetMilliseconds / 1000
-            val localDateTime: LocalDateTime =
-              LocalDateTime.ofEpochSecond(datetime + gmtOffSet, 0, ZoneOffset.UTC)
-            val dateTimeStr =
-              "#$valueString <i>(${
-                localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-              } ${
-                localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-              })</i>#"
-
-            element.setValue(JsonPrimitive(dateTimeStr))
-          }
-
-          if (key == "firstTradeDateMilliseconds" && valueString.matches("^\\d+$".toRegex())) {
-            val datetimeMilliseconds = valueString.toLong()
-            val localDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(
-                (datetimeMilliseconds + gmtOffSetMilliseconds) / 1000, 0, ZoneOffset.UTC
+        if (dateTimeKey && valueString.matches("^\\d+$".toRegex())
+        ) {
+          val datetime = valueString.toLong()
+          val gmtOffSet = gmtOffSetMilliseconds / 1000
+          val localDateTime: ZonedDateTime =
+            ZonedDateTime.ofInstant(
+              Instant.ofEpochSecond(datetime + gmtOffSet),
+              ZonedDateTime.now().zone
             )
-            val dateTimeStr =
-              "#$valueString <i>(${
-                localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-              } ${
-                localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-              })</i>#"
+          val dateTimeStr =
+            "#$valueString <i>(${
+              localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+            } ${
+              localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+            })</i>#"
 
-            element.setValue(JsonPrimitive(dateTimeStr))
-          }
+          element.setValue(JsonPrimitive(dateTimeStr))
+        }
 
-          // Price/Change in bold
-          if (key.endsWith("MarketPrice")
-              || key.endsWith("MarketChange")
-              || key.endsWith("MarketChangePercent")
-          ) {
-            element.setValue(JsonPrimitive("#<b>$valueString</b>#"))
-          }
+        if (key == "firstTradeDateMilliseconds" && valueString.matches("^\\d+$".toRegex())) {
+          val datetimeMilliseconds = valueString.toLong()
+          val localDateTime: ZonedDateTime = ZonedDateTime.ofInstant(
+            Instant.ofEpochSecond((datetimeMilliseconds + gmtOffSetMilliseconds) / 1000),
+            ZonedDateTime.now().zone
+          )
+          val dateTimeStr =
+            "#$valueString <i>(${
+              localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+            } ${
+              localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+            })</i>#"
 
-          // Add size abbreviation.
-          if (key == "marketCap"
-              || key == "sharesOutstanding"
-              || key == "circulatingSupply"
-              || key == "openInterest"
-              || key.contains("volume", true)
-          ) {
-            val formattedLong = formatInt(valueString.toLong())
-            element.setValue(JsonPrimitive("#$valueString<i>${formattedLong.second}</i>#"))
-          }
+          element.setValue(JsonPrimitive(dateTimeStr))
+        }
 
-          // Recursion for json array.
-          if (value is JsonArray) {
-            for (jsonElement in value.iterator()) {
-              processJsonObject(jsonElement.asJsonObject, sorted)
-            }
-          }
+        // Price/Change in bold
+        if (key.endsWith("MarketPrice")
+          || key.endsWith("MarketChange")
+          || key.endsWith("MarketChangePercent")
+        ) {
+          element.setValue(JsonPrimitive("#<b>$valueString</b>#"))
+        }
 
-          // Recursion for json object.
-          if (value is JsonObject) {
-            processJsonObject(value, sorted)
+        // Add size abbreviation.
+        if (key == "marketCap"
+          || key == "sharesOutstanding"
+          || key == "circulatingSupply"
+          || key == "openInterest"
+          || key.contains("volume", true)
+        ) {
+          val formattedLong = formatInt(valueString.toLong())
+          element.setValue(JsonPrimitive("#$valueString<i>${formattedLong.second}</i>#"))
+        }
+
+        // Recursion for json array.
+        if (value is JsonArray) {
+          for (jsonElement in value.iterator()) {
+            processJsonObject(jsonElement.asJsonObject, sorted)
           }
         }
+
+        // Recursion for json object.
+        if (value is JsonObject) {
+          processJsonObject(value, sorted)
+        }
+      }
   }
 
   override fun onCreateViewHolder(
@@ -206,8 +210,8 @@ class OnlineDataAdapter internal constructor(
           var onlineJsonData = ""
           try {
             val gson: Gson = GsonBuilder()
-                .setPrettyPrinting()
-                .create()
+              .setPrettyPrinting()
+              .create()
 
             val parser = JsonParser()
             val jsonObj = parser.parse(onlineRawJsonData).asJsonObject
@@ -220,7 +224,7 @@ class OnlineDataAdapter internal constructor(
             // No space within the attr because they get replaced with &nbsp; and invalidate the attr.
             onlineJsonData += "<font color='grey'face='monospace'>${
               gson.toJson(
-                  jsonObjSorted
+                jsonObjSorted
               )
             }</font>"
 
@@ -229,12 +233,12 @@ class OnlineDataAdapter internal constructor(
             processJsonObject(jsonObjUnsorted, false)
             onlineJsonData += "\n\n<b>${
               context.getString(
-                  R.string.data_provider_details_unsorted
+                R.string.data_provider_details_unsorted
               )
             }</b>\n"
             onlineJsonData += "<font color='grey'face='monospace'>${
               gson.toJson(
-                  jsonObjUnsorted
+                jsonObjUnsorted
               )
             }</font>"
           } catch (e: Exception) {
@@ -244,27 +248,27 @@ class OnlineDataAdapter internal constructor(
 
           // Un-escape.
           onlineJsonData = onlineJsonData.replace(" ", "&nbsp;")
-              .replace("\\u003c", "<")
-              .replace("\\u003e", ">")
-              .replace("\n", "<br>")
-              .replace("\"#", "")
-              .replace("#\"", "")
-              .replace("<font&nbsp;", "<font ")
+            .replace("\\u003c", "<")
+            .replace("\\u003e", ">")
+            .replace("\n", "<br>")
+            .replace("\"#", "")
+            .replace("#\"", "")
+            .replace("<font&nbsp;", "<font ")
 
           // Convert to html spannable string.
           val htmlText = HtmlCompat.fromHtml(onlineJsonData, HtmlCompat.FROM_HTML_MODE_LEGACY)
-              .toSpannable()
+            .toSpannable()
 
           // Set small font.
           htmlText.setSpan(AbsoluteSizeSpan(10, true), 0, htmlText.length, SPAN_INCLUSIVE_INCLUSIVE)
 
           // Display the data.
           android.app.AlertDialog.Builder(context)
-              .setTitle(context.getString(R.string.data_provider_details, symbol))
-              .setMessage(htmlText)
-              .setPositiveButton(R.string.ok) { _, _ ->
-              }
-              .show()
+            .setTitle(context.getString(R.string.data_provider_details, symbol))
+            .setMessage(htmlText)
+            .setPositiveButton(R.string.ok) { _, _ ->
+            }
+            .show()
         }
       }
     }
@@ -349,64 +353,64 @@ class OnlineDataAdapter internal constructor(
     // val separatorChar: Char = DecimalFormatSymbols.getInstance().decimalSeparator
 
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
-            text = formatDouble(
-                DecimalFormat2To4Digits, onlineMarketData.regularMarketPreviousClose
-            )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
+        text = formatDouble(
+          DecimalFormat2To4Digits, onlineMarketData.regularMarketPreviousClose
         )
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_regularMarketOpen),
-            text = formatDouble(
-                DecimalFormat2To4Digits, onlineMarketData.regularMarketOpen
-            )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_regularMarketOpen),
+        text = formatDouble(
+          DecimalFormat2To4Digits, onlineMarketData.regularMarketOpen
         )
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_fiftyDayAverage),
-            text = formatDouble(DecimalFormat2Digits, onlineMarketData.fiftyDayAverage)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_fiftyDayAverage),
+        text = formatDouble(DecimalFormat2Digits, onlineMarketData.fiftyDayAverage)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
-            text = formatDouble(DecimalFormat2Digits, onlineMarketData.twoHundredDayAverage)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
+        text = formatDouble(DecimalFormat2Digits, onlineMarketData.twoHundredDayAverage)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
-            text = convertRangeStr(onlineMarketData.fiftyTwoWeekRange)
-            //onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
+        text = convertRangeStr(onlineMarketData.fiftyTwoWeekRange)
+        //onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_regularMarketDayRange),
-            text = convertRangeStr(onlineMarketData.regularMarketDayRange)
-            //onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_regularMarketDayRange),
+        text = convertRangeStr(onlineMarketData.regularMarketDayRange)
+        //onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_regularMarketVolume),
-            text = formatInt(onlineMarketData.regularMarketVolume).first
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_regularMarketVolume),
+        text = formatInt(onlineMarketData.regularMarketVolume).first
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_sharesOutstanding),
-            text = formatInt(onlineMarketData.sharesOutstanding).first
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_sharesOutstanding),
+        text = formatInt(onlineMarketData.sharesOutstanding).first
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_marketCap),
-            text = formatInt(onlineMarketData.marketCap).first
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_marketCap),
+        text = formatInt(onlineMarketData.marketCap).first
+      )
     )
 
 /*
@@ -427,79 +431,79 @@ class OnlineDataAdapter internal constructor(
  */
 
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
-            text = formatDoubleToSpannableString(onlineMarketData.epsTrailingTwelveMonths)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
+        text = formatDoubleToSpannableString(onlineMarketData.epsTrailingTwelveMonths)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_epsCurrentYear),
-            text = formatDoubleToSpannableString(onlineMarketData.epsCurrentYear)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_epsCurrentYear),
+        text = formatDoubleToSpannableString(onlineMarketData.epsCurrentYear)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_epsForward),
-            text = formatDoubleToSpannableString(onlineMarketData.epsForward)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_epsForward),
+        text = formatDoubleToSpannableString(onlineMarketData.epsForward)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_trailingPE),
-            text = formatDoubleToSpannableString(onlineMarketData.trailingPE)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_trailingPE),
+        text = formatDoubleToSpannableString(onlineMarketData.trailingPE)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_priceEpsCurrentYear),
-            text = formatDoubleToSpannableString(onlineMarketData.priceEpsCurrentYear)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_priceEpsCurrentYear),
+        text = formatDoubleToSpannableString(onlineMarketData.priceEpsCurrentYear)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_forwardPE),
-            text = formatDoubleToSpannableString(onlineMarketData.forwardPE)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_forwardPE),
+        text = formatDoubleToSpannableString(onlineMarketData.forwardPE)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_bookValue),
-            text = formatDoubleToSpannableString(onlineMarketData.bookValue)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_bookValue),
+        text = formatDoubleToSpannableString(onlineMarketData.bookValue)
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_priceToBook),
-            text = formatDoubleToSpannableString(onlineMarketData.priceToBook)
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_priceToBook),
+        text = formatDoubleToSpannableString(onlineMarketData.priceToBook)
+      )
     )
 
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_market),
-            text = SpannableStringBuilder().bold {
-              append(
-                  onlineMarketData.market.replace('_', ' ')
-              )
-            }
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_market),
+        text = SpannableStringBuilder().bold {
+          append(
+            onlineMarketData.market.replace('_', ' ')
+          )
+        }
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_fullExchangeName),
-            text = SpannableStringBuilder().bold { append(onlineMarketData.fullExchangeName) }
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_fullExchangeName),
+        text = SpannableStringBuilder().bold { append(onlineMarketData.fullExchangeName) }
+      )
     )
     data.add(
-        OnlineData(
-            desc = context.getString(R.string.onlinedata_marketState),
-            text = SpannableStringBuilder().bold {
-              append(
-                  getMarketText(context, onlineMarketData.marketState)
-              )
-            }
-        )
+      OnlineData(
+        desc = context.getString(R.string.onlinedata_marketState),
+        text = SpannableStringBuilder().bold {
+          append(
+            getMarketText(context, onlineMarketData.marketState)
+          )
+        }
+      )
     )
 
     notifyDataSetChanged()

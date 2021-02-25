@@ -53,8 +53,8 @@ import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
@@ -271,7 +271,7 @@ class FilterActivity : AppCompatActivity() {
           }
           saveSelected -> {
             // Set default filename.
-            val date = LocalDateTime.now()
+            val date = ZonedDateTime.now()
               .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
               .replace(":", "_")
             val jsonFileName = this.getString(R.string.json_default_filter_filename, date)
@@ -528,7 +528,7 @@ class FilterActivity : AppCompatActivity() {
           } catch (e: Exception) {
             0L
           }
-          val localDateTime = LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.UTC)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZonedDateTime.now().zone)
           // month is starting from zero
           dialogBinding.datePickerFilter.updateDate(
             localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
@@ -770,15 +770,17 @@ class FilterActivity : AppCompatActivity() {
               .trim()
           }
           DateType -> {
-            val localDateTime: LocalDateTime = LocalDateTime.of(
+            val localDateTime: ZonedDateTime = ZonedDateTime.of(
               dialogBinding.datePickerFilter.year,
               dialogBinding.datePickerFilter.month + 1,
               dialogBinding.datePickerFilter.dayOfMonth,
               0,
               0,
-              0
+              0,
+              0,
+              ZonedDateTime.now().zone
             )
-            val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+            val date = localDateTime.toEpochSecond()
             date.toString()
           }
           SelectionType -> {

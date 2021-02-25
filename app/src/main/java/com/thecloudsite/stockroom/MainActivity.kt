@@ -57,8 +57,7 @@ import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import com.thecloudsite.stockroom.utils.setAppTheme
 import java.text.DecimalFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.Locale
 
 // App constants.
@@ -758,8 +757,8 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
   private fun checkEvents() {
     if (SharedRepository.notifications) {
-      val datetimeNow = LocalDateTime.now()
-        .toEpochSecond(ZoneOffset.UTC)
+      val datetimeNow = ZonedDateTime.now()
+        .toEpochSecond()
 
       // Each stock item
       eventList.forEach { events ->

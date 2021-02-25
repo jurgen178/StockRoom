@@ -105,8 +105,10 @@ import okhttp3.internal.toHexString
 import java.lang.Double.min
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.MEDIUM
@@ -297,9 +299,9 @@ class StockDataFragment : Fragment() {
     dialogBinding.addNote.setText(asset.note)
 
     val localDateTime = if (asset.date == 0L) {
-      LocalDateTime.now()
+      ZonedDateTime.now()
     } else {
-      LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZonedDateTime.now().zone)
     }
     // month is starting from zero
     dialogBinding.datePickerAssetDate.updateDate(
@@ -378,15 +380,17 @@ class StockDataFragment : Fragment() {
         }
 
         // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-        val localDateTimeNew: LocalDateTime = LocalDateTime.of(
+        val localDateTimeNew: ZonedDateTime = ZonedDateTime.of(
           dialogBinding.datePickerAssetDate.year,
           dialogBinding.datePickerAssetDate.month + 1,
           dialogBinding.datePickerAssetDate.dayOfMonth,
           localDateTime.hour,
           localDateTime.minute,
-          localDateTime.second
+          localDateTime.second,
+          0,
+          ZonedDateTime.now().zone
         )
-        val date = localDateTimeNew.toEpochSecond(ZoneOffset.UTC)
+        val date = localDateTimeNew.toEpochSecond()
 
         val noteText = (dialogBinding.addNote.text).toString()
           .trim()
@@ -537,7 +541,8 @@ class StockDataFragment : Fragment() {
     val dialogBinding = DialogAddEventBinding.inflate(inflater)
     dialogBinding.textInputEditEventTitle.setText(event.title)
     dialogBinding.textInputEditEventNote.setText(event.note)
-    val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
+    val localDateTime =
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
     // month is starting from zero
     dialogBinding.datePickerEventDate.updateDate(
       localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
@@ -560,15 +565,17 @@ class StockDataFragment : Fragment() {
         } else {
           val note = (dialogBinding.textInputEditEventNote.text).toString()
 
-          val datetime: LocalDateTime = LocalDateTime.of(
+          val datetime: ZonedDateTime = ZonedDateTime.of(
             dialogBinding.datePickerEventDate.year,
             dialogBinding.datePickerEventDate.month + 1,
             dialogBinding.datePickerEventDate.dayOfMonth,
             dialogBinding.datePickerEventTime.hour,
             dialogBinding.datePickerEventTime.minute,
-            localDateTime.second
+            localDateTime.second,
+            0,
+            ZonedDateTime.now().zone
           )
-          val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
+          val seconds = datetime.toEpochSecond()
           val eventNew =
             Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
           if (event.title != eventNew.title || event.note != eventNew.note || event.datetime != eventNew.datetime) {
@@ -600,7 +607,8 @@ class StockDataFragment : Fragment() {
   }
 
   private fun eventItemDeleteClicked(event: Event) {
-    val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
+    val localDateTime =
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
     val datetime = localDateTime.format(
       DateTimeFormatter.ofLocalizedDateTime(
         MEDIUM
@@ -679,8 +687,8 @@ class StockDataFragment : Fragment() {
       Integer.min(Integer.max(spanCount, 1), 10)
     )
 
-    var timeInSeconds5minUpdate = LocalDateTime.now()
-      .toEpochSecond(ZoneOffset.UTC)
+    var timeInSeconds5minUpdate = ZonedDateTime.now()
+      .toEpochSecond()
     var timeInSeconds24hUpdate = timeInSeconds5minUpdate
 
     // use requireActivity() instead of this to have only one shared viewmodel
@@ -696,8 +704,8 @@ class StockDataFragment : Fragment() {
           onlineDataAdapter.updateData(onlineMarketData)
 
           // Update charts
-          val timeInSecondsNow = LocalDateTime.now()
-            .toEpochSecond(ZoneOffset.UTC)
+          val timeInSecondsNow = ZonedDateTime.now()
+            .toEpochSecond()
 
           // Update daily and 5-day chart every 5min
           if (stockViewRange == StockViewRange.OneDay
@@ -1495,16 +1503,18 @@ class StockDataFragment : Fragment() {
             }
           }
 
-          val localDateTimeNow = LocalDateTime.now()
-          val localDateTime: LocalDateTime = LocalDateTime.of(
+          val localDateTimeNow = ZonedDateTime.now()
+          val localDateTime: ZonedDateTime = ZonedDateTime.of(
             dialogBinding.datePickerAssetDate.year,
             dialogBinding.datePickerAssetDate.month + 1,
             dialogBinding.datePickerAssetDate.dayOfMonth,
             localDateTimeNow.hour,
             localDateTimeNow.minute,
-            localDateTimeNow.second
+            localDateTimeNow.second,
+            0,
+            ZonedDateTime.now().zone
           )
-          val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+          val date = localDateTime.toEpochSecond()
 
           val noteText = (dialogBinding.addNote.text).toString()
             .trim()
@@ -1640,16 +1650,18 @@ class StockDataFragment : Fragment() {
               quantity = totalQuantity
             }
 
-            val localDateTimeNow = LocalDateTime.now()
-            val localDateTime: LocalDateTime = LocalDateTime.of(
+            val localDateTimeNow = ZonedDateTime.now()
+            val localDateTime: ZonedDateTime = ZonedDateTime.of(
               dialogBinding.datePickerAssetDate.year,
               dialogBinding.datePickerAssetDate.month + 1,
               dialogBinding.datePickerAssetDate.dayOfMonth,
               localDateTimeNow.hour,
               localDateTimeNow.minute,
-              localDateTimeNow.second
+              localDateTimeNow.second,
+              0,
+              ZonedDateTime.now().zone
             )
-            val date = localDateTime.toEpochSecond(ZoneOffset.UTC)
+            val date = localDateTime.toEpochSecond()
 
             val noteText = (dialogBinding.removeNote.text).toString()
               .trim()
@@ -1806,16 +1818,18 @@ class StockDataFragment : Fragment() {
               .show()
           } else {
             val note = (dialogBinding.textInputEditEventNote.text).toString()
-            val localDateTimeNow = LocalDateTime.now()
-            val datetime: LocalDateTime = LocalDateTime.of(
+            val localDateTimeNow = ZonedDateTime.now()
+            val datetime: ZonedDateTime = ZonedDateTime.of(
               dialogBinding.datePickerEventDate.year,
               dialogBinding.datePickerEventDate.month + 1,
               dialogBinding.datePickerEventDate.dayOfMonth,
               dialogBinding.datePickerEventTime.hour,
               dialogBinding.datePickerEventTime.minute,
-              localDateTimeNow.second
+              localDateTimeNow.second,
+              0,
+              ZonedDateTime.now().zone
             )
-            val seconds = datetime.toEpochSecond(ZoneOffset.UTC)
+            val seconds = datetime.toEpochSecond()
             stockRoomViewModel.addEvent(
               Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
             )
@@ -2359,8 +2373,9 @@ class StockDataFragment : Fragment() {
         StockViewRange.OneDay -> {
           IndexAxisValueFormatter(stockDataEntries!!.map { stockDataEntry ->
             val date =
-              LocalDateTime.ofEpochSecond(
-                stockDataEntry.dateTimePoint, 0, ZoneOffset.UTC
+              ZonedDateTime.ofInstant(
+                Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
+                ZonedDateTime.now().zone
               )
             date.format(axisTimeFormatter)
           })
@@ -2368,8 +2383,9 @@ class StockDataFragment : Fragment() {
         else -> {
           IndexAxisValueFormatter(stockDataEntries!!.map { stockDataEntry ->
             val date =
-              LocalDateTime.ofEpochSecond(
-                stockDataEntry.dateTimePoint, 0, ZoneOffset.UTC
+              ZonedDateTime.ofInstant(
+                Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
+                ZonedDateTime.now().zone
               )
             date.format(xAxisDateFormatter)
           })

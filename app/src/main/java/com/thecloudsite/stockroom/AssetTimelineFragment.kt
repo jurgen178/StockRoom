@@ -30,9 +30,9 @@ import com.thecloudsite.stockroom.databinding.FragmentTimelineBinding
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
-import java.time.LocalDateTime
+import java.time.Instant
 import java.time.YearMonth
-import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
@@ -105,7 +105,7 @@ class AssetTimelineFragment : Fragment() {
         // map the list of assets to date map that maps to a symbol map with each matching asset
         assets.forEach { asset ->
           val date = if (asset.date > 0) {
-            val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
+            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZonedDateTime.now().zone)
             val yearMonth: YearMonth = YearMonth.from(localDateTime)
             yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
           } else {

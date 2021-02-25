@@ -29,9 +29,9 @@ import com.thecloudsite.stockroom.databinding.FragmentTimelineBinding
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
-import java.time.LocalDateTime
+import java.time.Instant
 import java.time.YearMonth
-import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
 
@@ -99,7 +99,7 @@ class EventTimelineFragment : Fragment() {
         events.forEach { event ->
           if (event.datetime > 0) {
 
-            val localDateTime = LocalDateTime.ofEpochSecond(event.datetime, 0, ZoneOffset.UTC)
+            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
             val yearMonth: YearMonth = YearMonth.from(localDateTime)
             val dateYM = yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
             val dateFull = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
