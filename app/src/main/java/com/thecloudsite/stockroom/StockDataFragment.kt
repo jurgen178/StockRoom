@@ -1016,6 +1016,9 @@ class StockDataFragment : Fragment() {
           )
         }
 
+        // Reload view with updated asset time data.
+        loadStockView(stockViewRange, stockViewMode)
+
         // Reset when assets are changed.
         binding.pickerKnob.setValue(0.0, 100.0, 0.0)
 
