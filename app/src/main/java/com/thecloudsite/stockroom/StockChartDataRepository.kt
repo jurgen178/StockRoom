@@ -20,6 +20,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
+// https://query1.finance.yahoo.com/v7/finance/chart/?symbol=abbv&interval=1d&range=3mo
+
 class StockChartDataRepository(private val api: () -> YahooApiChartData?) : BaseRepository() {
 
   private val _data = MutableLiveData<StockChartData>()
@@ -66,7 +68,7 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
         val timestamps = yahooChartDataEntry.timestamp
         val yahooChartQuoteEntries = yahooChartDataEntry.indicators?.quote?.first()
         if (timestamps.size == yahooChartQuoteEntries?.close?.size && yahooChartQuoteEntries.close.size > 0) {
-          val gmtoffset: Long = yahooChartDataEntry.meta?.gmtoffset?.toLong() ?: 0
+          val gmtoffset: Long = yahooChartDataEntry.meta?.gmtoffset?.toLong() ?: -18000
           // Interpolate values in case value is missing to avoid zero points.
           interpolateData(yahooChartQuoteEntries.high)
           interpolateData(yahooChartQuoteEntries.low)
