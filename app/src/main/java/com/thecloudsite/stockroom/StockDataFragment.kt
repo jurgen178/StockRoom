@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
@@ -144,6 +145,12 @@ data class StockAssetsLiveData(
   var onlineMarketData: OnlineMarketData? = null
 )
 
+data class AssetsTimeData(
+  var date: Long = 0L,
+  var value: Double = 0.0,
+  var bought: Boolean = true,
+)
+
 // Enable scrolling by disable parent scrolling
 class CustomLineChart(
   context: Context?,
@@ -155,6 +162,14 @@ class CustomLineChart(
       parent?.requestDisallowInterceptTouchEvent(true)
     }
     return false
+  }
+
+  // https://github.com/PhilJay/MPAndroidChart/issues/2917
+  override fun drawMarkers(canvas: Canvas?) {
+    try {
+      super.drawMarkers(canvas)
+    } catch (e: Exception) {
+    }
   }
 }
 
@@ -204,6 +219,7 @@ class StockDataFragment : Fragment() {
 
   private var stockDBdata = StockDBdata(symbol = "")
   private var stockDataEntries: List<StockDataEntry>? = null
+  private var assetTimeEntries: List<AssetsTimeData> = emptyList()
   private var symbol: String = ""
 
   private var isOnline: Boolean = false
@@ -990,6 +1006,15 @@ class StockDataFragment : Fragment() {
     assetsLiveData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
         // assetAdapter.updateAssets(data.assets)
+
+        // Get the time stamps for the assets.
+        assetTimeEntries = data.assets.map { asset ->
+          AssetsTimeData(
+            date = asset.date,
+            value = asset.price,
+            bought = asset.quantity > 0.0,
+          )
+        }
 
         // Reset when assets are changed.
         binding.pickerKnob.setValue(0.0, 100.0, 0.0)
@@ -2546,42 +2571,45 @@ class StockDataFragment : Fragment() {
 
     seriesList.add(series)
 
-//    // Add line points (circles) for transaction dates.
-//    if (stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
-//      var i: Int = 0
-//
-//      val tlist: MutableList<Long> = mutableListOf(1601683200L, 1602683200L, 1603683200L)
-//
-//      while (i < stockDataEntries!!.size - 1) {
-//
-//        if (tlist.isEmpty()) {
-//          break
-//        }
-//
-//        for (j in tlist.indices) {
-//          val t: Long = tlist[j]
-//          if (stockDataEntries!![i].dateTimePoint <= t && t < stockDataEntries!![i + 1].dateTimePoint) {
-//
-//            val transactionPoints = listOf(
-//              DataPoint(
-//                stockDataEntries!![i].candleEntry.x,
-//                stockDataEntries!![i].candleEntry.y
-//              )
-//            )
-//
-//            val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
-//            transactionSeries.setCircleColor(Color.RED)
-//
-//            seriesList.add(transactionSeries)
-//
-//            tlist.removeAt(j)
-//            break
-//          }
-//        }
-//
-//        i++
-//      }
-//    }
+    // Add line points (circles) for transaction dates.
+    val assetTimeEntriesCopy: MutableList<AssetsTimeData> = mutableListOf()
+    assetTimeEntriesCopy.addAll(assetTimeEntries)
+
+    if (assetTimeEntriesCopy.isNotEmpty() && stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
+      var i: Int = 0
+
+      while (i < stockDataEntries!!.size - 1) {
+
+        if (assetTimeEntriesCopy.isEmpty()) {
+          break
+        }
+
+        for (j in assetTimeEntriesCopy.indices) {
+          val t: Long = assetTimeEntriesCopy[j].date
+          if (stockDataEntries!![i].dateTimePoint <= t && t < stockDataEntries!![i + 1].dateTimePoint) {
+
+            val transactionPoints = listOf(
+              DataPoint(
+                stockDataEntries!![i].candleEntry.x,
+                assetTimeEntriesCopy[j].value.toFloat()
+                //stockDataEntries!![i].candleEntry.y
+              )
+            )
+
+            val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
+            transactionSeries.setCircleColor(if (assetTimeEntriesCopy[j].bought) Color.BLUE else Color.MAGENTA)
+            //transactionSeries.setDrawCircleHole(false)
+
+            seriesList.add(transactionSeries)
+
+            assetTimeEntriesCopy.removeAt(j)
+            break
+          }
+        }
+
+        i++
+      }
+    }
 
     val lineData = LineData(seriesList)
 
