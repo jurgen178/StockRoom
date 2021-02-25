@@ -239,6 +239,7 @@ class SummaryGroupAdapter internal constructor(
   ): Pair<SpannableStringBuilder, SpannableStringBuilder> {
 
     var totalPurchasePrice = 0.0
+    var totalCommission = 0.0
     var totalAssets = 0.0
     var totalGain = 0.0
     //var totalLoss = 0.0
@@ -273,6 +274,7 @@ class SummaryGroupAdapter internal constructor(
 
       totalPurchasePrice += price + commission
       totalQuantity += quantity
+      totalCommission += commission
 
       val (gain, loss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
       // Merge gain and loss of the individual stock to one gain/loss to prevent
@@ -504,6 +506,15 @@ class SummaryGroupAdapter internal constructor(
 
     val summaryGroup1 = SpannableStringBuilder()
       .append(gainLossText)
+      .append("\n${context.getString(R.string.summary_commission)} ")
+      .bold {
+        append(
+          "${
+            DecimalFormat(DecimalFormat2Digits)
+              .format(totalCommission)
+          }\n"
+        )
+      }
       .append("\n${context.getString(R.string.summary_no_dividend_assets)} ")
       .bold {
         append(

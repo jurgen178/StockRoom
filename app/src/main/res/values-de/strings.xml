@@ -517,4 +517,5 @@ limitations under the License. -->
   <string name="add_selection">Zur Auswahl hinzufügen</string>
   <string name="remove_selection">Von der Auswahl entfernen</string>
   <string name="app_theme">Farbdesign</string>
+  <string name="summary_commission">Gebühren</string>
 </resources>
