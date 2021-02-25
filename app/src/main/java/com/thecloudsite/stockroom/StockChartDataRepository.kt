@@ -46,12 +46,12 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
 
     val quoteResponse: YahooChartData? = try {
       safeApiCall(
-          call = {
-            updateCounter()
-            api.getYahooChartDataAsync(symbol, interval, range)
-                .await()
-          },
-          errorMessage = "Error getting finance data."
+        call = {
+          updateCounter()
+          api.getYahooChartDataAsync(symbol, interval, range)
+            .await()
+        },
+        errorMessage = "Error getting finance data."
       )
     } catch (e: Exception) {
       Log.d("StockChartDataRepository.getYahooChartDataAsync() failed", "Exception=$e")
@@ -76,13 +76,14 @@ class StockChartDataRepository(private val api: () -> YahooApiChartData?) : Base
           for (i in timestamps.indices) {
             val dateTimePoint = (timestamps[i] + gmtoffset)
             stockDataEntries.add(
-                StockDataEntry(
-                    dateTimePoint, i.toDouble(),
-                    yahooChartQuoteEntries.high[i],
-                    yahooChartQuoteEntries.low[i],
-                    yahooChartQuoteEntries.open[i],
-                    yahooChartQuoteEntries.close[i]
-                )
+              StockDataEntry(
+                dateTimePoint = dateTimePoint,
+                x = i.toDouble(),
+                high = yahooChartQuoteEntries.high[i],
+                low = yahooChartQuoteEntries.low[i],
+                open = yahooChartQuoteEntries.open[i],
+                close = yahooChartQuoteEntries.close[i]
+              )
             )
           }
         }
