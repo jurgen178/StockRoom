@@ -2586,11 +2586,11 @@ class StockDataFragment : Fragment() {
 
         for (j in assetTimeEntriesCopy.indices) {
           val t: Long = assetTimeEntriesCopy[j].date
-          if (stockDataEntries!![i].dateTimePoint < t && t < stockDataEntries!![i + 1].dateTimePoint) {
+          if (stockDataEntries!![i].dateTimePoint <= t && t < stockDataEntries!![i + 1].dateTimePoint) {
 
             val transactionPoints = listOf(
               DataPoint(
-                stockDataEntries!![i].candleEntry.x,
+                stockDataEntries!![i + 1].candleEntry.x,
                 assetTimeEntriesCopy[j].value.toFloat()
                 //stockDataEntries!![i].candleEntry.y
               )
