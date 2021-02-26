@@ -925,7 +925,7 @@ fun parseStockOption(symbol: String): StockOptionData {
     try {
       stockOption.expirationDate =
         ZonedDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
-          .toEpochSecond()
+          .toEpochSecond() // in GMT
     } catch (e: Exception) {
     }
 

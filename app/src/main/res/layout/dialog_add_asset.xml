@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
     >
 
   <androidx.core.widget.NestedScrollView
@@ -162,6 +161,14 @@
           android:layout_marginTop="16dp"
           android:datePickerMode="calendar"
           app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
+          />
+
+      <com.thecloudsite.stockroom.CustomTimePicker
+          android:id="@+id/datePickerAssetTime"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:timePickerMode="clock"
+          app:layout_constraintTop_toBottomOf="@+id/datePickerAssetDate"
           />
 
       <androidx.constraintlayout.widget.Barrier

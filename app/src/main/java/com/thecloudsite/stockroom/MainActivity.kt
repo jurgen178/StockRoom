@@ -758,7 +758,7 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
   private fun checkEvents() {
     if (SharedRepository.notifications) {
       val datetimeNow = ZonedDateTime.now()
-        .toEpochSecond()
+        .toEpochSecond() // in GMT
 
       // Each stock item
       eventList.forEach { events ->

@@ -497,7 +497,7 @@ open class FilterDividendBaseType() : FilterDoubleBaseType() {
 
     val datetimeYTD =
       ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZoneOffset.systemDefault())
-    secondsYTD = datetimeYTD.toEpochSecond()
+    secondsYTD = datetimeYTD.toEpochSecond() // in GMT
   }
 }
 
@@ -1559,7 +1559,7 @@ class FilterLongTermType(
 
     return if (assetBought.isNotEmpty()) {
       val secondsNow = ZonedDateTime.now()
-        .toEpochSecond()
+        .toEpochSecond() // in GMT
       val lastAssetDate = assetBought.maxOf { asset ->
         asset.date
       }

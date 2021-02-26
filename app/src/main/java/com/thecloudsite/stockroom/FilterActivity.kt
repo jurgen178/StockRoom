@@ -781,7 +781,7 @@ class FilterActivity : AppCompatActivity() {
               0,
               ZoneOffset.systemDefault()
             )
-            val date = localDateTime.toEpochSecond()
+            val date = localDateTime.toEpochSecond() // in GMT
             date.toString()
           }
           SelectionType -> {

@@ -106,13 +106,13 @@ open class NewsRepository(
             try {
               val localDateTime =
                 ZonedDateTime.parse(newsItem.pubDate, DateTimeFormatter.RFC_1123_DATE_TIME)
-              date = localDateTime.toEpochSecond()
+              date = localDateTime.toEpochSecond() // in GMT
             } catch (e: java.lang.Exception) {
             }
 
             if (date == 0L) {
               date = ZonedDateTime.now()
-                .toEpochSecond()
+                .toEpochSecond() // in GMT
             }
 
             NewsData(

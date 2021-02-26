@@ -78,7 +78,7 @@ class StockRoomTest {
     val secondsYTDlocal = datetimeYTDlocal.toEpochSecond(ZoneOffset.UTC)
 
     val datetimeYTDzoned = ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone)
-    val secondsYTDzoned = datetimeYTDzoned.toEpochSecond()
+    val secondsYTDzoned = datetimeYTDzoned.toEpochSecond() // in GMT
 
     assertEquals(secondsYTDlocal + 8*60*60, secondsYTDzoned)
   }

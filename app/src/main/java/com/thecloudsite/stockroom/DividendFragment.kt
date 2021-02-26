@@ -176,7 +176,7 @@ class DividendFragment : Fragment() {
               0,
               ZoneOffset.systemDefault()
             )
-            val seconds = datetime.toEpochSecond()
+            val seconds = datetime.toEpochSecond() // in GMT
 
             val noteText = (dialogBinding.addNote.text).toString()
               .trim()
@@ -330,7 +330,7 @@ class DividendFragment : Fragment() {
           0,
           ZoneOffset.systemDefault()
         )
-        val seconds = datetime.toEpochSecond()
+        val seconds = datetime.toEpochSecond() // in GMT
 
         val datetimeEx: ZonedDateTime = ZonedDateTime.of(
           dialogBinding.datePickerDividendExDate.year,
@@ -342,7 +342,7 @@ class DividendFragment : Fragment() {
           0,
           ZoneOffset.systemDefault()
         )
-        val secondsEx = datetimeEx.toEpochSecond()
+        val secondsEx = datetimeEx.toEpochSecond() // in GMT
 
         val noteText = (dialogBinding.addNote.text).toString()
           .trim()
@@ -600,7 +600,7 @@ class DividendFragment : Fragment() {
                 0,
                 ZoneOffset.systemDefault()
               )
-              val seconds = datetime.toEpochSecond()
+              val seconds = datetime.toEpochSecond() // in GMT
 
               val noteText = (dialogBinding.addNote.text).toString()
                 .trim()
@@ -728,7 +728,7 @@ class DividendFragment : Fragment() {
             0,
             ZoneOffset.systemDefault()
           )
-          val seconds = datetime.toEpochSecond()
+          val seconds = datetime.toEpochSecond() // in GMT
 
           val datetimeEx: ZonedDateTime = ZonedDateTime.of(
             dialogBinding.datePickerDividendExDate.year,
@@ -740,7 +740,7 @@ class DividendFragment : Fragment() {
             0,
             ZoneOffset.systemDefault()
           )
-          val secondsEx = datetimeEx.toEpochSecond()
+          val secondsEx = datetimeEx.toEpochSecond() // in GMT
 
           val noteText = (dialogBinding.addNote.text).toString()
             .trim()
