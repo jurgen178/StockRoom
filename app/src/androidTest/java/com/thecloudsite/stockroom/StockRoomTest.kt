@@ -73,7 +73,7 @@ class StockRoomTest {
     val datetimeYTDzoned = ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone)
     val secondsYTDzoned = datetimeYTDzoned.toEpochSecond()
 
-    assertEquals(secondsYTDlocal, secondsYTDzoned)
+    assertEquals(secondsYTDlocal + 8*60*60, secondsYTDzoned)
   }
 
   @Test

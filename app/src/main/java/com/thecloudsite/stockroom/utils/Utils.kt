@@ -19,7 +19,6 @@ package com.thecloudsite.stockroom.utils
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
@@ -40,7 +39,6 @@ import com.thecloudsite.stockroom.OnlineMarketData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.color
-import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
@@ -48,8 +46,6 @@ import com.thecloudsite.stockroom.database.Group
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -927,8 +923,7 @@ fun parseStockOption(symbol: String): StockOptionData {
     val dateStr = match.groups[3]?.value
     try {
       stockOption.expirationDate =
-        LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
-          .atStartOfDay(ZoneOffset.UTC)
+        ZonedDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
           .toEpochSecond()
     } catch (e: Exception) {
     }

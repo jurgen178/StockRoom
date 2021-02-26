@@ -43,6 +43,8 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -420,10 +422,14 @@ class ListDBAdapter(
 
   private fun getDateStr(datetime: Long): String {
     return if (datetime != 0L) {
+      val gmtDateTime: LocalDateTime =
+        LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
       val localDateTime: ZonedDateTime =
         ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZonedDateTime.now().zone)
       val dateTimeStr =
-        "${datetime}\n${
+        "${datetime}\nGMT: ${
+          gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        }\nLocal: ${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         }"
       dateTimeStr
@@ -434,10 +440,16 @@ class ListDBAdapter(
 
   private fun getDateTimeStr(datetime: Long): String {
     return if (datetime != 0L) {
+      val gmtDateTime: LocalDateTime =
+        LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
       val localDateTime: ZonedDateTime =
         ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZonedDateTime.now().zone)
       val dateTimeStr =
-        "${datetime}\n${
+        "${datetime}\nGMT: ${
+          gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        } ${
+          gmtDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+        }\nLocal: ${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         } ${
           localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
