@@ -2609,8 +2609,9 @@ class StockDataFragment : Fragment() {
           if (a <= t && t < b) {
             // use the index where the value is closest to t
             // a <= t < b
-            // i: if t is closer to a, and i+1: if t is closer to b
-            val k = if (t < (a + b) / 2) i else i + 1
+            // k=i: if t is closer to a
+            // k=i+1: if t is closer to b
+            val k = if (t <= (a + b) / 2) i else i + 1
             val transactionPoints = listOf(
               DataPoint(
                 stockDataEntries!![k].candleEntry.x,
