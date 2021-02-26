@@ -26,6 +26,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.dividendCycleStr
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -72,7 +73,7 @@ class DividendTimelineAdapter(
       dividend.paydate
     }
         .forEach { dividend ->
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZonedDateTime.now().zone)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
           val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
 
           if (!skipFirstline) {

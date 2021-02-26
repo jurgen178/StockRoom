@@ -425,11 +425,11 @@ class ListDBAdapter(
       val gmtDateTime: LocalDateTime =
         LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
       val localDateTime: ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZonedDateTime.now().zone)
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZoneOffset.systemDefault())
       val dateTimeStr =
         "${datetime}\nGMT: ${
           gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        }\nLocal: ${
+        }\nLokale Zeit: ${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         }"
       dateTimeStr
@@ -443,13 +443,13 @@ class ListDBAdapter(
       val gmtDateTime: LocalDateTime =
         LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
       val localDateTime: ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZonedDateTime.now().zone)
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZoneOffset.systemDefault())
       val dateTimeStr =
         "${datetime}\nGMT: ${
           gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         } ${
           gmtDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-        }\nLocal: ${
+        }\nLokale Zeit: ${
           localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         } ${
           localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))

@@ -39,6 +39,7 @@ import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.Locale
 
@@ -319,7 +320,7 @@ class SummaryGroupAdapter internal constructor(
         }
         .forEach { dividend ->
 
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZonedDateTime.now().zone)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
           val year = localDateTime.year
           if (!totalDividendPaidMap.containsKey(year)) {
             totalDividendPaidMap[year] = 0.0

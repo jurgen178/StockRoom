@@ -32,6 +32,7 @@ import com.thecloudsite.stockroom.utils.getGroupsMenuList
 import com.thecloudsite.stockroom.utils.isSimilarColor
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
@@ -344,7 +345,7 @@ open class FilterDateBaseType : FilterBaseType() {
   override var data: String = ""
     get() = ZonedDateTime.ofInstant(
       Instant.ofEpochSecond(filterDateValue),
-      ZonedDateTime.now().zone
+      ZoneOffset.systemDefault()
     )
       .format(DateTimeFormatter.ofLocalizedDate(FULL))
     set(value) {
@@ -495,7 +496,7 @@ open class FilterDividendBaseType() : FilterDoubleBaseType() {
 //    secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
 
     val datetimeYTD =
-      ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone)
+      ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZoneOffset.systemDefault())
     secondsYTD = datetimeYTD.toEpochSecond()
   }
 }

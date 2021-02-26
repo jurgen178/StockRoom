@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.databinding.EventviewItemBinding
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -90,7 +91,7 @@ class EventListAdapter internal constructor(
 
       holder.binding.textViewEventTitle.text = current.title
       holder.binding.textViewEventNote.text = current.note
-      val datetime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.datetime), ZonedDateTime.now().zone)
+      val datetime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.datetime), ZoneOffset.systemDefault())
       holder.binding.textViewEventDateTime.text =
         "${datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         }\n${datetime.format(DateTimeFormatter.ofLocalizedTime(SHORT))

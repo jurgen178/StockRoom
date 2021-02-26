@@ -31,6 +31,7 @@ import com.thecloudsite.stockroom.databinding.NewsheadlineItemBinding
 import com.thecloudsite.stockroom.databinding.YahoonewsviewItemBinding
 import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
@@ -186,7 +187,7 @@ class NewsAdapter(
   }
 
   private fun getTimeDateStr(date: Long): String {
-    val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZonedDateTime.now().zone)
+    val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneOffset.systemDefault())
     val dateStr = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
     val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
 

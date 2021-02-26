@@ -34,6 +34,7 @@ import com.thecloudsite.stockroom.utils.dividendCycleStr
 import com.thecloudsite.stockroom.utils.getAssets
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -157,7 +158,7 @@ class DividendReceivedListAdapter internal constructor(
           DecimalFormat(DecimalFormat2To4Digits).format(current.amount) + dividendYield
 
         val datetime: ZonedDateTime =
-          ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.paydate), ZonedDateTime.now().zone)
+          ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.paydate), ZoneOffset.systemDefault())
         holder.binding.textViewDividendReceivedDate.text =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         holder.binding.textViewDividendReceivedCycle.text = dividendCycleStr(current.cycle, context)

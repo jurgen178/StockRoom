@@ -47,6 +47,7 @@ import com.thecloudsite.stockroom.utils.getMarketValues
 import com.thecloudsite.stockroom.utils.obsoleteAssetType
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -368,7 +369,7 @@ class StockRoomTableAdapter internal constructor(
             val datetime: ZonedDateTime =
               ZonedDateTime.ofInstant(
                 Instant.ofEpochSecond(assetItem.date),
-                ZonedDateTime.now().zone
+                ZoneOffset.systemDefault()
               )
 
             val assetEntry = SpannableStringBuilder()
@@ -463,7 +464,7 @@ class StockRoomTableAdapter internal constructor(
 
           events.scale(textScale) { append(eventStr) }
           current.events.forEach {
-            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZonedDateTime.now().zone)
+            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZoneOffset.systemDefault())
             val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
             events.scale(textScale) {
               append(

@@ -59,6 +59,7 @@ import com.thecloudsite.stockroom.utils.getAssets
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -127,7 +128,7 @@ class DividendFragment : Fragment() {
       DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
     )
     dialogBinding.addNote.setText(dividend.note)
-    val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZonedDateTime.now().zone)
+    val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
     // month is starting from zero
     dialogBinding.datePickerDividendDate.updateDate(
       localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
@@ -173,7 +174,7 @@ class DividendFragment : Fragment() {
               localDateTime.minute,
               localDateTime.second,
               0,
-              ZonedDateTime.now().zone
+              ZoneOffset.systemDefault()
             )
             val seconds = datetime.toEpochSecond()
 
@@ -246,7 +247,7 @@ class DividendFragment : Fragment() {
         .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
         .show()
     } else if (dividend != null && dividendList == null) {
-      val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZonedDateTime.now().zone)
+      val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
       android.app.AlertDialog.Builder(requireContext())
         .setTitle(R.string.delete_dividend)
         .setMessage(
@@ -283,14 +284,14 @@ class DividendFragment : Fragment() {
     dialogBinding.addNote.setText(dividend.note)
 
     val localDateTime =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZonedDateTime.now().zone)
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
     // month is starting from zero
     dialogBinding.datePickerDividendDate.updateDate(
       localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
 
     val localDateTimeEx =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.exdate), ZonedDateTime.now().zone)
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.exdate), ZoneOffset.systemDefault())
     // month is starting from zero
     dialogBinding.datePickerDividendExDate.updateDate(
       localDateTimeEx.year, localDateTimeEx.month.value - 1, localDateTimeEx.dayOfMonth
@@ -327,7 +328,7 @@ class DividendFragment : Fragment() {
           localDateTime.minute,
           localDateTime.second,
           0,
-          ZonedDateTime.now().zone
+          ZoneOffset.systemDefault()
         )
         val seconds = datetime.toEpochSecond()
 
@@ -339,7 +340,7 @@ class DividendFragment : Fragment() {
           localDateTimeEx.minute,
           localDateTimeEx.second,
           0,
-          ZonedDateTime.now().zone
+          ZoneOffset.systemDefault()
         )
         val secondsEx = datetimeEx.toEpochSecond()
 
@@ -391,7 +392,7 @@ class DividendFragment : Fragment() {
   ) {
     // Summary tag?
     if (dividend != null) {
-      val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZonedDateTime.now().zone)
+      val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
       android.app.AlertDialog.Builder(requireContext())
         .setTitle(R.string.delete_dividend)
         .setMessage(
@@ -597,7 +598,7 @@ class DividendFragment : Fragment() {
                 localDateTimeNow.minute,
                 localDateTimeNow.second,
                 0,
-                ZonedDateTime.now().zone
+                ZoneOffset.systemDefault()
               )
               val seconds = datetime.toEpochSecond()
 
@@ -725,7 +726,7 @@ class DividendFragment : Fragment() {
             localDateTimeNow.minute,
             localDateTimeNow.second,
             0,
-            ZonedDateTime.now().zone
+            ZoneOffset.systemDefault()
           )
           val seconds = datetime.toEpochSecond()
 
@@ -737,7 +738,7 @@ class DividendFragment : Fragment() {
             localDateTimeNow.minute,
             localDateTimeNow.second,
             0,
-            ZonedDateTime.now().zone
+            ZoneOffset.systemDefault()
           )
           val secondsEx = datetimeEx.toEpochSecond()
 
@@ -912,7 +913,7 @@ class DividendFragment : Fragment() {
       .toEpochSecond() // in GMT
     if (dividendDate > 0 && dividendDate > dateTimeNow) {
       val datetime: ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(data.onlineMarketData?.dividendDate!!), ZonedDateTime.now().zone)
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(data.onlineMarketData?.dividendDate!!), ZoneOffset.systemDefault())
       dividend
         .append(
           "\n${getString(R.string.dividend_pay_date)}"

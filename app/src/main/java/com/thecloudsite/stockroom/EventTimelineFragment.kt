@@ -31,6 +31,7 @@ import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
 import java.time.Instant
 import java.time.YearMonth
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
@@ -99,7 +100,7 @@ class EventTimelineFragment : Fragment() {
         events.forEach { event ->
           if (event.datetime > 0) {
 
-            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
+            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZoneOffset.systemDefault())
             val yearMonth: YearMonth = YearMonth.from(localDateTime)
             val dateYM = yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
             val dateFull = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))

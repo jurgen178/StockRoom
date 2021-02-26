@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.databinding.TimelineEventItemBinding
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
@@ -69,7 +70,7 @@ class EventTimelineAdapter(
       event.datetime
     }
         .forEach { event ->
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZoneOffset.systemDefault())
           val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
 
           if (!skipFirstline) {

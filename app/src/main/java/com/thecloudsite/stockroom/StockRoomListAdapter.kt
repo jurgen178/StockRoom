@@ -48,6 +48,7 @@ import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
@@ -326,7 +327,7 @@ class StockRoomListAdapter internal constructor(
 
         assets.append(eventStr)
         current.events.forEach {
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZonedDateTime.now().zone)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZoneOffset.systemDefault())
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
           assets.append(
             "\n${

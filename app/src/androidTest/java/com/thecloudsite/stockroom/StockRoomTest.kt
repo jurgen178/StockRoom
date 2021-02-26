@@ -43,6 +43,7 @@ import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 import java.time.temporal.TemporalQueries.zoneId
 import java.util.Locale
+import java.util.TimeZone
 
 @RunWith(AndroidJUnit4::class)
 class StockRoomTest {
@@ -58,11 +59,17 @@ class StockRoomTest {
     val localDateTimeNowSeconds2 = localDateTimeNow.toEpochSecond(ZonedDateTime.now().offset)
     val zonedDateTimeNowSeconds = zonedDateTimeNow.toEpochSecond() // in GMT
 
-    val localDateTime1 = LocalDateTime.ofEpochSecond(localDateTimeNowSeconds1, 0, ZoneOffset.UTC)
+    val localDateTime = LocalDateTime.ofEpochSecond(localDateTimeNowSeconds1, 0, ZoneOffset.UTC)
     val localDateTime2 = LocalDateTime.ofEpochSecond(localDateTimeNowSeconds2, 0, ZoneOffset.UTC)
     val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(zonedDateTimeNowSeconds), ZonedDateTime.now().zone)
+    val zonedDateTime2 = ZonedDateTime.ofInstant(Instant.ofEpochSecond(zonedDateTimeNowSeconds), ZoneOffset.systemDefault())
 
-    val dateLocal = localDateTime1.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
+    val z1 = ZonedDateTime.now().zone
+    val z2 = ZoneOffset.systemDefault()
+    assertEquals(z1, z2)
+    assertEquals(zonedDateTime, zonedDateTime2)
+
+    val dateLocal = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
     val dateZoned = zonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
 
     assertEquals(dateLocal, dateZoned)

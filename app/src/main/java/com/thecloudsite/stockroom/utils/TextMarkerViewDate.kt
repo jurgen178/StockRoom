@@ -28,6 +28,7 @@ import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.StockDataEntry
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -52,7 +53,7 @@ class TextMarkerViewCandleChart(
         val date =
           ZonedDateTime.ofInstant(
             Instant.ofEpochSecond(stockDataEntries[index].dateTimePoint),
-            ZonedDateTime.now().zone
+            ZoneOffset.systemDefault()
           )
             .format(dateTimeFormatter)
 
@@ -98,7 +99,7 @@ class TextMarkerViewLineChart(
         val date =
           ZonedDateTime.ofInstant(
             Instant.ofEpochSecond(stockDataEntries[index].dateTimePoint),
-            ZonedDateTime.now().zone
+            ZoneOffset.systemDefault()
           )
             .format(dateTimeFormatter)
 

@@ -39,6 +39,7 @@ import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import com.thecloudsite.stockroom.utils.obsoleteAssetType
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -283,7 +284,7 @@ class AssetListAdapter internal constructor(
             ""
           }
         val datetime: ZonedDateTime =
-          ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.asset.date), ZonedDateTime.now().zone)
+          ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.asset.date), ZoneOffset.systemDefault())
         val itemViewDateText =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         val itemViewNoteText = current.asset.note

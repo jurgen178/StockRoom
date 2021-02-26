@@ -33,6 +33,7 @@ import xyz.sangcomz.stickytimelineview.model.SectionInfo
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.YearMonth
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -101,7 +102,7 @@ class DividendTimelineFragment : Fragment() {
           dividend.type == DividendType.Received.value && dividend.paydate > 0
         }
             .forEach { dividend ->
-              val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZonedDateTime.now().zone)
+              val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
               val yearMonth: YearMonth = YearMonth.from(localDateTime)
               val dateYM = yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
               val dateYMlong = context?.getString(

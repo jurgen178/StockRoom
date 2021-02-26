@@ -106,6 +106,7 @@ import java.lang.Double.min
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.LONG
@@ -299,7 +300,7 @@ class StockDataFragment : Fragment() {
     val localDateTime = if (asset.date == 0L) {
       ZonedDateTime.now()
     } else {
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZonedDateTime.now().zone)
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZoneOffset.systemDefault())
     }
     // month is starting from zero
     dialogBinding.datePickerAssetDate.updateDate(
@@ -386,7 +387,7 @@ class StockDataFragment : Fragment() {
           localDateTime.minute,
           localDateTime.second,
           0,
-          ZonedDateTime.now().zone
+          ZoneOffset.systemDefault()
         )
         val date = localDateTimeNew.toEpochSecond()
 
@@ -540,7 +541,7 @@ class StockDataFragment : Fragment() {
     dialogBinding.textInputEditEventTitle.setText(event.title)
     dialogBinding.textInputEditEventNote.setText(event.note)
     val localDateTime =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZoneOffset.systemDefault())
     // month is starting from zero
     dialogBinding.datePickerEventDate.updateDate(
       localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
@@ -569,9 +570,9 @@ class StockDataFragment : Fragment() {
             dialogBinding.datePickerEventDate.dayOfMonth,
             dialogBinding.datePickerEventTime.hour,
             dialogBinding.datePickerEventTime.minute,
-            localDateTime.second,
             0,
-            ZonedDateTime.now().zone
+            0,
+            ZoneOffset.systemDefault()
           )
           val seconds = datetime.toEpochSecond()
           val eventNew =
@@ -606,7 +607,7 @@ class StockDataFragment : Fragment() {
 
   private fun eventItemDeleteClicked(event: Event) {
     val localDateTime =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZonedDateTime.now().zone)
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZoneOffset.systemDefault())
     val datetime = localDateTime.format(
       DateTimeFormatter.ofLocalizedDateTime(
         MEDIUM
@@ -1510,7 +1511,7 @@ class StockDataFragment : Fragment() {
             localDateTimeNow.minute,
             localDateTimeNow.second,
             0,
-            ZonedDateTime.now().zone
+            ZoneOffset.systemDefault()
           )
           val date = localDateTime.toEpochSecond()
 
@@ -1657,7 +1658,7 @@ class StockDataFragment : Fragment() {
               localDateTimeNow.minute,
               localDateTimeNow.second,
               0,
-              ZonedDateTime.now().zone
+              ZoneOffset.systemDefault()
             )
             val date = localDateTime.toEpochSecond()
 
@@ -1823,9 +1824,9 @@ class StockDataFragment : Fragment() {
               dialogBinding.datePickerEventDate.dayOfMonth,
               dialogBinding.datePickerEventTime.hour,
               dialogBinding.datePickerEventTime.minute,
-              localDateTimeNow.second,
               0,
-              ZonedDateTime.now().zone
+              0,
+              ZoneOffset.systemDefault()
             )
             val seconds = datetime.toEpochSecond()
             stockRoomViewModel.addEvent(
@@ -2373,7 +2374,7 @@ class StockDataFragment : Fragment() {
             val date =
               ZonedDateTime.ofInstant(
                 Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
-                ZonedDateTime.now().zone
+                ZoneOffset.systemDefault()
               )
             date.format(axisTimeFormatter)
           })
@@ -2383,7 +2384,7 @@ class StockDataFragment : Fragment() {
             val date =
               ZonedDateTime.ofInstant(
                 Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
-                ZonedDateTime.now().zone
+                ZoneOffset.systemDefault()
               )
             date.format(xAxisDateFormatter)
           })
@@ -2603,11 +2604,16 @@ class StockDataFragment : Fragment() {
 
         for (j in assetTimeEntriesCopy.indices) {
           val t: Long = assetTimeEntriesCopy[j].date
-          if (stockDataEntries!![i].dateTimePoint <= t && t < stockDataEntries!![i + 1].dateTimePoint) {
-
+          val a = stockDataEntries!![i].dateTimePoint
+          val b = stockDataEntries!![i + 1].dateTimePoint
+          if (a <= t && t < b) {
+            // use the index where the value is closest to t
+            // a <= t < b
+            // i: if t is closer to a, and i+1: if t is closer to b
+            val k = if (t < (a + b) / 2) i else i + 1
             val transactionPoints = listOf(
               DataPoint(
-                stockDataEntries!![i + 1].candleEntry.x,
+                stockDataEntries!![k].candleEntry.x,
                 assetTimeEntriesCopy[j].value.toFloat()
                 //stockDataEntries!![i].candleEntry.y
               )

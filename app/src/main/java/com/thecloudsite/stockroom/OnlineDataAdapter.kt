@@ -46,6 +46,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -116,13 +118,16 @@ class OnlineDataAdapter internal constructor(
         ) {
           val datetime = valueString.toLong()
           val gmtOffSet = gmtOffSetMilliseconds / 1000
+          val gmtOffsetDateTime: LocalDateTime =
+            LocalDateTime.ofEpochSecond(datetime + gmtOffSet, 0, ZoneOffset.UTC)
           val localDateTime: ZonedDateTime =
-            ZonedDateTime.ofInstant(
-              Instant.ofEpochSecond(datetime + gmtOffSet),
-              ZonedDateTime.now().zone
-            )
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZoneOffset.systemDefault())
           val dateTimeStr =
-            "#$valueString <i>(${
+            "#$valueString <i>(Ortszeit: ${
+              gmtOffsetDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+            } ${
+              gmtOffsetDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+            }, Lokale Zeit: ${
               localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
             } ${
               localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
@@ -133,12 +138,22 @@ class OnlineDataAdapter internal constructor(
 
         if (key == "firstTradeDateMilliseconds" && valueString.matches("^\\d+$".toRegex())) {
           val datetimeMilliseconds = valueString.toLong()
-          val localDateTime: ZonedDateTime = ZonedDateTime.ofInstant(
-            Instant.ofEpochSecond((datetimeMilliseconds + gmtOffSetMilliseconds) / 1000),
-            ZonedDateTime.now().zone
+          val gmtOffsetDateTime: LocalDateTime = LocalDateTime.ofEpochSecond(
+            (datetimeMilliseconds + gmtOffSetMilliseconds) / 1000,
+            0,
+            ZoneOffset.UTC
           )
+          val localDateTime: ZonedDateTime =
+            ZonedDateTime.ofInstant(
+              Instant.ofEpochSecond(datetimeMilliseconds / 1000),
+              ZoneOffset.systemDefault()
+            )
           val dateTimeStr =
-            "#$valueString <i>(${
+            "#$valueString <i>(Ortszeit: ${
+              gmtOffsetDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+            } ${
+              gmtOffsetDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+            }, Lokale Zeit:${
               localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
             } ${
               localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))

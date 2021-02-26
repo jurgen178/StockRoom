@@ -54,6 +54,7 @@ import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
@@ -528,7 +529,7 @@ class FilterActivity : AppCompatActivity() {
           } catch (e: Exception) {
             0L
           }
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZonedDateTime.now().zone)
+          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneOffset.systemDefault())
           // month is starting from zero
           dialogBinding.datePickerFilter.updateDate(
             localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
@@ -778,7 +779,7 @@ class FilterActivity : AppCompatActivity() {
               0,
               0,
               0,
-              ZonedDateTime.now().zone
+              ZoneOffset.systemDefault()
             )
             val date = localDateTime.toEpochSecond()
             date.toString()

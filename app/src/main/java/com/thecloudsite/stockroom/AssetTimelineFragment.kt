@@ -32,6 +32,7 @@ import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
 import java.time.Instant
 import java.time.YearMonth
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -105,7 +106,7 @@ class AssetTimelineFragment : Fragment() {
         // map the list of assets to date map that maps to a symbol map with each matching asset
         assets.forEach { asset ->
           val date = if (asset.date > 0) {
-            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZonedDateTime.now().zone)
+            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZoneOffset.systemDefault())
             val yearMonth: YearMonth = YearMonth.from(localDateTime)
             yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
           } else {
