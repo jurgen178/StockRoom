@@ -433,6 +433,16 @@ class SettingsActivity : AppCompatActivity(),
           }
       }
 
+      val buttonCalc: Preference? = findPreference("calc")
+      if (buttonCalc != null) {
+        buttonCalc.onPreferenceClickListener =
+          OnPreferenceClickListener {
+            val intent = Intent(context, CalcActivity::class.java)
+            startActivity(intent)
+            true
+          }
+      }
+
       val buttonFeedback: Preference? = findPreference("feedback")
       if (buttonFeedback != null) {
         buttonFeedback.onPreferenceClickListener =

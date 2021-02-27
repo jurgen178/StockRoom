@@ -82,6 +82,7 @@ limitations under the License. -->
 
   <!-- Preference Titles -->
   <string name="title_activity_settings">Settings</string>
+  <string name="title_activity_calc">Calc</string>
   <string name="general_header">General</string>
   <string name="display_header">Display</string>
   <string name="feedback_header">Feedback</string>
@@ -519,4 +520,5 @@ limitations under the License. -->
   <string name="remove_selection">Remove from the selection</string>
   <string name="app_theme">App Theme</string>
   <string name="summary_commission">Commissions</string>
+  <string name="calc_title">Calc</string>
 </resources>

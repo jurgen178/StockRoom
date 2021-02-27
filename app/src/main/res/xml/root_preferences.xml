@@ -144,6 +144,12 @@
   </PreferenceCategory>
 
   <Preference
+      app:key="calc"
+      app:title="@string/calc_title"
+      app:icon="@drawable/ic_action_calc"
+      />
+
+  <Preference
       app:key="version"
       app:title="@string/version" />
 

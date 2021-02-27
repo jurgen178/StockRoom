@@ -81,6 +81,7 @@ limitations under the License. -->
 
   <!-- Preference Titles -->
   <string name="title_activity_settings">Einstellungen</string>
+  <string name="title_activity_calc">Rechner</string>
   <string name="general_header">Allgemein</string>
   <string name="display_header">Anzeige</string>
   <string name="feedback_header">Rückmeldung</string>
@@ -518,4 +519,5 @@ limitations under the License. -->
   <string name="remove_selection">Von der Auswahl entfernen</string>
   <string name="app_theme">Farbdesign</string>
   <string name="summary_commission">Gebühren</string>
+  <string name="calc_title">Rechner</string>
 </resources>
