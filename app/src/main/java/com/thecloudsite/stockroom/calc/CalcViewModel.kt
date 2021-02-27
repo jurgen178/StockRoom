@@ -22,17 +22,20 @@ import androidx.lifecycle.LiveData
 import java.text.NumberFormat
 import kotlin.math.pow
 
-enum class ArithmeticOperationBinary {
+enum class BinaryOperation {
   ADD,
   SUB,
   MULT,
   DIV,
   POW,
+  SWAP
 }
 
-enum class ArithmeticOperationUnary {
+enum class UnaryOperation {
   SQR,
+  SQ,
   INV,
+  SIGN,
 }
 
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
@@ -53,22 +56,30 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun opUnary(op: ArithmeticOperationUnary) {
+  fun opUnary(op: UnaryOperation) {
     val calcData = submitEditline(calcData.value!!)
 
     if (calcData.numberList.size > 0) {
       calcData.editMode = false
-      if (op == ArithmeticOperationUnary.INV && calcData.numberList.last() == 0.0) {
+
+      if (op == UnaryOperation.INV && calcData.numberList.last() == 0.0) {
         return
       }
+
       val op1 = calcData.numberList.removeLast()
 
       when (op) {
-        ArithmeticOperationUnary.SQR -> {
+        UnaryOperation.SQR -> {
           calcData.numberList.add(op1.pow(0.5))
         }
-        ArithmeticOperationUnary.INV -> {
+        UnaryOperation.SQ -> {
+          calcData.numberList.add(op1.pow(2))
+        }
+        UnaryOperation.INV -> {
           calcData.numberList.add(1 / op1)
+        }
+        UnaryOperation.SIGN -> {
+          calcData.numberList.add(-op1)
         }
       }
 
@@ -76,32 +87,38 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
   }
 
-  fun opBinary(op: ArithmeticOperationBinary) {
+  fun opBinary(op: BinaryOperation) {
     val calcData = submitEditline(calcData.value!!)
 
     if (calcData.numberList.size > 1) {
       calcData.editMode = false
-      if (op == ArithmeticOperationBinary.DIV && calcData.numberList.last() == 0.0) {
+
+      if (op == BinaryOperation.DIV && calcData.numberList.last() == 0.0) {
         return
       }
+
       val op2 = calcData.numberList.removeLast()
       val op1 = calcData.numberList.removeLast()
 
       when (op) {
-        ArithmeticOperationBinary.ADD -> {
+        BinaryOperation.ADD -> {
           calcData.numberList.add(op1 + op2)
         }
-        ArithmeticOperationBinary.SUB -> {
+        BinaryOperation.SUB -> {
           calcData.numberList.add(op1 - op2)
         }
-        ArithmeticOperationBinary.MULT -> {
+        BinaryOperation.MULT -> {
           calcData.numberList.add(op1 * op2)
         }
-        ArithmeticOperationBinary.DIV -> {
+        BinaryOperation.DIV -> {
           calcData.numberList.add(op1 / op2)
         }
-        ArithmeticOperationBinary.POW -> {
+        BinaryOperation.POW -> {
           calcData.numberList.add(op1.pow(op2))
+        }
+        BinaryOperation.SWAP -> {
+          calcData.numberList.add(op2)
+          calcData.numberList.add(op1)
         }
       }
 

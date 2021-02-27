@@ -71,14 +71,20 @@ class CalcActivity : AppCompatActivity() {
         }
     }
 
+    binding.calcSwap.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcSwap.setOnClickListener { calcViewModel.opBinary(BinaryOperation.SWAP) }
     binding.calcSQR.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSQR.setOnClickListener { calcViewModel.opUnary(ArithmeticOperationUnary.SQR) }
+    binding.calcSQR.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SQR) }
+    binding.calcSQ.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcSQ.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SQ) }
     binding.calcPOW.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcPOW.setOnClickListener { calcViewModel.opBinary(ArithmeticOperationBinary.POW) }
+    binding.calcPOW.setOnClickListener { calcViewModel.opBinary(BinaryOperation.POW) }
     binding.calcINV.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcINV.setOnClickListener { calcViewModel.opUnary(ArithmeticOperationUnary.INV) }
+    binding.calcINV.setOnClickListener { calcViewModel.opUnary(UnaryOperation.INV) }
     binding.calcEnter.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcEnter.setOnClickListener { calcViewModel.enter() }
+    binding.calcSign.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcSign.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SIGN) }
     binding.calcDrop.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcDrop.setOnClickListener { calcViewModel.drop() }
 
@@ -106,13 +112,13 @@ class CalcActivity : AppCompatActivity() {
     binding.calcDot.setOnClickListener { calcViewModel.addNum(separatorChar) }
 
     binding.calcDiv.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcDiv.setOnClickListener { calcViewModel.opBinary(ArithmeticOperationBinary.DIV) }
+    binding.calcDiv.setOnClickListener { calcViewModel.opBinary(BinaryOperation.DIV) }
     binding.calcMult.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcMult.setOnClickListener { calcViewModel.opBinary(ArithmeticOperationBinary.MULT) }
+    binding.calcMult.setOnClickListener { calcViewModel.opBinary(BinaryOperation.MULT) }
     binding.calcSub.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSub.setOnClickListener { calcViewModel.opBinary(ArithmeticOperationBinary.SUB) }
+    binding.calcSub.setOnClickListener { calcViewModel.opBinary(BinaryOperation.SUB) }
     binding.calcAdd.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcAdd.setOnClickListener { calcViewModel.opBinary(ArithmeticOperationBinary.ADD) }
+    binding.calcAdd.setOnClickListener { calcViewModel.opBinary(BinaryOperation.ADD) }
   }
 
   override fun onSupportNavigateUp(): Boolean {

@@ -74,6 +74,18 @@ class CalcAdapter internal constructor(
           ""
 
         }
+
+    holder.binding.calclinePrefix.text =
+      if (position >= 0 && position < this.calcData.numberList.size) {
+
+          // number list
+          "${this.calcData.numberList.size - position + 1}:"
+
+        } else {
+
+          ""
+
+        }
   }
 
   fun updateData(calcData: CalcData) {
