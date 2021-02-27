@@ -33,6 +33,7 @@ class CalcAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var numberList: List<Double> = emptyList()
   private var cursorPos: Int = 0
+  private var editMode: Boolean = false
 
   class CalcViewHolder(
     val binding: CalcItemBinding
@@ -54,7 +55,7 @@ class CalcAdapter internal constructor(
   ) {
     val current = numberList[position]
 
-    if (position == numberList.size - 1) {
+    if (this.editMode && position == numberList.size - 1) {
       holder.binding.calclineNumber.gravity = Gravity.START
     } else {
       holder.binding.calclineNumber.gravity = Gravity.END
@@ -65,8 +66,9 @@ class CalcAdapter internal constructor(
     )
   }
 
-  fun updateData(numbers: List<Double>, editMode: Boolean = true) {
+  fun updateData(numbers: List<Double>, editMode: Boolean) {
     numberList = numbers
+    this.editMode = editMode
 
     notifyDataSetChanged()
   }

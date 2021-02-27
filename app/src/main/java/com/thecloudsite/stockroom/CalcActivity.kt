@@ -43,30 +43,33 @@ class CalcActivity : AppCompatActivity() {
     binding.calcEnter.setOnClickListener {
       if (editMode) {
         editMode = false
-      }
-
-      if (numberList.size > 0) {
-        val op = numberList.last()
-        numberList.add(op)
+      } else {
+        if (numberList.size > 0) {
+          val op = numberList.last()
+          numberList.add(op)
+        }
       }
 
       calcAdapter.updateData(numberList, editMode)
+      binding.calclines.adapter?.itemCount?.minus(1)
+        ?.let { binding.calclines.scrollToPosition(it) }
     }
 
     binding.calc1.setOnClickListener {
-      if (!editMode) {
-        editMode = true
-        numberList.add(1.0)
-        calcAdapter.updateData(numberList, editMode)
-      } else {
+      if (editMode) {
         if (numberList.isEmpty()) {
           numberList.add(1.0)
         } else {
           numberList[numberList.size - 1] = numberList[numberList.size - 1] * 10.0 + 1.0
         }
-
-        calcAdapter.updateData(numberList, editMode)
+      } else {
+        editMode = true
+        numberList.add(1.0)
       }
+
+      calcAdapter.updateData(numberList, editMode)
+      binding.calclines.adapter?.itemCount?.minus(1)
+        ?.let { binding.calclines.scrollToPosition(it) }
     }
 
     binding.calcPlus.setOnClickListener {
@@ -77,6 +80,8 @@ class CalcActivity : AppCompatActivity() {
         numberList.add(op1 + op2)
 
         calcAdapter.updateData(numberList, editMode)
+        binding.calclines.adapter?.itemCount?.minus(1)
+          ?.let { binding.calclines.scrollToPosition(it) }
       }
     }
   }

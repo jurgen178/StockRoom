@@ -19,7 +19,7 @@
 
   <TextView
       android:id="@+id/calc_enter"
-      android:text="Enter"
+      android:text="ENTER"
       style="@style/calc_style"
       app:layout_constraintStart_toEndOf="@id/guidelineX1"
       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
