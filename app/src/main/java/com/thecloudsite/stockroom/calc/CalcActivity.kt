@@ -16,19 +16,22 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
+import com.thecloudsite.stockroom.setBackgroundColor
+import java.text.DecimalFormatSymbols
 
 class CalcActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityCalcBinding
   private lateinit var calcViewModel: CalcViewModel
-
-  private var calcData: CalcData = CalcData()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,7 +50,6 @@ class CalcActivity : AppCompatActivity() {
 
     calcViewModel.calcData.observe(this, Observer { data ->
       if (data != null) {
-        calcData = data
 
         calcAdapter.updateData(data)
 
@@ -57,49 +59,52 @@ class CalcActivity : AppCompatActivity() {
       }
     })
 
-    binding.calcEnter.setOnClickListener {
-      if (calcData.editMode) {
-        calcData.editMode = false
-      } else {
-        if (calcData.numberList.size > 0) {
-          val op = calcData.numberList.last()
-          calcData.numberList.add(op)
+
+    val separatorChar: Char = DecimalFormatSymbols.getInstance().decimalSeparator
+    binding.calcDot.text = separatorChar.toString()
+
+    fun touchHelper(view: View, event: MotionEvent) {
+      if (event.action == MotionEvent.ACTION_DOWN) {
+        setBackgroundColor(view, Color.LTGRAY)
+      } else
+        if (event.action == MotionEvent.ACTION_UP) {
+          setBackgroundColor(view, Color.DKGRAY)
         }
-      }
-
-      calcViewModel.updateData(calcData)
     }
 
-    fun num(value: Double) {
-      if (calcData.editMode) {
-        if (calcData.numberList.isEmpty()) {
-          calcData.numberList.add(value)
-        } else {
-          calcData.numberList[calcData.numberList.size - 1] =
-            calcData.numberList[calcData.numberList.size - 1] * 10.0 + value
-        }
-      } else {
-        calcData.editMode = true
-        calcData.numberList.add(value)
-      }
+    binding.calc1.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc1.setOnClickListener { calcViewModel.addNum('1') }
+    binding.calc2.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc2.setOnClickListener { calcViewModel.addNum('2') }
+    binding.calc3.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc3.setOnClickListener { calcViewModel.addNum('3') }
+    binding.calc4.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc4.setOnClickListener { calcViewModel.addNum('4') }
+    binding.calc5.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc5.setOnClickListener { calcViewModel.addNum('5') }
+    binding.calc6.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc6.setOnClickListener { calcViewModel.addNum('6') }
+    binding.calc7.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc7.setOnClickListener { calcViewModel.addNum('7') }
+    binding.calc8.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc8.setOnClickListener { calcViewModel.addNum('8') }
+    binding.calc9.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc9.setOnClickListener { calcViewModel.addNum('9') }
+    binding.calc0.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calc0.setOnClickListener { calcViewModel.addNum('0') }
 
-      calcViewModel.updateData(calcData)
-    }
-
-    binding.calc1.setOnClickListener { num(1.0) }
-    binding.calc2.setOnClickListener { num(2.0) }
-    binding.calc3.setOnClickListener { num(3.0) }
-
-    binding.calcPlus.setOnClickListener {
-      if (calcData.numberList.size >= 2) {
-        calcData.editMode = false
-        val op1 = calcData.numberList.removeLast()
-        val op2 = calcData.numberList.removeLast()
-        calcData.numberList.add(op1 + op2)
-
-        calcViewModel.updateData(calcData)
-      }
-    }
+    binding.calcEnter.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcEnter.setOnClickListener { calcViewModel.enter() }
+    binding.calcDrop.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcDrop.setOnClickListener { calcViewModel.drop() }
+    binding.calcDiv.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcDiv.setOnClickListener { calcViewModel.div() }
+    binding.calcMult.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcMult.setOnClickListener { calcViewModel.mult() }
+    binding.calcSub.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcSub.setOnClickListener { calcViewModel.sub() }
+    binding.calcAdd.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcAdd.setOnClickListener { calcViewModel.add() }
   }
 
   override fun onSupportNavigateUp(): Boolean {

@@ -25,7 +25,7 @@ import com.thecloudsite.stockroom.calc.CalcAdapter.CalcViewHolder
 import com.thecloudsite.stockroom.databinding.CalcItemBinding
 import java.text.DecimalFormat
 
-const val DecimalFormatCalcDigits = "#,##0.00######"
+const val DecimalFormatCalcDigits = "#,##0.########"
 
 class CalcAdapter internal constructor(
   private val context: Context
@@ -52,17 +52,26 @@ class CalcAdapter internal constructor(
     holder: CalcViewHolder,
     position: Int
   ) {
-    val current = this.calcData.numberList[position]
 
-    if (this.calcData.editMode && position == this.calcData.numberList.size - 1) {
-      holder.binding.calclineNumber.gravity = Gravity.START
-    } else {
-      holder.binding.calclineNumber.gravity = Gravity.END
-    }
+    holder.binding.calclineNumber.text =
+      if (this.calcData.editMode && position == this.calcData.numberList.size) {
 
-    holder.binding.calclineNumber.text = DecimalFormat(DecimalFormatCalcDigits).format(
-      current
-    )
+        // edit line
+        holder.binding.calclineNumber.gravity = Gravity.START
+        this.calcData.editline
+
+      } else if (position >= 0 && position < this.calcData.numberList.size) {
+
+        // number list
+        val current = this.calcData.numberList[position]
+        holder.binding.calclineNumber.gravity = Gravity.END
+        DecimalFormat(DecimalFormatCalcDigits).format(current)
+      } else {
+
+        holder.binding.calclineNumber.gravity = Gravity.END
+        ""
+
+      }
   }
 
   fun updateData(calcData: CalcData) {
@@ -71,5 +80,5 @@ class CalcAdapter internal constructor(
     notifyDataSetChanged()
   }
 
-  override fun getItemCount() = this.calcData.numberList.size
+  override fun getItemCount() = this.calcData.numberList.size + 1 // numberlist + editline
 }

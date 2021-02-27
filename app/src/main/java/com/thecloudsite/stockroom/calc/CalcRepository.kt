@@ -24,15 +24,22 @@ data class CalcData
   (
   var numberList: MutableList<Double> = mutableListOf(),
   var editMode: Boolean = false,
+  var editline: String = ""
 )
+
+object SharedCalcData {
+  val calcMutableLiveData = MutableLiveData<CalcData>()
+}
 
 class CalcRepository(val context: Context) {
 
-  val calcMutableLiveData = MutableLiveData<CalcData>()
   val calcLiveData: LiveData<CalcData>
-    get() = calcMutableLiveData
+    get() = SharedCalcData.calcMutableLiveData
+
+  fun getData(): CalcData =
+    SharedCalcData.calcMutableLiveData.value ?: CalcData()
 
   fun updateData(data: CalcData) {
-    calcMutableLiveData.postValue(data)
+    SharedCalcData.calcMutableLiveData.postValue(data)
   }
 }

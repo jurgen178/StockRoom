@@ -17,8 +17,18 @@
       />
 
   <TextView
-      android:id="@+id/calc_1"
-      android:text="1"
+      android:id="@+id/calc_drop"
+      android:text="\u232b"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY2"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY1"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_7"
+      android:text="7"
       app:layout_constraintBottom_toTopOf="@id/guidelineY3"
       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
       app:layout_constraintStart_toEndOf="@id/guidelineX1"
@@ -27,8 +37,8 @@
       />
 
   <TextView
-      android:id="@+id/calc_2"
-      android:text="2"
+      android:id="@+id/calc_8"
+      android:text="8"
       app:layout_constraintBottom_toTopOf="@id/guidelineY3"
       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
       app:layout_constraintStart_toEndOf="@id/guidelineX2"
@@ -37,8 +47,8 @@
       />
 
   <TextView
-      android:id="@+id/calc_3"
-      android:text="3"
+      android:id="@+id/calc_9"
+      android:text="9"
       app:layout_constraintBottom_toTopOf="@id/guidelineY3"
       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
       app:layout_constraintStart_toEndOf="@id/guidelineX3"
@@ -47,12 +57,122 @@
       />
 
   <TextView
-      android:id="@+id/calc_plus"
-      android:text="+"
+      android:id="@+id/calc_4"
+      android:text="4"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_5"
+      android:text="5"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_6"
+      android:text="6"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_1"
+      android:text="1"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_2"
+      android:text="2"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_3"
+      android:text="3"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_0"
+      android:text="0"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY6"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY5"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_dot"
+      android:text="."
+      app:layout_constraintBottom_toTopOf="@id/guidelineY6"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY5"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_div"
+      android:text="÷"
       app:layout_constraintBottom_toTopOf="@id/guidelineY3"
       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
       app:layout_constraintStart_toEndOf="@id/guidelineX4"
       app:layout_constraintTop_toBottomOf="@+id/guidelineY2"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_mult"
+      android:text="*"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_sub"
+      android:text="-"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_add"
+      android:text="+"
+      app:layout_constraintBottom_toTopOf="@id/guidelineY6"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineY5"
       style="@style/calc_style"
       />
 
@@ -78,6 +198,30 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal"
       app:layout_constraintGuide_begin="300dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guidelineY4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_begin="350dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guidelineY5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_begin="400dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guidelineY6"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_begin="450dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
