@@ -20,6 +20,20 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import java.text.NumberFormat
+import kotlin.math.pow
+
+enum class ArithmeticOperationBinary {
+  ADD,
+  SUB,
+  MULT,
+  DIV,
+  POW,
+}
+
+enum class ArithmeticOperationUnary {
+  SQR,
+  INV,
+}
 
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -39,53 +53,57 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun add() {
+  fun opUnary(op: ArithmeticOperationUnary) {
     val calcData = submitEditline(calcData.value!!)
 
-    if (calcData.numberList.size > 1) {
+    if (calcData.numberList.size > 0) {
       calcData.editMode = false
+      if (op == ArithmeticOperationUnary.INV && calcData.numberList.last() == 0.0) {
+        return
+      }
       val op1 = calcData.numberList.removeLast()
-      val op2 = calcData.numberList.removeLast()
-      calcData.numberList.add(op1 + op2)
+
+      when (op) {
+        ArithmeticOperationUnary.SQR -> {
+          calcData.numberList.add(op1.pow(0.5))
+        }
+        ArithmeticOperationUnary.INV -> {
+          calcData.numberList.add(1 / op1)
+        }
+      }
 
       calcRepository.updateData(calcData)
     }
   }
 
-  fun sub() {
+  fun opBinary(op: ArithmeticOperationBinary) {
     val calcData = submitEditline(calcData.value!!)
 
     if (calcData.numberList.size > 1) {
       calcData.editMode = false
-      val op1 = calcData.numberList.removeLast()
+      if (op == ArithmeticOperationBinary.DIV && calcData.numberList.last() == 0.0) {
+        return
+      }
       val op2 = calcData.numberList.removeLast()
-      calcData.numberList.add(op1 - op2)
-
-      calcRepository.updateData(calcData)
-    }
-  }
-
-  fun mult() {
-    val calcData = submitEditline(calcData.value!!)
-
-    if (calcData.numberList.size > 1) {
-      calcData.editMode = false
       val op1 = calcData.numberList.removeLast()
-      val op2 = calcData.numberList.removeLast()
-      calcData.numberList.add(op1 * op2)
 
-      calcRepository.updateData(calcData)
-    }
-  }
-
-  fun div() {
-    val calcData = submitEditline(calcData.value!!)
-
-    val op2 = calcData.numberList.removeLast()
-    if (calcData.numberList.size > 1 && op2 != 0.0) {
-      calcData.editMode = false
-      val op1 = calcData.numberList.removeLast()
-      calcData.numberList.add(op1 / op2)
+      when (op) {
+        ArithmeticOperationBinary.ADD -> {
+          calcData.numberList.add(op1 + op2)
+        }
+        ArithmeticOperationBinary.SUB -> {
+          calcData.numberList.add(op1 - op2)
+        }
+        ArithmeticOperationBinary.MULT -> {
+          calcData.numberList.add(op1 * op2)
+        }
+        ArithmeticOperationBinary.DIV -> {
+          calcData.numberList.add(op1 / op2)
+        }
+        ArithmeticOperationBinary.POW -> {
+          calcData.numberList.add(op1.pow(op2))
+        }
+      }
 
       calcRepository.updateData(calcData)
     }
@@ -98,7 +116,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       calcData.editline = calcData.editline.dropLast(1)
     } else {
       if (calcData.numberList.size > 0) {
-        calcData.numberList.dropLast(1)
+        calcData.numberList.removeLast()
       }
     }
 

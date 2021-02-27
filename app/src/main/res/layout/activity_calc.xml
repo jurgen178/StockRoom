@@ -7,177 +7,207 @@
     >
 
   <TextView
+      android:id="@+id/calc_SQR"
+      android:text="√x"
+      app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_POW"
+      android:text="x^y"
+      app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+      style="@style/calc_style"
+      />
+
+  <TextView
+      android:id="@+id/calc_INV"
+      android:text="1/x"
+      app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+      style="@style/calc_style"
+      />
+
+  <TextView
       android:id="@+id/calc_enter"
       android:text="ENTER"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY2"
+      app:layout_constraintBottom_toTopOf="@id/guideline789"
       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
       app:layout_constraintStart_toEndOf="@id/guidelineX1"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY1"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_drop"
       android:text="\u232b"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY2"
+      app:layout_constraintBottom_toTopOf="@id/guideline789"
       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
       app:layout_constraintStart_toEndOf="@id/guidelineX4"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY1"
+      app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_7"
       android:text="7"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY3"
+      app:layout_constraintBottom_toTopOf="@id/guideline456"
       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
       app:layout_constraintStart_toEndOf="@id/guidelineX1"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY2"
+      app:layout_constraintTop_toBottomOf="@+id/guideline789"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_8"
       android:text="8"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY3"
+      app:layout_constraintBottom_toTopOf="@id/guideline456"
       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
       app:layout_constraintStart_toEndOf="@id/guidelineX2"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY2"
+      app:layout_constraintTop_toBottomOf="@+id/guideline789"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_9"
       android:text="9"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY3"
+      app:layout_constraintBottom_toTopOf="@id/guideline456"
       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
       app:layout_constraintStart_toEndOf="@id/guidelineX3"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY2"
+      app:layout_constraintTop_toBottomOf="@+id/guideline789"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_4"
       android:text="4"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintBottom_toTopOf="@id/guideline123"
       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
       app:layout_constraintStart_toEndOf="@id/guidelineX1"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      app:layout_constraintTop_toBottomOf="@+id/guideline456"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_5"
       android:text="5"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintBottom_toTopOf="@id/guideline123"
       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
       app:layout_constraintStart_toEndOf="@id/guidelineX2"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      app:layout_constraintTop_toBottomOf="@+id/guideline456"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_6"
       android:text="6"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintBottom_toTopOf="@id/guideline123"
       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
       app:layout_constraintStart_toEndOf="@id/guidelineX3"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      app:layout_constraintTop_toBottomOf="@+id/guideline456"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_1"
       android:text="1"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintBottom_toTopOf="@id/guideline0"
       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
       app:layout_constraintStart_toEndOf="@id/guidelineX1"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      app:layout_constraintTop_toBottomOf="@+id/guideline123"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_2"
       android:text="2"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintBottom_toTopOf="@id/guideline0"
       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
       app:layout_constraintStart_toEndOf="@id/guidelineX2"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      app:layout_constraintTop_toBottomOf="@+id/guideline123"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_3"
       android:text="3"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintBottom_toTopOf="@id/guideline0"
       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
       app:layout_constraintStart_toEndOf="@id/guidelineX3"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      app:layout_constraintTop_toBottomOf="@+id/guideline123"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_0"
       android:text="0"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY6"
+      app:layout_constraintBottom_toTopOf="@id/guideline00"
       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
       app:layout_constraintStart_toEndOf="@id/guidelineX1"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY5"
+      app:layout_constraintTop_toBottomOf="@+id/guideline0"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_dot"
       android:text="."
-      app:layout_constraintBottom_toTopOf="@id/guidelineY6"
+      app:layout_constraintBottom_toTopOf="@id/guideline00"
       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
       app:layout_constraintStart_toEndOf="@id/guidelineX2"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY5"
+      app:layout_constraintTop_toBottomOf="@+id/guideline0"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_div"
       android:text="÷"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY3"
+      app:layout_constraintBottom_toTopOf="@id/guideline456"
       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
       app:layout_constraintStart_toEndOf="@id/guidelineX4"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY2"
+      app:layout_constraintTop_toBottomOf="@+id/guideline789"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_mult"
       android:text="*"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY4"
+      app:layout_constraintBottom_toTopOf="@id/guideline123"
       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
       app:layout_constraintStart_toEndOf="@id/guidelineX4"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY3"
+      app:layout_constraintTop_toBottomOf="@+id/guideline456"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_sub"
       android:text="-"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY5"
+      app:layout_constraintBottom_toTopOf="@id/guideline0"
       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
       app:layout_constraintStart_toEndOf="@id/guidelineX4"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY4"
+      app:layout_constraintTop_toBottomOf="@+id/guideline123"
       style="@style/calc_style"
       />
 
   <TextView
       android:id="@+id/calc_add"
       android:text="+"
-      app:layout_constraintBottom_toTopOf="@id/guidelineY6"
+      app:layout_constraintBottom_toTopOf="@id/guideline00"
       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
       app:layout_constraintStart_toEndOf="@id/guidelineX4"
-      app:layout_constraintTop_toBottomOf="@+id/guidelineY5"
+      app:layout_constraintTop_toBottomOf="@+id/guideline0"
       style="@style/calc_style"
       />
 
   <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guidelineY1"
+      android:id="@+id/guidelineDisp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -185,7 +215,7 @@
       />
 
   <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guidelineY2"
+      android:id="@+id/guidelineF1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -193,7 +223,7 @@
       />
 
   <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guidelineY3"
+      android:id="@+id/guidelineEnter"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -201,7 +231,7 @@
       />
 
   <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guidelineY4"
+      android:id="@+id/guideline789"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -209,7 +239,7 @@
       />
 
   <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guidelineY5"
+      android:id="@+id/guideline456"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -217,7 +247,7 @@
       />
 
   <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guidelineY6"
+      android:id="@+id/guideline123"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -225,11 +255,27 @@
       />
 
   <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline0"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_begin="500dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline00"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_begin="550dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guidelineX1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="100dp"
+      app:layout_constraintGuide_percent="0.2"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -237,7 +283,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="150dp"
+      app:layout_constraintGuide_percent="0.35"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -245,7 +291,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="200dp"
+      app:layout_constraintGuide_percent="0.5"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -253,7 +299,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="250dp"
+      app:layout_constraintGuide_percent="0.65"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -261,14 +307,15 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="300dp"
+      app:layout_constraintGuide_percent="0.8"
       />
 
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/calclines"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      app:layout_constraintBottom_toTopOf="@+id/guidelineY1"
+      android:background="#CCC69B"
+      app:layout_constraintBottom_toTopOf="@+id/guidelineDisp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"

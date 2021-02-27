@@ -58,20 +58,22 @@ class CalcAdapter internal constructor(
 
         // edit line
         holder.binding.calclineNumber.gravity = Gravity.START
-        this.calcData.editline
+        this.calcData.editline + "‹"
 
-      } else if (position >= 0 && position < this.calcData.numberList.size) {
+      } else
+        if (position >= 0 && position < this.calcData.numberList.size) {
 
-        // number list
-        val current = this.calcData.numberList[position]
-        holder.binding.calclineNumber.gravity = Gravity.END
-        DecimalFormat(DecimalFormatCalcDigits).format(current)
-      } else {
+          // number list
+          val current = this.calcData.numberList[position]
+          holder.binding.calclineNumber.gravity = Gravity.END
+          DecimalFormat(DecimalFormatCalcDigits).format(current)
 
-        holder.binding.calclineNumber.gravity = Gravity.END
-        ""
+        } else {
 
-      }
+          holder.binding.calclineNumber.gravity = Gravity.END
+          ""
+
+        }
   }
 
   fun updateData(calcData: CalcData) {

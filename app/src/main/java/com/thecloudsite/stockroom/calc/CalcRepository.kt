@@ -23,7 +23,7 @@ import androidx.lifecycle.MutableLiveData
 data class CalcData
   (
   var numberList: MutableList<Double> = mutableListOf(),
-  var editMode: Boolean = false,
+  var editMode: Boolean = true,
   var editline: String = ""
 )
 
