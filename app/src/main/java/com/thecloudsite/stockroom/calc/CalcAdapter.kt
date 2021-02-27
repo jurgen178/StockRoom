@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020
+ * Copyright (C) 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.calc
 
 import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.calc.CalcAdapter.CalcViewHolder
 import com.thecloudsite.stockroom.databinding.CalcItemBinding
 import java.text.DecimalFormat
 
@@ -28,7 +29,7 @@ const val DecimalFormatCalcDigits = "#,##0.00######"
 
 class CalcAdapter internal constructor(
   private val context: Context
-) : RecyclerView.Adapter<CalcAdapter.CalcViewHolder>() {
+) : RecyclerView.Adapter<CalcViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var calcData: CalcData = CalcData()

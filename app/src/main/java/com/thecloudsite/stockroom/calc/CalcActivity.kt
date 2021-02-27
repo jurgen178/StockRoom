@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020
+ * Copyright (C) 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,20 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package com.thecloudsite.stockroom.calc
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
-
-data class CalcData
-  (
-  var numberList: MutableList<Double> = mutableListOf(),
-  var editMode: Boolean = false,
-)
-
-object CalcRepository {
-  val calcData = MutableLiveData<CalcData>()
-}
 
 class CalcActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityCalcBinding
+  private lateinit var calcViewModel: CalcViewModel
+
   private var calcData: CalcData = CalcData()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +43,9 @@ class CalcActivity : AppCompatActivity() {
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(this)
 
-    CalcRepository.calcData.observe(this, Observer { data ->
+    calcViewModel = ViewModelProvider(this).get(CalcViewModel::class.java)
+
+    calcViewModel.calcData.observe(this, Observer { data ->
       if (data != null) {
         calcData = data
 
@@ -73,7 +67,7 @@ class CalcActivity : AppCompatActivity() {
         }
       }
 
-      CalcRepository.calcData.postValue(calcData)
+      calcViewModel.updateData(calcData)
     }
 
     fun num(value: Double) {
@@ -89,7 +83,7 @@ class CalcActivity : AppCompatActivity() {
         calcData.numberList.add(value)
       }
 
-      CalcRepository.calcData.postValue(calcData)
+      calcViewModel.updateData(calcData)
     }
 
     binding.calc1.setOnClickListener { num(1.0) }
@@ -103,7 +97,7 @@ class CalcActivity : AppCompatActivity() {
         val op2 = calcData.numberList.removeLast()
         calcData.numberList.add(op1 + op2)
 
-        CalcRepository.calcData.postValue(calcData)
+        calcViewModel.updateData(calcData)
       }
     }
   }

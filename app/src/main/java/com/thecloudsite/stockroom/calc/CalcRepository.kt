@@ -14,6 +14,25 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom.news
+package com.thecloudsite.stockroom.calc
 
-class YahooAllNewsRepository : NewsRepository({ YahooAllNewsApiFactory.newsApi }, news_type_yahoo)
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+
+data class CalcData
+  (
+  var numberList: MutableList<Double> = mutableListOf(),
+  var editMode: Boolean = false,
+)
+
+class CalcRepository(val context: Context) {
+
+  val calcMutableLiveData = MutableLiveData<CalcData>()
+  val calcLiveData: LiveData<CalcData>
+    get() = calcMutableLiveData
+
+  fun updateData(data: CalcData) {
+    calcMutableLiveData.postValue(data)
+  }
+}

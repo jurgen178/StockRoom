@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020
+ * Copyright (C) 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.calc.CalcActivity
 import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
 import com.thecloudsite.stockroom.databinding.DialogRenameSymbolBinding
 import com.thecloudsite.stockroom.utils.setAppTheme

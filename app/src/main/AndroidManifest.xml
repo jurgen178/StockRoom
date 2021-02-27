@@ -27,7 +27,7 @@
         android:name=".UpdateGroupActivity"
         android:label="@string/title_activity_updategroup" />
     <activity
-        android:name=".CalcActivity"
+        android:name=".calc.CalcActivity"
         android:label="@string/title_activity_calc" />
     <activity
         android:name=".StockDataActivity"
