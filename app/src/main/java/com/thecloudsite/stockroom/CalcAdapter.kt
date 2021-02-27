@@ -31,9 +31,7 @@ class CalcAdapter internal constructor(
 ) : RecyclerView.Adapter<CalcAdapter.CalcViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var numberList: List<Double> = emptyList()
-  private var cursorPos: Int = 0
-  private var editMode: Boolean = false
+  private var calcData: CalcData = CalcData()
 
   class CalcViewHolder(
     val binding: CalcItemBinding
@@ -53,9 +51,9 @@ class CalcAdapter internal constructor(
     holder: CalcViewHolder,
     position: Int
   ) {
-    val current = numberList[position]
+    val current = this.calcData.numberList[position]
 
-    if (this.editMode && position == numberList.size - 1) {
+    if (this.calcData.editMode && position == this.calcData.numberList.size - 1) {
       holder.binding.calclineNumber.gravity = Gravity.START
     } else {
       holder.binding.calclineNumber.gravity = Gravity.END
@@ -66,12 +64,11 @@ class CalcAdapter internal constructor(
     )
   }
 
-  fun updateData(numbers: List<Double>, editMode: Boolean) {
-    numberList = numbers
-    this.editMode = editMode
+  fun updateData(calcData: CalcData) {
+    this.calcData = calcData
 
     notifyDataSetChanged()
   }
 
-  override fun getItemCount() = numberList.size
+  override fun getItemCount() = this.calcData.numberList.size
 }

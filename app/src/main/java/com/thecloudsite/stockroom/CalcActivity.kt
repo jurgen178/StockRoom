@@ -18,14 +18,25 @@ package com.thecloudsite.stockroom
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
+
+data class CalcData
+  (
+  var numberList: MutableList<Double> = mutableListOf(),
+  var editMode: Boolean = false,
+)
+
+object CalcRepository {
+  val calcData = MutableLiveData<CalcData>()
+}
 
 class CalcActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityCalcBinding
-  private var numberList: MutableList<Double> = mutableListOf()
-  private var editMode: Boolean = false
+  private var calcData: CalcData = CalcData()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,48 +51,59 @@ class CalcActivity : AppCompatActivity() {
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(this)
 
-    binding.calcEnter.setOnClickListener {
-      if (editMode) {
-        editMode = false
-      } else {
-        if (numberList.size > 0) {
-          val op = numberList.last()
-          numberList.add(op)
-        }
-      }
+    CalcRepository.calcData.observe(this, Observer { data ->
+      if (data != null) {
+        calcData = data
 
-      calcAdapter.updateData(numberList, editMode)
-      binding.calclines.adapter?.itemCount?.minus(1)
-        ?.let { binding.calclines.scrollToPosition(it) }
-    }
+        calcAdapter.updateData(data)
 
-    binding.calc1.setOnClickListener {
-      if (editMode) {
-        if (numberList.isEmpty()) {
-          numberList.add(1.0)
-        } else {
-          numberList[numberList.size - 1] = numberList[numberList.size - 1] * 10.0 + 1.0
-        }
-      } else {
-        editMode = true
-        numberList.add(1.0)
-      }
-
-      calcAdapter.updateData(numberList, editMode)
-      binding.calclines.adapter?.itemCount?.minus(1)
-        ?.let { binding.calclines.scrollToPosition(it) }
-    }
-
-    binding.calcPlus.setOnClickListener {
-      if (numberList.size >= 2) {
-        editMode = false
-        val op1 = numberList.removeLast()
-        val op2 = numberList.removeLast()
-        numberList.add(op1 + op2)
-
-        calcAdapter.updateData(numberList, editMode)
+        // scroll to always show last element at the bottom of the list
         binding.calclines.adapter?.itemCount?.minus(1)
           ?.let { binding.calclines.scrollToPosition(it) }
+      }
+    })
+
+    binding.calcEnter.setOnClickListener {
+      if (calcData.editMode) {
+        calcData.editMode = false
+      } else {
+        if (calcData.numberList.size > 0) {
+          val op = calcData.numberList.last()
+          calcData.numberList.add(op)
+        }
+      }
+
+      CalcRepository.calcData.postValue(calcData)
+    }
+
+    fun num(value: Double) {
+      if (calcData.editMode) {
+        if (calcData.numberList.isEmpty()) {
+          calcData.numberList.add(value)
+        } else {
+          calcData.numberList[calcData.numberList.size - 1] =
+            calcData.numberList[calcData.numberList.size - 1] * 10.0 + value
+        }
+      } else {
+        calcData.editMode = true
+        calcData.numberList.add(value)
+      }
+
+      CalcRepository.calcData.postValue(calcData)
+    }
+
+    binding.calc1.setOnClickListener { num(1.0) }
+    binding.calc2.setOnClickListener { num(2.0) }
+    binding.calc3.setOnClickListener { num(3.0) }
+
+    binding.calcPlus.setOnClickListener {
+      if (calcData.numberList.size >= 2) {
+        calcData.editMode = false
+        val op1 = calcData.numberList.removeLast()
+        val op2 = calcData.numberList.removeLast()
+        calcData.numberList.add(op1 + op2)
+
+        CalcRepository.calcData.postValue(calcData)
       }
     }
   }
