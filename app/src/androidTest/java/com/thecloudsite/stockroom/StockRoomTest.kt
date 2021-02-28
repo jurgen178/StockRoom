@@ -50,6 +50,38 @@ class StockRoomTest {
 
   @Test
   @Throws(Exception::class)
+  fun numberFormat() {
+    val DecimalFormatCalcDigits = "#,##0.########"
+
+    assertEquals(
+      "1,23", DecimalFormat("#,##0.########").format(1.23)
+    )
+
+    val numberFormat1: NumberFormat = NumberFormat.getNumberInstance()
+    assertEquals(
+      "1,23", numberFormat1.parse("1,23")!!.toDouble()
+    )
+    assertEquals(
+      "1,23", numberFormat1.parse("1.23")!!.toDouble()
+    )
+    assertEquals(
+      "1,23", numberFormat1.format(1.23)
+    )
+
+    val numberFormat2: NumberFormat = NumberFormat.getInstance(Locale.ENGLISH)
+    assertEquals(
+      "1,23", numberFormat2.parse("1,23")!!.toDouble()
+    )
+    assertEquals(
+      "1,23", numberFormat2.parse("1.23")!!.toDouble()
+    )
+    assertEquals(
+      "1.23", numberFormat1.format(1.23)
+    )
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun timeZoneTest() {
 
     val localDateTimeNow = LocalDateTime.now()
@@ -61,8 +93,14 @@ class StockRoomTest {
 
     val localDateTime = LocalDateTime.ofEpochSecond(localDateTimeNowSeconds1, 0, ZoneOffset.UTC)
     val localDateTime2 = LocalDateTime.ofEpochSecond(localDateTimeNowSeconds2, 0, ZoneOffset.UTC)
-    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(zonedDateTimeNowSeconds), ZonedDateTime.now().zone)
-    val zonedDateTime2 = ZonedDateTime.ofInstant(Instant.ofEpochSecond(zonedDateTimeNowSeconds), ZoneOffset.systemDefault())
+    val zonedDateTime = ZonedDateTime.ofInstant(
+      Instant.ofEpochSecond(zonedDateTimeNowSeconds),
+      ZonedDateTime.now().zone
+    )
+    val zonedDateTime2 = ZonedDateTime.ofInstant(
+      Instant.ofEpochSecond(zonedDateTimeNowSeconds),
+      ZoneOffset.systemDefault()
+    )
 
     val z1 = ZonedDateTime.now().zone
     val z2 = ZoneOffset.systemDefault()
@@ -77,10 +115,11 @@ class StockRoomTest {
     val datetimeYTDlocal = LocalDateTime.of(LocalDateTime.now().year, 1, 1, 0, 0, 0)
     val secondsYTDlocal = datetimeYTDlocal.toEpochSecond(ZoneOffset.UTC)
 
-    val datetimeYTDzoned = ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone)
+    val datetimeYTDzoned =
+      ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone)
     val secondsYTDzoned = datetimeYTDzoned.toEpochSecond() // in GMT
 
-    assertEquals(secondsYTDlocal + 8*60*60, secondsYTDzoned)
+    assertEquals(secondsYTDlocal + 8 * 60 * 60, secondsYTDzoned)
   }
 
   @Test

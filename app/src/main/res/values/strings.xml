@@ -523,4 +523,8 @@ limitations under the License. -->
   <string name="calc_title">AI and machine learning finance calculation</string>
   <string name="calc_copy">Copy</string>
   <string name="calc_paste">Paste</string>
+  <string name="title_activity_calc_settings">Calc Settings</string>
+  <string name="calc_format_header">Display format</string>
+  <string name="calc_format_displayed_decimals">Displayed decimals</string>
+  <string name="calc_format_decimal_separator">Decimal separator</string>
 </resources>

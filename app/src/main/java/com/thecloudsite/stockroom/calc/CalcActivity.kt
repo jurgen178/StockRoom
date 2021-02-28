@@ -19,14 +19,19 @@ package com.thecloudsite.stockroom.calc
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
 import com.thecloudsite.stockroom.setBackgroundColor
 import java.text.DecimalFormatSymbols
@@ -45,6 +50,35 @@ class CalcActivity : AppCompatActivity() {
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+    val displayedDecimalsSetting =
+      sharedPreferences.getString("calc_format_displayed_decimals", "1")
+    val displayedDecimals: Int = when (displayedDecimalsSetting) {
+      "0" -> {
+        2
+      }
+      "1" -> {
+        8
+      }
+      else -> {
+        16
+      }
+    }
+
+    val decimalSeparatorSetting = sharedPreferences.getString("calc_format_decimal_separator", "0")
+    val separatorChar = when (decimalSeparatorSetting) {
+      "0" -> {
+        DecimalFormatSymbols.getInstance().decimalSeparator
+      }
+      "1" -> {
+        '.'
+      }
+      else -> {
+        ','
+      }
+    }
+
     val calcAdapter = CalcAdapter(this)
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(this)
@@ -54,7 +88,7 @@ class CalcActivity : AppCompatActivity() {
     calcViewModel.calcData.observe(this, Observer { data ->
       if (data != null) {
 
-        calcAdapter.updateData(data)
+        calcAdapter.updateData(data, displayedDecimals, separatorChar)
 
         // scroll to always show last element at the bottom of the list
         binding.calclines.adapter?.itemCount?.minus(1)
@@ -62,7 +96,6 @@ class CalcActivity : AppCompatActivity() {
       }
     })
 
-    val separatorChar: Char = DecimalFormatSymbols.getInstance().decimalSeparator
     binding.calcDot.text = separatorChar.toString()
 
     fun touchHelper(view: View, event: MotionEvent) {
@@ -147,6 +180,17 @@ class CalcActivity : AppCompatActivity() {
     binding.calcSub.setOnClickListener { calcViewModel.opBinary(BinaryOperation.SUB) }
     binding.calcAdd.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcAdd.setOnClickListener { calcViewModel.opBinary(BinaryOperation.ADD) }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    menuInflater.inflate(R.menu.calc_menu, menu)
+    return true
+  }
+
+  fun onSettings(item: MenuItem) {
+    val intent = Intent(this@CalcActivity, CalcSettingsActivity::class.java)
+    startActivity(intent)
   }
 
   override fun onSupportNavigateUp(): Boolean {

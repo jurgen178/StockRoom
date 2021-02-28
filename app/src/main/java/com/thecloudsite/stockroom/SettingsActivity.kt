@@ -46,7 +46,6 @@ import com.thecloudsite.stockroom.calc.CalcActivity
 import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
 import com.thecloudsite.stockroom.databinding.DialogRenameSymbolBinding
 import com.thecloudsite.stockroom.utils.setAppTheme
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM

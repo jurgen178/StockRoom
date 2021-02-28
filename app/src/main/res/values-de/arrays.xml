@@ -48,4 +48,14 @@
     <item>Dunkel</item>
     <item>Automatisch entsprechend dem Batteriestand</item>
   </string-array>
+  <string-array name="calc_format_displayed_decimals">
+    <item>2 (3,14)</item>
+    <item>8 (3,14159265)</item>
+    <item>Max (3,141592653589793238)</item>
+  </string-array>
+  <string-array name="calc_format_decimal_separator">
+    <item>Systemeinstellung</item>
+    <item>.</item>
+    <item>,</item>
+  </string-array>
 </resources>

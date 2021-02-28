@@ -97,7 +97,7 @@ class CalcAdapter internal constructor(
       SpannableStringBuilder().color(Color.BLACK) { append(prefixText) }
   }
 
-  fun updateData(calcData: CalcData) {
+  fun updateData(calcData: CalcData, displayedDecimals: Int, separatorChar: Char) {
     this.calcData = calcData
 
     notifyDataSetChanged()
