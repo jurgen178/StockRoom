@@ -79,7 +79,7 @@ class CalcAdapter internal constructor(
         }
 
     holder.binding.calclineNumber.text =
-      SpannableStringBuilder().color(Color.DKGRAY) { append(lineText) }
+      SpannableStringBuilder().color(Color.BLACK) { append(lineText) }
 
     val prefixText =
       if (position >= 0 && position < this.calcData.numberList.size) {
@@ -94,7 +94,7 @@ class CalcAdapter internal constructor(
       }
 
     holder.binding.calclinePrefix.text =
-      SpannableStringBuilder().color(Color.DKGRAY) { append(prefixText) }
+      SpannableStringBuilder().color(Color.BLACK) { append(prefixText) }
   }
 
   fun updateData(calcData: CalcData) {

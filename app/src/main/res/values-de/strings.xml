@@ -81,7 +81,7 @@ limitations under the License. -->
 
   <!-- Preference Titles -->
   <string name="title_activity_settings">Einstellungen</string>
-  <string name="title_activity_calc">Rechner</string>
+  <string name="title_activity_calc">AI</string>
   <string name="general_header">Allgemein</string>
   <string name="display_header">Anzeige</string>
   <string name="feedback_header">Rückmeldung</string>

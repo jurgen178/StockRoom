@@ -110,7 +110,7 @@ class CalcActivity : AppCompatActivity() {
     binding.calcINV.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcINV.setOnClickListener { calcViewModel.opUnary(UnaryOperation.INV) }
     binding.calcEnter.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcEnter.setOnClickListener { calcViewModel.enter() }
+    binding.calcEnter.setOnClickListener { calcViewModel.enter(this) }
     binding.calcSign.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSign.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SIGN) }
     binding.calcDrop.setOnTouchListener { view, event -> touchHelper(view, event); false }

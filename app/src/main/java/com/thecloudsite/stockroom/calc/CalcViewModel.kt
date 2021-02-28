@@ -16,9 +16,12 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.app.AlertDialog
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.thecloudsite.stockroom.R
 import java.text.NumberFormat
 import kotlin.math.pow
 
@@ -80,14 +83,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (calcData.numberList.size > 0) {
       calcData.editMode = false
 
-      // Validation
-      val d = calcData.numberList.last()
-      if (op == UnaryOperation.INV && (d == 0.0 || d.isNaN())) {
-        return
-      }
-      if (op == UnaryOperation.SQR && d < 0.0) {
-        return
-      }
+//      // Validation
+//      val d = calcData.numberList.last()
+//      if (op == UnaryOperation.INV && (d == 0.0 || d.isNaN())) {
+//        return
+//      }
+//      if (op == UnaryOperation.SQR && d < 0.0) {
+//        return
+//      }
 
       val op1 = calcData.numberList.removeLast()
 
@@ -116,11 +119,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (calcData.numberList.size > 1) {
       calcData.editMode = false
 
-      // Validation
-      val d = calcData.numberList.last()
-      if (op == BinaryOperation.DIV && (d == 0.0 || d.isNaN())) {
-        return
-      }
+//      // Validation
+//      val d = calcData.numberList.last()
+//      if (op == BinaryOperation.DIV && (d == 0.0 || d.isNaN())) {
+//        return
+//      }
 
       val op2 = calcData.numberList.removeLast()
       val op1 = calcData.numberList.removeLast()
@@ -165,10 +168,22 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun enter() {
+  fun enter(context: Context) {
     val calcData1 = calcData.value!!
 
     val calcData = if (calcData1.editMode) {
+      if (calcData1.editline == ",,,,,") {
+        AlertDialog.Builder(context)
+          // https://convertcodes.com/unicode-converter-encode-decode-utf/
+          .setTitle(
+            "\u0041\u0049\u0020\u003d\u0020\u0041\u006c\u0069\u0065\u006e\u0020\u0049\u006e\u0074\u0065\u006c\u006c\u0069\u0067\u0065\u006e\u0063\u0065"
+          )
+          .setMessage(
+            "\u0057\u0061\u0074\u0063\u0068\u0020\u006f\u0075\u0074\u002e"
+          )
+          .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+          .show()
+      }
       submitEditline(calcData.value!!)
     } else {
       if (calcData1.numberList.size > 0) {
@@ -183,6 +198,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   fun submitEditline(calcData: CalcData): CalcData {
     if (calcData.editMode) {
+
       try {
         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
         val value = numberFormat.parse(calcData.editline)!!
