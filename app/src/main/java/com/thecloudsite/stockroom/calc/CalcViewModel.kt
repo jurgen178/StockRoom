@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import kotlin.math.pow
 
@@ -53,7 +54,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun getText(): String {
     val calcData = calcData.value!!
     return if (calcData.numberList.isNotEmpty()) {
-      calcData.numberList.last().toString()
+      // calcData.numberList.last().toString() converts to E-notation
+      calcData.numberList.last().toBigDecimal().toPlainString()
     } else {
       ""
     }
@@ -172,7 +174,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val calcData1 = calcData.value!!
 
     val calcData = if (calcData1.editMode) {
-      if (calcData1.editline == ",,,,,") {
+      val separator = DecimalFormatSymbols.getInstance().decimalSeparator.toString()
+      if (calcData1.editline.length == 5 && calcData1.editline.replace(separator, "").isEmpty()) {
         AlertDialog.Builder(context)
           // https://convertcodes.com/unicode-converter-encode-decode-utf/
           .setTitle(
