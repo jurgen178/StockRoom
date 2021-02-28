@@ -51,6 +51,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcRepository.getData())
   }
 
+  // clipboard export/import text is using the . decimal point
   fun getText(): String {
     val calcData = calcData.value!!
     return if (calcData.numberList.isNotEmpty()) {
@@ -64,9 +65,26 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun setText(text: String?) {
     if (text != null && text.isNotEmpty()) {
       val calcData = calcData.value!!
-      calcData.editline = text
-      calcData.editMode = true
-      calcRepository.updateData(submitEditline(calcData))
+
+      // try . decimal point
+      val value: Double = try {
+        text.toDouble()
+      } catch (e: Exception) {
+        try {
+          // try local specific decimal point
+          val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+          numberFormat.parse(text)!!
+            .toDouble()
+        } catch (e: Exception) {
+          return
+        }
+      }
+
+      calcData.editMode = false
+      calcData.editline = ""
+      calcData.numberList.add(value)
+
+      calcRepository.updateData(calcData)
     }
   }
 
