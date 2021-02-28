@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    android:textSize="20sp"
+    android:layout_margin="4dp"
     >
 
   <TextView
       android:id="@+id/calclinePrefix"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:textSize="20sp"
+      android:fontFamily="@font/bitmap"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/guideline1"
       app:layout_constraintStart_toStartOf="parent"
@@ -21,6 +22,8 @@
       android:id="@+id/calclineNumber"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:textSize="20sp"
+      android:fontFamily="@font/bitmap"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintTop_toTopOf="parent"
@@ -32,7 +35,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="24dp"
+      app:layout_constraintGuide_begin="48dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

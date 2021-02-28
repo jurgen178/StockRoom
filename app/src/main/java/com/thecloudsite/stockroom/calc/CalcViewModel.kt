@@ -47,6 +47,24 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcRepository.getData())
   }
 
+  fun getText(): String {
+    val calcData = calcData.value!!
+    return if (calcData.numberList.isNotEmpty()) {
+      calcData.numberList.last().toString()
+    } else {
+      ""
+    }
+  }
+
+  fun setText(text: String?) {
+    if (text != null && text.isNotEmpty()) {
+      val calcData = calcData.value!!
+      calcData.editline = text
+      calcData.editMode = true
+      calcRepository.updateData(submitEditline(calcData))
+    }
+  }
+
   fun addNum(char: Char) {
     val calcData = calcData.value!!
 
@@ -62,7 +80,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (calcData.numberList.size > 0) {
       calcData.editMode = false
 
-      if (op == UnaryOperation.INV && calcData.numberList.last() == 0.0) {
+      // Validation
+      val d = calcData.numberList.last()
+      if (op == UnaryOperation.INV && (d == 0.0 || d.isNaN())) {
+        return
+      }
+      if (op == UnaryOperation.SQR && d < 0.0) {
         return
       }
 
@@ -93,7 +116,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (calcData.numberList.size > 1) {
       calcData.editMode = false
 
-      if (op == BinaryOperation.DIV && calcData.numberList.last() == 0.0) {
+      // Validation
+      val d = calcData.numberList.last()
+      if (op == BinaryOperation.DIV && (d == 0.0 || d.isNaN())) {
         return
       }
 

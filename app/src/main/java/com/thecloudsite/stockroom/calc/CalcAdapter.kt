@@ -17,9 +17,12 @@
 package com.thecloudsite.stockroom.calc
 
 import android.content.Context
+import android.graphics.Color
+import android.text.SpannableStringBuilder
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.calc.CalcAdapter.CalcViewHolder
 import com.thecloudsite.stockroom.databinding.CalcItemBinding
@@ -53,7 +56,7 @@ class CalcAdapter internal constructor(
     position: Int
   ) {
 
-    holder.binding.calclineNumber.text =
+    val lineText =
       if (this.calcData.editMode && position == this.calcData.numberList.size) {
 
         // edit line
@@ -75,17 +78,23 @@ class CalcAdapter internal constructor(
 
         }
 
-    holder.binding.calclinePrefix.text =
+    holder.binding.calclineNumber.text =
+      SpannableStringBuilder().color(Color.DKGRAY) { append(lineText) }
+
+    val prefixText =
       if (position >= 0 && position < this.calcData.numberList.size) {
 
-          // number list
-          "${this.calcData.numberList.size - position + 1}:"
+        // number list
+        "${this.calcData.numberList.size - position}:"
 
-        } else {
+      } else {
 
-          ""
+        ""
 
-        }
+      }
+
+    holder.binding.calclinePrefix.text =
+      SpannableStringBuilder().color(Color.DKGRAY) { append(prefixText) }
   }
 
   fun updateData(calcData: CalcData) {

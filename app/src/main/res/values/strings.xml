@@ -520,5 +520,7 @@ limitations under the License. -->
   <string name="remove_selection">Remove from the selection</string>
   <string name="app_theme">App Theme</string>
   <string name="summary_commission">Commissions</string>
-  <string name="calc_title">Calc</string>
+  <string name="calc_title">AI and machine learning finance calculation</string>
+  <string name="calc_copy">Copy</string>
+  <string name="calc_paste">Paste</string>
 </resources>

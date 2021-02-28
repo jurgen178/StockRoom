@@ -16,6 +16,9 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
@@ -66,9 +69,34 @@ class CalcActivity : AppCompatActivity() {
       if (event.action == MotionEvent.ACTION_DOWN) {
         setBackgroundColor(view, Color.LTGRAY)
       } else
-        if (event.action == MotionEvent.ACTION_UP) {
+        if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
           setBackgroundColor(view, Color.DKGRAY)
         }
+    }
+
+    binding.calcCopyToClipboard.setOnTouchListener { view, event ->
+      touchHelper(
+        view,
+        event
+      )
+      false
+    }
+    binding.calcCopyToClipboard.setOnClickListener {
+      val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+      val clipData = ClipData.newPlainText("text", calcViewModel.getText())
+      clipboardManager.setPrimaryClip(clipData)
+    }
+
+    binding.calcCopyFromClipboard.setOnTouchListener { view, event ->
+      touchHelper(
+        view,
+        event
+      )
+      false
+    }
+    binding.calcCopyFromClipboard.setOnClickListener {
+      val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+      calcViewModel.setText(clipboardManager.primaryClip?.getItemAt(0)?.text.toString())
     }
 
     binding.calcSwap.setOnTouchListener { view, event -> touchHelper(view, event); false }

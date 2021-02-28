@@ -18,9 +18,31 @@
         >
 
       <TextView
+          android:id="@+id/calc_CopyToClipboard"
+          android:text="@string/calc_copy"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+          app:layout_constraintStart_toEndOf="@id/guidelineX1"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_CopyFromClipboard"
+          android:text="@string/calc_paste"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+          app:layout_constraintStart_toEndOf="@id/guidelineX2"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+          style="@style/calc_style"
+          />
+
+      <TextView
           android:id="@+id/calc_swap"
           android:text="SWAP"
-          android:textSize="14sp"
+          android:textSize="12sp"
           app:layout_constraintBottom_toTopOf="@id/guidelineF1"
           app:layout_constraintEnd_toStartOf="@id/guidelineX5"
           app:layout_constraintStart_toEndOf="@id/guidelineX4"
@@ -253,7 +275,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
-          app:layout_constraintGuide_begin="200dp"
+          app:layout_constraintGuide_begin="190dp"
           />
 
       <androidx.constraintlayout.widget.Guideline
@@ -325,7 +347,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.2"
+          app:layout_constraintGuide_percent="0.14"
           />
 
       <androidx.constraintlayout.widget.Guideline
@@ -333,7 +355,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.35"
+          app:layout_constraintGuide_percent="0.32"
           />
 
       <androidx.constraintlayout.widget.Guideline
@@ -349,7 +371,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.65"
+          app:layout_constraintGuide_percent="0.68"
           />
 
       <androidx.constraintlayout.widget.Guideline
@@ -357,7 +379,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.8"
+          app:layout_constraintGuide_percent="0.86"
           />
 
       <androidx.recyclerview.widget.RecyclerView
@@ -365,6 +387,7 @@
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:background="#CCC69B"
+          android:padding="4dp"
           app:layout_constraintBottom_toTopOf="@+id/guidelineDisp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"

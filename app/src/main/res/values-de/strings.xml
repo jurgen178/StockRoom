@@ -519,5 +519,7 @@ limitations under the License. -->
   <string name="remove_selection">Von der Auswahl entfernen</string>
   <string name="app_theme">Farbdesign</string>
   <string name="summary_commission">Gebühren</string>
-  <string name="calc_title">Rechner</string>
+  <string name="calc_title">AI und maschinelles Lernen unterstütze Finanzkalkulation</string>
+  <string name="calc_copy">Kopieren</string>
+  <string name="calc_paste">Einfügen</string>
 </resources>
