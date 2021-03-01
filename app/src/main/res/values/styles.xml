@@ -142,7 +142,6 @@ limitations under the License. -->
     <item name="android:padding">4dp</item>
     <item name="android:textSize">20sp</item>
     <item name="android:textColor">#FFFFFF</item>
-    <item name="android:layout_gravity">center</item>
     <item name="android:background">@drawable/calc_roundcorner</item>
   </style>
 
