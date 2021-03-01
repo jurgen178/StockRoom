@@ -257,7 +257,8 @@ class SettingsActivity : AppCompatActivity(),
         "\u0057\u0068\u0061\u0074\u0020\u0079\u006f\u0075\u0020\u0061\u0072\u0065\u0020\u006c\u006f\u006f\u006b\u0069\u006e\u0067\u0020\u0066\u006f\u0072",
         "\u004c\u006f\u006f\u006b",
         "\u0054\u0068\u0065\u0020\u0063\u0068\u0061\u0072\u0074",
-        "\u004d\u0069\u006e\u0065"
+        "\u004d\u0069\u006e\u0065",
+        "\u004f\u0062\u0073\u0065\u0072\u0076\u0065"
       )
 
       val messages: List<String> = listOf(
@@ -265,14 +266,15 @@ class SettingsActivity : AppCompatActivity(),
         "\u0069\u0073\u0020\u006e\u006f\u0074\u0020\u0068\u0065\u0072\u0065\u002e",
         "\u004e\u006f\u0072\u0074\u0068\u0020\u0062\u0079\u0020\u004e\u006f\u0072\u0074\u0068\u0065\u0061\u0073\u0074",
         "\u006e\u0065\u0065\u0064\u0073\u0020\u0061\u0020\u0073\u0065\u0063\u006f\u006e\u0064\u0020\u006c\u006f\u006f\u006b\u002e",
-        "\u0074\u0068\u0065\u0020\u0064\u0065\u0074\u0061\u0069\u006c\u0020\u0064\u0061\u0074\u0061\u002e"
+        "\u0074\u0068\u0065\u0020\u0064\u0065\u0074\u0061\u0069\u006c\u0020\u0064\u0061\u0074\u0061\u002e",
+        "\u0074\u0068\u0065\u0020\u0073\u0065\u0063\u0072\u0065\u0074\u0020\u006d\u0065\u0073\u0073\u0061\u0067\u0065\u0020\u0069\u006e\u0020\u0074\u0068\u0065\u0020\u0041\u0049\u002e"
       )
 
       var versionClickCounter: Int = 0
       version?.onPreferenceClickListener =
         OnPreferenceClickListener {
           versionClickCounter++
-          if (versionClickCounter % 10 == 0 && versionClickCounter <= 40) {
+          if (versionClickCounter % 10 == 0 && versionClickCounter <= messages.size * 10) {
             val index = versionClickCounter / 10 - 1
             AlertDialog.Builder(requireContext())
               .setTitle(titles[index])

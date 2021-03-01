@@ -52,32 +52,49 @@ class StockRoomTest {
   @Throws(Exception::class)
   fun numberFormat() {
     val DecimalFormatCalcDigits = "#,##0.########"
+    var resultStr = ""
+    var result: Double = 0.0
 
-    assertEquals(
-      "1,23", DecimalFormat("#,##0.########").format(1.23)
-    )
+    resultStr = DecimalFormat("#,##0.########").format(1.23)
+    assertEquals("1,23", resultStr)
 
     val numberFormat1: NumberFormat = NumberFormat.getNumberInstance()
-    assertEquals(
-      "1,23", numberFormat1.parse("1,23")!!.toDouble()
-    )
-    assertEquals(
-      "1,23", numberFormat1.parse("1.23")!!.toDouble()
-    )
-    assertEquals(
-      "1,23", numberFormat1.format(1.23)
-    )
+
+    result = numberFormat1.parse("1,23")!!.toDouble()
+    assertEquals(1.23, result, epsilon)
+
+    result = numberFormat1.parse("1.23")!!.toDouble()
+    assertEquals(123.0, result, epsilon)
+
+    resultStr = numberFormat1.format(1.23)
+    assertEquals("1,23", resultStr)
+
+    numberFormat1.isGroupingUsed = false
+    resultStr = numberFormat1.format(1234567890123.45)
+    assertEquals("1234567890123,45", resultStr)
+
+    result = numberFormat1.parse(resultStr)!!.toDouble()
+    resultStr = numberFormat1.format(result)
+    assertEquals("1234567890123,45", resultStr)
+
+    numberFormat1.isGroupingUsed = true
+    resultStr = numberFormat1.format(1234567890123.45)
+    assertEquals("1.234.567.890.123,45", resultStr)
+
+    numberFormat1.maximumFractionDigits = 3
+    resultStr = numberFormat1.format(1.23456789)
+    assertEquals("1,235", resultStr)
 
     val numberFormat2: NumberFormat = NumberFormat.getInstance(Locale.ENGLISH)
-    assertEquals(
-      "1,23", numberFormat2.parse("1,23")!!.toDouble()
-    )
-    assertEquals(
-      "1,23", numberFormat2.parse("1.23")!!.toDouble()
-    )
-    assertEquals(
-      "1.23", numberFormat1.format(1.23)
-    )
+
+    result = numberFormat2.parse("1,23")!!.toDouble()
+    assertEquals(123.0, result, epsilon)
+
+    result = numberFormat2.parse("1.23")!!.toDouble()
+    assertEquals(1.23, result, epsilon)
+
+    resultStr = numberFormat1.format(1.23)
+    assertEquals("1.23", resultStr)
   }
 
   @Test

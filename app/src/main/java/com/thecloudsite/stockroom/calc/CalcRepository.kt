@@ -39,6 +39,11 @@ class CalcRepository(val context: Context) {
   fun getData(): CalcData =
     SharedCalcData.calcMutableLiveData.value ?: CalcData()
 
+  // Force redraw of the data.
+  fun updateData() {
+    SharedCalcData.calcMutableLiveData.postValue(getData())
+  }
+
   fun updateData(data: CalcData) {
     SharedCalcData.calcMutableLiveData.postValue(data)
   }

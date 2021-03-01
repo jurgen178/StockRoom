@@ -22,7 +22,6 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
-import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import kotlin.math.pow
 
@@ -46,6 +45,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   private val calcRepository: CalcRepository = CalcRepository(application)
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
+  var separatorChar = ','
+  var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
 
   init {
     calcRepository.updateData(calcRepository.getData())
@@ -56,7 +57,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val calcData = calcData.value!!
     return if (calcData.numberList.isNotEmpty()) {
       // calcData.numberList.last().toString() converts to E-notation
-      calcData.numberList.last().toBigDecimal().toPlainString()
+      // calcData.numberList.last().toBigDecimal().toPlainString()
+      numberFormat.format(calcData.numberList.last())
     } else {
       ""
     }
@@ -66,25 +68,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (text != null && text.isNotEmpty()) {
       val calcData = calcData.value!!
 
-      // try . decimal point
-      val value: Double = try {
-        text.toDouble()
-      } catch (e: Exception) {
-        try {
-          // try local specific decimal point
-          val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-          numberFormat.parse(text)!!
-            .toDouble()
-        } catch (e: Exception) {
-          return
-        }
-      }
+      calcData.editMode = true
+      calcData.editline = text
 
-      calcData.editMode = false
-      calcData.editline = ""
-      calcData.numberList.add(value)
-
-      calcRepository.updateData(calcData)
+      calcRepository.updateData(submitEditline(calcData))
     }
   }
 
@@ -192,8 +179,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val calcData1 = calcData.value!!
 
     val calcData = if (calcData1.editMode) {
-      val separator = DecimalFormatSymbols.getInstance().decimalSeparator.toString()
-      if (calcData1.editline.length == 5 && calcData1.editline.replace(separator, "").isEmpty()) {
+      if (calcData1.editline.length == 5 && calcData1.editline.replace(separatorChar.toString(), "").isEmpty()) {
         AlertDialog.Builder(context)
           // https://convertcodes.com/unicode-converter-encode-decode-utf/
           .setTitle(
@@ -221,7 +207,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (calcData.editMode) {
 
       try {
-        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
         val value = numberFormat.parse(calcData.editline)!!
           .toDouble()
 
@@ -235,6 +220,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     return calcData
+  }
+
+  fun updateData() {
+    calcRepository.updateData()
   }
 
   fun updateData(data: CalcData) {

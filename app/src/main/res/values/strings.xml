@@ -520,11 +520,16 @@ limitations under the License. -->
   <string name="remove_selection">Remove from the selection</string>
   <string name="app_theme">App Theme</string>
   <string name="summary_commission">Commissions</string>
-  <string name="calc_title">AI and machine learning finance calculation</string>
+  <string name="calc_title">AI</string>
   <string name="calc_copy">Copy</string>
   <string name="calc_paste">Paste</string>
-  <string name="title_activity_calc_settings">Calc Settings</string>
+  <string name="title_activity_calc_settings">AI Settings</string>
   <string name="calc_format_header">Display format</string>
   <string name="calc_format_displayed_decimals">Displayed decimals</string>
+  <string name="calc_format_displayed_decimals_desc">Sets the number of displayed decimals.</string>
   <string name="calc_format_decimal_separator">Decimal separator</string>
+  <string name="calc_format_decimal_separator_desc">Sets which char is used as a decimal separator. For example 3.14</string>
+  <string name="calc_format_display_group_separator">Display group separator</string>
+  <string name="calc_format_display_group_separator_desc">Displays the thousands group separator of the number. For example 1,234,567</string>
+  <string name="system_header">System</string>
 </resources>

@@ -27,8 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.calc.CalcAdapter.CalcViewHolder
 import com.thecloudsite.stockroom.databinding.CalcItemBinding
 import java.text.DecimalFormat
-
-const val DecimalFormatCalcDigits = "#,##0.########"
+import java.text.NumberFormat
 
 class CalcAdapter internal constructor(
   private val context: Context
@@ -36,6 +35,7 @@ class CalcAdapter internal constructor(
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var calcData: CalcData = CalcData()
+  private var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
 
   class CalcViewHolder(
     val binding: CalcItemBinding
@@ -69,7 +69,7 @@ class CalcAdapter internal constructor(
           // number list
           val current = this.calcData.numberList[position]
           holder.binding.calclineNumber.gravity = Gravity.END
-          DecimalFormat(DecimalFormatCalcDigits).format(current)
+          numberFormat.format(current)
 
         } else {
 
@@ -97,8 +97,9 @@ class CalcAdapter internal constructor(
       SpannableStringBuilder().color(Color.BLACK) { append(prefixText) }
   }
 
-  fun updateData(calcData: CalcData, displayedDecimals: Int, separatorChar: Char) {
+  fun updateData(calcData: CalcData, numberFormat: NumberFormat) {
     this.calcData = calcData
+    this.numberFormat = numberFormat
 
     notifyDataSetChanged()
   }

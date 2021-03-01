@@ -123,11 +123,11 @@
         <extra
             android:name="android.intent.extra.SUBJECT"
             android:value="StockRoom Feedback"/>
-<!--
-        <extra
-            android:name="android.intent.extra.TEXT"
-            android:value="text"/>
--->
+        <!--
+                <extra
+                    android:name="android.intent.extra.TEXT"
+                    android:value="text"/>
+        -->
       </intent>
     </Preference>
 
@@ -143,14 +143,16 @@
 
   </PreferenceCategory>
 
-  <Preference
-      app:key="calc"
-      app:title="@string/calc_title"
-      app:icon="@drawable/ic_action_calc"
-      />
+  <PreferenceCategory app:title="@string/system_header">
+    <Preference
+        app:key="calc"
+        app:title="@string/calc_title"
+        app:icon="@drawable/ic_action_calc"
+        />
 
-  <Preference
-      app:key="version"
-      app:title="@string/version" />
+    <Preference
+        app:key="version"
+        app:title="@string/version" />
+  </PreferenceCategory>
 
 </PreferenceScreen>

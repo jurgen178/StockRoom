@@ -35,11 +35,15 @@ import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
 import com.thecloudsite.stockroom.setBackgroundColor
 import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
+import java.util.Locale
 
 class CalcActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityCalcBinding
   private lateinit var calcViewModel: CalcViewModel
+  private var separatorChar = ','
+  private var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -50,35 +54,6 @@ class CalcActivity : AppCompatActivity() {
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    val displayedDecimalsSetting =
-      sharedPreferences.getString("calc_format_displayed_decimals", "1")
-    val displayedDecimals: Int = when (displayedDecimalsSetting) {
-      "0" -> {
-        2
-      }
-      "1" -> {
-        8
-      }
-      else -> {
-        16
-      }
-    }
-
-    val decimalSeparatorSetting = sharedPreferences.getString("calc_format_decimal_separator", "0")
-    val separatorChar = when (decimalSeparatorSetting) {
-      "0" -> {
-        DecimalFormatSymbols.getInstance().decimalSeparator
-      }
-      "1" -> {
-        '.'
-      }
-      else -> {
-        ','
-      }
-    }
-
     val calcAdapter = CalcAdapter(this)
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(this)
@@ -88,15 +63,13 @@ class CalcActivity : AppCompatActivity() {
     calcViewModel.calcData.observe(this, Observer { data ->
       if (data != null) {
 
-        calcAdapter.updateData(data, displayedDecimals, separatorChar)
+        calcAdapter.updateData(data, numberFormat)
 
         // scroll to always show last element at the bottom of the list
         binding.calclines.adapter?.itemCount?.minus(1)
           ?.let { binding.calclines.scrollToPosition(it) }
       }
     })
-
-    binding.calcDot.text = separatorChar.toString()
 
     fun touchHelper(view: View, event: MotionEvent) {
       if (event.action == MotionEvent.ACTION_DOWN) {
@@ -186,6 +159,55 @@ class CalcActivity : AppCompatActivity() {
     // Inflate the menu; this adds items to the action bar if it is present.
     menuInflater.inflate(R.menu.calc_menu, menu)
     return true
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+
+    when (sharedPreferences.getString("calc_format_decimal_separator", "0")) {
+      "0" -> {
+        separatorChar = DecimalFormatSymbols.getInstance().decimalSeparator
+        numberFormat = NumberFormat.getNumberInstance()
+      }
+      "1" -> {
+        separatorChar = '.'
+        numberFormat = NumberFormat.getInstance(Locale.ENGLISH)
+      }
+      else -> {
+        separatorChar = ','
+        numberFormat = NumberFormat.getInstance(Locale.GERMAN)
+      }
+    }
+
+    when (sharedPreferences.getString("calc_format_displayed_decimals", "1")) {
+      "0" -> {
+        numberFormat.maximumFractionDigits = 2
+        numberFormat.minimumFractionDigits = 2
+      }
+      "1" -> {
+        numberFormat.maximumFractionDigits = 8
+        numberFormat.minimumFractionDigits = 0
+      }
+      else -> {
+        // https://developer.android.com/reference/java/text/DecimalFormat#setMaximumFractionDigits(int)
+        numberFormat.maximumFractionDigits = 340
+        numberFormat.minimumFractionDigits = 0
+      }
+    }
+
+    numberFormat.isGroupingUsed =
+      sharedPreferences.getBoolean("calc_format_display_group_separator", true)
+
+    calcViewModel.separatorChar = separatorChar
+    calcViewModel.numberFormat = numberFormat
+
+    binding.calcDot.text = separatorChar.toString()
+
+    // Redraw the valued displayed in the adapter with the new number format.
+    calcViewModel.updateData()
   }
 
   fun onSettings(item: MenuItem) {

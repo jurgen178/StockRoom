@@ -50,8 +50,8 @@
   </string-array>
   <string-array name="calc_format_displayed_decimals">
     <item>2 (3,14)</item>
-    <item>8 (3,14159265)</item>
-    <item>Max (3,141592653589793238)</item>
+    <item>0..8 (3,14159265)</item>
+    <item>Max\n(3,14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110)</item>
   </string-array>
   <string-array name="calc_format_decimal_separator">
     <item>Systemeinstellung</item>

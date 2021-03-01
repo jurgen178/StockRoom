@@ -519,11 +519,16 @@ limitations under the License. -->
   <string name="remove_selection">Von der Auswahl entfernen</string>
   <string name="app_theme">Farbdesign</string>
   <string name="summary_commission">Gebühren</string>
-  <string name="calc_title">AI und maschinelles Lernen unterstütze Finanzkalkulation</string>
+  <string name="calc_title">AI</string>
   <string name="calc_copy">Kopieren</string>
   <string name="calc_paste">Einfügen</string>
-  <string name="title_activity_calc_settings">Calc Settings</string>
-  <string name="calc_format_header">Display format</string>
-  <string name="calc_format_displayed_decimals">Displayed decimals</string>
-  <string name="calc_format_decimal_separator">Decimal separator</string>
+  <string name="title_activity_calc_settings">AI-Einstellungen</string>
+  <string name="calc_format_header">Angezeigeformat</string>
+  <string name="calc_format_displayed_decimals">Angezeigte Nachkommastellen</string>
+  <string name="calc_format_displayed_decimals_desc">Legt fest wieviel Nachkommastellen angezeigt werden.</string>
+  <string name="calc_format_decimal_separator">Dezimalzeichen</string>
+  <string name="calc_format_decimal_separator_desc">Legt fest welches Zeichen als Dezimalzeichen verwendet wird. Zum Beispiel 3,14</string>
+  <string name="calc_format_display_group_separator">Gruppentrenner anzeigen</string>
+  <string name="calc_format_display_group_separator_desc">Zeigt den Tausender-Gruppentrenner für die Zahl an. Zum Beispiel 1.234.567</string>
+  <string name="system_header">System</string>
 </resources>
