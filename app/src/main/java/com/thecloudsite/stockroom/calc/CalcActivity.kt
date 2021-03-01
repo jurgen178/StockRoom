@@ -184,17 +184,21 @@ class CalcActivity : AppCompatActivity() {
 
     when (sharedPreferences.getString("calc_format_displayed_decimals", "1")) {
       "0" -> {
-        numberFormat.maximumFractionDigits = 2
         numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 2
       }
       "1" -> {
-        numberFormat.maximumFractionDigits = 8
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 4
+      }
+      "2" -> {
         numberFormat.minimumFractionDigits = 0
+        numberFormat.maximumFractionDigits = 8
       }
       else -> {
         // https://developer.android.com/reference/java/text/DecimalFormat#setMaximumFractionDigits(int)
-        numberFormat.maximumFractionDigits = 340
         numberFormat.minimumFractionDigits = 0
+        numberFormat.maximumFractionDigits = 340
       }
     }
 
