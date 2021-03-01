@@ -121,12 +121,17 @@ class CalcActivity : AppCompatActivity() {
         }
     }
 
-//    binding.calcStocks.setOnTouchListener { view, event ->
-//      if (event.action == MotionEvent.ACTION_UP) {
-//      }
-//
-//      false
-//    }
+    binding.calcStocks.setOnTouchListener { view, event ->
+      if (event.action == MotionEvent.ACTION_DOWN) {
+
+        // Get the latest market value for the stock.
+        stockRoomViewModel.runOnlineTaskNow()
+
+        listLoaded = true
+      }
+
+      false
+    }
     binding.calcStocks.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
       }
@@ -137,6 +142,7 @@ class CalcActivity : AppCompatActivity() {
         position: Int,
         id: Long
       ) {
+        // skip the first selection caused by the initial list loading
         if (listLoaded && position >= 0 && position < stockitemListCopy.size) {
           var marketPrice = stockitemListCopy[position].onlineMarketData.marketPrice
           if (marketPrice == 0.0) {
@@ -151,8 +157,6 @@ class CalcActivity : AppCompatActivity() {
             calcViewModel.add(marketPrice)
           }
         }
-
-        listLoaded = true
       }
     }
 
@@ -242,6 +246,11 @@ class CalcActivity : AppCompatActivity() {
       stockRoomViewModel.runOnlineTask()
       onlineDataHandler.postDelayed(this, MainActivity.onlineDataTimerDelay)
     }
+  }
+
+  override fun onPause() {
+    onlineDataHandler.removeCallbacks(onlineDataTask)
+    super.onPause()
   }
 
   override fun onResume() {
