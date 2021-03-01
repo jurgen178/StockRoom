@@ -47,6 +47,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+  var aic: Int = 0
 
   init {
     calcRepository.updateData(calcRepository.getData())
@@ -75,8 +76,33 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
   }
 
-  fun addNum(char: Char) {
+  fun addNum(char: Char, context: Context? = null) {
     val calcData = calcData.value!!
+
+    if (char == separatorChar) {
+      aic++
+
+      if (context != null && aic == 10) {
+        AlertDialog.Builder(context)
+          // https://convertcodes.com/unicode-converter-encode-decode-utf/
+          .setTitle(
+            "\u0041\u0049\u0020\u003d\u0020\u0041\u006c\u0069\u0065\u006e\u0020\u0049\u006e\u0074\u0065\u006c\u006c\u0069\u0067\u0065\u006e\u0063\u0065"
+          )
+          .setMessage(
+            "\u0057\u0061\u0074\u0063\u0068\u0020\u006f\u0075\u0074\u002e"
+          )
+          .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+          .show()
+      }
+
+      // Validation:
+      // Only one separator char allowed.
+      if (calcData.editline.contains(char)) {
+        return
+      }
+    } else {
+      aic = 0
+    }
 
     calcData.editMode = true
     calcData.editline += char
@@ -175,22 +201,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun enter(context: Context) {
+  fun enter() {
     val calcData1 = calcData.value!!
 
     val calcData = if (calcData1.editMode) {
-      if (calcData1.editline.length == 5 && calcData1.editline.replace(separatorChar.toString(), "").isEmpty()) {
-        AlertDialog.Builder(context)
-          // https://convertcodes.com/unicode-converter-encode-decode-utf/
-          .setTitle(
-            "\u0041\u0049\u0020\u003d\u0020\u0041\u006c\u0069\u0065\u006e\u0020\u0049\u006e\u0074\u0065\u006c\u006c\u0069\u0067\u0065\u006e\u0063\u0065"
-          )
-          .setMessage(
-            "\u0057\u0061\u0074\u0063\u0068\u0020\u006f\u0075\u0074\u002e"
-          )
-          .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-          .show()
-      }
       submitEditline(calcData.value!!)
     } else {
       if (calcData1.numberList.size > 0) {
@@ -219,6 +233,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
     }
 
+    aic = 0
     return calcData
   }
 

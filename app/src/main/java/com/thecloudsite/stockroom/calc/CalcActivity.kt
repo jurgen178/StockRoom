@@ -116,7 +116,7 @@ class CalcActivity : AppCompatActivity() {
     binding.calcINV.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcINV.setOnClickListener { calcViewModel.opUnary(UnaryOperation.INV) }
     binding.calcEnter.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcEnter.setOnClickListener { calcViewModel.enter(this) }
+    binding.calcEnter.setOnClickListener { calcViewModel.enter() }
     binding.calcSign.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSign.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SIGN) }
     binding.calcDrop.setOnTouchListener { view, event -> touchHelper(view, event); false }
@@ -143,7 +143,7 @@ class CalcActivity : AppCompatActivity() {
     binding.calc0.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calc0.setOnClickListener { calcViewModel.addNum('0') }
     binding.calcDot.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcDot.setOnClickListener { calcViewModel.addNum(separatorChar) }
+    binding.calcDot.setOnClickListener { calcViewModel.addNum(separatorChar, this) }
 
     binding.calcDiv.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcDiv.setOnClickListener { calcViewModel.opBinary(BinaryOperation.DIV) }
