@@ -531,4 +531,5 @@ limitations under the License. -->
   <string name="calc_format_display_group_separator">Gruppentrenner anzeigen</string>
   <string name="calc_format_display_group_separator_desc">Zeigt den Tausender-Gruppentrenner für die Zahl an. Zum Beispiel 1.234.567</string>
   <string name="system_header">System</string>
+  <string name="calc_stocks">Aktien</string>
 </resources>

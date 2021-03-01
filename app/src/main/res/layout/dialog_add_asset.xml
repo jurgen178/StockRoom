@@ -47,7 +47,6 @@
             android:gravity="end"
             android:imeOptions="actionDone"
             android:inputType="numberDecimal"
-            android:maxLength="9"
             android:maxLines="1"
             android:nextFocusDown="@+id/price"
             android:nextFocusForward="@+id/price"
@@ -84,7 +83,6 @@
             android:gravity="end"
             android:imeOptions="actionDone"
             android:inputType="numberDecimal"
-            android:maxLength="9"
             android:maxLines="1"
             android:textAlignment="textEnd"
             />
@@ -119,7 +117,6 @@
             android:gravity="end"
             android:imeOptions="actionDone"
             android:inputType="numberDecimal"
-            android:maxLength="9"
             android:maxLines="1"
             android:textAlignment="textEnd"
             />

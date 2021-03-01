@@ -544,7 +544,6 @@
                 android:inputType="numberDecimal"
                 android:digits="0123456789.,"
                 android:imeOptions="actionDone"
-                android:maxLength="9"
                 android:maxLines="1"
                 android:textAlignment="textEnd"
                 />
@@ -619,7 +618,6 @@
                 android:inputType="numberDecimal"
                 android:digits="0123456789.,"
                 android:imeOptions="actionDone"
-                android:maxLength="9"
                 android:maxLines="1"
                 android:textAlignment="textEnd"
                 />
@@ -724,7 +722,6 @@
                       android:inputType="numberDecimal"
                       android:digits="0123456789.,"
                       android:imeOptions="actionDone"
-                      android:maxLength="9"
                       android:maxLines="1"
                       android:textAlignment="textEnd"
                       />
@@ -775,7 +772,6 @@
                       android:inputType="numberDecimal"
                       android:digits="0123456789.,"
                       android:imeOptions="actionDone"
-                      android:maxLength="9"
                       android:maxLines="1"
                       android:textAlignment="textEnd"
                       />
@@ -835,7 +831,6 @@
                       android:inputType="numberDecimal"
                       android:digits="0123456789.,"
                       android:imeOptions="actionDone"
-                      android:maxLength="9"
                       android:maxLines="1"
                       android:textAlignment="textEnd"
                       />
@@ -887,7 +882,6 @@
                       android:inputType="numberDecimal"
                       android:digits="0123456789.,"
                       android:imeOptions="actionDone"
-                      android:maxLength="9"
                       android:maxLines="1"
                       android:textAlignment="textEnd"
                       />

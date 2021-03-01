@@ -532,4 +532,5 @@ limitations under the License. -->
   <string name="calc_format_display_group_separator">Display group separator</string>
   <string name="calc_format_display_group_separator_desc">Displays the thousands group separator of the number. For example 1,234,567</string>
   <string name="system_header">System</string>
+  <string name="calc_stocks">Stocks</string>
 </resources>

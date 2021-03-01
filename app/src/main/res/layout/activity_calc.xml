@@ -39,6 +39,16 @@
           style="@style/calc_style"
           />
 
+      <Spinner
+          android:id="@+id/calc_stocks"
+          android:text="@string/calc_stocks"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+          app:layout_constraintStart_toEndOf="@id/guidelineX3"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+          style="@style/calc_style"
+          />
+
       <TextView
           android:id="@+id/calc_swap"
           android:text="SWAP"

@@ -76,13 +76,23 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
   }
 
+  fun add(value: Double) {
+    val calcData = calcData.value!!
+
+    calcData.editMode = false
+    calcData.editline = ""
+    calcData.numberList.add(value)
+
+    calcRepository.updateData(calcData)
+  }
+
   fun addNum(char: Char, context: Context? = null) {
     val calcData = calcData.value!!
 
     if (char == separatorChar) {
       aic++
 
-      if (context != null && aic == 10) {
+      if (context != null && aic == 5) {
         AlertDialog.Builder(context)
           // https://convertcodes.com/unicode-converter-encode-decode-utf/
           .setTitle(

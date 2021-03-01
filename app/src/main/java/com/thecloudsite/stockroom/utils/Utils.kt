@@ -61,7 +61,7 @@ const val DecimalFormat0To2Digits = "#,##0.##"
 const val DecimalFormat0To4Digits = "#,##0.####"
 const val DecimalFormat0To6Digits = "#,##0.######"
 const val DecimalFormat2To4Digits = "#,##0.00##"
-const val DecimalFormat2To6Digits = "#,##0.00####"
+const val DecimalFormat2To8Digits = "#,##0.00######"
 
 // Rounding error
 const val epsilon = 0.000001

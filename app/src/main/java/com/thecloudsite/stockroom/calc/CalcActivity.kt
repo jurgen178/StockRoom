@@ -16,22 +16,36 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.R.layout
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.thecloudsite.stockroom.MainActivity
 import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.StockAssetsLiveData
+import com.thecloudsite.stockroom.StockItem
+import com.thecloudsite.stockroom.StockRoomViewModel
+import com.thecloudsite.stockroom.database.Assets
+import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
 import com.thecloudsite.stockroom.setBackgroundColor
 import java.text.DecimalFormatSymbols
@@ -41,9 +55,13 @@ import java.util.Locale
 class CalcActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityCalcBinding
+  private lateinit var stockRoomViewModel: StockRoomViewModel
+  private var stockitemListCopy: List<StockItem> = emptyList()
   private lateinit var calcViewModel: CalcViewModel
   private var separatorChar = ','
   private var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+  private var listLoaded = false
+  lateinit var onlineDataHandler: Handler
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -53,10 +71,33 @@ class CalcActivity : AppCompatActivity() {
     setContentView(view)
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    onlineDataHandler = Handler(Looper.getMainLooper())
 
     val calcAdapter = CalcAdapter(this)
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(this)
+
+    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
+
+    stockRoomViewModel.allStockItems.observe(this, Observer { stockitemList ->
+      if (stockitemList != null && stockitemList.isNotEmpty()) {
+
+        // used by the selection
+        stockitemListCopy = stockitemList.sortedBy { stockItem ->
+          stockItem.stockDBdata.symbol
+        }
+
+        if (!listLoaded) {
+
+          val selectedList = stockitemListCopy.map { item ->
+            item.stockDBdata.symbol
+          }
+
+          binding.calcStocks.adapter =
+            ArrayAdapter(this, layout.simple_list_item_1, selectedList)
+        }
+      }
+    })
 
     calcViewModel = ViewModelProvider(this).get(CalcViewModel::class.java)
 
@@ -78,6 +119,41 @@ class CalcActivity : AppCompatActivity() {
         if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
           setBackgroundColor(view, Color.DKGRAY)
         }
+    }
+
+//    binding.calcStocks.setOnTouchListener { view, event ->
+//      if (event.action == MotionEvent.ACTION_UP) {
+//      }
+//
+//      false
+//    }
+    binding.calcStocks.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        if (listLoaded && position >= 0 && position < stockitemListCopy.size) {
+          var marketPrice = stockitemListCopy[position].onlineMarketData.marketPrice
+          if (marketPrice == 0.0) {
+            val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+              stockitemListCopy[position].assets
+            )
+            if (quantity != 0.0 && price != 0.0) {
+              marketPrice = price / quantity
+            }
+          }
+          if (marketPrice != 0.0) {
+            calcViewModel.add(marketPrice)
+          }
+        }
+
+        listLoaded = true
+      }
     }
 
     binding.calcCopyToClipboard.setOnTouchListener { view, event ->
@@ -161,8 +237,18 @@ class CalcActivity : AppCompatActivity() {
     return true
   }
 
+  private val onlineDataTask = object : Runnable {
+    override fun run() {
+      stockRoomViewModel.runOnlineTask()
+      onlineDataHandler.postDelayed(this, MainActivity.onlineDataTimerDelay)
+    }
+  }
+
   override fun onResume() {
     super.onResume()
+
+    onlineDataHandler.post(onlineDataTask)
+    stockRoomViewModel.runOnlineTaskNow()
 
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
