@@ -41,10 +41,10 @@ fun GoertzelFFT(dataList: ArrayList<DataPoint>): ArrayList<DataPoint> {
   dataFFTList.add(DataPoint(0f, 0f))
   dataFFTList.add(DataPoint(1f, 0f))
 
-  for (k in 2 until N / 2) {
+  for (k in 1 until N / 2) {
     // Leistungsspektrum
     val fftData = ((y_real[k]!! * y_real[k]!!) + (y_imag[k]!! * y_imag[k]!!))
-    val x = k.toFloat()
+    val x = (2*k).toFloat()
     dataFFTList.add(DataPoint(x, fftData))
     dataFFTList.add(DataPoint(x, fftData))
   }
