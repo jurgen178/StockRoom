@@ -93,6 +93,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To6Digits
+import com.thecloudsite.stockroom.utils.GoertzelFFT
 import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
 import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
 import com.thecloudsite.stockroom.utils.commissionScale
@@ -2587,6 +2588,19 @@ class StockDataFragment : Fragment() {
     series.fillColor = context?.getColor(R.color.chartLine)!!
 
     seriesList.add(series)
+
+//    // FFT
+//    val dataPointsFFT = GoertzelFFT(dataPoints)
+//    val seriesFFT = LineDataSet(dataPointsFFT as List<Entry>, symbol)
+//
+//    seriesFFT.setDrawHorizontalHighlightIndicator(false)
+//    seriesFFT.setDrawValues(false)
+//    seriesFFT.setDrawFilled(true)
+//    seriesFFT.setDrawCircles(false)
+//    seriesFFT.color = Color.RED
+//    seriesFFT.fillColor = Color.MAGENTA
+//
+//    seriesList.add(seriesFFT)
 
     // Add line points (circles) for transaction dates.
     val assetTimeEntriesCopy: MutableList<AssetsTimeData> = mutableListOf()
