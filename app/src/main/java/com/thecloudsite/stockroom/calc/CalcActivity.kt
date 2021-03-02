@@ -32,20 +32,16 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.MainActivity
 import com.thecloudsite.stockroom.R
-import com.thecloudsite.stockroom.StockAssetsLiveData
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.StockRoomViewModel
-import com.thecloudsite.stockroom.database.Assets
-import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
 import com.thecloudsite.stockroom.setBackgroundColor
 import java.text.DecimalFormatSymbols
@@ -94,7 +90,7 @@ class CalcActivity : AppCompatActivity() {
           }
 
           binding.calcStocks.adapter =
-            ArrayAdapter(this, layout.simple_list_item_1, selectedList)
+            ArrayAdapter(this, R.layout.calc_spinner_item, selectedList)
         }
       }
     })
