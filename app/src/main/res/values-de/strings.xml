@@ -533,4 +533,6 @@ limitations under the License. -->
   <string name="system_header">System</string>
   <string name="calc_stocks">Aktien</string>
   <string name="clipboard">Zwischenablage=</string>
+  <string name="calc_headline">AI</string>
+  <string name="calc_prog_headline">AI prog</string>
 </resources>

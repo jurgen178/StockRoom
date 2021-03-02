@@ -56,7 +56,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcRepository.getData())
   }
 
-  // clipboard export/import text is using the . decimal point
+  // clipboard import/export
   fun getText(): String {
     val calcData = calcData.value!!
     return if (calcData.numberList.isNotEmpty()) {
