@@ -23,6 +23,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.color
+import androidx.core.text.italic
+import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.calc.CalcAdapter.CalcViewHolder
 import com.thecloudsite.stockroom.databinding.CalcItemBinding
@@ -56,45 +58,46 @@ class CalcAdapter internal constructor(
     position: Int
   ) {
 
-    val lineText =
-      if (this.calcData.editMode && position == this.calcData.numberList.size) {
+    holder.binding.calclineNumber.text =
+      if (calcData.editMode && position == calcData.numberList.size) {
 
         // edit line
         holder.binding.calclineNumber.gravity = Gravity.START
-        this.calcData.editline + "‹"
+        SpannableStringBuilder().color(Color.BLACK) { append(calcData.editline + "‹") }
 
       } else
-        if (position >= 0 && position < this.calcData.numberList.size) {
+        if (position >= 0 && position < calcData.numberList.size) {
 
           // number list
-          val current = this.calcData.numberList[position]
+          val current = calcData.numberList[position]
           holder.binding.calclineNumber.gravity = Gravity.END
-          numberFormat.format(current)
+          SpannableStringBuilder().color(Color.GRAY) { scale(0.8f) { append(current.desc) } }
+            .color(Color.BLACK) {
+              append(
+                numberFormat.format(current.value)
+              )
+            }
 
         } else {
 
           holder.binding.calclineNumber.gravity = Gravity.END
-          ""
+          SpannableStringBuilder().append("")
 
         }
 
-    holder.binding.calclineNumber.text =
-      SpannableStringBuilder().color(Color.BLACK) { append(lineText) }
-
-    val prefixText =
-      if (position >= 0 && position < this.calcData.numberList.size) {
+    holder.binding.calclinePrefix.text =
+      if (position >= 0 && position < calcData.numberList.size) {
 
         // number list
-        "${this.calcData.numberList.size - position}:"
+        SpannableStringBuilder().color(Color.BLACK) {
+          append("${calcData.numberList.size - position}:")
+        }
 
       } else {
 
-        ""
+        SpannableStringBuilder().append("")
 
       }
-
-    holder.binding.calclinePrefix.text =
-      SpannableStringBuilder().color(Color.BLACK) { append(prefixText) }
   }
 
   fun updateData(calcData: CalcData, numberFormat: NumberFormat) {
@@ -104,5 +107,5 @@ class CalcAdapter internal constructor(
     notifyDataSetChanged()
   }
 
-  override fun getItemCount() = this.calcData.numberList.size + 1 // numberlist + editline
+  override fun getItemCount() = calcData.numberList.size + 1 // numberlist + editline
 }

@@ -61,29 +61,29 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     return if (calcData.numberList.isNotEmpty()) {
       // calcData.numberList.last().toString() converts to E-notation
       // calcData.numberList.last().toBigDecimal().toPlainString()
-      numberFormat.format(calcData.numberList.last())
+      numberFormat.format(calcData.numberList.last().value)
     } else {
       ""
     }
   }
 
-  fun setText(text: String?) {
+  fun setText(text: String?, desc: String) {
     if (text != null && text.isNotEmpty()) {
       val calcData = calcData.value!!
 
       calcData.editMode = true
       calcData.editline = text
 
-      calcRepository.updateData(submitEditline(calcData))
+      calcRepository.updateData(submitEditline(calcData, desc))
     }
   }
 
-  fun add(value: Double) {
+  fun add(value: Double, desc: String) {
     val calcData = calcData.value!!
 
     calcData.editMode = false
     calcData.editline = ""
-    calcData.numberList.add(value)
+    calcData.numberList.add(CalcLine(desc = desc, value = value))
 
     calcRepository.updateData(calcData)
   }
@@ -137,20 +137,20 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 //        return
 //      }
 
-      val op1 = calcData.numberList.removeLast()
+      val op1 = calcData.numberList.removeLast().value
 
       when (op) {
         UnaryOperation.SQR -> {
-          calcData.numberList.add(op1.pow(0.5))
+          calcData.numberList.add(CalcLine(desc = "", value = op1.pow(0.5)))
         }
         UnaryOperation.SQ -> {
-          calcData.numberList.add(op1.pow(2))
+          calcData.numberList.add(CalcLine(desc = "", value = op1.pow(2)))
         }
         UnaryOperation.INV -> {
-          calcData.numberList.add(1 / op1)
+          calcData.numberList.add(CalcLine(desc = "", value = 1 / op1))
         }
         UnaryOperation.SIGN -> {
-          calcData.numberList.add(-op1)
+          calcData.numberList.add(CalcLine(desc = "", value = -op1))
         }
       }
 
@@ -175,31 +175,36 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       when (op) {
         BinaryOperation.ADD -> {
-          calcData.numberList.add(op1 + op2)
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value + op2.value))
         }
         BinaryOperation.SUB -> {
-          calcData.numberList.add(op1 - op2)
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value - op2.value))
         }
         BinaryOperation.MULT -> {
-          calcData.numberList.add(op1 * op2)
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value * op2.value))
         }
         BinaryOperation.DIV -> {
-          calcData.numberList.add(op1 / op2)
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value / op2.value))
         }
         BinaryOperation.POW -> {
-          calcData.numberList.add(op1.pow(op2))
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value.pow(op2.value)))
         }
         BinaryOperation.SWAP -> {
-          calcData.numberList.add(op2)
-          calcData.numberList.add(op1)
+          calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
+          calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
         }
         // Percent
         BinaryOperation.PER -> {
-          calcData.numberList.add(op1 * op2 / 100)
+          calcData.numberList.add(CalcLine(desc = "% ", value = op1.value * op2.value / 100))
         }
         // Percent change
         BinaryOperation.PERC -> {
-          calcData.numberList.add((op2 - op1) / op1 * 100)
+          calcData.numberList.add(
+            CalcLine(
+              desc = "∆% ",
+              value = (op2.value - op1.value) / op1.value * 100
+            )
+          )
         }
       }
 
@@ -237,7 +242,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun submitEditline(calcData: CalcData): CalcData {
+  fun submitEditline(calcData: CalcData, desc: String = ""): CalcData {
     if (calcData.editMode) {
 
       try {
@@ -246,12 +251,17 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
         calcData.editMode = false
         calcData.editline = ""
-        calcData.numberList.add(value)
+        calcData.numberList.add(CalcLine(desc = desc, value = value))
 
         return calcData
       } catch (e: Exception) {
       }
     }
+
+//    // Remove all descriptions.
+//    calcData.numberList.forEach { calcLine ->
+//      calcLine.desc = ""
+//    }
 
     aic = 0
     return calcData

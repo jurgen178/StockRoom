@@ -20,9 +20,15 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
+data class CalcLine
+  (
+  var desc: String = "",
+  var value: Double = 0.0,
+)
+
 data class CalcData
   (
-  var numberList: MutableList<Double> = mutableListOf(),
+  var numberList: MutableList<CalcLine> = mutableListOf(),
   var editMode: Boolean = true,
   var editline: String = ""
 )

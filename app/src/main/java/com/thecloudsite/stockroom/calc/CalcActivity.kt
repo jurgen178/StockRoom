@@ -165,7 +165,7 @@ class CalcActivity : AppCompatActivity() {
             }
           }
           if (marketPrice != 0.0) {
-            calcViewModel.add(marketPrice)
+            calcViewModel.add(marketPrice, "${stockitemListCopy[position].stockDBdata.symbol}=")
           }
         }
       }
@@ -193,7 +193,10 @@ class CalcActivity : AppCompatActivity() {
     }
     binding.calcCopyFromClipboard.setOnClickListener {
       val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-      calcViewModel.setText(clipboardManager.primaryClip?.getItemAt(0)?.text.toString())
+      calcViewModel.setText(
+        clipboardManager.primaryClip?.getItemAt(0)?.text.toString(),
+        getString(R.string.clipboard)
+      )
     }
 
     binding.calcPercentChange.setOnTouchListener { view, event -> touchHelper(view, event); false }
