@@ -16,7 +16,6 @@
 
 package com.thecloudsite.stockroom.calc
 
-import android.R.layout
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -25,6 +24,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -32,7 +32,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -47,6 +46,22 @@ import com.thecloudsite.stockroom.setBackgroundColor
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.Locale
+
+// Support selection of the same item
+class CustomSpinner(
+  context: Context,
+  attrs: AttributeSet?
+) :
+  androidx.appcompat.widget.AppCompatSpinner(context, attrs) {
+  override fun setSelection(position: Int) {
+    val sameSelected = position == selectedItemPosition
+    super.setSelection(position)
+    if (sameSelected) {
+      // Spinner does not call the OnItemSelectedListener if the same item is selected, so do it manually now
+      onItemSelectedListener!!.onItemSelected(this, selectedView, position, selectedItemId)
+    }
+  }
+}
 
 class CalcActivity : AppCompatActivity() {
 
