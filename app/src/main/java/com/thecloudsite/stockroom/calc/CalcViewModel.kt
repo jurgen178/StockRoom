@@ -23,9 +23,30 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import java.text.NumberFormat
+import kotlin.math.cos
+import kotlin.math.ln
 import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.tan
 
-enum class BinaryOperation {
+enum class ZeroArgument {
+  PI,
+  E,
+}
+
+enum class UnaryArgument {
+  SQR,
+  SQ,
+  INV,
+  SIGN,
+  SIN,
+  COS,
+  TAN,
+  LN,
+  E,
+}
+
+enum class BinaryArgument {
   ADD,
   SUB,
   MULT,
@@ -37,17 +58,15 @@ enum class BinaryOperation {
   PERC, // Percent change
 }
 
-enum class UnaryOperation {
-  SQR,
-  SQ,
-  INV,
-  SIGN,
+enum class TernaryArgument {
+  ZinsMonat,
 }
 
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   private val calcRepository: CalcRepository = CalcRepository(application)
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
+  var radian = 1.0
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
   var aic: Int = 0
@@ -123,7 +142,24 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun opUnary(op: UnaryOperation) {
+  fun opZero(op: ZeroArgument) {
+    val calcData = submitEditline(calcData.value!!)
+
+    calcData.editMode = false
+
+    when (op) {
+      ZeroArgument.PI -> {
+        calcData.numberList.add(CalcLine(desc = "", value = Math.PI))
+      }
+      ZeroArgument.E -> {
+        calcData.numberList.add(CalcLine(desc = "", value = Math.E))
+      }
+    }
+
+    calcRepository.updateData(calcData)
+  }
+
+  fun opUnary(op: UnaryArgument) {
     val calcData = submitEditline(calcData.value!!)
 
     if (calcData.numberList.size > 0) {
@@ -141,17 +177,32 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val op1 = calcData.numberList.removeLast().value
 
       when (op) {
-        UnaryOperation.SQR -> {
+        UnaryArgument.SQR -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.pow(0.5)))
         }
-        UnaryOperation.SQ -> {
+        UnaryArgument.SQ -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.pow(2)))
         }
-        UnaryOperation.INV -> {
+        UnaryArgument.INV -> {
           calcData.numberList.add(CalcLine(desc = "", value = 1 / op1))
         }
-        UnaryOperation.SIGN -> {
+        UnaryArgument.SIGN -> {
           calcData.numberList.add(CalcLine(desc = "", value = -op1))
+        }
+        UnaryArgument.SIN -> {
+          calcData.numberList.add(CalcLine(desc = "", value = sin(op1 * radian)))
+        }
+        UnaryArgument.COS -> {
+          calcData.numberList.add(CalcLine(desc = "", value = cos(op1 * radian)))
+        }
+        UnaryArgument.TAN -> {
+          calcData.numberList.add(CalcLine(desc = "", value = tan(op1 * radian)))
+        }
+        UnaryArgument.LN -> {
+          calcData.numberList.add(CalcLine(desc = "", value = ln(op1)))
+        }
+        UnaryArgument.E -> {
+          calcData.numberList.add(CalcLine(desc = "", value = Math.E.pow(op1)))
         }
       }
 
@@ -159,7 +210,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
   }
 
-  fun opBinary(op: BinaryOperation) {
+  fun opBinary(op: BinaryArgument) {
     val calcData = submitEditline(calcData.value!!)
 
     if (calcData.numberList.size > 1) {
@@ -175,42 +226,67 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val op1 = calcData.numberList.removeLast()
 
       when (op) {
-        BinaryOperation.ADD -> {
+        BinaryArgument.ADD -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.value + op2.value))
         }
-        BinaryOperation.SUB -> {
+        BinaryArgument.SUB -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.value - op2.value))
         }
-        BinaryOperation.MULT -> {
+        BinaryArgument.MULT -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.value * op2.value))
         }
-        BinaryOperation.DIV -> {
+        BinaryArgument.DIV -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.value / op2.value))
         }
-        BinaryOperation.POW -> {
+        BinaryArgument.POW -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.value.pow(op2.value)))
         }
-        BinaryOperation.SWAP -> {
+        BinaryArgument.SWAP -> {
           calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
           calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
         }
-        BinaryOperation.OVER -> {
+        BinaryArgument.OVER -> {
           calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
           calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
           calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
         }
         // Percent
-        BinaryOperation.PER -> {
+        BinaryArgument.PER -> {
           calcData.numberList.add(CalcLine(desc = "% ", value = op1.value * op2.value / 100))
         }
         // Percent change
-        BinaryOperation.PERC -> {
+        BinaryArgument.PERC -> {
           calcData.numberList.add(
             CalcLine(
               desc = "∆% ",
               value = (op2.value - op1.value) / op1.value * 100
             )
           )
+        }
+      }
+
+      calcRepository.updateData(calcData)
+    }
+  }
+
+  fun opTernary(op: TernaryArgument) {
+    val calcData = submitEditline(calcData.value!!)
+
+    if (calcData.numberList.size > 2) {
+      calcData.editMode = false
+
+      val op3 = calcData.numberList.removeLast().value
+      val op2 = calcData.numberList.removeLast().value
+      val op1 = calcData.numberList.removeLast().value
+
+      when (op) {
+        TernaryArgument.ZinsMonat -> {
+          val K = op1 // Kapital
+          val P = op2 // Jahreszins
+          val J = op3 // Laufzeit in Jahren
+          val p = P / 12.0 / 100.0
+          val M = p * K / (1.0 - (1.0 + p).pow(-J * 12.0))
+          calcData.numberList.add(CalcLine(desc = "Monatsrate=", value = M))
         }
       }
 

@@ -31,6 +31,14 @@
         app:icon="@drawable/ic_action_calc_separator"
         />
 
+    <SwitchPreferenceCompat
+        app:key="calc_format_radian"
+        app:title="@string/calc_format_radian"
+        app:summary="@string/calc_format_radian_desc"
+        app:defaultValue="true"
+        app:icon="@drawable/ic_action_calc_pi"
+        />
+
   </PreferenceCategory>
 
 </PreferenceScreen>

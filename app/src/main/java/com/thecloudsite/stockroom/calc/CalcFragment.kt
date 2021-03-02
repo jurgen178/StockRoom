@@ -19,9 +19,7 @@ package com.thecloudsite.stockroom.calc
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -29,37 +27,15 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.StockRoomViewModel
 import com.thecloudsite.stockroom.databinding.FragmentCalcBinding
-import com.thecloudsite.stockroom.setBackgroundColor
-import java.text.DecimalFormatSymbols
-import java.text.NumberFormat
-import java.util.Locale
 
-// Support selection of the same item
-class CustomSpinner(
-  context: Context,
-  attrs: AttributeSet?
-) :
-  androidx.appcompat.widget.AppCompatSpinner(context, attrs) {
-  override fun setSelection(position: Int) {
-    val sameSelected = position == selectedItemPosition
-    super.setSelection(position)
-    if (sameSelected) {
-      // Spinner does not call the OnItemSelectedListener if the same item is selected, so do it manually now
-      onItemSelectedListener!!.onItemSelected(this, selectedView, position, selectedItemId)
-    }
-  }
-}
-
-class CalcFragment : Fragment() {
+class CalcFragment : CalcBaseFragment() {
 
   private var _binding: FragmentCalcBinding? = null
 
@@ -69,18 +45,10 @@ class CalcFragment : Fragment() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var stockitemListCopy: List<StockItem> = emptyList()
-  private lateinit var calcViewModel: CalcViewModel
-  private var separatorChar = ','
-  private var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
   private var listLoaded = false
 
   companion object {
     fun newInstance() = CalcFragment()
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setHasOptionsMenu(true)
   }
 
   override fun onCreateView(
@@ -98,13 +66,19 @@ class CalcFragment : Fragment() {
     _binding = null
   }
 
+  override fun updateUI()
+  {
+    // scroll to always show last element at the bottom of the list
+    binding.calclines.adapter?.itemCount?.minus(1)
+      ?.let { binding.calclines.scrollToPosition(it) }
+  }
+
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val calcAdapter = CalcAdapter(requireActivity())
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
@@ -142,15 +116,6 @@ class CalcFragment : Fragment() {
           ?.let { binding.calclines.scrollToPosition(it) }
       }
     })
-
-    fun touchHelper(view: View, event: MotionEvent) {
-      if (event.action == MotionEvent.ACTION_DOWN) {
-        setBackgroundColor(view, Color.LTGRAY)
-      } else
-        if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-          setBackgroundColor(view, Color.DKGRAY)
-        }
-    }
 
     binding.calcStocks.setOnTouchListener { view, event ->
       if (event.action == MotionEvent.ACTION_DOWN) {
@@ -222,25 +187,25 @@ class CalcFragment : Fragment() {
     }
 
     binding.calcPercentChange.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcPercentChange.setOnClickListener { calcViewModel.opBinary(BinaryOperation.PERC) }
+    binding.calcPercentChange.setOnClickListener { calcViewModel.opBinary(BinaryArgument.PERC) }
     binding.calcPercent.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcPercent.setOnClickListener { calcViewModel.opBinary(BinaryOperation.PER) }
+    binding.calcPercent.setOnClickListener { calcViewModel.opBinary(BinaryArgument.PER) }
     binding.calcOver.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcOver.setOnClickListener { calcViewModel.opBinary(BinaryOperation.OVER) }
+    binding.calcOver.setOnClickListener { calcViewModel.opBinary(BinaryArgument.OVER) }
     binding.calcSwap.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSwap.setOnClickListener { calcViewModel.opBinary(BinaryOperation.SWAP) }
+    binding.calcSwap.setOnClickListener { calcViewModel.opBinary(BinaryArgument.SWAP) }
     binding.calcSQR.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSQR.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SQR) }
+    binding.calcSQR.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SQR) }
     binding.calcSQ.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSQ.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SQ) }
+    binding.calcSQ.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SQ) }
     binding.calcPOW.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcPOW.setOnClickListener { calcViewModel.opBinary(BinaryOperation.POW) }
+    binding.calcPOW.setOnClickListener { calcViewModel.opBinary(BinaryArgument.POW) }
     binding.calcINV.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcINV.setOnClickListener { calcViewModel.opUnary(UnaryOperation.INV) }
+    binding.calcINV.setOnClickListener { calcViewModel.opUnary(UnaryArgument.INV) }
     binding.calcEnter.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcEnter.setOnClickListener { calcViewModel.enter() }
     binding.calcSign.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSign.setOnClickListener { calcViewModel.opUnary(UnaryOperation.SIGN) }
+    binding.calcSign.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SIGN) }
     binding.calcDrop.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcDrop.setOnClickListener { calcViewModel.drop() }
 
@@ -268,65 +233,18 @@ class CalcFragment : Fragment() {
     binding.calcDot.setOnClickListener { calcViewModel.addNum(separatorChar, context) }
 
     binding.calcDiv.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcDiv.setOnClickListener { calcViewModel.opBinary(BinaryOperation.DIV) }
+    binding.calcDiv.setOnClickListener { calcViewModel.opBinary(BinaryArgument.DIV) }
     binding.calcMult.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcMult.setOnClickListener { calcViewModel.opBinary(BinaryOperation.MULT) }
+    binding.calcMult.setOnClickListener { calcViewModel.opBinary(BinaryArgument.MULT) }
     binding.calcSub.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSub.setOnClickListener { calcViewModel.opBinary(BinaryOperation.SUB) }
+    binding.calcSub.setOnClickListener { calcViewModel.opBinary(BinaryArgument.SUB) }
     binding.calcAdd.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcAdd.setOnClickListener { calcViewModel.opBinary(BinaryOperation.ADD) }
+    binding.calcAdd.setOnClickListener { calcViewModel.opBinary(BinaryArgument.ADD) }
   }
 
   override fun onResume() {
     super.onResume()
 
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
-
-    when (sharedPreferences.getString("calc_format_decimal_separator", "0")) {
-      "0" -> {
-        separatorChar = DecimalFormatSymbols.getInstance().decimalSeparator
-        numberFormat = NumberFormat.getNumberInstance()
-      }
-      "1" -> {
-        separatorChar = '.'
-        numberFormat = NumberFormat.getInstance(Locale.ENGLISH)
-      }
-      else -> {
-        separatorChar = ','
-        numberFormat = NumberFormat.getInstance(Locale.GERMAN)
-      }
-    }
-
-    when (sharedPreferences.getString("calc_format_displayed_decimals", "1")) {
-      "0" -> {
-        numberFormat.minimumFractionDigits = 2
-        numberFormat.maximumFractionDigits = 2
-      }
-      "1" -> {
-        numberFormat.minimumFractionDigits = 2
-        numberFormat.maximumFractionDigits = 4
-      }
-      "2" -> {
-        numberFormat.minimumFractionDigits = 0
-        numberFormat.maximumFractionDigits = 8
-      }
-      else -> {
-        // https://developer.android.com/reference/java/text/DecimalFormat#setMaximumFractionDigits(int)
-        numberFormat.minimumFractionDigits = 0
-        numberFormat.maximumFractionDigits = 340
-      }
-    }
-
-    numberFormat.isGroupingUsed =
-      sharedPreferences.getBoolean("calc_format_display_group_separator", true)
-
-    calcViewModel.separatorChar = separatorChar
-    calcViewModel.numberFormat = numberFormat
-
     binding.calcDot.text = separatorChar.toString()
-
-    // Redraw the valued displayed in the adapter with the new number format.
-    calcViewModel.updateData()
   }
 }
