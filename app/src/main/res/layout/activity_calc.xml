@@ -81,6 +81,17 @@
           />
 
       <TextView
+          android:id="@+id/calc_over"
+          android:text="OVER"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+          app:layout_constraintStart_toEndOf="@id/guidelineX3"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+          style="@style/calc_style"
+          />
+
+      <TextView
           android:id="@+id/calc_SQR"
           android:text="√x"
           app:layout_constraintBottom_toTopOf="@id/guidelineEnter"

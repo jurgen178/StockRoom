@@ -32,6 +32,7 @@ enum class BinaryOperation {
   DIV,
   POW,
   SWAP,
+  OVER,
   PER,  // Percent
   PERC, // Percent change
 }
@@ -94,7 +95,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (char == separatorChar) {
       aic++
 
-      if (context != null && aic == 5) {
+      if (context != null && aic == 7) {
         AlertDialog.Builder(context)
           // https://convertcodes.com/unicode-converter-encode-decode-utf/
           .setTitle(
@@ -190,6 +191,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           calcData.numberList.add(CalcLine(desc = "", value = op1.value.pow(op2.value)))
         }
         BinaryOperation.SWAP -> {
+          calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
+          calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
+        }
+        BinaryOperation.OVER -> {
+          calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
           calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
           calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
         }
