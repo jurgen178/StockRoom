@@ -196,6 +196,10 @@ class CalcActivity : AppCompatActivity() {
       calcViewModel.setText(clipboardManager.primaryClip?.getItemAt(0)?.text.toString())
     }
 
+    binding.calcPercentChange.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcPercentChange.setOnClickListener { calcViewModel.opBinary(BinaryOperation.PERC) }
+    binding.calcPercent.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcPercent.setOnClickListener { calcViewModel.opBinary(BinaryOperation.PER) }
     binding.calcSwap.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSwap.setOnClickListener { calcViewModel.opBinary(BinaryOperation.SWAP) }
     binding.calcSQR.setOnTouchListener { view, event -> touchHelper(view, event); false }

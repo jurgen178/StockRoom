@@ -31,7 +31,9 @@ enum class BinaryOperation {
   MULT,
   DIV,
   POW,
-  SWAP
+  SWAP,
+  PER,  // Percent
+  PERC, // Percent change
 }
 
 enum class UnaryOperation {
@@ -190,6 +192,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         BinaryOperation.SWAP -> {
           calcData.numberList.add(op2)
           calcData.numberList.add(op1)
+        }
+        // Percent
+        BinaryOperation.PER -> {
+          calcData.numberList.add(op1 * op2 / 100)
+        }
+        // Percent change
+        BinaryOperation.PERC -> {
+          calcData.numberList.add((op2 - op1) / op1 * 100)
         }
       }
 

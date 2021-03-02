@@ -17,6 +17,26 @@
         android:layout_height="match_parent"
         >
 
+      <com.thecloudsite.stockroom.calc.CustomSpinner
+          android:id="@+id/calc_stocks"
+          android:text="@string/calc_stocks"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+          app:layout_constraintStart_toEndOf="@id/guidelineX1"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+          style="@style/calc_selection_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_percentChange"
+          android:text="∆%"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+          app:layout_constraintStart_toEndOf="@id/guidelineX4"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+          style="@style/calc_style"
+          />
+
       <TextView
           android:id="@+id/calc_CopyToClipboard"
           android:text="@string/calc_copy"
@@ -39,24 +59,24 @@
           style="@style/calc_style"
           />
 
-      <com.thecloudsite.stockroom.calc.CustomSpinner
-          android:id="@+id/calc_stocks"
-          android:text="@string/calc_stocks"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-          app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-          style="@style/calc_selection_style"
+      <TextView
+          android:id="@+id/calc_percent"
+          android:text="%"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+          app:layout_constraintStart_toEndOf="@id/guidelineX3"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+          style="@style/calc_style"
           />
 
       <TextView
           android:id="@+id/calc_swap"
           android:text="SWAP"
           android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
           app:layout_constraintEnd_toStartOf="@id/guidelineX5"
           app:layout_constraintStart_toEndOf="@id/guidelineX4"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
           style="@style/calc_style"
           />
 
