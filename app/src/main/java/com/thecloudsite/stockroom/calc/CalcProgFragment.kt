@@ -21,14 +21,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
+import java.util.Locale
 
 class CalcProgFragment : CalcBaseFragment() {
 
   private var _binding: FragmentCalcProgBinding? = null
+  private var f1code = ""
+  private var f1desc = ""
 
   // This property is only valid between onCreateView and
   // onDestroyView.
@@ -79,14 +85,25 @@ class CalcProgFragment : CalcBaseFragment() {
         R.string.execute
       ) { _, _ ->
         // Add () to avoid cast exception.
-        val calcCodeText = (dialogBinding.calcCode.text).toString()
+        f1code = (dialogBinding.calcCode.text).toString()
           .trim()
 
-        val calcDescText = (dialogBinding.calcDesc.text).toString()
+        f1desc = (dialogBinding.calcDesc.text).toString()
           .trim()
 
-        //calcViewModel.function("dup 1.0 +", "test")
-        calcViewModel.function(calcCodeText, calcDescText)
+        val sharedPreferences =
+          PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
+
+        sharedPreferences
+          .edit()
+          .putString("calc_f1_code", f1code)
+          .apply()
+        sharedPreferences
+          .edit()
+          .putString("calc_f1_desc", f1desc)
+          .apply()
+
+        calcViewModel.function(f1code, f1desc)
       }
       .setNegativeButton(
         R.string.cancel
@@ -108,7 +125,7 @@ class CalcProgFragment : CalcBaseFragment() {
 
     binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcF1.setOnClickListener {
-      runCodeDialog("dup 1.0 +", "test")
+      runCodeDialog(f1code, f1desc)
     }
 
     binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
@@ -127,5 +144,26 @@ class CalcProgFragment : CalcBaseFragment() {
     binding.calcE.setOnClickListener { calcViewModel.opZero(ZeroArgument.E) }
     binding.calcEx.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcEx.setOnClickListener { calcViewModel.opUnary(UnaryArgument.E) }
+  }
+
+  override fun onPause() {
+    super.onPause()
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
+
+    f1code = sharedPreferences.getString("calc_f1_code", "").toString()
+    if (f1code.isEmpty()) {
+      f1code = "dup 1.0 +"
+    }
+
+    f1desc = sharedPreferences.getString("calc_f1_desc", "").toString()
+    if (f1desc.isEmpty()) {
+      f1desc = "test="
+    }
   }
 }

@@ -92,7 +92,7 @@
           />
 
       <TextView
-          android:id="@+id/calc_SQR"
+          android:id="@+id/calc_SQRT"
           android:text="√x"
           app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
           app:layout_constraintEnd_toStartOf="@id/guidelineX2"

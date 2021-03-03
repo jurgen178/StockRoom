@@ -194,8 +194,8 @@ class CalcFragment : CalcBaseFragment() {
     binding.calcOver.setOnClickListener { calcViewModel.opBinary(BinaryArgument.OVER) }
     binding.calcSwap.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSwap.setOnClickListener { calcViewModel.opBinary(BinaryArgument.SWAP) }
-    binding.calcSQR.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSQR.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SQR) }
+    binding.calcSQRT.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcSQRT.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SQRT) }
     binding.calcSQ.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSQ.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SQ) }
     binding.calcPOW.setOnTouchListener { view, event -> touchHelper(view, event); false }

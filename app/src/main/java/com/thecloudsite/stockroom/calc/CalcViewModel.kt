@@ -36,7 +36,7 @@ enum class ZeroArgument {
 }
 
 enum class UnaryArgument {
-  SQR,
+  SQRT,
   SQ,
   INV,
   SIGN,
@@ -81,12 +81,54 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     calcData.editMode = false
 
-    val symbols = code.toLowerCase(Locale.ROOT).split(" ")
+    val symbols = code.toLowerCase(Locale.ROOT).split("[ \r\n\t]".toRegex())
     val numbers = calcData.numberList.size
     var errors = 0
 
     symbols.forEach { symbol ->
       when (symbol) {
+        "sin" -> {
+          if (!opUnary(calcData, UnaryArgument.SIN)) {
+            // Error
+            errors++
+          }
+        }
+        "cos" -> {
+          if (!opUnary(calcData, UnaryArgument.COS)) {
+            // Error
+            errors++
+          }
+        }
+        "tan" -> {
+          if (!opUnary(calcData, UnaryArgument.TAN)) {
+            // Error
+            errors++
+          }
+        }
+        "ln" -> {
+          if (!opUnary(calcData, UnaryArgument.LN)) {
+            // Error
+            errors++
+          }
+        }
+        "sqrt" -> {
+          if (!opUnary(calcData, UnaryArgument.SQRT)) {
+            // Error
+            errors++
+          }
+        }
+        "over" -> {
+          if (!opBinary(calcData, BinaryArgument.OVER)) {
+            // Error
+            errors++
+          }
+        }
+        "swap" -> {
+          if (!opBinary(calcData, BinaryArgument.SWAP)) {
+            // Error
+            errors++
+          }
+        }
         "dup" -> {
           if (calcData.numberList.isNotEmpty()) {
             calcData.numberList.add(calcData.numberList.last())
@@ -100,6 +142,33 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             // Error
             errors++
           }
+        }
+        "+-" -> {
+          if (!opBinary(calcData, BinaryArgument.SUB)) {
+            // Error
+            errors++
+          }
+        }
+        "*" -> {
+          if (!opBinary(calcData, BinaryArgument.MULT)) {
+            // Error
+            errors++
+          }
+        }
+        "/" -> {
+          if (!opBinary(calcData, BinaryArgument.DIV)) {
+            // Error
+            errors++
+          }
+        }
+        "^" -> {
+          if (!opBinary(calcData, BinaryArgument.POW)) {
+            // Error
+            errors++
+          }
+        }
+        "" -> {
+          // Skip empty lines.
         }
         else -> {
           try {
@@ -214,7 +283,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   fun opUnary(op: UnaryArgument): Boolean {
     val calcData = submitEditline(calcData.value!!)
+    return opUnary(calcData, op)
+  }
 
+  private fun opUnary(calcData: CalcData, op: UnaryArgument): Boolean {
     val argsValid = calcData.numberList.size > 0
 
     if (argsValid) {
@@ -232,7 +304,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val op1 = calcData.numberList.removeLast().value
 
       when (op) {
-        UnaryArgument.SQR -> {
+        UnaryArgument.SQRT -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.pow(0.5)))
         }
         UnaryArgument.SQ -> {
@@ -335,7 +407,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   fun opTernary(op: TernaryArgument): Boolean {
     val calcData = submitEditline(calcData.value!!)
+    return opTernary(calcData, op)
+  }
 
+  private fun opTernary(calcData: CalcData, op: TernaryArgument): Boolean {
     val argsValid = calcData.numberList.size > 2
 
     if (calcData.numberList.size > 2) {
