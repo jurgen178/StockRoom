@@ -30,7 +30,8 @@ data class CalcData
   (
   var numberList: MutableList<CalcLine> = mutableListOf(),
   var editMode: Boolean = true,
-  var editline: String = ""
+  var editline: String = "",
+  var errorMsg: String = ""
 )
 
 object SharedCalcData {

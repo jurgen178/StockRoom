@@ -104,21 +104,26 @@ class CalcProgFragment : CalcBaseFragment() {
       dialogBinding.calcDesc.setText(codeMap[name]!!.desc)
     }
 
+    fun save() {
+      val calcCodeText = (dialogBinding.calcCode.text).toString()
+      val calcDescText = (dialogBinding.calcDesc.text).toString()
+
+      codeMap[name] = CodeType(code = calcCodeText, desc = calcDescText)
+    }
+
     builder.setView(dialogBinding.root)
       .setTitle(R.string.calc_code)
       // Add action buttons
+      .setNeutralButton(
+        R.string.menu_save_filter_set
+      ) { _, _ ->
+        save()
+      }
       .setPositiveButton(
         R.string.execute
       ) { _, _ ->
-        // Add () to avoid cast exception.
-        val calcCodeText = (dialogBinding.calcCode.text).toString()
-          .trim()
-
-        val calcDescText = (dialogBinding.calcDesc.text).toString()
-          .trim()
-
-        codeMap[name] = CodeType(code = calcCodeText, desc = calcDescText)
-        calcViewModel.function(calcCodeText, calcDescText)
+        save()
+        calcViewModel.function(codeMap[name]!!.code, codeMap[name]!!.desc)
       }
       .setNegativeButton(
         R.string.cancel
@@ -174,7 +179,7 @@ class CalcProgFragment : CalcBaseFragment() {
     val codeMapStr = getSerializedStr()
     sharedPreferences
       .edit()
-      .putString("calc_code", codeMapStr)
+      .putString("calcCodeMap", codeMapStr)
       .apply()
   }
 
@@ -184,9 +189,9 @@ class CalcProgFragment : CalcBaseFragment() {
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
 
-    val codeMapStr = sharedPreferences.getString("calc_code", "").toString()
+    val codeMapStr = sharedPreferences.getString("calcCodeMap", "").toString()
     if (codeMapStr.isEmpty()) {
-      codeMap["F1"] = CodeType(code = "dup 1 +", desc = "Test=")
+      codeMap["F1"] = CodeType(code = "over - swap / 100 *", desc = "∆% ")
     } else {
       setSerializedStr(codeMapStr)
     }

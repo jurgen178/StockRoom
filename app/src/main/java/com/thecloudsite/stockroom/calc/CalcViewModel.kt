@@ -79,7 +79,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun function(code: String, desc: String) {
     val calcData = this.calcData.value!!
 
-    calcData.editMode = false
+    endEdit(calcData)
 
     val symbols = code.toLowerCase(Locale.ROOT).split("[ \r\n\t]".toRegex())
     val numbers = calcData.numberList.size
@@ -155,6 +155,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "" -> {
           // Skip empty lines.
         }
+        "pi" -> {
+          opZero(ZeroArgument.PI)
+        }
+        "e" -> {
+          opZero(ZeroArgument.E)
+        }
         else -> {
           try {
             val value = numberFormat.parse(symbol)!!
@@ -163,14 +169,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             calcData.numberList.add(CalcLine(desc = "", value = value))
           } catch (e: Exception) {
             // Error
-            calcData.numberList.add(CalcLine(desc = "Error parsing '$symbol' ", value = Double.NaN))
+            calcData.errorMsg = "Error parsing '$symbol' "
             success = false
           }
         }
       }
 
       if (!success) {
-        calcData.numberList.add(CalcLine(desc = "Error at symbol $symbol ", value = Double.NaN))
+        calcData.errorMsg = "Error at symbol '$symbol' "
         calcRepository.updateData(calcData)
 
         return
@@ -178,12 +184,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // Add desc to the result.
-    if (desc.isNotEmpty() && success && calcData.numberList.size >= numbers) {
-      if (calcData.numberList.isNotEmpty()) {
-        val op = calcData.numberList.removeLast()
-        op.desc = desc
-        calcData.numberList.add(op)
-      }
+    if (desc.isNotEmpty() && success && calcData.numberList.isNotEmpty()) {
+      val op = calcData.numberList.removeLast()
+      op.desc = desc
+      calcData.numberList.add(op)
     }
 
     calcRepository.updateData(calcData)
@@ -215,8 +219,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun add(value: Double, desc: String) {
     val calcData = calcData.value!!
 
-    calcData.editMode = false
-    calcData.editline = ""
+    endEdit(calcData)
     calcData.numberList.add(CalcLine(desc = desc, value = value))
 
     calcRepository.updateData(calcData)
@@ -259,7 +262,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun opZero(op: ZeroArgument) {
     val calcData = submitEditline(calcData.value!!)
 
-    calcData.editMode = false
+    endEdit(calcData)
 
     when (op) {
       ZeroArgument.PI -> {
@@ -282,7 +285,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val argsValid = calcData.numberList.size > 0
 
     if (argsValid) {
-      calcData.editMode = false
+      endEdit(calcData)
 
 //      // Validation
 //      val d = calcData.numberList.last()
@@ -340,7 +343,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     val argsValid = calcData.numberList.size > 1
     if (argsValid) {
-      calcData.editMode = false
+      endEdit(calcData)
 
 //      // Validation
 //      val d = calcData.numberList.last()
@@ -406,7 +409,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val argsValid = calcData.numberList.size > 2
 
     if (calcData.numberList.size > 2) {
-      calcData.editMode = false
+      endEdit(calcData)
 
       val op3 = calcData.numberList.removeLast().value
       val op2 = calcData.numberList.removeLast().value
@@ -466,8 +469,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         val value = numberFormat.parse(calcData.editline)!!
           .toDouble()
 
-        calcData.editMode = false
-        calcData.editline = ""
+        endEdit(calcData)
         calcData.numberList.add(CalcLine(desc = desc, value = value))
 
         return calcData
@@ -482,6 +484,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     aic = 0
     return calcData
+  }
+
+  private fun endEdit(calcData: CalcData) {
+    calcData.editMode = false
+    calcData.editline = ""
+    calcData.errorMsg = ""
   }
 
   fun updateData() {

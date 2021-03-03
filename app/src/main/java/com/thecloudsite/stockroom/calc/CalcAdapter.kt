@@ -59,11 +59,22 @@ class CalcAdapter internal constructor(
   ) {
 
     holder.binding.calclineNumber.text =
-      if (calcData.editMode && position == calcData.numberList.size) {
+      if (position == calcData.numberList.size) {
 
-        // edit line
+        // edit/error line
         holder.binding.calclineNumber.gravity = Gravity.START
-        SpannableStringBuilder().color(Color.BLACK) { append(calcData.editline + "‹") }
+
+        when {
+          calcData.editline.isNotEmpty() -> {
+            SpannableStringBuilder().color(Color.BLACK) { append(calcData.editline + "‹") }
+          }
+          calcData.errorMsg.isNotEmpty() -> {
+            SpannableStringBuilder().scale(0.8f) { color(Color.RED) { append(calcData.errorMsg) } }
+          }
+          else -> {
+            SpannableStringBuilder()
+          }
+        }
 
       } else
         if (position >= 0 && position < calcData.numberList.size) {
