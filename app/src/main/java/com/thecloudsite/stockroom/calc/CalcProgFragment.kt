@@ -140,6 +140,12 @@ class CalcProgFragment : CalcBaseFragment() {
 
     binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcF1.setOnClickListener { runCodeDialog("F1") }
+    binding.calcF2.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF2.setOnClickListener { runCodeDialog("F2") }
+    binding.calcF3.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF3.setOnClickListener { runCodeDialog("F3") }
+    binding.calcF4.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF4.setOnClickListener { runCodeDialog("F4") }
 
     binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
@@ -180,7 +186,7 @@ class CalcProgFragment : CalcBaseFragment() {
 
     val codeMapStr = sharedPreferences.getString("calc_code", "").toString()
     if (codeMapStr.isEmpty()) {
-      codeMap["F1"] = CodeType(code = "dup 1 +", desc = "test=")
+      codeMap["F1"] = CodeType(code = "dup 1 +", desc = "Test=")
     } else {
       setSerializedStr(codeMapStr)
     }

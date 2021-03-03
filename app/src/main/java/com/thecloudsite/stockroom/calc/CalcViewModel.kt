@@ -83,7 +83,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     val symbols = code.toLowerCase(Locale.ROOT).split("[ \r\n\t]".toRegex())
     val numbers = calcData.numberList.size
-    var success = false
+    var success = true
 
     symbols.forEach { symbol ->
       when (symbol) {
@@ -138,7 +138,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "+" -> {
           success = opBinary(calcData, BinaryArgument.ADD)
         }
-        "+-" -> {
+        "-" -> {
           success = opBinary(calcData, BinaryArgument.SUB)
         }
         "*" -> {

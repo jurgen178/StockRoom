@@ -21,6 +21,16 @@
           android:id="@+id/calc_ZinsMonat"
           android:text="Test"
           android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guideline123"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+          app:layout_constraintStart_toEndOf="@id/guidelineX4"
+          app:layout_constraintTop_toBottomOf="@+id/guideline456"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_F1"
+          android:text="F1"
           app:layout_constraintBottom_toTopOf="@id/guidelineF2"
           app:layout_constraintEnd_toStartOf="@id/guidelineX2"
           app:layout_constraintStart_toEndOf="@id/guidelineX1"
@@ -29,12 +39,31 @@
           />
 
       <TextView
-          android:id="@+id/calc_F1"
-          android:text="F1"
-          android:textSize="12sp"
+          android:id="@+id/calc_F2"
+          android:text="F2"
           app:layout_constraintBottom_toTopOf="@id/guidelineF2"
           app:layout_constraintEnd_toStartOf="@id/guidelineX3"
           app:layout_constraintStart_toEndOf="@id/guidelineX2"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_F3"
+          android:text="F3"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+          app:layout_constraintStart_toEndOf="@id/guidelineX3"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_F4"
+          android:text="F4"
+          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+          app:layout_constraintStart_toEndOf="@id/guidelineX4"
           app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
           style="@style/calc_style"
           />
