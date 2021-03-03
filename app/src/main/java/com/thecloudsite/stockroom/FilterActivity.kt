@@ -50,6 +50,7 @@ import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.databinding.ActivityFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
+import com.thecloudsite.stockroom.utils.saveTextToFile
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -424,30 +425,10 @@ class FilterActivity : AppCompatActivity() {
   ) {
     val jsonString = filterDataViewModel.getSerializedStr()
 
-    // Write the json string.
-    try {
-      context.contentResolver.openOutputStream(exportJsonUri)
-        ?.use { output ->
-          output as FileOutputStream
-          output.channel.truncate(0)
-          output.write(jsonString.toByteArray())
-        }
-
-      val msg = application.getString(
-        R.string.save_filter_msg, filterDataViewModel.filterNameList.size
-      )
-
-      Toast.makeText(context, msg, Toast.LENGTH_LONG)
-        .show()
-
-    } catch (e: Exception) {
-      Toast.makeText(
-        context, application.getString(R.string.export_error, e.message),
-        Toast.LENGTH_LONG
-      )
-        .show()
-      Log.d("Export JSON error", "Exception: $e")
-    }
+    val msg = application.getString(
+      R.string.save_filter_msg, filterDataViewModel.filterNameList.size
+    )
+    saveTextToFile(jsonString, msg, context, exportJsonUri)
   }
 
   private fun filterItemUpdateClicked(
@@ -529,7 +510,8 @@ class FilterActivity : AppCompatActivity() {
           } catch (e: Exception) {
             0L
           }
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneOffset.systemDefault())
+          val localDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneOffset.systemDefault())
           // month is starting from zero
           dialogBinding.datePickerFilter.updateDate(
             localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth

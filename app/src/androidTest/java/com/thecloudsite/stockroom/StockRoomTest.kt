@@ -41,12 +41,42 @@ import java.time.format.FormatStyle.FULL
 import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
-import java.time.temporal.TemporalQueries.zoneId
 import java.util.Locale
-import java.util.TimeZone
 
 @RunWith(AndroidJUnit4::class)
 class StockRoomTest {
+
+  @Test
+  @Throws(Exception::class)
+  fun codeParse() {
+
+    var code = "\nover - swap //* comment */100 * \n// comment1\n/* comment */\n\"∆% \"\n// comment2"
+
+    // Remove comments
+    code = code
+      .replace("/[*].*?[*]/".toRegex(), " ")
+      .replace("//.*?(\n|$)".toRegex(), " ")
+
+    // Split by spaces not followed by even amount of quotes. Spaces need to be outside of quotes.
+    val symbols1 = code.split("\\s+(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)".toRegex())
+    val symbols2 =
+      code.split("\\s(?=(?:[^\"'\\\\]*(?:\\\\.|[\"'](?:[^\"'\\\\]*\\\\.)*[^\"'\\\\]*[\"']))*[^\"']*$)".toRegex())
+
+    assertEquals(7, symbols1.size)
+    assertEquals("\"∆% \"", symbols1[6])
+    assertEquals(7, symbols2.size)
+    assertEquals("\"∆% \"", symbols2[6])
+
+    val isComment = symbols1[6].matches("[\"'](.*?)[\"']".toRegex())
+    val match = "[\"'](.*?)[\"']".toRegex()
+      .matchEntire(symbols1[6])
+
+    var sym = ""
+    if (match != null && match.groups.size == 2) {
+      sym = match.groups[1]?.value.toString()
+    }
+    assertEquals("∆% ", sym)
+  }
 
   @Test
   @Throws(Exception::class)

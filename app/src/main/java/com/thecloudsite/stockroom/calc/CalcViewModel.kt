@@ -76,13 +76,18 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcRepository.getData())
   }
 
-  fun function(code: String, desc: String) {
+  fun function(code: String) {
     val calcData = this.calcData.value!!
 
     endEdit(calcData)
 
-    val symbols = code.toLowerCase(Locale.ROOT).split("[ \r\n\t]".toRegex())
-    val numbers = calcData.numberList.size
+    // Split by spaces not followed by even amount of quotes so only spaces outside of quotes are replaced.
+    val symbols = code
+      .replace("/[*].*?[*]/".toRegex(), " ")
+      .replace("//.*?(\n|$)".toRegex(), " ")
+      .toLowerCase(Locale.ROOT)
+      .split("\\s+(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)".toRegex())
+
     var success = true
 
     symbols.forEach { symbol ->
@@ -162,15 +167,29 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           opZero(ZeroArgument.E)
         }
         else -> {
-          try {
-            val value = numberFormat.parse(symbol)!!
-              .toDouble()
+          // If symbol is comment, add comment to the last entry.
+          val match = "[\"'](.*?)[\"']".toRegex()
+            .matchEntire(symbol)
+          // is comment?
+          if (match != null && match.groups.size == 2 && calcData.numberList.isNotEmpty()) {
+            // first group (groups[0]) is entire src
+            // captured comment is in groups[1]
+            val desc = match.groups[1]?.value.toString()
 
-            calcData.numberList.add(CalcLine(desc = "", value = value))
-          } catch (e: Exception) {
-            // Error
-            calcData.errorMsg = "Error parsing '$symbol' "
-            success = false
+            val op = calcData.numberList.removeLast()
+            op.desc = desc
+            calcData.numberList.add(op)
+          } else {
+            try {
+              val value = numberFormat.parse(symbol)!!
+                .toDouble()
+
+              calcData.numberList.add(CalcLine(desc = "", value = value))
+            } catch (e: Exception) {
+              // Error
+              calcData.errorMsg = "Error parsing '$symbol' "
+              success = false
+            }
           }
         }
       }
@@ -181,13 +200,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
         return
       }
-    }
-
-    // Add desc to the result.
-    if (desc.isNotEmpty() && success && calcData.numberList.isNotEmpty()) {
-      val op = calcData.numberList.removeLast()
-      op.desc = desc
-      calcData.numberList.add(op)
     }
 
     calcRepository.updateData(calcData)

@@ -26,6 +26,8 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.text.bold
@@ -43,6 +45,7 @@ import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
 import com.thecloudsite.stockroom.database.Group
+import java.io.FileOutputStream
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.time.Instant
@@ -1057,5 +1060,33 @@ fun setAppTheme(context: Context) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
       }
     }
+  }
+}
+
+fun saveTextToFile(
+  text: String,
+  msg: String,
+  context: Context,
+  exportJsonUri: Uri
+) {
+  // Write the text string.
+  try {
+    context.contentResolver.openOutputStream(exportJsonUri)
+      ?.use { output ->
+        output as FileOutputStream
+        output.channel.truncate(0)
+        output.write(text.toByteArray())
+      }
+
+    Toast.makeText(context, msg, Toast.LENGTH_LONG)
+      .show()
+
+  } catch (e: Exception) {
+    Toast.makeText(
+      context, context.getString(R.string.export_error, e.message),
+      Toast.LENGTH_LONG
+    )
+      .show()
+    Log.d("Export JSON error", "Exception: $e")
   }
 }

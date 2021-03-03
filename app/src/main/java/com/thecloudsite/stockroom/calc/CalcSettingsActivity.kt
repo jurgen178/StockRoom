@@ -16,10 +16,18 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.thecloudsite.stockroom.R
@@ -27,7 +35,19 @@ import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.xml
 import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.databinding.ActivityCalcSettingsBinding
+import com.thecloudsite.stockroom.exportListActivityRequestCode
+import com.thecloudsite.stockroom.importListActivityRequestCode
+import com.thecloudsite.stockroom.utils.saveTextToFile
 import com.thecloudsite.stockroom.utils.setAppTheme
+import java.io.BufferedReader
+import java.io.FileOutputStream
+import java.io.InputStreamReader
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.MEDIUM
+
+const val importCalcActivityRequestCode = 7
+const val exportCalcActivityRequestCode = 8
 
 class CalcSettingsActivity : AppCompatActivity(),
   SharedPreferences.OnSharedPreferenceChangeListener {
@@ -54,6 +74,97 @@ class CalcSettingsActivity : AppCompatActivity(),
   override fun onSupportNavigateUp(): Boolean {
     onBackPressed()
     return true
+  }
+
+  override fun onActivityResult(
+    requestCode: Int,
+    resultCode: Int,
+    resultData: Intent?
+  ) {
+    super.onActivityResult(requestCode, resultCode, resultData)
+
+    if (resultCode == Activity.RESULT_OK) {
+      val resultCodeShort = requestCode.toShort()
+        .toInt()
+      if (resultCodeShort == importCalcActivityRequestCode) {
+        resultData?.data?.also { uri ->
+
+          // Perform operations on the document using its URI.
+          loadCode(this, uri)
+          finish()
+        }
+      } else
+        if (resultCodeShort == exportCalcActivityRequestCode) {
+          resultData?.data?.also { uri ->
+
+            // Perform operations on the document using its URI.
+            saveCode(this, uri)
+            finish()
+          }
+        }
+    }
+  }
+
+  private fun loadCode(
+    context: Context,
+    uri: Uri
+  ) {
+    try {
+      context.contentResolver.openInputStream(uri)
+        ?.use { inputStream ->
+          BufferedReader(InputStreamReader(inputStream)).use { reader ->
+            val text: String = reader.readText()
+
+            // https://developer.android.com/training/secure-file-sharing/retrieve-info
+
+            when (val type = context.contentResolver.getType(uri)) {
+              "application/json", "text/x-json" -> {
+
+                val sharedPreferences =
+                  PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+
+                sharedPreferences
+                  .edit()
+                  .putString("calcCodeMap", text)
+                  .apply()
+
+                val msg = application.getString(
+                  R.string.load_code_msg
+                )
+                Toast.makeText(context, msg, Toast.LENGTH_LONG)
+                  .show()
+              }
+              else -> {
+                val msg = application.getString(
+                  R.string.import_mimetype_error, type
+                )
+                throw IllegalArgumentException(msg)
+              }
+            }
+          }
+        }
+    } catch (e: Exception) {
+      Toast.makeText(
+        context, application.getString(R.string.import_error, e.message),
+        Toast.LENGTH_LONG
+      )
+        .show()
+    }
+  }
+
+  private fun saveCode(
+    context: Context,
+    exportJsonUri: Uri
+  ) {
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+
+    val jsonString = sharedPreferences.getString("calcCodeMap", "").toString()
+    val msg = application.getString(
+      R.string.save_code_msg
+    )
+
+    saveTextToFile(jsonString, msg, context, exportJsonUri)
   }
 
   override fun onResume() {
@@ -102,6 +213,58 @@ class CalcSettingsActivity : AppCompatActivity(),
       rootKey: String?
     ) {
       setPreferencesFromResource(xml.calc_preferences, rootKey)
+
+      val buttonExportCode: Preference? = findPreference("export_code")
+      if (buttonExportCode != null) {
+        buttonExportCode.onPreferenceClickListener =
+          Preference.OnPreferenceClickListener {
+            onExportCode()
+            true
+          }
+      }
+
+      val buttonImportCode: Preference? = findPreference("import_code")
+      if (buttonImportCode != null) {
+        buttonImportCode.onPreferenceClickListener =
+          Preference.OnPreferenceClickListener {
+            onImportCode()
+            true
+          }
+      }
+    }
+
+  private fun onImportCode() {
+      val mimeTypes = arrayOf(
+
+        // .json
+        "application/json",
+        "text/x-json",
+
+        )
+
+      val intent = Intent()
+      intent.type = "*/*"
+      intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+      intent.action = Intent.ACTION_OPEN_DOCUMENT
+
+      startActivityForResult(
+        Intent.createChooser(intent, getString(R.string.import_select_file)),
+        importCalcActivityRequestCode
+      )
+    }
+
+    private fun onExportCode() {
+      // Set default filename.
+      val jsonFileName = "AI-Code"
+      val intent = Intent()
+        .setType("application/json")
+        .setAction(Intent.ACTION_CREATE_DOCUMENT)
+        .addCategory(Intent.CATEGORY_OPENABLE)
+        .putExtra(Intent.EXTRA_TITLE, jsonFileName)
+      startActivityForResult(
+        Intent.createChooser(intent, getString(R.string.export_select_file)),
+        exportCalcActivityRequestCode
+      )
     }
   }
 }

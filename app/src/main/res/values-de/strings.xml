@@ -537,7 +537,13 @@ limitations under the License. -->
   <string name="calc_prog_headline">AI prog</string>
   <string name="calc_format_radian">Radiant/Grad</string>
   <string name="calc_format_radian_desc">Verwendet das Bogenmaß 2π anstelle von 360° für trigonometrische Funktionen.</string>
-  <string name="calc_desc">Ergebnisbeschreibung:</string>
+  <string name="calc_display_name">Anzeigename:</string>
   <string name="calc_code">AI code</string>
   <string name="execute">Ausführen</string>
+  <string name="export_code">Export AI</string>
+  <string name="export_code_desc">Exports the custom function code as a .json file.</string>
+  <string name="import_code">Import AI</string>
+  <string name="import_code_desc">Import function code from a .json file.</string>
+  <string name="load_code_msg">Der AI code wurde geladen.</string>
+  <string name="save_code_msg">Der AI code wurde in eine .JSON-Datei gespeichert.</string>
 </resources>

@@ -31,6 +31,7 @@
       <TextView
           android:id="@+id/calc_F1"
           android:text="F1"
+          android:textSize="12sp"
           app:layout_constraintBottom_toTopOf="@id/guidelineF2"
           app:layout_constraintEnd_toStartOf="@id/guidelineX2"
           app:layout_constraintStart_toEndOf="@id/guidelineX1"
@@ -41,6 +42,7 @@
       <TextView
           android:id="@+id/calc_F2"
           android:text="F2"
+          android:textSize="12sp"
           app:layout_constraintBottom_toTopOf="@id/guidelineF2"
           app:layout_constraintEnd_toStartOf="@id/guidelineX3"
           app:layout_constraintStart_toEndOf="@id/guidelineX2"
@@ -51,6 +53,7 @@
       <TextView
           android:id="@+id/calc_F3"
           android:text="F3"
+          android:textSize="12sp"
           app:layout_constraintBottom_toTopOf="@id/guidelineF2"
           app:layout_constraintEnd_toStartOf="@id/guidelineX4"
           app:layout_constraintStart_toEndOf="@id/guidelineX3"
@@ -61,6 +64,7 @@
       <TextView
           android:id="@+id/calc_F4"
           android:text="F4"
+          android:textSize="12sp"
           app:layout_constraintBottom_toTopOf="@id/guidelineF2"
           app:layout_constraintEnd_toStartOf="@id/guidelineX5"
           app:layout_constraintStart_toEndOf="@id/guidelineX4"

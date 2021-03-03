@@ -39,6 +39,20 @@
         app:icon="@drawable/ic_action_calc_pi"
         />
 
+    <Preference
+        app:key="export_code"
+        app:title="@string/export_code"
+        app:summary="@string/export_code_desc"
+        app:icon="@drawable/ic_action_calc_export"
+        />
+
+    <Preference
+        app:key="import_code"
+        app:title="@string/import_code"
+        app:summary="@string/import_code_desc"
+        app:icon="@drawable/ic_action_calc_import"
+        />
+
   </PreferenceCategory>
 
 </PreferenceScreen>

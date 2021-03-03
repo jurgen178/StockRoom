@@ -42,7 +42,7 @@
           android:id="@+id/textViewCalcDesc"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/calc_desc"
+          android:text="@string/calc_display_name"
           app:layout_constraintBottom_toBottomOf="@+id/textInputLayout2"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
           app:endIconMode="clear_text"
           >
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/calc_desc"
+            android:id="@+id/calc_display_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/textInputEditText"

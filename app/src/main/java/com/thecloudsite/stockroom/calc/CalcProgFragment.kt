@@ -42,14 +42,14 @@ import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
 data class CodeType
   (
   val code: String,
-  val desc: String,
+  val displayName: String = "",
 )
 
 data class CodeTypeJson
   (
   val name: String,
   val code: String,
-  val desc: String,
+  val displayName: String,
 )
 
 class CalcProgFragment : CalcBaseFragment() {
@@ -99,16 +99,27 @@ class CalcProgFragment : CalcBaseFragment() {
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogCalcBinding.inflate(inflater)
 
+    var displayName = ""
     if (codeMap.containsKey(name)) {
       dialogBinding.calcCode.setText(codeMap[name]!!.code)
-      dialogBinding.calcDesc.setText(codeMap[name]!!.desc)
+      displayName = codeMap[name]!!.displayName
     }
+    if (displayName.isEmpty()) {
+      displayName = name
+    }
+    dialogBinding.calcDisplayName.setText(displayName)
 
     fun save() {
       val calcCodeText = (dialogBinding.calcCode.text).toString()
-      val calcDescText = (dialogBinding.calcDesc.text).toString()
+      var calcDisplayNameText = (dialogBinding.calcDisplayName.text).toString().trim()
 
-      codeMap[name] = CodeType(code = calcCodeText, desc = calcDescText)
+      // Default display name is the map key (name).
+      if (calcDisplayNameText.isEmpty()) {
+        calcDisplayNameText = name
+      }
+
+      codeMap[name] = CodeType(code = calcCodeText, displayName = calcDisplayNameText)
+      updateFKeys()
     }
 
     builder.setView(dialogBinding.root)
@@ -123,7 +134,7 @@ class CalcProgFragment : CalcBaseFragment() {
         R.string.execute
       ) { _, _ ->
         save()
-        calcViewModel.function(codeMap[name]!!.code, codeMap[name]!!.desc)
+        calcViewModel.function(codeMap[name]!!.code)
       }
       .setNegativeButton(
         R.string.cancel
@@ -190,11 +201,20 @@ class CalcProgFragment : CalcBaseFragment() {
       PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
 
     val codeMapStr = sharedPreferences.getString("calcCodeMap", "").toString()
-    if (codeMapStr.isEmpty()) {
-      codeMap["F1"] = CodeType(code = "over - swap / 100 *", desc = "∆% ")
-    } else {
-      setSerializedStr(codeMapStr)
+    setSerializedStr(codeMapStr)
+
+    if (codeMap.isEmpty()) {
+      codeMap["F1"] = CodeType(code = "//∆%=100*(b-a)/a\nover - swap / 100 *\n// add ∆% to result\n\"∆% \"")
     }
+
+    updateFKeys()
+  }
+
+  private fun updateFKeys() {
+    binding.calcF1.text = codeMap["F1"]?.displayName ?: "F1"
+    binding.calcF2.text = codeMap["F2"]?.displayName ?: "F2"
+    binding.calcF3.text = codeMap["F3"]?.displayName ?: "F3"
+    binding.calcF4.text = codeMap["F4"]?.displayName ?: "F4"
   }
 
   private fun getSerializedStr(): String {
@@ -207,7 +227,7 @@ class CalcProgFragment : CalcBaseFragment() {
           CodeTypeJson(
             name = name,
             code = codeType.code,
-            desc = codeType.desc,
+            displayName = codeType.displayName,
           )
         )
       }
@@ -227,16 +247,18 @@ class CalcProgFragment : CalcBaseFragment() {
   private fun setSerializedStr(
     codeData: String
   ) {
+    codeMap.clear()
+
     try {
 
       val sType = object : TypeToken<List<CodeTypeJson>>() {}.type
       val gson = Gson()
       val codeList = gson.fromJson<List<CodeTypeJson>>(codeData, sType)
 
-      codeMap.clear()
       codeList?.forEach { codeTypeJson ->
         // de-serialized JSON type can be null
-        codeMap[codeTypeJson.name] = CodeType(code = codeTypeJson.code, desc = codeTypeJson.desc)
+        codeMap[codeTypeJson.name] =
+          CodeType(code = codeTypeJson.code, displayName = codeTypeJson.displayName)
       }
     } catch (e: Exception) {
     }

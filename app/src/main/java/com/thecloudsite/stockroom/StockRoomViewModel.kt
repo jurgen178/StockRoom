@@ -49,6 +49,7 @@ import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getGroupsMenuList
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
+import com.thecloudsite.stockroom.utils.saveTextToFile
 import com.thecloudsite.stockroom.utils.validateDouble
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -1987,31 +1988,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       .create()
     val jsonString = gson.toJson(stockItemsJson)
 
-    // Write the json string.
-    try {
-      context.contentResolver.openOutputStream(exportJsonUri)
-        ?.use { output ->
-          output as FileOutputStream
-          output.channel.truncate(0)
-          output.write(jsonString.toByteArray())
-        }
-
-      val msg =
-        getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size)
-      logDebug("Export JSON '$msg'")
-
-      Toast.makeText(context, msg, Toast.LENGTH_LONG)
-        .show()
-
-    } catch (e: Exception) {
-      Toast.makeText(
-        context, getApplication<Application>().getString(R.string.export_error, e.message),
-        Toast.LENGTH_LONG
-      )
-        .show()
-      Log.d("Export JSON error", "Exception: $e")
-      logDebug("Export JSON Exception: $e")
-    }
+    val msg =
+      getApplication<Application>().getString(R.string.export_msg, stockItemsJson.size)
+    saveTextToFile(jsonString, msg, context, exportJsonUri)
+    logDebug("Export JSON '$msg'")
   }
 
   // Get the colored menu entries for the groups.
