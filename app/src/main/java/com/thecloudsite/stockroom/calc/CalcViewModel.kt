@@ -60,7 +60,6 @@ enum class BinaryArgument {
 }
 
 enum class TernaryArgument {
-  ROT,
   ZinsMonat,
 }
 
@@ -84,62 +83,41 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     val symbols = code.toLowerCase(Locale.ROOT).split("[ \r\n\t]".toRegex())
     val numbers = calcData.numberList.size
-    var errors = 0
+    var success = false
 
     symbols.forEach { symbol ->
       when (symbol) {
 
         // Math operations
         "sin" -> {
-          if (!opUnary(calcData, UnaryArgument.SIN)) {
-            // Error
-            errors++
-          }
+          success = opUnary(calcData, UnaryArgument.SIN)
         }
         "cos" -> {
-          if (!opUnary(calcData, UnaryArgument.COS)) {
-            // Error
-            errors++
-          }
+          success = opUnary(calcData, UnaryArgument.COS)
         }
         "tan" -> {
-          if (!opUnary(calcData, UnaryArgument.TAN)) {
-            // Error
-            errors++
-          }
+          success = opUnary(calcData, UnaryArgument.TAN)
         }
         "ln" -> {
-          if (!opUnary(calcData, UnaryArgument.LN)) {
-            // Error
-            errors++
-          }
+          success = opUnary(calcData, UnaryArgument.LN)
         }
         "sqrt" -> {
-          if (!opUnary(calcData, UnaryArgument.SQRT)) {
-            // Error
-            errors++
-          }
+          success = opUnary(calcData, UnaryArgument.SQRT)
         }
 
         // Stack operations
         "over" -> {
-          if (!opBinary(calcData, BinaryArgument.OVER)) {
-            // Error
-            errors++
-          }
+          success = opBinary(calcData, BinaryArgument.OVER)
         }
         "swap" -> {
-          if (!opBinary(calcData, BinaryArgument.SWAP)) {
-            // Error
-            errors++
-          }
+          success = opBinary(calcData, BinaryArgument.SWAP)
         }
         "dup" -> {
           if (calcData.numberList.isNotEmpty()) {
             calcData.numberList.add(calcData.numberList.last())
           } else {
             // Error
-            errors++
+            success = false
           }
         }
         "rot" -> {
@@ -152,40 +130,25 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             calcData.numberList.add(op1)
           } else {
             // Error
-            errors++
+            success = false
           }
         }
 
         // Arithmetic operations
         "+" -> {
-          if (!opBinary(calcData, BinaryArgument.ADD)) {
-            // Error
-            errors++
-          }
+          success = opBinary(calcData, BinaryArgument.ADD)
         }
         "+-" -> {
-          if (!opBinary(calcData, BinaryArgument.SUB)) {
-            // Error
-            errors++
-          }
+          success = opBinary(calcData, BinaryArgument.SUB)
         }
         "*" -> {
-          if (!opBinary(calcData, BinaryArgument.MULT)) {
-            // Error
-            errors++
-          }
+          success = opBinary(calcData, BinaryArgument.MULT)
         }
         "/" -> {
-          if (!opBinary(calcData, BinaryArgument.DIV)) {
-            // Error
-            errors++
-          }
+          success = opBinary(calcData, BinaryArgument.DIV)
         }
         "^" -> {
-          if (!opBinary(calcData, BinaryArgument.POW)) {
-            // Error
-            errors++
-          }
+          success = opBinary(calcData, BinaryArgument.POW)
         }
 
         // Formating and number operations
@@ -201,23 +164,26 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           } catch (e: Exception) {
             // Error
             calcData.numberList.add(CalcLine(desc = "Error parsing '$symbol' ", value = Double.NaN))
-            errors++
+            success = false
           }
         }
+      }
+
+      if (!success) {
+        calcData.numberList.add(CalcLine(desc = "Error at symbol $symbol ", value = Double.NaN))
+        calcRepository.updateData(calcData)
+
+        return
       }
     }
 
     // Add desc to the result.
-    if (desc.isNotEmpty() && errors == 0 && calcData.numberList.size >= numbers) {
+    if (desc.isNotEmpty() && success && calcData.numberList.size >= numbers) {
       if (calcData.numberList.isNotEmpty()) {
         val op = calcData.numberList.removeLast()
         op.desc = desc
         calcData.numberList.add(op)
       }
-    }
-
-    if (errors > 0) {
-      calcData.numberList.add(CalcLine(desc = "$errors errors ", value = Double.NaN))
     }
 
     calcRepository.updateData(calcData)

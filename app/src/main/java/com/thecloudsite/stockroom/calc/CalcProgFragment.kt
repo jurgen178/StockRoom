@@ -20,19 +20,43 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import com.thecloudsite.stockroom.FilterFactory
+import com.thecloudsite.stockroom.FilterModeTypeEnum
+import com.thecloudsite.stockroom.FilterSet
+import com.thecloudsite.stockroom.FilterTypeJson
+import com.thecloudsite.stockroom.Filters
+import com.thecloudsite.stockroom.IFilterType
 import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
-import java.text.DecimalFormatSymbols
-import java.text.NumberFormat
-import java.util.Locale
+
+data class CodeType
+  (
+  val code: String,
+  val desc: String,
+)
+
+data class CodeTypeJson
+  (
+  val name: String,
+  val code: String,
+  val desc: String,
+)
 
 class CalcProgFragment : CalcBaseFragment() {
 
   private var _binding: FragmentCalcProgBinding? = null
+  private val codeMap: MutableMap<String, CodeType> = mutableMapOf()
+
   private var f1code = ""
   private var f1desc = ""
 
@@ -65,7 +89,7 @@ class CalcProgFragment : CalcBaseFragment() {
     _binding = null
   }
 
-  private fun runCodeDialog(code: String, desc: String) {
+  private fun runCodeDialog(name: String) {
 
     val builder = AlertDialog.Builder(requireContext())
     // Get the layout inflater
@@ -75,8 +99,10 @@ class CalcProgFragment : CalcBaseFragment() {
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogCalcBinding.inflate(inflater)
 
-    dialogBinding.calcCode.setText(code)
-    dialogBinding.calcDesc.setText(desc)
+    if (codeMap.containsKey(name)) {
+      dialogBinding.calcCode.setText(codeMap[name]!!.code)
+      dialogBinding.calcDesc.setText(codeMap[name]!!.desc)
+    }
 
     builder.setView(dialogBinding.root)
       .setTitle(R.string.calc_code)
@@ -85,25 +111,14 @@ class CalcProgFragment : CalcBaseFragment() {
         R.string.execute
       ) { _, _ ->
         // Add () to avoid cast exception.
-        f1code = (dialogBinding.calcCode.text).toString()
+        val calcCodeText = (dialogBinding.calcCode.text).toString()
           .trim()
 
-        f1desc = (dialogBinding.calcDesc.text).toString()
+        val calcDescText = (dialogBinding.calcDesc.text).toString()
           .trim()
 
-        val sharedPreferences =
-          PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
-
-        sharedPreferences
-          .edit()
-          .putString("calc_f1_code", f1code)
-          .apply()
-        sharedPreferences
-          .edit()
-          .putString("calc_f1_desc", f1desc)
-          .apply()
-
-        calcViewModel.function(f1code, f1desc)
+        codeMap[name] = CodeType(code = calcCodeText, desc = calcDescText)
+        calcViewModel.function(calcCodeText, calcDescText)
       }
       .setNegativeButton(
         R.string.cancel
@@ -124,9 +139,7 @@ class CalcProgFragment : CalcBaseFragment() {
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
     binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF1.setOnClickListener {
-      runCodeDialog(f1code, f1desc)
-    }
+    binding.calcF1.setOnClickListener { runCodeDialog("F1") }
 
     binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
@@ -148,6 +161,15 @@ class CalcProgFragment : CalcBaseFragment() {
 
   override fun onPause() {
     super.onPause()
+
+    val sharedPreferences =
+      PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
+
+    val codeMapStr = getSerializedStr()
+    sharedPreferences
+      .edit()
+      .putString("calc_code", codeMapStr)
+      .apply()
   }
 
   override fun onResume() {
@@ -156,14 +178,56 @@ class CalcProgFragment : CalcBaseFragment() {
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
 
-    f1code = sharedPreferences.getString("calc_f1_code", "").toString()
-    if (f1code.isEmpty()) {
-      f1code = "dup 1.0 +"
+    val codeMapStr = sharedPreferences.getString("calc_code", "").toString()
+    if (codeMapStr.isEmpty()) {
+      codeMap["F1"] = CodeType(code = "dup 1 +", desc = "test=")
+    } else {
+      setSerializedStr(codeMapStr)
+    }
+  }
+
+  private fun getSerializedStr(): String {
+
+    var jsonString = ""
+    try {
+      val codeTypeJsonList: MutableList<CodeTypeJson> = mutableListOf()
+      codeMap.forEach { (name, codeType) ->
+        codeTypeJsonList.add(
+          CodeTypeJson(
+            name = name,
+            code = codeType.code,
+            desc = codeType.desc,
+          )
+        )
+      }
+
+      // Convert to a json string.
+      val gson: Gson = GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+
+      jsonString = gson.toJson(codeTypeJsonList)
+    } catch (e: Exception) {
     }
 
-    f1desc = sharedPreferences.getString("calc_f1_desc", "").toString()
-    if (f1desc.isEmpty()) {
-      f1desc = "test="
+    return jsonString
+  }
+
+  private fun setSerializedStr(
+    codeData: String
+  ) {
+    try {
+
+      val sType = object : TypeToken<List<CodeTypeJson>>() {}.type
+      val gson = Gson()
+      val codeList = gson.fromJson<List<CodeTypeJson>>(codeData, sType)
+
+      codeMap.clear()
+      codeList?.forEach { codeTypeJson ->
+        // de-serialized JSON type can be null
+        codeMap[codeTypeJson.name] = CodeType(code = codeTypeJson.code, desc = codeTypeJson.desc)
+      }
+    } catch (e: Exception) {
     }
   }
 }
