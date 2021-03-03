@@ -537,5 +537,8 @@ limitations under the License. -->
   <string name="calc_headline">AI</string>
   <string name="calc_prog_headline">AI prog</string>
   <string name="calc_format_radian">Radian/Degree</string>
-  <string name="calc_format_radian_desc">Use 2\uD835\uDF0B instead of 360° for trigonometric functions.</string>
+  <string name="calc_format_radian_desc">Use 2π instead of 360° for trigonometric functions.</string>
+  <string name="calc_desc">Result description</string>
+  <string name="calc_code">AI code</string>
+  <string name="execute">Execute</string>
 </resources>

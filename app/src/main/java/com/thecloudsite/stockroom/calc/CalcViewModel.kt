@@ -23,6 +23,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import java.text.NumberFormat
+import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.pow
@@ -73,6 +74,58 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   init {
     calcRepository.updateData(calcRepository.getData())
+  }
+
+  fun function(code: String, desc: String) {
+    val calcData = this.calcData.value!!
+
+    calcData.editMode = false
+
+    val symbols = code.toLowerCase(Locale.ROOT).split(" ")
+    val numbers = calcData.numberList.size
+    var errors = 0
+
+    symbols.forEach { symbol ->
+      when (symbol) {
+        "dup" -> {
+          if (calcData.numberList.isNotEmpty()) {
+            calcData.numberList.add(calcData.numberList.last())
+          } else {
+            // Error
+            errors++
+          }
+        }
+        "+" -> {
+          if (!opBinary(calcData, BinaryArgument.ADD)) {
+            // Error
+            errors++
+          }
+        }
+        else -> {
+          try {
+            val value = numberFormat.parse(symbol)!!
+              .toDouble()
+
+            calcData.numberList.add(CalcLine(desc = "", value = value))
+          } catch (e: Exception) {
+            // Error
+            calcData.numberList.add(CalcLine(desc = "Error parsing '$symbol' ", value = 0.0))
+            errors++
+          }
+        }
+      }
+    }
+
+    // Add desc to the result.
+    if (desc.isNotEmpty() && errors == 0 && calcData.numberList.size >= numbers) {
+      if (calcData.numberList.isNotEmpty()) {
+        val op = calcData.numberList.removeLast()
+        op.desc = desc
+        calcData.numberList.add(op)
+      }
+    }
+
+    calcRepository.updateData(calcData)
   }
 
   // clipboard import/export
@@ -159,10 +212,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun opUnary(op: UnaryArgument) {
+  fun opUnary(op: UnaryArgument): Boolean {
     val calcData = submitEditline(calcData.value!!)
 
-    if (calcData.numberList.size > 0) {
+    val argsValid = calcData.numberList.size > 0
+
+    if (argsValid) {
       calcData.editMode = false
 
 //      // Validation
@@ -208,12 +263,19 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       calcRepository.updateData(calcData)
     }
+
+    return argsValid
   }
 
-  fun opBinary(op: BinaryArgument) {
+  fun opBinary(op: BinaryArgument): Boolean {
     val calcData = submitEditline(calcData.value!!)
+    return opBinary(calcData, op)
+  }
 
-    if (calcData.numberList.size > 1) {
+  private fun opBinary(calcData: CalcData, op: BinaryArgument): Boolean {
+
+    val argsValid = calcData.numberList.size > 1
+    if (argsValid) {
       calcData.editMode = false
 
 //      // Validation
@@ -267,10 +329,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       calcRepository.updateData(calcData)
     }
+
+    return argsValid
   }
 
-  fun opTernary(op: TernaryArgument) {
+  fun opTernary(op: TernaryArgument): Boolean {
     val calcData = submitEditline(calcData.value!!)
+
+    val argsValid = calcData.numberList.size > 2
 
     if (calcData.numberList.size > 2) {
       calcData.editMode = false
@@ -292,6 +358,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       calcRepository.updateData(calcData)
     }
+
+    return argsValid
   }
 
   fun drop() {

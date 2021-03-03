@@ -20,7 +20,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
 
 class CalcProgFragment : CalcBaseFragment() {
@@ -35,8 +38,7 @@ class CalcProgFragment : CalcBaseFragment() {
     fun newInstance() = CalcProgFragment()
   }
 
-  override fun updateUI()
-  {
+  override fun updateUI() {
     // scroll to always show last element at the bottom of the list
     binding.calclines.adapter?.itemCount?.minus(1)
       ?.let { binding.calclines.scrollToPosition(it) }
@@ -57,6 +59,44 @@ class CalcProgFragment : CalcBaseFragment() {
     _binding = null
   }
 
+  private fun runCodeDialog(code: String, desc: String) {
+
+    val builder = AlertDialog.Builder(requireContext())
+    // Get the layout inflater
+    val inflater = LayoutInflater.from(requireContext())
+
+    // Inflate and set the layout for the dialog
+    // Pass null as the parent view because its going in the dialog layout
+    val dialogBinding = DialogCalcBinding.inflate(inflater)
+
+    dialogBinding.calcCode.setText(code)
+    dialogBinding.calcDesc.setText(desc)
+
+    builder.setView(dialogBinding.root)
+      .setTitle(R.string.calc_code)
+      // Add action buttons
+      .setPositiveButton(
+        R.string.execute
+      ) { _, _ ->
+        // Add () to avoid cast exception.
+        val calcCodeText = (dialogBinding.calcCode.text).toString()
+          .trim()
+
+        val calcDescText = (dialogBinding.calcDesc.text).toString()
+          .trim()
+
+        //calcViewModel.function("dup 1.0 +", "test")
+        calcViewModel.function(calcCodeText, calcDescText)
+      }
+      .setNegativeButton(
+        R.string.cancel
+      ) { _, _ ->
+      }
+    builder
+      .create()
+      .show()
+  }
+
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
@@ -65,6 +105,11 @@ class CalcProgFragment : CalcBaseFragment() {
 
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
+
+    binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF1.setOnClickListener {
+      runCodeDialog("dup 1.0 +", "test")
+    }
 
     binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
