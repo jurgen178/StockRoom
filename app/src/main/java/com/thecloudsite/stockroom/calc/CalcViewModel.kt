@@ -60,6 +60,7 @@ enum class BinaryArgument {
 }
 
 enum class TernaryArgument {
+  ROT,
   ZinsMonat,
 }
 
@@ -87,6 +88,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     symbols.forEach { symbol ->
       when (symbol) {
+
+        // Math operations
         "sin" -> {
           if (!opUnary(calcData, UnaryArgument.SIN)) {
             // Error
@@ -117,6 +120,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             errors++
           }
         }
+
+        // Stack operations
         "over" -> {
           if (!opBinary(calcData, BinaryArgument.OVER)) {
             // Error
@@ -137,6 +142,21 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             errors++
           }
         }
+        "rot" -> {
+          if (calcData.numberList.size > 2) {
+            val op3 = calcData.numberList.removeLast()
+            val op2 = calcData.numberList.removeLast()
+            val op1 = calcData.numberList.removeLast()
+            calcData.numberList.add(op2)
+            calcData.numberList.add(op3)
+            calcData.numberList.add(op1)
+          } else {
+            // Error
+            errors++
+          }
+        }
+
+        // Arithmetic operations
         "+" -> {
           if (!opBinary(calcData, BinaryArgument.ADD)) {
             // Error
@@ -167,6 +187,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             errors++
           }
         }
+
+        // Formating and number operations
         "" -> {
           // Skip empty lines.
         }
@@ -178,7 +200,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             calcData.numberList.add(CalcLine(desc = "", value = value))
           } catch (e: Exception) {
             // Error
-            calcData.numberList.add(CalcLine(desc = "Error parsing '$symbol' ", value = 0.0))
+            calcData.numberList.add(CalcLine(desc = "Error parsing '$symbol' ", value = Double.NaN))
             errors++
           }
         }
@@ -192,6 +214,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         op.desc = desc
         calcData.numberList.add(op)
       }
+    }
+
+    if (errors > 0) {
+      calcData.numberList.add(CalcLine(desc = "$errors errors ", value = Double.NaN))
     }
 
     calcRepository.updateData(calcData)
