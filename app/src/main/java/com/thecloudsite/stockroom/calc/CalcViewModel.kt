@@ -191,14 +191,19 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           val match = "[\"'](.*?)[\"']".toRegex()
             .matchEntire(symbol)
           // is comment?
-          if (match != null && match.groups.size == 2 && calcData.numberList.isNotEmpty()) {
+          if (match != null && match.groups.size == 2) {
             // first group (groups[0]) is entire src
             // captured comment is in groups[1]
             val desc = match.groups[1]?.value.toString()
 
-            val op = calcData.numberList.removeLast()
-            op.desc = desc
-            calcData.numberList.add(op)
+            // Add line if list is empty to add the text to.
+            if (calcData.numberList.isEmpty()) {
+              calcData.numberList.add(CalcLine(desc = desc, value = Double.NaN))
+            } else {
+              val op = calcData.numberList.removeLast()
+              op.desc = desc
+              calcData.numberList.add(op)
+            }
           } else
           // evaluate $$StockSymbol
             if (symbol.startsWith("$$")) {
@@ -571,6 +576,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   }
 
   fun updateData(data: CalcData) {
+
+//    data.numberList.removeIf { calcLine ->
+//      calcLine.desc.isEmpty() && calcLine.value.isNaN()
+//    }
+
     calcRepository.updateData(data)
   }
 }

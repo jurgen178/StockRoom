@@ -29,7 +29,7 @@ data class CalcLine
 data class CalcData
   (
   var numberList: MutableList<CalcLine> = mutableListOf(),
-  var editMode: Boolean = true,
+  var editMode: Boolean = false,
   var editline: String = "",
   var errorMsg: String = ""
 )

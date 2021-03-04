@@ -80,14 +80,19 @@ class CalcAdapter internal constructor(
         if (position >= 0 && position < calcData.numberList.size) {
 
           // number list
-          val current = calcData.numberList[position]
           holder.binding.calclineNumber.gravity = Gravity.END
-          SpannableStringBuilder().color(Color.GRAY) { scale(0.8f) { append(current.desc) } }
-            .color(Color.BLACK) {
+          val current = calcData.numberList[position]
+          val line =
+            SpannableStringBuilder().color(Color.GRAY) { scale(0.8f) { append(current.desc) } }
+          // No value displayed for Double.NaN if desc is used.
+          if (!(current.desc.isNotEmpty() && current.value.isNaN())) {
+            line.append(SpannableStringBuilder().color(Color.BLACK) {
               append(
                 numberFormat.format(current.value)
               )
-            }
+            })
+          }
+          line
 
         } else {
 
