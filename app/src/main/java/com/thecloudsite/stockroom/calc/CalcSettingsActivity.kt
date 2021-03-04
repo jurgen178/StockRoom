@@ -233,7 +233,7 @@ class CalcSettingsActivity : AppCompatActivity(),
       }
     }
 
-  private fun onImportCode() {
+    private fun onImportCode() {
       val mimeTypes = arrayOf(
 
         // .json

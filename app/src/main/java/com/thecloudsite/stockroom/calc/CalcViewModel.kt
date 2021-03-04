@@ -24,6 +24,9 @@ import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.acos
+import kotlin.math.asin
+import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.pow
@@ -43,6 +46,9 @@ enum class UnaryArgument {
   SIN,
   COS,
   TAN,
+  ARCSIN,
+  ARCCOS,
+  ARCTAN,
   LN,
   E,
 }
@@ -77,9 +83,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   }
 
   fun function(code: String) {
-    val calcData = this.calcData.value!!
-
-    endEdit(calcData)
+    val calcData = submitEditline(calcData.value!!)
 
     // Split by spaces not followed by even amount of quotes so only spaces outside of quotes are replaced.
     val symbols = code
@@ -102,6 +106,15 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "tan" -> {
           success = opUnary(calcData, UnaryArgument.TAN)
+        }
+        "arcsin" -> {
+          success = opUnary(calcData, UnaryArgument.ARCSIN)
+        }
+        "arccos" -> {
+          success = opUnary(calcData, UnaryArgument.ARCCOS)
+        }
+        "arctan" -> {
+          success = opUnary(calcData, UnaryArgument.ARCTAN)
         }
         "ln" -> {
           success = opUnary(calcData, UnaryArgument.LN)
@@ -331,6 +344,15 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         UnaryArgument.TAN -> {
           calcData.numberList.add(CalcLine(desc = "", value = tan(op1 * radian)))
+        }
+        UnaryArgument.ARCSIN -> {
+          calcData.numberList.add(CalcLine(desc = "", value = asin(op1) / radian))
+        }
+        UnaryArgument.ARCCOS -> {
+          calcData.numberList.add(CalcLine(desc = "", value = acos(op1) / radian))
+        }
+        UnaryArgument.ARCTAN -> {
+          calcData.numberList.add(CalcLine(desc = "", value = atan(op1) / radian))
         }
         UnaryArgument.LN -> {
           calcData.numberList.add(CalcLine(desc = "", value = ln(op1)))

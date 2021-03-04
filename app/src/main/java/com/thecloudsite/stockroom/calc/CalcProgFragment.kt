@@ -162,6 +162,14 @@ class CalcProgFragment : CalcBaseFragment() {
     binding.calcF3.setOnClickListener { runCodeDialog("F3") }
     binding.calcF4.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcF4.setOnClickListener { runCodeDialog("F4") }
+    binding.calcF5.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF5.setOnClickListener { runCodeDialog("F5") }
+    binding.calcF6.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF6.setOnClickListener { runCodeDialog("F6") }
+    binding.calcF7.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF7.setOnClickListener { runCodeDialog("F7") }
+    binding.calcF8.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF8.setOnClickListener { runCodeDialog("F8") }
 
     binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
@@ -171,6 +179,12 @@ class CalcProgFragment : CalcBaseFragment() {
     binding.calcCos.setOnClickListener { calcViewModel.opUnary(UnaryArgument.COS) }
     binding.calcTan.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcTan.setOnClickListener { calcViewModel.opUnary(UnaryArgument.TAN) }
+    binding.calcArcsin.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcArcsin.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCSIN) }
+    binding.calcArccos.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcArccos.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCCOS) }
+    binding.calcArctan.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcArctan.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCTAN) }
     binding.calcLn.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcLn.setOnClickListener { calcViewModel.opUnary(UnaryArgument.LN) }
     binding.calcPi.setOnTouchListener { view, event -> touchHelper(view, event); false }
@@ -203,18 +217,45 @@ class CalcProgFragment : CalcBaseFragment() {
     val codeMapStr = sharedPreferences.getString("calcCodeMap", "").toString()
     setSerializedStr(codeMapStr)
 
-    if (codeMap.isEmpty()) {
-      codeMap["F1"] = CodeType(code = "//∆%=100*(b-a)/a\nover - swap / 100 *\n// add ∆% to result\n\"∆% \"")
+    // Set default code if all codes are empty.
+    val codes = codeMap.map { code ->
+      code.value
+    }.filter { codeType ->
+      codeType.code.isNotEmpty()
+    }
+
+    if (codes.isEmpty()) {
+      codeMap["F1"] =
+        CodeType(code = "//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// add ∆% to result\n\"∆% \"")
     }
 
     updateFKeys()
   }
 
   private fun updateFKeys() {
-    binding.calcF1.text = codeMap["F1"]?.displayName ?: "F1"
-    binding.calcF2.text = codeMap["F2"]?.displayName ?: "F2"
-    binding.calcF3.text = codeMap["F3"]?.displayName ?: "F3"
-    binding.calcF4.text = codeMap["F4"]?.displayName ?: "F4"
+    val F1 = codeMap["F1"]?.displayName
+    binding.calcF1.text = if (F1.isNullOrEmpty()) "F1" else F1
+
+    val F2 = codeMap["F2"]?.displayName
+    binding.calcF2.text = if (F2.isNullOrEmpty()) "F2" else F2
+
+    val F3 = codeMap["F3"]?.displayName
+    binding.calcF3.text = if (F3.isNullOrEmpty()) "F3" else F3
+
+    val F4 = codeMap["F4"]?.displayName
+    binding.calcF4.text = if (F4.isNullOrEmpty()) "F4" else F4
+
+    val F5 = codeMap["F5"]?.displayName
+    binding.calcF5.text = if (F5.isNullOrEmpty()) "F5" else F5
+
+    val F6 = codeMap["F6"]?.displayName
+    binding.calcF6.text = if (F6.isNullOrEmpty()) "F6" else F6
+
+    val F7 = codeMap["F7"]?.displayName
+    binding.calcF7.text = if (F7.isNullOrEmpty()) "F7" else F7
+
+    val F8 = codeMap["F8"]?.displayName
+    binding.calcF8.text = if (F8.isNullOrEmpty()) "F8" else F8
   }
 
   private fun getSerializedStr(): String {
@@ -227,7 +268,11 @@ class CalcProgFragment : CalcBaseFragment() {
           CodeTypeJson(
             name = name,
             code = codeType.code,
-            displayName = codeType.displayName,
+            displayName = if (codeType.displayName.isNotEmpty()) {
+              codeType.displayName
+            } else {
+              name
+            },
           )
         )
       }
@@ -258,7 +303,14 @@ class CalcProgFragment : CalcBaseFragment() {
       codeList?.forEach { codeTypeJson ->
         // de-serialized JSON type can be null
         codeMap[codeTypeJson.name] =
-          CodeType(code = codeTypeJson.code, displayName = codeTypeJson.displayName)
+          CodeType(
+            code = codeTypeJson.code,
+            displayName = if (codeTypeJson.displayName.isNotEmpty()) {
+              codeTypeJson.displayName
+            } else {
+              codeTypeJson.name
+            }
+          )
       }
     } catch (e: Exception) {
     }
