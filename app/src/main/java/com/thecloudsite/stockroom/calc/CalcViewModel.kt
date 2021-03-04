@@ -24,6 +24,7 @@ import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.absoluteValue
 import kotlin.math.acos
 import kotlin.math.asin
 import kotlin.math.atan
@@ -42,6 +43,7 @@ enum class UnaryArgument {
   SQRT,
   SQ,
   INV,
+  ABS,
   SIGN,
   SIN,
   COS,
@@ -121,6 +123,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "sqrt" -> {
           success = opUnary(calcData, UnaryArgument.SQRT)
+        }
+        "abs" -> {
+          success = opUnary(calcData, UnaryArgument.ABS)
         }
 
         // Stack operations
@@ -332,6 +337,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         UnaryArgument.INV -> {
           calcData.numberList.add(CalcLine(desc = "", value = 1 / op1))
+        }
+        UnaryArgument.ABS -> {
+          calcData.numberList.add(CalcLine(desc = "", value = op1.absoluteValue))
         }
         UnaryArgument.SIGN -> {
           calcData.numberList.add(CalcLine(desc = "", value = -op1))

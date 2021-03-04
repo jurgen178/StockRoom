@@ -50,7 +50,8 @@ class StockRoomTest {
   @Throws(Exception::class)
   fun codeParse() {
 
-    var code = "\nover - swap //* comment */100 * \n// comment1\n/* comment */\n\"∆% \"\n// comment2"
+    var code =
+      "\nover - swap //* comment */100 * \n// comment1\n/* comment */\n\"∆% \"\n// comment2"
 
     // Remove comments
     code = code

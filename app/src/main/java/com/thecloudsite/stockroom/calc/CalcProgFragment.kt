@@ -20,36 +20,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.thecloudsite.stockroom.FilterFactory
-import com.thecloudsite.stockroom.FilterModeTypeEnum
-import com.thecloudsite.stockroom.FilterSet
-import com.thecloudsite.stockroom.FilterTypeJson
-import com.thecloudsite.stockroom.Filters
-import com.thecloudsite.stockroom.IFilterType
 import com.thecloudsite.stockroom.R
-import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
 
 data class CodeType
   (
   val code: String,
-  val displayName: String = "",
+  val name: String = "",
 )
 
 data class CodeTypeJson
   (
-  val name: String,
+  val key: String,
   val code: String,
-  val displayName: String,
+  val name: String,
 )
 
 class CalcProgFragment : CalcBaseFragment() {
@@ -102,7 +93,7 @@ class CalcProgFragment : CalcBaseFragment() {
     var displayName = ""
     if (codeMap.containsKey(name)) {
       dialogBinding.calcCode.setText(codeMap[name]!!.code)
-      displayName = codeMap[name]!!.displayName
+      displayName = codeMap[name]!!.name
     }
     if (displayName.isEmpty()) {
       displayName = name
@@ -118,7 +109,7 @@ class CalcProgFragment : CalcBaseFragment() {
         calcDisplayNameText = name
       }
 
-      codeMap[name] = CodeType(code = calcCodeText, displayName = calcDisplayNameText)
+      codeMap[name] = CodeType(code = calcCodeText, name = calcDisplayNameText)
       updateFKeys()
     }
 
@@ -226,35 +217,43 @@ class CalcProgFragment : CalcBaseFragment() {
 
     if (codes.isEmpty()) {
       codeMap["F1"] =
-        CodeType(code = "//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// add ∆% to result\n\"∆% \"")
+        CodeType(
+          code = "//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// add ∆% to result\n\"∆% \"",
+          name = "∆%"
+        )
+      codeMap["F4"] =
+        CodeType(
+          code = "// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" rot rot - \"x₂=\"",
+          name = "x²+ax+b"
+        )
     }
 
     updateFKeys()
   }
 
   private fun updateFKeys() {
-    val F1 = codeMap["F1"]?.displayName
+    val F1 = codeMap["F1"]?.name
     binding.calcF1.text = if (F1.isNullOrEmpty()) "F1" else F1
 
-    val F2 = codeMap["F2"]?.displayName
+    val F2 = codeMap["F2"]?.name
     binding.calcF2.text = if (F2.isNullOrEmpty()) "F2" else F2
 
-    val F3 = codeMap["F3"]?.displayName
+    val F3 = codeMap["F3"]?.name
     binding.calcF3.text = if (F3.isNullOrEmpty()) "F3" else F3
 
-    val F4 = codeMap["F4"]?.displayName
+    val F4 = codeMap["F4"]?.name
     binding.calcF4.text = if (F4.isNullOrEmpty()) "F4" else F4
 
-    val F5 = codeMap["F5"]?.displayName
+    val F5 = codeMap["F5"]?.name
     binding.calcF5.text = if (F5.isNullOrEmpty()) "F5" else F5
 
-    val F6 = codeMap["F6"]?.displayName
+    val F6 = codeMap["F6"]?.name
     binding.calcF6.text = if (F6.isNullOrEmpty()) "F6" else F6
 
-    val F7 = codeMap["F7"]?.displayName
+    val F7 = codeMap["F7"]?.name
     binding.calcF7.text = if (F7.isNullOrEmpty()) "F7" else F7
 
-    val F8 = codeMap["F8"]?.displayName
+    val F8 = codeMap["F8"]?.name
     binding.calcF8.text = if (F8.isNullOrEmpty()) "F8" else F8
   }
 
@@ -263,15 +262,15 @@ class CalcProgFragment : CalcBaseFragment() {
     var jsonString = ""
     try {
       val codeTypeJsonList: MutableList<CodeTypeJson> = mutableListOf()
-      codeMap.forEach { (name, codeType) ->
+      codeMap.forEach { (key, codeType) ->
         codeTypeJsonList.add(
           CodeTypeJson(
-            name = name,
+            key = key,
             code = codeType.code,
-            displayName = if (codeType.displayName.isNotEmpty()) {
-              codeType.displayName
+            name = if (codeType.name.isNotEmpty()) {
+              codeType.name
             } else {
-              name
+              key
             },
           )
         )
@@ -302,13 +301,13 @@ class CalcProgFragment : CalcBaseFragment() {
 
       codeList?.forEach { codeTypeJson ->
         // de-serialized JSON type can be null
-        codeMap[codeTypeJson.name] =
+        codeMap[codeTypeJson.key] =
           CodeType(
             code = codeTypeJson.code,
-            displayName = if (codeTypeJson.displayName.isNotEmpty()) {
-              codeTypeJson.displayName
-            } else {
+            name = if (codeTypeJson.name.isNotEmpty()) {
               codeTypeJson.name
+            } else {
+              codeTypeJson.key
             }
           )
       }
