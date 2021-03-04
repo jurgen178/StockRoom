@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.StockItem
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.absoluteValue
@@ -79,6 +80,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
   var aic: Int = 0
+  var stockitemList: List<StockItem> = emptyList()
 
   init {
     calcRepository.updateData(calcRepository.getData())
@@ -197,18 +199,48 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             val op = calcData.numberList.removeLast()
             op.desc = desc
             calcData.numberList.add(op)
-          } else {
-            try {
-              val value = numberFormat.parse(symbol)!!
-                .toDouble()
+          } else
+          // evaluate $$StockSymbol
+            if (symbol.startsWith("$$")) {
+              val stockSymbol = symbol.drop(2)
+              val stockItem = stockitemList.find { stockItem ->
+                stockItem.stockDBdata.symbol.equals(stockSymbol, true)
+              }
+              var marketPrice = Double.NaN
+              if (stockItem != null) {
+                marketPrice = stockItem.onlineMarketData.marketPrice
+                if (marketPrice == 0.0) {
+                  // Offline: use purchase price
+                  val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+                    stockItem.assets
+                  )
+                  if (quantity != 0.0 && price != 0.0) {
+                    marketPrice = price / quantity
+                  }
+                }
+              }
 
-              calcData.numberList.add(CalcLine(desc = "", value = value))
-            } catch (e: Exception) {
-              // Error
-              calcData.errorMsg = "Error parsing '$symbol' "
-              success = false
+              calcData.numberList.add(
+                CalcLine(
+                  desc = "$stockSymbol=",
+                  value = marketPrice
+                )
+              )
+
+            } else
+            // Evaluate number
+            {
+              try {
+                val value = numberFormat.parse(symbol)!!
+                  .toDouble()
+
+                calcData.numberList.add(CalcLine(desc = "", value = value))
+              } catch (e: Exception) {
+                // Error
+                calcData.errorMsg = "Error parsing '$symbol' "
+                success = false
+              }
             }
-          }
         }
       }
 

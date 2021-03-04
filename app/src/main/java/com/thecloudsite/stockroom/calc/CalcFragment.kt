@@ -82,28 +82,6 @@ class CalcFragment : CalcBaseFragment() {
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
-    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-
-    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
-      if (stockitemList != null && stockitemList.isNotEmpty()) {
-
-        // used by the selection
-        stockitemListCopy = stockitemList.sortedBy { stockItem ->
-          stockItem.stockDBdata.symbol
-        }
-
-        if (!listLoaded) {
-
-          val selectedList = stockitemListCopy.map { item ->
-            item.stockDBdata.symbol
-          }
-
-          binding.calcStocks.adapter =
-            context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
-        }
-      }
-    })
-
     calcViewModel = ViewModelProvider(requireActivity()).get(CalcViewModel::class.java)
 
     calcViewModel.calcData.observe(viewLifecycleOwner, Observer { data ->
@@ -114,6 +92,30 @@ class CalcFragment : CalcBaseFragment() {
         // scroll to always show last element at the bottom of the list
         binding.calclines.adapter?.itemCount?.minus(1)
           ?.let { binding.calclines.scrollToPosition(it) }
+      }
+    })
+
+    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+
+    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
+      if (stockitemList != null && stockitemList.isNotEmpty()) {
+
+        // used by the selection
+        stockitemListCopy = stockitemList.sortedBy { stockItem ->
+          stockItem.stockDBdata.symbol
+        }
+
+        calcViewModel.stockitemList = stockitemListCopy
+
+        if (!listLoaded) {
+
+          val selectedList = stockitemListCopy.map { item ->
+            item.stockDBdata.symbol
+          }
+
+          binding.calcStocks.adapter =
+            context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
+        }
       }
     })
 

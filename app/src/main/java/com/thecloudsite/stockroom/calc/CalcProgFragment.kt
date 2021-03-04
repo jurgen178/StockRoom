@@ -221,6 +221,16 @@ class CalcProgFragment : CalcBaseFragment() {
           code = "//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// add ∆% to result\n\"∆% \"",
           name = "∆%"
         )
+      codeMap["F2"] =
+        CodeType(
+          code = "// k j p\n1200 / dup 1 + rot -12 * ^ 1 swap - / *",
+          name = "m"
+        )
+      codeMap["F3"] =
+        CodeType(
+          code = "// m j p\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - *",
+          name = "k"
+        )
       codeMap["F4"] =
         CodeType(
           code = "// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" rot rot - \"x₂=\"",
