@@ -43,8 +43,6 @@ class CalcFragment : CalcBaseFragment() {
   // onDestroyView.
   private val binding get() = _binding!!
 
-//  private lateinit var stockRoomViewModel: StockRoomViewModel
-//  private var stockitemListCopy: List<StockItem> = emptyList()
   private var listLoaded = false
 
   companion object {
@@ -95,35 +93,6 @@ class CalcFragment : CalcBaseFragment() {
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
-//    calcViewModel = ViewModelProvider(requireActivity()).get(CalcViewModel::class.java)
-//
-//    calcViewModel.calcData.observe(viewLifecycleOwner, Observer { data ->
-//      if (data != null) {
-//
-//        calcAdapter.updateData(data, numberFormat)
-//
-//        // scroll to always show last element at the bottom of the list
-//        binding.calclines.adapter?.itemCount?.minus(1)
-//          ?.let { binding.calclines.scrollToPosition(it) }
-//      }
-//    })
-
-//    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-//
-//    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
-//      if (stockitemList != null && stockitemList.isNotEmpty()) {
-//
-//        // used by the selection
-//        stockitemListCopy = stockitemList.sortedBy { stockItem ->
-//          stockItem.stockDBdata.symbol
-//        }
-//
-//        calcViewModel.stockitemList = stockitemListCopy
-//
-//        updateStockListSpinner()
-//      }
-//    })
-//
     binding.calcStocks.setOnTouchListener { view, event ->
       if (event.action == MotionEvent.ACTION_DOWN) {
 

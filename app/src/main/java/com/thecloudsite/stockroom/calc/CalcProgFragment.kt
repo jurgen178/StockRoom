@@ -203,6 +203,9 @@ class CalcProgFragment : CalcBaseFragment() {
     super.onResume()
 
     // Get the latest market value for the stock.
+    // This fragment uses the online data only for script code $$symbol evaluation.
+    // CalcFragment uses the online data for the spinner data and runs runOnlineTaskNow()
+    // in the touch handler for each update.
     stockRoomViewModel.runOnlineTaskNow()
 
     val sharedPreferences =
