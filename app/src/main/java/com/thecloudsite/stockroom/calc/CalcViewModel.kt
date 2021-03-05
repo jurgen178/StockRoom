@@ -415,9 +415,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           calcData.numberList.add(CalcLine(desc = "", value = Math.E.pow(op1)))
         }
       }
-
-      calcRepository.updateData(calcData)
+    } else {
+      calcData.errorMsg = context.getString(R.string.calc_invalid_args)
     }
+
+    calcRepository.updateData(calcData)
 
     return argsValid
   }
@@ -481,9 +483,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           )
         }
       }
-
-      calcRepository.updateData(calcData)
+    } else {
+      calcData.errorMsg = context.getString(R.string.calc_invalid_args)
     }
+
+    calcRepository.updateData(calcData)
 
     return argsValid
   }
@@ -496,7 +500,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   private fun opTernary(calcData: CalcData, op: TernaryArgument): Boolean {
     val argsValid = calcData.numberList.size > 2
 
-    if (calcData.numberList.size > 2) {
+    if (argsValid) {
       endEdit(calcData)
 
       val op3 = calcData.numberList.removeLast().value
@@ -513,9 +517,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           calcData.numberList.add(CalcLine(desc = "Monatsrate=", value = M))
         }
       }
-
-      calcRepository.updateData(calcData)
+    } else {
+      calcData.errorMsg = context.getString(R.string.calc_invalid_args)
     }
+
+    calcRepository.updateData(calcData)
 
     return argsValid
   }
@@ -525,13 +531,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     if (calcData.editMode) {
       calcData.editline = calcData.editline.dropLast(1)
-      calcData.errorMsg = ""
     } else {
       if (calcData.numberList.size > 0) {
         calcData.numberList.removeLast()
       }
     }
 
+    calcData.errorMsg = ""
     calcRepository.updateData(calcData)
   }
 
@@ -548,6 +554,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       calcData1
     }
 
+    endEdit(calcData)
     calcRepository.updateData(calcData)
   }
 

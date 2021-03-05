@@ -552,9 +552,9 @@ limitations under the License. -->
   <string name="calc_F1_code">//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// ∆% dem Ergebnis hinzufügen\n\"∆% \"</string>
   <string name="calc_F1_desc">∆%</string>
   <string name="calc_F2_code">// Kreditberechnung\n// Monatliche Rate\n\n// 3: Kreditbetrag\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * \"Monatliche Rate \"</string>
-  <string name="calc_F2_desc">Monatliche Rate</string>
+  <string name="calc_F2_desc">Monatl. Rate</string>
   <string name="calc_F3_code">// Kreditberechnung\n// Kreditbetrag\n\n// 3: Monatliche Rate\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * \"Kreditbetrag \"</string>
-  <string name="calc_F3_desc">Kreditbetrag</string>
+  <string name="calc_F3_desc">Kredit betrag</string>
   <string name="calc_F4_code">// Kreditberechnung\n// Laufzeit in Jahren\n\n// 3: Kreditbetrag\n// 2: Monatliche Rate\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / \"Laufzeit in Jahren \"</string>
   <string name="calc_F4_desc">Laufzeit</string>
   <string name="calc_F5_code">// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" rot rot - \"x₂=\"</string>
