@@ -59,7 +59,7 @@ class CalcProgFragment : CalcBaseFragment() {
     fun newInstance() = CalcProgFragment()
   }
 
-  override fun updateUI() {
+  override fun updateCalcAdapter() {
     // scroll to always show last element at the bottom of the list
     binding.calclines.adapter?.itemCount?.minus(1)
       ?.let { binding.calclines.scrollToPosition(it) }
@@ -201,6 +201,9 @@ class CalcProgFragment : CalcBaseFragment() {
 
   override fun onResume() {
     super.onResume()
+
+    // Get the latest market value for the stock.
+    stockRoomViewModel.runOnlineTaskNow()
 
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)

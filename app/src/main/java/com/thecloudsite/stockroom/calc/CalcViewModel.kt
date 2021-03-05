@@ -52,6 +52,7 @@ enum class UnaryArgument {
   ARCSIN,
   ARCCOS,
   ARCTAN,
+  IP, // Integer part
   LN,
   E,
 }
@@ -129,6 +130,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "abs" -> {
           validArgs = opUnary(calcData, UnaryArgument.ABS)
+        }
+        "ip" -> {
+          validArgs = opUnary(calcData, UnaryArgument.IP)
         }
 
         // Stack operations
@@ -389,6 +393,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         UnaryArgument.SIGN -> {
           calcData.numberList.add(CalcLine(desc = "", value = -op1))
+        }
+        UnaryArgument.IP -> {
+          calcData.numberList.add(CalcLine(desc = "", value = op1.toInt().toDouble()))
         }
         UnaryArgument.SIN -> {
           calcData.numberList.add(CalcLine(desc = "", value = sin(op1 * radian)))

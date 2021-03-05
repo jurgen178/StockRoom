@@ -43,8 +43,8 @@ class CalcFragment : CalcBaseFragment() {
   // onDestroyView.
   private val binding get() = _binding!!
 
-  private lateinit var stockRoomViewModel: StockRoomViewModel
-  private var stockitemListCopy: List<StockItem> = emptyList()
+//  private lateinit var stockRoomViewModel: StockRoomViewModel
+//  private var stockitemListCopy: List<StockItem> = emptyList()
   private var listLoaded = false
 
   companion object {
@@ -66,11 +66,24 @@ class CalcFragment : CalcBaseFragment() {
     _binding = null
   }
 
-  override fun updateUI()
+  override fun updateCalcAdapter()
   {
     // scroll to always show last element at the bottom of the list
     binding.calclines.adapter?.itemCount?.minus(1)
       ?.let { binding.calclines.scrollToPosition(it) }
+  }
+
+  override fun updateStockListSpinner()
+  {
+    if (!listLoaded) {
+
+      val selectedList = stockitemListCopy.map { item ->
+        item.stockDBdata.symbol
+      }
+
+      binding.calcStocks.adapter =
+        context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
+    }
   }
 
   override fun onViewCreated(
@@ -82,43 +95,35 @@ class CalcFragment : CalcBaseFragment() {
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
-    calcViewModel = ViewModelProvider(requireActivity()).get(CalcViewModel::class.java)
+//    calcViewModel = ViewModelProvider(requireActivity()).get(CalcViewModel::class.java)
+//
+//    calcViewModel.calcData.observe(viewLifecycleOwner, Observer { data ->
+//      if (data != null) {
+//
+//        calcAdapter.updateData(data, numberFormat)
+//
+//        // scroll to always show last element at the bottom of the list
+//        binding.calclines.adapter?.itemCount?.minus(1)
+//          ?.let { binding.calclines.scrollToPosition(it) }
+//      }
+//    })
 
-    calcViewModel.calcData.observe(viewLifecycleOwner, Observer { data ->
-      if (data != null) {
-
-        calcAdapter.updateData(data, numberFormat)
-
-        // scroll to always show last element at the bottom of the list
-        binding.calclines.adapter?.itemCount?.minus(1)
-          ?.let { binding.calclines.scrollToPosition(it) }
-      }
-    })
-
-    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-
-    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
-      if (stockitemList != null && stockitemList.isNotEmpty()) {
-
-        // used by the selection
-        stockitemListCopy = stockitemList.sortedBy { stockItem ->
-          stockItem.stockDBdata.symbol
-        }
-
-        calcViewModel.stockitemList = stockitemListCopy
-
-        if (!listLoaded) {
-
-          val selectedList = stockitemListCopy.map { item ->
-            item.stockDBdata.symbol
-          }
-
-          binding.calcStocks.adapter =
-            context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
-        }
-      }
-    })
-
+//    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+//
+//    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
+//      if (stockitemList != null && stockitemList.isNotEmpty()) {
+//
+//        // used by the selection
+//        stockitemListCopy = stockitemList.sortedBy { stockItem ->
+//          stockItem.stockDBdata.symbol
+//        }
+//
+//        calcViewModel.stockitemList = stockitemListCopy
+//
+//        updateStockListSpinner()
+//      }
+//    })
+//
     binding.calcStocks.setOnTouchListener { view, event ->
       if (event.action == MotionEvent.ACTION_DOWN) {
 

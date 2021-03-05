@@ -26,6 +26,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
+import com.thecloudsite.stockroom.StockItem
+import com.thecloudsite.stockroom.StockRoomViewModel
 import com.thecloudsite.stockroom.setBackgroundColor
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -51,6 +53,8 @@ open class CalcBaseFragment : Fragment() {
 
   lateinit var calcViewModel: CalcViewModel
   lateinit var calcAdapter: CalcAdapter
+  lateinit var stockRoomViewModel: StockRoomViewModel
+  var stockitemListCopy: List<StockItem> = emptyList()
 
   var radian = 1.0
   var separatorChar = ','
@@ -70,7 +74,10 @@ open class CalcBaseFragment : Fragment() {
     setHasOptionsMenu(true)
   }
 
-  open fun updateUI() {
+  open fun updateCalcAdapter() {
+  }
+
+  open fun updateStockListSpinner() {
   }
 
   override fun onViewCreated(
@@ -87,7 +94,23 @@ open class CalcBaseFragment : Fragment() {
 
         calcAdapter.updateData(data, numberFormat)
 
-        updateUI()
+        updateCalcAdapter()
+      }
+    })
+
+    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+
+    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
+      if (stockitemList != null && stockitemList.isNotEmpty()) {
+
+        // used by the selection
+        stockitemListCopy = stockitemList.sortedBy { stockItem ->
+          stockItem.stockDBdata.symbol
+        }
+
+        calcViewModel.stockitemList = stockitemListCopy
+
+        updateStockListSpinner()
       }
     })
   }
