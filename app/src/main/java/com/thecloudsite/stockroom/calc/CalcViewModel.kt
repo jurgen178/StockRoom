@@ -74,6 +74,7 @@ enum class TernaryArgument {
 
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
+  private val context = application
   private val calcRepository: CalcRepository = CalcRepository(application)
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
   var radian = 1.0
@@ -93,56 +94,56 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val symbols = code
       .replace("/[*].*?[*]/".toRegex(), " ")
       .replace("//.*?(\n|$)".toRegex(), " ")
-      .toLowerCase(Locale.ROOT)
       .split("\\s+(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)".toRegex())
 
     var success = true
+    var validArgs = true
 
     symbols.forEach { symbol ->
-      when (symbol) {
+      when (symbol.toLowerCase(Locale.ROOT)) {
 
         // Math operations
         "sin" -> {
-          success = opUnary(calcData, UnaryArgument.SIN)
+          validArgs = opUnary(calcData, UnaryArgument.SIN)
         }
         "cos" -> {
-          success = opUnary(calcData, UnaryArgument.COS)
+          validArgs = opUnary(calcData, UnaryArgument.COS)
         }
         "tan" -> {
-          success = opUnary(calcData, UnaryArgument.TAN)
+          validArgs = opUnary(calcData, UnaryArgument.TAN)
         }
         "arcsin" -> {
-          success = opUnary(calcData, UnaryArgument.ARCSIN)
+          validArgs = opUnary(calcData, UnaryArgument.ARCSIN)
         }
         "arccos" -> {
-          success = opUnary(calcData, UnaryArgument.ARCCOS)
+          validArgs = opUnary(calcData, UnaryArgument.ARCCOS)
         }
         "arctan" -> {
-          success = opUnary(calcData, UnaryArgument.ARCTAN)
+          validArgs = opUnary(calcData, UnaryArgument.ARCTAN)
         }
         "ln" -> {
-          success = opUnary(calcData, UnaryArgument.LN)
+          validArgs = opUnary(calcData, UnaryArgument.LN)
         }
         "sqrt" -> {
           success = opUnary(calcData, UnaryArgument.SQRT)
         }
         "abs" -> {
-          success = opUnary(calcData, UnaryArgument.ABS)
+          validArgs = opUnary(calcData, UnaryArgument.ABS)
         }
 
         // Stack operations
         "over" -> {
-          success = opBinary(calcData, BinaryArgument.OVER)
+          validArgs = opBinary(calcData, BinaryArgument.OVER)
         }
         "swap" -> {
-          success = opBinary(calcData, BinaryArgument.SWAP)
+          validArgs = opBinary(calcData, BinaryArgument.SWAP)
         }
         "dup" -> {
           if (calcData.numberList.isNotEmpty()) {
             calcData.numberList.add(calcData.numberList.last())
           } else {
             // Error
-            success = false
+            validArgs = false
           }
         }
         "rot" -> {
@@ -155,25 +156,25 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             calcData.numberList.add(op1)
           } else {
             // Error
-            success = false
+            validArgs = false
           }
         }
 
         // Arithmetic operations
         "+" -> {
-          success = opBinary(calcData, BinaryArgument.ADD)
+          validArgs = opBinary(calcData, BinaryArgument.ADD)
         }
         "-" -> {
-          success = opBinary(calcData, BinaryArgument.SUB)
+          validArgs = opBinary(calcData, BinaryArgument.SUB)
         }
         "*" -> {
-          success = opBinary(calcData, BinaryArgument.MULT)
+          validArgs = opBinary(calcData, BinaryArgument.MULT)
         }
         "/" -> {
-          success = opBinary(calcData, BinaryArgument.DIV)
+          validArgs = opBinary(calcData, BinaryArgument.DIV)
         }
         "^" -> {
-          success = opBinary(calcData, BinaryArgument.POW)
+          validArgs = opBinary(calcData, BinaryArgument.POW)
         }
 
         // Formating and number operations
@@ -242,7 +243,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
                 calcData.numberList.add(CalcLine(desc = "", value = value))
               } catch (e: Exception) {
                 // Error
-                calcData.errorMsg = "Error parsing '$symbol' "
+                calcData.errorMsg = context.getString(R.string.calc_error_parsing_msg, symbol)
                 success = false
               }
             }
@@ -250,11 +251,17 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       if (!success) {
-        calcData.errorMsg = "Error at symbol '$symbol' "
+        calcData.errorMsg = context.getString(R.string.calc_error_msg, symbol)
         calcRepository.updateData(calcData)
 
         return
-      }
+      } else
+        if (!validArgs) {
+          calcData.errorMsg = context.getString(R.string.calc_invalid_args)
+          calcRepository.updateData(calcData)
+
+          return
+        }
     }
 
     calcRepository.updateData(calcData)
@@ -278,6 +285,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       calcData.editMode = true
       calcData.editline = text
+      calcData.errorMsg = ""
 
       calcRepository.updateData(submitEditline(calcData, desc))
     }
@@ -322,6 +330,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     calcData.editMode = true
     calcData.editline += char
+    calcData.errorMsg = ""
 
     calcRepository.updateData(calcData)
   }
@@ -516,6 +525,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     if (calcData.editMode) {
       calcData.editline = calcData.editline.dropLast(1)
+      calcData.errorMsg = ""
     } else {
       if (calcData.numberList.size > 0) {
         calcData.numberList.removeLast()

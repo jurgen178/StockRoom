@@ -547,4 +547,48 @@ limitations under the License. -->
   <string name="import_code_desc">Import AI code from a .json file.</string>
   <string name="load_code_msg">The AI code was loaded.</string>
   <string name="save_code_msg">The AI code was saved to a .json file.</string>
+  <string name="calc_invalid_args">Missing numbers.</string>
+  <string name="calc_error_msg">Error at symbol \'%1$s\'.</string>
+  <string name="calc_error_parsing_msg">Error parsing \'%1$s\'.</string>
+  <string name="calc_F1_code">//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// add ∆% to result\n\"∆% \"</string>
+  <string name="calc_F1_desc">∆%</string>
+  <string name="calc_F2_code">// Mortgage Calculator
+// Monthly Payment
+
+// 3: Loan Amount
+// 2: Loan Term in Years
+// 1: Annual Interest Rate in %
+
+1200 / dup 1 + rot -12 * ^ 1 swap - / * "Monthly Payment "
+</string>
+  <string name="calc_F2_desc">Monthly Payment</string>
+  <string name="calc_F3_code">// Mortgage Calculator
+// Loan Amount
+
+// 3: Monthly Payment
+// 2: Loan Term in Years
+// 1: Annual Interest Rate in %
+
+1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * "Loan Amount "</string>
+  <string name="calc_F3_desc">Loan Amount</string>
+  <string name="calc_F4_code">// Mortgage Calculator
+// Loan Term in Years
+
+// 3: Loan Amount
+// 2: Monthly Payment
+// 1: Annual Interest Rate in %
+
+1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / "Loan Term in Years "</string>
+  <string name="calc_F4_desc">Loan Term</string>
+  <string name="calc_F5_code">// Quadratische Gleichung
+// x²+ax+b
+
+swap -2 / dup dup * rot - sqrt over over + "x₁=" rot rot - "x₂="</string>
+  <string name="calc_F5_desc">x²+ax+b</string>
+  <string name="calc_F6_code"></string>
+  <string name="calc_F6_desc"></string>
+  <string name="calc_F7_code"></string>
+  <string name="calc_F7_desc"></string>
+  <string name="calc_F8_code"></string>
+  <string name="calc_F8_desc"></string>
 </resources>

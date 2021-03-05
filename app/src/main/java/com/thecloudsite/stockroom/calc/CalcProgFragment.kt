@@ -162,8 +162,8 @@ class CalcProgFragment : CalcBaseFragment() {
     binding.calcF8.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcF8.setOnClickListener { runCodeDialog("F8") }
 
-    binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
+//    binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
+//    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
     binding.calcSin.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSin.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SIN) }
     binding.calcCos.setOnTouchListener { view, event -> touchHelper(view, event); false }
@@ -218,23 +218,43 @@ class CalcProgFragment : CalcBaseFragment() {
     if (codes.isEmpty()) {
       codeMap["F1"] =
         CodeType(
-          code = "//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// add ∆% to result\n\"∆% \"",
-          name = "∆%"
+          code = requireContext().getString(R.string.calc_F1_code),
+          name = requireContext().getString(R.string.calc_F1_desc)
         )
       codeMap["F2"] =
         CodeType(
-          code = "// k j p\n1200 / dup 1 + rot -12 * ^ 1 swap - / *",
-          name = "m"
+          code = requireContext().getString(R.string.calc_F2_code),
+          name = requireContext().getString(R.string.calc_F2_desc)
         )
       codeMap["F3"] =
         CodeType(
-          code = "// m j p\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - *",
-          name = "k"
+          code = requireContext().getString(R.string.calc_F3_code),
+          name = requireContext().getString(R.string.calc_F3_desc)
         )
       codeMap["F4"] =
         CodeType(
-          code = "// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" rot rot - \"x₂=\"",
-          name = "x²+ax+b"
+          code = requireContext().getString(R.string.calc_F4_code),
+          name = requireContext().getString(R.string.calc_F4_desc)
+        )
+      codeMap["F5"] =
+        CodeType(
+          code = requireContext().getString(R.string.calc_F5_code),
+          name = requireContext().getString(R.string.calc_F5_desc)
+        )
+      codeMap["F6"] =
+        CodeType(
+          code = requireContext().getString(R.string.calc_F6_code),
+          name = requireContext().getString(R.string.calc_F6_desc)
+        )
+      codeMap["F7"] =
+        CodeType(
+          code = requireContext().getString(R.string.calc_F7_code),
+          name = requireContext().getString(R.string.calc_F7_desc)
+        )
+      codeMap["F8"] =
+        CodeType(
+          code = requireContext().getString(R.string.calc_F8_code),
+          name = requireContext().getString(R.string.calc_F8_desc)
         )
     }
 
