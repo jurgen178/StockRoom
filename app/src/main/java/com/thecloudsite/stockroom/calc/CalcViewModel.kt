@@ -23,8 +23,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.StockItem
+import com.thecloudsite.stockroom.getName
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.Double.Companion
 import kotlin.math.absoluteValue
 import kotlin.math.acos
 import kotlin.math.asin
@@ -218,29 +220,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           // evaluate $$StockSymbol
             if (symbol.startsWith("$$")) {
               val stockSymbol = symbol.drop(2)
-              val stockItem = stockitemList.find { stockItem ->
-                stockItem.stockDBdata.symbol.equals(stockSymbol, true)
-              }
-              var marketPrice = Double.NaN
-              if (stockItem != null) {
-                marketPrice = stockItem.onlineMarketData.marketPrice
-                if (marketPrice == 0.0) {
-                  // Offline: use purchase price
-                  val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
-                    stockItem.assets
-                  )
-                  if (quantity != 0.0 && price != 0.0) {
-                    marketPrice = price / quantity
-                  }
-                }
-              }
-
-              calcData.numberList.add(
-                CalcLine(
-                  desc = "$stockSymbol=",
-                  value = marketPrice
-                )
-              )
+              evaluate(calcData, stockSymbol)
 
             } else
             // Evaluate number
@@ -274,6 +254,88 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     calcRepository.updateData(calcData)
+  }
+
+  // $$tsla
+  // $$tsla.marketprice
+  // $$tsla.purchaseprice
+  // $$tsla.quantity
+  fun evaluate(calcData: CalcData, expression: String) {
+
+    // symbol[.property]
+    val match = "(.*?)(?:[.].*?)?$".toRegex()
+      .matchEntire(expression)
+
+    val symbol = if (match != null && match.groups.size == 2) {
+      // first group (groups[0]) is entire src
+      // captured symbol is in groups[1]
+      match.groups[1]?.value.toString()
+    } else {
+      expression
+    }
+
+    val stockItem = stockitemList.find { stockItem ->
+      stockItem.stockDBdata.symbol.equals(symbol, true)
+    }
+
+    var desc = "$expression="
+    var value = 0.0
+    if (stockItem != null) {
+
+      when {
+        expression.endsWith(".marketprice") -> {
+          value = stockItem.onlineMarketData.marketPrice
+        }
+        expression.endsWith(".purchaseprice") -> {
+          val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+            stockItem.assets
+          )
+          value = price / quantity
+        }
+        expression.endsWith(".quantity") -> {
+          val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+            stockItem.assets
+          )
+          value = quantity
+        }
+        expression.endsWith(".marketchange") -> {
+          value = stockItem.onlineMarketData.marketChange
+        }
+        expression.endsWith(".marketchangepercent") -> {
+          value = stockItem.onlineMarketData.marketChangePercent
+        }
+        expression.endsWith(".name") -> {
+          desc = getName(stockItem.onlineMarketData)
+          value = Double.NaN
+        }
+        expression.endsWith(".currency") -> {
+          desc = stockItem.onlineMarketData.currency
+          value = Double.NaN
+        }
+        symbol == expression -> {
+          value = stockItem.onlineMarketData.marketPrice
+          if (value == 0.0) {
+            // Offline: use purchase price
+            val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+              stockItem.assets
+            )
+            if (quantity != 0.0) {
+              value = price / quantity
+            }
+          }
+        }
+        else -> {
+          value = Companion.NaN
+        }
+      }
+    }
+
+    calcData.numberList.add(
+      CalcLine(
+        desc = desc,
+        value = value
+      )
+    )
   }
 
   // clipboard import/export
@@ -405,7 +467,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           calcData.numberList.add(CalcLine(desc = "", value = op1.toInt().toDouble()))
         }
         UnaryArgument.ROUND -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.times(100.0).roundToLong().toDouble().div(100.0)))
+          calcData.numberList.add(
+            CalcLine(
+              desc = "",
+              value = op1.times(100.0).roundToLong().toDouble().div(100.0)
+            )
+          )
         }
         UnaryArgument.SIN -> {
           calcData.numberList.add(CalcLine(desc = "", value = sin(op1 * radian)))

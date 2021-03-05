@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
+      android:onClick="onCalc"
+      android:icon="@drawable/ic_action_calc"
+      app:showAsAction="always"
+      android:title="@string/calc_title"
+      />
+  <item
       android:id="@+id/menu_sync"
       android:icon="@drawable/ic_action_sync"
       app:showAsAction="always"

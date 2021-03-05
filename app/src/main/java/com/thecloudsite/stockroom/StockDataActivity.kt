@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.thecloudsite.stockroom.calc.CalcActivity
 import com.thecloudsite.stockroom.databinding.ActivityStockBinding
 import com.thecloudsite.stockroom.news.NewsFragment
 import java.util.Locale
@@ -114,23 +116,28 @@ class StockDataActivity : AppCompatActivity() {
 
   fun onDelete(item: MenuItem) {
     AlertDialog.Builder(this)
-        .setTitle(R.string.delete)
-        .setMessage(getString(R.string.delete_stock, symbol))
-        .setPositiveButton(R.string.delete) { dialog, _ ->
-          SharedHandler.deleteStockHandler.postValue(symbol)
+      .setTitle(R.string.delete)
+      .setMessage(getString(R.string.delete_stock, symbol))
+      .setPositiveButton(R.string.delete) { dialog, _ ->
+        SharedHandler.deleteStockHandler.postValue(symbol)
 
-          dialog.dismiss()
+        dialog.dismiss()
 
-          finish()
-          //activity?.onBackPressed()
-        }
-        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-        .show()
+        finish()
+        //activity?.onBackPressed()
+      }
+      .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+      .show()
 //    Toast.makeText(
 //        applicationContext,
 //        "delete: ${symbol}",
 //        Toast.LENGTH_LONG
 //    )
 //        .show()
+  }
+
+  fun onCalc(item: MenuItem) {
+    val intent = Intent(this@StockDataActivity, CalcActivity::class.java)
+    startActivity(intent)
   }
 }
