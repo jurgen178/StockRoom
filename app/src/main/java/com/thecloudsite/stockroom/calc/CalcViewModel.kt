@@ -32,6 +32,7 @@ import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.pow
+import kotlin.math.roundToLong
 import kotlin.math.sin
 import kotlin.math.tan
 
@@ -53,6 +54,7 @@ enum class UnaryArgument {
   ARCCOS,
   ARCTAN,
   INT, // Integer part
+  ROUND, // Round to two digits
   LN,
   E,
 }
@@ -133,6 +135,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "int" -> {
           validArgs = opUnary(calcData, UnaryArgument.INT)
+        }
+        "round" -> {
+          validArgs = opUnary(calcData, UnaryArgument.ROUND)
         }
 
         // Stack operations
@@ -273,7 +278,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   // clipboard import/export
   fun getText(): String {
-    val calcData = calcData.value!!
+    val calcData = submitEditline(calcData.value!!)
+    calcRepository.updateData(calcData)
+
     return if (calcData.numberList.isNotEmpty()) {
       // calcData.numberList.last().toString() converts to E-notation
       // calcData.numberList.last().toBigDecimal().toPlainString()
@@ -396,6 +403,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         UnaryArgument.INT -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.toInt().toDouble()))
+        }
+        UnaryArgument.ROUND -> {
+          calcData.numberList.add(CalcLine(desc = "", value = op1.times(100.0).roundToLong().toDouble().div(100.0)))
         }
         UnaryArgument.SIN -> {
           calcData.numberList.add(CalcLine(desc = "", value = sin(op1 * radian)))
