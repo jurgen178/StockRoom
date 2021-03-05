@@ -549,40 +549,15 @@ limitations under the License. -->
   <string name="calc_invalid_args">Fehlende Zahlen.</string>
   <string name="calc_error_msg">Fehler bei Symbol \'%1$s\'.</string>
   <string name="calc_error_parsing_msg">Fehler bei \'%1$s\'.</string>
-  <string name="calc_F1_code">//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// add ∆% to result\n\"∆% \"</string>
+  <string name="calc_F1_code">//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// ∆% dem Ergebnis hinzufügen\n\"∆% \"</string>
   <string name="calc_F1_desc">∆%</string>
-  <string name="calc_F2_code">// Mortgage Calculator
-// Monthly Payment
-
-// 3: Loan Amount
-// 2: Loan Term in Years
-// 1: Annual Interest Rate in %
-
-1200 / dup 1 + rot -12 * ^ 1 swap - / * "Monthly Payment "
-</string>
-  <string name="calc_F2_desc">Monthly Payment</string>
-  <string name="calc_F3_code">// Mortgage Calculator
-// Loan Amount
-
-// 3: Monthly Payment
-// 2: Loan Term in Years
-// 1: Annual Interest Rate in %
-
-1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * "Loan Amount "</string>
-  <string name="calc_F3_desc">Loan Amount</string>
-  <string name="calc_F4_code">// Mortgage Calculator
-// Loan Term in Years
-
-// 3: Loan Amount
-// 2: Monthly Payment
-// 1: Annual Interest Rate in %
-
-1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / "Loan Term in Years "</string>
-  <string name="calc_F4_desc">Loan Term</string>
-  <string name="calc_F5_code">// Quadratische Gleichung
-// x²+ax+b
-
-swap -2 / dup dup * rot - sqrt over over + "x₁=" rot rot - "x₂="</string>
+  <string name="calc_F2_code">// Kreditberechnung\n// Monatliche Rate\n\n// 3: Kreditbetrag\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * \"Monatliche Rate \"</string>
+  <string name="calc_F2_desc">Monatliche Rate</string>
+  <string name="calc_F3_code">// Kreditberechnung\n// Kreditbetrag\n\n// 3: Monatliche Rate\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * \"Kreditbetrag \"</string>
+  <string name="calc_F3_desc">Kreditbetrag</string>
+  <string name="calc_F4_code">// Kreditberechnung\n// Laufzeit in Jahren\n\n// 3: Kreditbetrag\n// 2: Monatliche Rate\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / \"Laufzeit in Jahren \"</string>
+  <string name="calc_F4_desc">Laufzeit</string>
+  <string name="calc_F5_code">// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" rot rot - \"x₂=\"</string>
   <string name="calc_F5_desc">x²+ax+b</string>
   <string name="calc_F6_code"></string>
   <string name="calc_F6_desc"></string>
