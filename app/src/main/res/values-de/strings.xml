@@ -561,7 +561,7 @@ limitations under the License. -->
   <string name="calc_F5_desc">x²+ax+b</string>
   <string name="calc_F6_code">// $$ für den Aktienwert\n\n$$tsla\ndup 10000 swap / int \"Für 10000 bekommst du \"</string>
   <string name="calc_F6_desc">Aktien wert</string>
-  <string name="calc_F7_code"> // Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.markeprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
+  <string name="calc_F7_code"> // Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
   <string name="calc_F7_desc">TSLA</string>
   <string name="calc_F8_code"></string>
   <string name="calc_F8_desc"></string>

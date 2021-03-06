@@ -562,7 +562,7 @@ limitations under the License. -->
   <string name="calc_F5_desc">x²+ax+b</string>
   <string name="calc_F6_code">// $$ gets the stock price\n\n$$tsla\ndup 10000 swap / int \"For 10000 you can buy \"</string>
   <string name="calc_F6_desc">Stock price</string>
-  <string name="calc_F7_code"> // stock evaluation example\n\n$$tsla\n$$tsla.markeprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
+  <string name="calc_F7_code"> // stock evaluation example\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
   <string name="calc_F7_desc">TSLA</string>
   <string name="calc_F8_code"></string>
   <string name="calc_F8_desc"></string>
