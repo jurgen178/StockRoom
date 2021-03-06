@@ -27,15 +27,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
-import com.thecloudsite.stockroom.StockItem
-import com.thecloudsite.stockroom.StockRoomViewModel
 import com.thecloudsite.stockroom.databinding.FragmentCalcBinding
 
-class CalcFragment : CalcBaseFragment() {
+class CalcFragment(stockSymbol: String) : CalcBaseFragment(stockSymbol) {
 
   private var _binding: FragmentCalcBinding? = null
 
@@ -46,7 +42,7 @@ class CalcFragment : CalcBaseFragment() {
   private var listLoaded = false
 
   companion object {
-    fun newInstance() = CalcFragment()
+    fun newInstance(symbol: String) = CalcFragment(symbol)
   }
 
   override fun onCreateView(
@@ -64,15 +60,13 @@ class CalcFragment : CalcBaseFragment() {
     _binding = null
   }
 
-  override fun updateCalcAdapter()
-  {
+  override fun updateCalcAdapter() {
     // scroll to always show last element at the bottom of the list
     binding.calclines.adapter?.itemCount?.minus(1)
       ?.let { binding.calclines.scrollToPosition(it) }
   }
 
-  override fun updateStockListSpinner()
-  {
+  override fun updateStockListSpinner() {
     if (!listLoaded) {
 
       val selectedList = stockitemListCopy.map { item ->
@@ -81,6 +75,12 @@ class CalcFragment : CalcBaseFragment() {
 
       binding.calcStocks.adapter =
         context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
+
+      val index = selectedList.indexOf(symbol)
+      // default is 0, set the index if greater than 0
+      if(index > 0) {
+        binding.calcStocks.setSelection(index)
+      }
     }
   }
 

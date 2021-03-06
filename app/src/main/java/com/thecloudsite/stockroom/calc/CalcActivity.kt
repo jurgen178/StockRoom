@@ -27,10 +27,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
+import java.util.Locale
 
 class CalcActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityCalcBinding
+  private lateinit var symbol: String
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -39,21 +41,24 @@ class CalcActivity : AppCompatActivity() {
     val view = binding.root
     setContentView(view)
 
+    val symbolString = intent.getStringExtra("symbol")
+    symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
+
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     binding.calcViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
         return when (position) {
           0 -> {
-            val instance = CalcFragment.newInstance()
+            val instance = CalcFragment.newInstance(symbol)
             instance
           }
           1 -> {
-            val instance = CalcProgFragment.newInstance()
+            val instance = CalcProgFragment.newInstance(symbol)
             instance
           }
           else -> {
-            val instance = CalcFragment.newInstance()
+            val instance = CalcFragment.newInstance(symbol)
             instance
           }
         }

@@ -81,11 +81,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   private val context = application
   private val calcRepository: CalcRepository = CalcRepository(application)
+  private var aic: Int = 0
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
   var radian = 1.0
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-  var aic: Int = 0
   var stockitemList: List<StockItem> = emptyList()
 
   init {

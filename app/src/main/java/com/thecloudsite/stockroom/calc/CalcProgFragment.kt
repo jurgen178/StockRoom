@@ -43,20 +43,17 @@ data class CodeTypeJson
   val name: String,
 )
 
-class CalcProgFragment : CalcBaseFragment() {
+class CalcProgFragment(stockSymbol: String) : CalcBaseFragment(stockSymbol) {
 
   private var _binding: FragmentCalcProgBinding? = null
   private val codeMap: MutableMap<String, CodeType> = mutableMapOf()
-
-  private var f1code = ""
-  private var f1desc = ""
 
   // This property is only valid between onCreateView and
   // onDestroyView.
   private val binding get() = _binding!!
 
   companion object {
-    fun newInstance() = CalcProgFragment()
+    fun newInstance(symbol: String) = CalcProgFragment(symbol)
   }
 
   override fun updateCalcAdapter() {

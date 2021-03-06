@@ -49,7 +49,7 @@ class CustomSpinner(
   }
 }
 
-open class CalcBaseFragment : Fragment() {
+open class CalcBaseFragment(val symbol: String) : Fragment() {
 
   lateinit var calcViewModel: CalcViewModel
   lateinit var calcAdapter: CalcAdapter
@@ -59,6 +59,8 @@ open class CalcBaseFragment : Fragment() {
   var radian = 1.0
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+
+  private var initialRun = true
 
   fun touchHelper(view: View, event: MotionEvent) {
     if (event.action == MotionEvent.ACTION_DOWN) {
@@ -92,6 +94,9 @@ open class CalcBaseFragment : Fragment() {
     calcViewModel.calcData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
 
+        // Get the latest market value for the stock.
+        stockRoomViewModel.runOnlineTaskNow()
+
         calcAdapter.updateData(data, numberFormat)
 
         updateCalcAdapter()
@@ -113,6 +118,11 @@ open class CalcBaseFragment : Fragment() {
         updateStockListSpinner()
       }
     })
+
+//    stockRoomViewModel.onlineMarketDataList.observe(
+//      viewLifecycleOwner,
+//      Observer { onlineMarketDataList ->
+//      })
   }
 
   override fun onResume() {

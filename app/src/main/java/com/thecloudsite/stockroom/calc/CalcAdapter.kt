@@ -23,12 +23,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.color
-import androidx.core.text.italic
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.calc.CalcAdapter.CalcViewHolder
 import com.thecloudsite.stockroom.databinding.CalcItemBinding
-import java.text.DecimalFormat
 import java.text.NumberFormat
 
 class CalcAdapter internal constructor(

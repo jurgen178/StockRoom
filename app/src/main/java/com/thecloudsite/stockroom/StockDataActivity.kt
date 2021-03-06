@@ -138,6 +138,7 @@ class StockDataActivity : AppCompatActivity() {
 
   fun onCalc(item: MenuItem) {
     val intent = Intent(this@StockDataActivity, CalcActivity::class.java)
+    intent.putExtra("symbol", symbol)
     startActivity(intent)
   }
 }
