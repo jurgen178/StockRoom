@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter
 import androidx.core.text.bold
 import androidx.core.text.scale
 import androidx.core.text.superscript
+import androidx.core.text.underline
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.FragmentCalcBinding

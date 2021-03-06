@@ -26,14 +26,12 @@ import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.getName
 import java.text.NumberFormat
 import java.util.Locale
-import kotlin.Double.Companion
 import kotlin.math.absoluteValue
 import kotlin.math.acos
 import kotlin.math.asin
 import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.ln
-import kotlin.math.log
 import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.roundToLong
@@ -329,7 +327,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           }
         }
         else -> {
-          value = Companion.NaN
+          value = Double.NaN
         }
       }
     }
