@@ -20,6 +20,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -27,11 +28,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import androidx.core.text.bold
+import androidx.core.text.scale
+import androidx.core.text.superscript
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.FragmentCalcBinding
 
-class CalcFragment(stockSymbol: String) : CalcBaseFragment(stockSymbol) {
+class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
 
   private var _binding: FragmentCalcBinding? = null
 
@@ -78,7 +82,7 @@ class CalcFragment(stockSymbol: String) : CalcBaseFragment(stockSymbol) {
 
       val index = selectedList.indexOf(symbol)
       // default is 0, set the index if greater than 0
-      if(index > 0) {
+      if (index > 0) {
         binding.calcStocks.setSelection(index)
       }
     }
@@ -166,18 +170,24 @@ class CalcFragment(stockSymbol: String) : CalcBaseFragment(stockSymbol) {
     binding.calcPercentChange.setOnClickListener { calcViewModel.opBinary(BinaryArgument.PERC) }
     binding.calcPercent.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcPercent.setOnClickListener { calcViewModel.opBinary(BinaryArgument.PER) }
+
     binding.calcOver.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcOver.setOnClickListener { calcViewModel.opBinary(BinaryArgument.OVER) }
     binding.calcSwap.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSwap.setOnClickListener { calcViewModel.opBinary(BinaryArgument.SWAP) }
+
     binding.calcSQRT.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSQRT.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SQRT) }
     binding.calcSQ.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSQ.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SQ) }
     binding.calcPOW.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcPOW.setOnClickListener { calcViewModel.opBinary(BinaryArgument.POW) }
+    binding.calcPOW.text = SpannableStringBuilder()
+      .append("x")
+      .superscript { superscript { scale(0.55f) { bold { append("y") } } } }
     binding.calcINV.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcINV.setOnClickListener { calcViewModel.opUnary(UnaryArgument.INV) }
+
     binding.calcEnter.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcEnter.setOnClickListener { calcViewModel.enter() }
     binding.calcSign.setOnTouchListener { view, event -> touchHelper(view, event); false }

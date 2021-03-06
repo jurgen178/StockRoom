@@ -17,10 +17,14 @@
 package com.thecloudsite.stockroom.calc
 
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.bold
+import androidx.core.text.scale
+import androidx.core.text.superscript
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -33,7 +37,7 @@ import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
 data class CodeType
   (
   val code: String,
-  val name: String = "",
+  val name: String,
 )
 
 data class CodeTypeJson
@@ -43,7 +47,7 @@ data class CodeTypeJson
   val name: String,
 )
 
-class CalcProgFragment(stockSymbol: String) : CalcBaseFragment(stockSymbol) {
+class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
 
   private var _binding: FragmentCalcProgBinding? = null
   private val codeMap: MutableMap<String, CodeType> = mutableMapOf()
@@ -173,14 +177,26 @@ class CalcProgFragment(stockSymbol: String) : CalcBaseFragment(stockSymbol) {
     binding.calcArccos.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCCOS) }
     binding.calcArctan.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcArctan.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCTAN) }
+
     binding.calcLn.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcLn.setOnClickListener { calcViewModel.opUnary(UnaryArgument.LN) }
+    binding.calcEx.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcEx.setOnClickListener { calcViewModel.opUnary(UnaryArgument.EX) }
+    binding.calcEx.text = SpannableStringBuilder()
+      .append("e")
+      .superscript { superscript { scale(0.65f) { bold { append("x") } } } }
+    binding.calcLog.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcLog.setOnClickListener { calcViewModel.opUnary(UnaryArgument.LOG) }
+    binding.calcZx.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcZx.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ZX) }
+    binding.calcZx.text = SpannableStringBuilder()
+      .append("10")
+      .superscript { superscript { scale(0.7f) { bold { append("x") } } } }
+
     binding.calcPi.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcPi.setOnClickListener { calcViewModel.opZero(ZeroArgument.PI) }
     binding.calcE.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcE.setOnClickListener { calcViewModel.opZero(ZeroArgument.E) }
-    binding.calcEx.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcEx.setOnClickListener { calcViewModel.opUnary(UnaryArgument.E) }
   }
 
   override fun onPause() {

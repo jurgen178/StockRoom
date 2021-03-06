@@ -33,6 +33,8 @@ import kotlin.math.asin
 import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.ln
+import kotlin.math.log
+import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.roundToLong
 import kotlin.math.sin
@@ -58,7 +60,9 @@ enum class UnaryArgument {
   INT, // Integer part
   ROUND, // Round to two digits
   LN,
-  E,
+  EX,
+  LOG,
+  ZX,
 }
 
 enum class BinaryArgument {
@@ -495,8 +499,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         UnaryArgument.LN -> {
           calcData.numberList.add(CalcLine(desc = "", value = ln(op1)))
         }
-        UnaryArgument.E -> {
+        UnaryArgument.EX -> {
           calcData.numberList.add(CalcLine(desc = "", value = Math.E.pow(op1)))
+        }
+        UnaryArgument.LOG -> {
+          calcData.numberList.add(CalcLine(desc = "", value = log10(op1)))
+        }
+        UnaryArgument.ZX -> {
+          calcData.numberList.add(CalcLine(desc = "", value = 10.0.pow(op1)))
         }
       }
     } else {
