@@ -49,7 +49,7 @@ class CustomSpinner(
   }
 }
 
-open class CalcBaseFragment(val symbol: String) : Fragment() {
+open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
 
   lateinit var calcViewModel: CalcViewModel
   lateinit var calcAdapter: CalcAdapter
@@ -79,7 +79,7 @@ open class CalcBaseFragment(val symbol: String) : Fragment() {
   open fun updateCalcAdapter() {
   }
 
-  open fun updateStockListSpinner() {
+  open fun updateStockListSpinner(symbol: String) {
   }
 
   override fun onViewCreated(
@@ -90,6 +90,11 @@ open class CalcBaseFragment(val symbol: String) : Fragment() {
 
     calcAdapter = CalcAdapter(requireActivity())
     calcViewModel = ViewModelProvider(requireActivity()).get(CalcViewModel::class.java)
+
+    // Update symbol
+    if (stockSymbol.isNotEmpty()) {
+      calcViewModel.symbol = stockSymbol
+    }
 
     calcViewModel.calcData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
@@ -115,7 +120,7 @@ open class CalcBaseFragment(val symbol: String) : Fragment() {
 
         calcViewModel.stockitemList = stockitemListCopy
 
-        updateStockListSpinner()
+        updateStockListSpinner(calcViewModel.symbol)
       }
     })
 

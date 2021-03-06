@@ -162,6 +162,14 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcF7.setOnClickListener { runCodeDialog("F7") }
     binding.calcF8.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcF8.setOnClickListener { runCodeDialog("F8") }
+    binding.calcF9.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF9.setOnClickListener { runCodeDialog("F9") }
+    binding.calcF10.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF10.setOnClickListener { runCodeDialog("F10") }
+    binding.calcF11.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF11.setOnClickListener { runCodeDialog("F11") }
+    binding.calcF12.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF12.setOnClickListener { runCodeDialog("F12") }
 
 //    binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
 //    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
@@ -235,75 +243,66 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     }
 
     if (codes.isEmpty()) {
-      codeMap["F1"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F1_code),
-          name = requireContext().getString(R.string.calc_F1_desc)
-        )
-      codeMap["F2"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F2_code),
-          name = requireContext().getString(R.string.calc_F2_desc)
-        )
-      codeMap["F3"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F3_code),
-          name = requireContext().getString(R.string.calc_F3_desc)
-        )
-      codeMap["F4"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F4_code),
-          name = requireContext().getString(R.string.calc_F4_desc)
-        )
-      codeMap["F5"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F5_code),
-          name = requireContext().getString(R.string.calc_F5_desc)
-        )
-      codeMap["F6"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F6_code),
-          name = requireContext().getString(R.string.calc_F6_desc)
-        )
-      codeMap["F7"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F7_code),
-          name = requireContext().getString(R.string.calc_F7_desc)
-        )
-      codeMap["F8"] =
-        CodeType(
-          code = requireContext().getString(R.string.calc_F8_code),
-          name = requireContext().getString(R.string.calc_F8_desc)
-        )
+
+      val resList = listOf(
+        Triple("F1", R.string.calc_F1_code, R.string.calc_F1_desc),
+        Triple("F2", R.string.calc_F2_code, R.string.calc_F2_desc),
+        Triple("F3", R.string.calc_F3_code, R.string.calc_F3_desc),
+        Triple("F4", R.string.calc_F4_code, R.string.calc_F4_desc),
+        Triple("F5", R.string.calc_F5_code, R.string.calc_F5_desc),
+        Triple("F6", R.string.calc_F6_code, R.string.calc_F6_desc),
+        Triple("F7", R.string.calc_F7_code, R.string.calc_F7_desc),
+        Triple("F8", R.string.calc_F8_code, R.string.calc_F8_desc),
+        Triple("F9", R.string.calc_F9_code, R.string.calc_F9_desc),
+        Triple("F10", R.string.calc_F10_code, R.string.calc_F10_desc),
+        Triple("F11", R.string.calc_F11_code, R.string.calc_F11_desc),
+        Triple("F12", R.string.calc_F12_code, R.string.calc_F12_desc),
+      )
+
+      resList.forEach { entry ->
+
+//        codeMap["F1"] =
+//          CodeType(
+//            code = requireContext().getString(R.string.calc_F1_code),
+//            name = requireContext().getString(R.string.calc_F1_desc)
+//          )
+
+        codeMap[entry.first] =
+          CodeType(
+            code = requireContext().getString(entry.second),
+            name = requireContext().getString(entry.third)
+          )
+      }
     }
 
     updateFKeys()
   }
 
   private fun updateFKeys() {
-    val F1 = codeMap["F1"]?.name
-    binding.calcF1.text = if (F1.isNullOrEmpty()) "F1" else F1
 
-    val F2 = codeMap["F2"]?.name
-    binding.calcF2.text = if (F2.isNullOrEmpty()) "F2" else F2
+    val textViewList = listOf(
+      Pair(binding.calcF1, "F1"),
+      Pair(binding.calcF2, "F2"),
+      Pair(binding.calcF3, "F3"),
+      Pair(binding.calcF4, "F4"),
+      Pair(binding.calcF5, "F5"),
+      Pair(binding.calcF6, "F6"),
+      Pair(binding.calcF7, "F7"),
+      Pair(binding.calcF8, "F8"),
+      Pair(binding.calcF9, "F9"),
+      Pair(binding.calcF10, "F10"),
+      Pair(binding.calcF11, "F11"),
+      Pair(binding.calcF12, "F12"),
+    )
 
-    val F3 = codeMap["F3"]?.name
-    binding.calcF3.text = if (F3.isNullOrEmpty()) "F3" else F3
+    textViewList.forEach { pair ->
 
-    val F4 = codeMap["F4"]?.name
-    binding.calcF4.text = if (F4.isNullOrEmpty()) "F4" else F4
+//      val F1 = codeMap["F1"]?.name
+//      binding.calcF1.text = if (F1.isNullOrEmpty()) "F1" else F1
 
-    val F5 = codeMap["F5"]?.name
-    binding.calcF5.text = if (F5.isNullOrEmpty()) "F5" else F5
-
-    val F6 = codeMap["F6"]?.name
-    binding.calcF6.text = if (F6.isNullOrEmpty()) "F6" else F6
-
-    val F7 = codeMap["F7"]?.name
-    binding.calcF7.text = if (F7.isNullOrEmpty()) "F7" else F7
-
-    val F8 = codeMap["F8"]?.name
-    binding.calcF8.text = if (F8.isNullOrEmpty()) "F8" else F8
+      val F = codeMap[pair.second]?.name
+      pair.first.text = if (F.isNullOrEmpty()) pair.second else F
+    }
   }
 
   private fun getSerializedStr(): String {

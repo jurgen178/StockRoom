@@ -71,7 +71,7 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
       ?.let { binding.calclines.scrollToPosition(it) }
   }
 
-  override fun updateStockListSpinner() {
+  override fun updateStockListSpinner(symbol: String) {
     if (!listLoaded) {
 
       val selectedList = stockitemListCopy.map { item ->
@@ -133,6 +133,8 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
           if (marketPrice != 0.0) {
             calcViewModel.add(marketPrice, "${stockitemListCopy[position].stockDBdata.symbol}=")
           }
+
+          calcViewModel.symbol = stockitemListCopy[position].stockDBdata.symbol
         }
       }
     }

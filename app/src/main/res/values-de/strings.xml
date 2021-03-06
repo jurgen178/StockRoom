@@ -549,8 +549,8 @@ limitations under the License. -->
   <string name="calc_invalid_args">Fehlende Zahlen.</string>
   <string name="calc_error_msg">Fehler bei Symbol \'%1$s\'.</string>
   <string name="calc_error_parsing_msg">Fehler bei \'%1$s\'.</string>
-  <string name="calc_F1_code">//∆% = 100 * (b - a) / a\nover - swap / 100 * round\n\n// ∆% dem Ergebnis hinzufügen\n\"∆% \"</string>
-  <string name="calc_F1_desc">∆%</string>
+  <string name="calc_F1_code">//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n//Auf 2 Nachkommastellen runden\nround\n\n// ∆% dem Ergebnis hinzufügen\n\"∆% \"</string>
+  <string name="calc_F1_desc">∆% .2</string>
   <string name="calc_F2_code">// Kreditberechnung\n// Monatliche Rate\n\n// 3: Kreditbetrag\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * round \"Monatliche Rate \"</string>
   <string name="calc_F2_desc">Monatl. Rate</string>
   <string name="calc_F3_code">// Kreditberechnung\n// Kreditbetrag\n\n// 3: Monatliche Rate\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * round \"Kreditbetrag \"</string>
@@ -561,8 +561,16 @@ limitations under the License. -->
   <string name="calc_F5_desc">x²+ax+b</string>
   <string name="calc_F6_code">// $$ für den Aktienwert\n\n$$tsla\ndup 10000 swap / int \"Für 10000 bekommst du \"</string>
   <string name="calc_F6_desc">Aktien wert</string>
-  <string name="calc_F7_code"></string>
-  <string name="calc_F7_desc"></string>
+  <string name="calc_F7_code"> // Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.markeprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
+  <string name="calc_F7_desc">TSLA</string>
   <string name="calc_F8_code"></string>
   <string name="calc_F8_desc"></string>
+  <string name="calc_F9_code"></string>
+  <string name="calc_F9_desc"></string>
+  <string name="calc_F10_code"></string>
+  <string name="calc_F10_desc"></string>
+  <string name="calc_F11_code"></string>
+  <string name="calc_F11_desc"></string>
+  <string name="calc_F12_code"></string>
+  <string name="calc_F12_desc"></string>
 </resources>

@@ -119,102 +119,146 @@
           />
 
       <TextView
-          android:id="@+id/calc_sin"
-          android:text="sin"
-          app:layout_constraintBottom_toTopOf="@id/guideline789"
+          android:id="@+id/calc_F9"
+          android:text="F9"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
           app:layout_constraintEnd_toStartOf="@id/guidelineX2"
           app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_F10"
+          android:text="F10"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+          app:layout_constraintStart_toEndOf="@id/guidelineX2"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_F11"
+          android:text="F1"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+          app:layout_constraintStart_toEndOf="@id/guidelineX3"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_F12"
+          android:text="F12"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+          app:layout_constraintStart_toEndOf="@id/guidelineX4"
+          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+          style="@style/calc_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_sin"
+          android:text="sin"
+          app:layout_constraintBottom_toTopOf="@id/guideline456"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+          app:layout_constraintStart_toEndOf="@id/guidelineX1"
+          app:layout_constraintTop_toBottomOf="@+id/guideline789"
           style="@style/calc_style"
           />
 
       <TextView
           android:id="@+id/calc_cos"
           android:text="cos"
-          app:layout_constraintBottom_toTopOf="@id/guideline789"
+          app:layout_constraintBottom_toTopOf="@id/guideline456"
           app:layout_constraintEnd_toStartOf="@id/guidelineX3"
           app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
+          app:layout_constraintTop_toBottomOf="@+id/guideline789"
           style="@style/calc_style"
           />
 
       <TextView
           android:id="@+id/calc_tan"
           android:text="tan"
-          app:layout_constraintBottom_toTopOf="@id/guideline789"
+          app:layout_constraintBottom_toTopOf="@id/guideline456"
           app:layout_constraintEnd_toStartOf="@id/guidelineX4"
           app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
+          app:layout_constraintTop_toBottomOf="@+id/guideline789"
           style="@style/calc_style"
           />
 
       <TextView
           android:id="@+id/calc_arcsin"
           android:text="sin⁻¹"
-          app:layout_constraintBottom_toTopOf="@id/guideline456"
+          app:layout_constraintBottom_toTopOf="@id/guideline123"
           app:layout_constraintEnd_toStartOf="@id/guidelineX2"
           app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guideline789"
+          app:layout_constraintTop_toBottomOf="@+id/guideline456"
           style="@style/calc_style"
           />
 
       <TextView
           android:id="@+id/calc_arccos"
           android:text="cos⁻¹"
-          app:layout_constraintBottom_toTopOf="@id/guideline456"
+          app:layout_constraintBottom_toTopOf="@id/guideline123"
           app:layout_constraintEnd_toStartOf="@id/guidelineX3"
           app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guideline789"
+          app:layout_constraintTop_toBottomOf="@+id/guideline456"
           style="@style/calc_style"
           />
 
       <TextView
           android:id="@+id/calc_arctan"
           android:text="tan⁻¹"
-          app:layout_constraintBottom_toTopOf="@id/guideline456"
+          app:layout_constraintBottom_toTopOf="@id/guideline123"
           app:layout_constraintEnd_toStartOf="@id/guidelineX4"
           app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guideline789"
+          app:layout_constraintTop_toBottomOf="@+id/guideline456"
           style="@style/calc_style"
           />
 
           <TextView
               android:id="@+id/calc_ln"
               android:text="ln"
-              app:layout_constraintBottom_toTopOf="@id/guideline123"
+              app:layout_constraintBottom_toTopOf="@id/guideline0"
               app:layout_constraintEnd_toStartOf="@id/guidelineX2"
               app:layout_constraintStart_toEndOf="@id/guidelineX1"
-              app:layout_constraintTop_toBottomOf="@+id/guideline456"
+              app:layout_constraintTop_toBottomOf="@+id/guideline123"
               style="@style/calc_style"
               />
 
           <TextView
               android:id="@+id/calc_ex"
               android:text="e^x"
-              app:layout_constraintBottom_toTopOf="@id/guideline123"
+              app:layout_constraintBottom_toTopOf="@id/guideline0"
               app:layout_constraintEnd_toStartOf="@id/guidelineX3"
               app:layout_constraintStart_toEndOf="@id/guidelineX2"
-              app:layout_constraintTop_toBottomOf="@+id/guideline456"
+              app:layout_constraintTop_toBottomOf="@+id/guideline123"
               style="@style/calc_style"
               />
 
           <TextView
               android:id="@+id/calc_log"
               android:text="log"
-              app:layout_constraintBottom_toTopOf="@id/guideline123"
+              app:layout_constraintBottom_toTopOf="@id/guideline0"
               app:layout_constraintEnd_toStartOf="@id/guidelineX4"
               app:layout_constraintStart_toEndOf="@id/guidelineX3"
-              app:layout_constraintTop_toBottomOf="@+id/guideline456"
+              app:layout_constraintTop_toBottomOf="@+id/guideline123"
               style="@style/calc_style"
               />
 
           <TextView
               android:id="@+id/calc_zx"
               android:text="10^x"
-              app:layout_constraintBottom_toTopOf="@id/guideline123"
+              app:layout_constraintBottom_toTopOf="@id/guideline0"
               app:layout_constraintEnd_toStartOf="@id/guidelineX5"
               app:layout_constraintStart_toEndOf="@id/guidelineX4"
-              app:layout_constraintTop_toBottomOf="@+id/guideline456"
+              app:layout_constraintTop_toBottomOf="@+id/guideline123"
               style="@style/calc_style"
               />
 

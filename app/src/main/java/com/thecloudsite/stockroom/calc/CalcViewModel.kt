@@ -84,6 +84,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   private val context = application
   private val calcRepository: CalcRepository = CalcRepository(application)
   private var aic: Int = 0
+  var symbol: String = ""
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
   var radian = 1.0
   var separatorChar = ','
@@ -314,6 +315,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           desc = stockItem.onlineMarketData.currency
           value = Double.NaN
         }
+        expression.endsWith(".annualdividendrate") -> {
+          value = if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
+            stockItem.stockDBdata.annualDividendRate
+          } else {
+            stockItem.onlineMarketData.annualDividendRate
+          }
+        }
         symbol == expression -> {
           value = stockItem.onlineMarketData.marketPrice
           if (value == 0.0) {
@@ -472,7 +480,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           calcData.numberList.add(
             CalcLine(
               desc = "",
-              value = op1.times(100.0).roundToLong().toDouble().div(100.0)
+              // roundToLong is not defined for Double.NaN
+              value = if (op1.isNaN()) {
+                op1
+              } else {
+                op1.times(100.0).roundToLong().toDouble().div(100.0)
+              }
             )
           )
         }
