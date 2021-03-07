@@ -44,6 +44,7 @@ enum class ZeroArgument {
 }
 
 enum class UnaryArgument {
+  DROP,
   SQRT,
   SQ,
   INV,
@@ -104,6 +105,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun function(code: String) {
     val calcData = submitEditline(calcData.value!!)
 
+    endEdit(calcData)
+
     // Split by spaces not followed by even amount of quotes so only spaces outside of quotes are replaced.
     val symbols = code
       .replace("/[*].*?[*]/".toRegex(), " ")
@@ -152,6 +155,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         // Stack operations
+        "drop" -> {
+          validArgs = opUnary(calcData, UnaryArgument.DROP)
+        }
         "over" -> {
           validArgs = opBinary(calcData, BinaryArgument.OVER)
         }
@@ -475,6 +481,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val op1 = calcData.numberList.removeLast().value
 
       when (op) {
+        UnaryArgument.DROP -> {
+        }
         UnaryArgument.SQRT -> {
           calcData.numberList.add(CalcLine(desc = "", value = op1.pow(0.5)))
         }
