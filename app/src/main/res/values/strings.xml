@@ -564,7 +564,7 @@ limitations under the License. -->
   <string name="calc_F6_desc">Stock price</string>
   <string name="calc_F7_code"> // stock evaluation example\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
   <string name="calc_F7_desc">TSLA</string>
-  <string name="calc_F8_code">// if conditional example\n\n// 4: else part\n// 3: then part\n// 2: conditional op2\n// 1: conditional op1\n\n// if equal (op2 == op1)?\n// result is 4, not equal\n4 \"false \" 3 \"true \" 2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// result is 3, greater than\n4 \"false \" 3 \"true \" 2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// result is 4, not less than\n4 \"false \" 3 \"true \" 2 1 if.lt</string>
+  <string name="calc_F8_code">// if conditional example (aiaman)\n\n// 4: else part\n// 3: then part\n// 2: conditional op2\n// 1: conditional op1\n\n// if equal (op2 == op1)?\n// result is 4, not equal\n4 \"false \" 3 \"true \" 2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// result is 3, greater than\n4 \"false \" 3 \"true \" 2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// result is 4, not less than\n4 \"false \" 3 \"true \" 2 1 if.lt</string>
   <string name="calc_F8_desc">if example</string>
   <string name="calc_F9_code"></string>
   <string name="calc_F9_desc"></string>

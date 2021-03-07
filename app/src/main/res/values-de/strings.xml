@@ -563,7 +563,7 @@ limitations under the License. -->
   <string name="calc_F6_desc">Aktien wert</string>
   <string name="calc_F7_code"> // Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
   <string name="calc_F7_desc">TSLA</string>
-  <string name="calc_F8_code">// if-Bedingung Beispiel\n\n// 4: else-Teil\n// 3: then-Teil\n// 2: Bedingung op2\n// 1: Bedingung op1\n\n// if equal (op2 == op1)?\n// Ergebnis ist 4, nicht gleich\n4 \"false \" 3 \"true \" 2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// Ergebnis ist 3, größer als\n4 \"false \" 3 \"true \" 2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// Ergebnis ist 4, nicht kleiner als\n4 \"false \" 3 \"true \" 2 1 if.lt</string>
+  <string name="calc_F8_code">// if-Bedingung Beispiel (aiaman)\n\n// 4: else-Teil\n// 3: then-Teil\n// 2: Bedingung op2\n// 1: Bedingung op1\n\n// if equal (op2 == op1)?\n// Ergebnis ist 4, nicht gleich\n4 \"false \" 3 \"true \" 2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// Ergebnis ist 3, größer als\n4 \"false \" 3 \"true \" 2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// Ergebnis ist 4, nicht kleiner als\n4 \"false \" 3 \"true \" 2 1 if.lt</string>
   <string name="calc_F8_desc">if Beispiel</string>
   <string name="calc_F9_code"></string>
   <string name="calc_F9_desc"></string>
