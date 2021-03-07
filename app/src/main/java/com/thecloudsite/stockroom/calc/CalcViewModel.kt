@@ -79,6 +79,12 @@ enum class TernaryArgument {
   ZinsMonat,
 }
 
+enum class QuadArgument {
+  IFEQ, // if equal
+  IFGT, // if greater than
+  IFLT, // if less then
+}
+
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   private val context = application
@@ -172,6 +178,17 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             // Error
             validArgs = false
           }
+        }
+
+        // Conditional operations
+        "if.eq" -> {
+          validArgs = opQuad(calcData, QuadArgument.IFEQ)
+        }
+        "if.gt" -> {
+          validArgs = opQuad(calcData, QuadArgument.IFGT)
+        }
+        "if.lt" -> {
+          validArgs = opQuad(calcData, QuadArgument.IFLT)
         }
 
         // Arithmetic operations
@@ -546,44 +563,46 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 //        return
 //      }
 
-      val op2 = calcData.numberList.removeLast()
+      // 2: op2
+      // 1: op1
       val op1 = calcData.numberList.removeLast()
+      val op2 = calcData.numberList.removeLast()
 
       when (op) {
         BinaryArgument.ADD -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.value + op2.value))
+          calcData.numberList.add(CalcLine(desc = "", value = op2.value + op1.value))
         }
         BinaryArgument.SUB -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.value - op2.value))
+          calcData.numberList.add(CalcLine(desc = "", value = op2.value - op1.value))
         }
         BinaryArgument.MULT -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.value * op2.value))
+          calcData.numberList.add(CalcLine(desc = "", value = op2.value * op1.value))
         }
         BinaryArgument.DIV -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.value / op2.value))
+          calcData.numberList.add(CalcLine(desc = "", value = op2.value / op1.value))
         }
         BinaryArgument.POW -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.value.pow(op2.value)))
+          calcData.numberList.add(CalcLine(desc = "", value = op2.value.pow(op1.value)))
         }
         BinaryArgument.SWAP -> {
-          calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
-          calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
+          calcData.numberList.add(op1)
+          calcData.numberList.add(op2)
         }
         BinaryArgument.OVER -> {
-          calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
-          calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
-          calcData.numberList.add(CalcLine(desc = op1.desc, value = op1.value))
+          calcData.numberList.add(op2)
+          calcData.numberList.add(op1)
+          calcData.numberList.add(op2)
         }
         // Percent
         BinaryArgument.PER -> {
-          calcData.numberList.add(CalcLine(desc = "% ", value = op1.value * op2.value / 100))
+          calcData.numberList.add(CalcLine(desc = "% ", value = op2.value * op1.value / 100))
         }
         // Percent change
         BinaryArgument.PERC -> {
           calcData.numberList.add(
             CalcLine(
               desc = "∆% ",
-              value = (op2.value - op1.value) / op1.value * 100
+              value = (op1.value - op2.value) / op2.value * 100
             )
           )
         }
@@ -608,18 +627,64 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     if (argsValid) {
       endEdit(calcData)
 
-      val op3 = calcData.numberList.removeLast().value
-      val op2 = calcData.numberList.removeLast().value
+      // 3: op3
+      // 2: op2
+      // 1: op1
       val op1 = calcData.numberList.removeLast().value
+      val op2 = calcData.numberList.removeLast().value
+      val op3 = calcData.numberList.removeLast().value
 
       when (op) {
         TernaryArgument.ZinsMonat -> {
-          val K = op1 // Kapital
+          val K = op3 // Kapital
           val P = op2 // Jahreszins
-          val J = op3 // Laufzeit in Jahren
+          val J = op1 // Laufzeit in Jahren
           val p = P / 12.0 / 100.0
           val M = p * K / (1.0 - (1.0 + p).pow(-J * 12.0))
           calcData.numberList.add(CalcLine(desc = "Monatsrate=", value = M))
+        }
+      }
+    } else {
+      calcData.errorMsg = context.getString(R.string.calc_invalid_args)
+    }
+
+    calcRepository.updateData(calcData)
+
+    return argsValid
+  }
+
+  fun opQuad(op: QuadArgument): Boolean {
+    val calcData = submitEditline(calcData.value!!)
+    return opQuad(calcData, op)
+  }
+
+  private fun opQuad(calcData: CalcData, op: QuadArgument): Boolean {
+    val argsValid = calcData.numberList.size > 3
+
+    if (argsValid) {
+      endEdit(calcData)
+
+      // 4: op4 else part
+      // 3: op3 then part
+      // 2: op2 conditional op
+      // 1: op1 conditional op
+      val op1 = calcData.numberList.removeLast()
+      val op2 = calcData.numberList.removeLast()
+      val op3 = calcData.numberList.removeLast()
+      val op4 = calcData.numberList.removeLast()
+
+      when (op) {
+        QuadArgument.IFEQ -> {
+          val opResult = if (op2.value == op1.value) op3 else op4
+          calcData.numberList.add(opResult)
+        }
+        QuadArgument.IFGT -> {
+          val opResult = if (op2.value > op1.value) op3 else op4
+          calcData.numberList.add(opResult)
+        }
+        QuadArgument.IFLT -> {
+          val opResult = if (op2.value < op1.value) op3 else op4
+          calcData.numberList.add(opResult)
         }
       }
     } else {
