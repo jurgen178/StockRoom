@@ -549,7 +549,7 @@ limitations under the License. -->
   <string name="calc_invalid_args">Fehlende Zahlen.</string>
   <string name="calc_error_msg">Fehler bei Symbol \'%1$s\'.</string>
   <string name="calc_error_parsing_msg">Fehler bei \'%1$s\'.</string>
-  <string name="calc_F1_code">//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n//Auf 2 Nachkommastellen runden\nround\n\n// ∆% dem Ergebnis hinzufügen\n\"∆% \"</string>
+  <string name="calc_F1_code">// ∆%\n\n// 2: a\n// 1: b\n//∆% \u003d 100 * (b - a) / a\nover - swap / 100 *\n\n//Auf 2 Nachkommastellen runden\nround\n\n// \"∆% \" dem Ergebnis hinzufügen\n\"∆% \"</string>
   <string name="calc_F1_desc">∆% .2</string>
   <string name="calc_F2_code">// Kreditberechnung\n// Monatliche Rate\n\n// 3: Kreditbetrag\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * round \"Monatliche Rate \"</string>
   <string name="calc_F2_desc">Monatl. Rate</string>
@@ -563,8 +563,8 @@ limitations under the License. -->
   <string name="calc_F6_desc">Aktien wert</string>
   <string name="calc_F7_code"> // Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
   <string name="calc_F7_desc">TSLA</string>
-  <string name="calc_F8_code"></string>
-  <string name="calc_F8_desc"></string>
+  <string name="calc_F8_code">// if-Bedingung Beispiel\n\n// 4: else-Teil\n// 3: then-Teil\n// 2: Bedingung op2\n// 1: Bedingung op1\n\n// if equal (op2 == op1)?\n// Ergebnis ist 4, nicht gleich\n4 \"false \" 3 \"true \" 2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// Ergebnis ist 3, größer als\n4 \"false \" 3 \"true \" 2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// Ergebnis ist 4, nicht kleiner als\n4 \"false \" 3 \"true \" 2 1 if.lt</string>
+  <string name="calc_F8_desc">if Beispiel</string>
   <string name="calc_F9_code"></string>
   <string name="calc_F9_desc"></string>
   <string name="calc_F10_code"></string>
