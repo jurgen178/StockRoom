@@ -547,7 +547,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             argsValid = true
             // copy level n to level 1
             val nLevelOp = calcData.numberList[size - n - 1]
-            calcData.numberList.add(nLevelOp)
+            // Clone nLevelOp
+            calcData.numberList.add(CalcLine(desc = nLevelOp.desc, value = nLevelOp.value))
           }
         }
       }
@@ -561,6 +562,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             argsValid = true
             // move level n to level 1
             val nLevelOp = calcData.numberList.removeAt(size - n - 1)
+            // Copy nLevelOp
             calcData.numberList.add(nLevelOp)
           }
         }
@@ -765,7 +767,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         BinaryArgument.OVER -> {
           calcData.numberList.add(op2)
           calcData.numberList.add(op1)
-          calcData.numberList.add(op2)
+          // Clone element
+          calcData.numberList.add(CalcLine(desc = op2.desc, value = op2.value))
         }
         // Percent
         BinaryArgument.PER -> {
