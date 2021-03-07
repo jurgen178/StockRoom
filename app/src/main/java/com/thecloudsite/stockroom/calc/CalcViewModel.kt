@@ -38,6 +38,11 @@ import kotlin.math.roundToLong
 import kotlin.math.sin
 import kotlin.math.tan
 
+enum class VariableArguments {
+  SUM,
+  VAR,  // Varianz
+}
+
 enum class ZeroArgument {
   PI,
   E,
@@ -91,6 +96,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   private val context = application
   private val calcRepository: CalcRepository = CalcRepository(application)
   private var aic: Int = 0
+  private val varMap: MutableMap<String, CalcLine> = mutableMapOf()
   var symbol: String = ""
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
   var radian = 1.0
@@ -152,6 +158,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "round" -> {
           validArgs = opUnary(calcData, UnaryArgument.ROUND)
+        }
+        "sum" -> {
+          validArgs = opVarArg(calcData, VariableArguments.SUM)
+        }
+        "var" -> {
+          validArgs = opVarArg(calcData, VariableArguments.VAR)
         }
 
         // Stack operations
@@ -219,20 +231,27 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           // Skip empty lines.
         }
         "pi" -> {
-          opZero(ZeroArgument.PI)
+          opZero(calcData, ZeroArgument.PI)
         }
         "e" -> {
-          opZero(ZeroArgument.E)
+          opZero(calcData, ZeroArgument.E)
+        }
+
+        // Variable operation
+        "rcl" -> {
+          recallAllVariables(calcData)
         }
         else -> {
+
+          // Comment
           // If symbol is comment, add comment to the last entry.
-          val match = "[\"'](.*?)[\"']".toRegex()
+          val commentMatch = "[\"'](.*?)[\"']".toRegex()
             .matchEntire(symbol)
           // is comment?
-          if (match != null && match.groups.size == 2) {
+          if (commentMatch != null && commentMatch.groups.size == 2 && commentMatch.groups[1] != null) {
             // first group (groups[0]) is entire src
             // captured comment is in groups[1]
-            val desc = match.groups[1]?.value.toString()
+            val desc = commentMatch.groups[1]!!.value
 
             // Add line if list is empty to add the text to.
             if (calcData.numberList.isEmpty()) {
@@ -242,26 +261,50 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
               op.desc = desc
               calcData.numberList.add(op)
             }
-          } else
-          // evaluate $$StockSymbol
-            if (symbol.startsWith("$$")) {
-              val stockSymbol = symbol.drop(2)
-              evaluate(calcData, stockSymbol)
 
-            } else
-            // Evaluate number
-            {
-              try {
-                val value = numberFormat.parse(symbol)!!
-                  .toDouble()
+          } else {
 
-                calcData.numberList.add(CalcLine(desc = "", value = value))
-              } catch (e: Exception) {
-                // Error
-                calcData.errorMsg = context.getString(R.string.calc_error_parsing_msg, symbol)
-                success = false
+            // sto[.name]
+            val storeVariableMatch = "sto[.](.+)$".toRegex()
+              .matchEntire(symbol)
+            if (storeVariableMatch != null && storeVariableMatch.groups.size == 2 && storeVariableMatch.groups[1] != null) {
+              val variableName = storeVariableMatch.groups[1]!!.value
+              validArgs = storeVariable(calcData, variableName)
+
+            } else {
+
+              // rcl[.name]
+              val recallVariableMatch = "rcl[.](.+)$".toRegex()
+                .matchEntire(symbol)
+              if (recallVariableMatch != null && recallVariableMatch.groups.size == 2 && recallVariableMatch.groups[1] != null) {
+                val variableName = recallVariableMatch.groups[1]!!.value
+                recallVariable(calcData, variableName)
+
+              } else {
+
+                // evaluate $$StockSymbol
+                if (symbol.startsWith("$$")) {
+                  val stockSymbol = symbol.drop(2)
+                  evaluate(calcData, stockSymbol)
+
+                } else {
+
+                  // Evaluate number
+                  try {
+                    val value = numberFormat.parse(symbol)!!
+                      .toDouble()
+
+                    calcData.numberList.add(CalcLine(desc = "", value = value))
+                  } catch (e: Exception) {
+                    // Error
+                    calcData.errorMsg = context.getString(R.string.calc_error_parsing_msg, symbol)
+                    success = false
+                  }
+
+                }
               }
             }
+          }
         }
       }
 
@@ -282,6 +325,47 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
+  private fun storeVariable(calcData: CalcData, name: String): Boolean {
+    val argsValid = calcData.numberList.size > 0
+
+    if (argsValid) {
+      endEdit(calcData)
+
+      // 1: op1
+      val op1 = calcData.numberList.removeLast()
+      varMap[name] = op1
+
+    } else {
+      calcData.errorMsg = context.getString(R.string.calc_invalid_args)
+    }
+
+    calcRepository.updateData(calcData)
+
+    return argsValid
+  }
+
+  private fun recallVariable(calcData: CalcData, name: String) {
+    endEdit(calcData)
+
+    if (varMap.containsKey(name)) {
+      calcData.numberList.add(varMap[name]!!)
+
+      calcRepository.updateData(calcData)
+    }
+  }
+
+  private fun recallAllVariables(calcData: CalcData) {
+    endEdit(calcData)
+
+    varMap.forEach { (name, line) ->
+      calcData.numberList.add(CalcLine(desc = "Variable '$name'", value = Double.NaN))
+      calcData.numberList.add(line)
+    }
+    //calcData.numberList.add(CalcLine(desc = "${varMap.size}", value = Double.NaN))
+
+    calcRepository.updateData(calcData)
+  }
+
   // $$tsla
   // $$tsla.marketprice
   // $$tsla.purchaseprice
@@ -289,63 +373,69 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun evaluate(calcData: CalcData, expression: String) {
 
     // symbol[.property]
-    val match = "(.*?)(?:[.].*?)?$".toRegex()
+    val match = "(.*?)([.].*?)?$".toRegex()
       .matchEntire(expression)
 
-    val symbol = if (match != null && match.groups.size == 2) {
+    var symbol = expression.toUpperCase(Locale.ROOT)
+    var property = ""
+    if (match != null
+      && match.groups.size == 3
+      && match.groups[1] != null
+      && match.groups[2] != null
+    ) {
       // first group (groups[0]) is entire src
       // captured symbol is in groups[1]
-      match.groups[1]?.value.toString()
-    } else {
-      expression
+      // captured property is in groups[2]
+      symbol = match.groups[1]!!.value.toUpperCase(Locale.ROOT)
+      property = match.groups[2]!!.value.toLowerCase(Locale.ROOT)
     }
 
     val stockItem = stockitemList.find { stockItem ->
       stockItem.stockDBdata.symbol.equals(symbol, true)
     }
 
-    var desc = "$expression="
+    var desc = "$symbol$property="
     var value = 0.0
     if (stockItem != null) {
 
       when {
-        expression.endsWith(".marketprice") -> {
+        property == ".marketprice" -> {
           value = stockItem.onlineMarketData.marketPrice
         }
-        expression.endsWith(".purchaseprice") -> {
+        property == ".purchaseprice" -> {
           val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
             stockItem.assets
           )
           value = price / quantity
         }
-        expression.endsWith(".quantity") -> {
+        property == ".quantity" -> {
           val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
             stockItem.assets
           )
           value = quantity
         }
-        expression.endsWith(".marketchange") -> {
+        property == ".marketchange" -> {
           value = stockItem.onlineMarketData.marketChange
         }
-        expression.endsWith(".marketchangepercent") -> {
+        property == ".marketchangepercent" -> {
           value = stockItem.onlineMarketData.marketChangePercent
         }
-        expression.endsWith(".name") -> {
+        property == ".name" -> {
           desc = getName(stockItem.onlineMarketData)
           value = Double.NaN
         }
-        expression.endsWith(".currency") -> {
+        property == ".currency" -> {
           desc = stockItem.onlineMarketData.currency
           value = Double.NaN
         }
-        expression.endsWith(".annualdividendrate") -> {
+        property == ".annualdividendrate" -> {
           value = if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
             stockItem.stockDBdata.annualDividendRate
           } else {
             stockItem.onlineMarketData.annualDividendRate
           }
         }
-        symbol == expression -> {
+        property.isEmpty() -> {
           value = stockItem.onlineMarketData.marketPrice
           if (value == 0.0) {
             // Offline: use purchase price
@@ -358,6 +448,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           }
         }
         else -> {
+          // unknown property
           value = Double.NaN
         }
       }
@@ -441,9 +532,57 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
+  fun opVarArg(op: VariableArguments): Boolean {
+    val calcData = submitEditline(calcData.value!!)
+    return opVarArg(calcData, op)
+  }
+
+  fun opVarArg(calcData: CalcData, op: VariableArguments): Boolean {
+    var argsValid = true
+    endEdit(calcData)
+
+    when (op) {
+      VariableArguments.SUM -> {
+        val size = calcData.numberList.size
+        val sum = calcData.numberList.sumByDouble { calcLine ->
+          calcLine.value
+        }
+        calcData.numberList.clear()
+        calcData.numberList.add(CalcLine(desc = "Σ=", value = sum))
+        calcData.numberList.add(CalcLine(desc = "n=", value = size.toDouble()))
+      }
+      VariableArguments.VAR -> {
+        val size = calcData.numberList.size
+        if (size > 0) {
+
+          val sum = calcData.numberList.sumByDouble { calcLine ->
+            calcLine.value
+          }
+          val mean = sum / size
+
+          var variance = 0.0
+          for (i in 0 until size) {
+            val x = calcData.numberList.removeLast().value - mean
+            variance += x * x
+          }
+          calcData.numberList.add(CalcLine(desc = "σ²=", value = variance))
+        } else {
+          argsValid = false
+        }
+      }
+    }
+
+    calcRepository.updateData(calcData)
+
+    return argsValid
+  }
+
   fun opZero(op: ZeroArgument) {
     val calcData = submitEditline(calcData.value!!)
+    opZero(calcData, op)
+  }
 
+  fun opZero(calcData: CalcData, op: ZeroArgument) {
     endEdit(calcData)
 
     when (op) {

@@ -205,6 +205,9 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcPi.setOnClickListener { calcViewModel.opZero(ZeroArgument.PI) }
     binding.calcE.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcE.setOnClickListener { calcViewModel.opZero(ZeroArgument.E) }
+
+    binding.calcSum.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcSum.setOnClickListener { calcViewModel.opVarArg(VariableArguments.SUM) }
   }
 
   override fun onPause() {
