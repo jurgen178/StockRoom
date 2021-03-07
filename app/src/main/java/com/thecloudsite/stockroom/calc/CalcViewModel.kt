@@ -39,6 +39,8 @@ import kotlin.math.sin
 import kotlin.math.tan
 
 enum class VariableArguments {
+  PICK,
+  ROLL,
   SUM,
   VAR,  // Varianz
 }
@@ -50,6 +52,7 @@ enum class ZeroArgument {
 
 enum class UnaryArgument {
   DROP,
+  DUP,
   SQRT,
   SQ,
   INV,
@@ -82,6 +85,7 @@ enum class BinaryArgument {
 }
 
 enum class TernaryArgument {
+  ROT,
   ZinsMonat,
 }
 
@@ -170,32 +174,23 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "drop" -> {
           validArgs = opUnary(calcData, UnaryArgument.DROP)
         }
+        "dup" -> {
+          validArgs = opUnary(calcData, UnaryArgument.DUP)
+        }
         "over" -> {
           validArgs = opBinary(calcData, BinaryArgument.OVER)
         }
         "swap" -> {
           validArgs = opBinary(calcData, BinaryArgument.SWAP)
         }
-        "dup" -> {
-          if (calcData.numberList.isNotEmpty()) {
-            calcData.numberList.add(calcData.numberList.last())
-          } else {
-            // Error
-            validArgs = false
-          }
-        }
         "rot" -> {
-          if (calcData.numberList.size > 2) {
-            val op3 = calcData.numberList.removeLast()
-            val op2 = calcData.numberList.removeLast()
-            val op1 = calcData.numberList.removeLast()
-            calcData.numberList.add(op2)
-            calcData.numberList.add(op3)
-            calcData.numberList.add(op1)
-          } else {
-            // Error
-            validArgs = false
-          }
+          validArgs = opTernary(calcData, TernaryArgument.ROT)
+        }
+        "pick" -> {
+          validArgs = opVarArg(calcData, VariableArguments.PICK)
+        }
+        "roll" -> {
+          validArgs = opVarArg(calcData, VariableArguments.ROLL)
         }
 
         // Conditional operations
@@ -542,6 +537,34 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     endEdit(calcData)
 
     when (op) {
+      VariableArguments.PICK -> {
+        argsValid = false
+        val size = calcData.numberList.size
+        if (size > 1) {
+
+          val n = calcData.numberList.removeLast().value.toInt()
+          if (size > n) {
+            argsValid = true
+            // copy level n to level 1
+            val nLevelOp = calcData.numberList[size - n - 1]
+            calcData.numberList.add(nLevelOp)
+          }
+        }
+      }
+      VariableArguments.ROLL -> {
+        argsValid = false
+        val size = calcData.numberList.size
+        if (size > 1) {
+
+          val n = calcData.numberList.removeLast().value.toInt()
+          if (size > n) {
+            argsValid = true
+            // move level n to level 1
+            val nLevelOp = calcData.numberList.removeAt(size - n - 1)
+            calcData.numberList.add(nLevelOp)
+          }
+        }
+      }
       VariableArguments.SUM -> {
         val size = calcData.numberList.size
         val sum = calcData.numberList.sumByDouble { calcLine ->
@@ -617,71 +640,75 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 //        return
 //      }
 
-      val op1 = calcData.numberList.removeLast().value
+      val op1 = calcData.numberList.removeLast()
 
       when (op) {
         UnaryArgument.DROP -> {
         }
+        UnaryArgument.DUP -> {
+          calcData.numberList.add(op1)
+          calcData.numberList.add(op1)
+        }
         UnaryArgument.SQRT -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.pow(0.5)))
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value.pow(0.5)))
         }
         UnaryArgument.SQ -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.pow(2)))
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value.pow(2)))
         }
         UnaryArgument.INV -> {
-          calcData.numberList.add(CalcLine(desc = "", value = 1 / op1))
+          calcData.numberList.add(CalcLine(desc = "", value = 1 / op1.value))
         }
         UnaryArgument.ABS -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.absoluteValue))
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value.absoluteValue))
         }
         UnaryArgument.SIGN -> {
-          calcData.numberList.add(CalcLine(desc = "", value = -op1))
+          calcData.numberList.add(CalcLine(desc = "", value = -op1.value))
         }
         UnaryArgument.INT -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op1.toInt().toDouble()))
+          calcData.numberList.add(CalcLine(desc = "", value = op1.value.toInt().toDouble()))
         }
         UnaryArgument.ROUND -> {
           calcData.numberList.add(
             CalcLine(
               desc = "",
               // roundToLong is not defined for Double.NaN
-              value = if (op1.isNaN()) {
-                op1
+              value = if (op1.value.isNaN()) {
+                op1.value
               } else {
-                op1.times(100.0).roundToLong().toDouble().div(100.0)
+                op1.value.times(100.0).roundToLong().toDouble().div(100.0)
               }
             )
           )
         }
         UnaryArgument.SIN -> {
-          calcData.numberList.add(CalcLine(desc = "", value = sin(op1 * radian)))
+          calcData.numberList.add(CalcLine(desc = "", value = sin(op1.value * radian)))
         }
         UnaryArgument.COS -> {
-          calcData.numberList.add(CalcLine(desc = "", value = cos(op1 * radian)))
+          calcData.numberList.add(CalcLine(desc = "", value = cos(op1.value * radian)))
         }
         UnaryArgument.TAN -> {
-          calcData.numberList.add(CalcLine(desc = "", value = tan(op1 * radian)))
+          calcData.numberList.add(CalcLine(desc = "", value = tan(op1.value * radian)))
         }
         UnaryArgument.ARCSIN -> {
-          calcData.numberList.add(CalcLine(desc = "", value = asin(op1) / radian))
+          calcData.numberList.add(CalcLine(desc = "", value = asin(op1.value) / radian))
         }
         UnaryArgument.ARCCOS -> {
-          calcData.numberList.add(CalcLine(desc = "", value = acos(op1) / radian))
+          calcData.numberList.add(CalcLine(desc = "", value = acos(op1.value) / radian))
         }
         UnaryArgument.ARCTAN -> {
-          calcData.numberList.add(CalcLine(desc = "", value = atan(op1) / radian))
+          calcData.numberList.add(CalcLine(desc = "", value = atan(op1.value) / radian))
         }
         UnaryArgument.LN -> {
-          calcData.numberList.add(CalcLine(desc = "", value = ln(op1)))
+          calcData.numberList.add(CalcLine(desc = "", value = ln(op1.value)))
         }
         UnaryArgument.EX -> {
-          calcData.numberList.add(CalcLine(desc = "", value = Math.E.pow(op1)))
+          calcData.numberList.add(CalcLine(desc = "", value = Math.E.pow(op1.value)))
         }
         UnaryArgument.LOG -> {
-          calcData.numberList.add(CalcLine(desc = "", value = log10(op1)))
+          calcData.numberList.add(CalcLine(desc = "", value = log10(op1.value)))
         }
         UnaryArgument.ZX -> {
-          calcData.numberList.add(CalcLine(desc = "", value = 10.0.pow(op1)))
+          calcData.numberList.add(CalcLine(desc = "", value = 10.0.pow(op1.value)))
         }
       }
     } else {
@@ -777,15 +804,20 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // 3: op3
       // 2: op2
       // 1: op1
-      val op1 = calcData.numberList.removeLast().value
-      val op2 = calcData.numberList.removeLast().value
-      val op3 = calcData.numberList.removeLast().value
+      val op1 = calcData.numberList.removeLast()
+      val op2 = calcData.numberList.removeLast()
+      val op3 = calcData.numberList.removeLast()
 
       when (op) {
+        TernaryArgument.ROT -> {
+          calcData.numberList.add(op2)
+          calcData.numberList.add(op1)
+          calcData.numberList.add(op3)
+        }
         TernaryArgument.ZinsMonat -> {
-          val K = op3 // Kapital
-          val P = op2 // Jahreszins
-          val J = op1 // Laufzeit in Jahren
+          val K = op3.value // Kapital
+          val P = op2.value // Jahreszins
+          val J = op1.value // Laufzeit in Jahren
           val p = P / 12.0 / 100.0
           val M = p * K / (1.0 - (1.0 + p).pow(-J * 12.0))
           calcData.numberList.add(CalcLine(desc = "Monatsrate=", value = M))
