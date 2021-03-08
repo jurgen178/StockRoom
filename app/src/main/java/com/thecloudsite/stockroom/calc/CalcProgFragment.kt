@@ -153,27 +153,27 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcF1.setOnClickListener { runCodeDialog(getKey("F1")) }
     binding.calcF2.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF2.setOnClickListener { runCodeDialog("F2") }
+    binding.calcF2.setOnClickListener { runCodeDialog(getKey("F2")) }
     binding.calcF3.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF3.setOnClickListener { runCodeDialog("F3") }
+    binding.calcF3.setOnClickListener { runCodeDialog(getKey("F3")) }
     binding.calcF4.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF4.setOnClickListener { runCodeDialog("F4") }
+    binding.calcF4.setOnClickListener { runCodeDialog(getKey("F4")) }
     binding.calcF5.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF5.setOnClickListener { runCodeDialog("F5") }
+    binding.calcF5.setOnClickListener { runCodeDialog(getKey("F5")) }
     binding.calcF6.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF6.setOnClickListener { runCodeDialog("F6") }
+    binding.calcF6.setOnClickListener { runCodeDialog(getKey("F6")) }
     binding.calcF7.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF7.setOnClickListener { runCodeDialog("F7") }
+    binding.calcF7.setOnClickListener { runCodeDialog(getKey("F7")) }
     binding.calcF8.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF8.setOnClickListener { runCodeDialog("F8") }
+    binding.calcF8.setOnClickListener { runCodeDialog(getKey("F8")) }
     binding.calcF9.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF9.setOnClickListener { runCodeDialog("F9") }
+    binding.calcF9.setOnClickListener { runCodeDialog(getKey("F9")) }
     binding.calcF10.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF10.setOnClickListener { runCodeDialog("F10") }
+    binding.calcF10.setOnClickListener { runCodeDialog(getKey("F10")) }
     binding.calcF11.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF11.setOnClickListener { runCodeDialog("F11") }
+    binding.calcF11.setOnClickListener { runCodeDialog(getKey("F11")) }
     binding.calcF12.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF12.setOnClickListener { runCodeDialog("F12") }
+    binding.calcF12.setOnClickListener { runCodeDialog(getKey("F12")) }
 
 //    binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
 //    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
@@ -213,13 +213,17 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcSum.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSum.setOnClickListener { calcViewModel.opVarArg(VariableArguments.SUM) }
 
+    binding.calcSum.setOnTouchListener { view, event ->
+      if (event.action == MotionEvent.ACTION_DOWN) {
+        setBackgroundColor(view, requireContext().getColor(R.color.calcShiftPressed))
+      } else
+        if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+          setBackgroundColor(view, requireContext().getColor(R.color.calcShift))
+        }
+      false
+    }
     binding.calcShift.setOnClickListener {
       calcViewModel.shift = !calcViewModel.shift
-      if (calcViewModel.shift) {
-        context?.let { setBackgroundColor(view, it.getColor(R.color.calcShiftPressed)) }
-      } else {
-        context?.let { setBackgroundColor(view, it.getColor(R.color.calcShift)) }
-      }
       updateShift()
     }
   }
@@ -297,6 +301,11 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   }
 
   private fun updateShift() {
+    if (calcViewModel.shift) {
+      binding.calcShift.text = "↱"
+    } else {
+      binding.calcShift.text = ""
+    }
     updateFKeys()
   }
 

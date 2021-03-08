@@ -6,436 +6,447 @@
     android:layout_height="match_parent"
     >
 
-  <androidx.core.widget.NestedScrollView
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:scrollbars="vertical"
-      >
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-<!--
-      <TextView
-          android:id="@+id/calc_ZinsMonat"
-          android:text="Test"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guideline123"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
-          app:layout_constraintStart_toEndOf="@id/guidelineX4"
-          app:layout_constraintTop_toBottomOf="@+id/guideline456"
-          style="@style/calc_style"
-          />
--->
-
-      <TextView
-          android:id="@+id/calc_F1"
-          android:text="F1"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
-          app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F2"
-          android:text="F2"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-          app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F3"
-          android:text="F3"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
-          app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F4"
-          android:text="F4"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF2"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
-          app:layout_constraintStart_toEndOf="@id/guidelineX4"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F5"
-          android:text="F5"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
-          app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F6"
-          android:text="F6"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-          app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F7"
-          android:text="F7"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
-          app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F8"
-          android:text="F8"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineF1"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
-          app:layout_constraintStart_toEndOf="@id/guidelineX4"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F9"
-          android:text="F9"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
-          app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F10"
-          android:text="F10"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-          app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F11"
-          android:text="F1"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
-          app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_F12"
-          android:text="F12"
-          android:textSize="12sp"
-          app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
-          app:layout_constraintStart_toEndOf="@id/guidelineX4"
-          app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_sin"
-          android:text="sin"
-          app:layout_constraintBottom_toTopOf="@id/guideline456"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
-          app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guideline789"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_cos"
-          android:text="cos"
-          app:layout_constraintBottom_toTopOf="@id/guideline456"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-          app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guideline789"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_tan"
-          android:text="tan"
-          app:layout_constraintBottom_toTopOf="@id/guideline456"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
-          app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guideline789"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_arcsin"
-          android:text="sin⁻¹"
-          app:layout_constraintBottom_toTopOf="@id/guideline123"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
-          app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guideline456"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_arccos"
-          android:text="cos⁻¹"
-          app:layout_constraintBottom_toTopOf="@id/guideline123"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-          app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guideline456"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_arctan"
-          android:text="tan⁻¹"
-          app:layout_constraintBottom_toTopOf="@id/guideline123"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
-          app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guideline456"
-          style="@style/calc_style"
-          />
-
-          <TextView
-              android:id="@+id/calc_ln"
-              android:text="ln"
-              app:layout_constraintBottom_toTopOf="@id/guideline0"
-              app:layout_constraintEnd_toStartOf="@id/guidelineX2"
-              app:layout_constraintStart_toEndOf="@id/guidelineX1"
-              app:layout_constraintTop_toBottomOf="@+id/guideline123"
-              style="@style/calc_style"
-              />
-
-          <TextView
-              android:id="@+id/calc_ex"
-              android:text="e^x"
-              app:layout_constraintBottom_toTopOf="@id/guideline0"
-              app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-              app:layout_constraintStart_toEndOf="@id/guidelineX2"
-              app:layout_constraintTop_toBottomOf="@+id/guideline123"
-              style="@style/calc_style"
-              />
-
-          <TextView
-              android:id="@+id/calc_log"
-              android:text="log"
-              app:layout_constraintBottom_toTopOf="@id/guideline0"
-              app:layout_constraintEnd_toStartOf="@id/guidelineX4"
-              app:layout_constraintStart_toEndOf="@id/guidelineX3"
-              app:layout_constraintTop_toBottomOf="@+id/guideline123"
-              style="@style/calc_style"
-              />
-
-          <TextView
-              android:id="@+id/calc_zx"
-              android:text="10^x"
-              app:layout_constraintBottom_toTopOf="@id/guideline0"
-              app:layout_constraintEnd_toStartOf="@id/guidelineX5"
-              app:layout_constraintStart_toEndOf="@id/guidelineX4"
-              app:layout_constraintTop_toBottomOf="@+id/guideline123"
-              style="@style/calc_style"
-              />
-
-          <TextView
-          android:id="@+id/calc_pi"
-          android:text="π"
-          app:layout_constraintBottom_toTopOf="@id/guideline00"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX2"
-          app:layout_constraintStart_toEndOf="@id/guidelineX1"
-          app:layout_constraintTop_toBottomOf="@+id/guideline0"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_e"
-          android:text="e"
-          app:layout_constraintBottom_toTopOf="@id/guideline00"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX3"
-          app:layout_constraintStart_toEndOf="@id/guidelineX2"
-          app:layout_constraintTop_toBottomOf="@+id/guideline0"
-          style="@style/calc_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_shift"
-          android:text="↱"
-          app:layout_constraintBottom_toTopOf="@id/guideline00"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX4"
-          app:layout_constraintStart_toEndOf="@id/guidelineX3"
-          app:layout_constraintTop_toBottomOf="@+id/guideline0"
-          style="@style/calc_shift_style"
-          />
-
-      <TextView
-          android:id="@+id/calc_sum"
-          android:text="∑"
-          app:layout_constraintBottom_toTopOf="@id/guideline00"
-          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
-          app:layout_constraintStart_toEndOf="@id/guidelineX4"
-          app:layout_constraintTop_toBottomOf="@+id/guideline0"
-          style="@style/calc_style"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineDisp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="190dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineF3"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="230dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineF2"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="280dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineF1"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="330dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineEnter"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="380dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guideline789"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="430dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guideline456"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="480dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guideline123"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="530dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guideline0"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="580dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guideline00"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          app:layout_constraintGuide_begin="630dp"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineX1"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.14"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineX2"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.32"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineX3"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.5"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineX4"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.68"
-          />
-
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guidelineX5"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.86"
-          />
-
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/calclines"
+      <androidx.core.widget.NestedScrollView
           android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:background="#CCC69B"
-          android:padding="4dp"
-          app:layout_constraintBottom_toTopOf="@+id/guidelineDisp"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          />
+          android:layout_height="match_parent"
+          android:scrollbars="vertical"
+          >
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
-  </androidx.core.widget.NestedScrollView>
+                  <!--
+                        <TextView
+                            android:id="@+id/calc_ZinsMonat"
+                            android:text="Test"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toTopOf="@id/guideline123"
+                            app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                            app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                            app:layout_constraintTop_toBottomOf="@+id/guideline456"
+                            style="@style/calc_style"
+                            />
+                  -->
+
+                  <TextView
+                      android:id="@+id/calc_F1"
+                      android:text="F1"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F2"
+                      android:text="F2"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F3"
+                      android:text="F3"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F4"
+                      android:text="F4"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF2"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F5"
+                      android:text="F5"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F6"
+                      android:text="F6"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F7"
+                      android:text="F7"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F8"
+                      android:text="F8"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineF1"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F9"
+                      android:text="F9"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F10"
+                      android:text="F10"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F11"
+                      android:text="F1"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F12"
+                      android:text="F12"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineEnter"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_sin"
+                      android:text="sin"
+                      app:layout_constraintBottom_toTopOf="@id/guideline456"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline789"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_cos"
+                      android:text="cos"
+                      app:layout_constraintBottom_toTopOf="@id/guideline456"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline789"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_tan"
+                      android:text="tan"
+                      app:layout_constraintBottom_toTopOf="@id/guideline456"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline789"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_arcsin"
+                      android:text="sin⁻¹"
+                      app:layout_constraintBottom_toTopOf="@id/guideline123"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline456"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_arccos"
+                      android:text="cos⁻¹"
+                      app:layout_constraintBottom_toTopOf="@id/guideline123"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline456"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_arctan"
+                      android:text="tan⁻¹"
+                      app:layout_constraintBottom_toTopOf="@id/guideline123"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline456"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_ln"
+                      android:text="ln"
+                      app:layout_constraintBottom_toTopOf="@id/guideline0"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline123"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_ex"
+                      android:text="e^x"
+                      app:layout_constraintBottom_toTopOf="@id/guideline0"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline123"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_log"
+                      android:text="log"
+                      app:layout_constraintBottom_toTopOf="@id/guideline0"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline123"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_zx"
+                      android:text="10^x"
+                      app:layout_constraintBottom_toTopOf="@id/guideline0"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline123"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_pi"
+                      android:text="π"
+                      app:layout_constraintBottom_toTopOf="@id/guideline00"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline0"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_e"
+                      android:text="e"
+                      app:layout_constraintBottom_toTopOf="@id/guideline00"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline0"
+                      style="@style/calc_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_shift"
+                      android:text="↱"
+                      app:layout_constraintBottom_toTopOf="@id/guideline00"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline0"
+                      style="@style/calc_shift_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_sum"
+                      android:text="∑"
+                      app:layout_constraintBottom_toTopOf="@id/guideline00"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline0"
+                      style="@style/calc_style"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineDisp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="190dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineF3"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="230dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineF2"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="280dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineF1"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="330dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineEnter"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="380dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guideline789"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="430dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guideline456"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="480dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guideline123"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="530dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guideline0"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="580dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guideline00"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      app:layout_constraintGuide_begin="630dp"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineX1"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      app:layout_constraintGuide_percent="0.14"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineX2"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      app:layout_constraintGuide_percent="0.32"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineX3"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      app:layout_constraintGuide_percent="0.5"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineX4"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      app:layout_constraintGuide_percent="0.68"
+                      />
+
+                  <androidx.constraintlayout.widget.Guideline
+                      android:id="@+id/guidelineX5"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      app:layout_constraintGuide_percent="0.86"
+                      />
+
+                  <androidx.recyclerview.widget.RecyclerView
+                      android:id="@+id/calclines"
+                      android:layout_width="match_parent"
+                      android:layout_height="0dp"
+                      android:background="#CCC69B"
+                      android:padding="4dp"
+                      app:layout_constraintBottom_toTopOf="@+id/guidelineDisp"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintTop_toTopOf="parent"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_indicator"
+                      android:textColor="@color/black"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintHorizontal_bias="0.0"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintEnd_toEndOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
