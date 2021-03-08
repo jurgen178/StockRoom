@@ -489,13 +489,19 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   fun setText(text: String?, desc: String) {
     if (text != null && text.isNotEmpty()) {
-      val calcData = calcData.value!!
 
-      calcData.editMode = true
-      calcData.editline = text
-      calcData.errorMsg = ""
+      // Use function(...) to interpret the content instead of parsing as a number.
+      // This allows pasting code scripts.
+      function(text)
 
-      calcRepository.updateData(submitEditline(calcData, desc))
+//      val calcData = calcData.value!!
+//
+//      calcData.editMode = true
+//      calcData.editline = text
+//      calcData.errorMsg = ""
+//
+//      calcRepository.updateData(submitEditline(calcData, desc))
+
     }
   }
 
@@ -587,7 +593,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         var n = 0
         var sum = 0.0
         calcData.numberList.forEach { calcLine ->
-          if (!calcLine.value.isNaN()) {
+          if (calcLine.value.isFinite()) {
             n++
             sum += calcLine.value
           }
@@ -608,7 +614,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           var n = 0
           calcData.numberList.forEach { calcLine ->
             val x = calcLine.value
-            if (!x.isNaN()) {
+            if (x.isFinite()) {
               n++
               sum += x
             }
@@ -620,7 +626,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             var variance = 0.0
             calcData.numberList.forEach { calcLine ->
               val x1 = calcLine.value
-              if (!x1.isNaN()) {
+              if (x1.isFinite()) {
                 val x = x1 - mean
                 variance += x * x
               }

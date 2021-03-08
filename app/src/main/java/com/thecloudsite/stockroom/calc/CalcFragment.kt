@@ -66,7 +66,7 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
 
   override fun updateCalcAdapter() {
     val lines = calcViewModel.getLines()
-    binding.calcIndicatorDepth.text = if (lines > 0) "$lines" else ""
+    binding.calcIndicatorDepth.text = if (lines > 3) "$lines" else ""
 
     // scroll to always show last element at the bottom of the list
     // itemcount is numberlist + editline
