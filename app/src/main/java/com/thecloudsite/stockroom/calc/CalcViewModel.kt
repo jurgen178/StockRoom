@@ -592,42 +592,52 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             sum += calcLine.value
           }
         }
-        calcData.numberList.clear()
-        calcData.numberList.add(CalcLine(desc = "Σ=", value = sum))
-        calcData.numberList.add(CalcLine(desc = "n=", value = n.toDouble()))
+        if (n > 1) {
+          calcData.numberList.clear()
+          calcData.numberList.add(CalcLine(desc = "Σ=", value = sum))
+          calcData.numberList.add(CalcLine(desc = "n=", value = n.toDouble()))
+        } else {
+          argsValid = false
+        }
       }
       VariableArguments.VAR -> {
         argsValid = false
         val size = calcData.numberList.size
-        if (size > 0) {
+        if (size > 1) {
           var sum = 0.0
           var n = 0
-          for (i in 0 until size) {
-            val x = calcData.numberList[i].value
+          calcData.numberList.forEach { calcLine ->
+            val x = calcLine.value
             if (!x.isNaN()) {
               n++
               sum += x
             }
           }
 
-          if (n > 0) {
+          if (n > 1) {
             val mean = sum / n
 
             var variance = 0.0
-            for (i in 0 until size) {
-              val x1 = calcData.numberList[i].value
+            calcData.numberList.forEach { calcLine ->
+              val x1 = calcLine.value
               if (!x1.isNaN()) {
                 val x = x1 - mean
                 variance += x * x
               }
             }
+
             variance /= n
+
             calcData.numberList.clear()
             calcData.numberList.add(CalcLine(desc = "σ²=", value = variance))
             argsValid = true
           }
         }
       }
+    }
+
+    if (!argsValid) {
+      calcData.errorMsg = context.getString(R.string.calc_invalid_args)
     }
 
     calcRepository.updateData(calcData)
