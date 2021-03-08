@@ -550,7 +550,7 @@ limitations under the License. -->
   <string name="calc_invalid_args">Missing numbers.</string>
   <string name="calc_error_msg">Error at symbol \'%1$s\'.</string>
   <string name="calc_error_parsing_msg">Error parsing \'%1$s\'.</string>
-  <string name="calc_F1_code">// ∆%\n\n// 2: a\n// 1: b\n//∆% \u003d 100 * (b - a) / a\nover - swap / 100 *\n\n//round to two digits\nround\n\n// add \"∆% \" to result\n\"∆% \" +</string>
+  <string name="calc_F1_code">// Calculate the percentage change from a to b\n\n// 2: a\n// 1: b\n//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n//round to two digits\nround\n\n// add \"∆% \" to the result\n\"∆% \" +</string>
   <string name="calc_F1_desc">∆% .2</string>
   <string name="calc_F2_code">// Mortgage Calculator\n// Monthly Payment\n\n// 3: Loan Amount\n// 2: Loan Term in Years\n// 1: Annual Interest Rate in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * round \"Monthly Payment \" +</string>
   <string name="calc_F2_desc">Monthly Payment</string>
@@ -566,10 +566,10 @@ limitations under the License. -->
   <string name="calc_F7_desc">TSLA</string>
   <string name="calc_F8_code">// if conditional example (aiaman)\n\n// 4: else part\n// 3: then part\n// 2: conditional op2\n// 1: conditional op1\n\n// if equal (op2 == op1)?\n// result is 4, not equal\n4 \"false \" + 3 \"true \" + 2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// result is 3, greater than\n4 \"false \" + 3 \"true \" + 2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// result is 4, not less than\n4 \"false \" + 3 \"true \" + 2 1 if.lt</string>
   <string name="calc_F8_desc">if example</string>
-  <string name="calc_F9_code"></string>
-  <string name="calc_F9_desc"></string>
-  <string name="calc_F10_code"></string>
-  <string name="calc_F10_desc"></string>
+  <string name="calc_F9_code">// Clear all\nclear\n\n// Variables\n// Store number in variable \u0027abc\u0027\n123 \"abc=\" + sto.abc\n\n// Read variable \u0027abc\u0027\nrcl.abc\n\n// Read all variables\nrcl\n\n// Stack\n// n pick\n1 2 3 4 4 pick \"Copy from 4:\" // 1 2 3 4 1\n\n// n roll\n1 2 3 4 4 roll \"Move from 4:\" // 2 3 4 1\n\n// Stack size\ndepth \"Elements=\" +\n\n// Statistics\n// var (Variance)\n// sum (Sum)</string>
+  <string name="calc_F9_desc">More examples</string>
+  <string name="calc_F10_code">clear</string>
+  <string name="calc_F10_desc">Clear all</string>
   <string name="calc_F11_code"></string>
   <string name="calc_F11_desc"></string>
   <string name="calc_F12_code"></string>
