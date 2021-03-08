@@ -60,8 +60,6 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
 
-  private var initialRun = true
-
   fun touchHelper(view: View, event: MotionEvent) {
     if (event.action == MotionEvent.ACTION_DOWN) {
       setBackgroundColor(view, Color.LTGRAY)
@@ -98,9 +96,6 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
 
     calcViewModel.calcData.observe(viewLifecycleOwner, Observer { data ->
       if (data != null) {
-
-        // Get the latest market value for the stock.
-        stockRoomViewModel.runOnlineTaskNow()
 
         calcAdapter.updateData(data, numberFormat)
 

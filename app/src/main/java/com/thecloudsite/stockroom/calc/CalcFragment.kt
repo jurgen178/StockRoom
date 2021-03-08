@@ -66,6 +66,8 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
   }
 
   override fun updateCalcAdapter() {
+    binding.calcIndicatorDepth.text = "${calcViewModel.getLines()}"
+
     // scroll to always show last element at the bottom of the list
     binding.calclines.adapter?.itemCount?.minus(1)
       ?.let { binding.calclines.scrollToPosition(it) }

@@ -16,7 +16,6 @@
 
 package com.thecloudsite.stockroom.calc
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -64,6 +63,8 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   }
 
   override fun updateCalcAdapter() {
+    binding.calcIndicatorDepth.text = "${calcViewModel.getLines()}"
+
     // scroll to always show last element at the bottom of the list
     binding.calclines.adapter?.itemCount?.minus(1)
       ?.let { binding.calclines.scrollToPosition(it) }
@@ -213,7 +214,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcSum.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSum.setOnClickListener { calcViewModel.opVarArg(VariableArguments.SUM) }
 
-    binding.calcSum.setOnTouchListener { view, event ->
+    binding.calcShift.setOnTouchListener { view, event ->
       if (event.action == MotionEvent.ACTION_DOWN) {
         setBackgroundColor(view, requireContext().getColor(R.color.calcShiftPressed))
       } else
@@ -257,7 +258,6 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     setSerializedStr(codeMapStr)
 
     // Set default code if all codes are empty.
-    // Default only for the first 12 entries.
     val codes = codeMap.map { code ->
       code.value
     }.filter { codeType ->
@@ -266,6 +266,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 
     if (codes.isEmpty()) {
 
+      // Default only for the first 12 entries.
       val resList = listOf(
         Triple("F1", R.string.calc_F1_code, R.string.calc_F1_desc),
         Triple("F2", R.string.calc_F2_code, R.string.calc_F2_desc),
@@ -302,9 +303,9 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 
   private fun updateShift() {
     if (calcViewModel.shift) {
-      binding.calcShift.text = "↱"
+      binding.calcIndicatorShift.text = "↱"
     } else {
-      binding.calcShift.text = ""
+      binding.calcIndicatorShift.text = ""
     }
     updateFKeys()
   }

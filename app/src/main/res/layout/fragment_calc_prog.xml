@@ -302,12 +302,19 @@
                       style="@style/calc_style"
                       />
 
+                  <androidx.constraintlayout.widget.Barrier
+                      android:id="@+id/guidelineIndicator"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:barrierDirection="top"
+                      />
+
                   <androidx.constraintlayout.widget.Guideline
                       android:id="@+id/guidelineDisp"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
-                      app:layout_constraintGuide_begin="190dp"
+                      app:layout_constraintGuide_begin="200dp"
                       />
 
                   <androidx.constraintlayout.widget.Guideline
@@ -422,6 +429,34 @@
                       app:layout_constraintGuide_percent="0.86"
                       />
 
+                  <TextView
+                      android:id="@+id/calc_indicator_left"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX1"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
+                      style="@style/calc_inidicator_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_indicator_depth"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
+                      style="@style/calc_inidicator_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_indicator_shift"
+                      android:textStyle="bold"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
+                      style="@style/calc_inidicator_style"
+                      />
+
                   <androidx.recyclerview.widget.RecyclerView
                       android:id="@+id/calclines"
                       android:layout_width="match_parent"
@@ -431,18 +466,7 @@
                       app:layout_constraintBottom_toTopOf="@+id/guidelineDisp"
                       app:layout_constraintEnd_toEndOf="parent"
                       app:layout_constraintStart_toStartOf="parent"
-                      app:layout_constraintTop_toTopOf="parent"
-                      />
-
-                  <TextView
-                      android:id="@+id/calc_indicator"
-                      android:textColor="@color/black"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      app:layout_constraintHorizontal_bias="0.0"
-                      app:layout_constraintTop_toTopOf="parent"
-                      app:layout_constraintEnd_toEndOf="@id/guidelineX5"
-                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineIndicator"
                       />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

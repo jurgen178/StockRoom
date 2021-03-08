@@ -956,6 +956,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcData.errorMsg = ""
   }
 
+  fun getLines(): Int {
+    return calcData.value!!.numberList.size
+  }
+
   fun updateData() {
     calcRepository.updateData()
   }
