@@ -257,14 +257,21 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             // captured comment is in groups[1]
             val desc = commentMatch.groups[1]!!.value
 
-            // Add line if list is empty to add the text to.
-            if (calcData.numberList.isEmpty()) {
-              calcData.numberList.add(CalcLine(desc = desc, value = Double.NaN))
-            } else {
-              val op = calcData.numberList.removeLast()
-              op.desc = desc
-              calcData.numberList.add(op)
-            }
+//            // Add line if list is empty to add the text to.
+//            if (calcData.numberList.isEmpty()) {
+//              calcData.numberList.add(CalcLine(desc = desc, value = Double.NaN))
+//            } else {
+//              val op = calcData.numberList.removeLast()
+//              if (op.value.isNaN()) {
+//                // add comment
+//                op.desc += desc
+//              } else {
+//                op.desc = desc
+//              }
+//              calcData.numberList.add(op)
+//            }
+
+            calcData.numberList.add(CalcLine(desc = desc, value = Double.NaN))
 
           } else {
 
@@ -779,7 +786,18 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       when (op) {
         BinaryArgument.ADD -> {
-          calcData.numberList.add(CalcLine(desc = "", value = op2.value + op1.value))
+          if (op1.value.isNaN() && op2.value.isNaN()) {
+            // add comments if both NaN
+            calcData.numberList.add(CalcLine(desc = op2.desc + op1.desc, value = op2.value))
+          } else {
+            if (op1.value.isNaN() && op1.desc.isNotEmpty()) {
+              // set comment to op2 if exists
+              calcData.numberList.add(CalcLine(desc = op1.desc, value = op2.value))
+            } else {
+              // default op, add two numbers
+              calcData.numberList.add(CalcLine(desc = "", value = op2.value + op1.value))
+            }
+          }
         }
         BinaryArgument.SUB -> {
           calcData.numberList.add(CalcLine(desc = "", value = op2.value - op1.value))
