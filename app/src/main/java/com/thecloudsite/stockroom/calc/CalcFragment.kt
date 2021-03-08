@@ -31,7 +31,6 @@ import android.widget.ArrayAdapter
 import androidx.core.text.bold
 import androidx.core.text.scale
 import androidx.core.text.superscript
-import androidx.core.text.underline
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.FragmentCalcBinding
@@ -66,7 +65,8 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
   }
 
   override fun updateCalcAdapter() {
-    binding.calcIndicatorDepth.text = "${calcViewModel.getLines()}"
+    val lines = calcViewModel.getLines()
+    binding.calcIndicatorDepth.text = if (lines > 0) "$lines" else ""
 
     // scroll to always show last element at the bottom of the list
     binding.calclines.adapter?.itemCount?.minus(1)
