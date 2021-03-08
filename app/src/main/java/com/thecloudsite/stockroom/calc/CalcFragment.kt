@@ -69,6 +69,7 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
     binding.calcIndicatorDepth.text = if (lines > 0) "$lines" else ""
 
     // scroll to always show last element at the bottom of the list
+    // itemcount is numberlist + editline
     binding.calclines.adapter?.itemCount?.minus(1)
       ?.let { binding.calclines.scrollToPosition(it) }
   }

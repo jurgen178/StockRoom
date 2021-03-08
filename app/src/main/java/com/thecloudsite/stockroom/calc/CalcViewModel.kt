@@ -577,31 +577,48 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
       }
       VariableArguments.SUM -> {
-        val size = calcData.numberList.size
-        val sum = calcData.numberList.sumByDouble { calcLine ->
-          calcLine.value
+        var n = 0
+        var sum = 0.0
+        calcData.numberList.forEach { calcLine ->
+          if (!calcLine.value.isNaN()) {
+            n++
+            sum += calcLine.value
+          }
         }
         calcData.numberList.clear()
         calcData.numberList.add(CalcLine(desc = "Σ=", value = sum))
-        calcData.numberList.add(CalcLine(desc = "n=", value = size.toDouble()))
+        calcData.numberList.add(CalcLine(desc = "n=", value = n.toDouble()))
       }
       VariableArguments.VAR -> {
+        argsValid = false
         val size = calcData.numberList.size
         if (size > 0) {
-
-          val sum = calcData.numberList.sumByDouble { calcLine ->
-            calcLine.value
-          }
-          val mean = sum / size
-
-          var variance = 0.0
+          var sum = 0.0
+          var n = 0
           for (i in 0 until size) {
-            val x = calcData.numberList.removeLast().value - mean
-            variance += x * x
+            val x = calcData.numberList[i].value
+            if (!x.isNaN()) {
+              n++
+              sum += x
+            }
           }
-          calcData.numberList.add(CalcLine(desc = "σ²=", value = variance))
-        } else {
-          argsValid = false
+
+          if (n > 0) {
+            val mean = sum / n
+
+            var variance = 0.0
+            for (i in 0 until size) {
+              val x1 = calcData.numberList[i].value
+              if (!x1.isNaN()) {
+                val x = x1 - mean
+                variance += x * x
+              }
+            }
+            variance /= n
+            calcData.numberList.clear()
+            calcData.numberList.add(CalcLine(desc = "σ²=", value = variance))
+            argsValid = true
+          }
         }
       }
     }
