@@ -46,6 +46,8 @@ enum class VariableArguments {
 }
 
 enum class ZeroArgument {
+  DEPTH,
+  CLEAR,
   PI,
   E,
 }
@@ -102,6 +104,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   private var aic: Int = 0
   private val varMap: MutableMap<String, CalcLine> = mutableMapOf()
   var symbol: String = ""
+  var shift = false
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
   var radian = 1.0
   var separatorChar = ','
@@ -171,6 +174,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         // Stack operations
+        "clear" -> {
+          opZero(calcData, ZeroArgument.CLEAR)
+        }
+        "depth" -> {
+          opZero(calcData, ZeroArgument.DEPTH)
+        }
         "drop" -> {
           validArgs = opUnary(calcData, UnaryArgument.DROP)
         }
@@ -611,6 +620,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     endEdit(calcData)
 
     when (op) {
+      ZeroArgument.CLEAR -> {
+        calcData.numberList.clear()
+      }
+      ZeroArgument.DEPTH -> {
+        val size = calcData.numberList.size.toDouble()
+        calcData.numberList.add(CalcLine(desc = "", value = size))
+      }
       ZeroArgument.PI -> {
         calcData.numberList.add(CalcLine(desc = "", value = Math.PI))
       }

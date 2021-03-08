@@ -36,5 +36,7 @@ limitations under the License. -->
   <color name="white">#ffffff</color>
   <color name="black">#000000</color>
   <color name="settingsblue">#33B5E5</color>
+  <color name="calcShift">#0094FF</color>
+  <color name="calcShiftPressed">#7FC9FF</color>
 
 </resources>

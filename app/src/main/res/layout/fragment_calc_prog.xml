@@ -283,11 +283,21 @@
           />
 
       <TextView
-          android:id="@+id/calc_sum"
-          android:text="∑"
+          android:id="@+id/calc_shift"
+          android:text="↱"
           app:layout_constraintBottom_toTopOf="@id/guideline00"
           app:layout_constraintEnd_toStartOf="@id/guidelineX4"
           app:layout_constraintStart_toEndOf="@id/guidelineX3"
+          app:layout_constraintTop_toBottomOf="@+id/guideline0"
+          style="@style/calc_shift_style"
+          />
+
+      <TextView
+          android:id="@+id/calc_sum"
+          android:text="∑"
+          app:layout_constraintBottom_toTopOf="@id/guideline00"
+          app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+          app:layout_constraintStart_toEndOf="@id/guidelineX4"
           app:layout_constraintTop_toBottomOf="@+id/guideline0"
           style="@style/calc_style"
           />

@@ -16,9 +16,11 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
@@ -33,6 +35,7 @@ import com.google.gson.reflect.TypeToken
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
+import com.thecloudsite.stockroom.setBackgroundColor
 
 data class CodeType
   (
@@ -126,6 +129,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
         R.string.execute
       ) { _, _ ->
         save()
+        // codeMap[name] gets added by the save function and is always available.
         calcViewModel.function(codeMap[name]!!.code)
       }
       .setNegativeButton(
@@ -147,7 +151,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
     binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF1.setOnClickListener { runCodeDialog("F1") }
+    binding.calcF1.setOnClickListener { runCodeDialog(getKey("F1")) }
     binding.calcF2.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcF2.setOnClickListener { runCodeDialog("F2") }
     binding.calcF3.setOnTouchListener { view, event -> touchHelper(view, event); false }
@@ -208,6 +212,16 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 
     binding.calcSum.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSum.setOnClickListener { calcViewModel.opVarArg(VariableArguments.SUM) }
+
+    binding.calcShift.setOnClickListener {
+      calcViewModel.shift = !calcViewModel.shift
+      if (calcViewModel.shift) {
+        context?.let { setBackgroundColor(view, it.getColor(R.color.calcShiftPressed)) }
+      } else {
+        context?.let { setBackgroundColor(view, it.getColor(R.color.calcShift)) }
+      }
+      updateShift()
+    }
   }
 
   override fun onPause() {
@@ -239,6 +253,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     setSerializedStr(codeMapStr)
 
     // Set default code if all codes are empty.
+    // Default only for the first 12 entries.
     val codes = codeMap.map { code ->
       code.value
     }.filter { codeType ->
@@ -281,21 +296,67 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     updateFKeys()
   }
 
+  private fun updateShift() {
+    updateFKeys()
+  }
+
+  private fun getKey(key: String): String {
+    if (calcViewModel.shift) {
+      if (key == "F1") {
+        return "F13"
+      }
+      if (key == "F2") {
+        return "F14"
+      }
+      if (key == "F3") {
+        return "F15"
+      }
+      if (key == "F4") {
+        return "F16"
+      }
+      if (key == "F5") {
+        return "F17"
+      }
+      if (key == "F6") {
+        return "F18"
+      }
+      if (key == "F7") {
+        return "F19"
+      }
+      if (key == "F8") {
+        return "F20"
+      }
+      if (key == "F9") {
+        return "F21"
+      }
+      if (key == "F10") {
+        return "F22"
+      }
+      if (key == "F11") {
+        return "F23"
+      }
+      if (key == "F12") {
+        return "F24"
+      }
+    }
+    return key
+  }
+
   private fun updateFKeys() {
 
     val textViewList = listOf(
-      Pair(binding.calcF1, "F1"),
-      Pair(binding.calcF2, "F2"),
-      Pair(binding.calcF3, "F3"),
-      Pair(binding.calcF4, "F4"),
-      Pair(binding.calcF5, "F5"),
-      Pair(binding.calcF6, "F6"),
-      Pair(binding.calcF7, "F7"),
-      Pair(binding.calcF8, "F8"),
-      Pair(binding.calcF9, "F9"),
-      Pair(binding.calcF10, "F10"),
-      Pair(binding.calcF11, "F11"),
-      Pair(binding.calcF12, "F12"),
+      Pair(binding.calcF1, getKey("F1")),
+      Pair(binding.calcF2, getKey("F2")),
+      Pair(binding.calcF3, getKey("F3")),
+      Pair(binding.calcF4, getKey("F4")),
+      Pair(binding.calcF5, getKey("F5")),
+      Pair(binding.calcF6, getKey("F6")),
+      Pair(binding.calcF7, getKey("F7")),
+      Pair(binding.calcF8, getKey("F8")),
+      Pair(binding.calcF9, getKey("F9")),
+      Pair(binding.calcF10, getKey("F10")),
+      Pair(binding.calcF11, getKey("F11")),
+      Pair(binding.calcF12, getKey("F12")),
     )
 
     textViewList.forEach { pair ->
