@@ -28,15 +28,21 @@ import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.absoluteValue
 import kotlin.math.acos
+import kotlin.math.acosh
 import kotlin.math.asin
+import kotlin.math.asinh
 import kotlin.math.atan
+import kotlin.math.atanh
 import kotlin.math.cos
+import kotlin.math.cosh
 import kotlin.math.ln
 import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.roundToLong
 import kotlin.math.sin
+import kotlin.math.sinh
 import kotlin.math.tan
+import kotlin.math.tanh
 
 enum class VariableArguments {
   PICK,
@@ -62,11 +68,17 @@ enum class UnaryArgument {
   ABS,
   SIGN,
   SIN,
+  SINH,
   COS,
+  COSH,
   TAN,
+  TANH,
   ARCSIN,
+  ARCSINH,
   ARCCOS,
+  ARCCOSH,
   ARCTAN,
+  ARCTANH,
   INT,    // Integer part
   ROUND,  // Round to two digits
   TOSTR,  // toStr
@@ -795,20 +807,38 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         UnaryArgument.SIN -> {
           calcData.numberList.add(CalcLine(desc = "", value = sin(op1.value * radian)))
         }
+        UnaryArgument.SINH -> {
+          calcData.numberList.add(CalcLine(desc = "", value = sinh(op1.value)))
+        }
         UnaryArgument.COS -> {
           calcData.numberList.add(CalcLine(desc = "", value = cos(op1.value * radian)))
+        }
+        UnaryArgument.COSH -> {
+          calcData.numberList.add(CalcLine(desc = "", value = cosh(op1.value)))
         }
         UnaryArgument.TAN -> {
           calcData.numberList.add(CalcLine(desc = "", value = tan(op1.value * radian)))
         }
+        UnaryArgument.TANH -> {
+          calcData.numberList.add(CalcLine(desc = "", value = tanh(op1.value)))
+        }
         UnaryArgument.ARCSIN -> {
           calcData.numberList.add(CalcLine(desc = "", value = asin(op1.value) / radian))
+        }
+        UnaryArgument.ARCSINH -> {
+          calcData.numberList.add(CalcLine(desc = "", value = asinh(op1.value)))
         }
         UnaryArgument.ARCCOS -> {
           calcData.numberList.add(CalcLine(desc = "", value = acos(op1.value) / radian))
         }
+        UnaryArgument.ARCCOSH -> {
+          calcData.numberList.add(CalcLine(desc = "", value = acosh(op1.value)))
+        }
         UnaryArgument.ARCTAN -> {
           calcData.numberList.add(CalcLine(desc = "", value = atan(op1.value) / radian))
+        }
+        UnaryArgument.ARCTANH -> {
+          calcData.numberList.add(CalcLine(desc = "", value = atanh(op1.value)))
         }
         UnaryArgument.LN -> {
           calcData.numberList.add(CalcLine(desc = "", value = ln(op1.value)))

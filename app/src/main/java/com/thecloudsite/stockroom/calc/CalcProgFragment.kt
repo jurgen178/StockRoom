@@ -117,7 +117,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       }
 
       codeMap[name] = CodeType(code = calcCodeText, name = calcDisplayNameText)
-      updateFKeys()
+      updateKeys()
     }
 
     builder.setView(dialogBinding.root)
@@ -181,17 +181,53 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 //    binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
 //    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
     binding.calcSin.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSin.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SIN) }
+    binding.calcSin.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.SINH)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.SIN)
+      }
+    }
     binding.calcCos.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcCos.setOnClickListener { calcViewModel.opUnary(UnaryArgument.COS) }
+    binding.calcCos.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.COSH)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.COS)
+      }
+    }
     binding.calcTan.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcTan.setOnClickListener { calcViewModel.opUnary(UnaryArgument.TAN) }
+    binding.calcTan.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.TANH)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.TAN)
+      }
+    }
     binding.calcArcsin.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcArcsin.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCSIN) }
+    binding.calcArcsin.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.ARCSINH)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.ARCSIN)
+      }
+    }
     binding.calcArccos.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcArccos.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCCOS) }
+    binding.calcArccos.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.ARCCOSH)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.ARCCOS)
+      }
+    }
     binding.calcArctan.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcArctan.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ARCTAN) }
+    binding.calcArctan.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.ARCTANH)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.ARCTAN)
+      }
+    }
 
     binding.calcLn.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcLn.setOnClickListener { calcViewModel.opUnary(UnaryArgument.LN) }
@@ -300,7 +336,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       }
     }
 
-    updateFKeys()
+    updateKeys()
   }
 
   private fun updateShift() {
@@ -309,7 +345,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     } else {
       binding.calcIndicatorShift.text = ""
     }
-    updateFKeys()
+    updateKeys()
   }
 
   private fun getKey(key: String): String {
@@ -350,11 +386,30 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       if (key == "F12") {
         return "F24"
       }
+
+      if (key == "sin") {
+        return "sinh"
+      }
+      if (key == "cos") {
+        return "cosh"
+      }
+      if (key == "tan") {
+        return "tanh"
+      }
+      if (key == "sin⁻¹") {
+        return "sinh⁻¹"
+      }
+      if (key == "cos⁻¹") {
+        return "cosh⁻¹"
+      }
+      if (key == "tan⁻¹") {
+        return "tanh⁻¹"
+      }
     }
     return key
   }
 
-  private fun updateFKeys() {
+  private fun updateKeys() {
 
     val textViewList = listOf(
       Pair(binding.calcF1, getKey("F1")),
@@ -369,6 +424,13 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       Pair(binding.calcF10, getKey("F10")),
       Pair(binding.calcF11, getKey("F11")),
       Pair(binding.calcF12, getKey("F12")),
+
+      Pair(binding.calcSin, getKey("sin")),
+      Pair(binding.calcCos, getKey("cos")),
+      Pair(binding.calcTan, getKey("tan")),
+      Pair(binding.calcArcsin, getKey("sin⁻¹")),
+      Pair(binding.calcArccos, getKey("cos⁻¹")),
+      Pair(binding.calcArctan, getKey("tan⁻¹")),
     )
 
     textViewList.forEach { pair ->
