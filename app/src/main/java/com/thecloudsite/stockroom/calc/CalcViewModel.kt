@@ -213,7 +213,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           return
         }
 
-        val argsValid = calcData.numberList.size > 2
+        val argsValid = calcData.numberList.size >= 2
         if (argsValid) {
 
           // 2: op2
@@ -223,7 +223,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
           when (compare.toLowerCase(Locale.ROOT)) {
 
-            // compare
             "gt" -> {
               if (op2.value > op1.value) {
                 // jump to label
