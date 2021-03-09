@@ -527,7 +527,7 @@ limitations under the License. -->
   <string name="calc_format_displayed_decimals">Angezeigte Nachkommastellen</string>
   <string name="calc_format_displayed_decimals_desc">Legt fest wieviel Nachkommastellen angezeigt werden.</string>
   <string name="calc_format_decimal_separator">Dezimalzeichen</string>
-  <string name="calc_format_decimal_separator_desc">Legt fest welches Zeichen als Dezimalzeichen verwendet wird. Zum Beispiel 3,14</string>
+  <string name="calc_format_decimal_separator_desc">Legt das Dezimalzeichen fest. Zum Beispiel 3,14</string>
   <string name="calc_format_display_group_separator">Gruppentrenner anzeigen</string>
   <string name="calc_format_display_group_separator_desc">Zeigt den Tausender-Gruppentrenner für die Zahl an. Zum Beispiel 1.234.567</string>
   <string name="system_header">System</string>
@@ -552,11 +552,11 @@ limitations under the License. -->
   <string name="calc_F1_code">// Berechnet prozentuale Änderung von a zu b\n\n// 2: a\n// 1: b\n//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n//Auf 2 Nachkommastellen runden\nround\n\n// \"∆% \" dem Ergebnis hinzufügen\n\"∆% \" +</string>
   <string name="calc_F1_desc">∆% .2</string>
   <string name="calc_F2_code">// Kreditberechnung\n// Monatliche Rate\n\n// 3: Kreditbetrag\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * round \"Monatliche Rate \" +</string>
-  <string name="calc_F2_desc">Monatl. Rate</string>
+  <string name="calc_F2_desc">Kredit Rate</string>
   <string name="calc_F3_code">// Kreditberechnung\n// Kreditbetrag\n\n// 3: Monatliche Rate\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * round \"Kreditbetrag \" +</string>
-  <string name="calc_F3_desc">Kredit betrag</string>
+  <string name="calc_F3_desc">Kredit Betrag</string>
   <string name="calc_F4_code">// Kreditberechnung\n// Laufzeit in Jahren\n\n// 3: Kreditbetrag\n// 2: Monatliche Rate\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / round \"Laufzeit in Jahren \" +</string>
-  <string name="calc_F4_desc">Laufzeit</string>
+  <string name="calc_F4_desc">Kredit Laufzeit</string>
   <string name="calc_F5_code">// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" + rot rot - \"x₂=\" +</string>
   <string name="calc_F5_desc">x²+ax+b</string>
   <string name="calc_F6_code">// $$ für den Aktienwert\n\n$$tsla\ndup 10000 swap / int \"Für 10000 bekommst du \" +</string>

@@ -528,7 +528,7 @@ limitations under the License. -->
   <string name="calc_format_displayed_decimals">Displayed decimals</string>
   <string name="calc_format_displayed_decimals_desc">Sets the number of displayed decimals.</string>
   <string name="calc_format_decimal_separator">Decimal separator</string>
-  <string name="calc_format_decimal_separator_desc">Sets which char is used as a decimal separator. For example 3.14</string>
+  <string name="calc_format_decimal_separator_desc">Sets the decimal separator. For example 3.14</string>
   <string name="calc_format_display_group_separator">Display group separator</string>
   <string name="calc_format_display_group_separator_desc">Displays the thousands group separator of the number. For example 1,234,567</string>
   <string name="system_header">System</string>
@@ -553,7 +553,7 @@ limitations under the License. -->
   <string name="calc_F1_code">// Calculate the percentage change from a to b\n\n// 2: a\n// 1: b\n//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n//round to two digits\nround\n\n// add \"∆% \" to the result\n\"∆% \" +</string>
   <string name="calc_F1_desc">∆% .2</string>
   <string name="calc_F2_code">// Mortgage Calculator\n// Monthly Payment\n\n// 3: Loan Amount\n// 2: Loan Term in Years\n// 1: Annual Interest Rate in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * round \"Monthly Payment \" +</string>
-  <string name="calc_F2_desc">Monthly Payment</string>
+  <string name="calc_F2_desc">Loan Payment</string>
   <string name="calc_F3_code">// Mortgage Calculator\n// Loan Amount\n\n// 3: Monthly Payment\n// 2: Loan Term in Years\n// 1: Annual Interest Rate in %\n\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * round \"Loan Amount \" +</string>
   <string name="calc_F3_desc">Loan Amount</string>
   <string name="calc_F4_code">// Mortgage Calculator\n// Loan Term in Years\n\n// 3: Loan Amount\n// 2: Monthly Payment\n// 1: Annual Interest Rate in %\n\n1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / round \"Loan Term in Years \" +</string>

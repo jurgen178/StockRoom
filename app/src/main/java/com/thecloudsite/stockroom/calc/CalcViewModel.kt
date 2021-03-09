@@ -43,6 +43,7 @@ enum class VariableArguments {
   ROLL,
   SUM,
   VAR,  // Varianz
+  VALIDATE,
 }
 
 enum class ZeroArgument {
@@ -66,8 +67,9 @@ enum class UnaryArgument {
   ARCSIN,
   ARCCOS,
   ARCTAN,
-  INT, // Integer part
-  ROUND, // Round to two digits
+  INT,    // Integer part
+  ROUND,  // Round to two digits
+  TOSTR,  // toStr
   LN,
   EX,
   LOG,
@@ -122,8 +124,18 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     // Split by spaces not followed by even amount of quotes so only spaces outside of quotes are replaced.
     val symbols = code
-      .replace("/[*].*?[*]/".toRegex(), " ")
-      .replace("//.*?(\n|$)".toRegex(), " ")
+      // [\s\S] = . + \n
+      //.replace("/[*][\\s\\S]*?[*]/".toRegex(), " ")
+
+      // (?s) = dotall = . + \n
+      .replace("(?s)/[*].*?[*]/".toRegex(), " ")
+
+      //.replace("//.*?(\n|$)".toRegex(), " ")
+
+      // multiline (?m) accept the anchors ^ and $ to match at the start and end of each line
+      // (otherwise they only match at the start/end of the entire string)
+      .replace("(?m)//.*?$".toRegex(), " ")
+
       .split("\\s+(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)".toRegex())
 
     var success = true
@@ -165,6 +177,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "round" -> {
           validArgs = opUnary(calcData, UnaryArgument.ROUND)
+        }
+        "tostr" -> {
+          validArgs = opUnary(calcData, UnaryArgument.TOSTR)
         }
         "sum" -> {
           validArgs = opVarArg(calcData, VariableArguments.SUM)
@@ -240,6 +255,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "e" -> {
           opZero(calcData, ZeroArgument.E)
         }
+        "validate" -> {
+          validArgs = opVarArg(calcData, VariableArguments.VALIDATE)
+          // Stop here when validate fails.
+          if (!validArgs) {
+            return
+          }
+        }
 
         // Variable operation
         "rcl" -> {
@@ -249,7 +271,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
           // Comment
           // If symbol is comment, add comment to the last entry.
-          val commentMatch = "[\"'](.*?)[\"']".toRegex()
+          // (?s) = dotall = . + \n
+          val commentMatch = "(?s)[\"'](.+?)[\"']".toRegex()
             .matchEntire(symbol)
           // is comment?
           if (commentMatch != null && commentMatch.groups.size == 2 && commentMatch.groups[1] != null) {
@@ -384,7 +407,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun evaluate(calcData: CalcData, expression: String) {
 
     // symbol[.property]
-    val match = "(.*?)([.].*?)?$".toRegex()
+    val match = "(.+?)([.].+?)?$".toRegex()
       .matchEntire(expression)
 
     var symbol = expression.toUpperCase(Locale.ROOT)
@@ -555,12 +578,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   }
 
   fun opVarArg(calcData: CalcData, op: VariableArguments): Boolean {
-    var argsValid = true
+    var argsValid = false
     endEdit(calcData)
 
     when (op) {
       VariableArguments.PICK -> {
-        argsValid = false
         val size = calcData.numberList.size
         if (size > 1) {
 
@@ -575,7 +597,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
       }
       VariableArguments.ROLL -> {
-        argsValid = false
         val size = calcData.numberList.size
         if (size > 1) {
 
@@ -599,15 +620,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           }
         }
         if (n > 1) {
+          argsValid = true
           calcData.numberList.clear()
           calcData.numberList.add(CalcLine(desc = "Σ=", value = sum))
           calcData.numberList.add(CalcLine(desc = "n=", value = n.toDouble()))
-        } else {
-          argsValid = false
         }
       }
       VariableArguments.VAR -> {
-        argsValid = false
         val size = calcData.numberList.size
         if (size > 1) {
           var sum = 0.0
@@ -621,6 +640,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           }
 
           if (n > 1) {
+            argsValid = true
             val mean = sum / n
 
             var variance = 0.0
@@ -636,7 +656,28 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
             calcData.numberList.clear()
             calcData.numberList.add(CalcLine(desc = "σ²=", value = variance))
+          }
+        }
+      }
+      VariableArguments.VALIDATE -> {
+        val size = calcData.numberList.size
+        if (size >= 2) {
+
+          val n = calcData.numberList.removeLast().value.toInt()
+          val errorOp = calcData.numberList.removeLast()
+          if (n > 0 && n <= size - 2) {
             argsValid = true
+            for (i in 0 until n) {
+              if (!calcData.numberList[size - 3 - i].value.isFinite()) {
+                argsValid = false
+                break
+              }
+            }
+          }
+          if (!argsValid) {
+            calcData.numberList.add(errorOp)
+            calcRepository.updateData(calcData)
+            return false
           }
         }
       }
@@ -737,6 +778,19 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
               }
             )
           )
+        }
+        UnaryArgument.TOSTR -> {
+          // Convert the value to string.
+          if (op1.value.isFinite()) {
+            calcData.numberList.add(
+              CalcLine(
+                desc = numberFormat.format(op1.value),
+                value = Double.NaN
+              )
+            )
+          } else {
+            calcData.numberList.add(op1)
+          }
         }
         UnaryArgument.SIN -> {
           calcData.numberList.add(CalcLine(desc = "", value = sin(op1.value * radian)))

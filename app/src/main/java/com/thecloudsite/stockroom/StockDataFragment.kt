@@ -448,8 +448,6 @@ class StockDataFragment : Fragment() {
           )
             .show()
         }
-
-        // hideSoftInputFromWindow()
       }
       .setNegativeButton(
         R.string.cancel
@@ -596,8 +594,6 @@ class StockDataFragment : Fragment() {
               .show()
           }
         }
-
-        //hideSoftInputFromWindow()
       }
       .setNegativeButton(
         R.string.cancel
@@ -1407,8 +1403,6 @@ class StockDataFragment : Fragment() {
                   )
                     .show()
                 }
-
-                //hideSoftInputFromWindow()
               } else {
                 Toast.makeText(
                   requireContext(), getString(R.string.invalid_split_entry), Toast.LENGTH_LONG
@@ -1552,8 +1546,6 @@ class StockDataFragment : Fragment() {
           )
           Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
             .show()
-
-          //hideSoftInputFromWindow()
         }
         .setNegativeButton(
           R.string.cancel
@@ -1775,8 +1767,6 @@ class StockDataFragment : Fragment() {
                     )
                   }
                 }
-
-                //hideSoftInputFromWindow()
               } else {
                 Toast.makeText(
                     requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
@@ -1989,14 +1979,6 @@ class StockDataFragment : Fragment() {
     stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
     updateStockViewRange(stockViewRange)
   }
-
-//  private fun hideSoftInputFromWindow() {
-//    val view = activity?.currentFocus
-//    if (view is TextView) {
-//      val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//      imm.hideSoftInputFromWindow(view.windowToken, 0)
-//    }
-//  }
 
   private fun updateNote() {
     val builder = AlertDialog.Builder(requireContext())
