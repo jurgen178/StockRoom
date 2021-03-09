@@ -154,29 +154,29 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
     binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF1.setOnClickListener { runCodeDialog(getKey("F1")) }
+    binding.calcF1.setOnClickListener { runCodeDialog(mapKey("F1")) }
     binding.calcF2.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF2.setOnClickListener { runCodeDialog(getKey("F2")) }
+    binding.calcF2.setOnClickListener { runCodeDialog(mapKey("F2")) }
     binding.calcF3.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF3.setOnClickListener { runCodeDialog(getKey("F3")) }
+    binding.calcF3.setOnClickListener { runCodeDialog(mapKey("F3")) }
     binding.calcF4.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF4.setOnClickListener { runCodeDialog(getKey("F4")) }
+    binding.calcF4.setOnClickListener { runCodeDialog(mapKey("F4")) }
     binding.calcF5.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF5.setOnClickListener { runCodeDialog(getKey("F5")) }
+    binding.calcF5.setOnClickListener { runCodeDialog(mapKey("F5")) }
     binding.calcF6.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF6.setOnClickListener { runCodeDialog(getKey("F6")) }
+    binding.calcF6.setOnClickListener { runCodeDialog(mapKey("F6")) }
     binding.calcF7.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF7.setOnClickListener { runCodeDialog(getKey("F7")) }
+    binding.calcF7.setOnClickListener { runCodeDialog(mapKey("F7")) }
     binding.calcF8.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF8.setOnClickListener { runCodeDialog(getKey("F8")) }
+    binding.calcF8.setOnClickListener { runCodeDialog(mapKey("F8")) }
     binding.calcF9.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF9.setOnClickListener { runCodeDialog(getKey("F9")) }
+    binding.calcF9.setOnClickListener { runCodeDialog(mapKey("F9")) }
     binding.calcF10.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF10.setOnClickListener { runCodeDialog(getKey("F10")) }
+    binding.calcF10.setOnClickListener { runCodeDialog(mapKey("F10")) }
     binding.calcF11.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF11.setOnClickListener { runCodeDialog(getKey("F11")) }
+    binding.calcF11.setOnClickListener { runCodeDialog(mapKey("F11")) }
     binding.calcF12.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcF12.setOnClickListener { runCodeDialog(getKey("F12")) }
+    binding.calcF12.setOnClickListener { runCodeDialog(mapKey("F12")) }
 
 //    binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
 //    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
@@ -229,26 +229,30 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       }
     }
 
-    binding.calcLn.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcLn.setOnClickListener { calcViewModel.opUnary(UnaryArgument.LN) }
-    binding.calcEx.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcEx.setOnClickListener { calcViewModel.opUnary(UnaryArgument.EX) }
-    binding.calcEx.text = SpannableStringBuilder()
-      .append("e")
-      .superscript { superscript { scale(0.65f) { bold { append("x") } } } }
     binding.calcLog.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcLog.setOnClickListener { calcViewModel.opUnary(UnaryArgument.LOG) }
+    binding.calcLog.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.LN)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.LOG)
+      }
+    }
     binding.calcZx.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcZx.setOnClickListener { calcViewModel.opUnary(UnaryArgument.ZX) }
-    binding.calcZx.text = SpannableStringBuilder()
-      .append("10")
-      .superscript { superscript { scale(0.7f) { bold { append("x") } } } }
-
-    binding.calcPi.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcPi.setOnClickListener { calcViewModel.opZero(ZeroArgument.PI) }
-    binding.calcE.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcE.setOnClickListener { calcViewModel.opZero(ZeroArgument.E) }
-
+    binding.calcZx.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opUnary(UnaryArgument.EX)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.ZX)
+      }
+    }
+    binding.calcConst.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcConst.setOnClickListener {
+      if (calcViewModel.shift) {
+        calcViewModel.opZero(ZeroArgument.E)
+      } else {
+        calcViewModel.opZero(ZeroArgument.PI)
+      }
+    }
     binding.calcSum.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSum.setOnClickListener { calcViewModel.opVarArg(VariableArguments.SUM) }
 
@@ -265,6 +269,8 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       calcViewModel.shift = !calcViewModel.shift
       updateShift()
     }
+
+    updateShift()
   }
 
   override fun onPause() {
@@ -342,13 +348,24 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   private fun updateShift() {
     if (calcViewModel.shift) {
       binding.calcIndicatorShift.text = "↱"
+
+      // set e^x
+      binding.calcZx.text = SpannableStringBuilder()
+        .append("e")
+        .superscript { superscript { scale(0.65f) { bold { append("x") } } } }
     } else {
       binding.calcIndicatorShift.text = ""
+
+      // set 10^x
+      binding.calcZx.text = SpannableStringBuilder()
+        .append("10")
+        .superscript { superscript { scale(0.7f) { bold { append("x") } } } }
     }
+
     updateKeys()
   }
 
-  private fun getKey(key: String): String {
+  private fun mapKey(key: String): String {
     if (calcViewModel.shift) {
       if (key == "F1") {
         return "F13"
@@ -405,6 +422,13 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       if (key == "tan⁻¹") {
         return "tanh⁻¹"
       }
+      if (key == "log") {
+        return "ln"
+      }
+      // 10^x/e^x is set directly
+      if (key == "π") {
+        return "e"
+      }
     }
     return key
   }
@@ -412,25 +436,29 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   private fun updateKeys() {
 
     val textViewList = listOf(
-      Pair(binding.calcF1, getKey("F1")),
-      Pair(binding.calcF2, getKey("F2")),
-      Pair(binding.calcF3, getKey("F3")),
-      Pair(binding.calcF4, getKey("F4")),
-      Pair(binding.calcF5, getKey("F5")),
-      Pair(binding.calcF6, getKey("F6")),
-      Pair(binding.calcF7, getKey("F7")),
-      Pair(binding.calcF8, getKey("F8")),
-      Pair(binding.calcF9, getKey("F9")),
-      Pair(binding.calcF10, getKey("F10")),
-      Pair(binding.calcF11, getKey("F11")),
-      Pair(binding.calcF12, getKey("F12")),
+      Pair(binding.calcF1, mapKey("F1")),
+      Pair(binding.calcF2, mapKey("F2")),
+      Pair(binding.calcF3, mapKey("F3")),
+      Pair(binding.calcF4, mapKey("F4")),
+      Pair(binding.calcF5, mapKey("F5")),
+      Pair(binding.calcF6, mapKey("F6")),
+      Pair(binding.calcF7, mapKey("F7")),
+      Pair(binding.calcF8, mapKey("F8")),
+      Pair(binding.calcF9, mapKey("F9")),
+      Pair(binding.calcF10, mapKey("F10")),
+      Pair(binding.calcF11, mapKey("F11")),
+      Pair(binding.calcF12, mapKey("F12")),
 
-      Pair(binding.calcSin, getKey("sin")),
-      Pair(binding.calcCos, getKey("cos")),
-      Pair(binding.calcTan, getKey("tan")),
-      Pair(binding.calcArcsin, getKey("sin⁻¹")),
-      Pair(binding.calcArccos, getKey("cos⁻¹")),
-      Pair(binding.calcArctan, getKey("tan⁻¹")),
+      Pair(binding.calcSin, mapKey("sin")),
+      Pair(binding.calcCos, mapKey("cos")),
+      Pair(binding.calcTan, mapKey("tan")),
+      Pair(binding.calcArcsin, mapKey("sin⁻¹")),
+      Pair(binding.calcArccos, mapKey("cos⁻¹")),
+      Pair(binding.calcArctan, mapKey("tan⁻¹")),
+
+      Pair(binding.calcLog, mapKey("log")),
+      // 10^x/e^x is set directly
+      Pair(binding.calcConst, mapKey("π")),
     )
 
     textViewList.forEach { pair ->
