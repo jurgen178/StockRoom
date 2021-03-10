@@ -106,20 +106,24 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       SyntaxHighlightRule("[+-]?[0-9]+", "#028900"),
       // + - * /
       SyntaxHighlightRule("((\\s|^)[+-/*])+(\\s|\$)", "#FF0000"),
+      // loop, variable and label op
       SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#2C42C1"),
       SyntaxHighlightRule("(?i)((\\s|^)(rcl))+(\\s|$)", "#2C42C1"),
+      // stack op
       SyntaxHighlightRule(
         "(?i)((\\s|^)(validate|clear|depth|drop|dup|over|swap|rot|pick|roll))+(\\s|$)",
         "#0094FF"
       ),
+      // math op
       SyntaxHighlightRule(
         "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|ln|sqrt|abs|int|round|tostr|sum|var|pi|e))+(\\s|\$)",
         "#B50000"
       ),
       // "text"
       SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#A09936"),
-      // "// comment"
+      // // comment
       SyntaxHighlightRule("(?m)//.*?$", "#808080"),
+      // /* comment */
       SyntaxHighlightRule("(?s)/[*].*?[*]/", "#808080")
     )
 
