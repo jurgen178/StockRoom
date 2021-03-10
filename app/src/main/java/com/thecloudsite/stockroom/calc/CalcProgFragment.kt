@@ -99,22 +99,25 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogCalcBinding.inflate(inflater)
 
-    dialogBinding.calcCode.setTextSize(14f)
+    dialogBinding.calcCode.setTextSize(13f)
     dialogBinding.calcCode.setTypeface(Typeface.MONOSPACE)
     dialogBinding.calcCode.setSyntaxHighlightRules(
-      SyntaxHighlightRule("[+-]?[0-9]+", "#00838f"),
-      SyntaxHighlightRule("(\\s[+-/*])+\\s", "#FF0000"),
-      SyntaxHighlightRule("(\\s(while|do|goto|if|rcl|sto)?[.].+?)+\\s", "#BC4B00"),
+      // 0..9
+      SyntaxHighlightRule("[+-]?[0-9]+", "#028900"),
+      // + - * /
+      SyntaxHighlightRule("((\\s|^)[+-/*])+(\\s|\$)", "#FF0000"),
+      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#2C42C1"),
+      SyntaxHighlightRule("(?i)((\\s|^)(rcl))+(\\s|$)", "#2C42C1"),
       SyntaxHighlightRule(
-        "(\\s(validate|clear|depth|drop|dup|over|swap|rot|pick|roll))+\\s",
+        "(?i)((\\s|^)(validate|clear|depth|drop|dup|over|swap|rot|pick|roll))+(\\s|$)",
         "#0094FF"
       ),
       SyntaxHighlightRule(
-        "(\\s(sin|cos|tan|arcsin|arccos|arctan|ln|sqrt|abs|int|round|tostr|sum|var|pi|e))+\\s",
+        "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|ln|sqrt|abs|int|round|tostr|sum|var|pi|e))+(\\s|\$)",
         "#B50000"
       ),
       // "text"
-      SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#01B513"),
+      SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#A09936"),
       // "// comment"
       SyntaxHighlightRule("(?m)//.*?$", "#808080"),
       SyntaxHighlightRule("(?s)/[*].*?[*]/", "#808080")

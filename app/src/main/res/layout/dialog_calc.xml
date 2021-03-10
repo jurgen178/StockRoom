@@ -18,9 +18,7 @@
         >
 
       <com.thecloudsite.stockroom.codeeditor.Editor
-          app:endIconMode="clear_text"
           android:id="@+id/calc_code"
-          android:fontFamily="monospace"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:layout_constraintEnd_toEndOf="parent"
