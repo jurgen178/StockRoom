@@ -22,8 +22,8 @@ class EditorText(context: Context, attrs: AttributeSet): AppCompatEditText(conte
 
     private var mNumberLines = 0
 
-    private var changeLineCountListener: ((Int) -> Unit)? = null
-    private var changeVerticalScrollListener: ((Int) -> Unit)? = null
+    // private var changeLineCountListener: ((Int) -> Unit)? = null
+    // private var changeVerticalScrollListener: ((Int) -> Unit)? = null
 
     private var syntaxHighlightRules: Array<SyntaxHighlightRule>? = emptyArray()
 
@@ -37,7 +37,7 @@ class EditorText(context: Context, attrs: AttributeSet): AppCompatEditText(conte
         gravity = Gravity.TOP
 
         // Allow horizontally scrolling
-        setHorizontallyScrolling(true)
+        // setHorizontallyScrolling(true)
         movementMethod = ScrollingMovementMethod()
 
         // Make text selectable
@@ -57,36 +57,36 @@ class EditorText(context: Context, attrs: AttributeSet): AppCompatEditText(conte
      * Listener that emit the count of lines when changes
      * @param listener function that receives an Int representing the count of line
      */
-    fun onChangeLineCount(listener: (Int) -> Unit) {
-        changeLineCountListener = listener
-    }
+//    fun onChangeLineCount(listener: (Int) -> Unit) {
+//        changeLineCountListener = listener
+//    }
 
     /**
      * Listener that emit the position of scroll Y when changes
      * @param listener function that receives an Int representing the position of scroll Y
      */
-    fun onChangeScroll(listener: (scrollY: Int) -> Unit) {
-        changeVerticalScrollListener = listener
-    }
+//    fun onChangeScroll(listener: (scrollY: Int) -> Unit) {
+//        changeVerticalScrollListener = listener
+//    }
 
-    override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter)
+//    override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
+//        super.onTextChanged(text, start, lengthBefore, lengthAfter)
+//
+//        // Only when the line count differs
+//        if (mNumberLines != lineCount) {
+//            mNumberLines = lineCount
+//
+//            // notify to listener if exists
+//            changeLineCountListener?.invoke(lineCount)
+//        }
+//    }
 
-        // Only when the line count differs
-        if (mNumberLines != lineCount) {
-            mNumberLines = lineCount
-
-            // notify to listener if exists
-            changeLineCountListener?.invoke(lineCount)
-        }
-    }
-
-    override fun onScrollChanged(horiz: Int, vert: Int, oldHoriz: Int, oldVert: Int) {
-        super.onScrollChanged(horiz, vert, oldHoriz, oldVert)
-
-        // Only when vertical scroll differs
-        if (vert != oldVert) changeVerticalScrollListener?.invoke(scrollY)
-    }
+//    override fun onScrollChanged(horiz: Int, vert: Int, oldHoriz: Int, oldVert: Int) {
+//        super.onScrollChanged(horiz, vert, oldHoriz, oldVert)
+//
+//        // Only when vertical scroll differs
+//        if (vert != oldVert) changeVerticalScrollListener?.invoke(scrollY)
+//    }
 
     fun setSyntaxHighlightRules(vararg rules: SyntaxHighlightRule) {
         syntaxHighlightRules = arrayOf(*rules)

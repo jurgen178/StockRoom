@@ -139,7 +139,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     dialogBinding.calcDisplayName.setText(displayName)
 
     fun save() {
-      val calcCodeText = (dialogBinding.calcCode.getEditText().text).toString()
+      val calcCodeText = (dialogBinding.calcCode.text).toString()
       var calcDisplayNameText = (dialogBinding.calcDisplayName.text).toString().trim()
 
       // Default display name is the map key (name).

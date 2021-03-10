@@ -3,6 +3,7 @@ package com.thecloudsite.stockroom.codeeditor
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.text.Editable
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
@@ -15,16 +16,15 @@ import java.lang.Exception
 class Editor(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
   private val editText = EditorText(context, attrs)
-  private val numLinesView = EditorNumberLines(context, attrs)
+  // private val numLinesView = EditorNumberLines(context, attrs)
 
-  private var mText = ""
   private var mTextSize: Float = 12F
   private var mTypeface: Typeface = Typeface.DEFAULT
 
   init {
 
-    // add number lines
-    addNumLinesView()
+//    // add number lines
+//    addNumLinesView()
 
     // add edittext
     addEditText()
@@ -50,31 +50,31 @@ class Editor(context: Context, attrs: AttributeSet) : LinearLayout(context, attr
     // default attrs
     orientation = HORIZONTAL
 
-    // Observe changes in edittext line count
-    editText.onChangeLineCount { lineCount ->
-      var lines = ""
-      for (i in 1..lineCount) lines += "$i\n"
-      numLinesView.text = lines
-    }
+//    // Observe changes in edittext line count
+//    editText.onChangeLineCount { lineCount ->
+//      var lines = ""
+//      for (i in 1..lineCount) lines += "$i\n"
+//      numLinesView.text = lines
+//    }
 
     // Observe changes in edittext scroll
-    editText.onChangeScroll { scrollY ->
-      numLinesView.scrollY = scrollY
-    }
+//    editText.onChangeScroll { scrollY ->
+//      numLinesView.scrollY = scrollY
+//    }
 
-    // Deliver touch events on numlines to edittext
-    numLinesView.setOnTouchListener { _, event ->
-      editText.onTouchEvent(event)
-    }
+//    // Deliver touch events on numlines to edittext
+//    numLinesView.setOnTouchListener { _, event ->
+//      editText.onTouchEvent(event)
+//    }
   }
 
   private fun addEditText() {
     addView(editText)
   }
 
-  private fun addNumLinesView() {
-    addView(numLinesView)
-  }
+//  private fun addNumLinesView() {
+//    addView(numLinesView)
+//  }
 
   /**
    * Get edit text widget to access the whole API
@@ -90,9 +90,9 @@ class Editor(context: Context, attrs: AttributeSet) : LinearLayout(context, attr
    * Make whatever you want, but keep in mind that you may change default behaviour.
    * Get Fun!
    */
-  fun getNumLinesView(): EditorNumberLines {
-    return numLinesView
-  }
+//  fun getNumLinesView(): EditorNumberLines {
+//    return numLinesView
+//  }
 
   /**
    * Set syntax highlight rules
@@ -109,23 +109,21 @@ class Editor(context: Context, attrs: AttributeSet) : LinearLayout(context, attr
    * @param text string to set
    */
   fun setText(text: String) {
-    mText = text
-
     editText.setText(text)
 
-    val n = text.filter { it == '\n' }.count()
-    var lines = ""
-    for (i in 0..n) lines += "$i\n"
-    numLinesView.text = lines
+//    val n = text.filter { it == '\n' }.count() + 1
+//    var lines = ""
+//    for (i in 1..n) lines += "$i\n"
+//    numLinesView.text = lines
   }
 
   /**
    * Get text from edit text
    */
-  fun getText(): String {
-    mText = getEditText().text.toString()
-    return mText
-  }
+  val text: Editable?
+    get() {
+      return getEditText().text
+    }
 
   /**
    * Set Typeface to edit text and number lines
@@ -135,8 +133,8 @@ class Editor(context: Context, attrs: AttributeSet) : LinearLayout(context, attr
     mTypeface = typeface
 
     editText.typeface = typeface
-    numLinesView.typeface = typeface
-    numLinesView.setTextColor(Color.LTGRAY)
+//    numLinesView.typeface = typeface
+//    numLinesView.setTextColor(Color.LTGRAY)
   }
 
   /**
@@ -154,7 +152,7 @@ class Editor(context: Context, attrs: AttributeSet) : LinearLayout(context, attr
     mTextSize = size
 
     editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
-    numLinesView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
+//    numLinesView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
   }
 
   /**
@@ -173,11 +171,11 @@ class Editor(context: Context, attrs: AttributeSet) : LinearLayout(context, attr
         weight = 1f
       }
 
-      // set layout yo numlinesview
-      numLinesView.layoutParams = numLinesView.layoutParams.apply {
-        width = ViewGroup.LayoutParams.WRAP_CONTENT
-        height = params.height
-      }
+//      // set layout yo numlinesview
+//      numLinesView.layoutParams = numLinesView.layoutParams.apply {
+//        width = ViewGroup.LayoutParams.WRAP_CONTENT
+//        height = params.height
+//      }
 
     }
   }
