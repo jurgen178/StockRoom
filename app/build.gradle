@@ -164,11 +164,6 @@ dependencies {
   // Timeline
   implementation 'com.github.sangcomz:StickyTimeLine:v0.1.1'
 
-  // code editor
-  implementation 'com.otaliastudios:zoomlayout:1.8.0'
-  def codeEditorVersion = "v3.0.2"
-  implementation("com.github.markusressel:KodeEditor:${codeEditorVersion}")
-
   // Testing
   testImplementation 'junit:junit:4.13'
   androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"

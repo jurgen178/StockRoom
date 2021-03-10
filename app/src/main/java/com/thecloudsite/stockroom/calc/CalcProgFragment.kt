@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -32,6 +33,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.codeeditor.SyntaxHighlightRule
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
 import com.thecloudsite.stockroom.setBackgroundColor
@@ -97,18 +99,36 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogCalcBinding.inflate(inflater)
 
+    dialogBinding.calcCode.setTextSize(14f)
+    dialogBinding.calcCode.setTypeface(Typeface.MONOSPACE)
+    dialogBinding.calcCode.setSyntaxHighlightRules(
+      SyntaxHighlightRule("-?[0-9]+", "#00838f"),
+      SyntaxHighlightRule("\\s(+|-|/|*)\\s", "#D30000"),
+      SyntaxHighlightRule("\\s(while|do|goto|if|rcl|sto)?[.].+?\\s", "#BC4B00"),
+      SyntaxHighlightRule("\\s(validate|clear|depth|drop|dup|over|swap|rot|pick|roll)\\s", "#0094FF"),
+      SyntaxHighlightRule(
+        "\\s(sin|cos|tan|arcsin|arccos|arctan|ln|sqrt|abs|int|round|tostr|sum|var|pi|e)\\s",
+        "#B50000"
+      ),
+      // "text
+      SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#01B513"),
+      // // comment
+      SyntaxHighlightRule("(?m)//.*?$", "#808080"),
+    )
+
     var displayName = ""
     if (codeMap.containsKey(name)) {
       dialogBinding.calcCode.setText(codeMap[name]!!.code)
       displayName = codeMap[name]!!.name
     }
+
     if (displayName.isEmpty()) {
       displayName = name
     }
     dialogBinding.calcDisplayName.setText(displayName)
 
     fun save() {
-      val calcCodeText = (dialogBinding.calcCode.text).toString()
+      val calcCodeText = (dialogBinding.calcCode.getEditText().text).toString()
       var calcDisplayNameText = (dialogBinding.calcDisplayName.text).toString().trim()
 
       // Default display name is the map key (name).

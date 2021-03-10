@@ -183,4 +183,10 @@ limitations under the License. -->
     <item name="android:background">@drawable/calc_shift_roundcorner</item>
   </style>
 
+  <declare-styleable name="Editor">
+    <attr name="text" format="string" />
+    <attr name="textSize" format="dimension"/>
+    <attr name="fontFamily" format="string"/>
+  </declare-styleable>
+
 </resources>
