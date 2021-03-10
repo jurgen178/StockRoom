@@ -160,13 +160,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     var i: Int = 0
     while (i < symbols.size) {
 
-      // Check for endless loop.
-      if (j++ > 10000) {
-        calcData.errorMsg = context.getString(R.string.calc_endless_loop)
-        calcRepository.updateData(calcData)
-        return
-      }
-
       val symbol = symbols[i++]
 
       // Store label
@@ -176,7 +169,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       if (labelMatch != null && labelMatch.groups.size == 2 && labelMatch.groups[1] != null) {
         // first group (groups[0]) is entire src
         // captured label is in groups[1]
-        val label = labelMatch.groups[1]!!.value
+        val label = labelMatch.groups[1]!!.value.toLowerCase(Locale.ROOT)
 
         // Store label
         if (!labelMap.containsKey(label)) {
@@ -191,7 +184,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       // while.compare.label
       // while.gt.label1
-      val whileMatch = "^while[.](\\w{2})[.]([a-zA-Z]\\w*?)$".toRegex(IGNORE_CASE)
+      val whileMatch = "^while[.](\\w+)[.]([a-zA-Z]\\w*?)$".toRegex(IGNORE_CASE)
         .matchEntire(symbol)
       // is while?
       if (whileMatch != null
@@ -199,14 +192,22 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         && whileMatch.groups[1] != null
         && whileMatch.groups[2] != null
       ) {
+        // Check for endless loop.
+        if (j++ > 10000 || calcData.numberList.size >= 1000) {
+          calcData.errorMsg = context.getString(R.string.calc_endless_loop)
+          calcRepository.updateData(calcData)
+          return
+        }
+
         // first group (groups[0]) is entire src
         // captured compare is in groups[1]
         // captured label is in groups[2]
         val compare = whileMatch.groups[1]!!.value
-        val label = whileMatch.groups[2]!!.value
+        val labelStr = whileMatch.groups[2]!!.value
+        val label = labelStr.toLowerCase(Locale.ROOT)
 
         if (!labelMap.containsKey(label)) {
-          calcData.errorMsg = context.getString(R.string.calc_missing_label, label)
+          calcData.errorMsg = context.getString(R.string.calc_missing_label, labelStr)
           calcRepository.updateData(calcData)
 
           // label missing, end loop
@@ -1000,8 +1001,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             calcData.numberList.add(CalcLine(desc = op2.desc + op1.desc, value = op2.value))
           } else {
             if (op1.value.isNaN() && op1.desc.isNotEmpty()) {
-              // set comment to op2 if exists
-              calcData.numberList.add(CalcLine(desc = op1.desc, value = op2.value))
+              // set comment to op2 if exists, same as add comments if both NaN
+              calcData.numberList.add(CalcLine(desc = op2.desc + op1.desc, value = op2.value))
             } else {
               // default op, add two numbers
               calcData.numberList.add(CalcLine(desc = "", value = op2.value + op1.value))
