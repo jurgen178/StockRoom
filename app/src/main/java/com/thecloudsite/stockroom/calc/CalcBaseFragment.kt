@@ -17,14 +17,18 @@
 package com.thecloudsite.stockroom.calc
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.StockRoomViewModel
@@ -46,6 +50,28 @@ class CustomSpinner(
       // Spinner does not call the OnItemSelectedListener if the same item is selected, so do it manually now
       onItemSelectedListener!!.onItemSelected(this, selectedView, position, selectedItemId)
     }
+  }
+}
+
+class MyEditText(context: Context, attrs: AttributeSet?) :
+  androidx.appcompat.widget.AppCompatEditText(context, attrs) {
+  private val rect: Rect
+  private val paint: Paint
+  override fun onDraw(canvas: Canvas) {
+    var baseline = baseline
+    for (i in 0 until lineCount) {
+      canvas.drawText("" + (i + 1), rect.left.toFloat(), baseline.toFloat(), paint)
+      baseline += lineHeight
+    }
+    super.onDraw(canvas)
+  }
+
+  init {
+    rect = Rect()
+    paint = Paint()
+    paint.setStyle(Paint.Style.FILL)
+    paint.setColor(Color.BLACK)
+    paint.setTextSize(10f)
   }
 }
 

@@ -184,7 +184,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     var success = true
     var validArgs = true
 
-    val labelRegex = "^[.]([a-zA-Z].*?)$".toRegex()
+    // Label has optional 'do' (do.label1 instead of .label1) at the beginning
+    // for better readability when used for while loop.
+    // ?: = non capturing group
+    val labelRegex = "^(?:do)?[.]([a-z].*?)$".toRegex(IGNORE_CASE)
     val whileRegex = "^while[.](\\w+)[.]([a-z].*?)$".toRegex(IGNORE_CASE)
     val gotoRegex = "^goto[.]([a-z].*?)$".toRegex(IGNORE_CASE)
     val stoRegex = "^sto[.](.+)$".toRegex(IGNORE_CASE)
@@ -194,6 +197,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // Stores the index of the labels.
     val labelMap: MutableMap<String, Int> = mutableMapOf()
 
+    // store .label
     symbols.forEachIndexed { index, symbol ->
       // Store label
       val labelMatch = getRegexGroups1(symbol, labelRegex)
@@ -208,7 +212,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
     }
 
-    var j: Int = 0
+    var loopCounter: Int = 0
     var i: Int = 0
     while (i < symbols.size) {
 
@@ -227,12 +231,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         getRegexGroups2(symbol, whileRegex)
       // is while?
       if (whileMatch != null) {
-        // Check for endless loop.
-        if (j++ > 10000 || calcData.numberList.size >= 1000) {
-          calcData.errorMsg = context.getString(R.string.calc_endless_loop)
-          calcRepository.updateData(calcData)
-          return
-        }
+        loopCounter++
 
         // captured compare is in first
         // captured label is in second
@@ -301,6 +300,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val gotoMatch =
         getRegexGroups1(symbol, gotoRegex)
       if (gotoMatch != null) {
+        loopCounter++
         val label = gotoMatch.toLowerCase(Locale.ROOT)
 
         if (!labelMap.containsKey(label)) {
@@ -314,6 +314,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         // jump to label
         i = labelMap[label]!!
         continue
+      }
+
+      // Check for endless loop.
+      if (loopCounter > 10000 || calcData.numberList.size >= 1000) {
+        calcData.errorMsg = context.getString(R.string.calc_endless_loop)
+        calcRepository.updateData(calcData)
+        return
       }
 
       // process symbols
