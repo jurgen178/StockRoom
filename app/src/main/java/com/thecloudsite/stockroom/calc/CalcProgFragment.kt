@@ -102,18 +102,22 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     dialogBinding.calcCode.setTextSize(14f)
     dialogBinding.calcCode.setTypeface(Typeface.MONOSPACE)
     dialogBinding.calcCode.setSyntaxHighlightRules(
-      SyntaxHighlightRule("-?[0-9]+", "#00838f"),
-      SyntaxHighlightRule("\\s(+|-|/|*)\\s", "#D30000"),
-      SyntaxHighlightRule("\\s(while|do|goto|if|rcl|sto)?[.].+?\\s", "#BC4B00"),
-      SyntaxHighlightRule("\\s(validate|clear|depth|drop|dup|over|swap|rot|pick|roll)\\s", "#0094FF"),
+      SyntaxHighlightRule("[+-]?[0-9]+", "#00838f"),
+      SyntaxHighlightRule("(\\s[+-/*])+\\s", "#FF0000"),
+      SyntaxHighlightRule("(\\s(while|do|goto|if|rcl|sto)?[.].+?)+\\s", "#BC4B00"),
       SyntaxHighlightRule(
-        "\\s(sin|cos|tan|arcsin|arccos|arctan|ln|sqrt|abs|int|round|tostr|sum|var|pi|e)\\s",
+        "(\\s(validate|clear|depth|drop|dup|over|swap|rot|pick|roll))+\\s",
+        "#0094FF"
+      ),
+      SyntaxHighlightRule(
+        "(\\s(sin|cos|tan|arcsin|arccos|arctan|ln|sqrt|abs|int|round|tostr|sum|var|pi|e))+\\s",
         "#B50000"
       ),
-      // "text
+      // "text"
       SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#01B513"),
-      // // comment
+      // "// comment"
       SyntaxHighlightRule("(?m)//.*?$", "#808080"),
+      SyntaxHighlightRule("(?s)/[*].*?[*]/", "#808080")
     )
 
     var displayName = ""
