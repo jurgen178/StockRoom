@@ -130,6 +130,36 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcRepository.getData())
   }
 
+  private fun getRegexGroups1(text: String, regex: Regex): String? {
+    val match = regex.matchEntire(text)
+    if (match != null
+      && match.groups.size == 2
+      && match.groups[1] != null
+    ) {
+      // first group (groups[0]) is entire src
+      // first capture is in groups[1]
+      return match.groups[1]!!.value
+    }
+
+    return null
+  }
+
+  private fun getRegexGroups2(text: String, regex: Regex): Pair<String, String>? {
+    val match = regex.matchEntire(text)
+    if (match != null
+      && match.groups.size == 3
+      && match.groups[1] != null
+      && match.groups[2] != null
+    ) {
+      // first group (groups[0]) is entire src
+      // first capture is in groups[1]
+      // second capture is in groups[2]
+      return Pair(match.groups[1]!!.value, match.groups[2]!!.value)
+    }
+
+    return null
+  }
+
   fun function(code: String) {
     val calcData = submitEditline(calcData.value!!)
 
@@ -156,26 +186,34 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     // Stores the index of the labels.
     val labelMap: MutableMap<String, Int> = mutableMapOf()
+    val labelRegex = "^[.]([a-zA-Z].*?)$".toRegex()
+    val whileRegex = "^while[.](\\w+)[.]([a-zA-Z].*?)$".toRegex(IGNORE_CASE)
+    val stoRegex = "^sto[.](.+)$".toRegex()
+    val rclRegex = "^rcl[.](.+)$".toRegex()
+    val commentRegex = "(?s)[\"'](.+?)[\"']".toRegex()
+
+    symbols.forEachIndexed { index, symbol ->
+      // Store label
+      val labelMatch = getRegexGroups1(symbol, labelRegex)
+      // is label?
+      if (labelMatch != null) {
+        val label = labelMatch.toLowerCase(Locale.ROOT)
+
+        // Store label
+        if (!labelMap.containsKey(label)) {
+          labelMap[label] = index
+        }
+      }
+    }
+
     var j: Int = 0
     var i: Int = 0
     while (i < symbols.size) {
 
       val symbol = symbols[i++]
 
-      // Store label
-      val labelMatch = "^[.]([a-zA-Z]\\w*?)$".toRegex()
-        .matchEntire(symbol)
       // is label?
-      if (labelMatch != null && labelMatch.groups.size == 2 && labelMatch.groups[1] != null) {
-        // first group (groups[0]) is entire src
-        // captured label is in groups[1]
-        val label = labelMatch.groups[1]!!.value.toLowerCase(Locale.ROOT)
-
-        // Store label
-        if (!labelMap.containsKey(label)) {
-          labelMap[label] = i - 1
-        }
-
+      if (getRegexGroups1(symbol, labelRegex) != null) {
         // skip to next symbol
         continue
       }
@@ -184,14 +222,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       // while.compare.label
       // while.gt.label1
-      val whileMatch = "^while[.](\\w+)[.]([a-zA-Z]\\w*?)$".toRegex(IGNORE_CASE)
-        .matchEntire(symbol)
+      val whileMatch =
+        getRegexGroups2(symbol, whileRegex)
       // is while?
-      if (whileMatch != null
-        && whileMatch.groups.size == 3
-        && whileMatch.groups[1] != null
-        && whileMatch.groups[2] != null
-      ) {
+      if (whileMatch != null) {
         // Check for endless loop.
         if (j++ > 10000 || calcData.numberList.size >= 1000) {
           calcData.errorMsg = context.getString(R.string.calc_endless_loop)
@@ -199,11 +233,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           return
         }
 
-        // first group (groups[0]) is entire src
-        // captured compare is in groups[1]
-        // captured label is in groups[2]
-        val compare = whileMatch.groups[1]!!.value
-        val labelStr = whileMatch.groups[2]!!.value
+        // captured compare is in first
+        // captured label is in second
+        val compare = whileMatch.first
+        val labelStr = whileMatch.second
         val label = labelStr.toLowerCase(Locale.ROOT)
 
         if (!labelMap.containsKey(label)) {
@@ -394,13 +427,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           // Comment
           // If symbol is comment, add comment to the last entry.
           // (?s) = dotall = . + \n
-          val commentMatch = "(?s)[\"'](.+?)[\"']".toRegex()
-            .matchEntire(symbol)
+          val comment = getRegexGroups1(symbol, commentRegex)
           // is comment?
-          if (commentMatch != null && commentMatch.groups.size == 2 && commentMatch.groups[1] != null) {
-            // first group (groups[0]) is entire src
-            // captured comment is in groups[1]
-            val desc = commentMatch.groups[1]!!.value
+          if (comment != null) {
 
 //            // Add line if list is empty to add the text to.
 //            if (calcData.numberList.isEmpty()) {
@@ -416,25 +445,21 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 //              calcData.numberList.add(op)
 //            }
 
-            calcData.numberList.add(CalcLine(desc = desc, value = Double.NaN))
+            calcData.numberList.add(CalcLine(desc = comment, value = Double.NaN))
 
           } else {
 
             // sto[.name]
-            val storeVariableMatch = "^sto[.](.+)$".toRegex()
-              .matchEntire(symbol)
-            if (storeVariableMatch != null && storeVariableMatch.groups.size == 2 && storeVariableMatch.groups[1] != null) {
-              val variableName = storeVariableMatch.groups[1]!!.value
+            val variableName = getRegexGroups1(symbol, stoRegex)
+            if (variableName != null) {
               validArgs = storeVariable(calcData, variableName)
 
             } else {
 
               // rcl[.name]
-              val recallVariableMatch = "^rcl[.](.+)$".toRegex()
-                .matchEntire(symbol)
-              if (recallVariableMatch != null && recallVariableMatch.groups.size == 2 && recallVariableMatch.groups[1] != null) {
-                val variableName = recallVariableMatch.groups[1]!!.value
-                recallVariable(calcData, variableName)
+              val recallVariable = getRegexGroups1(symbol, rclRegex)
+              if (recallVariable != null) {
+                recallVariable(calcData, recallVariable)
 
               } else {
 
@@ -529,21 +554,16 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun evaluate(calcData: CalcData, expression: String) {
 
     // symbol[.property]
-    val match = "(.+?)([.].+?)?$".toRegex()
-      .matchEntire(expression)
+    val match = getRegexGroups2(expression, "(.+?)([.].+?)?$".toRegex())
 
     var symbol = expression.toUpperCase(Locale.ROOT)
     var property = ""
-    if (match != null
-      && match.groups.size == 3
-      && match.groups[1] != null
-      && match.groups[2] != null
-    ) {
+    if (match != null) {
       // first group (groups[0]) is entire src
       // captured symbol is in groups[1]
       // captured property is in groups[2]
-      symbol = match.groups[1]!!.value.toUpperCase(Locale.ROOT)
-      property = match.groups[2]!!.value.toLowerCase(Locale.ROOT)
+      symbol = match.first.toUpperCase(Locale.ROOT)
+      property = match.second.toLowerCase(Locale.ROOT)
     }
 
     val stockItem = stockitemList.find { stockItem ->
