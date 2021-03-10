@@ -184,13 +184,15 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     var success = true
     var validArgs = true
 
+    val labelRegex = "^[.]([a-zA-Z].*?)$".toRegex()
+    val whileRegex = "^while[.](\\w+)[.]([a-z].*?)$".toRegex(IGNORE_CASE)
+    val gotoRegex = "^goto[.]([a-z].*?)$".toRegex(IGNORE_CASE)
+    val stoRegex = "^sto[.](.+)$".toRegex(IGNORE_CASE)
+    val rclRegex = "^rcl[.](.+)$".toRegex(IGNORE_CASE)
+    val commentRegex = "(?s)[\"'](.+?)[\"']".toRegex()
+
     // Stores the index of the labels.
     val labelMap: MutableMap<String, Int> = mutableMapOf()
-    val labelRegex = "^[.]([a-zA-Z].*?)$".toRegex()
-    val whileRegex = "^while[.](\\w+)[.]([a-zA-Z].*?)$".toRegex(IGNORE_CASE)
-    val stoRegex = "^sto[.](.+)$".toRegex()
-    val rclRegex = "^rcl[.](.+)$".toRegex()
-    val commentRegex = "(?s)[\"'](.+?)[\"']".toRegex()
 
     symbols.forEachIndexed { index, symbol ->
       // Store label
@@ -219,7 +221,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // While loop
-
       // while.compare.label
       // while.gt.label1
       val whileMatch =
@@ -284,16 +285,35 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             }
           }
 
-          // skip to next symbol
           continue
 
         } else {
           calcData.errorMsg = context.getString(R.string.calc_invalid_while_args)
           calcRepository.updateData(calcData)
 
-          // invalid args, end loop
+          // invalid args, end instruction
           return
         }
+      }
+
+      // Goto
+      // goto.label
+      val gotoMatch =
+        getRegexGroups1(symbol, gotoRegex)
+      if (gotoMatch != null) {
+        val label = gotoMatch.toLowerCase(Locale.ROOT)
+
+        if (!labelMap.containsKey(label)) {
+          calcData.errorMsg = context.getString(R.string.calc_missing_label, gotoMatch)
+          calcRepository.updateData(calcData)
+
+          // label missing, end instruction
+          return
+        }
+
+        // jump to label
+        i = labelMap[label]!!
+        continue
       }
 
       // process symbols
