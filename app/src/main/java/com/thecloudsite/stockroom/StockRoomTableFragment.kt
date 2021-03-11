@@ -41,7 +41,7 @@ class StockRoomTableFragment : Fragment() {
     fun newInstance() = StockRoomTableFragment()
   }
 
-  fun clickListenerSummary(stockItem: StockItem) {
+  private fun clickListenerSummary(stockItem: StockItem) {
     if (stockItem.stockDBdata.symbol.isNotEmpty()) {
       val intent = Intent(context, StockDataActivity::class.java)
       intent.putExtra("symbol", stockItem.onlineMarketData.symbol)

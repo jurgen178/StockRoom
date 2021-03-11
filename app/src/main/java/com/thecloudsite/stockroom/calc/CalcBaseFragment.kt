@@ -52,28 +52,6 @@ class CustomSpinner(
   }
 }
 
-class MyEditText(context: Context, attrs: AttributeSet?) :
-  androidx.appcompat.widget.AppCompatEditText(context, attrs) {
-  private val rect: Rect
-  private val paint: Paint
-  override fun onDraw(canvas: Canvas) {
-    var baseline = baseline
-    for (i in 0 until lineCount) {
-      canvas.drawText("" + (i + 1), rect.left.toFloat(), baseline.toFloat(), paint)
-      baseline += lineHeight
-    }
-    super.onDraw(canvas)
-  }
-
-  init {
-    rect = Rect()
-    paint = Paint()
-    paint.setStyle(Paint.Style.FILL)
-    paint.setColor(Color.BLACK)
-    paint.setTextSize(10f)
-  }
-}
-
 open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
 
   lateinit var calcViewModel: CalcViewModel

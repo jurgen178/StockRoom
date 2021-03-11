@@ -23,7 +23,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -52,7 +51,6 @@ import com.thecloudsite.stockroom.databinding.DialogAddFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
 import com.thecloudsite.stockroom.utils.saveTextToFile
 import java.io.BufferedReader
-import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.time.Instant
 import java.time.ZoneOffset

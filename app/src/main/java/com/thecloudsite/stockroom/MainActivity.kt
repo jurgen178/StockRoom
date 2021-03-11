@@ -29,7 +29,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment

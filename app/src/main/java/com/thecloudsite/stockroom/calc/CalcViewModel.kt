@@ -81,7 +81,8 @@ enum class UnaryArgument {
   ARCTAN,
   ARCTANH,
   INT,    // Integer part
-  ROUND,  // Round to two digits
+  ROUND,  // Round to nearest int
+  ROUND2,  // Round to two digits
   TOSTR,  // toStr
   LN,
   EX,
@@ -400,6 +401,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "round" -> {
           validArgs = opUnary(calcData, UnaryArgument.ROUND)
+        }
+        "round2" -> {
+          validArgs = opUnary(calcData, UnaryArgument.ROUND2)
         }
         "tostr" -> {
           validArgs = opUnary(calcData, UnaryArgument.TOSTR)
@@ -799,7 +803,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     return opVarArg(calcData, op)
   }
 
-  fun opVarArg(calcData: CalcData, op: VariableArguments): Boolean {
+  private fun opVarArg(calcData: CalcData, op: VariableArguments): Boolean {
     var argsValid = false
     endEdit(calcData)
 
@@ -919,7 +923,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     opZero(calcData, op)
   }
 
-  fun opZero(calcData: CalcData, op: ZeroArgument) {
+  private fun opZero(calcData: CalcData, op: ZeroArgument) {
     endEdit(calcData)
 
     when (op) {
@@ -989,6 +993,19 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           calcData.numberList.add(CalcLine(desc = "", value = op1.value.toInt().toDouble()))
         }
         UnaryArgument.ROUND -> {
+          calcData.numberList.add(
+            CalcLine(
+              desc = "",
+              // roundToLong is not defined for Double.NaN
+              value = if (op1.value.isNaN()) {
+                op1.value
+              } else {
+                op1.value.roundToLong().toDouble()
+              }
+            )
+          )
+        }
+        UnaryArgument.ROUND2 -> {
           calcData.numberList.add(
             CalcLine(
               desc = "",

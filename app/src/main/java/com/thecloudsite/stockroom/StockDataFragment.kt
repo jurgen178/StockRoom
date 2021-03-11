@@ -93,7 +93,6 @@ import com.thecloudsite.stockroom.utils.DecimalFormat0To6Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To8Digits
-import com.thecloudsite.stockroom.utils.GoertzelFFT
 import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
 import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
 import com.thecloudsite.stockroom.utils.commissionScale

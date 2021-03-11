@@ -18,13 +18,11 @@ package com.thecloudsite.stockroom.calc
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
@@ -35,8 +33,6 @@ import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.xml
 import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.databinding.ActivityCalcSettingsBinding
-import com.thecloudsite.stockroom.exportListActivityRequestCode
-import com.thecloudsite.stockroom.importListActivityRequestCode
 import com.thecloudsite.stockroom.utils.saveTextToFile
 import com.thecloudsite.stockroom.utils.setAppTheme
 import java.io.BufferedReader
