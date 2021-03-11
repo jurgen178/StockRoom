@@ -576,5 +576,5 @@ limitations under the License. -->
   <string name="calc_endless_loop">Mögliche Endlosschleife. Vorgang abgebrochen.</string>
   <string name="calc_missing_label">Fehlende Marke \'%1$s\'</string>
   <string name="calc_invalid_while_args">Fehlende Zahlen für \'while\'.</string>
-  <string name="calc_unknown_while_condition">Unbekannte while-Bedingung \'%1$s\'. Verwende while.gt, while.lt oder while.eq.</string>
+  <string name="calc_unknown_while_condition">Unbekannte while-Bedingung \'%1$s\'. Verwende while.[eq ge gt le lt].</string>
 </resources>

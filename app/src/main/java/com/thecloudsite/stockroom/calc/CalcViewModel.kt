@@ -108,7 +108,9 @@ enum class TernaryArgument {
 
 enum class QuadArgument {
   IFEQ, // if equal
+  IFGE, // if greater or equal than
   IFGT, // if greater than
+  IFLE, // if less or equal then
   IFLT, // if less then
 }
 
@@ -257,8 +259,20 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
           when (compare.toLowerCase(Locale.ROOT)) {
 
+            "ge" -> {
+              if (op2.value >= op1.value) {
+                // jump to label
+                i = labelMap[label]!!
+              }
+            }
             "gt" -> {
               if (op2.value > op1.value) {
+                // jump to label
+                i = labelMap[label]!!
+              }
+            }
+            "le" -> {
+              if (op2.value <= op1.value) {
                 // jump to label
                 i = labelMap[label]!!
               }
@@ -403,8 +417,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "if.eq" -> {
           validArgs = opQuad(calcData, QuadArgument.IFEQ)
         }
+        "if.ge" -> {
+          validArgs = opQuad(calcData, QuadArgument.IFGE)
+        }
         "if.gt" -> {
           validArgs = opQuad(calcData, QuadArgument.IFGT)
+        }
+        "if.le" -> {
+          validArgs = opQuad(calcData, QuadArgument.IFLE)
         }
         "if.lt" -> {
           validArgs = opQuad(calcData, QuadArgument.IFLT)
@@ -1168,8 +1188,16 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           val opResult = if (op2.value == op1.value) op3 else op4
           calcData.numberList.add(opResult)
         }
+        QuadArgument.IFGE -> {
+          val opResult = if (op2.value >= op1.value) op3 else op4
+          calcData.numberList.add(opResult)
+        }
         QuadArgument.IFGT -> {
           val opResult = if (op2.value > op1.value) op3 else op4
+          calcData.numberList.add(opResult)
+        }
+        QuadArgument.IFLE -> {
+          val opResult = if (op2.value <= op1.value) op3 else op4
           calcData.numberList.add(opResult)
         }
         QuadArgument.IFLT -> {

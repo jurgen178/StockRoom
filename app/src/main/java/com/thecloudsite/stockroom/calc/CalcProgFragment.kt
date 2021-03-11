@@ -33,7 +33,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.thecloudsite.stockroom.R
-import com.thecloudsite.stockroom.codeeditor.SyntaxHighlightRule
+import com.thecloudsite.stockroom.SyntaxHighlightRule
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
 import com.thecloudsite.stockroom.setBackgroundColor
@@ -99,15 +99,13 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogCalcBinding.inflate(inflater)
 
-    dialogBinding.calcCode.setTextSize(13f)
-    dialogBinding.calcCode.setTypeface(Typeface.MONOSPACE)
     dialogBinding.calcCode.setSyntaxHighlightRules(
-      // 0..9
-      SyntaxHighlightRule("[+-]?[0-9]+", "#028900"),
+      // 1.234,56
+      SyntaxHighlightRule("((\\s|^)[+-]?[0-9]+?[,.]?[0-9]*?)+(\\s|\$)", "#028900"),
       // + - * /
-      SyntaxHighlightRule("((\\s|^)[+-/*])+(\\s|\$)", "#FF0000"),
+      SyntaxHighlightRule("((\\s|^)[+-/*^])+(\\s|\$)", "#D60000"),
       // loop, variable and label op
-      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#2C42C1"),
+      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#00C617"),
       SyntaxHighlightRule("(?i)((\\s|^)(rcl))+(\\s|$)", "#2C42C1"),
       // stack op
       SyntaxHighlightRule(

@@ -17,10 +17,12 @@
         android:padding="8dp"
         >
 
-      <com.thecloudsite.stockroom.codeeditor.Editor
+      <com.thecloudsite.stockroom.ColorSyntaxEditText
           android:id="@+id/calc_code"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:textSize="13sp"
+          android:fontFamily="monospace"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
