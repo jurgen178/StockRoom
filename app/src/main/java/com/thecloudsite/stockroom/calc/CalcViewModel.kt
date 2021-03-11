@@ -82,7 +82,7 @@ enum class UnaryArgument {
   ARCTANH,
   INT,    // Integer part
   ROUND,  // Round to nearest int
-  ROUND2,  // Round to two digits
+  ROUND2, // Round to two digits
   TOSTR,  // toStr
   LN,
   EX,
