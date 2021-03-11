@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom.calc
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -174,6 +175,18 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       .show()
   }
 
+  fun touchHelperFunction(
+    view: View,
+    event: MotionEvent
+  ) {
+    return touchHelper(
+      view,
+      event,
+      requireContext().getColor(R.color.calcFunctionPressed),
+      requireContext().getColor(R.color.calcFunction)
+    )
+  }
+
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
@@ -183,30 +196,38 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
 
-    binding.calcF1.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF1.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF1.setOnClickListener { runCodeDialog(mapKey("F1")) }
-    binding.calcF2.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF2.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF2.setOnClickListener { runCodeDialog(mapKey("F2")) }
-    binding.calcF3.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF3.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF3.setOnClickListener { runCodeDialog(mapKey("F3")) }
-    binding.calcF4.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF4.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF4.setOnClickListener { runCodeDialog(mapKey("F4")) }
-    binding.calcF5.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF5.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF5.setOnClickListener { runCodeDialog(mapKey("F5")) }
-    binding.calcF6.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF6.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF6.setOnClickListener { runCodeDialog(mapKey("F6")) }
-    binding.calcF7.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF7.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF7.setOnClickListener { runCodeDialog(mapKey("F7")) }
-    binding.calcF8.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF8.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF8.setOnClickListener { runCodeDialog(mapKey("F8")) }
-    binding.calcF9.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF9.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF9.setOnClickListener { runCodeDialog(mapKey("F9")) }
-    binding.calcF10.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF10.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF10.setOnClickListener { runCodeDialog(mapKey("F10")) }
-    binding.calcF11.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF11.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF11.setOnClickListener { runCodeDialog(mapKey("F11")) }
-    binding.calcF12.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcF12.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
     binding.calcF12.setOnClickListener { runCodeDialog(mapKey("F12")) }
+    binding.calcF13.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
+    binding.calcF13.setOnClickListener { runCodeDialog(mapKey("F13")) }
+    binding.calcF14.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
+    binding.calcF14.setOnClickListener { runCodeDialog(mapKey("F14")) }
+    binding.calcF15.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
+    binding.calcF15.setOnClickListener { runCodeDialog(mapKey("F15")) }
+    binding.calcF16.setOnTouchListener { view, event -> touchHelperFunction(view, event); false }
+    binding.calcF16.setOnClickListener { runCodeDialog(mapKey("F16")) }
 
 //    binding.calcZinsMonat.setOnTouchListener { view, event -> touchHelper(view, event); false }
 //    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
@@ -287,12 +308,12 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcSum.setOnClickListener { calcViewModel.opVarArg(VariableArguments.SUM) }
 
     binding.calcShift.setOnTouchListener { view, event ->
-      if (event.action == MotionEvent.ACTION_DOWN) {
-        setBackgroundColor(view, requireContext().getColor(R.color.calcShiftPressed))
-      } else
-        if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-          setBackgroundColor(view, requireContext().getColor(R.color.calcShift))
-        }
+      touchHelper(
+        view,
+        event,
+        requireContext().getColor(R.color.calcShiftPressed),
+        requireContext().getColor(R.color.calcShift)
+      )
       false
     }
     binding.calcFrac.setOnTouchListener { view, event -> touchHelper(view, event); false }
@@ -356,6 +377,10 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
         Triple("F10", R.string.calc_F10_code, R.string.calc_F10_desc),
         Triple("F11", R.string.calc_F11_code, R.string.calc_F11_desc),
         Triple("F12", R.string.calc_F12_code, R.string.calc_F12_desc),
+        Triple("F13", R.string.calc_F13_code, R.string.calc_F13_desc),
+        Triple("F14", R.string.calc_F14_code, R.string.calc_F14_desc),
+        Triple("F15", R.string.calc_F15_code, R.string.calc_F15_desc),
+        Triple("F16", R.string.calc_F16_code, R.string.calc_F16_desc),
       )
 
       resList.forEach { entry ->
@@ -400,40 +425,52 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   private fun mapKey(key: String): String {
     if (calcViewModel.shift) {
       if (key == "F1") {
-        return "F13"
-      }
-      if (key == "F2") {
-        return "F14"
-      }
-      if (key == "F3") {
-        return "F15"
-      }
-      if (key == "F4") {
-        return "F16"
-      }
-      if (key == "F5") {
         return "F17"
       }
-      if (key == "F6") {
+      if (key == "F2") {
         return "F18"
       }
-      if (key == "F7") {
+      if (key == "F3") {
         return "F19"
       }
-      if (key == "F8") {
+      if (key == "F4") {
         return "F20"
       }
-      if (key == "F9") {
+      if (key == "F5") {
         return "F21"
       }
-      if (key == "F10") {
+      if (key == "F6") {
         return "F22"
       }
-      if (key == "F11") {
+      if (key == "F7") {
         return "F23"
       }
-      if (key == "F12") {
+      if (key == "F8") {
         return "F24"
+      }
+      if (key == "F9") {
+        return "F25"
+      }
+      if (key == "F10") {
+        return "F26"
+      }
+      if (key == "F11") {
+        return "F27"
+      }
+      if (key == "F12") {
+        return "F28"
+      }
+      if (key == "F13") {
+        return "F29"
+      }
+      if (key == "F14") {
+        return "F30"
+      }
+      if (key == "F15") {
+        return "F31"
+      }
+      if (key == "F16") {
+        return "F32"
       }
 
       if (key == "sin") {
@@ -480,6 +517,10 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       Pair(binding.calcF10, mapKey("F10")),
       Pair(binding.calcF11, mapKey("F11")),
       Pair(binding.calcF12, mapKey("F12")),
+      Pair(binding.calcF13, mapKey("F13")),
+      Pair(binding.calcF14, mapKey("F14")),
+      Pair(binding.calcF15, mapKey("F15")),
+      Pair(binding.calcF16, mapKey("F16")),
 
       Pair(binding.calcSin, mapKey("sin")),
       Pair(binding.calcCos, mapKey("cos")),

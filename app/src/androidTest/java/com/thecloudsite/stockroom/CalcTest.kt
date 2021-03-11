@@ -33,6 +33,7 @@ class CalcTest {
     assertEquals(Pair(104348, 33215), frac(3.14159265359))
     assertEquals(Pair(37, 61), frac(0.606557377049))
     assertEquals(Pair(2, 1), frac(2.0))
+    assertEquals(Pair(1, 3), frac(0.33333333))
 
     assertEquals(Pair(0, 1), frac(0.0))
 
@@ -40,5 +41,6 @@ class CalcTest {
     assertEquals(Pair(-5, 19), frac(-5.0 / 19.0))
     assertEquals(Pair(-104348, 33215), frac(-3.14159265359))
     assertEquals(Pair(-37, 61), frac(-0.606557377049))
+    assertEquals(Pair(-1, 3), frac(-0.33333333))
   }
 }

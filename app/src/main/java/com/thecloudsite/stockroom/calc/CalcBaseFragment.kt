@@ -63,12 +63,17 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
 
-  fun touchHelper(view: View, event: MotionEvent) {
+  fun touchHelper(
+    view: View,
+    event: MotionEvent,
+    colorDown: Int = Color.LTGRAY,
+    colorUp: Int = Color.DKGRAY
+  ) {
     if (event.action == MotionEvent.ACTION_DOWN) {
-      setBackgroundColor(view, Color.LTGRAY)
+      setBackgroundColor(view, colorDown)
     } else
       if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-        setBackgroundColor(view, Color.DKGRAY)
+        setBackgroundColor(view, colorUp)
       }
   }
 

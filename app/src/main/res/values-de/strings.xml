@@ -573,6 +573,14 @@ limitations under the License. -->
   <string name="calc_F11_desc"></string>
   <string name="calc_F12_code"></string>
   <string name="calc_F12_desc"></string>
+  <string name="calc_F13_code"></string>
+  <string name="calc_F13_desc"></string>
+  <string name="calc_F14_code"></string>
+  <string name="calc_F14_desc"></string>
+  <string name="calc_F15_code"></string>
+  <string name="calc_F15_desc"></string>
+  <string name="calc_F16_code"></string>
+  <string name="calc_F16_desc"></string>
   <string name="calc_endless_loop">Mögliche Endlosschleife. Vorgang abgebrochen.</string>
   <string name="calc_missing_label">Fehlende Marke \'%1$s\'</string>
   <string name="calc_invalid_while_args">Fehlende Zahlen für \'while\'.</string>

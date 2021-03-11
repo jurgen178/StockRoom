@@ -38,7 +38,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
                       app:layout_constraintStart_toEndOf="@id/guidelineX1"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -49,7 +49,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
                       app:layout_constraintStart_toEndOf="@id/guidelineX2"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -60,7 +60,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
                       app:layout_constraintStart_toEndOf="@id/guidelineX3"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -71,7 +71,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
                       app:layout_constraintStart_toEndOf="@id/guidelineX4"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF3"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -82,7 +82,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
                       app:layout_constraintStart_toEndOf="@id/guidelineX1"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -93,7 +93,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
                       app:layout_constraintStart_toEndOf="@id/guidelineX2"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -104,7 +104,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
                       app:layout_constraintStart_toEndOf="@id/guidelineX3"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -115,7 +115,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
                       app:layout_constraintStart_toEndOf="@id/guidelineX4"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF2"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -126,7 +126,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
                       app:layout_constraintStart_toEndOf="@id/guidelineX1"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -137,7 +137,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
                       app:layout_constraintStart_toEndOf="@id/guidelineX2"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -148,7 +148,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
                       app:layout_constraintStart_toEndOf="@id/guidelineX3"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
@@ -159,7 +159,51 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
                       app:layout_constraintStart_toEndOf="@id/guidelineX4"
                       app:layout_constraintTop_toBottomOf="@+id/guidelineF1"
-                      style="@style/calc_style"
+                      style="@style/calc_function_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F13"
+                      android:text="F9"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guideline789"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX2"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX1"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
+                      style="@style/calc_function_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F14"
+                      android:text="F10"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guideline789"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
+                      style="@style/calc_function_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F15"
+                      android:text="F1"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guideline789"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX4"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX3"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
+                      style="@style/calc_function_style"
+                      />
+
+                  <TextView
+                      android:id="@+id/calc_F16"
+                      android:text="F12"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toTopOf="@id/guideline789"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                      app:layout_constraintTop_toBottomOf="@+id/guidelineEnter"
+                      style="@style/calc_function_style"
                       />
 
                   <TextView
