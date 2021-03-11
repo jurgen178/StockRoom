@@ -16,7 +16,6 @@
 
 package com.thecloudsite.stockroom.calc
 
-import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -102,10 +101,12 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     dialogBinding.calcCode.setSyntaxHighlightRules(
       // 1.234,56
       SyntaxHighlightRule("((\\s|^)[+-]?[0-9]+?[,.]?[0-9]*?)+(\\s|\$)", "#028900"),
+      // $$stock[.property]
+      SyntaxHighlightRule("((\\s|^)[$]{2}\\w+?([.]\\w+)?)+(\\s|\$)", "#A700D6"),
       // + - * /
       SyntaxHighlightRule("((\\s|^)[+-/*^])+(\\s|\$)", "#B50000"),
       // loop, variable and label op
-      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#D8007E"),
+      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#FF7F7F"),
       SyntaxHighlightRule("(?i)((\\s|^)(rcl))+(\\s|$)", "#2C42C1"),
       // stack op
       SyntaxHighlightRule(
@@ -114,7 +115,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       ),
       // math op
       SyntaxHighlightRule(
-        "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|ln|sqrt|abs|int|round|tostr|sum|var|pi|e))+(\\s|\$)",
+        "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|tostr|sum|var|pi|π|e))+(\\s|\$)",
         "#B50000"
       ),
       // "text"

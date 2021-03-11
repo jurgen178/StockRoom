@@ -40,11 +40,7 @@ import com.thecloudsite.stockroom.importListActivityRequestCode
 import com.thecloudsite.stockroom.utils.saveTextToFile
 import com.thecloudsite.stockroom.utils.setAppTheme
 import java.io.BufferedReader
-import java.io.FileOutputStream
 import java.io.InputStreamReader
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle.MEDIUM
 
 const val importCalcActivityRequestCode = 7
 const val exportCalcActivityRequestCode = 8

@@ -132,7 +132,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcRepository.getData())
   }
 
-  private fun getRegexGroups1(text: String, regex: Regex): String? {
+  private fun getRegexOneGroup(text: String, regex: Regex): String? {
     val match = regex.matchEntire(text)
     if (match != null
       && match.groups.size == 2
@@ -146,7 +146,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     return null
   }
 
-  private fun getRegexGroups2(text: String, regex: Regex): Pair<String, String>? {
+  private fun getRegexTwoGroups(text: String, regex: Regex): Pair<String, String>? {
     val match = regex.matchEntire(text)
     if (match != null
       && match.groups.size == 3
@@ -202,7 +202,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // store .label
     symbols.forEachIndexed { index, symbol ->
       // Store label
-      val labelMatch = getRegexGroups1(symbol, labelRegex)
+      val labelMatch = getRegexOneGroup(symbol, labelRegex)
       // is label?
       if (labelMatch != null) {
         val label = labelMatch.toLowerCase(Locale.ROOT)
@@ -221,7 +221,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val symbol = symbols[i++]
 
       // is label?
-      if (getRegexGroups1(symbol, labelRegex) != null) {
+      if (getRegexOneGroup(symbol, labelRegex) != null) {
         // skip to next symbol
         continue
       }
@@ -230,7 +230,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // while.compare.label
       // while.gt.label1
       val whileMatch =
-        getRegexGroups2(symbol, whileRegex)
+        getRegexTwoGroups(symbol, whileRegex)
       // is while?
       if (whileMatch != null) {
         loopCounter++
@@ -312,7 +312,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // Goto
       // goto.label
       val gotoMatch =
-        getRegexGroups1(symbol, gotoRegex)
+        getRegexOneGroup(symbol, gotoRegex)
       if (gotoMatch != null) {
         loopCounter++
         val label = gotoMatch.toLowerCase(Locale.ROOT)
@@ -359,11 +359,38 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "arctan" -> {
           validArgs = opUnary(calcData, UnaryArgument.ARCTAN)
         }
+        "sinh" -> {
+          validArgs = opUnary(calcData, UnaryArgument.SINH)
+        }
+        "cosh" -> {
+          validArgs = opUnary(calcData, UnaryArgument.COSH)
+        }
+        "tanh" -> {
+          validArgs = opUnary(calcData, UnaryArgument.TANH)
+        }
+        "arcsinh" -> {
+          validArgs = opUnary(calcData, UnaryArgument.ARCSINH)
+        }
+        "arccosh" -> {
+          validArgs = opUnary(calcData, UnaryArgument.ARCCOSH)
+        }
+        "arctanh" -> {
+          validArgs = opUnary(calcData, UnaryArgument.ARCTANH)
+        }
         "ln" -> {
           validArgs = opUnary(calcData, UnaryArgument.LN)
         }
+        "log" -> {
+          validArgs = opUnary(calcData, UnaryArgument.LOG)
+        }
+        "sq" -> {
+          success = opUnary(calcData, UnaryArgument.SQ)
+        }
         "sqrt" -> {
           success = opUnary(calcData, UnaryArgument.SQRT)
+        }
+        "inv" -> {
+          validArgs = opUnary(calcData, UnaryArgument.INV)
         }
         "abs" -> {
           validArgs = opUnary(calcData, UnaryArgument.ABS)
@@ -382,6 +409,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "var" -> {
           validArgs = opVarArg(calcData, VariableArguments.VAR)
+        }
+        "per" -> {
+          validArgs = opBinary(calcData, BinaryArgument.PER)
+        }
+        "perc" -> {
+          validArgs = opBinary(calcData, BinaryArgument.PERC)
         }
 
         // Stack operations
@@ -443,7 +476,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "/" -> {
           validArgs = opBinary(calcData, BinaryArgument.DIV)
         }
-        "^" -> {
+        "^", "pow" -> {
           validArgs = opBinary(calcData, BinaryArgument.POW)
         }
 
@@ -451,7 +484,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "" -> {
           // Skip empty lines.
         }
-        "pi" -> {
+        "pi", "π" -> {
           opZero(calcData, ZeroArgument.PI)
         }
         "e" -> {
@@ -474,7 +507,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           // Comment
           // If symbol is comment, add comment to the last entry.
           // (?s) = dotall = . + \n
-          val comment = getRegexGroups1(symbol, commentRegex)
+          val comment = getRegexOneGroup(symbol, commentRegex)
           // is comment?
           if (comment != null) {
 
@@ -497,14 +530,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           } else {
 
             // sto[.name]
-            val variableName = getRegexGroups1(symbol, stoRegex)
+            val variableName = getRegexOneGroup(symbol, stoRegex)
             if (variableName != null) {
               validArgs = storeVariable(calcData, variableName)
 
             } else {
 
               // rcl[.name]
-              val recallVariable = getRegexGroups1(symbol, rclRegex)
+              val recallVariable = getRegexOneGroup(symbol, rclRegex)
               if (recallVariable != null) {
                 recallVariable(calcData, recallVariable)
 
@@ -601,7 +634,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   fun evaluate(calcData: CalcData, expression: String) {
 
     // symbol[.property]
-    val match = getRegexGroups2(expression, "(.+?)([.].+?)?$".toRegex())
+    val match = getRegexTwoGroups(expression, "(.+?)([.].+?)?$".toRegex())
 
     var symbol = expression.toUpperCase(Locale.ROOT)
     var property = ""
