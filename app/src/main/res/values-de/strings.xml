@@ -549,28 +549,28 @@ limitations under the License. -->
   <string name="calc_invalid_args">Fehlende Zahlen.</string>
   <string name="calc_error_msg">Fehler bei Symbol \'%1$s\'.</string>
   <string name="calc_error_parsing_msg">Fehler bei \'%1$s\'.</string>
-  <string name="calc_F1_code">// Berechnet prozentuale Änderung von a zu b\n\n// 2: a\n// 1: b\n//∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n//Auf 2 Nachkommastellen runden\nround\n\n// \"∆% \" dem Ergebnis hinzufügen\n\"∆% \" +</string>
+  <string name="calc_F1_code">// Berechnet prozentuale Änderung\n// von a zu b\n\n// 2: a\n// 1: b\n// ∆% = 100 * (b - a) / a\nover - swap / 100 *\n\n// Auf 2 Nachkommastellen runden\nround2\n\n// \"∆% \" dem Ergebnis hinzufügen\n\"∆% \" +\n\n// perc ist die eingebaute Funktion für prozentuale Änderung ohne Rundung\n// 10 12 perc</string>
   <string name="calc_F1_desc">∆% .2</string>
-  <string name="calc_F2_code">// Kreditberechnung\n// Monatliche Rate\n\n// 3: Kreditbetrag\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * round \"Monatliche Rate \" +</string>
+  <string name="calc_F2_code">// Kreditberechnung\n// Monatliche Rate\n\n// 3: Kreditbetrag\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / dup 1 + rot -12 * ^ 1 swap - / * round2 \"Monatliche Rate \" +</string>
   <string name="calc_F2_desc">Kredit Rate</string>
-  <string name="calc_F3_code">// Kreditberechnung\n// Kreditbetrag\n\n// 3: Monatliche Rate\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * round \"Kreditbetrag \" +</string>
+  <string name="calc_F3_code">// Kreditberechnung\n// Kreditbetrag\n\n// 3: Monatliche Rate\n// 2: Laufzeit in Jahren\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot over / rot rot 1 + swap -12 * ^ 1 swap - * round2 \"Kreditbetrag \" +</string>
   <string name="calc_F3_desc">Kredit Betrag</string>
-  <string name="calc_F4_code">// Kreditberechnung\n// Laufzeit in Jahren\n\n// 3: Kreditbetrag\n// 2: Monatliche Rate\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / round \"Laufzeit in Jahren \" +</string>
+  <string name="calc_F4_code">// Kreditberechnung\n// Laufzeit in Jahren\n\n// 3: Kreditbetrag\n// 2: Monatliche Rate\n// 1: Jährlicher Zinssatz in %\n\n1200 / rot rot / over * 1 swap - ln swap 1 + ln / -12 / round2 \"Laufzeit in Jahren \" +</string>
   <string name="calc_F4_desc">Kredit Laufzeit</string>
-  <string name="calc_F5_code">// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" + rot rot - \"x₂=\" +</string>
+  <string name="calc_F5_code">// Quadratische Gleichung\n// x²+ax+b\n\nswap -2 / dup dup * rot - sqrt over over + \"x₁=\" + rot rot - \"x₂=\" +"</string>
   <string name="calc_F5_desc">x²+ax+b</string>
-  <string name="calc_F6_code">// $$ für den Aktienwert\n\n$$tsla\ndup 10000 swap / int \"Für 10000 bekommst du \" +</string>
-  <string name="calc_F6_desc">Aktien wert</string>
-  <string name="calc_F7_code"> // Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate"</string>
-  <string name="calc_F7_desc">TSLA</string>
-  <string name="calc_F8_code">// if-Bedingung Beispiel (aiaman)\n\n// 4: else-Teil\n// 3: then-Teil\n// 2: Bedingung op2\n// 1: Bedingung op1\n\n// if equal (op2 == op1)?\n// Ergebnis ist 4, nicht gleich\n4 \"false \" + 3 \"true \" + 2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// Ergebnis ist 3, größer als\n4 \"false \" + 3 \"true \" + 2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// Ergebnis ist 4, nicht kleiner als\n4 \"false \" + 3 \"true \" + 2 1 if.lt</string>
- <string name="calc_F8_desc">if Beispiel</string>
-  <string name="calc_F9_code">// Alles löschen\nclear\n\n// Variablen\n// Zahl in Variable \u0027abc\u0027 speichern\n123 \"abc=\" + sto.abc\n\n// Variable \u0027abc\u0027 lesen\nrcl.abc\n\n// Alle Variablen lesen\nrcl\n\n// Stack\n// n pick\n1 2 3 4 4 pick \"Kopiert von 4:\" // 1 2 3 4 1\n\n// n roll\n1 2 3 4 4 roll \"Verschoben von 4:\" // 2 3 4 1\n\n// Stackgröße\ndepth \"Anzahl=\" +\n\n// Statistik\n// var (Varianz)\n// sum (Summe)</string>
-  <string name="calc_F9_desc">Weitere Beispiele</string>
-  <string name="calc_F10_code">clear</string>
-  <string name="calc_F10_desc">Alles löschen</string>
-  <string name="calc_F11_code"></string>
-  <string name="calc_F11_desc"></string>
+  <string name="calc_F6_code">// if-Bedingung Beispiel (aiaman)\n\n// 4: else-Teil\n// 3: then-Teil\n// 2: Bedingung op2\n// 1: Bedingung op1\n\n// if equal (op2 == op1)?\n// Ergebnis ist 4, nicht gleich\n4 \"false \" +\n3 \"true \" +\n2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// Ergebnis ist 3, größer als\n4 \"false \" +\n3 \"true \" +\n2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// Ergebnis ist 4, nicht kleiner als\n4 \"false \"\n+ 3 \"true \"\n+ 2 1 if.lt</string>
+  <string name="calc_F6_desc">if Beispiel</string>
+  <string name="calc_F7_code">// Schleifenbeispiel\n\n\"10..1 -1\"\n10\ndo.decrLabel\n dup 1 - dup 1\nwhile.ge.decrLabel\ndrop\n\n\"1..10 +1\"\n1\ndo.incrLabel\n dup 1 + dup 10\nwhile.le.incrLabel\ndrop\n\n\"0..360 +22,5\"\n0\ndo.f(x)\n dup\n // f(x)\n sin\n // \"sin(x)=\"\n \"sin(\" 3 pick toStr + + \")=\" +\n // \u003c= 360 ?\n swap 22,5 + dup 360\nwhile.le.f(x)\ndrop\n\n// goto Beispiel\n// Überspringe 1234\ngoto.end\n1234\n.end</string>
+  <string name="calc_F7_desc">while Beispiel</string>
+  <string name="calc_F8_code">// Alles löschen\nclear\n\n// Variablen\n// Zahl in Variable \u0027abc\u0027 speichern\n123 \"abc=\" + sto.abc\n// Ergebnis in Variable \u0027x\u0027 speichern\n2 e * π ^ sqrt \"x=\" + sto.x\n\n// Variable \u0027abc\u0027 lesen\nrcl.abc\n\n// Alle Variablen lesen\nrcl\n\n// Dezimalzahl in Bruch (x/y)\n0,75 frac // 3/4\n0,40476190476 frac // 17/42\n\n// Stack\n// n pick\n1 2 3 4 4 pick \"Kopiert von 4:\" // 1 2 3 4 1\n\n// n roll\n1 2 3 4 4 roll \"Verschoben von 4:\" // 2 3 4 1\n\n// Stackgröße\ndepth \"Anzahl=\" +\n\n// Statistik\n// var (Varianz)\n// sum (Summe)</string>
+  <string name="calc_F8_desc">Weitere Beispiele</string>
+  <string name="calc_F9_code">clear</string>
+  <string name="calc_F9_desc">Alles löschen</string>
+  <string name="calc_F10_code">// Beispiel Aktienkauf\n\n// 1: Geldbetrag\n\n\"Geben sie einen Geldbetrag ein\"\n1 // Eine Zahl wird erwartet\nvalidate\n\n// Auf 2 Nachkommastellen runden \nround2\n\n// Aktie wählen\n$$tsla\n\n// else-Teil\n\"Wählen Sie eine Aktie vom Portfolio\"\n\n// then-Teil\nover 4 pick swap / int \"Für $\" 5 roll toStr + \" bekommst du \" + +\n\n// if\n// Gibt es die Aktie?\n3 pick 0 if.gt // Aktie \u003e 0 ?</string>
+  <string name="calc_F10_desc">Aktien kauf</string>
+  <string name="calc_F11_code">// Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate</string>
+  <string name="calc_F11_desc">TSLA</string>
   <string name="calc_F12_code"></string>
   <string name="calc_F12_desc"></string>
   <string name="calc_F13_code"></string>
