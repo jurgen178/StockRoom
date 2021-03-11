@@ -273,6 +273,16 @@
                       style="@style/calc_math_style"
                       />
 
+                  <TextView
+                      android:id="@+id/calc_frac"
+                      android:text="x/y"
+                      app:layout_constraintBottom_toTopOf="@id/guideline0"
+                      app:layout_constraintEnd_toStartOf="@id/guidelineX5"
+                      app:layout_constraintStart_toEndOf="@id/guidelineX4"
+                      app:layout_constraintTop_toBottomOf="@+id/guideline123"
+                      style="@style/calc_math_style"
+                      />
+
                   <androidx.constraintlayout.widget.Barrier
                       android:id="@+id/guidelineIndicator"
                       android:layout_width="wrap_content"

@@ -24,6 +24,7 @@ import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.getName
+import com.thecloudsite.stockroom.utils.frac
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.absoluteValue
@@ -1040,7 +1041,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           )
         }
         UnaryArgument.FRAC -> {
-          //calcData.numberList.add(CalcLine(desc = "", value = frac(op1.value)))
+          val fraction = frac(op1.value)
+          calcData.numberList.add(CalcLine(desc = "", value = fraction.first.toDouble()))
+          calcData.numberList.add(CalcLine(desc = "", value = fraction.second.toDouble()))
         }
         UnaryArgument.TOSTR -> {
           // Convert the value to string.

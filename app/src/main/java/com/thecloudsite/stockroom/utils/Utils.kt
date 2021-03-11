@@ -54,6 +54,8 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
+import kotlin.math.sign
 
 // https://developer.android.com/reference/java/text/DecimalFormat
 // #,## add thousand separator: 1.234,56
@@ -1089,4 +1091,31 @@ fun saveTextToFile(
       .show()
     Log.d("Export JSON error", "Exception: $e")
   }
+}
+
+// https://begriffs.com/pdf/dec2frac.pdf
+fun frac(x: Double): Pair<Int, Int> {
+  val eps = 0.0000001
+  val sign = x.sign.toInt()
+  val xAbs = x.absoluteValue
+  var z = xAbs
+  var n = z.toInt()
+  var d0: Int = 0
+  var d1: Int = 1
+  var x0 = 1.0
+  var x1 = 0.0
+
+  while ((z - z.toInt().toDouble()) > eps && (x0 - x1).absoluteValue > eps) {
+    z = 1 / (z - z.toInt().toDouble())
+    val d = d1 * z.toInt() + d0
+    n = (xAbs * d).roundToInt()
+
+    x0 = x1
+    x1 = n.toDouble() / d.toDouble()
+
+    d0 = d1
+    d1 = d
+  }
+
+  return Pair(n * sign, d1)
 }
