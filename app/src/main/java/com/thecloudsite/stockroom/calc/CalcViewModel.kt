@@ -83,6 +83,8 @@ enum class UnaryArgument {
   INT,    // Integer part
   ROUND,  // Round to nearest int
   ROUND2, // Round to two digits
+  ROUND4, // Round to four digits
+  FRAC,
   TOSTR,  // toStr
   LN,
   EX,
@@ -404,6 +406,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "round2" -> {
           validArgs = opUnary(calcData, UnaryArgument.ROUND2)
+        }
+        "round4" -> {
+          validArgs = opUnary(calcData, UnaryArgument.ROUND4)
+        }
+        "frac" -> {
+          validArgs = opUnary(calcData, UnaryArgument.FRAC)
         }
         "tostr" -> {
           validArgs = opUnary(calcData, UnaryArgument.TOSTR)
@@ -1017,6 +1025,22 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
               }
             )
           )
+        }
+        UnaryArgument.ROUND4 -> {
+          calcData.numberList.add(
+            CalcLine(
+              desc = "",
+              // roundToLong is not defined for Double.NaN
+              value = if (op1.value.isNaN()) {
+                op1.value
+              } else {
+                op1.value.times(10000.0).roundToLong().toDouble().div(10000.0)
+              }
+            )
+          )
+        }
+        UnaryArgument.FRAC -> {
+          //calcData.numberList.add(CalcLine(desc = "", value = frac(op1.value)))
         }
         UnaryArgument.TOSTR -> {
           // Convert the value to string.

@@ -58,18 +58,18 @@ class FilterTest {
     val filter1 = FilterTest1Type()
 
     val stockItem1 = StockItem(
-        OnlineMarketData(symbol = "s1"),
-        StockDBdata(
-            symbol = "s1", groupColor = 123, alertAbove = 11.0, alertBelow = 12.0,
-            note = "note1"
-        ),
-        listOf(Asset(symbol = "s1", quantity = 1.0, price = 2.0)),
-        listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
-        listOf(
-            Dividend(
-                symbol = "s1", amount = 0.0, type = 0, cycle = 0, exdate = 0L, paydate = 0L
-            )
+      OnlineMarketData(symbol = "s1"),
+      StockDBdata(
+        symbol = "s1", groupColor = 123, alertAbove = 11.0, alertBelow = 12.0,
+        note = "note1"
+      ),
+      listOf(Asset(symbol = "s1", quantity = 1.0, price = 2.0)),
+      listOf(Event(symbol = "s1", type = 1, title = "ti1", note = "te1", datetime = 1L)),
+      listOf(
+        Dividend(
+          symbol = "s1", amount = 0.0, type = 0, cycle = 0, exdate = 0L, paydate = 0L
         )
+      )
     )
 
     assertEquals(true, filter1.filter(stockItem1))
