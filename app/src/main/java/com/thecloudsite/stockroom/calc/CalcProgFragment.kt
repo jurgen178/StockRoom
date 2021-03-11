@@ -103,9 +103,9 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       // 1.234,56
       SyntaxHighlightRule("((\\s|^)[+-]?[0-9]+?[,.]?[0-9]*?)+(\\s|\$)", "#028900"),
       // + - * /
-      SyntaxHighlightRule("((\\s|^)[+-/*^])+(\\s|\$)", "#D60000"),
+      SyntaxHighlightRule("((\\s|^)[+-/*^])+(\\s|\$)", "#B50000"),
       // loop, variable and label op
-      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#00C617"),
+      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#D8007E"),
       SyntaxHighlightRule("(?i)((\\s|^)(rcl))+(\\s|$)", "#2C42C1"),
       // stack op
       SyntaxHighlightRule(
@@ -118,7 +118,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
         "#B50000"
       ),
       // "text"
-      SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#A09936"),
+      SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#D89E00"),
       // // comment
       SyntaxHighlightRule("(?m)//.*?$", "#808080"),
       // /* comment */
