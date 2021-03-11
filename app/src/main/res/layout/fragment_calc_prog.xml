@@ -213,7 +213,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
                       app:layout_constraintStart_toEndOf="@id/guidelineX1"
                       app:layout_constraintTop_toBottomOf="@+id/guideline789"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -223,7 +223,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
                       app:layout_constraintStart_toEndOf="@id/guidelineX2"
                       app:layout_constraintTop_toBottomOf="@+id/guideline789"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -233,7 +233,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
                       app:layout_constraintStart_toEndOf="@id/guidelineX3"
                       app:layout_constraintTop_toBottomOf="@+id/guideline789"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -243,7 +243,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
                       app:layout_constraintStart_toEndOf="@id/guidelineX1"
                       app:layout_constraintTop_toBottomOf="@+id/guideline456"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -253,7 +253,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
                       app:layout_constraintStart_toEndOf="@id/guidelineX2"
                       app:layout_constraintTop_toBottomOf="@+id/guideline456"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -263,7 +263,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
                       app:layout_constraintStart_toEndOf="@id/guidelineX3"
                       app:layout_constraintTop_toBottomOf="@+id/guideline456"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -273,7 +273,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX3"
                       app:layout_constraintStart_toEndOf="@id/guidelineX2"
                       app:layout_constraintTop_toBottomOf="@+id/guideline123"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -283,7 +283,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX4"
                       app:layout_constraintStart_toEndOf="@id/guidelineX3"
                       app:layout_constraintTop_toBottomOf="@+id/guideline123"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -293,7 +293,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX2"
                       app:layout_constraintStart_toEndOf="@id/guidelineX1"
                       app:layout_constraintTop_toBottomOf="@+id/guideline123"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -314,7 +314,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
                       app:layout_constraintStart_toEndOf="@id/guidelineX4"
                       app:layout_constraintTop_toBottomOf="@+id/guideline0"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <TextView
@@ -324,7 +324,7 @@
                       app:layout_constraintEnd_toStartOf="@id/guidelineX5"
                       app:layout_constraintStart_toEndOf="@id/guidelineX4"
                       app:layout_constraintTop_toBottomOf="@+id/guideline123"
-                      style="@style/calc_math_style"
+                      style="@style/calc_style"
                       />
 
                   <androidx.constraintlayout.widget.Barrier
@@ -419,7 +419,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      app:layout_constraintGuide_percent="0.14"
+                      app:layout_constraintGuide_percent="0.06"
                       />
 
                   <androidx.constraintlayout.widget.Guideline
@@ -427,7 +427,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      app:layout_constraintGuide_percent="0.32"
+                      app:layout_constraintGuide_percent="0.28"
                       />
 
                   <androidx.constraintlayout.widget.Guideline
@@ -443,7 +443,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      app:layout_constraintGuide_percent="0.68"
+                      app:layout_constraintGuide_percent="0.72"
                       />
 
                   <androidx.constraintlayout.widget.Guideline
@@ -451,7 +451,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      app:layout_constraintGuide_percent="0.86"
+                      app:layout_constraintGuide_percent="0.94"
                       />
 
                   <TextView

@@ -403,7 +403,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.14"
+          app:layout_constraintGuide_percent="0.06"
           />
 
       <androidx.constraintlayout.widget.Guideline
@@ -411,7 +411,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.32"
+          app:layout_constraintGuide_percent="0.28"
           />
 
       <androidx.constraintlayout.widget.Guideline
@@ -427,7 +427,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.68"
+          app:layout_constraintGuide_percent="0.72"
           />
 
       <androidx.constraintlayout.widget.Guideline
@@ -435,7 +435,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.86"
+          app:layout_constraintGuide_percent="0.94"
           />
 
       <TextView

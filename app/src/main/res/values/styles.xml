@@ -155,16 +155,6 @@ limitations under the License. -->
     <item name="android:background">@drawable/calc_function_roundcorner</item>
   </style>
 
-  <style name="calc_math_style">
-    <item name="android:layout_width">0dp</item>
-    <item name="android:layout_height">0dp</item>
-    <item name="android:layout_margin">4dp</item>
-    <item name="android:padding">4dp</item>
-    <item name="android:textSize">16sp</item>
-    <item name="android:textColor">#FFFFFF</item>
-    <item name="android:background">@drawable/calc_roundcorner</item>
-  </style>
-
   <style name="calc_inidicator_style">
     <item name="android:layout_width">0dp</item>
     <item name="android:layout_height">wrap_content</item>
