@@ -43,63 +43,71 @@ const val news_type_google: Int = 2
 const val news_type_nasdaq: Int = 3
 
 val excludeUrlList = arrayListOf(
-    "newsdaemon.com",
-    "newsheater.com",
-    "investorsobserver.com",
-    "stocksregister.com",
-    "marketingsentinel.com",
-    "dbtnews.com",
-    "oracledispatch.com",
-    "friscoherald.com",
-    "investchronicle.com",
-    "scientect.com",
-    "mzpnews.com",
-    "cometreports.com",
-    "onenewspage.com",
-    "pinevillevoice.com",
-    "reportswatch.com",
-    "newsbrok.com",
-    "startupng.com.ng",
-    "primefeed.in",
-    "thedailychronicle.in",
-    "galusaustralis.com",
-    "bulletinline.com",
-    "investmillion.com",
-    "weeklywall.com",
-    "clarkscarlet.com",
-    "algosonline.com",
-    "baytownsun.com",
-    "openpr.com",
-    "gnghockey.com",
-    "redandblackonline.com",
-    "njmmanews.com",
-    "prnewswire.co.uk",
-    "themarketchronicles.com",
-    "kws24.com",
-    "crainsnewyork.com",
-    "digitalmarketnews.com",
-    "rejerusalem.com",
-    "reporter.am",
-    "kyt24.com",
-    "prnewsleader.com",
-    "thinkcuriouser.com",
-    "theunionjournal.com",
-    "icotodaymagazine.com",
-    "oaoa.com",
-    "streetinsider.com",
-    "cheshire.media",
-    "birmingham-alive.com",
-    "mccourier.com",
-    "bangordailynews.com",
-    "hcnn.ht",
-    "canaanmountainherald.com",
-    "murphyshockeylaw.net",
-    "law360.com",
-    "theblend.ie",
-    "khabarsouthasia.com",
-    "express-journal.com",
-    "factorymaintenance.com.au",
-    "pulse2.com"
+  "newsdaemon.com",
+  "newsheater.com",
+  "investorsobserver.com",
+  "stocksregister.com",
+  "marketingsentinel.com",
+  "dbtnews.com",
+  "oracledispatch.com",
+  "friscoherald.com",
+  "investchronicle.com",
+  "scientect.com",
+  "mzpnews.com",
+  "cometreports.com",
+  "onenewspage.com",
+  "pinevillevoice.com",
+  "reportswatch.com",
+  "newsbrok.com",
+  "startupng.com.ng",
+  "primefeed.in",
+  "thedailychronicle.in",
+  "galusaustralis.com",
+  "bulletinline.com",
+  "investmillion.com",
+  "weeklywall.com",
+  "clarkscarlet.com",
+  "algosonline.com",
+  "baytownsun.com",
+  "openpr.com",
+  "gnghockey.com",
+  "redandblackonline.com",
+  "njmmanews.com",
+  "prnewswire.co.uk",
+  "themarketchronicles.com",
+  "kws24.com",
+  "crainsnewyork.com",
+  "digitalmarketnews.com",
+  "rejerusalem.com",
+  "reporter.am",
+  "kyt24.com",
+  "prnewsleader.com",
+  "thinkcuriouser.com",
+  "theunionjournal.com",
+  "icotodaymagazine.com",
+  "oaoa.com",
+  "streetinsider.com",
+  "cheshire.media",
+  "birmingham-alive.com",
+  "mccourier.com",
+  "bangordailynews.com",
+  "hcnn.ht",
+  "canaanmountainherald.com",
+  "murphyshockeylaw.net",
+  "law360.com",
+  "theblend.ie",
+  "khabarsouthasia.com",
+  "express-journal.com",
+  "factorymaintenance.com.au",
+  "pulse2.com",
+  "baxterreport.com",
+  "bovnews.com",
+  "bisouv.com",
+  "newsrts.com",
+  "thestockdork.com",
+  "marketrealist.com",
+  "leathermag.com",
+  "ponokanews.com"
 )
 
 data class NewsData(
@@ -122,10 +130,10 @@ class NewsAdapter(
   private var newsDataList = if (headline.isNotEmpty()) {
     // Add headline to news list.
     listOf(
-        // News is sorted by time, date=Long.MAX_VALUE is top entry.
-        NewsData(
-            headline, "", Long.MAX_VALUE, "", news_type_headline
-        )
+      // News is sorted by time, date=Long.MAX_VALUE is top entry.
+      NewsData(
+        headline, "", Long.MAX_VALUE, "", news_type_headline
+      )
     )
   } else {
     listOf()
@@ -187,7 +195,8 @@ class NewsAdapter(
   }
 
   private fun getTimeDateStr(date: Long): String {
-    val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneOffset.systemDefault())
+    val localDateTime =
+      ZonedDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneOffset.systemDefault())
     val dateStr = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
     val timeStr = localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
 
@@ -218,11 +227,11 @@ class NewsAdapter(
         holder.binding.yahooNewsItemDate.text = getTimeDateStr(current.date)
 
         holder.binding.yahooNewsItemLink.text = HtmlCompat.fromHtml(
-            "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
-            HtmlCompat.FROM_HTML_MODE_LEGACY
+          "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
+          HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         holder.binding.yahooNewsItemLink.setLinkTextColor(
-            context.getColor(color.material_on_background_emphasis_medium)
+          context.getColor(color.material_on_background_emphasis_medium)
         )
         holder.binding.yahooNewsItemText.text =
           HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -251,11 +260,11 @@ class NewsAdapter(
         holder.binding.nasdaqNewsItemDate.text = getTimeDateStr(current.date)
 
         holder.binding.nasdaqNewsItemLink.text = HtmlCompat.fromHtml(
-            "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
-            HtmlCompat.FROM_HTML_MODE_LEGACY
+          "<a href=\"${current.link}\" target=\"_blank\">${current.link}</a>",
+          HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         holder.binding.nasdaqNewsItemLink.setLinkTextColor(
-            context.getColor(color.material_on_background_emphasis_medium)
+          context.getColor(color.material_on_background_emphasis_medium)
         )
         holder.binding.nasdaqNewsItemText.text =
           HtmlCompat.fromHtml(current.text, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -286,20 +295,20 @@ class NewsAdapter(
     dataList.filterNot { data ->
       excludeUrlList.any { data.link.contains(it) }
     }
-        .forEach { data ->
-          // Do not overwrite existing news for that time stamp.
-          if (newsMap[data.date]?.date != data.date) {
-            newsMap[data.date] = data
-          }
+      .forEach { data ->
+        // Do not overwrite existing news for that time stamp.
+        if (newsMap[data.date]?.date != data.date) {
+          newsMap[data.date] = data
         }
+      }
 
     // Map back to news list.
     this.newsDataList = newsMap.map { mapdata ->
       mapdata.value
     }
-        .sortedByDescending { newsdata ->
-          newsdata.date
-        }
+      .sortedByDescending { newsdata ->
+        newsdata.date
+      }
 
     notifyDataSetChanged()
   }
