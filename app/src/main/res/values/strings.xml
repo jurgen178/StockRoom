@@ -536,7 +536,7 @@ limitations under the License. -->
   <string name="clipboard">Clipboard=</string>
   <string name="calc_headline">AI</string>
   <string name="calc_prog_headline">AI prog</string>
-  <string name="calc_format_radian">Radian/Degree</string>
+  <string name="calc_format_radian">Degree/Radian</string>
   <string name="calc_format_radian_desc">Use 2π instead of 360° for trigonometric functions.</string>
   <string name="calc_display_name">Display name:</string>
   <string name="calc_code">AI code</string>

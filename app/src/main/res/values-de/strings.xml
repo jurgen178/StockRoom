@@ -535,7 +535,7 @@ limitations under the License. -->
   <string name="clipboard">Zwischenablage=</string>
   <string name="calc_headline">AI</string>
   <string name="calc_prog_headline">AI prog</string>
-  <string name="calc_format_radian">Radiant/Grad</string>
+  <string name="calc_format_radian">Grad/Radiant</string>
   <string name="calc_format_radian_desc">Verwendet das Bogenmaß 2π anstelle von 360° für trigonometrische Funktionen.</string>
   <string name="calc_display_name">Anzeigename:</string>
   <string name="calc_code">AI code</string>
