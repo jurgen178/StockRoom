@@ -3,7 +3,7 @@
 
   <color name="backgroundListColor">#2a2a2a</color>
   <color name="verticalLine">@color/cardview_light_background</color>
-  <color name="textInputEditText"></color>
+  <color name="textInputEditText">#333333</color>
 
   <color name="tableHeaderBackground">#FF6A00</color>
   <color name="chartLine">#00a1ff</color>

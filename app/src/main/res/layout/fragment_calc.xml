@@ -447,11 +447,20 @@
         />
 
     <TextView
+        android:id="@+id/calc_indicator_radian"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+        app:layout_constraintStart_toEndOf="@id/guidelineX2"
+        app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
+        style="@style/calc_inidicator_style"
+        />
+
+    <TextView
         android:id="@+id/calc_indicator_shift"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guidelineX2"
+        app:layout_constraintStart_toEndOf="@id/guidelineX3"
         app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
         style="@style/calc_inidicator_style"
         />

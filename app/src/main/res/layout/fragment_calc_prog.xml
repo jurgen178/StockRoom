@@ -145,7 +145,7 @@
 
             <TextView
                 android:id="@+id/calc_F13"
-                android:text="F9"
+                android:text="F13"
                 app:layout_constraintBottom_toTopOf="@id/guideline789"
                 app:layout_constraintEnd_toStartOf="@id/guidelineX2"
                 app:layout_constraintStart_toEndOf="@id/guidelineX1"
@@ -155,7 +155,7 @@
 
             <TextView
                 android:id="@+id/calc_F14"
-                android:text="F10"
+                android:text="F14"
                 app:layout_constraintBottom_toTopOf="@id/guideline789"
                 app:layout_constraintEnd_toStartOf="@id/guidelineX3"
                 app:layout_constraintStart_toEndOf="@id/guidelineX2"
@@ -165,7 +165,7 @@
 
             <TextView
                 android:id="@+id/calc_F15"
-                android:text="F1"
+                android:text="F15"
                 app:layout_constraintBottom_toTopOf="@id/guideline789"
                 app:layout_constraintEnd_toStartOf="@id/guidelineX4"
                 app:layout_constraintStart_toEndOf="@id/guidelineX3"
@@ -175,7 +175,7 @@
 
             <TextView
                 android:id="@+id/calc_F16"
-                android:text="F12"
+                android:text="F16"
                 app:layout_constraintBottom_toTopOf="@id/guideline789"
                 app:layout_constraintEnd_toStartOf="@id/guidelineX5"
                 app:layout_constraintStart_toEndOf="@id/guidelineX4"
@@ -450,11 +450,20 @@
                 />
 
             <TextView
+                android:id="@+id/calc_indicator_radian"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guidelineX3"
+                app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
+                style="@style/calc_inidicator_style"
+                />
+
+            <TextView
                 android:id="@+id/calc_indicator_shift"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guidelineX2"
+                app:layout_constraintStart_toEndOf="@id/guidelineX3"
                 app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
                 style="@style/calc_inidicator_style"
                 />

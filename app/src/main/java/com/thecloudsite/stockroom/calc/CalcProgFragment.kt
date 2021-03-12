@@ -124,7 +124,8 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       // // comment
       SyntaxHighlightRule("(?m)//.*?$", "#808080"),
       // /* comment */
-      SyntaxHighlightRule("(?s)/[*].*?[*]/", "#808080")
+      SyntaxHighlightRule("(?s)/[*].*?[*]/", "#808080"),
+      SyntaxHighlightRule("(?i)\u0061\u006c\u0069\u0065\u006e", "#00FF21")
     )
 
     var displayName = ""
@@ -397,6 +398,12 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
             name = requireContext().getString(entry.third)
           )
       }
+    }
+
+    if (radian == 1.0) {
+      binding.calcIndicatorRadian.text = "2π"
+    } else {
+      binding.calcIndicatorRadian.text = "360°"
     }
 
     updateKeys()

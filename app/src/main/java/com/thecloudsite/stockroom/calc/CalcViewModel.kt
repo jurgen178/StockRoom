@@ -503,6 +503,26 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         "e" -> {
           opZero(calcData, ZeroArgument.E)
         }
+        "\u0061\u006c\u0069\u0065\u006e" -> {
+          val a = "\uD83D\uDEF8\uD83D\uDC7D\uD83D\uDC7E" +
+              " ".repeat((1..17).shuffled().first())
+          if (calcData.numberList.isEmpty()) {
+            calcData.numberList.add(
+              CalcLine(
+                desc = a,
+                value = Double.NaN
+              )
+            )
+          } else {
+            val op = calcData.numberList.removeLast()
+            calcData.numberList.add(
+              CalcLine(
+                desc = "$a ${op.desc}",
+                value = op.value
+              )
+            )
+          }
+        }
         "validate" -> {
           validArgs = opVarArg(calcData, VariableArguments.VALIDATE)
           // Stop here when validate fails.

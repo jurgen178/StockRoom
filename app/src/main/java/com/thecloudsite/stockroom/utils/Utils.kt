@@ -1095,10 +1095,14 @@ fun saveTextToFile(
 
 // https://begriffs.com/pdf/dec2frac.pdf
 fun frac(x: Double): Pair<Int, Int> {
+
   val eps = 0.0000001
+
   val sign = x.sign.toInt()
   val xAbs = x.absoluteValue
+
   var z = xAbs
+
   var n = z.toInt()
   var d0: Int = 0
   var d1: Int = 1
