@@ -203,9 +203,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // Stores the index of the labels.
     val labelMap: MutableMap<String, Int> = mutableMapOf()
 
-    // store .label
+    // store all .labels
     symbols.forEachIndexed { index, symbol ->
-      // Store label
       val labelMatch = getRegexOneGroup(symbol, labelRegex)
       // is label?
       if (labelMatch != null) {
@@ -231,7 +230,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // While loop
-      // while.compare.label
+      // while.[compare].[label]
       // while.gt.label1
       val whileMatch =
         getRegexTwoGroups(symbol, whileRegex)
@@ -314,7 +313,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // Goto
-      // goto.label
+      // goto.[label]
       val gotoMatch =
         getRegexOneGroup(symbol, gotoRegex)
       if (gotoMatch != null) {

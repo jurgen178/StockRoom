@@ -505,7 +505,7 @@ limitations under the License. -->
   <string name="table_column_Note">Anmerkung</string>
   <string name="marketStatePRE">Vorbörse</string>
   <string name="marketStatePREPRE">Vorbörse noch nicht geöffnet</string>
-  <string name="marketStateREGULAR">Normal</string>
+  <string name="marketStateREGULAR">Geöffnet</string>
   <string name="marketStatePOST">Nachbörse</string>
   <string name="marketStatePOSTPOST">Nachbörse geschlossen</string>
   <string name="marketStateCLOSED">Geschlossen</string>
