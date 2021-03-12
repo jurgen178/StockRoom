@@ -2590,6 +2590,7 @@ class StockDataFragment : Fragment() {
     if (assetTimeEntriesCopy.isNotEmpty() && stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
       var i: Int = 0
 
+      val lastIndex = stockDataEntries!!.size - 2
       while (i < stockDataEntries!!.size - 1) {
 
         if (assetTimeEntriesCopy.isEmpty()) {
@@ -2600,7 +2601,8 @@ class StockDataFragment : Fragment() {
           val t: Long = assetTimeEntriesCopy[j].date
           val a = stockDataEntries!![i].dateTimePoint
           val b = stockDataEntries!![i + 1].dateTimePoint
-          if (a <= t && t < b) {
+          // In the time interval a..b or in the future ( >= b, after hours)
+          if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
             // use the index where the value is closest to t
             // a <= t < b
             // k=i: if t is closer to a
