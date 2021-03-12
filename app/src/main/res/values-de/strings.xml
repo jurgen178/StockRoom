@@ -567,7 +567,7 @@ limitations under the License. -->
   <string name="calc_F8_desc">Weitere Beispiele</string>
   <string name="calc_F9_code">clear</string>
   <string name="calc_F9_desc">Alles löschen</string>
-  <string name="calc_F10_code">// Beispiel Aktienkauf\n\n// 1: Geldbetrag\n\n\"Geben sie einen Geldbetrag ein\"\n1 // Eine Zahl wird erwartet\nvalidate\n\n// Auf 2 Nachkommastellen runden \nround2\n\n// Aktie wählen\n$$tsla\n\n// else-Teil\n\"Wählen Sie eine Aktie vom Portfolio\"\n\n// then-Teil\nover 4 pick swap / int \"Für $\" 5 roll toStr + \" bekommst du \" + +\n\n// if\n// Gibt es die Aktie?\n3 pick 0 if.gt // Aktie \u003e 0 ?</string>
+  <string name="calc_F10_code">// Beispiel Aktienkauf\n\n// 1: Geldbetrag\n\n\"Geben sie zuerst einen Geldbetrag ein\"\n1 // Eine Zahl wird erwartet\nvalidate\n\n// Auf 2 Nachkommastellen runden \nround2\n\n// Aktie wählen\n$$tsla\n\n// else-Teil\n\"Wählen Sie eine Aktie vom Portfolio\"\n\n// then-Teil\nover 4 pick swap / int \"Für $\" 5 roll toStr + \" bekommst du \" + +\n\n// if\n// Gibt es die Aktie?\n3 pick 0 if.gt // Aktie \u003e 0 ?</string>
   <string name="calc_F10_desc">Aktienkauf</string>
   <string name="calc_F11_code">// Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate</string>
   <string name="calc_F11_desc">TSLA</string>

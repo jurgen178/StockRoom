@@ -568,7 +568,7 @@ limitations under the License. -->
   <string name="calc_F8_desc">More examples</string>
   <string name="calc_F9_code">clear</string>
   <string name="calc_F9_desc">Clear all</string>
-  <string name="calc_F10_code">// Stock purchase example\n\n// 1: Money\n\n\"Enter an amount of money\"\n1 // One number expected\nvalidate\n\n// round to two digits\nround2\n\n// Select stock\n$$tsla\n\n// else part\n\"Select a stock from your portfolio\"\n\n// then part\nover 4 pick swap / int \"For $\" 5 roll toStr + \" you get \" + +\n\n// if\n// Doe sthe stock exist?\n3 pick 0 if.gt // Stock \u003e 0 ?</string>
+  <string name="calc_F10_code">// Stock purchase example\n\n// 1: Money\n\n\"Enter an amount of money first\"\n1 // One number expected\nvalidate\n\n// round to two digits\nround2\n\n// Select stock\n$$tsla\n\n// else part\n\"Select a stock from your portfolio\"\n\n// then part\nover 4 pick swap / int \"For $\" 5 roll toStr + \" you get \" + +\n\n// if\n// Doe sthe stock exist?\n3 pick 0 if.gt // Stock \u003e 0 ?</string>
   <string name="calc_F10_desc">Stock purchase</string>
   <string name="calc_F11_code">// stock evaluation example\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate</string>
   <string name="calc_F11_desc">TSLA</string>

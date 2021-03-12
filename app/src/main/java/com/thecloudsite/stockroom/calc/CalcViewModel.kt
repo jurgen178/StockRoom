@@ -1026,10 +1026,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             CalcLine(
               desc = "",
               // roundToLong is not defined for Double.NaN
-              value = if (op1.value.isNaN()) {
-                op1.value
-              } else {
+              value = if (op1.value.isFinite()) {
                 op1.value.roundToLong().toDouble()
+              } else {
+                op1.value
               }
             )
           )
@@ -1039,10 +1039,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             CalcLine(
               desc = "",
               // roundToLong is not defined for Double.NaN
-              value = if (op1.value.isNaN()) {
-                op1.value
-              } else {
+              value = if (op1.value.isFinite()) {
                 op1.value.times(100.0).roundToLong().toDouble().div(100.0)
+              } else {
+                op1.value
               }
             )
           )
@@ -1052,10 +1052,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             CalcLine(
               desc = "",
               // roundToLong is not defined for Double.NaN
-              value = if (op1.value.isNaN()) {
-                op1.value
-              } else {
+              value = if (op1.value.isFinite()) {
                 op1.value.times(10000.0).roundToLong().toDouble().div(10000.0)
+              } else {
+                op1.value
               }
             )
           )
