@@ -282,11 +282,9 @@ class PickerKnob : View {
     val widthSize = MeasureSpec.getSize(widthMeasureSpec)
     val heightMode = MeasureSpec.getMode(heightMeasureSpec)
     val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-    val width: Int
-    val height: Int
 
     // Measure Width
-    width = when (widthMode) {
+    val width: Int = when (widthMode) {
       MeasureSpec.EXACTLY -> {
         // Must be this size
         widthSize
@@ -302,7 +300,7 @@ class PickerKnob : View {
     }
 
     // Measure Height
-    height = when (heightMode) {
+    val height: Int = when (heightMode) {
       MeasureSpec.EXACTLY -> {
         // Must be this size
         heightSize

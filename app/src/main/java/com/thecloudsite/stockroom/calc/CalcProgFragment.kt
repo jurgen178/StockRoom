@@ -16,7 +16,6 @@
 
 package com.thecloudsite.stockroom.calc
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -36,7 +35,6 @@ import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.SyntaxHighlightRule
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
-import com.thecloudsite.stockroom.setBackgroundColor
 
 data class CodeType
   (
@@ -176,7 +174,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       .show()
   }
 
-  fun touchHelperFunction(
+  private fun touchHelperFunction(
     view: View,
     event: MotionEvent
   ) {
