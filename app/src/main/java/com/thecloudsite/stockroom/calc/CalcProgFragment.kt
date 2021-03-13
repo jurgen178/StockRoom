@@ -98,6 +98,8 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     val dialogBinding = DialogCalcBinding.inflate(inflater)
 
     dialogBinding.calcCode.setSyntaxHighlightRules(
+      // "text"
+      SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#D89E00"),
       // 1.234,56
       SyntaxHighlightRule("((\\s|^)[+-]?[0-9]+?[,.]?[0-9]*?)+(\\s|$)", "#028900"),
       // $$stock[.property]
@@ -119,8 +121,6 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
         "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|π|e))+(\\s|$)",
         "#B50000"
       ),
-      // "text"
-      SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#D89E00"),
       // // comment
       SyntaxHighlightRule("(?m)//.*?$", "#808080"),
       // /* comment */

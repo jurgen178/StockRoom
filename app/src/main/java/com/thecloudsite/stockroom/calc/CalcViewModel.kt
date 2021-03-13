@@ -27,6 +27,7 @@ import com.thecloudsite.stockroom.getName
 import com.thecloudsite.stockroom.utils.frac
 import java.text.NumberFormat
 import java.util.Locale
+import java.util.Stack
 import kotlin.math.absoluteValue
 import kotlin.math.acos
 import kotlin.math.acosh
@@ -179,6 +180,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // (?s) = dotall = . + \n
       .replace("(?s)/[*].*?[*]/".toRegex(), " ")
 
+      //.replace("(?s): [a-z]+ .*? ;".toRegex(IGNORE_CASE), " ")
+
       //.replace("//.*?(\n|$)".toRegex(), " ")
 
       // multiline (?m) accept the anchors ^ and $ to match at the start and end of each line
@@ -274,6 +277,42 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
     }
 
+    // validate and store all dictionaries
+    val dictionaryMap: MutableMap<String, Pair<Int, Int>> = mutableMapOf()
+    var k = 0
+    while (k < symbols.size) {
+      if (symbols[k] == ":") {
+        k++
+        val startIndex = k
+        var endIndex = -1
+        var name = ""
+        if (k < symbols.size) {
+          name = symbols[k]
+          k++
+        }
+        while (k < symbols.size) {
+          if (symbols[k] == ";") {
+            endIndex = k
+            break
+          }
+          k++
+        }
+
+        if (endIndex > 0) {
+          dictionaryMap[name] = Pair(startIndex, endIndex)
+        } else {
+          calcData.errorMsg = context.getString(R.string.calc_incomplete_dictionary, name)
+          calcRepository.updateData(calcData)
+
+          // label missing, end loop
+          return
+        }
+      }
+
+      k++
+    }
+
+    val returnStack = Stack<Int>()
     var loopCounter: Int = 0
     var i: Int = 0
     while (i < symbols.size) {
@@ -399,8 +438,38 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         continue
       }
 
+      val symbolLwr = symbol.toLowerCase(Locale.ROOT)
+      if (dictionaryMap.containsKey(symbolLwr)) {
+
+        returnStack.push(i)
+        i = dictionaryMap[symbolLwr]!!.first
+
+        continue
+      }
+
+      // skip dictionary entry definitions
+      if (symbol == ":") {
+        do {
+          i++
+        }
+        while (i < symbols.size && symbols[i] != ";")
+        // skip ;
+        i++
+
+        continue
+      }
+
+      // Dictionary function was called, return on end of statement.
+      if (symbol == ";") {
+        if (returnStack.isEmpty()) {
+          i = returnStack.pop() + 1
+        }
+
+        continue
+      }
+
       // process symbols
-      when (symbol.toLowerCase(Locale.ROOT)) {
+      when (symbolLwr) {
 
         // Math operations
         "sin" -> {
