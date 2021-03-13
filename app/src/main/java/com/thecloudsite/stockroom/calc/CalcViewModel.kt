@@ -189,6 +189,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     var success = true
     var validArgs = true
+    var checkLoop = true
 
     // Label has optional 'do' (do.label1 instead of .label1) at the beginning
     // for better readability when used for while loop.
@@ -214,11 +215,17 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         if (!labelMap.containsKey(label)) {
           labelMap[label] = index
         }
+      } else {
+        when (symbol.toLowerCase(Locale.ROOT)) {
+          // disable loop check
+          ":loop" -> {
+            checkLoop = false
+          }
+        }
       }
     }
 
     var loopCounter: Int = 0
-    var checkLoop = true
     var i: Int = 0
     while (i < symbols.size) {
 
@@ -494,8 +501,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         // Formating and number operations
-        "" -> {
-          // Skip empty lines.
+        "", ":loop" -> {
+          // Skip empty lines and instructions.
         }
         "pi", "π" -> {
           opZero(calcData, ZeroArgument.PI)
@@ -529,10 +536,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           if (!validArgs) {
             return
           }
-        }
-        // disable loop check
-        ":loop" -> {
-          checkLoop = false
         }
 
         // Variable operation
