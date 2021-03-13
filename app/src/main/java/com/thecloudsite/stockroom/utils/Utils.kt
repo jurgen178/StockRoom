@@ -1094,32 +1094,38 @@ fun saveTextToFile(
 }
 
 // https://begriffs.com/pdf/dec2frac.pdf
-fun frac(x: Double): Pair<Int, Int> {
+fun frac(x: Double): Pair<Int?, Int> {
 
   val eps = 0.0000001
 
-  val sign = x.sign.toInt()
-  val xAbs = x.absoluteValue
+  if (x.isFinite()) {
+    val sign = x.sign.toInt()
+    val xAbs = x.absoluteValue
 
-  var z = xAbs
+    var z = xAbs
 
-  var n = z.toInt()
-  var d0: Int = 0
-  var d1: Int = 1
-  var x0 = 1.0
-  var x1 = 0.0
+    var n = z.toInt()
+    var d0: Int = 0
+    var d1: Int = 1
+    var x0 = 1.0
+    var x1 = 0.0
 
-  while ((z - z.toInt().toDouble()) > eps && (x0 - x1).absoluteValue > eps) {
-    z = 1 / (z - z.toInt().toDouble())
-    val d = d1 * z.toInt() + d0
-    n = (xAbs * d).roundToInt()
+    while ((z - z.toInt().toDouble()) > eps && (x0 - x1).absoluteValue > eps) {
+      z = 1 / (z - z.toInt().toDouble())
+      val d = d1 * z.toInt() + d0
+      n = (xAbs * d).roundToInt()
 
-    x0 = x1
-    x1 = n.toDouble() / d.toDouble()
+      x0 = x1
+      x1 = n.toDouble() / d.toDouble()
 
-    d0 = d1
-    d1 = d
+      d0 = d1
+      d1 = d
+    }
+
+    if (d1 > 0) {
+      return Pair(n * sign, d1)
+    }
   }
 
-  return Pair(n * sign, d1)
+  return Pair(null, 0)
 }

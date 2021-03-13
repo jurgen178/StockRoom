@@ -1061,8 +1061,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         UnaryArgument.FRAC -> {
           val fraction = frac(op1.value)
-          calcData.numberList.add(CalcLine(desc = "", value = fraction.first.toDouble()))
-          calcData.numberList.add(CalcLine(desc = "", value = fraction.second.toDouble()))
+          if (fraction.first != null) {
+            calcData.numberList.add(CalcLine(desc = "", value = fraction.first!!.toDouble()))
+            calcData.numberList.add(CalcLine(desc = "", value = fraction.second.toDouble()))
+          } else {
+            calcData.numberList.add(op1)
+          }
         }
         UnaryArgument.TOSTR -> {
           // Convert the value to string.
