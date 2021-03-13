@@ -42,5 +42,14 @@ class CalcTest {
     assertEquals(Pair(-104348, 33215), frac(-3.14159265359))
     assertEquals(Pair(-37, 61), frac(-0.606557377049))
     assertEquals(Pair(-1, 3), frac(-0.33333333))
+
+    // null result
+
+    // infinity
+    assertEquals(Pair(null, 1), frac(1 / 0.0))
+    // NaN
+    assertEquals(Pair(null, 1), frac(Math.sqrt(-1.0)))
+    // large number
+    assertEquals(Pair(null, 1), frac(100000000000000.0))
   }
 }

@@ -2601,7 +2601,7 @@ class StockDataFragment : Fragment() {
           val t: Long = assetTimeEntriesCopy[j].date
           val a = stockDataEntries!![i].dateTimePoint
           val b = stockDataEntries!![i + 1].dateTimePoint
-          // In the time interval a..b or in the future ( >= b, after hours)
+          // In the time interval a..b or just bought in after hours >= b
           if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
             // use the index where the value is closest to t
             // a <= t < b

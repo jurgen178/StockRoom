@@ -99,14 +99,15 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 
     dialogBinding.calcCode.setSyntaxHighlightRules(
       // 1.234,56
-      SyntaxHighlightRule("((\\s|^)[+-]?[0-9]+?[,.]?[0-9]*?)+(\\s|\$)", "#028900"),
+      SyntaxHighlightRule("((\\s|^)[+-]?[0-9]+?[,.]?[0-9]*?)+(\\s|$)", "#028900"),
       // $$stock[.property]
-      SyntaxHighlightRule("((\\s|^)[$]{2}\\w+?([.]\\w+)?)+(\\s|\$)", "#A700D6"),
+      SyntaxHighlightRule("((\\s|^)[$]{2}\\w+?([.]\\w+)?)+(\\s|$)", "#A700D6"),
       // + - * /
-      SyntaxHighlightRule("((\\s|^)[+-/*^])+(\\s|\$)", "#B50000"),
+      SyntaxHighlightRule("((\\s|^)[+-/*^])+(\\s|$)", "#B50000"),
       // loop, variable and label op
-      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|\$)", "#FF7F7F"),
-      SyntaxHighlightRule("(?i)((\\s|^)(rcl))+(\\s|$)", "#2C42C1"),
+      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|$)", "#FF7F7F"),
+      SyntaxHighlightRule("(?i)((\\s|^):loop)+(\\s|$)", "#FF7F7F"),
+      SyntaxHighlightRule("(?i)((\\s|^)rcl)+(\\s|$)", "#2C42C1"),
       // stack op
       SyntaxHighlightRule(
         "(?i)((\\s|^)(validate|clear|depth|drop|dup|over|swap|rot|pick|roll))+(\\s|$)",
@@ -114,7 +115,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       ),
       // math op
       SyntaxHighlightRule(
-        "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|π|e))+(\\s|\$)",
+        "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|π|e))+(\\s|$)",
         "#B50000"
       ),
       // "text"

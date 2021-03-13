@@ -218,6 +218,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     var loopCounter: Int = 0
+    var checkLoop = true
     var i: Int = 0
     while (i < symbols.size) {
 
@@ -334,7 +335,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // Check for endless loop.
-      if (loopCounter > 10000 || calcData.numberList.size >= 1000) {
+      if (checkLoop && (loopCounter > 10000 || calcData.numberList.size >= 1000)) {
         calcData.errorMsg = context.getString(R.string.calc_endless_loop)
         calcRepository.updateData(calcData)
         return
@@ -528,6 +529,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           if (!validArgs) {
             return
           }
+        }
+        // disable loop check
+        ":loop" -> {
+          checkLoop = false
         }
 
         // Variable operation
