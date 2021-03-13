@@ -195,9 +195,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // for better readability when used for while loop.
     // ?: = non capturing group
     // (?s) = dotall = . + \n
-    val labelRegex = "^(?:do)?[.]([a-z].*?)$".toRegex(IGNORE_CASE)
-    val whileRegex = "^while[.](\\w+)[.]([a-z].*?)$".toRegex(IGNORE_CASE)
-    val gotoRegex = "^goto[.]([a-z].*?)$".toRegex(IGNORE_CASE)
+    val labelRegex = "^(?:do)?[.](.+?)$".toRegex(IGNORE_CASE)
+    val whileRegex = "^while[.](\\w+)[.](.+?)$".toRegex(IGNORE_CASE)
+    val gotoRegex = "^goto[.](.+?)$".toRegex(IGNORE_CASE)
     val stoRegex = "^sto[.](.+)$".toRegex(IGNORE_CASE)
     val rclRegex = "^rcl[.](.+)$".toRegex(IGNORE_CASE)
     val commentRegex = "(?s)^[\"'](.+?)[\"']$".toRegex()
@@ -284,6 +284,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       if (getRegexOneGroup(symbol, labelRegex) != null) {
         // skip to next symbol
         continue
+      }
+
+      // Check for endless loop.
+      if (checkLoop && (loopCounter > 10000 || calcData.numberList.size >= 1000)) {
+        calcData.errorMsg = context.getString(R.string.calc_endless_loop)
+        calcRepository.updateData(calcData)
+        return
       }
 
       // While loop
@@ -390,13 +397,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         // jump to label
         i = labelMap[label]!!
         continue
-      }
-
-      // Check for endless loop.
-      if (checkLoop && (loopCounter > 10000 || calcData.numberList.size >= 1000)) {
-        calcData.errorMsg = context.getString(R.string.calc_endless_loop)
-        calcRepository.updateData(calcData)
-        return
       }
 
       // process symbols

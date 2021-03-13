@@ -561,7 +561,7 @@ limitations under the License. -->
   <string name="calc_F5_desc">x²+ax+b</string>
   <string name="calc_F6_code">// if-Bedingung Beispiel (aiaman)\n\n// 4: else-Teil\n// 3: then-Teil\n// 2: Bedingung op2\n// 1: Bedingung op1\n\n// if equal (op2 == op1)?\n// Ergebnis ist 4, nicht gleich\n4 \"false \" +\n3 \"true \" +\n2 1 if.eq\n\n// if greater than (op2 \u003e op1)?\n// Ergebnis ist 3, größer als\n4 \"false \" +\n3 \"true \" +\n2 1 if.gt\n\n// if less than (op2 \u003c op1)?\n// Ergebnis ist 4, nicht kleiner als\n4 \"false \"\n+ 3 \"true \"\n+ 2 1 if.lt</string>
   <string name="calc_F6_desc">if Beispiel</string>
-  <string name="calc_F7_code">// Schleifenbeispiel\n\n\"10..1 -1\"\n10\ndo.decrLabel\n dup 1 - dup 1\nwhile.ge.decrLabel\ndrop\n\n\"1..10 +1\"\n1\ndo.incrLabel\n dup 1 + dup 10\nwhile.le.incrLabel\ndrop\n\n\"0..360 +22,5\"\n0\ndo.f(x)\n dup\n // f(x)\n sin\n // \"sin(x)=\"\n \"sin(\" 3 pick toStr + + \")=\" +\n // \u003c= 360 ?\n swap 22,5 + dup 360\nwhile.le.f(x)\ndrop\n\n// goto Beispiel\n// Überspringe 1234\ngoto.end\n1234\n.end</string>
+  <string name="calc_F7_code">// Schleifenbeispiel\n\n\"10..1 -1\"\n10\ndo.decrLabel\n  dup 1 - dup 1\nwhile.ge.decrLabel\ndrop\n\n\"1..10 +1\"\n1\ndo.incrLabel\n  dup 1 + dup 10\nwhile.le.incrLabel\ndrop\n\n\"0..360 +22,5\"\n0\ndo.f(x)\n  dup\n    // f(x)\n    sin\n  // \"sin(x)=\"\n  \"sin(\" 3 pick toStr + + \")=\" +\n  // \u003c= 360 ?\n  swap 22,5 + dup 360\nwhile.le.f(x)\ndrop\n\n// goto Beispiel\n// Überspringe 1234\ngoto.end\n1234\n.end</string>
   <string name="calc_F7_desc">while Beispiel</string>
   <string name="calc_F8_code">// Alles löschen\nclear\n\n// Variablen\n// Zahl in Variable \u0027abc\u0027 speichern\n123 \"abc=\" + sto.abc\n// Ergebnis in Variable \u0027x\u0027 speichern\n2 e * π ^ sqrt \"x=\" + sto.x\n\n// Variable \u0027abc\u0027 lesen\nrcl.abc\n\n// Alle Variablen lesen\nrcl\n\n// Dezimalzahl in Bruch (x/y)\n0,75 frac // 3/4\n0,40476190476 frac // 17/42\n\n// Stack\n// n pick\n1 2 3 4 4 pick \"Kopiert von 4:\" // 1 2 3 4 1\n\n// n roll\n1 2 3 4 4 roll \"Verschoben von 4:\" // 2 3 4 1\n\n// Stackgröße\ndepth \"Anzahl=\" +\n\n// Statistik\n// var (Varianz)\n// sum (Summe)</string>
   <string name="calc_F8_desc">Weitere Beispiele</string>
@@ -571,8 +571,8 @@ limitations under the License. -->
   <string name="calc_F10_desc">Aktienkauf</string>
   <string name="calc_F11_code">// Beispiel Aktienauswertung\n\n$$tsla\n$$tsla.marketprice\n$$tsla.purchaseprice\n$$tsla.quantity\n$$tsla.marketchange\n$$tsla.marketchangepercent\n$$tsla.name\n$$tsla.currency\n$$tsla.annualdividendrate</string>
   <string name="calc_F11_desc">TSLA</string>
-  <string name="calc_F12_code"></string>
-  <string name="calc_F12_desc"></string>
+  <string name="calc_F12_code">// Numerische Integration von f(x)\n\n//          ₄\n// Beispiel ∫x²dx\n//          ¹\n\n1 // Startwert\n4 sto.x2 // Endwert\n\n0,001 sto.dx // Genauigkeit\n\n0\ndo.∫x²\n  over\n    // f(x)\n    sq // x²\n  + swap rcl.dx + swap over rcl.x2\nwhile.lt.∫x²\nswap drop rcl.dx * \"∫f(x)dx=\" +\n\n\n// 2. Beispiel ∫sin(x)dx von 0..π\n\n0 // Startwert\nπ sto.x2 // Endwert\n\nπ 100 / sto.dx // Genauigkeit\n\n0\ndo.sin // neue do-while-Marke\n  over\n    // f(x)\n    sin\n  + swap rcl.dx + swap over rcl.x2\nwhile.lt.sin\nswap drop rcl.dx * \"∫f(x)dx=\" +\n\n\n// Endlosschleifenerkennung abschalten\n:loop</string>
+  <string name="calc_F12_desc">∫f(x)dx</string>
   <string name="calc_F13_code"></string>
   <string name="calc_F13_desc"></string>
   <string name="calc_F14_code"></string>

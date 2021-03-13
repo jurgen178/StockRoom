@@ -105,7 +105,8 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       // + - * /
       SyntaxHighlightRule("((\\s|^)[+-/*^])+(\\s|$)", "#B50000"),
       // loop, variable and label op
-      SyntaxHighlightRule("(?i)((\\s|^)(while|do|goto|if|rcl|sto)?[.].+?)+(\\s|$)", "#FF7F7F"),
+      SyntaxHighlightRule("(?i)((\\s|^)(do|goto|if|rcl|sto)?[.].+?)+(\\s|$)", "#FF7F7F"),
+      SyntaxHighlightRule("(?i)((\\s|^)while[.](eq|le|lt|ge|gt)[.].+?)+(\\s|$)", "#FF7F7F"),
       SyntaxHighlightRule("(?i)((\\s|^):loop)+(\\s|$)", "#FF6A00"),
       SyntaxHighlightRule("(?i)((\\s|^)rcl)+(\\s|$)", "#2C42C1"),
       // stack op

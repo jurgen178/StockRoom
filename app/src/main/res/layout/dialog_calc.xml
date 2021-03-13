@@ -27,7 +27,7 @@
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
           app:layout_constraintBottom_toTopOf="@+id/textInputLayout2"
-          android:inputType="textMultiLine"
+          android:inputType="textMultiLine|textNoSuggestions"
           />
 
       <TextView
