@@ -194,25 +194,32 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // Label has optional 'do' (do.label1 instead of .label1) at the beginning
     // for better readability when used for while loop.
     // ?: = non capturing group
+    // (?s) = dotall = . + \n
     val labelRegex = "^(?:do)?[.]([a-z].*?)$".toRegex(IGNORE_CASE)
     val whileRegex = "^while[.](\\w+)[.]([a-z].*?)$".toRegex(IGNORE_CASE)
     val gotoRegex = "^goto[.]([a-z].*?)$".toRegex(IGNORE_CASE)
     val stoRegex = "^sto[.](.+)$".toRegex(IGNORE_CASE)
     val rclRegex = "^rcl[.](.+)$".toRegex(IGNORE_CASE)
-    val commentRegex = "(?s)[\"'](.+?)[\"']".toRegex()
+    val commentRegex = "(?s)^[\"'](.+?)[\"']$".toRegex()
 
     // Stores the index of the labels.
     val labelMap: MutableMap<String, Int> = mutableMapOf()
 
-    // store all .labels
+    // validate and store all .labels
     symbols.forEachIndexed { index, symbol ->
       val labelMatch = getRegexOneGroup(symbol, labelRegex)
       // is label?
       if (labelMatch != null) {
         val label = labelMatch.toLowerCase(Locale.ROOT)
 
-        // Store label
-        if (!labelMap.containsKey(label)) {
+        if (labelMap.containsKey(label)) {
+          calcData.errorMsg = context.getString(R.string.calc_duplicate_label, labelMatch)
+          calcRepository.updateData(calcData)
+
+          // duplicate label, end loop
+          return
+        } else {
+          // Store label
           labelMap[label] = index
         }
       } else {
@@ -221,6 +228,48 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           ":loop" -> {
             checkLoop = false
           }
+        }
+      }
+    }
+
+    // validate and store all while.labels
+    val whileMap: MutableMap<String, Int> = mutableMapOf()
+    symbols.forEachIndexed { index, symbol ->
+      val whileMatch =
+        getRegexTwoGroups(symbol, whileRegex)
+      // is while?
+      if (whileMatch != null) {
+        // captured compare is in first
+        // captured label is in second
+        val compare = whileMatch.first
+        val labelStr = whileMatch.second
+        val label = labelStr.toLowerCase(Locale.ROOT)
+
+        if (!compare.matches("eq|le|lt|ge|gt".toRegex())) {
+          calcData.errorMsg = context.getString(R.string.calc_unknown_while_condition, compare)
+          calcRepository.updateData(calcData)
+
+          // label missing, end loop
+          return
+        }
+
+        if (whileMap.containsKey(label)) {
+          calcData.errorMsg = context.getString(R.string.calc_duplicate_while_label, labelStr)
+          calcRepository.updateData(calcData)
+
+          // duplicate label, end loop
+          return
+        } else {
+          // Store label
+          whileMap[label] = index
+        }
+
+        if (!labelMap.containsKey(label)) {
+          calcData.errorMsg = context.getString(R.string.calc_missing_while_label, labelStr)
+          calcRepository.updateData(calcData)
+
+          // label missing, end loop
+          return
         }
       }
     }
@@ -252,8 +301,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         val labelStr = whileMatch.second
         val label = labelStr.toLowerCase(Locale.ROOT)
 
+        // already checked in validation, kept as runtime test-case
         if (!labelMap.containsKey(label)) {
-          calcData.errorMsg = context.getString(R.string.calc_missing_label, labelStr)
+          calcData.errorMsg = context.getString(R.string.calc_missing_while_label, labelStr)
           calcRepository.updateData(calcData)
 
           // label missing, end loop
@@ -301,6 +351,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
               }
             }
             else -> {
+              // already checked in validation, kept as runtime test-case
               calcData.errorMsg = context.getString(R.string.calc_unknown_while_condition, compare)
               calcRepository.updateData(calcData)
 

@@ -55,35 +55,11 @@ limitations under the License. -->
   <string name="app_name" translatable="false">Stock Room</string>
 
   <!-- string-array -->
-  <string-array name="predefined_groups">
-    <item>Buy</item>
-    <item>Sell</item>
-    <item>Watch</item>
-    <item>Give away for free</item>
-    <item>Ask the cat</item>
-    <item>Stop looking at</item>
-    <item>Buy more</item>
-    <item>Group 1</item>
-    <item>Group 2</item>
-    <item>Group 3</item>
-    <item>Group 4</item>
-    <item>Group 5</item>
-  </string-array>
-  <string-array name="dividend_cycles">
-    <item>Monthly</item>
-    <item>Quarterly</item>
-    <item>Semi Annual</item>
-    <item>Annual</item>
-  </string-array>
-  <string-array name="filter_mode_items">
-    <item>All filters must match (&amp;&amp;)</item>
-    <item>At least one filter match (||)</item>
-  </string-array>
-
-  <!-- Preference Titles -->
   <string name="title_activity_settings">Settings</string>
   <string name="title_activity_calc">AI</string>
   <string name="general_header">General</string>
+
+  <!-- Preference Titles -->
   <string name="display_header">Display</string>
   <string name="feedback_header">Feedback</string>
   <string name="menu_sync">Update</string>
@@ -91,10 +67,10 @@ limitations under the License. -->
   <string name="hint_add_stock">Stock symbol</string>
   <string name="button_add">Add</string>
   <string name="sort_change_percentage">Sort by Change \u0025</string>
-
   <string name="sort_name">Sort by Name</string>
   <string name="sort_assets">Sort by Assets</string>
   <string name="sort_profit">Sort by Gain</string>
+
   <string name="sort_profit_percentage">Sort by Gain \u0025</string>
   <string name="sort_dividend_percentage">Sort by Dividend \u0025</string>
   <string name="sort_group">Sort by Group</string>
@@ -102,10 +78,10 @@ limitations under the License. -->
   <string name="ok">OK</string>
   <string name="cancel">Cancel</string>
   <string name="one_day_range">Daily</string>
-
   <string name="five_days_range">Weekly</string>
   <string name="one_month_range">Monthly</string>
   <string name="three_month_range">Quarterly</string>
+
   <string name="ytd_range">Year to date</string>
   <string name="one_year_range">One Year</string>
   <string name="five_year_range">Five years</string>
@@ -583,7 +559,34 @@ limitations under the License. -->
   <string name="calc_F16_code"></string>
   <string name="calc_F16_desc"></string>
   <string name="calc_endless_loop">Possible endless loop. Task stopped.</string>
-  <string name="calc_missing_label">Missing label \'%1$s\'</string>
+  <string name="calc_missing_label">Missing label \'.%1$s\'.</string>
+  <string name="calc_missing_while_label">Missing while-label \'do.%1$s\'.</string>
+  <string name="calc_duplicate_label">Duplicate label \'.%1$s\'.</string>
+  <string name="calc_duplicate_while_label">Duplicate while-label \'.%1$s\'.</string>
   <string name="calc_invalid_while_args">Missing numbers for \'while\'.</string>
   <string name="calc_unknown_while_condition">Unknown while condition \'%1$s\'. Use while.[eq ge gt le lt].</string>
+  <string-array name="predefined_groups">
+    <item>Buy</item>
+    <item>Sell</item>
+    <item>Watch</item>
+    <item>Give away for free</item>
+    <item>Ask the cat</item>
+    <item>Stop looking at</item>
+    <item>Buy more</item>
+    <item>Group 1</item>
+    <item>Group 2</item>
+    <item>Group 3</item>
+    <item>Group 4</item>
+    <item>Group 5</item>
+  </string-array>
+  <string-array name="dividend_cycles">
+    <item>Monthly</item>
+    <item>Quarterly</item>
+    <item>Semi Annual</item>
+    <item>Annual</item>
+  </string-array>
+  <string-array name="filter_mode_items">
+    <item>All filters must match (&amp;&amp;)</item>
+    <item>At least one filter match (||)</item>
+  </string-array>
 </resources>
