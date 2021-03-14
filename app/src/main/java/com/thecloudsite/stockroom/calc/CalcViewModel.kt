@@ -220,24 +220,36 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     matches.forEach { matchResult ->
       val import = matchResult.groupValues[1]
 
+      // Search all code entries for a matching name.
       val codeKey = codeMap.filterValues { codeValue ->
         codeValue.name.equals(import, true)
       }
-      if (codeKey.size == 1) {
-        // Get all definitions in the import.
-        val regexDefinition = Regex("(:\\s(.+?)\\s.*?\\s;)")
-        val importedCode = codeKey.values.first().code
-        val matchesDefinition = regexDefinition.findAll(importedCode)
-        matchesDefinition.forEach { matchResultDefinition ->
-          val definition = matchResultDefinition.groupValues[1]
-          codePreprocessed += " $definition "
-        }
-      } else {
-        calcData.errorMsg = context.getString(R.string.calc_unknown_import, import)
-        calcRepository.updateData(calcData)
 
-        // import missing, end loop
-        return
+      when {
+        codeKey.size == 1 -> {
+          // Get all definitions in the import.
+          val regexDefinition = Regex("(:\\s(.+?)\\s.*?\\s;)")
+          val importedCode = codeKey.values.first().code
+          val matchesDefinition = regexDefinition.findAll(importedCode)
+          matchesDefinition.forEach { matchResultDefinition ->
+            val definition = matchResultDefinition.groupValues[1]
+            codePreprocessed += " $definition "
+          }
+        }
+        codeKey.size > 1 -> {
+          calcData.errorMsg = context.getString(R.string.calc_multiple_imports, import)
+          calcRepository.updateData(calcData)
+
+          // multiple imports exist, end loop
+          return
+        }
+        else -> {
+          calcData.errorMsg = context.getString(R.string.calc_unknown_import, import)
+          calcRepository.updateData(calcData)
+
+          // import missing, end loop
+          return
+        }
       }
     }
 
