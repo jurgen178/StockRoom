@@ -72,8 +72,8 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
       val name = matchResult.groupValues[1]
       if (!wordListRegex.matches(name)) {
         val escapedName = name
-          .replace("[", "[\\[]")
-          .replace("]", "[\\]]")
+          .replace("[", "\\[")
+          .replace("]", "\\]")
           .replace("(", "[(]")
           .replace(")", "[)]")
           .replace("{", "[{]")
