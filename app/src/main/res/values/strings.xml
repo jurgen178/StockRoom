@@ -565,7 +565,8 @@ limitations under the License. -->
   <string name="calc_duplicate_while_label">Duplicate while-label \'.%1$s\'.</string>
   <string name="calc_invalid_while_args">Missing numbers for \'while\'.</string>
   <string name="calc_unknown_while_condition">Unknown while condition \'%1$s\'. Use while.[eq ge gt le lt].</string>
-  <string name="calc_incomplete_dictionary">Incomplete dictionary entry \'%1$s\'.</string>
+  <string name="calc_incomplete_dictionary">Incomplete function entry \'%1$s\'.</string>
+  <string name="calc_dictionary_entry_exists">Function already exist \'%1$s\'.</string>
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>

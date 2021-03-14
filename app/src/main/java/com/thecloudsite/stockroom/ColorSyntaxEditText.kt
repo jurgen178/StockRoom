@@ -52,33 +52,60 @@ fun Editable.removeAllSpans() {
 class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
   AppCompatEditText(context, attrs) {
 
-  private var syntaxHighlightRules: Array<SyntaxHighlightRule>? = emptyArray()
+  private var syntaxHighlightRules: List<SyntaxHighlightRule> = emptyList()
 
   init {
     addTextChangedListener(afterTextChanged { applySyntaxHighlight() })
   }
 
-  fun setSyntaxHighlightRules(vararg rules: SyntaxHighlightRule) {
-    syntaxHighlightRules = arrayOf(*rules)
+  fun setSyntaxHighlightRules(rules: List<SyntaxHighlightRule>) {
+    syntaxHighlightRules = rules
+  }
+
+  private fun getDictionary(text: String): List<SyntaxHighlightRule> {
+    val rules: MutableList<SyntaxHighlightRule> = mutableListOf()
+
+    val regex = Regex(":\\s(\\w+)\\s.*?\\s;")
+    val matches = regex.findAll(text)
+    matches.forEach { matchResult ->
+      val name = matchResult.groupValues[1]
+      rules.add(SyntaxHighlightRule("(?i)((\\s|^)$name)+(\\s|$)", "#FF6A00"))
+    }
+
+    return rules
   }
 
   private fun applySyntaxHighlight() {
-    if (syntaxHighlightRules.isNullOrEmpty()) return
+    if (!syntaxHighlightRules.isNullOrEmpty()) {
 
-    // first remove all spans
-    text?.removeAllSpans()
+      // first remove all spans
+      text?.removeAllSpans()
 
-    // set span for proper matching according to a rule
-    for (syntaxHighlightRule in syntaxHighlightRules!!) {
-      val color = Color.parseColor(syntaxHighlightRule.color)
-      val matcher = Pattern.compile(syntaxHighlightRule.regex).matcher(text.toString())
+      val textStr = text.toString()
 
-      while (matcher.find()) text?.setSpan(
-        ForegroundColorSpan(color),
-        matcher.start(),
-        matcher.end(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-      )
+      // set span for proper matching according to a rule
+      for (syntaxHighlightRule in getDictionary(textStr)) {
+        setSyntax(text, textStr, syntaxHighlightRule)
+      }
+      for (syntaxHighlightRule in syntaxHighlightRules) {
+        setSyntax(text, textStr, syntaxHighlightRule)
+      }
     }
+  }
+
+  private fun setSyntax(
+    text: Editable?,
+    textStr: String,
+    syntaxHighlightRule: SyntaxHighlightRule
+  ) {
+    val color = Color.parseColor(syntaxHighlightRule.color)
+    val matcher = Pattern.compile(syntaxHighlightRule.regex).matcher(textStr)
+
+    while (matcher.find()) text?.setSpan(
+      ForegroundColorSpan(color),
+      matcher.start(),
+      matcher.end(),
+      Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
   }
 }

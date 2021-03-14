@@ -278,18 +278,21 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // validate and store all dictionaries
-    val dictionaryMap: MutableMap<String, Pair<Int, Int>> = mutableMapOf()
+    // : name ... ;
+    val dictionaryMap: MutableMap<String, Int> = mutableMapOf()
     var k = 0
     while (k < symbols.size) {
+      // Search begin of definition.
       if (symbols[k] == ":") {
         k++
-        val startIndex = k
         var endIndex = -1
         var name = ""
         if (k < symbols.size) {
           name = symbols[k]
           k++
         }
+        val startIndex = k
+        // Search end of definition.
         while (k < symbols.size) {
           if (symbols[k] == ";") {
             endIndex = k
@@ -298,8 +301,17 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           k++
         }
 
+        // Add definition name and start index to dictionary
         if (endIndex > 0) {
-          dictionaryMap[name] = Pair(startIndex, endIndex)
+          if (dictionaryMap.containsKey(name)) {
+            calcData.errorMsg = context.getString(R.string.calc_dictionary_entry_exists, name)
+            calcRepository.updateData(calcData)
+
+            // already exists, end loop
+            return
+          } else {
+            dictionaryMap[name] = startIndex
+          }
         } else {
           calcData.errorMsg = context.getString(R.string.calc_incomplete_dictionary, name)
           calcRepository.updateData(calcData)
@@ -440,19 +452,21 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       val symbolLwr = symbol.toLowerCase(Locale.ROOT)
       if (dictionaryMap.containsKey(symbolLwr)) {
+        loopCounter++
 
         returnStack.push(i)
-        i = dictionaryMap[symbolLwr]!!.first
+        i = dictionaryMap[symbolLwr]!!
 
         continue
       }
 
       // skip dictionary entry definitions
       if (symbol == ":") {
+        loopCounter++
+
         do {
           i++
-        }
-        while (i < symbols.size && symbols[i] != ";")
+        } while (i < symbols.size && symbols[i] != ";")
         // skip ;
         i++
 
@@ -461,8 +475,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
       // Dictionary function was called, return on end of statement.
       if (symbol == ";") {
-        if (returnStack.isEmpty()) {
-          i = returnStack.pop() + 1
+        loopCounter++
+
+        if (returnStack.isNotEmpty()) {
+          i = returnStack.pop()
         }
 
         continue
