@@ -220,8 +220,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     matches.forEach { matchResult ->
       val import = matchResult.groupValues[1]
 
-      val codeKey = codeMap.filterKeys { entry ->
-        entry.equals(import, true)
+      val codeKey = codeMap.filterValues { codeValue ->
+        codeValue.name.equals(import, true)
       }
       if (codeKey.size == 1) {
         // Get all definitions in the import.
@@ -420,6 +420,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     while (i < words.size) {
 
       val word = words[i++]
+
+      // is import?
+      if (word.startsWith("import", true)) {
+        // skip to next word
+        continue
+      }
 
       // is label?
       if (getRegexOneGroup(word, labelRegex) != null) {
