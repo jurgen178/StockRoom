@@ -23,6 +23,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.StockItem
+import com.thecloudsite.stockroom.SyntaxHighlightRule
 import com.thecloudsite.stockroom.getName
 import com.thecloudsite.stockroom.utils.frac
 import java.text.NumberFormat
@@ -123,6 +124,19 @@ enum class QuadArgument {
 //  "\"|\'|[+]|-|[*]|/|^|:|;|:loop|do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
 val wordListRegex = "[\"':;]".toRegex()
 
+data class CodeType
+  (
+  val code: String,
+  val name: String,
+)
+
+data class CodeTypeJson
+  (
+  val key: String,
+  val code: String,
+  val name: String,
+)
+
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   private val context = application
@@ -136,6 +150,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   var separatorChar = ','
   var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
   var stockitemList: List<StockItem> = emptyList()
+
+  val codeMap: MutableMap<String, CodeType> = mutableMapOf()
 
   init {
     calcRepository.updateData(calcRepository.getData())
@@ -194,8 +210,39 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     endEdit(calcData)
 
+    var codePreprocessed = code
+
+    // resolve imports
+    val regex = Regex("(?i)(?:\\s|^)import[.]\"(.+?)\"")
+    val matches = regex.findAll(code)
+
+    // process each import statement
+    matches.forEach { matchResult ->
+      val import = matchResult.groupValues[1]
+
+      val codeKey = codeMap.filterKeys { entry ->
+        entry.equals(import, true)
+      }
+      if (codeKey.size == 1) {
+        // Get all definitions in the import.
+        val regexDefinition = Regex("(:\\s(.+?)\\s.*?\\s;)")
+        val importedCode = codeKey.values.first().code
+        val matchesDefinition = regexDefinition.findAll(importedCode)
+        matchesDefinition.forEach { matchResultDefinition ->
+          val definition = matchResultDefinition.groupValues[1]
+          codePreprocessed += " $definition "
+        }
+      } else {
+        calcData.errorMsg = context.getString(R.string.calc_unknown_import, import)
+        calcRepository.updateData(calcData)
+
+        // import missing, end loop
+        return
+      }
+    }
+
     // Split by spaces not followed by even amount of quotes so only spaces outside of quotes are replaced.
-    val words = code
+    val words = codePreprocessed
       // [\s\S] = . + \n
       //.replace("/[*][\\s\\S]*?[*]/".toRegex(), " ")
 

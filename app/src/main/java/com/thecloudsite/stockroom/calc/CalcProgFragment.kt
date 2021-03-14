@@ -36,23 +36,9 @@ import com.thecloudsite.stockroom.SyntaxHighlightRule
 import com.thecloudsite.stockroom.databinding.DialogCalcBinding
 import com.thecloudsite.stockroom.databinding.FragmentCalcProgBinding
 
-data class CodeType
-  (
-  val code: String,
-  val name: String,
-)
-
-data class CodeTypeJson
-  (
-  val key: String,
-  val code: String,
-  val name: String,
-)
-
 class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
 
   private var _binding: FragmentCalcProgBinding? = null
-  private val codeMap: MutableMap<String, CodeType> = mutableMapOf()
 
   // This property is only valid between onCreateView and
   // onDestroyView.
@@ -130,9 +116,9 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     ))
 
     var displayName = ""
-    if (codeMap.containsKey(name)) {
-      dialogBinding.calcCode.setText(codeMap[name]!!.code)
-      displayName = codeMap[name]!!.name
+    if (calcViewModel.codeMap.containsKey(name)) {
+      dialogBinding.calcCode.setText(calcViewModel.codeMap[name]!!.code)
+      displayName = calcViewModel.codeMap[name]!!.name
     }
 
     if (displayName.isEmpty()) {
@@ -149,7 +135,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
         calcDisplayNameText = name
       }
 
-      codeMap[name] = CodeType(code = calcCodeText, name = calcDisplayNameText)
+      calcViewModel.codeMap[name] = CodeType(code = calcCodeText, name = calcDisplayNameText)
       updateKeys()
     }
 
@@ -166,7 +152,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       ) { _, _ ->
         save()
         // codeMap[name] gets added by the save function and is always available.
-        calcViewModel.function(codeMap[name]!!.code)
+        calcViewModel.function(calcViewModel.codeMap[name]!!.code)
       }
       .setNegativeButton(
         R.string.cancel
@@ -357,7 +343,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     setSerializedStr(codeMapStr)
 
     // Set default code if all codes are empty.
-    val codes = codeMap.map { code ->
+    val codes = calcViewModel.codeMap.map { code ->
       code.value
     }.filter { codeType ->
       codeType.code.isNotEmpty()
@@ -393,7 +379,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 //            name = requireContext().getString(R.string.calc_F1_desc)
 //          )
 
-        codeMap[entry.first] =
+        calcViewModel.codeMap[entry.first] =
           CodeType(
             code = requireContext().getString(entry.second),
             name = requireContext().getString(entry.third)
@@ -547,7 +533,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 //      val F1 = codeMap["F1"]?.name
 //      binding.calcF1.text = if (F1.isNullOrEmpty()) "F1" else F1
 
-      val F = codeMap[pair.second]?.name
+      val F = calcViewModel.codeMap[pair.second]?.name
       pair.first.text = if (F.isNullOrEmpty()) pair.second else F
     }
   }
@@ -557,7 +543,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     var jsonString = ""
     try {
       val codeTypeJsonList: MutableList<CodeTypeJson> = mutableListOf()
-      codeMap.forEach { (key, codeType) ->
+      calcViewModel.codeMap.forEach { (key, codeType) ->
         codeTypeJsonList.add(
           CodeTypeJson(
             key = key,
@@ -586,7 +572,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   private fun setSerializedStr(
     codeData: String
   ) {
-    codeMap.clear()
+    calcViewModel.codeMap.clear()
 
     try {
 
@@ -596,7 +582,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 
       codeList?.forEach { codeTypeJson ->
         // de-serialized JSON type can be null
-        codeMap[codeTypeJson.key] =
+        calcViewModel.codeMap[codeTypeJson.key] =
           CodeType(
             code = codeTypeJson.code,
             name = if (codeTypeJson.name.isNotEmpty()) {
