@@ -119,8 +119,9 @@ enum class QuadArgument {
   IFLT, // if less then
 }
 
-val wordListRegex =
-  "do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
+//val wordListRegex =
+//  "\"|\'|[+]|-|[*]|/|^|:|;|:loop|do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
+val wordListRegex = "[\"':;]".toRegex()
 
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -473,7 +474,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         continue
       }
 
-      // skip definitions
+      // skip definitions :..;
       if (word == ":") {
         loopCounter++
 

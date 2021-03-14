@@ -66,12 +66,27 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
   private fun getDictionary(text: String): List<SyntaxHighlightRule> {
     val rules: MutableList<SyntaxHighlightRule> = mutableListOf()
 
-    val regex = Regex(":\\s(\\w+)\\s.*?\\s;")
+    val regex = Regex(":\\s(.+?)\\s.*?\\s;")
     val matches = regex.findAll(text)
     matches.forEach { matchResult ->
       val name = matchResult.groupValues[1]
       if (!wordListRegex.matches(name)) {
-        rules.add(SyntaxHighlightRule("(?i)((\\s|^)$name)+(\\s|$)", "#FF6A00"))
+        val escapedName = name
+          .replace("[", "[\\[]")
+          .replace("]", "[\\]]")
+          .replace("(", "[(]")
+          .replace(")", "[)]")
+          .replace("{", "[{]")
+          .replace("}", "[}]")
+          .replace("|", "[|]")
+          .replace("+", "[+]")
+          .replace("^", "[^]")
+          .replace("*", "[*]")
+          .replace(".", "[.]")
+          .replace("/", "[/]")
+          .replace("$", "[$]")
+          .replace("?", "[?]")
+        rules.add(SyntaxHighlightRule("(?i)((\\s|^)$escapedName)+(\\s|$)", "#FF6A00"))
       }
     }
 
