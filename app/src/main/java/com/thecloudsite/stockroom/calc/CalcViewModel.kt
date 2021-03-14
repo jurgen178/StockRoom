@@ -257,7 +257,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
     }
 
-    // validate and store all while.labels
+    // validate and store all while|if.labels
     val whileMap: MutableMap<String, Int> = mutableMapOf()
     words.forEachIndexed { index, word ->
       val whileIfMatch =
@@ -281,15 +281,19 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           return
         }
 
-        if (isWhile && whileMap.containsKey(label)) {
-          calcData.errorMsg = context.getString(R.string.calc_duplicate_while_label, labelStr)
-          calcRepository.updateData(calcData)
+        // check if while-labels are unique
+        // if-labels are not checked
+        if (isWhile) {
+          if (whileMap.containsKey(label)) {
+            calcData.errorMsg = context.getString(R.string.calc_duplicate_while_label, labelStr)
+            calcRepository.updateData(calcData)
 
-          // duplicate label, end loop
-          return
-        } else {
-          // Store label
-          whileMap[label] = index
+            // duplicate label, end loop
+            return
+          } else {
+            // Store label
+            whileMap[label] = index
+          }
         }
 
         if (!labelMap.containsKey(label)) {
@@ -383,24 +387,29 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         return
       }
 
-      // While loop
-      // while.[compare].[label]
-      // while.gt.label1
-      val whileMatch =
+      // While loop, if jump
+      // while|if.[compare].[label]
+      // while|if.gt.label1
+      val whileIfMatch =
         getRegexThreeGroups(word, whileIfRegex)
       // is while?
-      if (whileMatch != null) {
+      if (whileIfMatch != null) {
         loopCounter++
 
         // captured compare is in first
         // captured label is in second
-        val compare = whileMatch.first
-        val labelStr = whileMatch.second
+        val isWhile = whileIfMatch.first.equals("while", true)
+        val compare = whileIfMatch.second
+        val labelStr = whileIfMatch.third
         val label = labelStr.toLowerCase(Locale.ROOT)
 
         // already checked in validation, kept as runtime test-case
         if (!labelMap.containsKey(label)) {
-          calcData.errorMsg = context.getString(R.string.calc_missing_while_label, labelStr)
+          calcData.errorMsg = if (isWhile) {
+            context.getString(R.string.calc_missing_while_label, labelStr)
+          } else {
+            context.getString(R.string.calc_missing_if_label, labelStr)
+          }
           calcRepository.updateData(calcData)
 
           // label missing, end loop
@@ -449,8 +458,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             }
             else -> {
               // already checked in validation, kept as runtime test-case
-              calcData.errorMsg =
+              calcData.errorMsg = if (isWhile) {
                 context.getString(R.string.calc_unknown_while_condition, compare)
+              } else {
+                context.getString(R.string.calc_unknown_if_condition, compare)
+              }
+
               calcRepository.updateData(calcData)
 
               // label missing, end loop
@@ -461,92 +474,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           continue
 
         } else {
-          calcData.errorMsg = context.getString(R.string.calc_invalid_while_args)
-          calcRepository.updateData(calcData)
-
-          // invalid args, end instruction
-          return
-        }
-      }
-
-      // if jump
-      // if.[compare].[label]
-      // if.gt.label1
-      val ifMatch =
-        getRegexTwoGroups(word, ifRegex)
-      // is if?
-      if (ifMatch != null) {
-        loopCounter++
-
-        // captured compare is in first
-        // captured label is in second
-        val compare = ifMatch.first
-        val labelStr = ifMatch.second
-        val label = labelStr.toLowerCase(Locale.ROOT)
-
-        // already checked in validation, kept as runtime test-case
-        if (!labelMap.containsKey(label)) {
-          calcData.errorMsg = context.getString(R.string.calc_missing_if_label, labelStr)
-          calcRepository.updateData(calcData)
-
-          // label missing, end loop
-          return
-        }
-
-        val argsValid = calcData.numberList.size > 1
-        if (argsValid) {
-
-          // 2: op2
-          // 1: op1
-          val op1 = calcData.numberList.removeLast()
-          val op2 = calcData.numberList.removeLast()
-
-          when (compare.toLowerCase(Locale.ROOT)) {
-
-            "ge" -> {
-              if (op2.value >= op1.value) {
-                // jump to label
-                i = labelMap[label]!!
-              }
-            }
-            "gt" -> {
-              if (op2.value > op1.value) {
-                // jump to label
-                i = labelMap[label]!!
-              }
-            }
-            "le" -> {
-              if (op2.value <= op1.value) {
-                // jump to label
-                i = labelMap[label]!!
-              }
-            }
-            "lt" -> {
-              if (op2.value < op1.value) {
-                // jump to label
-                i = labelMap[label]!!
-              }
-            }
-            "eq" -> {
-              if (op2.value == op1.value) {
-                // jump to label
-                i = labelMap[label]!!
-              }
-            }
-            else -> {
-              // already checked in validation, kept as runtime test-case
-              calcData.errorMsg = context.getString(R.string.calc_unknown_if_condition, compare)
-              calcRepository.updateData(calcData)
-
-              // label missing, end loop
-              return
-            }
+          calcData.errorMsg = if (isWhile) {
+            context.getString(R.string.calc_invalid_while_args)
+          } else {
+            context.getString(R.string.calc_invalid_if_args)
           }
-
-          continue
-
-        } else {
-          calcData.errorMsg = context.getString(R.string.calc_invalid_if_args)
           calcRepository.updateData(calcData)
 
           // invalid args, end instruction
