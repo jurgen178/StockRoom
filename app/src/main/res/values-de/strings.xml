@@ -588,6 +588,7 @@ limitations under the License. -->
   <string name="calc_duplicate_while_label">while-Marke \'.%1$s\' darf nur einmal verwendet werden.</string>
   <string name="calc_invalid_while_args">Fehlende Zahlen für \'while\'.</string>
   <string name="calc_unknown_while_condition">Unbekannte while-Bedingung \'%1$s\'. Verwende while.[eq ge gt le lt].</string>
-  <string name="calc_incomplete_dictionary">Funktionseintrag \'%1$s\' ist nicht abgeschlossen.</string>
-  <string name="calc_dictionary_entry_exists">Funktion \'%1$s\' ist bereits vorhanden.</string>
+  <string name="calc_incomplete_definition">Funktionseintrag \'%1$s\' ist nicht abgeschlossen.</string>
+  <string name="calc_definition_entry_exists">Funktionseintrag \'%1$s\' ist bereits vorhanden.</string>
+  <string name="calc_definition_is_keyword">Funktionsname \'%1$s\' darf kein Schlüsselwort sein.</string>
 </resources>

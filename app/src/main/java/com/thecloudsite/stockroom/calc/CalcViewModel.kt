@@ -119,6 +119,9 @@ enum class QuadArgument {
   IFLT, // if less then
 }
 
+val wordListRegex =
+  "do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
+
 class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
   private val context = application
@@ -173,7 +176,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     endEdit(calcData)
 
     // Split by spaces not followed by even amount of quotes so only spaces outside of quotes are replaced.
-    val symbols = code
+    val words = code
       // [\s\S] = . + \n
       //.replace("/[*][\\s\\S]*?[*]/".toRegex(), " ")
 
@@ -209,8 +212,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val labelMap: MutableMap<String, Int> = mutableMapOf()
 
     // validate and store all .labels
-    symbols.forEachIndexed { index, symbol ->
-      val labelMatch = getRegexOneGroup(symbol, labelRegex)
+    words.forEachIndexed { index, word ->
+      val labelMatch = getRegexOneGroup(word, labelRegex)
       // is label?
       if (labelMatch != null) {
         val label = labelMatch.toLowerCase(Locale.ROOT)
@@ -226,7 +229,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           labelMap[label] = index
         }
       } else {
-        when (symbol.toLowerCase(Locale.ROOT)) {
+        when (word.toLowerCase(Locale.ROOT)) {
           // disable loop check
           ":loop" -> {
             checkLoop = false
@@ -237,9 +240,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     // validate and store all while.labels
     val whileMap: MutableMap<String, Int> = mutableMapOf()
-    symbols.forEachIndexed { index, symbol ->
+    words.forEachIndexed { index, word ->
       val whileMatch =
-        getRegexTwoGroups(symbol, whileRegex)
+        getRegexTwoGroups(word, whileRegex)
       // is while?
       if (whileMatch != null) {
         // captured compare is in first
@@ -277,43 +280,53 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
     }
 
-    // validate and store all dictionaries
+    // validate and store all definitions
     // : name ... ;
-    val dictionaryMap: MutableMap<String, Int> = mutableMapOf()
+    val definitionMap: MutableMap<String, Int> = mutableMapOf()
     var k = 0
-    while (k < symbols.size) {
+    while (k < words.size) {
       // Search begin of definition.
-      if (symbols[k] == ":") {
+      if (words[k] == ":") {
         k++
         var endIndex = -1
         var name = ""
-        if (k < symbols.size) {
-          name = symbols[k]
+        if (k < words.size) {
+          name = words[k]
           k++
         }
         val startIndex = k
         // Search end of definition.
-        while (k < symbols.size) {
-          if (symbols[k] == ";") {
+        while (k < words.size) {
+          if (words[k] == ";") {
             endIndex = k
             break
           }
           k++
         }
 
-        // Add definition name and start index to dictionary
+        // Add definition name and start index to definition
         if (endIndex > 0) {
-          if (dictionaryMap.containsKey(name)) {
-            calcData.errorMsg = context.getString(R.string.calc_dictionary_entry_exists, name)
-            calcRepository.updateData(calcData)
+          when {
+            wordListRegex.matches(name) -> {
+              calcData.errorMsg = context.getString(R.string.calc_definition_is_keyword, name)
+              calcRepository.updateData(calcData)
 
-            // already exists, end loop
-            return
-          } else {
-            dictionaryMap[name] = startIndex
+              // already exists, end loop
+              return
+            }
+            definitionMap.containsKey(name) -> {
+              calcData.errorMsg = context.getString(R.string.calc_definition_entry_exists, name)
+              calcRepository.updateData(calcData)
+
+              // already exists, end loop
+              return
+            }
+            else -> {
+              definitionMap[name] = startIndex
+            }
           }
         } else {
-          calcData.errorMsg = context.getString(R.string.calc_incomplete_dictionary, name)
+          calcData.errorMsg = context.getString(R.string.calc_incomplete_definition, name)
           calcRepository.updateData(calcData)
 
           // label missing, end loop
@@ -327,13 +340,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val returnStack = Stack<Int>()
     var loopCounter: Int = 0
     var i: Int = 0
-    while (i < symbols.size) {
+    while (i < words.size) {
 
-      val symbol = symbols[i++]
+      val word = words[i++]
 
       // is label?
-      if (getRegexOneGroup(symbol, labelRegex) != null) {
-        // skip to next symbol
+      if (getRegexOneGroup(word, labelRegex) != null) {
+        // skip to next word
         continue
       }
 
@@ -348,7 +361,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // while.[compare].[label]
       // while.gt.label1
       val whileMatch =
-        getRegexTwoGroups(symbol, whileRegex)
+        getRegexTwoGroups(word, whileRegex)
       // is while?
       if (whileMatch != null) {
         loopCounter++
@@ -432,7 +445,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // Goto
       // goto.[label]
       val gotoMatch =
-        getRegexOneGroup(symbol, gotoRegex)
+        getRegexOneGroup(word, gotoRegex)
       if (gotoMatch != null) {
         loopCounter++
         val label = gotoMatch.toLowerCase(Locale.ROOT)
@@ -450,31 +463,31 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         continue
       }
 
-      val symbolLwr = symbol.toLowerCase(Locale.ROOT)
-      if (dictionaryMap.containsKey(symbolLwr)) {
+      val wordLwr = word.toLowerCase(Locale.ROOT)
+      if (definitionMap.containsKey(wordLwr)) {
         loopCounter++
 
         returnStack.push(i)
-        i = dictionaryMap[symbolLwr]!!
+        i = definitionMap[wordLwr]!!
 
         continue
       }
 
-      // skip dictionary entry definitions
-      if (symbol == ":") {
+      // skip definitions
+      if (word == ":") {
         loopCounter++
 
         do {
           i++
-        } while (i < symbols.size && symbols[i] != ";")
+        } while (i < words.size && words[i] != ";")
         // skip ;
         i++
 
         continue
       }
 
-      // Dictionary function was called, return on end of statement.
-      if (symbol == ";") {
+      // Definition function was called, return to the calling word.
+      if (word == ";") {
         loopCounter++
 
         if (returnStack.isNotEmpty()) {
@@ -484,8 +497,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         continue
       }
 
-      // process symbols
-      when (symbolLwr) {
+      // process words
+      when (wordLwr) {
 
         // Math operations
         "sin" -> {
@@ -636,7 +649,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           validArgs = opBinary(calcData, BinaryArgument.POW)
         }
 
-        // Formating and number operations
+        // Formatting and number operations
         "", ":loop" -> {
           // Skip empty lines and instructions.
         }
@@ -681,9 +694,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         else -> {
 
           // Comment
-          // If symbol is comment, add comment to the last entry.
+          // If word is comment, add comment to the last entry.
           // (?s) = dotall = . + \n
-          val comment = getRegexOneGroup(symbol, commentRegex)
+          val comment = getRegexOneGroup(word, commentRegex)
           // is comment?
           if (comment != null) {
 
@@ -706,35 +719,35 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           } else {
 
             // sto[.name]
-            val variableName = getRegexOneGroup(symbol, stoRegex)
+            val variableName = getRegexOneGroup(word, stoRegex)
             if (variableName != null) {
               validArgs = storeVariable(calcData, variableName)
 
             } else {
 
               // rcl[.name]
-              val recallVariable = getRegexOneGroup(symbol, rclRegex)
+              val recallVariable = getRegexOneGroup(word, rclRegex)
               if (recallVariable != null) {
                 recallVariable(calcData, recallVariable)
 
               } else {
 
                 // evaluate $$StockSymbol
-                if (symbol.startsWith("$$")) {
-                  val stockSymbol = symbol.drop(2)
+                if (word.startsWith("$$")) {
+                  val stockSymbol = word.drop(2)
                   evaluate(calcData, stockSymbol)
 
                 } else {
 
                   // Evaluate number
                   try {
-                    val value = numberFormat.parse(symbol)!!
+                    val value = numberFormat.parse(word)!!
                       .toDouble()
 
                     calcData.numberList.add(CalcLine(desc = "", value = value))
                   } catch (e: Exception) {
                     // Error
-                    calcData.errorMsg = context.getString(R.string.calc_error_parsing_msg, symbol)
+                    calcData.errorMsg = context.getString(R.string.calc_error_parsing_msg, word)
                     success = false
                   }
 
@@ -746,7 +759,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       if (!success) {
-        calcData.errorMsg = context.getString(R.string.calc_error_msg, symbol)
+        calcData.errorMsg = context.getString(R.string.calc_error_msg, word)
         calcRepository.updateData(calcData)
 
         return
@@ -809,24 +822,24 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   // $$tsla.quantity
   fun evaluate(calcData: CalcData, expression: String) {
 
-    // symbol[.property]
+    // word[.property]
     val match = getRegexTwoGroups(expression, "(.+?)([.].+?)?$".toRegex())
 
-    var symbol = expression.toUpperCase(Locale.ROOT)
+    var word = expression.toUpperCase(Locale.ROOT)
     var property = ""
     if (match != null) {
       // first group (groups[0]) is entire src
-      // captured symbol is in groups[1]
+      // captured word is in groups[1]
       // captured property is in groups[2]
-      symbol = match.first.toUpperCase(Locale.ROOT)
+      word = match.first.toUpperCase(Locale.ROOT)
       property = match.second.toLowerCase(Locale.ROOT)
     }
 
     val stockItem = stockitemList.find { stockItem ->
-      stockItem.stockDBdata.symbol.equals(symbol, true)
+      stockItem.stockDBdata.symbol.equals(word, true)
     }
 
-    var desc = "$symbol$property="
+    var desc = "$word$property="
     var value = 0.0
     if (stockItem != null) {
 

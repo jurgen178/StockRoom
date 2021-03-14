@@ -24,6 +24,7 @@ import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
+import com.thecloudsite.stockroom.calc.wordListRegex
 import java.util.regex.Pattern
 
 // https://github.com/testica/codeeditor
@@ -69,7 +70,9 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
     val matches = regex.findAll(text)
     matches.forEach { matchResult ->
       val name = matchResult.groupValues[1]
-      rules.add(SyntaxHighlightRule("(?i)((\\s|^)$name)+(\\s|$)", "#FF6A00"))
+      if (!wordListRegex.matches(name)) {
+        rules.add(SyntaxHighlightRule("(?i)((\\s|^)$name)+(\\s|$)", "#FF6A00"))
+      }
     }
 
     return rules
