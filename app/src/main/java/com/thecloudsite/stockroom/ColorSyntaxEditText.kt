@@ -23,6 +23,7 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
+import android.util.Log
 import androidx.appcompat.widget.AppCompatEditText
 import com.thecloudsite.stockroom.calc.wordListRegex
 import java.util.regex.Pattern
@@ -63,7 +64,7 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
     syntaxHighlightRules = rules
   }
 
-  private fun getDictionary(text: String): List<SyntaxHighlightRule> {
+  private fun getDefinitions(text: String): List<SyntaxHighlightRule> {
     val rules: MutableList<SyntaxHighlightRule> = mutableListOf()
 
     val regex = Regex(":\\s(.+?)\\s.*?\\s;")
@@ -102,7 +103,7 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
       val textStr = text.toString()
 
       // set span for proper matching according to a rule
-      for (syntaxHighlightRule in getDictionary(textStr)) {
+      for (syntaxHighlightRule in getDefinitions(textStr)) {
         setSyntax(text, textStr, syntaxHighlightRule)
       }
       for (syntaxHighlightRule in syntaxHighlightRules) {
@@ -116,14 +117,19 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
     textStr: String,
     syntaxHighlightRule: SyntaxHighlightRule
   ) {
-    val color = Color.parseColor(syntaxHighlightRule.color)
-    val matcher = Pattern.compile(syntaxHighlightRule.regex).matcher(textStr)
+    try {
+      val color = Color.parseColor(syntaxHighlightRule.color)
+      val matcher = Pattern.compile(syntaxHighlightRule.regex).matcher(textStr)
 
-    while (matcher.find()) text?.setSpan(
-      ForegroundColorSpan(color),
-      matcher.start(),
-      matcher.end(),
-      Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-    )
+      while (matcher.find()) text?.setSpan(
+        ForegroundColorSpan(color),
+        matcher.start(),
+        matcher.end(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+      )
+    } catch (e: Exception) {
+      // skip exception caused by the custom definition entries
+      Log.d("invalid regex in setSyntax", "Exception=$e")
+    }
   }
 }

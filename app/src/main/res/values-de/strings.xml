@@ -584,10 +584,13 @@ limitations under the License. -->
   <string name="calc_endless_loop">Mögliche Endlosschleife. Vorgang abgebrochen.</string>
   <string name="calc_missing_label">Fehlende Marke \'.%1$s\'.</string>
   <string name="calc_missing_while_label">Fehlende while-Marke \'do.%1$s\'.</string>
+  <string name="calc_missing_if_label">Fehlende if-Marke \'.%1$s\'.</string>
   <string name="calc_duplicate_label">Marke \'.%1$s\' darf nur einmal verwendet werden.</string>
   <string name="calc_duplicate_while_label">while-Marke \'.%1$s\' darf nur einmal verwendet werden.</string>
   <string name="calc_invalid_while_args">Fehlende Zahlen für \'while\'.</string>
+  <string name="calc_invalid_if_args">Fehlende Zahlen für \'if\'.</string>
   <string name="calc_unknown_while_condition">Unbekannte while-Bedingung \'%1$s\'. Verwende while.[eq ge gt le lt].</string>
+  <string name="calc_unknown_if_condition">Unbekannte if-Bedingung \'%1$s\'. Verwende if.[eq ge gt le lt].</string>
   <string name="calc_incomplete_definition">Funktionseintrag \'%1$s\' ist nicht abgeschlossen.</string>
   <string name="calc_definition_entry_exists">Funktionseintrag \'%1$s\' ist bereits vorhanden.</string>
   <string name="calc_definition_is_keyword">Funktionsname \'%1$s\' darf kein Schlüsselwort sein.</string>

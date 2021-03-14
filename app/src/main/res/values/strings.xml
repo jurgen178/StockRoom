@@ -561,10 +561,13 @@ limitations under the License. -->
   <string name="calc_endless_loop">Possible endless loop. Task stopped.</string>
   <string name="calc_missing_label">Missing label \'.%1$s\'.</string>
   <string name="calc_missing_while_label">Missing while-label \'do.%1$s\'.</string>
+  <string name="calc_missing_if_label">Missing if-label \'.%1$s\'.</string>
   <string name="calc_duplicate_label">Duplicate label \'.%1$s\'.</string>
   <string name="calc_duplicate_while_label">Duplicate while-label \'.%1$s\'.</string>
   <string name="calc_invalid_while_args">Missing numbers for \'while\'.</string>
+  <string name="calc_invalid_if_args">Missing numbers for \'if\'.</string>
   <string name="calc_unknown_while_condition">Unknown while condition \'%1$s\'. Use while.[eq ge gt le lt].</string>
+  <string name="calc_unknown_if_condition">Unknown if condition \'%1$s\'. Use if.[eq ge gt le lt].</string>
   <string name="calc_incomplete_definition">Incomplete function definition \'%1$s\'.</string>
   <string name="calc_definition_entry_exists">Function definition already exist \'%1$s\'.</string>
   <string name="calc_definition_is_keyword">Function definition name \'%1$s\' must not be a key word.</string>

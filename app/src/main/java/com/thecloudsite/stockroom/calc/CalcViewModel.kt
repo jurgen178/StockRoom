@@ -171,6 +171,24 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     return null
   }
 
+  private fun getRegexThreeGroups(text: String, regex: Regex): Triple<String, String, String>? {
+    val match = regex.matchEntire(text)
+    if (match != null
+      && match.groups.size == 4
+      && match.groups[1] != null
+      && match.groups[2] != null
+      && match.groups[3] != null
+    ) {
+      // first group (groups[0]) is entire src
+      // first capture is in groups[1]
+      // second capture is in groups[2]
+      // third capture is in groups[2]
+      return Triple(match.groups[1]!!.value, match.groups[2]!!.value, match.groups[3]!!.value)
+    }
+
+    return null
+  }
+
   fun function(code: String) {
     val calcData = submitEditline(calcData.value!!)
 
@@ -203,7 +221,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // ?: = non capturing group
     // (?s) = dotall = . + \n
     val labelRegex = "^(?:do)?[.](.+?)$".toRegex(IGNORE_CASE)
-    val whileRegex = "^while[.](\\w+)[.](.+?)$".toRegex(IGNORE_CASE)
+    val whileIfRegex = "^(while|if)[.](\\w+)[.](.+?)$".toRegex(IGNORE_CASE)
     val gotoRegex = "^goto[.](.+?)$".toRegex(IGNORE_CASE)
     val stoRegex = "^sto[.](.+)$".toRegex(IGNORE_CASE)
     val rclRegex = "^rcl[.](.+)$".toRegex(IGNORE_CASE)
@@ -242,25 +260,28 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // validate and store all while.labels
     val whileMap: MutableMap<String, Int> = mutableMapOf()
     words.forEachIndexed { index, word ->
-      val whileMatch =
-        getRegexTwoGroups(word, whileRegex)
-      // is while?
-      if (whileMatch != null) {
-        // captured compare is in first
-        // captured label is in second
-        val compare = whileMatch.first
-        val labelStr = whileMatch.second
+      val whileIfMatch =
+        getRegexThreeGroups(word, whileIfRegex)
+      // is while or if?
+      if (whileIfMatch != null) {
+        val isWhile = whileIfMatch.first.equals("while", true)
+        val compare = whileIfMatch.second
+        val labelStr = whileIfMatch.third
         val label = labelStr.toLowerCase(Locale.ROOT)
 
         if (!compare.matches("eq|le|lt|ge|gt".toRegex())) {
-          calcData.errorMsg = context.getString(R.string.calc_unknown_while_condition, compare)
+          calcData.errorMsg = if (isWhile) {
+            context.getString(R.string.calc_unknown_while_condition, compare)
+          } else {
+            context.getString(R.string.calc_unknown_if_condition, compare)
+          }
           calcRepository.updateData(calcData)
 
           // label missing, end loop
           return
         }
 
-        if (whileMap.containsKey(label)) {
+        if (isWhile && whileMap.containsKey(label)) {
           calcData.errorMsg = context.getString(R.string.calc_duplicate_while_label, labelStr)
           calcRepository.updateData(calcData)
 
@@ -272,7 +293,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         if (!labelMap.containsKey(label)) {
-          calcData.errorMsg = context.getString(R.string.calc_missing_while_label, labelStr)
+          calcData.errorMsg = if (isWhile) {
+            context.getString(R.string.calc_missing_while_label, labelStr)
+          } else {
+            context.getString(R.string.calc_missing_if_label, labelStr)
+          }
           calcRepository.updateData(calcData)
 
           // label missing, end loop
@@ -362,7 +387,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // while.[compare].[label]
       // while.gt.label1
       val whileMatch =
-        getRegexTwoGroups(word, whileRegex)
+        getRegexThreeGroups(word, whileIfRegex)
       // is while?
       if (whileMatch != null) {
         loopCounter++
@@ -382,7 +407,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           return
         }
 
-        val argsValid = calcData.numberList.size >= 2
+        val argsValid = calcData.numberList.size > 1
         if (argsValid) {
 
           // 2: op2
@@ -424,7 +449,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             }
             else -> {
               // already checked in validation, kept as runtime test-case
-              calcData.errorMsg = context.getString(R.string.calc_unknown_while_condition, compare)
+              calcData.errorMsg =
+                context.getString(R.string.calc_unknown_while_condition, compare)
               calcRepository.updateData(calcData)
 
               // label missing, end loop
@@ -436,6 +462,91 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
         } else {
           calcData.errorMsg = context.getString(R.string.calc_invalid_while_args)
+          calcRepository.updateData(calcData)
+
+          // invalid args, end instruction
+          return
+        }
+      }
+
+      // if jump
+      // if.[compare].[label]
+      // if.gt.label1
+      val ifMatch =
+        getRegexTwoGroups(word, ifRegex)
+      // is if?
+      if (ifMatch != null) {
+        loopCounter++
+
+        // captured compare is in first
+        // captured label is in second
+        val compare = ifMatch.first
+        val labelStr = ifMatch.second
+        val label = labelStr.toLowerCase(Locale.ROOT)
+
+        // already checked in validation, kept as runtime test-case
+        if (!labelMap.containsKey(label)) {
+          calcData.errorMsg = context.getString(R.string.calc_missing_if_label, labelStr)
+          calcRepository.updateData(calcData)
+
+          // label missing, end loop
+          return
+        }
+
+        val argsValid = calcData.numberList.size > 1
+        if (argsValid) {
+
+          // 2: op2
+          // 1: op1
+          val op1 = calcData.numberList.removeLast()
+          val op2 = calcData.numberList.removeLast()
+
+          when (compare.toLowerCase(Locale.ROOT)) {
+
+            "ge" -> {
+              if (op2.value >= op1.value) {
+                // jump to label
+                i = labelMap[label]!!
+              }
+            }
+            "gt" -> {
+              if (op2.value > op1.value) {
+                // jump to label
+                i = labelMap[label]!!
+              }
+            }
+            "le" -> {
+              if (op2.value <= op1.value) {
+                // jump to label
+                i = labelMap[label]!!
+              }
+            }
+            "lt" -> {
+              if (op2.value < op1.value) {
+                // jump to label
+                i = labelMap[label]!!
+              }
+            }
+            "eq" -> {
+              if (op2.value == op1.value) {
+                // jump to label
+                i = labelMap[label]!!
+              }
+            }
+            else -> {
+              // already checked in validation, kept as runtime test-case
+              calcData.errorMsg = context.getString(R.string.calc_unknown_if_condition, compare)
+              calcRepository.updateData(calcData)
+
+              // label missing, end loop
+              return
+            }
+          }
+
+          continue
+
+        } else {
+          calcData.errorMsg = context.getString(R.string.calc_invalid_if_args)
           calcRepository.updateData(calcData)
 
           // invalid args, end instruction
@@ -818,9 +929,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   }
 
   // $$tsla
-  // $$tsla.marketprice
-  // $$tsla.purchaseprice
-  // $$tsla.quantity
+// $$tsla.marketprice
+// $$tsla.purchaseprice
+// $$tsla.quantity
   fun evaluate(calcData: CalcData, expression: String) {
 
     // word[.property]
