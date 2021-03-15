@@ -23,7 +23,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.StockItem
-import com.thecloudsite.stockroom.SyntaxHighlightRule
 import com.thecloudsite.stockroom.getName
 import com.thecloudsite.stockroom.utils.frac
 import java.text.NumberFormat
@@ -122,7 +121,8 @@ enum class QuadArgument {
 
 //val wordListRegex =
 //  "\"|\'|[+]|-|[*]|/|^|:|;|:loop|do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
-val wordListRegex = "[\"':;]".toRegex()
+// List of chars that cannot be used as definitions.
+val wordListRegex = "[\"':;(){}\\[\\]]".toRegex()
 
 // (?s) dotall
 val wordDefinitionRegex = Regex("(?s):\\s(.+?)\\s(?:.*?\\s)?;")
@@ -297,6 +297,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val stoRegex = "^sto[.](.+)$".toRegex(IGNORE_CASE)
     val rclRegex = "^rcl[.](.+)$".toRegex(IGNORE_CASE)
     val commentRegex = "(?s)^[\"'](.+?)[\"']$".toRegex()
+    val definitionRegex = "^[(](.+?)[)]$".toRegex()
+    val lambdaRegex = "^[{](.+?)[}]$".toRegex()
 
     // Stores the index of the labels.
     val labelMap: MutableMap<String, Int> = mutableMapOf()
@@ -584,6 +586,42 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         continue
       }
 
+      // { lambda }
+      // Add the adress of the lambda definition.
+      if (word == "{") {
+
+        calcData.numberList.add(
+          CalcLine(
+            desc = "",
+            value = Double.NaN,
+            lambda = i,
+            definition = "$i"
+          )
+        )
+
+        var lambdaEnd = false
+        // Search end of definition.
+        var j = i
+        while (j < words.size) {
+          if (words[j++] == "}") {
+            lambdaEnd = true
+            break
+          }
+        }
+
+        if (!lambdaEnd) {
+          calcData.errorMsg = context.getString(R.string.calc_lambda_not_terminated)
+          calcRepository.updateData(calcData)
+
+          // terminator missing, end instruction
+          return
+        }
+
+        i = j
+        continue
+      }
+
+      // definition function?
       val wordLwr = word.toLowerCase(Locale.ROOT)
       if (definitionMap.containsKey(wordLwr)) {
         loopCounter++
@@ -594,7 +632,49 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         continue
       }
 
-      // skip definitions :..;
+      // (definition)
+      // Add the adress of the definition.
+      val definitionMatch =
+        getRegexOneGroup(word, definitionRegex)
+      if (definitionMatch != null) {
+        val definition = definitionMatch.toLowerCase(Locale.ROOT)
+        if (definitionMap.containsKey(definition)) {
+          loopCounter++
+
+          calcData.numberList.add(
+            CalcLine(
+              desc = "",
+              value = Double.NaN,
+              lambda = definitionMap[definition]!!,
+              definition = definitionMatch
+            )
+          )
+
+          continue
+        }
+      }
+
+      // ()
+      // Run the address of the current item.
+      if (word == "()") {
+        val op = calcData.numberList.removeLast()
+        if (op.lambda >= 0) {
+          loopCounter++
+
+          returnStack.push(i)
+          i = op.lambda
+
+          continue
+        } else {
+          calcData.errorMsg = context.getString(R.string.calc_missing_lambda)
+          calcRepository.updateData(calcData)
+
+          // lambda missing, end instruction
+          return
+        }
+      }
+
+      // skip definition declarations :..;
       if (word == ":") {
         loopCounter++
 
@@ -607,8 +687,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         continue
       }
 
-      // Definition function was called, return to the calling word.
-      if (word == ";") {
+      // Definition function or lambda was called, return to the calling word.
+      if (word == ";" || word == "}") {
         loopCounter++
 
         if (returnStack.isNotEmpty()) {

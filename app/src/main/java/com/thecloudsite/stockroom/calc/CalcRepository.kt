@@ -24,6 +24,8 @@ data class CalcLine
   (
   var desc: String = "",
   var value: Double = 0.0,
+  var lambda: Int = -1,
+  var definition: String = "",
 )
 
 data class CalcData

@@ -596,4 +596,6 @@ limitations under the License. -->
   <string name="calc_definition_is_keyword">Funktionsname \'%1$s\' darf kein Schlüsselwort sein.</string>
   <string name="calc_unknown_import">\'%1$s\' ist nicht vorhanden.</string>
   <string name="calc_multiple_imports">\'%1$s\' ist mehrfach vorhanden.</string>
+  <string name="calc_missing_lambda">Der Befehl \'()\' erwartet eine Funktion.</string>
+  <string name="calc_lambda_not_terminated">Fehlendes schließendes \'}\'.</string>
   </resources>
