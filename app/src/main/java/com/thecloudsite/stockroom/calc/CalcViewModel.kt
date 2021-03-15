@@ -123,6 +123,7 @@ enum class QuadArgument {
 //val wordListRegex =
 //  "\"|\'|[+]|-|[*]|/|^|:|;|:loop|do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
 val wordListRegex = "[\"':;]".toRegex()
+
 // (?s) dotall
 val wordDefinitionRegex = Regex("(?s):\\s(.+?)\\s(?:.*?\\s)?;")
 
@@ -212,7 +213,17 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     endEdit(calcData)
 
+    // remove comments
     var codePreprocessed = code
+      .replace("(?s)/[*].*?[*]/".toRegex(), " ")
+
+      //.replace("(?s): [a-z]+ .*? ;".toRegex(IGNORE_CASE), " ")
+
+      //.replace("//.*?(\n|$)".toRegex(), " ")
+
+      // multiline (?m) accept the anchors ^ and $ to match at the start and end of each line
+      // (otherwise they only match at the start/end of the entire string)
+      .replace("(?m)//.*?$".toRegex(), " ")
 
     // resolve imports
     val regex = Regex("(?i)(?:\\s|^)import[.]\"(.+?)\"")
@@ -234,12 +245,20 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
         when {
           codeKey.size == 1 -> {
+
             // Get all definitions in the import.
             val importedCode = codeKey.values.first().code
+              .replace("(?s)/[*].*?[*]/".toRegex(), " ")
+              .replace("(?m)//.*?$".toRegex(), " ")
             val matchesDefinition = wordDefinitionRegex.findAll(importedCode)
             matchesDefinition.forEach { matchResultDefinition ->
-              val definition = matchResultDefinition.groupValues[1]
+              val definition = matchResultDefinition.groupValues[0]
               codePreprocessed += " $definition "
+            }
+
+            // Get special instructions from the import.
+            if (importedCode.contains(":loop", true)) {
+              codePreprocessed += " :loop "
             }
           }
           codeKey.size > 1 -> {
@@ -262,20 +281,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     // Split by spaces not followed by even amount of quotes so only spaces outside of quotes are replaced.
     val words = codePreprocessed
-      // [\s\S] = . + \n
-      //.replace("/[*][\\s\\S]*?[*]/".toRegex(), " ")
-
-      // (?s) = dotall = . + \n
-      .replace("(?s)/[*].*?[*]/".toRegex(), " ")
-
-      //.replace("(?s): [a-z]+ .*? ;".toRegex(IGNORE_CASE), " ")
-
-      //.replace("//.*?(\n|$)".toRegex(), " ")
-
-      // multiline (?m) accept the anchors ^ and $ to match at the start and end of each line
-      // (otherwise they only match at the start/end of the entire string)
-      .replace("(?m)//.*?$".toRegex(), " ")
-
       .split("\\s+(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)".toRegex())
 
     var success = true

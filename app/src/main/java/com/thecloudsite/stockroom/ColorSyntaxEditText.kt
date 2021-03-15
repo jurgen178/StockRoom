@@ -66,7 +66,10 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
   private fun getDefinitions(text: String): List<SyntaxHighlightRule> {
     val rules: MutableList<SyntaxHighlightRule> = mutableListOf()
 
+    // remove comments
     var codePreprocessed = text
+      .replace("(?s)/[*].*?[*]/".toRegex(), " ")
+      .replace("(?m)//.*?$".toRegex(), " ")
 
     // resolve imports
     val regexImport = Regex("(?i)(?:\\s|^)import[.]\"(.+?)\"")
@@ -84,6 +87,8 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
       if (codeKey.size == 1) {
         // Get all definitions in the import.
         val importedCode = codeKey.values.first().code
+          .replace("(?s)/[*].*?[*]/".toRegex(), " ")
+          .replace("(?m)//.*?$".toRegex(), " ")
         val matchesDefinition = wordDefinitionRegex.findAll(importedCode)
         matchesDefinition.forEach { matchResultDefinition ->
           // add the complete match in groupValues[0]
