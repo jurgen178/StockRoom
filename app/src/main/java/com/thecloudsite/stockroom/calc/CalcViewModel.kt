@@ -227,7 +227,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     // resolve imports
     val regex = Regex("(?i)(?:\\s|^)import[.]\"(.+?)\"")
-    val matches = regex.findAll(code)
+    val matches = regex.findAll(codePreprocessed)
 
     // process each import statement
     matches.forEach { matchResult ->
