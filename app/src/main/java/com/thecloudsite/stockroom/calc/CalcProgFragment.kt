@@ -109,6 +109,11 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
         "(?i)((\\s|^)(sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|π|e))+(\\s|$)",
         "#B50000"
       ),
+      // ()
+      SyntaxHighlightRule(
+        "(?i)((\\s|^)[(].*?[)])+(\\s|$)",
+        "#B851E8"
+      ),
       // // comment
       SyntaxHighlightRule("(?m)//.*?$", "#808080"),
       // /* comment */

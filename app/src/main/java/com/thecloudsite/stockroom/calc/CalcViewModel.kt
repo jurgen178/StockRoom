@@ -589,6 +589,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       // { lambda }
       // Add the adress of the lambda definition.
       if (word == "{") {
+        loopCounter++
 
         calcData.numberList.add(
           CalcLine(
@@ -637,6 +638,8 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val definitionMatch =
         getRegexOneGroup(word, definitionRegex)
       if (definitionMatch != null) {
+        loopCounter++
+
         val definition = definitionMatch.toLowerCase(Locale.ROOT)
         if (definitionMap.containsKey(definition)) {
           loopCounter++
