@@ -86,7 +86,8 @@ class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
         val importedCode = codeKey.values.first().code
         val matchesDefinition = wordDefinitionRegex.findAll(importedCode)
         matchesDefinition.forEach { matchResultDefinition ->
-          val definition = matchResultDefinition.groupValues[1]
+          // add the complete match in groupValues[0]
+          val definition = matchResultDefinition.groupValues[0]
           codePreprocessed += " $definition "
         }
       }

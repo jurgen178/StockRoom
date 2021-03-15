@@ -124,7 +124,7 @@ enum class QuadArgument {
 //  "\"|\'|[+]|-|[*]|/|^|:|;|:loop|do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
 val wordListRegex = "[\"':;]".toRegex()
 // (?s) dotall
-val wordDefinitionRegex = Regex("(?s)(:\\s(.+?)\\s(.*?\\s)?;)")
+val wordDefinitionRegex = Regex("(?s):\\s(.+?)\\s(?:.*?\\s)?;")
 
 data class CodeType
   (
