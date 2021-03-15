@@ -594,6 +594,6 @@ limitations under the License. -->
   <string name="calc_incomplete_definition">Funktionseintrag \'%1$s\' ist nicht abgeschlossen.</string>
   <string name="calc_definition_entry_exists">Funktionseintrag \'%1$s\' ist bereits vorhanden.</string>
   <string name="calc_definition_is_keyword">Funktionsname \'%1$s\' darf kein Schlüsselwort sein.</string>
-  <string name="calc_unknown_import">Eintrag für import=\'%1$s\' ist nicht vorhanden.</string>
-  <string name="calc_multiple_imports">Eintrag für import=\'%1$s\' ist mehrfach vorhanden.</string>
+  <string name="calc_unknown_import">\'%1$s\' ist nicht vorhanden.</string>
+  <string name="calc_multiple_imports">\'%1$s\' ist mehrfach vorhanden.</string>
   </resources>

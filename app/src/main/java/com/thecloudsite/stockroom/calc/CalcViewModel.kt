@@ -123,6 +123,8 @@ enum class QuadArgument {
 //val wordListRegex =
 //  "\"|\'|[+]|-|[*]|/|^|:|;|:loop|do|goto|if|rcl|sto|while|validate|clear|depth|drop|dup|over|swap|rot|pick|roll|sin|cos|tan|arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|arctanh|ln|log|sq|sqrt|pow|per|perc|inv|abs|int|round|round2|round4|frac|tostr|sum|var|pi|p|e".toRegex()
 val wordListRegex = "[\"':;]".toRegex()
+// (?s) dotall
+val wordDefinitionRegex = Regex("(?s)(:\\s(.+?)\\s(.*?\\s)?;)")
 
 data class CodeType
   (
@@ -205,7 +207,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     return null
   }
 
-  fun function(code: String) {
+  fun function(code: String, codeMapKey: String = "") {
     val calcData = submitEditline(calcData.value!!)
 
     endEdit(calcData)
@@ -220,35 +222,40 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     matches.forEach { matchResult ->
       val import = matchResult.groupValues[1]
 
-      // Search all code entries for a matching name.
-      val codeKey = codeMap.filterValues { codeValue ->
-        codeValue.name.equals(import, true)
-      }
+      // do not import the own code
+      if (!(codeMapKey.isNotEmpty()
+            && codeMap.containsKey(codeMapKey)
+            && import.equals(codeMap[codeMapKey]!!.name, true))
+      ) {
+        // Search all code entries for a matching name.
+        val codeKey = codeMap.filterValues { codeValue ->
+          codeValue.name.equals(import, true)
+        }
 
-      when {
-        codeKey.size == 1 -> {
-          // Get all definitions in the import.
-          val regexDefinition = Regex("(:\\s(.+?)\\s.*?\\s;)")
-          val importedCode = codeKey.values.first().code
-          val matchesDefinition = regexDefinition.findAll(importedCode)
-          matchesDefinition.forEach { matchResultDefinition ->
-            val definition = matchResultDefinition.groupValues[1]
-            codePreprocessed += " $definition "
+        when {
+          codeKey.size == 1 -> {
+            // Get all definitions in the import.
+            val importedCode = codeKey.values.first().code
+            val matchesDefinition = wordDefinitionRegex.findAll(importedCode)
+            matchesDefinition.forEach { matchResultDefinition ->
+              val definition = matchResultDefinition.groupValues[1]
+              codePreprocessed += " $definition "
+            }
           }
-        }
-        codeKey.size > 1 -> {
-          calcData.errorMsg = context.getString(R.string.calc_multiple_imports, import)
-          calcRepository.updateData(calcData)
+          codeKey.size > 1 -> {
+            calcData.errorMsg = context.getString(R.string.calc_multiple_imports, import)
+            calcRepository.updateData(calcData)
 
-          // multiple imports exist, end loop
-          return
-        }
-        else -> {
-          calcData.errorMsg = context.getString(R.string.calc_unknown_import, import)
-          calcRepository.updateData(calcData)
+            // multiple imports exist, end loop
+            return
+          }
+          else -> {
+            calcData.errorMsg = context.getString(R.string.calc_unknown_import, import)
+            calcRepository.updateData(calcData)
 
-          // import missing, end loop
-          return
+            // import missing, end loop
+            return
+          }
         }
       }
     }

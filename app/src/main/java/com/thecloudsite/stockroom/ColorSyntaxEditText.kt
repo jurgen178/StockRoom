@@ -25,6 +25,8 @@ import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.util.Log
 import androidx.appcompat.widget.AppCompatEditText
+import com.thecloudsite.stockroom.calc.CodeType
+import com.thecloudsite.stockroom.calc.wordDefinitionRegex
 import com.thecloudsite.stockroom.calc.wordListRegex
 import java.util.regex.Pattern
 
@@ -54,21 +56,43 @@ fun Editable.removeAllSpans() {
 class ColorSyntaxEditText(context: Context, attrs: AttributeSet) :
   AppCompatEditText(context, attrs) {
 
-  private var syntaxHighlightRules: List<SyntaxHighlightRule> = emptyList()
+  var syntaxHighlightRules: List<SyntaxHighlightRule> = emptyList()
+  var codeMap: MutableMap<String, CodeType> = mutableMapOf()
 
   init {
     addTextChangedListener(afterTextChanged { applySyntaxHighlight() })
   }
 
-  fun setSyntaxHighlightRules(rules: List<SyntaxHighlightRule>) {
-    syntaxHighlightRules = rules
-  }
-
   private fun getDefinitions(text: String): List<SyntaxHighlightRule> {
     val rules: MutableList<SyntaxHighlightRule> = mutableListOf()
 
-    val regex = Regex(":\\s(.+?)\\s.*?\\s;")
-    val matches = regex.findAll(text)
+    var codePreprocessed = text
+
+    // resolve imports
+    val regexImport = Regex("(?i)(?:\\s|^)import[.]\"(.+?)\"")
+    val matchesImport = regexImport.findAll(text)
+
+    // process each import statement
+    matchesImport.forEach { matchResult ->
+      val import = matchResult.groupValues[1]
+
+      // Search all code entries for a matching name.
+      val codeKey = codeMap.filterValues { codeValue ->
+        codeValue.name.equals(import, true)
+      }
+
+      if (codeKey.size == 1) {
+        // Get all definitions in the import.
+        val importedCode = codeKey.values.first().code
+        val matchesDefinition = wordDefinitionRegex.findAll(importedCode)
+        matchesDefinition.forEach { matchResultDefinition ->
+          val definition = matchResultDefinition.groupValues[1]
+          codePreprocessed += " $definition "
+        }
+      }
+    }
+
+    val matches = wordDefinitionRegex.findAll(codePreprocessed)
     matches.forEach { matchResult ->
       val name = matchResult.groupValues[1]
       if (!wordListRegex.matches(name)) {

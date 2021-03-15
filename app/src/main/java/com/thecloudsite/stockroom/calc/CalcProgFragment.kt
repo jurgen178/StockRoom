@@ -83,7 +83,8 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     // Pass null as the parent view because its going in the dialog layout
     val dialogBinding = DialogCalcBinding.inflate(inflater)
 
-    dialogBinding.calcCode.setSyntaxHighlightRules(listOf(
+    dialogBinding.calcCode.codeMap = calcViewModel.codeMap
+    dialogBinding.calcCode.syntaxHighlightRules = listOf(
       // "text"
       SyntaxHighlightRule("(?s)[\"'](.+?)[\"']", "#D89E00"),
       // 1.234,56
@@ -113,7 +114,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       // /* comment */
       SyntaxHighlightRule("(?s)/[*].*?[*]/", "#808080"),
       SyntaxHighlightRule("(?i)\u0061\u006c\u0069\u0065\u006e", "#00FF21")
-    ))
+    )
 
     var displayName = ""
     if (calcViewModel.codeMap.containsKey(name)) {
@@ -152,7 +153,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       ) { _, _ ->
         save()
         // codeMap[name] gets added by the save function and is always available.
-        calcViewModel.function(calcViewModel.codeMap[name]!!.code)
+        calcViewModel.function(calcViewModel.codeMap[name]!!.code, name)
       }
       .setNegativeButton(
         R.string.cancel

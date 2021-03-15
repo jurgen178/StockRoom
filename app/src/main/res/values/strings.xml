@@ -571,8 +571,8 @@ limitations under the License. -->
   <string name="calc_incomplete_definition">Incomplete function definition \'%1$s\'.</string>
   <string name="calc_definition_entry_exists">Function definition already exist \'%1$s\'.</string>
   <string name="calc_definition_is_keyword">Function definition name \'%1$s\' must not be a key word.</string>
-  <string name="calc_unknown_import">Entry for import=\'%1$s\' does not exist.</string>
-  <string name="calc_multiple_imports">Entry for import=\'%1$s\' exist multiple times.</string>
+  <string name="calc_unknown_import">\'%1$s\' does not exist.</string>
+  <string name="calc_multiple_imports">\'%1$s\' exist multiple times.</string>
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>
