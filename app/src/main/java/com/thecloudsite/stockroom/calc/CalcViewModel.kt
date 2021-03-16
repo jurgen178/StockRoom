@@ -102,6 +102,7 @@ enum class BinaryArgument {
   POW,
   SWAP,
   OVER,
+  MOD,  // modulo
   PER,  // Percent
   PERC, // Percent change
 }
@@ -767,6 +768,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         "int" -> {
           validArgs = opUnary(calcData, UnaryArgument.INT)
+        }
+        "mod" -> {
+          validArgs = opBinary(calcData, BinaryArgument.MOD)
         }
         "round" -> {
           validArgs = opUnary(calcData, UnaryArgument.ROUND)
@@ -1564,6 +1568,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         BinaryArgument.SWAP -> {
           calcData.numberList.add(op1)
           calcData.numberList.add(op2)
+        }
+        BinaryArgument.MOD -> {
+          calcData.numberList.add(
+            CalcLine(
+              desc = "",
+              value = op2.value.toLong().rem(op1.value.toLong()).toDouble()
+            )
+          )
         }
         BinaryArgument.OVER -> {
           calcData.numberList.add(op2)
