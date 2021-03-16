@@ -148,7 +148,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
   private var aic: Int = 0
   private val varMap: MutableMap<String, CalcLine> = mutableMapOf()
   var symbol: String = ""
-  var shift = false
+  var shiftLevel: Int = 0
   var calcData: LiveData<CalcData> = calcRepository.calcLiveData
   var radian = 1.0
   var separatorChar = ','
@@ -1214,28 +1214,30 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     when (op) {
       VariableArguments.PICK -> {
-        val size = calcData.numberList.size
+        var size = calcData.numberList.size
         if (size > 1) {
 
           val n = calcData.numberList.removeLast().value.toInt()
-          if (size > n) {
+          size = calcData.numberList.size
+          if (size - n >= 0 && n > 0) {
             argsValid = true
             // copy level n to level 1
-            val nLevelOp = calcData.numberList[size - n - 1]
+            val nLevelOp = calcData.numberList[size - n]
             // Clone nLevelOp
             calcData.numberList.add(CalcLine(desc = nLevelOp.desc, value = nLevelOp.value))
           }
         }
       }
       VariableArguments.ROLL -> {
-        val size = calcData.numberList.size
+        var size = calcData.numberList.size
         if (size > 1) {
 
           val n = calcData.numberList.removeLast().value.toInt()
-          if (size > n) {
+          size = calcData.numberList.size
+          if (size - n >= 0 && n > 0) {
             argsValid = true
             // move level n to level 1
-            val nLevelOp = calcData.numberList.removeAt(size - n - 1)
+            val nLevelOp = calcData.numberList.removeAt(size - n)
             // Copy nLevelOp
             calcData.numberList.add(nLevelOp)
           }

@@ -227,75 +227,75 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 //    binding.calcZinsMonat.setOnClickListener { calcViewModel.opTernary(TernaryArgument.ZinsMonat) }
     binding.calcSin.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcSin.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.SINH)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.SIN)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.SINH)
       }
     }
     binding.calcCos.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcCos.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.COSH)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.COS)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.COSH)
       }
     }
     binding.calcTan.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcTan.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.TANH)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.TAN)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.TANH)
       }
     }
     binding.calcArcsin.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcArcsin.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.ARCSINH)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.ARCSIN)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.ARCSINH)
       }
     }
     binding.calcArccos.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcArccos.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.ARCCOSH)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.ARCCOS)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.ARCCOSH)
       }
     }
     binding.calcArctan.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcArctan.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.ARCTANH)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.ARCTAN)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.ARCTANH)
       }
     }
 
     binding.calcLog.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcLog.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.LN)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.LOG)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.LN)
       }
     }
     binding.calcZx.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcZx.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opUnary(UnaryArgument.EX)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opUnary(UnaryArgument.ZX)
+      } else {
+        calcViewModel.opUnary(UnaryArgument.EX)
       }
     }
     binding.calcConst.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcConst.setOnClickListener {
-      if (calcViewModel.shift) {
-        calcViewModel.opZero(ZeroArgument.E)
-      } else {
+      if (calcViewModel.shiftLevel == 0) {
         calcViewModel.opZero(ZeroArgument.PI)
+      } else {
+        calcViewModel.opZero(ZeroArgument.E)
       }
     }
     binding.calcSum.setOnTouchListener { view, event -> touchHelper(view, event); false }
@@ -313,7 +313,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcFrac.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcFrac.setOnClickListener { calcViewModel.opUnary(UnaryArgument.FRAC) }
     binding.calcShift.setOnClickListener {
-      calcViewModel.shift = !calcViewModel.shift
+      calcViewModel.shiftLevel = (calcViewModel.shiftLevel + 1).rem(3)
       updateShift()
     }
 
@@ -357,7 +357,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
 
     if (codes.isEmpty()) {
 
-      // Default only for the first 12 entries.
+      // Default only for the first 16 entries.
       val resList = listOf(
         Triple("F1", R.string.calc_F1_code, R.string.calc_F1_desc),
         Triple("F2", R.string.calc_F2_code, R.string.calc_F2_desc),
@@ -403,74 +403,52 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   }
 
   private fun updateShift() {
-    if (calcViewModel.shift) {
-      binding.calcIndicatorShift.text = "↱"
+    when (calcViewModel.shiftLevel) {
+      0 -> {
+        binding.calcShift.text = "↱"
+        binding.calcIndicatorShift.text = ""
+      }
+      1 -> {
+        binding.calcShift.text = "↱  ↱"
+        binding.calcIndicatorShift.text = "↱"
+      }
+      2 -> {
+        binding.calcShift.text = "↱  ↱↱"
+        binding.calcIndicatorShift.text = "↱↱"
+      }
+    }
 
-      // set e^x
-      binding.calcZx.text = SpannableStringBuilder()
-        .append("e")
-        .superscript { superscript { scale(0.65f) { bold { append("x") } } } }
-    } else {
-      binding.calcIndicatorShift.text = ""
-
+    if (calcViewModel.shiftLevel == 0) {
       // set 10^x
       binding.calcZx.text = SpannableStringBuilder()
         .append("10")
         .superscript { superscript { scale(0.7f) { bold { append("x") } } } }
+    } else {
+      // set e^x
+      binding.calcZx.text = SpannableStringBuilder()
+        .append("e")
+        .superscript { superscript { scale(0.65f) { bold { append("x") } } } }
     }
 
     updateKeys()
   }
 
   private fun mapKey(key: String): String {
-    if (calcViewModel.shift) {
-      if (key == "F1") {
-        return "F17"
-      }
-      if (key == "F2") {
-        return "F18"
-      }
-      if (key == "F3") {
-        return "F19"
-      }
-      if (key == "F4") {
-        return "F20"
-      }
-      if (key == "F5") {
-        return "F21"
-      }
-      if (key == "F6") {
-        return "F22"
-      }
-      if (key == "F7") {
-        return "F23"
-      }
-      if (key == "F8") {
-        return "F24"
-      }
-      if (key == "F9") {
-        return "F25"
-      }
-      if (key == "F10") {
-        return "F26"
-      }
-      if (key == "F11") {
-        return "F27"
-      }
-      if (key == "F12") {
-        return "F28"
-      }
-      if (key == "F13") {
-        return "F29"
-      }
-      if (key == "F14") {
-        return "F30"
-      }
-      if (key == "F15") {
-        return "F31"
-      }
-      if (key == "F16") {
-        return "F32"
+    if (calcViewModel.shiftLevel > 0) {
+
+      // Fnn keys
+      val match = "^F(\\d{1,2})$".toRegex().matchEntire(key)
+      if (match != null
+        && match.groups.size == 2
+        && match.groups[1] != null
+      ) {
+        // first group (groups[0]) is entire text
+        // first capture is in groups[1]
+        var value = match.groups[1]!!.value.toInt()
+
+        // 16 keys per shift level
+        value += 16 * calcViewModel.shiftLevel
+        return "F$value"
       }
 
       if (key == "sin") {
