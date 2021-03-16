@@ -298,7 +298,6 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     val rclRegex = "^rcl[.](.+)$".toRegex(IGNORE_CASE)
     val commentRegex = "(?s)^[\"'](.+?)[\"']$".toRegex()
     val definitionRegex = "^[(](.+?)[)]$".toRegex()
-    val lambdaRegex = "^[{](.+?)[}]$".toRegex()
 
     // Stores the index of the labels.
     val labelMap: MutableMap<String, Int> = mutableMapOf()
@@ -395,6 +394,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         var name = ""
         if (k < words.size) {
           name = words[k]
+          if (name == ";") {
+            calcData.errorMsg = context.getString(R.string.calc_empty_definition)
+            calcRepository.updateData(calcData)
+
+            // empty definition, end loop
+            return
+          }
           k++
         }
         val startIndex = k
@@ -414,7 +420,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
               calcData.errorMsg = context.getString(R.string.calc_definition_is_keyword, name)
               calcRepository.updateData(calcData)
 
-              // already exists, end loop
+              // definition is keyword, end loop
               return
             }
             definitionMap.containsKey(name) -> {
@@ -432,7 +438,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           calcData.errorMsg = context.getString(R.string.calc_incomplete_definition, name)
           calcRepository.updateData(calcData)
 
-          // label missing, end loop
+          // incomplete definition, end loop
           return
         }
       }
@@ -587,7 +593,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // { lambda }
-      // Add the adress of the lambda definition.
+      // Add the index of the lambda definition.
       if (word == "{") {
         loopCounter++
 
@@ -596,7 +602,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             desc = "",
             value = Double.NaN,
             lambda = i,
-            definition = "$i"
+            definition = "\uD83D\uDC7D@$i"
           )
         )
 
@@ -634,7 +640,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // (definition)
-      // Add the adress of the definition.
+      // Add the index of the definition.
       val definitionMatch =
         getRegexOneGroup(word, definitionRegex)
       if (definitionMatch != null) {
@@ -856,6 +862,12 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         // Formatting and number operations
         "", ":loop" -> {
           // Skip empty lines and instructions.
+        }
+        ":radian" -> {
+          radian = 1.0
+        }
+        ":degree" -> {
+          radian = Math.PI / 180
         }
         "pi", "π" -> {
           opZero(calcData, ZeroArgument.PI)

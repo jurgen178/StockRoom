@@ -119,7 +119,18 @@ class CalcAdapter internal constructor(
   }
 
   fun updateData(calcData: CalcData, numberFormat: NumberFormat) {
-    this.calcData = calcData
+
+    // add a copy of the data
+
+    // using calcData.numberList.clear() (or .removeLast()) in the view model causes
+    // java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter positionCalcViewHolder
+
+    this.calcData.numberList.clear()
+    this.calcData.numberList.addAll(calcData.numberList)
+
+    this.calcData.errorMsg = calcData.errorMsg
+    this.calcData.editMode = calcData.editMode
+    this.calcData.editline = calcData.editline
     this.numberFormat = numberFormat
 
     notifyDataSetChanged()

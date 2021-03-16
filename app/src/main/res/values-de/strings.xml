@@ -598,4 +598,5 @@ limitations under the License. -->
   <string name="calc_multiple_imports">\'%1$s\' ist mehrfach vorhanden.</string>
   <string name="calc_missing_lambda">Der Befehl \'()\' erwartet eine Funktion.</string>
   <string name="calc_lambda_not_terminated">Fehlendes schließendes \'}\'.</string>
+  <string name="calc_empty_definition">Funktionseintrag darf nicht leer sein.</string>
   </resources>
