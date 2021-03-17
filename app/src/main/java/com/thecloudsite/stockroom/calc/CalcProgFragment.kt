@@ -317,6 +317,18 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
       updateShift()
     }
 
+    binding.calcIndicatorRadian.setOnClickListener {
+      radian = if (radian == 1.0) {
+        binding.calcIndicatorRadian.text = "360°"
+        Math.PI / 180
+      } else {
+        binding.calcIndicatorRadian.text = "2π"
+        1.0
+      }
+
+      calcViewModel.radian = radian
+    }
+
     updateShift()
   }
 
@@ -330,6 +342,11 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     sharedPreferences
       .edit()
       .putString("calcCodeMap", codeMapStr)
+      .apply()
+
+    sharedPreferences
+      .edit()
+      .putBoolean("calc_format_radian", radian == 1.0)
       .apply()
   }
 
