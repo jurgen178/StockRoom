@@ -449,6 +449,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 
     val returnStack = Stack<Int>()
     var loopCounter: Int = 0
+    val currentSize = calcData.numberList.size
     var i: Int = 0
     while (i < words.size) {
 
@@ -467,7 +468,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // Check for endless loop.
-      if (checkLoop && (loopCounter > 10000 || calcData.numberList.size >= 1000)) {
+      if (checkLoop && (loopCounter > 10000 || (calcData.numberList.size - currentSize >= 1000))) {
         calcData.errorMsg = context.getString(R.string.calc_endless_loop)
         calcRepository.updateData(calcData)
         return
