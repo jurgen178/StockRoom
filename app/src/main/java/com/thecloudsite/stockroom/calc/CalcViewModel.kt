@@ -871,6 +871,9 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         ":radian" -> {
           radian = 1.0
         }
+        ":clearcode" -> {
+          codeMap.clear()
+        }
         ":degree" -> {
           radian = Math.PI / 180
         }

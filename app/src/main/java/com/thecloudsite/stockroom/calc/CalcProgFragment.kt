@@ -362,7 +362,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
 
-    val codeMapStr = sharedPreferences.getString("calcCodeMap", "").toString()
+    val codeMapStr = sharedPreferences.getString("calcCodeMap1", "").toString()
     setSerializedStr(codeMapStr)
 
     // Set default code if all codes are empty.
