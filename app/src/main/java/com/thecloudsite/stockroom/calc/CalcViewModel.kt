@@ -873,6 +873,11 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         }
         ":clearcode" -> {
           codeMap.clear()
+          // Add empty entry to not set to default if code is all empty.
+          codeMap["F0"] = CodeType(code = "", name = "")
+        }
+        ":defaultcode" -> {
+          codeMap.clear()
         }
         ":degree" -> {
           radian = Math.PI / 180

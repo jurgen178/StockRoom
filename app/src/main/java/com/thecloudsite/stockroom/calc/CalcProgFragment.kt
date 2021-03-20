@@ -362,17 +362,9 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     val sharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
 
-    val codeMapStr = sharedPreferences.getString("calcCodeMap1", "").toString()
-    setSerializedStr(codeMapStr)
+    val codeMapStr = sharedPreferences.getString("calcCodeMap", "").toString()
 
-    // Set default code if all codes are empty.
-    val codes = calcViewModel.codeMap.map { code ->
-      code.value
-    }.filter { codeType ->
-      codeType.code.isNotEmpty()
-    }
-
-    if (codes.isEmpty()) {
+    if (codeMapStr.isEmpty()) {
 
       // Default only for the first 16 entries.
       val resList = listOf(
@@ -408,6 +400,8 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
             name = requireContext().getString(entry.third)
           )
       }
+    } else {
+      setSerializedStr(codeMapStr)
     }
 
     if (radian == 1.0) {
@@ -540,6 +534,10 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
   }
 
   private fun getSerializedStr(): String {
+
+    if (calcViewModel.codeMap.isEmpty()) {
+      return ""
+    }
 
     var jsonString = ""
     try {
