@@ -173,25 +173,6 @@ class CalcSettingsActivity : AppCompatActivity(),
     sharedPreferences: SharedPreferences,
     key: String
   ) {
-    when (key) {
-      "postmarket" -> {
-        SharedRepository.postMarket = sharedPreferences.getBoolean(key, true)
-      }
-      "notifications" -> {
-        SharedRepository.notifications = sharedPreferences.getBoolean(key, true)
-      }
-      "displayed_views" -> {
-        AlertDialog.Builder(this)
-          .setTitle(getString(R.string.displayed_views_dialog_title))
-          .setMessage(getString(R.string.app_needs_restart_message))
-          .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-          .show()
-      }
-      "app_theme" -> {
-        setAppTheme(this)
-        delegate.applyDayNight()
-      }
-    }
   }
 
   class CalcSettingsFragment : PreferenceFragmentCompat() {
