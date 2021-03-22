@@ -518,7 +518,7 @@ limitations under the License. -->
   <string name="calc_code">AI code</string>
   <string name="execute">Execute</string>
   <string name="export_code">Export AI</string>
-  <string name="export_code_desc">Exports the AI code as a .json file.</string>
+  <string name="export_code_desc">Export the AI code as a .json file.</string>
   <string name="import_code">Import AI</string>
   <string name="import_code_desc">Import AI code from a .json file.</string>
   <string name="load_code_msg">The AI code was loaded.</string>
