@@ -101,10 +101,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
     setAppTheme(this)
-    delegate.applyDayNight()
+    //delegate.applyDayNight()
+
+    super.onCreate(savedInstanceState)
 
     binding = ActivityMainBinding.inflate(layoutInflater)
     val view = binding.root

@@ -178,7 +178,7 @@ class SettingsActivity : AppCompatActivity(),
       }
       "app_theme" -> {
         setAppTheme(this)
-        delegate.applyDayNight()
+        //delegate.applyDayNight()
       }
     }
   }
