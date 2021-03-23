@@ -54,8 +54,6 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
   lateinit var calcViewModel: CalcViewModel
   lateinit var calcAdapter: CalcAdapter
 
-//  private lateinit var filterDataViewModel: FilterDataViewModel
-
   lateinit var stockRoomViewModel: StockRoomViewModel
 
   var stockitemListCopy: List<StockItem> = emptyList()
@@ -112,18 +110,6 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
       }
     })
 
-//    filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
-//    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext() /* Activity context */)
-//    val selectedFilter = sharedPreferences.getString("selectedFilter", "")
-//    val filterActive = sharedPreferences.getBoolean("filterActive", false)
-//    val filterData = sharedPreferences.getString("filterSetting", "")
-//    if (filterData != null) {
-//      filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
-//    }
-//
-//    filterDataViewModel.data.observe(viewLifecycleOwner, Observer { filter ->
-//    })
-
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
@@ -139,12 +125,6 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
         updateStockListSpinner(calcViewModel.symbol)
       }
     })
-
-//    stockRoomViewModel.onlineMarketDataList.observe(
-//      viewLifecycleOwner,
-//      Observer { onlineMarketDataList ->
-//        updateStockListSpinner(calcViewModel.symbol)
-//      })
   }
 
   override fun onResume() {

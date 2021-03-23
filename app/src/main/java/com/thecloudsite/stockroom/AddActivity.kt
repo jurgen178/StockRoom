@@ -58,14 +58,6 @@ class AddActivity : AppCompatActivity() {
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
-/*
-    // Setup observer to enable valid data for the export function.
-    stockRoomViewModel.allStockItems.observe(this, Observer { items ->
-      items?.let {
-      }
-    })
-*/
-
     binding.buttonAdd.setOnClickListener {
       val replyIntent = Intent()
       if (TextUtils.isEmpty(addView.text)) {
