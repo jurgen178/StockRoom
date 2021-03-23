@@ -505,10 +505,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
  */
 
-  private fun updateAll() {
+  fun updateAll() {
     allMediatorData.value = allData.value?.let { process(it, true) }
     if (SharedRepository.notifications) {
-      processNotifications(allMediatorData.value!!)
+      if (allMediatorData.value != null) {
+        processNotifications(allMediatorData.value!!)
+      }
     }
   }
 

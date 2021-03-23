@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import com.thecloudsite.stockroom.FilterDataViewModel
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.StockRoomViewModel
 import com.thecloudsite.stockroom.setBackgroundColor
@@ -53,7 +54,11 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
 
   lateinit var calcViewModel: CalcViewModel
   lateinit var calcAdapter: CalcAdapter
+
+//  private lateinit var filterDataViewModel: FilterDataViewModel
+
   lateinit var stockRoomViewModel: StockRoomViewModel
+
   var stockitemListCopy: List<StockItem> = emptyList()
 
   var radian = 1.0
@@ -108,6 +113,18 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
       }
     })
 
+//    filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
+//    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext() /* Activity context */)
+//    val selectedFilter = sharedPreferences.getString("selectedFilter", "")
+//    val filterActive = sharedPreferences.getBoolean("filterActive", false)
+//    val filterData = sharedPreferences.getString("filterSetting", "")
+//    if (filterData != null) {
+//      filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
+//    }
+//
+//    filterDataViewModel.data.observe(viewLifecycleOwner, Observer { filter ->
+//    })
+
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockitemList ->
@@ -127,6 +144,7 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
 //    stockRoomViewModel.onlineMarketDataList.observe(
 //      viewLifecycleOwner,
 //      Observer { onlineMarketDataList ->
+//        updateStockListSpinner(calcViewModel.symbol)
 //      })
   }
 
