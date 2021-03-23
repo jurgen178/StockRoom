@@ -85,7 +85,7 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
       context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
 
     val index = selectedList.indexOf(symbol)
-    if (index >= 0) {
+    if (index > 0) {
       binding.calcStocks.setSelection(index)
     }
   }

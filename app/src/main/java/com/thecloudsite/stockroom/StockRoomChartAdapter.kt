@@ -107,7 +107,7 @@ class StockRoomChartAdapter internal constructor(
         chartDataItems[current.onlineMarketData.symbol]
 
       if (stockDataEntries != null
-          && stockDataEntries.isNotEmpty()
+        && stockDataEntries.isNotEmpty()
       ) {
         val stockDataEntriesRef: List<StockDataEntry>? =
           chartDataItems[chartOverlaySymbol]
@@ -118,11 +118,11 @@ class StockRoomChartAdapter internal constructor(
 
           setupCandleStickChart(holder.binding.candleStickChart)
           loadCandleStickChart(
-              holder.binding.candleStickChart,
-              chartOverlaySymbol,
-              stockDataEntriesRef,
-              current.onlineMarketData.symbol,
-              stockDataEntries
+            holder.binding.candleStickChart,
+            chartOverlaySymbol,
+            stockDataEntriesRef,
+            current.onlineMarketData.symbol,
+            stockDataEntries
           )
         } else {
           holder.binding.candleStickChart.visibility = View.GONE
@@ -130,11 +130,11 @@ class StockRoomChartAdapter internal constructor(
 
           setupLineChart(holder.binding.lineChart)
           loadLineChart(
-              holder.binding.lineChart,
-              chartOverlaySymbol,
-              stockDataEntriesRef,
-              current.onlineMarketData.symbol,
-              stockDataEntries
+            holder.binding.lineChart,
+            chartOverlaySymbol,
+            stockDataEntriesRef,
+            current.onlineMarketData.symbol,
+            stockDataEntries
           )
         }
       } else {
@@ -158,29 +158,29 @@ class StockRoomChartAdapter internal constructor(
         //.build()
 
         Glide.with(imgView.context)
-            .load(imgUri)
-            .listener(object : RequestListener<Drawable> {
-              override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable?>?,
-                isFirstResource: Boolean
-              ): Boolean {
-                return false
-              }
+          .load(imgUri)
+          .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+              e: GlideException?,
+              model: Any?,
+              target: com.bumptech.glide.request.target.Target<Drawable?>?,
+              isFirstResource: Boolean
+            ): Boolean {
+              return false
+            }
 
-              override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-              ): Boolean {
-                holder.binding.imageViewSymbol.visibility = View.VISIBLE
-                return false
-              }
-            })
-            .into(imgView)
+            override fun onResourceReady(
+              resource: Drawable?,
+              model: Any?,
+              target: com.bumptech.glide.request.target.Target<Drawable>?,
+              dataSource: DataSource?,
+              isFirstResource: Boolean
+            ): Boolean {
+              holder.binding.imageViewSymbol.visibility = View.VISIBLE
+              return false
+            }
+          })
+          .into(imgView)
       }
 
       holder.binding.textViewName.text = getName(current.onlineMarketData)
@@ -190,13 +190,13 @@ class StockRoomChartAdapter internal constructor(
 
         if (current.onlineMarketData.postMarketData) {
           holder.binding.textViewMarketPrice.text = SpannableStringBuilder()
-              .italic { append(marketValues.first) }
+            .italic { append(marketValues.first) }
 
           holder.binding.textViewChange.text = SpannableStringBuilder()
-              .italic { append(marketValues.second) }
+            .italic { append(marketValues.second) }
 
           holder.binding.textViewChangePercent.text = SpannableStringBuilder()
-              .italic { append(marketValues.third) }
+            .italic { append(marketValues.third) }
         } else {
           holder.binding.textViewMarketPrice.text = marketValues.first
           holder.binding.textViewChange.text = marketValues.second
@@ -210,12 +210,12 @@ class StockRoomChartAdapter internal constructor(
 
       // set background to market change
       holder.binding.itemRedGreen.setBackgroundColor(
-          getChangeColor(
-              current.onlineMarketData.marketChange,
-              current.onlineMarketData.postMarketData,
-              context.getColor(color.backgroundListColor),
-              context
-          )
+        getChangeColor(
+          current.onlineMarketData.marketChange,
+          current.onlineMarketData.postMarketData,
+          context.getColor(color.backgroundListColor),
+          context
+        )
       )
 
       var color = current.stockDBdata.groupColor
@@ -302,11 +302,11 @@ class StockRoomChartAdapter internal constructor(
         stockDataEntriesRef.forEach { stockDataEntry ->
           val candleEntryRef: CandleEntry =
             CandleEntry(
-                stockDataEntry.candleEntry.x,
-                (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
-                (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
-                (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
-                (stockDataEntry.candleEntry.close - minRefY) * scale + minY
+              stockDataEntry.candleEntry.x,
+              (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
+              (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
+              (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
+              (stockDataEntry.candleEntry.close - minRefY) * scale + minY
             )
 
           candleEntriesRef.add(candleEntryRef)
@@ -393,6 +393,11 @@ class StockRoomChartAdapter internal constructor(
       dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
     }
 
+    // Chart data is constant, add a zero point for correct scaling of the control.
+    if (minY == maxY) {
+      dataPoints.add(DataPoint(0f, 0f))
+    }
+
     val series = LineDataSet(dataPoints as List<Entry>?, symbol)
     series.setDrawHorizontalHighlightIndicator(false)
     series.setDrawValues(false)
@@ -413,15 +418,15 @@ class StockRoomChartAdapter internal constructor(
 
       // Scale ref data to stock data.
       // Then the ref stock data will always look the same in each stock chart.
-      if (maxRefY > minRefY && maxRefY > 0f) {
+      if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
         val scale = (maxY - minY) / (maxRefY - minRefY)
         stockDataEntriesRef.forEach { stockDataEntry ->
           val dataPointRef: DataPoint =
             DataPoint(
-                x = stockDataEntry.candleEntry.x,
-                y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
-                    * scale                                  // scale ref to match stock data range
-                    + minY                                   // shift up to min stock data
+              x = stockDataEntry.candleEntry.x,
+              y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
+                  * scale                                  // scale ref to match stock data range
+                  + minY                                   // shift up to min stock data
             )
 
           dataPointsRef.add(dataPointRef)
