@@ -98,7 +98,6 @@ class SettingsActivity : AppCompatActivity(),
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
     // Setup observer to enable valid data for the export function.
-    // Gets unfiltered list because of own activity.
     stockRoomViewModel.allStockItems.observe(this, Observer { items ->
       items?.let {
       }

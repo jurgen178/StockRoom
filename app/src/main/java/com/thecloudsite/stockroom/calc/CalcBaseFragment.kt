@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
-import com.thecloudsite.stockroom.FilterDataViewModel
 import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.StockRoomViewModel
 import com.thecloudsite.stockroom.setBackgroundColor

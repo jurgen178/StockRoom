@@ -21,7 +21,7 @@ android {
   compileSdkVersion 30
   defaultConfig {
     applicationId 'com.thecloudsite.stockroom'
-    minSdkVersion 29
+    minSdkVersion 30
     targetSdkVersion 30
     versionCode 11
     versionName "11"

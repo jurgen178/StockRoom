@@ -20,8 +20,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -34,9 +32,7 @@ import androidx.core.text.bold
 import androidx.core.text.scale
 import androidx.core.text.superscript
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.R
-import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.databinding.FragmentCalcBinding
 
 class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
