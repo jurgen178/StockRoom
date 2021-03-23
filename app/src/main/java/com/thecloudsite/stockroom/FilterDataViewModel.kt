@@ -349,7 +349,7 @@ class FilterDataRepository(val context: Context) {
 class FilterDataViewModel(application: Application) : AndroidViewModel(application) {
 
   private val filterDataRepository: FilterDataRepository = FilterDataRepository(application)
-  var data: LiveData<Filters> = SharedRepository.filterMapLiveData
+  var filterLiveData: LiveData<Filters> = SharedRepository.filterMapLiveData
 
   fun getSerializedStr(): String {
     return filterDataRepository.getSerializedStr()

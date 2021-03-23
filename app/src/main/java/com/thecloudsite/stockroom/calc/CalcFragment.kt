@@ -36,20 +36,19 @@ import androidx.core.text.superscript
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
 import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.databinding.FragmentCalcBinding
 
 class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
 
   private var _binding: FragmentCalcBinding? = null
 
-  lateinit var onlineDataHandler: Handler
-
   // This property is only valid between onCreateView and
   // onDestroyView.
   private val binding get() = _binding!!
 
+  private var selectEnabled = false
   private var firstSelect = true
-  private var delayedLoaded = false
 
   companion object {
     fun newInstance(symbol: String) = CalcFragment(symbol)
@@ -82,19 +81,16 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
 
   override fun updateStockListSpinner(symbol: String) {
 
-    if (firstSelect) {
+    val selectedList = stockitemListCopy.map { item ->
+      item.stockDBdata.symbol
+    }
 
-      val selectedList = stockitemListCopy.map { item ->
-        item.stockDBdata.symbol
-      }
+    binding.calcStocks.adapter =
+      context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
 
-      binding.calcStocks.adapter =
-        context?.let { ArrayAdapter(it, R.layout.calc_spinner_item, selectedList) }
-
-      val index = selectedList.indexOf(symbol)
-      if (index >= 0) {
-        binding.calcStocks.setSelection(index)
-      }
+    val index = selectedList.indexOf(symbol)
+    if (index >= 0) {
+      binding.calcStocks.setSelection(index)
     }
   }
 
@@ -103,8 +99,6 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-
-    onlineDataHandler = Handler(Looper.getMainLooper())
 
     binding.calclines.adapter = calcAdapter
     binding.calclines.layoutManager = LinearLayoutManager(requireActivity())
@@ -115,7 +109,8 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
         // Get the latest market value for the stock.
         stockRoomViewModel.runOnlineTaskNow()
 
-        firstSelect = false
+        selectEnabled = true
+        firstSelect = true
       }
 
       false
@@ -130,23 +125,27 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
         position: Int,
         id: Long
       ) {
-        if (!firstSelect && delayedLoaded) {
-          if (position >= 0 && position < stockitemListCopy.size) {
-            var marketPrice = stockitemListCopy[position].onlineMarketData.marketPrice
-            if (marketPrice == 0.0) {
-              val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
-                stockitemListCopy[position].assets
-              )
-              if (quantity != 0.0 && price != 0.0) {
-                marketPrice = price / quantity
+        if (selectEnabled) {
+          if (!firstSelect) {
+            if (position >= 0 && position < stockitemListCopy.size) {
+              var marketPrice = stockitemListCopy[position].onlineMarketData.marketPrice
+              if (marketPrice == 0.0) {
+                val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+                  stockitemListCopy[position].assets
+                )
+                if (quantity != 0.0 && price != 0.0) {
+                  marketPrice = price / quantity
+                }
               }
-            }
-            if (marketPrice != 0.0) {
-              calcViewModel.add(marketPrice, "${stockitemListCopy[position].stockDBdata.symbol}=")
-            }
+              if (marketPrice != 0.0) {
+                calcViewModel.add(marketPrice, "${stockitemListCopy[position].stockDBdata.symbol}=")
+              }
 
-            calcViewModel.symbol = stockitemListCopy[position].stockDBdata.symbol
+              calcViewModel.symbol = stockitemListCopy[position].stockDBdata.symbol
+            }
           }
+
+          firstSelect = false
         }
       }
     }
@@ -243,24 +242,8 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
     binding.calcAdd.setOnClickListener { calcViewModel.opBinary(BinaryArgument.ADD) }
   }
 
-  private val onlineDataTask = object : Runnable {
-    override fun run() {
-      stockRoomViewModel.runOnlineTaskNow()
-      delayedLoaded = true
-      //onlineDataHandler.postDelayed(this, MainActivity.onlineDataTimerDelay)
-    }
-  }
-
-  override fun onPause() {
-    onlineDataHandler.removeCallbacks(onlineDataTask)
-    super.onPause()
-  }
-
   override fun onResume() {
     super.onResume()
-
-    //stockRoomViewModel.updateAll()
-    onlineDataHandler.postDelayed(onlineDataTask, onlineDataTimerDelay)
 
     binding.calcDot.text = separatorChar.toString()
   }

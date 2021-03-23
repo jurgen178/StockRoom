@@ -100,7 +100,7 @@ class FilterActivity : AppCompatActivity() {
       filterDataViewModel.filterActive = isChecked
     }
 
-    filterDataViewModel.data.observe(this, Observer { filter ->
+    filterDataViewModel.filterLiveData.observe(this, Observer { filter ->
 
       filterAdapter.setFilter(filter.filterList)
 

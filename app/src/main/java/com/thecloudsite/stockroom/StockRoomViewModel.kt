@@ -507,11 +507,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun updateAll() {
     allMediatorData.value = allData.value?.let { process(it, true) }
-    if (SharedRepository.notifications) {
-      if (allMediatorData.value != null) {
-        processNotifications(allMediatorData.value!!)
-      }
-    }
+//    if (SharedRepository.notifications) {
+//      if (allMediatorData.value != null) {
+//        processNotifications(allMediatorData.value!!)
+//      }
+//    }
   }
 
   private fun getMediatorData(): LiveData<List<StockItem>> {

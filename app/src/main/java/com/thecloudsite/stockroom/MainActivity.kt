@@ -291,7 +291,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     // Update the menu when filter data changed.
-    filterDataViewModel.data.observe(this, Observer { filter ->
+    filterDataViewModel.filterLiveData.observe(this, Observer { filter ->
       invalidateOptionsMenu()
     })
 
