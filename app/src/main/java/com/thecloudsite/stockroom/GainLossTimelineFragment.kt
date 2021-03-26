@@ -39,7 +39,13 @@ import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 data class GainLoss2(
   var gain: Double = 0.0,
   var loss: Double = 0.0,
-  var stockList: MutableList<SpannableStringBuilder> = mutableListOf()
+  var stockList: MutableList<GainLossStockItem> = mutableListOf()
+)
+
+data class GainLossStockItem(
+  var date: Long = 0L,
+  var symbol: String = "",
+  var text: SpannableStringBuilder = SpannableStringBuilder()
 )
 
 class GainLossTimelineFragment : Fragment() {
@@ -109,18 +115,13 @@ class GainLossTimelineFragment : Fragment() {
           val capitalGainLoss = gain - loss
 
           // Add the gain/loss of the stock
-          val capitalGainLossText = SpannableStringBuilder()
-          capitalGainLossText.append(stockItem.stockDBdata.symbol)
-          capitalGainLossText.append(" ")
-          capitalGainLossText.append(
-            getCapitalGainLossText(
-              requireContext(),
-              gain,
-              loss,
-              0.0,
-              "-",
-              "\n"
-            )
+          val capitalGainLossText = getCapitalGainLossText(
+            requireContext(),
+            gain,
+            loss,
+            0.0,
+            "-",
+            "\n"
           )
 
           when {
@@ -145,7 +146,13 @@ class GainLossTimelineFragment : Fragment() {
               capitalGainLossMap[year]?.loss = capitalGainLossMap[year]?.loss!! - gainloss
             }
 
-            capitalGainLossMap[year]?.stockList?.add(capitalGainLossText)
+            capitalGainLossMap[year]?.stockList?.add(
+              GainLossStockItem(
+                date = map.lastTransactionDate,
+                symbol = stockItem.stockDBdata.symbol,
+                text = capitalGainLossText
+              )
+            )
           }
         }
 

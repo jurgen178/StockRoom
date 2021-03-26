@@ -20,13 +20,19 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.databinding.TimelineGainlossItemBinding
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle.MEDIUM
 
 data class GainLossTimelineElement(
   val date: String,
   val totalGainLoss: SpannableStringBuilder,
-  val stockGainLossList: List<SpannableStringBuilder>,
+  val stockItemGainLossList: MutableList<GainLossStockItem>,
 )
 
 class GainLossTimelineAdapter(
@@ -60,8 +66,19 @@ class GainLossTimelineAdapter(
 
     val gainlossStr = SpannableStringBuilder()
 
-    timelineElement.stockGainLossList.forEach { gainloss ->
-      gainlossStr.append(gainloss)
+    timelineElement.stockItemGainLossList.sortedBy { gainloss ->
+      gainloss.date
+    }.forEach { gainloss ->
+
+      val datetime: ZonedDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(gainloss.date), ZoneOffset.systemDefault())
+      val dateMedium = datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+
+      gainlossStr.bold { append(gainloss.symbol) }
+      gainlossStr.append(" (")
+      gainlossStr.append(dateMedium)
+      gainlossStr.append(") ")
+      gainlossStr.append(gainloss.text)
     }
 
     holder.binding.timelineDetails.text = gainlossStr

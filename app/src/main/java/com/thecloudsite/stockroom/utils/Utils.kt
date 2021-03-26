@@ -693,6 +693,7 @@ fun getAddedDeletedAssets(
 data class GainLoss(
   var gain: Double = 0.0,
   var loss: Double = 0.0,
+  var lastTransactionDate: Long = 0L,
 )
 
 fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
@@ -762,6 +763,7 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
   var totalLoss: Double = 0.0
   var bought: Double = 0.0
   var sold: Double = 0.0
+  var lastTransactionDate: Long = 0L
 
   // gain/loss for each year
   val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
@@ -779,6 +781,7 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
     val asset = assetListCopy[i]
     if (asset.quantity < 0.0) {
       sold = -asset.quantity * asset.price
+      lastTransactionDate = asset.date
       bought = asset.commission
       var quantityToRemove = -asset.quantity
 
@@ -820,10 +823,12 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
       if (gain > 0.0) {
         totalGain += gain
         totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + gain
+        totalGainLossMap[year]?.lastTransactionDate = lastTransactionDate
       } else
         if (gain < 0.0) {
           totalLoss -= gain
           totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! - gain
+          totalGainLossMap[year]?.lastTransactionDate = lastTransactionDate
         }
     }
   }
