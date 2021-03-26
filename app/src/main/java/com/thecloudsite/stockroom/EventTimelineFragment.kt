@@ -95,6 +95,7 @@ class EventTimelineFragment : Fragment() {
 
     stockRoomViewModel.allEventTable.observe(viewLifecycleOwner, Observer { events ->
       if (events != null) {
+
         val hashMap: HashMap<String, HashMap<String, MutableList<Event>>> = hashMapOf()
 
         events.forEach { event ->
@@ -141,6 +142,11 @@ class EventTimelineFragment : Fragment() {
             }
 
         eventTimelineAdapter.updateData(eventList)
+
+        for (i in 0 until recyclerView.itemDecorationCount) {
+          recyclerView.removeItemDecorationAt(0)
+        }
+
         recyclerView.addItemDecoration(getSectionCallback(eventList))
       }
     })

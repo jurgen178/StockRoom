@@ -100,6 +100,7 @@ class AssetTimelineFragment : Fragment() {
 
     stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
       if (assets != null) {
+
         val hashMap: HashMap<String, HashMap<String, MutableList<Asset>>> = hashMapOf()
         val unknownDate = getString(R.string.timeline_unknown_date)
 
@@ -148,6 +149,11 @@ class AssetTimelineFragment : Fragment() {
             }
 
         assetTimelineAdapter.updateData(assetList)
+
+        for (i in 0 until recyclerView.itemDecorationCount) {
+          recyclerView.removeItemDecorationAt(0)
+        }
+
         recyclerView.addItemDecoration(getSectionCallback(assetList))
       }
     })

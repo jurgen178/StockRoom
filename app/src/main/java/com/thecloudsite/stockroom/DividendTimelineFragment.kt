@@ -96,6 +96,7 @@ class DividendTimelineFragment : Fragment() {
 
     stockRoomViewModel.allDividendTable.observe(viewLifecycleOwner, Observer { dividends ->
       if (dividends != null) {
+
         val hashMap: HashMap<String, HashMap<String, MutableList<Dividend>>> = hashMapOf()
 
         dividends.filter { dividend ->
@@ -162,6 +163,11 @@ class DividendTimelineFragment : Fragment() {
             }
 
         dividendTimelineAdapter.updateData(dividendList)
+
+        for (i in 0 until recyclerView.itemDecorationCount) {
+          recyclerView.removeItemDecorationAt(0)
+        }
+
         recyclerView.addItemDecoration(getSectionCallback(dividendList))
       }
     })

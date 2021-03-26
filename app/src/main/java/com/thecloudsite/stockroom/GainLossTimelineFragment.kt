@@ -78,25 +78,25 @@ class GainLossTimelineFragment : Fragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
+    val recyclerView: TimeLineRecyclerView = binding.timelineRecyclerView
+
+    // Currently only LinearLayoutManager is supported.
+    recyclerView.layoutManager = LinearLayoutManager(
+      requireContext(),
+      LinearLayoutManager.VERTICAL,
+      false
+    )
+
+    // Set Adapter
+    val gainLossTimelineAdapter = GainLossTimelineAdapter(requireContext())
+
+    recyclerView.adapter = gainLossTimelineAdapter
+
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItems ->
-
-        val recyclerView: TimeLineRecyclerView = binding.timelineRecyclerView
-
-        // Currently only LinearLayoutManager is supported.
-        recyclerView.layoutManager = LinearLayoutManager(
-          requireContext(),
-          LinearLayoutManager.VERTICAL,
-          false
-        )
-
-        // Set Adapter
-        val gainLossTimelineAdapter = GainLossTimelineAdapter(requireContext())
-
-        recyclerView.adapter = gainLossTimelineAdapter
 
         var capitalGain = 0.0
         var capitalLoss = 0.0
@@ -112,7 +112,16 @@ class GainLossTimelineFragment : Fragment() {
           val capitalGainLossText = SpannableStringBuilder()
           capitalGainLossText.append(stockItem.stockDBdata.symbol)
           capitalGainLossText.append(" ")
-          capitalGainLossText.append(getCapitalGainLossText(requireContext(), gain, loss, 0.0, "-", "\n"))
+          capitalGainLossText.append(
+            getCapitalGainLossText(
+              requireContext(),
+              gain,
+              loss,
+              0.0,
+              "-",
+              "\n"
+            )
+          )
 
           when {
             capitalGainLoss > 0.0 -> {
@@ -155,6 +164,11 @@ class GainLossTimelineFragment : Fragment() {
           }
 
         gainLossTimelineAdapter.updateData(gainLossList)
+
+        for (i in 0 until recyclerView.itemDecorationCount) {
+          recyclerView.removeItemDecorationAt(0)
+        }
+
         recyclerView.addItemDecoration(getSectionCallback(gainLossList))
       }
     })
