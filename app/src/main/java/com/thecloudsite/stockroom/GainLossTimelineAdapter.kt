@@ -21,6 +21,7 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.bold
+import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.databinding.TimelineGainlossItemBinding
 import java.time.Instant
@@ -70,14 +71,21 @@ class GainLossTimelineAdapter(
       gainloss.date
     }.forEach { gainloss ->
 
-      val datetime: ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(gainloss.date), ZoneOffset.systemDefault())
-      val dateMedium = datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-
       gainlossStr.bold { append(gainloss.symbol) }
-      gainlossStr.append(" (")
-      gainlossStr.append(dateMedium)
-      gainlossStr.append(") ")
+      gainlossStr.append(" ")
+
+      if (gainloss.date > 0L) {
+        val datetime: ZonedDateTime =
+          ZonedDateTime.ofInstant(Instant.ofEpochSecond(gainloss.date), ZoneOffset.systemDefault())
+        val dateMedium = datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+
+        gainlossStr.scale(0.8f) {
+          append("(")
+            .append(dateMedium)
+            .append(") ")
+        }
+      }
+
       gainlossStr.append(gainloss.text)
     }
 
