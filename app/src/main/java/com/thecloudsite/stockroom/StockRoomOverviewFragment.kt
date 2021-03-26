@@ -410,12 +410,15 @@ class StockRoomOverviewFragment : Fragment() {
     }
 
     val summaryStr = SpannableStringBuilder()
-      .append("${requireContext().getString(R.string.summary_stocks)} ")
-      .bold { append("${stockitemList.size}\n\n") }
-      .scale(1.4f) {
-        append(gainLossText)
-          .append(totalAssetsStr)
-      }
+    if (stockitemList.size > 3) {
+      summaryStr.append("${requireContext().getString(R.string.summary_stocks)} ")
+        .bold { append("${stockitemList.size}\n\n") }
+    }
+    summaryStr.scale(1.4f) {
+      append(gainLossText)
+        .append(totalAssetsStr)
+    }
+
     binding.textViewOverview.text = summaryStr
   }
 

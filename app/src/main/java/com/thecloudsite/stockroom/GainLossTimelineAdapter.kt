@@ -20,6 +20,7 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.text.bold
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
@@ -66,6 +67,11 @@ class GainLossTimelineAdapter(
     holder.binding.timelineHeader.text = timelineElement.totalGainLoss
 
     val gainlossStr = SpannableStringBuilder()
+
+    if (timelineElement.stockItemGainLossList.size > 3) {
+      gainlossStr.append("${context.getString(R.string.summary_stocks)} ")
+        .bold { append("${timelineElement.stockItemGainLossList.size}\n\n") }
+    }
 
     timelineElement.stockItemGainLossList.sortedBy { gainloss ->
       gainloss.date
