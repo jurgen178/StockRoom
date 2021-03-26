@@ -13,6 +13,7 @@
     <item>Summary</item>
     <item>News</item>
     <item>Timeline Transactions</item>
+    <item>Timeline Gain/Loss</item>
     <item>Timeline Events</item>
     <item>Timeline Dividends</item>
   </string-array>
@@ -29,6 +30,7 @@
     <item>Summary</item>
     <item>News</item>
     <item>Transactions</item>
+    <item>Gain/Loss</item>
     <item>Events</item>
     <item>Dividends</item>
   </string-array>
@@ -45,8 +47,9 @@
     <item>09_SummaryGroupFragment</item>
     <item>10_AllNewsFragment</item>
     <item>11_AssetTimelineFragment</item>
-    <item>12_EventTimelineFragment</item>
-    <item>13_DividendTimelineFragment</item>
+    <item>12_GainLossTimelineFragment</item>
+    <item>13_EventTimelineFragment</item>
+    <item>14_DividendTimelineFragment</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>

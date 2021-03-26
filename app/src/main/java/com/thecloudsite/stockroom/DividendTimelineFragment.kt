@@ -27,9 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.FragmentTimelineBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
-import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
-import xyz.sangcomz.stickytimelineview.callback.SectionCallback
-import xyz.sangcomz.stickytimelineview.model.SectionInfo
+import com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
+import com.thecloudsite.stockroom.timeline.callback.SectionCallback
+import com.thecloudsite.stockroom.timeline.model.SectionInfo
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.YearMonth
@@ -38,7 +38,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
-// Bug in xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
+// Bug in com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
 // updating the data shifts the cardview to the right
 
 class DividendTimelineFragment : Fragment() {

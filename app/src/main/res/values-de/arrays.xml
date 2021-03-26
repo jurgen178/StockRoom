@@ -13,6 +13,7 @@
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
     <item>Zeitachse Kauf/Verkauf</item>
+    <item>Zeitachse Gewinn/Verlust</item>
     <item>Zeitachse Ereignisse</item>
     <item>Zeitachse Dividenden</item>
   </string-array>
@@ -29,6 +30,7 @@
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
     <item>Kauf/Verkauf</item>
+    <item>Gewinn/Verlust</item>
     <item>Ereignisse</item>
     <item>Dividenden</item>
   </string-array>

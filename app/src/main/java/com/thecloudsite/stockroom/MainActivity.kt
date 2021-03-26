@@ -250,10 +250,13 @@ class MainActivity : AppCompatActivity() {
           "11_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "12_EventTimelineFragment" -> {
+          "12_GainLossTimelineFragment" -> {
+            GainLossTimelineFragment.newInstance()
+          }
+          "13_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "13_DividendTimelineFragment" -> {
+          "14_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
           }
           else -> {

@@ -27,9 +27,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.databinding.FragmentTimelineBinding
-import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
-import xyz.sangcomz.stickytimelineview.callback.SectionCallback
-import xyz.sangcomz.stickytimelineview.model.SectionInfo
+import com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
+import com.thecloudsite.stockroom.timeline.callback.SectionCallback
+import com.thecloudsite.stockroom.timeline.model.SectionInfo
 import java.time.Instant
 import java.time.YearMonth
 import java.time.ZoneOffset
@@ -37,7 +37,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
-// Bug in xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
+// Bug in com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
 // updating the data shifts the cardview to the right
 
 class AssetTimelineFragment : Fragment() {
