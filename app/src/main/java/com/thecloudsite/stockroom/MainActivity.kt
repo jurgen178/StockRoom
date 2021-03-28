@@ -223,40 +223,43 @@ class MainActivity : AppCompatActivity() {
           "02_StockRoomListFragment" -> {
             StockRoomListFragment.newInstance()
           }
-          "03_StockRoomTileFragment" -> {
-            StockRoomTileFragment.newInstance()
+          "03_StockRoomTile1Fragment" -> {
+            StockRoomTile1Fragment.newInstance()
           }
-          "04_StockRoomSmallListFragment" -> {
+          "04_StockRoomTile2Fragment" -> {
+            StockRoomTile2Fragment.newInstance()
+          }
+          "05_StockRoomSmallListFragment" -> {
             StockRoomSmallListFragment.newInstance()
           }
-          "05_StockRoomSmallTile1Fragment" -> {
+          "06_StockRoomSmallTile1Fragment" -> {
             StockRoomSmallTile1Fragment.newInstance()
           }
-          "06_StockRoomSmallTile2Fragment" -> {
+          "07_StockRoomSmallTile2Fragment" -> {
             StockRoomSmallTile2Fragment.newInstance()
           }
-          "07_StockRoomTableFragment" -> {
+          "08_StockRoomTableFragment" -> {
             StockRoomTableFragment.newInstance()
           }
-          "08_StockRoomTreemapFragment" -> {
+          "09_StockRoomTreemapFragment" -> {
             StockRoomTreemapFragment.newInstance()
           }
-          "09_SummaryGroupFragment" -> {
+          "10_SummaryGroupFragment" -> {
             SummaryGroupFragment.newInstance()
           }
-          "10_AllNewsFragment" -> {
+          "11_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "11_AssetTimelineFragment" -> {
+          "12_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "12_GainLossTimelineFragment" -> {
+          "13_GainLossTimelineFragment" -> {
             GainLossTimelineFragment.newInstance()
           }
-          "13_EventTimelineFragment" -> {
+          "14_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "14_DividendTimelineFragment" -> {
+          "15_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
           }
           else -> {

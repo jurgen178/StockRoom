@@ -33,8 +33,6 @@ import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
-// Bug in com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
-// updating the data shifts the cardview to the right
 
 data class GainLoss2(
   var gain: Double = 0.0,

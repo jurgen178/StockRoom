@@ -17,7 +17,6 @@
 package com.thecloudsite.stockroom.calc
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -31,10 +30,8 @@ import androidx.preference.PreferenceManager
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.id
 import com.thecloudsite.stockroom.R.xml
-import com.thecloudsite.stockroom.SharedRepository
 import com.thecloudsite.stockroom.databinding.ActivityCalcSettingsBinding
 import com.thecloudsite.stockroom.utils.saveTextToFile
-import com.thecloudsite.stockroom.utils.setAppTheme
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

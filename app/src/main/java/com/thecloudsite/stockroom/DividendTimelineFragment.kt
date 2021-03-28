@@ -38,8 +38,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
-// Bug in com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
-// updating the data shifts the cardview to the right
 
 class DividendTimelineFragment : Fragment() {
 

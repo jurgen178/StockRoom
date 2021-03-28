@@ -37,8 +37,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.FULL
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
-// Bug in com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
-// updating the data shifts the cardview to the right
 
 class EventTimelineFragment : Fragment() {
 

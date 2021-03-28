@@ -22,10 +22,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlin.math.roundToInt
 
-class StockRoomTileFragment : StockRoomBaseFragment() {
+class StockRoomTile2Fragment : StockRoomBaseFragment() {
 
   companion object {
-    fun newInstance() = StockRoomTileFragment()
+    fun newInstance() = StockRoomTile2Fragment()
   }
 
   override fun onViewCreated(
@@ -35,7 +35,7 @@ class StockRoomTileFragment : StockRoomBaseFragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
-    val adapter = StockRoomTileAdapter(requireContext(), clickListenerSymbolLambda)
+    val adapter = StockRoomTile2Adapter(requireContext(), clickListenerSymbolLambda)
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter

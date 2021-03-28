@@ -21,6 +21,7 @@ import com.thecloudsite.stockroom.utils.frac
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.math.sqrt
 
 @RunWith(AndroidJUnit4::class)
 class CalcTest {
@@ -48,7 +49,7 @@ class CalcTest {
     // infinity
     assertEquals(Pair(null, 1), frac(1 / 0.0))
     // NaN
-    assertEquals(Pair(null, 1), frac(Math.sqrt(-1.0)))
+    assertEquals(Pair(null, 1), frac(sqrt(-1.0)))
     // large number
     assertEquals(Pair(null, 1), frac(100000000000000.0))
   }

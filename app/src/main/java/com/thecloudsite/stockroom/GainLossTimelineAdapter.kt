@@ -20,7 +20,6 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.text.bold
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
