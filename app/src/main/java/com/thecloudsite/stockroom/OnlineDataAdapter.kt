@@ -228,8 +228,7 @@ class OnlineDataAdapter internal constructor(
               .setPrettyPrinting()
               .create()
 
-            val parser = JsonParser()
-            val jsonObj = parser.parse(onlineRawJsonData).asJsonObject
+            val jsonObj = JsonParser.parseString(onlineRawJsonData).asJsonObject
 
             // Add sorted json data.
             val jsonObjSorted = jsonObj.deepCopy()

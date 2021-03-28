@@ -20,7 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -956,33 +956,25 @@ fun parseStockOption(symbol: String): StockOptionData {
 }
 
 fun isOnline(context: Context): Boolean {
-  val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-  val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-  val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
-  return isConnected
-  /*
   val connectivityManager =
     context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-  val capabilities =
-    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-  if (capabilities != null) {
-    when {
-      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-        Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-      }
-      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-        Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-      }
-      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-        Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-      }
-    }
-    return true
-  }
-  return false
+  val networkCapabilities = connectivityManager.activeNetwork ?: return false
+  val actNw = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
 
-   */
+  return when {
+    actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+    actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+    actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+    else -> false
+  }
 }
+
+//fun isOnline(context: Context): Boolean {
+//  val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//  val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+//  val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+//  return isConnected
+//}
 
 fun checkUrl(url: String): String {
   return if (!url.startsWith("http://") && !url.startsWith("https://")) {
