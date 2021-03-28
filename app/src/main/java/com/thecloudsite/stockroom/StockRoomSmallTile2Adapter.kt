@@ -70,16 +70,20 @@ class StockRoomSmallTile2Adapter internal constructor(
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketValues = getMarketValues(current.onlineMarketData)
-        val marketPriceStr = "${marketValues.first} ${marketValues.second} ${marketValues.third}"
+        val marketChange = "${marketValues.second} ${marketValues.third}"
 
         if (current.onlineMarketData.postMarketData) {
           holder.binding.smalltileTextViewMarketPrice.text = SpannableStringBuilder()
-              .italic { append(marketPriceStr) }
+            .italic { append(marketValues.first) }
+          holder.binding.smalltileTextViewMarketChange.text = SpannableStringBuilder()
+            .italic { append(marketChange) }
         } else {
-          holder.binding.smalltileTextViewMarketPrice.text = marketPriceStr
+          holder.binding.smalltileTextViewMarketPrice.text = marketValues.first
+          holder.binding.smalltileTextViewMarketChange.text = marketChange
         }
       } else {
         holder.binding.smalltileTextViewMarketPrice.text = ""
+        holder.binding.smalltileTextViewMarketChange.text = ""
       }
 
       // set the background color to the market change
