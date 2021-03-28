@@ -22,10 +22,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlin.math.roundToInt
 
-class StockRoomTile2Fragment : StockRoomBaseFragment() {
+class StockRoomTileFragment : StockRoomBaseFragment() {
 
   companion object {
-    fun newInstance() = StockRoomTile2Fragment()
+    fun newInstance() = StockRoomTileFragment()
   }
 
   override fun onViewCreated(
@@ -35,7 +35,7 @@ class StockRoomTile2Fragment : StockRoomBaseFragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
-    val adapter = StockRoomTile2Adapter(requireContext(), clickListenerSymbolLambda)
+    val adapter = StockRoomTile1Adapter(requireContext(), clickListenerSymbolLambda)
 
     val recyclerView = binding.recyclerview
     recyclerView.adapter = adapter
@@ -123,12 +123,15 @@ class StockRoomTile2Fragment : StockRoomBaseFragment() {
 //    5, 4, 4, 4,    // 609
 
     // Set column number depending on screen width.
-    val scale = 156
+    val scale = 247 // 2 columns
+    // val scale = 156  // 3 columns
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    recyclerView.layoutManager =
-      GridLayoutManager(requireContext(), Integer.min(Integer.max(spanCount, 2), 20))
+    recyclerView.layoutManager = GridLayoutManager(
+      context,
+      Integer.min(Integer.max(spanCount, 1), 10)
+    )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockItems ->

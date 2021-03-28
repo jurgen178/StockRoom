@@ -25,23 +25,23 @@ import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
-import com.thecloudsite.stockroom.databinding.StockroomTile2ItemBinding
+import com.thecloudsite.stockroom.databinding.StockroomTileItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getMarketValues
 import java.text.DecimalFormat
 
-class StockRoomTile2Adapter internal constructor(
+class StockRoomTile1Adapter internal constructor(
   val context: Context,
   private val clickListenerListItemLambda: (StockItem) -> Unit
-) : RecyclerView.Adapter<StockRoomTile2Adapter.OnlineDataViewHolder>() {
+) : RecyclerView.Adapter<StockRoomTile1Adapter.OnlineDataViewHolder>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var stockItems: List<StockItem> = listOf()
 
   class OnlineDataViewHolder(
-    val binding: StockroomTile2ItemBinding
+    val binding: StockroomTileItemBinding
   ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
       stockItem: StockItem,
@@ -56,7 +56,7 @@ class StockRoomTile2Adapter internal constructor(
     viewType: Int
   ): OnlineDataViewHolder {
 
-    val binding = StockroomTile2ItemBinding.inflate(inflater, parent, false)
+    val binding = StockroomTileItemBinding.inflate(inflater, parent, false)
     return OnlineDataViewHolder(binding)
   }
 
@@ -76,17 +76,6 @@ class StockRoomTile2Adapter internal constructor(
     setBackgroundColor(holder.binding.stockRoomTileItemGroup, color)
 
     val (quantity, asset, commission) = getAssets(current.assets)
-
-//    val quantity = current.assets.sumByDouble {
-//      it.quantity
-//    }
-//
-//    var asset: Double = 0.0
-//    if (quantity > 0.0) {
-//      asset = current.assets.sumByDouble {
-//        it.quantity * it.price
-//      }
-//    }
 
     if (current.onlineMarketData.marketPrice > 0.0) {
       val marketValues = getMarketValues(current.onlineMarketData)

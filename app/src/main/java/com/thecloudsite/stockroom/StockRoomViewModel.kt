@@ -124,27 +124,26 @@ object SharedHandler {
 val displayedViewsDefaultSet: MutableSet<String> = mutableSetOf(
   "00_StockRoomChartFragment",
   "02_StockRoomListFragment",
-  "04_StockRoomTile2Fragment",
-  "10_SummaryGroupFragment"
+  "03_StockRoomTileFragment",
+  "09_SummaryGroupFragment"
 )
 
 val displayedViewsSet: MutableSet<String> = mutableSetOf(
   "00_StockRoomChartFragment",
   "01_StockRoomOverviewFragment",
   "02_StockRoomListFragment",
-  "03_StockRoomTile1Fragment",
-  "04_StockRoomTile2Fragment",
-  "05_StockRoomSmallListFragment",
-  "06_StockRoomSmallTile1Fragment",
-  "07_StockRoomSmallTile2Fragment",
-  "08_StockRoomTableFragment",
-  "09_StockRoomTreemapFragment",
-  "10_SummaryGroupFragment",
-  "11_AllNewsFragment",
-  "12_AssetTimelineFragment",
-  "13_GainLossTimelineFragment",
-  "14_EventTimelineFragment",
-  "15_DividendTimelineFragment"
+  "03_StockRoomTileFragment",
+  "04_StockRoomSmallListFragment",
+  "05_StockRoomSmallTile1Fragment",
+  "06_StockRoomSmallTile2Fragment",
+  "07_StockRoomTableFragment",
+  "08_StockRoomTreemapFragment",
+  "09_SummaryGroupFragment",
+  "10_AllNewsFragment",
+  "11_AssetTimelineFragment",
+  "12_GainLossTimelineFragment",
+  "13_EventTimelineFragment",
+  "14_DividendTimelineFragment"
 )
 
 object SharedRepository {

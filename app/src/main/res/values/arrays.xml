@@ -4,8 +4,7 @@
     <item>Chart</item>
     <item>Short Summary</item>
     <item>List</item>
-    <item>Tile 1</item>
-    <item>Tile 2</item>
+    <item>Tile</item>
     <item>Small List</item>
     <item>Small Tile 1</item>
     <item>Small Tile 2</item>
@@ -22,8 +21,7 @@
     <item>Chart</item>
     <item>Short Summary</item>
     <item>List</item>
-    <item>Tile 1</item>
-    <item>Tile 2</item>
+    <item>Tile</item>
     <item>Small List</item>
     <item>Small Tile 1</item>
     <item>Small Tile 2</item>
@@ -40,24 +38,23 @@
     <item>00_StockRoomChartFragment</item>
     <item>01_StockRoomOverviewFragment</item>
     <item>02_StockRoomListFragment</item>
-    <item>03_StockRoomTile1Fragment</item>
-    <item>04_StockRoomTile2Fragment</item>
-    <item>05_StockRoomSmallListFragment</item>
-    <item>06_StockRoomSmallTile1Fragment</item>
-    <item>07_StockRoomSmallTile2Fragment</item>
-    <item>08_StockRoomTableFragment</item>
-    <item>09_StockRoomTreemapFragment</item>
-    <item>10_SummaryGroupFragment</item>
-    <item>11_AllNewsFragment</item>
-    <item>12_AssetTimelineFragment</item>
-    <item>13_GainLossTimelineFragment</item>
-    <item>14_EventTimelineFragment</item>
-    <item>15_DividendTimelineFragment</item>
+    <item>03_StockRoomTileFragment</item>
+    <item>04_StockRoomSmallListFragment</item>
+    <item>05_StockRoomSmallTile1Fragment</item>
+    <item>06_StockRoomSmallTile2Fragment</item>
+    <item>07_StockRoomTableFragment</item>
+    <item>08_StockRoomTreemapFragment</item>
+    <item>09_SummaryGroupFragment</item>
+    <item>10_AllNewsFragment</item>
+    <item>11_AssetTimelineFragment</item>
+    <item>12_GainLossTimelineFragment</item>
+    <item>13_EventTimelineFragment</item>
+    <item>14_DividendTimelineFragment</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>
     <item>02_StockRoomListFragment</item>
-    <item>04_StockRoomTile2Fragment</item>
+    <item>03_StockRoomTileFragment</item>
     <item>09_SummaryGroupFragment</item>
   </string-array>
   <string-array name="quoteTypeNames" translatable="false">
