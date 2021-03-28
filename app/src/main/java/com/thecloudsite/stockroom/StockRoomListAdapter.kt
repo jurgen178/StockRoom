@@ -191,7 +191,6 @@ class StockRoomListAdapter internal constructor(
       val assets = SpannableStringBuilder()
 
 //      var asset: Double = 0.0
-      var capital: Double = 0.0
 
       if (quantity > 0.0 && asset + commission > 0.0) {
 //        asset = current.assets.sumByDouble {
@@ -227,7 +226,7 @@ class StockRoomListAdapter internal constructor(
         )
 
         if (current.onlineMarketData.marketPrice > 0.0) {
-          capital = quantity * current.onlineMarketData.marketPrice
+          val capital = quantity * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
 //            it.quantity * current.onlineMarketData.marketPrice
 //          }

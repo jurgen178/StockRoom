@@ -92,10 +92,8 @@ class StockRoomTile1Adapter internal constructor(
         holder.binding.stockRoomTileItemMarketChange.text = marketChange
       }
 
-      var capital: Double = 0.0
-
       if (quantity > 0.0) {
-        capital = quantity * current.onlineMarketData.marketPrice
+        val capital = quantity * current.onlineMarketData.marketPrice
 //        capital = current.assets.sumByDouble {
 //          it.quantity * current.onlineMarketData.marketPrice
 //        }
