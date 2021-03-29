@@ -17,14 +17,18 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.text.bold
 import androidx.core.text.italic
+import androidx.core.text.scale
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomSmalltile1ItemBinding
+import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
 
@@ -66,7 +70,30 @@ class StockRoomSmallTile1Adapter internal constructor(
       holder.bindOnClickListener(current, clickListenerSymbolLambda)
 
       holder.binding.smalltileItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-      holder.binding.smalltileTextViewSymbol.text = current.onlineMarketData.symbol
+
+      val assetChange =
+        getAssetChange(
+          current.assets,
+          current.onlineMarketData.marketPrice,
+          current.onlineMarketData.postMarketData,
+          Color.DKGRAY,
+          context,
+          false
+        )
+
+      val symbolChangeText = SpannableStringBuilder()
+      val changeText = assetChange.first
+      symbolChangeText
+        .bold { append(current.onlineMarketData.symbol) }
+
+      if (changeText.isNotEmpty()) {
+        symbolChangeText.scale(0.7f) {
+          append("\n")
+            .append(changeText)
+        }
+      }
+
+      holder.binding.smalltileTextViewSymbol.text = symbolChangeText
 
       if (current.onlineMarketData.marketPrice > 0.0) {
         val marketValues = getMarketValues(current.onlineMarketData)
