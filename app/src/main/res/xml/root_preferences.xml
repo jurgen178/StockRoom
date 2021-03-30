@@ -119,7 +119,7 @@
         >
       <intent
           android:action="android.intent.action.VIEW"
-          android:data="mailto:jurgen@outlook.com">
+          android:data="mailto:jurgen172020@gmail.com">
         <extra
             android:name="android.intent.extra.SUBJECT"
             android:value="StockRoom Feedback"/>
