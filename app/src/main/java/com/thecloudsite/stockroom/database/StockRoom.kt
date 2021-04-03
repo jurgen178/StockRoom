@@ -80,6 +80,7 @@ data class Asset(
   var quantity: Double,
   var price: Double,
   var type: Int = 0,
+  var account: String = "",
   var note: String = "",
   var date: Long = 0L,
   var sharesPerQuantity: Int = 1,

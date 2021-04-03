@@ -117,6 +117,15 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun updateAccount(
+    accountOld: String,
+    accountNew: String
+  ) {
+    stockRoomDao.updatePortfolio(accountOld, accountNew)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun updateAlertAbove(
     symbol: String,
     alertAbove: Double,

@@ -16,6 +16,7 @@
 
 package com.thecloudsite.stockroom
 
+import android.R.layout
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -34,6 +35,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
@@ -47,6 +49,7 @@ import androidx.core.text.italic
 import androidx.core.text.scale
 import androidx.core.text.underline
 import androidx.core.view.MenuCompat
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -75,17 +78,20 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
+import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.DialogAddAccountBinding
 import com.thecloudsite.stockroom.databinding.DialogAddAssetBinding
 import com.thecloudsite.stockroom.databinding.DialogAddEventBinding
 import com.thecloudsite.stockroom.databinding.DialogAddNoteBinding
 import com.thecloudsite.stockroom.databinding.DialogAddPortfolioBinding
 import com.thecloudsite.stockroom.databinding.DialogRemoveAssetBinding
+import com.thecloudsite.stockroom.databinding.DialogRenameAccountBinding
 import com.thecloudsite.stockroom.databinding.DialogSplitAssetBinding
 import com.thecloudsite.stockroom.databinding.FragmentStockdataBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
@@ -112,6 +118,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
+import java.util.HashSet
 import java.util.Locale
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
@@ -213,6 +220,7 @@ class StockDataFragment : Fragment() {
 
   private val assetChange = StockAssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
+  private var assetsAccounts: List<String> = emptyList()
 
   companion object {
     fun newInstance() = StockDataFragment()
@@ -295,6 +303,154 @@ class StockDataFragment : Fragment() {
     if (asset.commission > 0.0) {
       dialogBinding.addCommission.setText(DecimalFormat(DecimalFormat2To8Digits).format(asset.commission))
     }
+
+    val standardAccount = getString(R.string.standard_account)
+    dialogBinding.textViewAssetAccount.text =
+      if (asset.account.isEmpty()) {
+        standardAccount
+      } else {
+        asset.account
+      }
+    dialogBinding.textViewAssetAccount.setOnClickListener { view ->
+      val popupMenu = PopupMenu(requireContext(), view)
+
+      var menuIndex: Int = Menu.FIRST
+
+      assetsAccounts.sortedBy {
+        it.toLowerCase(Locale.ROOT)
+      }
+        .forEach { account ->
+          val name = if (account.isEmpty()) {
+            // first entry in bold
+            SpannableStringBuilder()
+              .bold { append(standardAccount) }
+          } else {
+            account
+          }
+          popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+        }
+
+      // Last-1 item is to add a new account
+      // Last item is to rename the account
+      val addAccountItem = SpannableStringBuilder()
+        .color(context?.getColor(R.color.colorAccent)!!) {
+          bold { append(getString(R.string.add_account)) }
+        }
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
+
+      val renameAccountItem = SpannableStringBuilder()
+        .color(context?.getColor(R.color.colorAccent)!!) {
+          bold { append(getString(R.string.rename_account)) }
+        }
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, renameAccountItem)
+
+      popupMenu.show()
+
+      popupMenu.setOnMenuItemClickListener { menuitem ->
+        val addSelected = menuIndex - 2 == menuitem.itemId
+        val renameSelected = menuIndex - 1 == menuitem.itemId
+
+        if (addSelected) {
+          // Add/Rename account
+          val builderAdd = android.app.AlertDialog.Builder(requireContext())
+          // Get the layout account
+          val inflaterAdd = LayoutInflater.from(requireContext())
+
+          // Inflate and set the layout for the dialog
+          // Pass null as the parent view because its going in the dialog layout
+          val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
+
+          builderAdd.setView(addDialogBinding.root)
+            .setTitle(getString(R.string.add_account))
+            // Add action buttons
+            .setPositiveButton(R.string.add) { _, _ ->
+              // Add () to avoid cast exception.
+              val accountText = (addDialogBinding.addAccount.text).toString()
+                .trim()
+
+              dialogBinding.textViewAssetAccount.text = accountText
+            }
+            .setNegativeButton(
+              R.string.cancel
+            ) { _, _ ->
+            }
+          builderAdd
+            .create()
+            .show()
+        } else
+          if (renameSelected) {
+            // Add/Rename account
+            val builderRename = android.app.AlertDialog.Builder(requireContext())
+            // Get the layout account
+            val inflaterRename = LayoutInflater.from(requireContext())
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            val dialogBindingRename = DialogRenameAccountBinding.inflate(inflaterRename)
+
+            dialogBindingRename.textViewAccountSpinner.adapter =
+              ArrayAdapter(requireContext(), layout.simple_list_item_1, assetsAccounts)
+
+            builderRename.setView(dialogBindingRename.root)
+              .setTitle(getString(R.string.rename_account))
+              // Add action buttons
+              .setPositiveButton(R.string.rename) { _, _ ->
+                // Add () to avoid cast exception.
+                val accountText = (dialogBindingRename.accountNew.text).toString()
+                  .trim()
+                if (accountText.isEmpty() || accountText.compareTo(
+                    standardAccount, true
+                  ) == 0
+                ) {
+                  Toast.makeText(
+                    requireContext(), getString(R.string.account_name_not_empty),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
+
+                if (dialogBindingRename.textViewAccountSpinner.isEmpty()) {
+                  Toast.makeText(
+                    requireContext(),
+                    getString(string.no_accounts_available),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
+
+                val used = assetsAccounts.find { account ->
+                  account.equals(accountText, true)
+                }
+                if (used != null) {
+                  Toast.makeText(
+                    requireContext(), getString(R.string.account_name_used, accountText),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
+
+                val accountOld = dialogBindingRename.textViewAccountSpinner.selectedItem.toString()
+                stockRoomViewModel.updateAccount(accountOld, accountText)
+              }
+              .setNegativeButton(
+                R.string.cancel
+              ) { _, _ ->
+              }
+            builderRename
+              .create()
+              .show()
+          } else {
+            val account = menuitem.title.trim()
+              .toString()
+            dialogBinding.textViewAssetAccount.text = account
+          }
+        true
+      }
+    }
+
     dialogBinding.addNote.setText(asset.note)
 
     val localDateTime = if (asset.date == 0L) {
@@ -314,7 +470,8 @@ class StockDataFragment : Fragment() {
       // Add action buttons
       .setPositiveButton(
         R.string.update
-      ) { _, _ ->
+      )
+      { _, _ ->
         val quantityText = (dialogBinding.addQuantity.text).toString()
           .trim()
         var quantity = 0.0
@@ -380,6 +537,12 @@ class StockDataFragment : Fragment() {
           }
         }
 
+        var accountText = (dialogBinding.textViewAssetAccount.text).toString()
+          .trim()
+        if (accountText == standardAccount) {
+          accountText = ""
+        }
+
         // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
         val localDateTimeNew: ZonedDateTime = ZonedDateTime.of(
           dialogBinding.datePickerAssetDate.year,
@@ -401,6 +564,7 @@ class StockDataFragment : Fragment() {
             symbol = symbol,
             quantity = quantity,
             price = price,
+            account = accountText,
             commission = commission,
             date = date,
             note = noteText
@@ -409,6 +573,7 @@ class StockDataFragment : Fragment() {
         if (asset.quantity != assetNew.quantity
           || asset.price != assetNew.price
           || asset.commission != assetNew.commission
+          || asset.account != assetNew.account
           || asset.date != assetNew.date
           || asset.note != assetNew.note
         ) {
@@ -450,7 +615,8 @@ class StockDataFragment : Fragment() {
       }
       .setNegativeButton(
         R.string.cancel
-      ) { _, _ ->
+      )
+      { _, _ ->
         //getDialog().cancel()
       }
     builder
@@ -737,6 +903,21 @@ class StockDataFragment : Fragment() {
           textViewDividend.text = dividendText
         */
         }
+      }
+    })
+
+    stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
+      if (assets != null) {
+        val map: HashSet<String> = hashSetOf()
+        assets.forEach { account ->
+          map.add(account.account)
+        }
+        assetsAccounts =
+          map.filter { account ->
+            account.isNotEmpty()
+          }.map { account ->
+            account
+          }
       }
     })
 

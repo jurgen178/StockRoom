@@ -2146,6 +2146,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.updatePortfolio(portfolioOld, portfolioNew)
   }
 
+  fun updateAccount(
+    accountOld: String,
+    accountNew: String
+  ) = scope.launch {
+    repository.updateAccount(accountOld, accountNew)
+  }
+
   fun getGroupSync(color: Int)
       : Group {
     var group: Group?

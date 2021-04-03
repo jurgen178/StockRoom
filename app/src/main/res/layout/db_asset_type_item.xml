@@ -89,7 +89,7 @@
       />
 
   <TextView
-      android:id="@+id/db_asset_note"
+      android:id="@+id/db_asset_account"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline5"
@@ -105,7 +105,7 @@
       />
 
   <TextView
-      android:id="@+id/db_asset_date"
+      android:id="@+id/db_asset_note"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline6"
@@ -121,7 +121,7 @@
       />
 
   <TextView
-      android:id="@+id/db_asset_sharesPerQuantity"
+      android:id="@+id/db_asset_date"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline7"
@@ -137,7 +137,7 @@
       />
 
   <TextView
-      android:id="@+id/db_asset_expirationDate"
+      android:id="@+id/db_asset_sharesPerQuantity"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline8"
@@ -153,7 +153,7 @@
       />
 
   <TextView
-      android:id="@+id/db_asset_premium"
+      android:id="@+id/db_asset_expirationDate"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline9"
@@ -169,11 +169,27 @@
       />
 
   <TextView
-      android:id="@+id/db_asset_commission"
+      android:id="@+id/db_asset_premium"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline10"
       app:layout_constraintEnd_toStartOf="@id/guideline11"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline10"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/db_asset_commission"
+      style="@style/db_item_style"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline11"
+      app:layout_constraintEnd_toStartOf="@id/guideline12"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
@@ -230,7 +246,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="730dp"
+      app:layout_constraintGuide_begin="740dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -238,7 +254,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="890dp"
+      app:layout_constraintGuide_begin="880dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -254,7 +270,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1140dp"
+      app:layout_constraintGuide_begin="1190dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -262,7 +278,15 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1240dp"
+      app:layout_constraintGuide_begin="1290dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline12"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="1390dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

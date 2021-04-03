@@ -599,4 +599,12 @@ limitations under the License. -->
   <string name="calc_missing_lambda">Der Befehl \'()\' erwartet eine Funktion.</string>
   <string name="calc_lambda_not_terminated">Fehlendes schließendes \'}\'.</string>
   <string name="calc_empty_definition">Funktionseintrag darf nicht leer sein.</string>
-  </resources>
+  <string name="account">Konto</string>
+  <string name="standard_account">Standard-Konto</string>
+  <string name="add_account">Konto hinzufügen</string>
+  <string name="rename_account">Konto umbenennen</string>
+  <string name="select_account">Konto auswählen</string>
+  <string name="new_account">Neuer Kontoname</string>
+  <string name="account_name_not_empty">Geben Sie einen Kontonamen ein.</string>
+  <string name="account_name_used">Das Konto \'%1$s\' wird bereits verwendet.</string>
+</resources>

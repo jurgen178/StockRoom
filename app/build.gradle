@@ -60,6 +60,10 @@ android {
   buildFeatures {
     viewBinding true
   }
+  sourceSets {
+    // Adds exported schema location as test app assets.
+    androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+  }
 }
 
 repositories {

@@ -76,6 +76,7 @@ data class DBData(
   val quantity: Double = 0.0,
   val price: Double = 0.0,
   val type: Int = 0,
+  val account: String = "",
   val date: Long = 0L,
   val sharesPerQuantity: Int = 1,
   val expirationDate: Long = 0L,
@@ -278,6 +279,7 @@ class ListDBAdapter(
           holder.binding.dbAssetQuantity.text = getHeaderStr("quantity")
           holder.binding.dbAssetPrice.text = getHeaderStr("price")
           holder.binding.dbAssetType.text = getHeaderStr("type")
+          holder.binding.dbAssetAccount.text = getHeaderStr("account")
           holder.binding.dbAssetNote.text = getHeaderStr("note")
           holder.binding.dbAssetDate.text = getHeaderStr("date")
           holder.binding.dbAssetSharesPerQuantity.text = getHeaderStr("sharesPerQuantity")
@@ -293,6 +295,7 @@ class ListDBAdapter(
           holder.binding.dbAssetPrice.text =
             DecimalFormat(DecimalFormat0To4Digits).format(data.price)
           holder.binding.dbAssetType.text = data.type.toString()
+          holder.binding.dbAssetAccount.text = data.account.toString()
           holder.binding.dbAssetNote.text = data.note
           holder.binding.dbAssetDate.text = getDateTimeStr(data.date)
           holder.binding.dbAssetSharesPerQuantity.text = "${data.sharesPerQuantity}"

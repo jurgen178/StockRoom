@@ -21,6 +21,7 @@ import android.graphics.Color
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -45,9 +46,9 @@ import kotlin.math.roundToInt
  * The fact that this has very few comments emphasizes its coolness.
  */
 @Database(
-    entities = [StoreData::class, StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class],
-    version = 1,
-    exportSchema = true
+  entities = [StoreData::class, StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class],
+  version = 2,
+  exportSchema = true
 )
 
 abstract class StockRoomDatabase : RoomDatabase() {
@@ -66,16 +67,51 @@ abstract class StockRoomDatabase : RoomDatabase() {
       // if it is, then create the database
       return INSTANCE ?: synchronized(this) {
         val instance = Room.databaseBuilder(
-            context.applicationContext,
-            StockRoomDatabase::class.java,
-            "stockroom_database"
+          context.applicationContext,
+          StockRoomDatabase::class.java,
+          "stockroom_database"
         )
-            .addCallback(StockRoomDatabaseCallback(scope, context))
-            .build()
+          .addCallback(StockRoomDatabaseCallback(scope, context))
+          .addMigrations(MIGRATION_1_2)
+          .build()
 
         INSTANCE = instance
         // return instance
         instance
+      }
+    }
+
+    val MIGRATION_1_2 = object : Migration(1, 2) {
+      override fun migrate(database: SupportSQLiteDatabase) {
+        val TABLE_NAME = "asset_table"
+        val TABLE_NAME_TEMP = "asset_table_temp"
+
+        database.execSQL(
+          """
+          CREATE TABLE `${TABLE_NAME_TEMP}` (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            symbol TEXT NOT NULL,
+            quantity REAL NOT NULL,
+            price REAL NOT NULL,
+            type INTEGER NOT NULL, 
+            account TEXT NOT NULL, 
+            note TEXT NOT NULL, 
+            date INTEGER NOT NULL, 
+            sharesPerQuantity INTEGER NOT NULL, 
+            expirationDate INTEGER NOT NULL, 
+            premium REAL NOT NULL,
+            commission REAL NOT NULL
+          )
+          """.trimIndent()
+        )
+        database.execSQL(
+          """
+          INSERT INTO `${TABLE_NAME_TEMP}` (symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission)
+          SELECT symbol, quantity, price, type, '', note, date, sharesPerQuantity, expirationDate, premium, commission FROM `${TABLE_NAME}`  
+          """.trimIndent()
+        )
+        database.execSQL("DROP TABLE `${TABLE_NAME}`")
+        database.execSQL("ALTER TABLE `${TABLE_NAME_TEMP}` RENAME TO `${TABLE_NAME}`")
       }
     }
 
@@ -104,35 +140,35 @@ abstract class StockRoomDatabase : RoomDatabase() {
       stockItemJsonList.forEach { stockItemJson ->
         val symbol = stockItemJson.symbol.toUpperCase(Locale.ROOT)
         stockRoomDao.insert(
-            StockDBdata(
-                symbol = symbol,
-                // can be null if it is not in the json
-                groupColor = stockItemJson.groupColor ?: 0,
-                note = stockItemJson.note ?: "",
-                alertBelow = stockItemJson.alertBelow ?: 0.0,
-                alertAbove = stockItemJson.alertAbove ?: 0.0
-            )
+          StockDBdata(
+            symbol = symbol,
+            // can be null if it is not in the json
+            groupColor = stockItemJson.groupColor ?: 0,
+            note = stockItemJson.note ?: "",
+            alertBelow = stockItemJson.alertBelow ?: 0.0,
+            alertAbove = stockItemJson.alertAbove ?: 0.0
+          )
         )
 
-        if(stockItemJson.assets != null) {
+        if (stockItemJson.assets != null) {
           stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets!!.map { asset ->
             Asset(
-                symbol = symbol,
-                quantity = asset.quantity ?: 0.0,
-                price = asset.price ?: 0.0,
-                date = asset.date ?: 0L
+              symbol = symbol,
+              quantity = asset.quantity ?: 0.0,
+              price = asset.price ?: 0.0,
+              date = asset.date ?: 0L
             )
           })
         }
 
-        if(stockItemJson.events != null) {
+        if (stockItemJson.events != null) {
           stockRoomDao.updateEvents(symbol = symbol, events = stockItemJson.events!!.map { event ->
             Event(
-                symbol = symbol,
-                type = event.type ?: 0,
-                title = event.title ?: "",
-                note = event.note ?: "",
-                datetime = event.datetime ?: 0L
+              symbol = symbol,
+              type = event.type ?: 0,
+              title = event.title ?: "",
+              note = event.note ?: "",
+              datetime = event.datetime ?: 0L
             )
           })
         }
@@ -159,16 +195,16 @@ abstract class StockRoomDatabase : RoomDatabase() {
         )
 
         val assets: List<AssetPreset> = listOf(
-            AssetPreset("AAPL", 6500.0, 5240.0, 1601683200, Color.BLUE),
-            AssetPreset("AMZN", 6500.0, 280.0, 1601683200, Color.MAGENTA),
-            AssetPreset("GE", 3700.0, 2470.0, 1601683200, Color.BLACK),
-            AssetPreset("BA", 5500.0, -640.0, 1601683200, Color.GREEN),
-            AssetPreset("CVX", 4500.0, -508.0, 1601683200, Color.rgb(0, 191, 255)),
-            AssetPreset("ANY", 8000.0, 6490.0, 1601683200, Color.YELLOW),
-            AssetPreset("MSFT", 5200.0, 1450.0, 1601683200, Color.rgb(173, 216, 230)),
-            AssetPreset("QCOM", 4200.0, 240.0, 1601683200, Color.rgb(0, 191, 255)),
-            AssetPreset("RM", 3600.0, 1110.0, 1601683200, Color.RED),
-            AssetPreset("TSLA", 7000.0, 2060.0, 1601683200, Color.rgb(72, 209, 204)),
+          AssetPreset("AAPL", 6500.0, 5240.0, 1601683200, Color.BLUE),
+          AssetPreset("AMZN", 6500.0, 280.0, 1601683200, Color.MAGENTA),
+          AssetPreset("GE", 3700.0, 2470.0, 1601683200, Color.BLACK),
+          AssetPreset("BA", 5500.0, -640.0, 1601683200, Color.GREEN),
+          AssetPreset("CVX", 4500.0, -508.0, 1601683200, Color.rgb(0, 191, 255)),
+          AssetPreset("ANY", 8000.0, 6490.0, 1601683200, Color.YELLOW),
+          AssetPreset("MSFT", 5200.0, 1450.0, 1601683200, Color.rgb(173, 216, 230)),
+          AssetPreset("QCOM", 4200.0, 240.0, 1601683200, Color.rgb(0, 191, 255)),
+          AssetPreset("RM", 3600.0, 1110.0, 1601683200, Color.RED),
+          AssetPreset("TSLA", 7000.0, 2060.0, 1601683200, Color.rgb(72, 209, 204)),
         )
 
         val symbols = assets.map { asset ->
@@ -195,11 +231,11 @@ abstract class StockRoomDatabase : RoomDatabase() {
 
             val price = data.marketPrice * (1 - gainvalue / assetvalue)
             val quantity = ((assetvalue - gainvalue) / price).roundToInt()
-                .toDouble()
+              .toDouble()
             val price2 = assetvalue / quantity
 
             stockRoomDao.addAsset(
-                Asset(symbol = asset.symbol, quantity = quantity, price = price2, date = asset.date)
+              Asset(symbol = asset.symbol, quantity = quantity, price = price2, date = asset.date)
             )
           }
         }
@@ -211,10 +247,10 @@ abstract class StockRoomDatabase : RoomDatabase() {
 
       // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
       stockRoomDao.updateNote(
-          symbol = "AAPL", note = context.getString(string.example_List_delete_all)
+        symbol = "AAPL", note = context.getString(string.example_List_delete_all)
       )
       stockRoomDao.updateNote(
-          symbol = "AMZN", note = context.getString(string.example_List_note)
+        symbol = "AMZN", note = context.getString(string.example_List_note)
       )
 
 /*

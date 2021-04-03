@@ -576,6 +576,14 @@ limitations under the License. -->
   <string name="calc_missing_lambda">The command \'()\' expects a function.</string>
   <string name="calc_lambda_not_terminated">Missing closing \'}\'.</string>
   <string name="calc_empty_definition">Function definition must not be empty.</string>
+  <string name="account">Account</string>
+  <string name="standard_account">Standard Account</string>
+  <string name="add_account">Add Account</string>
+  <string name="rename_account">Rename Account</string>
+  <string name="select_account">Select Account</string>
+  <string name="new_account">New account name</string>
+  <string name="account_name_not_empty">Enter an account name.</string>
+  <string name="account_name_used">The account \'%1$s\' is already used.</string>
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>
