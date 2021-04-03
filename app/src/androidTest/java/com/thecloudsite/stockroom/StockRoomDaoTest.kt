@@ -400,6 +400,25 @@ class StockRoomDaoTest {
 
   @Test
   @Throws(Exception::class)
+  fun updateAccountAssets() {
+    val stockDBdata1 = StockDBdata("symbol1")
+    stockRoomDao.insert(stockDBdata1)
+    val asset1 = Asset(symbol = "symbol1", quantity = 10.0, price = 1.0, account = "a")
+    stockRoomDao.addAsset(asset1)
+
+    val assets1 = stockRoomDao.getAssets("symbol1")
+    assertEquals(assets1.assets.size, 1)
+    assertEquals(assets1.assets[0].account, asset1.account)
+
+    stockRoomDao.updateAccount("a", "b")
+
+    val assetsRename1 = stockRoomDao.getAssets("symbol1")
+    assertEquals(assetsRename1.assets.size, 1)
+    assertEquals(assetsRename1.assets[0].account, "b")
+  }
+
+  @Test
+  @Throws(Exception::class)
   fun deleteStockDBdata() {
     val stockDBdata1 = StockDBdata("symbol1")
     stockRoomDao.insert(stockDBdata1)

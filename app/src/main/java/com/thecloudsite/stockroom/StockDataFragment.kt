@@ -78,7 +78,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.MainActivity.Companion.onlineDataTimerDelay
-import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Event
@@ -413,7 +412,7 @@ class StockDataFragment : Fragment() {
                 if (dialogBindingRename.textViewAccountSpinner.isEmpty()) {
                   Toast.makeText(
                     requireContext(),
-                    getString(string.no_accounts_available),
+                    getString(R.string.no_accounts_available),
                     Toast.LENGTH_LONG
                   )
                     .show()

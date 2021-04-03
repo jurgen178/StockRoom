@@ -74,6 +74,7 @@ data class AssetJson(
   var quantity: Double,
   val price: Double,
   val type: Int?,
+  var account: String?,
   var note: String?,
   var date: Long?,
   var sharesPerQuantity: Int?,
@@ -1293,6 +1294,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     } else {
                       0
                     },
+                    account = if (assetsObj.has("account")) {
+                      assetsObj.getString("account")
+                    } else {
+                      ""
+                    },
                     date = if (assetsObj.has("date")) {
                       assetsObj.getLong("date")
                     } else {
@@ -1916,6 +1922,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               quantity = validateDouble(asset.quantity),
               price = validateDouble(asset.price),
               type = if (asset.type != 0) asset.type else null,
+              account = if (asset.account.isNotEmpty()) asset.account else null,
               note = if (asset.note.isNotEmpty()) asset.note else null,
               date = if (asset.date != 0L) asset.date else null,
               sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,

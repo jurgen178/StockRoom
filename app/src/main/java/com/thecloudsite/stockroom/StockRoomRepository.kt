@@ -121,7 +121,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
     accountOld: String,
     accountNew: String
   ) {
-    stockRoomDao.updatePortfolio(accountOld, accountNew)
+    stockRoomDao.updateAccount(accountOld, accountNew)
   }
 
   @Suppress("RedundantSuspendModifier")

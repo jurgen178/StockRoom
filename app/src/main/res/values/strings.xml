@@ -584,6 +584,7 @@ limitations under the License. -->
   <string name="new_account">New account name</string>
   <string name="account_name_not_empty">Enter an account name.</string>
   <string name="account_name_used">The account \'%1$s\' is already used.</string>
+  <string name="no_accounts_available">No account available.</string>
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>

@@ -605,6 +605,7 @@ var events: List<Event>
     var quantity: Double,
     val price: Double,
     val type: Int?,
+    var account: String?,
     var note: String?,
     var date: Long?,
     var sharesPerQuantity: Int?,
