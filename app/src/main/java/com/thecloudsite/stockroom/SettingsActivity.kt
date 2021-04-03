@@ -41,14 +41,15 @@ import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.calc.CalcActivity
 import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
+import com.thecloudsite.stockroom.databinding.DialogRenameAccountBinding
 import com.thecloudsite.stockroom.databinding.DialogRenameSymbolBinding
 import com.thecloudsite.stockroom.utils.setAppTheme
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
+import java.util.HashSet
 import java.util.Locale
 
 const val exportListActivityRequestCode = 3
@@ -324,7 +325,7 @@ class SettingsActivity : AppCompatActivity(),
                 if (dialogBinding.textViewSymbolSpinner.isEmpty()) {
                   Toast.makeText(
                     requireContext(),
-                    getString(string.no_symbols_available),
+                    getString(R.string.no_symbols_available),
                     Toast.LENGTH_LONG
                   )
                     .show()
@@ -339,7 +340,7 @@ class SettingsActivity : AppCompatActivity(),
                 if (symbolNew.isEmpty() || symbolNew.contains(" ")) {
                   Toast.makeText(
                     requireContext(),
-                    getString(string.symbol_name_not_valid),
+                    getString(R.string.symbol_name_not_valid),
                     Toast.LENGTH_LONG
                   )
                     .show()
@@ -353,9 +354,9 @@ class SettingsActivity : AppCompatActivity(),
                   requireContext(),
 
                   if (renamed) {
-                    getString(string.symbol_renamed, symbolOld, symbolNew)
+                    getString(R.string.symbol_renamed, symbolOld, symbolNew)
                   } else {
-                    getString(string.symbol_not_renamed, symbolOld, symbolNew)
+                    getString(R.string.symbol_not_renamed, symbolOld, symbolNew)
                   },
 
                   Toast.LENGTH_LONG
@@ -372,6 +373,92 @@ class SettingsActivity : AppCompatActivity(),
 
             true
           }
+      }
+
+      val buttonRenameAccount: Preference? = findPreference("rename_account")
+      if (buttonRenameAccount != null) {
+        buttonRenameAccount.onPreferenceClickListener =
+          OnPreferenceClickListener {
+
+            val builder = android.app.AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val inflater = LayoutInflater.from(requireContext())
+            val dialogBinding = DialogRenameAccountBinding.inflate(inflater)
+            val standardAccount = getString(R.string.standard_account)
+            var assetsAccounts: List<String> = emptyList()
+            stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
+              if (assets != null) {
+                val map: HashSet<String> = hashSetOf()
+                assets.forEach { account ->
+                  map.add(account.account)
+                }
+
+                assetsAccounts =
+                  map.filter { account ->
+                    account.isNotEmpty()
+                  }.map { account ->
+                    account
+                  }
+
+                dialogBinding.textViewAccountSpinner.adapter =
+                  ArrayAdapter(requireContext(), layout.simple_list_item_1, assetsAccounts)
+              }
+            })
+
+            builder.setView(dialogBinding.root)
+              .setTitle(getString(R.string.rename_account))
+              // Add action buttons
+              .setPositiveButton(R.string.rename) { _, _ ->
+                // Add () to avoid cast exception.
+                val accountText = (dialogBinding.accountNew.text).toString()
+                  .trim()
+                if (accountText.isEmpty() || accountText.compareTo(
+                    standardAccount, true
+                  ) == 0
+                ) {
+                  Toast.makeText(
+                    requireContext(), getString(R.string.account_name_not_empty),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
+
+                if (dialogBinding.textViewAccountSpinner.isEmpty()) {
+                  Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_accounts_available),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
+
+                val isUsed = assetsAccounts.find { account ->
+                  account.equals(accountText, true)
+                }
+                if (isUsed != null) {
+                  Toast.makeText(
+                    requireContext(), getString(R.string.account_name_used, accountText),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
+
+                val accountOld = dialogBinding.textViewAccountSpinner.selectedItem.toString()
+                stockRoomViewModel.updateAccount(accountOld, accountText)
+              }
+              .setNegativeButton(
+                R.string.cancel
+              ) { _, _ ->
+              }
+            builder
+              .create()
+              .show()
+          }
+
+        true
       }
 
       val buttonResetPortfolios: Preference? = findPreference("reset_portfolios")

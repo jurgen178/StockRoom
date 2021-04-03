@@ -608,4 +608,5 @@ limitations under the License. -->
   <string name="account_name_not_empty">Geben Sie einen Kontonamen ein.</string>
   <string name="account_name_used">Das Konto \'%1$s\' wird bereits verwendet.</string>
   <string name="no_accounts_available">Kein Konto verfügbar.</string>
+  <string name="rename_account_desc">Rename an account.</string>
 </resources>

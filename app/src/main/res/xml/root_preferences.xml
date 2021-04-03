@@ -86,6 +86,13 @@
         app:icon="@drawable/ic_action_rename_symbol"
         />
 
+    <Preference
+        app:key="rename_account"
+        app:title="@string/rename_account"
+        app:summary="@string/rename_account_desc"
+        app:icon="@drawable/ic_action_rename_account"
+        />
+
     <!--
         <Preference
             app:key="export_cloud"
