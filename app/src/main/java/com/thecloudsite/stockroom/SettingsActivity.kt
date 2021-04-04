@@ -411,6 +411,16 @@ class SettingsActivity : AppCompatActivity(),
               .setTitle(getString(R.string.rename_account))
               // Add action buttons
               .setPositiveButton(R.string.rename) { _, _ ->
+                if (dialogBinding.textViewAccountSpinner.isEmpty()) {
+                  Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_accounts_available),
+                    Toast.LENGTH_LONG
+                  )
+                    .show()
+                  return@setPositiveButton
+                }
+
                 // Add () to avoid cast exception.
                 val accountText = (dialogBinding.accountNew.text).toString()
                   .trim()
@@ -420,16 +430,6 @@ class SettingsActivity : AppCompatActivity(),
                 ) {
                   Toast.makeText(
                     requireContext(), getString(R.string.account_name_not_empty),
-                    Toast.LENGTH_LONG
-                  )
-                    .show()
-                  return@setPositiveButton
-                }
-
-                if (dialogBinding.textViewAccountSpinner.isEmpty()) {
-                  Toast.makeText(
-                    requireContext(),
-                    getString(R.string.no_accounts_available),
                     Toast.LENGTH_LONG
                   )
                     .show()
