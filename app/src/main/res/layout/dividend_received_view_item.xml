@@ -153,14 +153,14 @@ limitations under the License. -->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="490dp"
+        app:layout_constraintGuide_begin="440dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="690dp"
+        app:layout_constraintGuide_begin="590dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
@@ -174,7 +174,7 @@ limitations under the License. -->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="890dp"
+        app:layout_constraintGuide_begin="790dp"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
