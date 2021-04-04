@@ -143,6 +143,7 @@ class SummaryGroupAdapter internal constructor(
 
   private fun updateData() {
     data.clear()
+
     val (allText1, allText2) = getTotal(0, true, stockItemsList)
     val portfolio = SharedRepository.selectedPortfolio.value ?: ""
     val overview = if (portfolio.isEmpty()) {
@@ -160,6 +161,61 @@ class SummaryGroupAdapter internal constructor(
         summarygroup_all_items
       )
     )
+
+    // Add Summary for each Account.
+    val map: java.util.HashSet<String> = hashSetOf()
+
+    stockItemsList.forEach { stockItem ->
+      stockItem.assets.forEach { account ->
+        map.add(account.account)
+      }
+    }
+
+    val assetsAccounts =
+      map.map { account ->
+        account
+      }
+
+    if (assetsAccounts.size > 1) {
+      assetsAccounts.forEach { account ->
+
+        // Deep copy of the list.
+//        val stockItemsListCopy1: MutableList<StockItem> = mutableListOf()
+//        stockItemsListCopy1.addAll(stockItemsList.map { it.copy() })
+        var stockItemsListCopy = stockItemsList.map { it.copy() }
+
+        // Filter for stockitems matching the account.
+        stockItemsListCopy.forEach { stockItem ->
+          stockItem.assets = stockItem.assets.filter { asset ->
+            asset.account == account
+          }
+        }
+
+        stockItemsListCopy = stockItemsListCopy.filter { stockItem ->
+          stockItem.assets.isNotEmpty()
+        }
+
+        val (allText1Account, allText2Account) = getTotal(0, true, stockItemsListCopy)
+        val accountName = context.getString(
+          R.string.account_overview_headline, if (account.isEmpty()) {
+            context.getString(R.string.standard_account)
+          } else {
+            account
+          }
+        )
+
+        data.add(
+          SummaryData(
+            overview + "\n$accountName",
+            "",
+            allText1Account,
+            allText2Account,
+            context.getColor(R.color.white),
+            summarygroup_all_items
+          )
+        )
+      }
+    }
 
     // Get all groups.
     val groupSet = HashSet<Int>()
@@ -320,7 +376,10 @@ class SummaryGroupAdapter internal constructor(
         }
         .forEach { dividend ->
 
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
+          val localDateTime = ZonedDateTime.ofInstant(
+            Instant.ofEpochSecond(dividend.paydate),
+            ZoneOffset.systemDefault()
+          )
           val year = localDateTime.year
           if (!totalDividendPaidMap.containsKey(year)) {
             totalDividendPaidMap[year] = 0.0

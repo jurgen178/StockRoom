@@ -587,6 +587,7 @@ limitations under the License. -->
   <string name="no_accounts_available">No account available.</string>
   <string name="rename_account_desc">Rename a stock account.</string>
   <string name="assetlistaccount">Account</string>
+  <string name="account_overview_headline">Account \'%1$s\'</string>
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>

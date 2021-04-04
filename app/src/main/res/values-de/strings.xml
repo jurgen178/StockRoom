@@ -610,4 +610,5 @@ limitations under the License. -->
   <string name="no_accounts_available">Kein Konto verfügbar.</string>
   <string name="rename_account_desc">Benennt ein Wertpapier-Konto um.</string>
   <string name="assetlistaccount">Konto</string>
+  <string name="account_overview_headline">Konto \'%1$s\'</string>
 </resources>
