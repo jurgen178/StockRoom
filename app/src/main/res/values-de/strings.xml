@@ -609,4 +609,5 @@ limitations under the License. -->
   <string name="account_name_used">Das Konto \'%1$s\' wird bereits verwendet.</string>
   <string name="no_accounts_available">Kein Konto verfügbar.</string>
   <string name="rename_account_desc">Benennt ein Wertpapier-Konto um.</string>
+  <string name="assetlistaccount">Konto</string>
 </resources>

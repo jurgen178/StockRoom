@@ -586,6 +586,7 @@ limitations under the License. -->
   <string name="account_name_used">The account \'%1$s\' is already used.</string>
   <string name="no_accounts_available">No account available.</string>
   <string name="rename_account_desc">Rename a stock account.</string>
+  <string name="assetlistaccount">Account</string>
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>

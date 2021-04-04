@@ -112,6 +112,7 @@ class AssetListAdapter internal constructor(
       holder.binding.textViewAssetValue.text = context.getString(R.string.assetlistvalue)
       holder.binding.textViewAssetCommission.text = context.getString(R.string.assetlistcommission)
       holder.binding.textViewAssetDate.text = context.getString(R.string.assetlistdate)
+      holder.binding.textViewAssetAccount.text = context.getString(R.string.assetlistaccount)
       holder.binding.textViewAssetNote.text = context.getString(R.string.assetlistnote)
       holder.binding.textViewAssetDelete.visibility = View.GONE
       holder.binding.assetSummaryView.visibility = View.GONE
@@ -174,6 +175,7 @@ class AssetListAdapter internal constructor(
         holder.binding.textViewAssetValue.text = SpannableStringBuilder()
           .color(Color.BLACK) { append(current.assetText) }
         holder.binding.textViewAssetDate.text = ""
+        holder.binding.textViewAssetAccount.text = ""
         holder.binding.textViewAssetNote.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
@@ -216,6 +218,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetTotal.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetCommission.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetDate.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetAccount.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetNote.setTextColor(colorNegativeAsset)
           }
           current.asset.type and obsoleteAssetType != 0 -> {
@@ -224,6 +227,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetTotal.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetCommission.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetDate.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetAccount.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetNote.setTextColor(colorObsoleteAsset)
           }
           defaultTextColor != null -> {
@@ -232,6 +236,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetTotal.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetCommission.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetDate.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetAccount.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetNote.setTextColor(defaultTextColor!!)
           }
         }
@@ -284,9 +289,17 @@ class AssetListAdapter internal constructor(
             ""
           }
         val datetime: ZonedDateTime =
-          ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.asset.date), ZoneOffset.systemDefault())
+          ZonedDateTime.ofInstant(
+            Instant.ofEpochSecond(current.asset.date),
+            ZoneOffset.systemDefault()
+          )
         val itemViewDateText =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        val itemViewAccountText = if (current.asset.account.isEmpty()) {
+          context.getString(R.string.standard_account)
+        } else {
+          current.asset.account
+        }
         val itemViewNoteText = current.asset.note
 
         // Negative values in italic.
@@ -305,6 +318,8 @@ class AssetListAdapter internal constructor(
             SpannableStringBuilder().italic { append(itemViewCommissionText) }
           holder.binding.textViewAssetDate.text =
             SpannableStringBuilder().italic { append(itemViewDateText) }
+          holder.binding.textViewAssetAccount.text =
+            SpannableStringBuilder().italic { append(itemViewAccountText) }
           holder.binding.textViewAssetNote.text =
             SpannableStringBuilder().italic { append(itemViewNoteText) }
         } else {
@@ -315,6 +330,7 @@ class AssetListAdapter internal constructor(
           holder.binding.textViewAssetValue.text = itemViewValueText
           holder.binding.textViewAssetCommission.text = itemViewCommissionText
           holder.binding.textViewAssetDate.text = itemViewDateText
+          holder.binding.textViewAssetAccount.text = itemViewAccountText
           holder.binding.textViewAssetNote.text = itemViewNoteText
         }
 
