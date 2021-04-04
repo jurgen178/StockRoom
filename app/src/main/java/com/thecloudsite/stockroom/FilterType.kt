@@ -19,6 +19,7 @@ package com.thecloudsite.stockroom
 import android.content.Context
 import android.text.SpannableStringBuilder
 import androidx.core.text.backgroundColor
+import androidx.core.text.bold
 import androidx.core.text.color
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.string
@@ -424,17 +425,21 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
 
   var filterAccountValue: String = ""
 
+  override val subTypeList =
+    listOf(
+      FilterSubTypeEnum.ContainsTextType,
+      FilterSubTypeEnum.NotContainsTextType
+    )
+
   override val selectionList: List<SpannableStringBuilder>
     get() {
       return SharedFilterAccountList.accounts.map { account ->
 
-        SpannableStringBuilder().append(
-          if (account.isEmpty()) {
-            context.getString(R.string.standard_account)
-          } else {
-            account
-          }
-        )
+        if (account.isEmpty()) {
+          SpannableStringBuilder().bold { append(context.getString(R.string.standard_account)) }
+        } else {
+          SpannableStringBuilder().append(account)
+        }
       }
     }
   override var data: String = ""
@@ -852,10 +857,10 @@ class FilterAccountType(
       asset.account == filterAccountValue
     }
     return when (subType) {
-      FilterSubTypeEnum.IsType -> {
+      FilterSubTypeEnum.ContainsTextType -> {
         accounts.isNotEmpty()
       }
-      FilterSubTypeEnum.IsNotType -> {
+      FilterSubTypeEnum.NotContainsTextType -> {
         accounts.isEmpty()
       }
       else -> false
