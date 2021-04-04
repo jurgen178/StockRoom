@@ -548,6 +548,7 @@ fun getAssetsRemoveOldestFirst(
       Asset(
         symbol = "",
         price = asset.price,
+        account = asset.account,
         quantity = asset.quantity,
         commission = asset.commission,
         type = asset.type and tagObsoleteAssetType.inv()
@@ -563,7 +564,7 @@ fun getAssetsRemoveOldestFirst(
       if (asset.quantity < 0.0) {
         var quantityToRemove = -asset.quantity
         for (j in k until i) {
-          if (assetListSortedCopy[j].quantity > 0.0) {
+          if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {
             if (quantityToRemove > assetListSortedCopy[j].quantity) {
               quantityToRemove -= assetListSortedCopy[j].quantity
               assetListSortedCopy[j].quantity = 0.0
@@ -790,7 +791,7 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
         bought += assetListCopy[j].commission
         assetListCopy[j].commission = 0.0
 
-        if (assetListCopy[j].quantity > 0.0) {
+        if (asset.account == assetListCopy[j].account && assetListCopy[j].quantity > 0.0) {
 
           // Start removing the quantity from the beginning.
           if (quantityToRemove > assetListCopy[j].quantity) {

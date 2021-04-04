@@ -386,9 +386,11 @@ class SettingsActivity : AppCompatActivity(),
             val dialogBinding = DialogRenameAccountBinding.inflate(inflater)
             val standardAccount = getString(R.string.standard_account)
             var assetsAccounts: List<String> = emptyList()
+
             stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
               if (assets != null) {
                 val map: HashSet<String> = hashSetOf()
+
                 assets.forEach { account ->
                   map.add(account.account)
                 }
@@ -456,9 +458,9 @@ class SettingsActivity : AppCompatActivity(),
             builder
               .create()
               .show()
-          }
 
         true
+          }
       }
 
       val buttonResetPortfolios: Preference? = findPreference("reset_portfolios")
