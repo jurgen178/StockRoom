@@ -179,9 +179,7 @@ class SummaryGroupAdapter internal constructor(
     if (assetsAccounts.size > 1) {
       assetsAccounts.forEach { account ->
 
-        // Deep copy of the list.
-//        val stockItemsListCopy1: MutableList<StockItem> = mutableListOf()
-//        stockItemsListCopy1.addAll(stockItemsList.map { it.copy() })
+        // Deep copy of the list because content gets removed.
         var stockItemsListCopy = stockItemsList.map { it.copy() }
 
         // Filter for stockitems matching the account.
