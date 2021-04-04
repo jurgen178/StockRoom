@@ -57,6 +57,7 @@ import com.thecloudsite.stockroom.utils.isValidSymbol
 import com.thecloudsite.stockroom.utils.setAppTheme
 import java.text.DecimalFormat
 import java.time.ZonedDateTime
+import java.util.HashSet
 import java.util.Locale
 
 // App constants.
@@ -182,6 +183,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateFilterList()
+      }
+    })
+
+    stockRoomViewModel.allAssetTable.observe(this, Observer { assets ->
+      if (assets != null) {
+        val map: HashSet<String> = hashSetOf()
+
+        assets.forEach { account ->
+          map.add(account.account)
+        }
+
+        SharedFilterAccountList.accounts =
+          map.map { account ->
+            account
+          }
       }
     })
 

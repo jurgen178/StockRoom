@@ -394,6 +394,8 @@ limitations under the License. -->
   <string name="filter_marketcap_desc">Der Wert der Marktkapitalisierung ist in Millionen.\nZum Beispiel 42 entspricht 42000000 = 42Mio.\n\nLarge-Cap ist größer 10Mrd\nMid-Cap ist 2Mrd bis 10Mrd\nSmall-Cap ist 300Mio bis 2Mrd\nMicro-Cap ist 50Mio bis 300Mio\nNano-Cap ist kleiner 50Mio</string>
   <string name="filter_quotetype_name">Wertpapiertyp</string>
   <string name="filter_quotetype_desc"></string>
+  <string name="filter_accounttype_name">Kontotyp</string>
+  <string name="filter_accounttype_desc"></string>
   <string name="filter_stockexchangename_name">Börsenname</string>
   <string name="filter_stockexchangename_desc"></string>
   <string name="filter_group_name">Gruppe</string>

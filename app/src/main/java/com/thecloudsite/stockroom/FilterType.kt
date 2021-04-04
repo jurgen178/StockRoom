@@ -59,6 +59,7 @@ enum class FilterTypeEnum {
   FilterProfitPercentageType,
   FilterAssetType,
   FilterAssetNoteType,
+  FilterAccountType,
   FilterCommissionType,
   FilterDividendPercentageType,
   FilterDividendPaidType,
@@ -127,6 +128,10 @@ object SharedFilterGroupList {
   var groups: List<Group> = emptyList()
 }
 
+object SharedFilterAccountList {
+  var accounts: List<String> = emptyList()
+}
+
 object FilterFactory {
   fun create(
     type: FilterTypeEnum,
@@ -139,6 +144,7 @@ object FilterFactory {
       FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
       FilterTypeEnum.FilterMarketCapType -> FilterMarketCapType(context)
       FilterTypeEnum.FilterQuoteType -> FilterQuoteType(context)
+      FilterTypeEnum.FilterAccountType -> FilterAccountType(context)
       FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
       FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
       FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
@@ -406,6 +412,42 @@ open class FilterQuoteTypeBaseType(override val context: Context) : FilterSelect
 
       return if (filterSelectionIndex >= 0 && filterSelectionIndex < quoteTypes.size) {
         SpannableStringBuilder().append(quoteTypes[filterSelectionIndex])
+      } else {
+        SpannableStringBuilder()
+      }
+    }
+}
+
+open class FilterAccountBaseType(override val context: Context) : FilterSelectionBaseType(
+  context
+) {
+
+  var filterAccountValue: String = ""
+
+  override val selectionList: List<SpannableStringBuilder>
+    get() {
+      return SharedFilterAccountList.accounts.map {
+        SpannableStringBuilder().append(it)
+      }
+    }
+  override var data: String = ""
+    get() = filterSelectionIndex.toString()
+    set(value) {
+      field = value
+      filterSelectionIndex = strToInt(value)
+
+      filterAccountValue =
+        if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterAccountList.accounts.size) {
+          SharedFilterAccountList.accounts[filterSelectionIndex]
+        } else {
+          ""
+        }
+    }
+
+  override val displayData: SpannableStringBuilder
+    get() {
+      return if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterAccountList.accounts.size) {
+        SpannableStringBuilder().append(SharedFilterAccountList.accounts[filterSelectionIndex])
       } else {
         SpannableStringBuilder()
       }
@@ -783,6 +825,32 @@ class FilterQuoteType(
   override val typeId = FilterTypeEnum.FilterQuoteType
   override val displayName = context.getString(R.string.filter_quotetype_name)
   override val desc = context.getString(R.string.filter_quotetype_desc)
+}
+
+class FilterAccountType(
+  context: Context
+) : FilterAccountBaseType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    return when (subType) {
+      FilterSubTypeEnum.IsType -> {
+        val accounts = stockItem.assets.filter { asset ->
+          asset.account == filterAccountValue
+        }
+        accounts.isEmpty()
+      }
+      FilterSubTypeEnum.IsNotType -> {
+        val accounts = stockItem.assets.filter { asset ->
+          asset.account != filterAccountValue
+        }
+        accounts.isEmpty()
+      }
+      else -> false
+    }
+  }
+
+  override val typeId = FilterTypeEnum.FilterAccountType
+  override val displayName = context.getString(R.string.filter_accounttype_name)
+  override val desc = context.getString(R.string.filter_accounttype_desc)
 }
 
 class FilterGroupType(
