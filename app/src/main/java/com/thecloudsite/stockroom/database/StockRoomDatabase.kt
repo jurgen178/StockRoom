@@ -83,12 +83,14 @@ abstract class StockRoomDatabase : RoomDatabase() {
 
     val MIGRATION_1_2 = object : Migration(1, 2) {
       override fun migrate(database: SupportSQLiteDatabase) {
-        val TABLE_NAME = "asset_table"
-        val TABLE_NAME_TEMP = "asset_table_temp"
+
+        // Add account to Asset table
+        val ASSET_TABLE_NAME = "asset_table"
+        val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
 
         database.execSQL(
           """
-          CREATE TABLE `${TABLE_NAME_TEMP}` (
+          CREATE TABLE `${ASSET_TABLE_NAME_TEMP}` (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             symbol TEXT NOT NULL,
             quantity REAL NOT NULL,
@@ -106,12 +108,40 @@ abstract class StockRoomDatabase : RoomDatabase() {
         )
         database.execSQL(
           """
-          INSERT INTO `${TABLE_NAME_TEMP}` (symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission)
-          SELECT symbol, quantity, price, type, '', note, date, sharesPerQuantity, expirationDate, premium, commission FROM `${TABLE_NAME}`  
+          INSERT INTO `${ASSET_TABLE_NAME_TEMP}` (symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission)
+          SELECT symbol, quantity, price, type, '', note, date, sharesPerQuantity, expirationDate, premium, commission FROM `${ASSET_TABLE_NAME}`  
           """.trimIndent()
         )
-        database.execSQL("DROP TABLE `${TABLE_NAME}`")
-        database.execSQL("ALTER TABLE `${TABLE_NAME_TEMP}` RENAME TO `${TABLE_NAME}`")
+        database.execSQL("DROP TABLE `${ASSET_TABLE_NAME}`")
+        database.execSQL("ALTER TABLE `${ASSET_TABLE_NAME_TEMP}` RENAME TO `${ASSET_TABLE_NAME}`")
+
+        // Add account to Dividend table
+        val DIVIDEND_TABLE_NAME = "dividend_table"
+        val DIVIDEND_TABLE_NAME_TEMP = "dividend_table_temp"
+
+        database.execSQL(
+          """
+          CREATE TABLE `${DIVIDEND_TABLE_NAME_TEMP}` (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            symbol TEXT NOT NULL,
+            amount REAL NOT NULL,
+            cycle INTEGER NOT NULL, 
+            paydate INTEGER NOT NULL, 
+            type INTEGER NOT NULL, 
+            account TEXT NOT NULL, 
+            exdate INTEGER NOT NULL, 
+            note TEXT NOT NULL
+          )
+          """.trimIndent()
+        )
+        database.execSQL(
+          """
+          INSERT INTO `${DIVIDEND_TABLE_NAME_TEMP}` (symbol, amount, cycle, paydate, type, account, exdate, note)
+          SELECT symbol, amount, cycle, paydate, type, '', exdate, note FROM `${DIVIDEND_TABLE_NAME}`  
+          """.trimIndent()
+        )
+        database.execSQL("DROP TABLE `${DIVIDEND_TABLE_NAME}`")
+        database.execSQL("ALTER TABLE `${DIVIDEND_TABLE_NAME_TEMP}` RENAME TO `${DIVIDEND_TABLE_NAME}`")
       }
     }
 
