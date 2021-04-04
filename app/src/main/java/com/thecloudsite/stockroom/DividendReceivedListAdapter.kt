@@ -98,6 +98,7 @@ class DividendReceivedListAdapter internal constructor(
       holder.binding.textViewDividendReceivedAmount.text = context.getString(R.string.dividend)
       holder.binding.textViewDividendReceivedDate.text = context.getString(R.string.dividend_date)
       holder.binding.textViewDividendReceivedCycle.text = context.getString(R.string.dividend_cycle)
+      holder.binding.textViewDividendReceivedAccount.text = context.getString(R.string.account)
       holder.binding.textViewDividendReceivedNote.text = context.getString(R.string.note)
       holder.binding.textViewDividendReceivedDelete.visibility = View.GONE
       holder.binding.dividendReceivedSummaryView.visibility = View.GONE
@@ -121,6 +122,7 @@ class DividendReceivedListAdapter internal constructor(
             }
         holder.binding.textViewDividendReceivedDate.text = ""
         holder.binding.textViewDividendReceivedCycle.text = ""
+        holder.binding.textViewDividendReceivedAccount.text = ""
         holder.binding.textViewDividendReceivedNote.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
@@ -162,6 +164,7 @@ class DividendReceivedListAdapter internal constructor(
         holder.binding.textViewDividendReceivedDate.text =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
         holder.binding.textViewDividendReceivedCycle.text = dividendCycleStr(current.cycle, context)
+        holder.binding.textViewDividendReceivedAccount.text = current.account
         holder.binding.textViewDividendReceivedNote.text = current.note
 
         holder.binding.textViewDividendReceivedDelete.visibility = View.VISIBLE

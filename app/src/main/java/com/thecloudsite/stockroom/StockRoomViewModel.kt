@@ -96,6 +96,7 @@ data class DividendJson(
   val paydate: Long,
   val exdate: Long?,
   val type: Int?,
+  val account: String?,
   val note: String?
 )
 
@@ -1432,6 +1433,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                   } else {
                     0
                   },
+                  account = if (dividendsObj.has("account")) {
+                    dividendsObj.getString("account")
+                  } else {
+                    ""
+                  },
                   cycle = if (dividendsObj.has("cycle")) {
                     dividendsObj.getInt("cycle")
                   } else {
@@ -1963,6 +1969,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               cycle = dividend.cycle,
               paydate = dividend.paydate,
               type = if (dividend.type != 0) dividend.type else null,
+              account = if (dividend.account.isNotEmpty()) dividend.account else null,
               exdate = if (dividend.exdate != 0L) dividend.exdate else null,
               note = if (dividend.note.isNotEmpty()) dividend.note else null
             )

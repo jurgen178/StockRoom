@@ -138,6 +138,7 @@ data class Dividend(
   val cycle: Int,
   val paydate: Long,
   val type: Int = 0,
+  var account: String = "",
   val exdate: Long = 0L,
   val note: String = ""
 )

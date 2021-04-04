@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "bfab55d2f1bbe934be4083bb77b3db74",
+    "identityHash": "d825fa5362e1ee75aee91377ceeaddb8",
     "entities": [
       {
         "tableName": "store_table",
@@ -298,7 +298,7 @@
       },
       {
         "tableName": "dividend_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `amount` REAL NOT NULL, `cycle` INTEGER NOT NULL, `paydate` INTEGER NOT NULL, `type` INTEGER NOT NULL, `exdate` INTEGER NOT NULL, `note` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `symbol` TEXT NOT NULL, `amount` REAL NOT NULL, `cycle` INTEGER NOT NULL, `paydate` INTEGER NOT NULL, `type` INTEGER NOT NULL, `account` TEXT NOT NULL, `exdate` INTEGER NOT NULL, `note` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -337,6 +337,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "account",
+            "columnName": "account",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "exdate",
             "columnName": "exdate",
             "affinity": "INTEGER",
@@ -362,7 +368,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bfab55d2f1bbe934be4083bb77b3db74')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd825fa5362e1ee75aee91377ceeaddb8')"
     ]
   }
 }

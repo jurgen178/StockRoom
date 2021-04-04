@@ -24,7 +24,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.thecloudsite.stockroom.database.Dividend
+import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDatabase
+import com.thecloudsite.stockroom.utils.epsilon
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,23 +48,39 @@ class MigrationTest {
   fun migrate1To2_Test() {
     helper.createDatabase(TEST_DB, 1)
       .apply {
-        val values = ContentValues()
-        values.put("id", 4)
-        values.put("symbol", "ktln")
-        values.put("quantity", 1.0)
-        values.put("price", 42.0)
-        values.put("type", 0)
-        values.put("note", "note")
-        values.put("date", 123L)
-        values.put("sharesPerQuantity", 2)
-        values.put("expirationDate", 3L)
-        values.put("premium", 1.2)
-        values.put("commission", 2.3)
+        val assetValues = ContentValues()
+        assetValues.put("id", 4)
+        assetValues.put("symbol", "ktln")
+        assetValues.put("quantity", 1.0)
+        assetValues.put("price", 42.0)
+        assetValues.put("type", 0)
+        assetValues.put("note", "note")
+        assetValues.put("date", 123L)
+        assetValues.put("sharesPerQuantity", 2)
+        assetValues.put("expirationDate", 3L)
+        assetValues.put("premium", 1.2)
+        assetValues.put("commission", 2.3)
 
-        this.insert("asset_table", SQLiteDatabase.CONFLICT_REPLACE, values)
+        this.insert("asset_table", SQLiteDatabase.CONFLICT_REPLACE, assetValues)
 
         this.execSQL(
           "INSERT INTO asset_table (id, symbol, quantity, price, type, note, date, sharesPerQuantity, expirationDate, premium, commission) VALUES (42, 'ktln2' , 1.02 , 42.02 , 02 , 'note2' , 1232 , 22 , 32 , 1.22 , 2.32);"
+        )
+
+        val dividendValues = ContentValues()
+        dividendValues.put("id", 4)
+        dividendValues.put("symbol", "ktln")
+        dividendValues.put("amount", 42.0)
+        dividendValues.put("cycle", 2)
+        dividendValues.put("paydate", 123L)
+        dividendValues.put("type", 0)
+        dividendValues.put("exdate", 3L)
+        dividendValues.put("note", "note")
+
+        this.insert("dividend_table", SQLiteDatabase.CONFLICT_REPLACE, dividendValues)
+
+        this.execSQL(
+          "INSERT INTO dividend_table (id, symbol, amount, cycle, paydate, type, exdate, note) VALUES (43, 'ktln3' , 1.03 , 3 , 033 , 0, 123, 'note3');"
         )
 
         // Prepare for the next version.
@@ -77,26 +96,38 @@ class MigrationTest {
     val cursor = db.query("SELECT * FROM asset_table")
     cursor.moveToFirst()
 
-    // Expect 10 columns
+    // Expect 12 columns
     assertEquals(12, cursor.columnCount)
 
-    // Expect 3 entries
+    // Expect 2 entries
     assertEquals(2, cursor.count)
 
     var stringEntry: String = ""
 
     stringEntry = cursor.getString(cursor.getColumnIndex("symbol"))
     assertEquals("ktln", stringEntry)
+
+    // dividend test
+    val cursor2 = db.query("SELECT * FROM dividend_table")
+    cursor2.moveToFirst()
+
+    // Expect 9 columns
+    assertEquals(9, cursor2.columnCount)
+
+    // Expect 2 entries
+    assertEquals(2, cursor2.count)
   }
 
   val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
-      val TABLE_NAME = "asset_table"
-      val TABLE_NAME_TEMP = "asset_table_temp"
+
+      // Add account to Asset table
+      val ASSET_TABLE_NAME = "asset_table"
+      val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
 
       database.execSQL(
         """
-          CREATE TABLE `${TABLE_NAME_TEMP}` (
+          CREATE TABLE `${ASSET_TABLE_NAME_TEMP}` (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             symbol TEXT NOT NULL,
             quantity REAL NOT NULL,
@@ -114,12 +145,40 @@ class MigrationTest {
       )
       database.execSQL(
         """
-          INSERT INTO `${TABLE_NAME_TEMP}` (symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission)
-          SELECT symbol, quantity, price, type, '', note, date, sharesPerQuantity, expirationDate, premium, commission FROM `${TABLE_NAME}`  
+          INSERT INTO `${ASSET_TABLE_NAME_TEMP}` (symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission)
+          SELECT symbol, quantity, price, type, '', note, date, sharesPerQuantity, expirationDate, premium, commission FROM `${ASSET_TABLE_NAME}`  
           """.trimIndent()
       )
-      database.execSQL("DROP TABLE `${TABLE_NAME}`")
-      database.execSQL("ALTER TABLE `${TABLE_NAME_TEMP}` RENAME TO `${TABLE_NAME}`")
+      database.execSQL("DROP TABLE `${ASSET_TABLE_NAME}`")
+      database.execSQL("ALTER TABLE `${ASSET_TABLE_NAME_TEMP}` RENAME TO `${ASSET_TABLE_NAME}`")
+
+      // Add account to Dividend table
+      val DIVIDEND_TABLE_NAME = "dividend_table"
+      val DIVIDEND_TABLE_NAME_TEMP = "dividend_table_temp"
+
+      database.execSQL(
+        """
+          CREATE TABLE `${DIVIDEND_TABLE_NAME_TEMP}` (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            symbol TEXT NOT NULL,
+            amount REAL NOT NULL,
+            cycle INTEGER NOT NULL, 
+            paydate INTEGER NOT NULL, 
+            type INTEGER NOT NULL, 
+            account TEXT NOT NULL, 
+            exdate INTEGER NOT NULL, 
+            note TEXT NOT NULL
+          )
+          """.trimIndent()
+      )
+      database.execSQL(
+        """
+          INSERT INTO `${DIVIDEND_TABLE_NAME_TEMP}` (symbol, amount, cycle, paydate, type, account, exdate, note)
+          SELECT symbol, amount, cycle, paydate, type, '', exdate, note FROM `${DIVIDEND_TABLE_NAME}`  
+          """.trimIndent()
+      )
+      database.execSQL("DROP TABLE `${DIVIDEND_TABLE_NAME}`")
+      database.execSQL("ALTER TABLE `${DIVIDEND_TABLE_NAME_TEMP}` RENAME TO `${DIVIDEND_TABLE_NAME}`")
     }
   }
 }

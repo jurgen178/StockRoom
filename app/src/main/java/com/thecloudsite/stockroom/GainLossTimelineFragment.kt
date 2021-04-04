@@ -100,72 +100,90 @@ class GainLossTimelineFragment : Fragment() {
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItems ->
+      items?.let { stockItemsList ->
 
-        var capitalGain = 0.0
-        var capitalLoss = 0.0
-        val capitalGainLossMap: MutableMap<Int, GainLoss2> = mutableMapOf()
+        val capitalGainLossMap: MutableMap<Int, MutableMap<String, GainLoss2>> = mutableMapOf()
 
-        stockItems.forEach { stockItem ->
-          val (gain, loss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
-          // Merge gain and loss of the individual stock to one gain/loss to prevent
-          // having individual loss/gain reported in the summary.
-          val capitalGainLoss = gain - loss
+        // Add Summary for all accounts.
+        updateMap(stockItemsList, "", capitalGainLossMap)
 
-          // Add the gain/loss of the stock
-          val capitalGainLossText = getCapitalGainLossText(
-            requireContext(),
-            gain,
-            loss,
-            0.0,
-            "-",
-            "\n"
-          )
+        // Add Summary for each Account.
+        val map: java.util.HashSet<String> = hashSetOf()
 
-          when {
-            capitalGainLoss > 0.0 -> {
-              capitalGain += capitalGainLoss
-            }
-            capitalGainLoss < 0.0 -> {
-              capitalLoss += -capitalGainLoss
-            }
-            else -> {
-            }
-          }
-
-          gainLossMap.forEach { (year, map) ->
-            if (!capitalGainLossMap.containsKey(year)) {
-              capitalGainLossMap[year] = GainLoss2()
-            }
-            val gainloss = map.gain - map.loss
-            if (gainloss >= 0.0) {
-              capitalGainLossMap[year]?.gain = capitalGainLossMap[year]?.gain!! + gainloss
-            } else {
-              capitalGainLossMap[year]?.loss = capitalGainLossMap[year]?.loss!! - gainloss
-            }
-
-            capitalGainLossMap[year]?.stockList?.add(
-              GainLossStockItem(
-                date = map.lastTransactionDate,
-                symbol = stockItem.stockDBdata.symbol,
-                text = capitalGainLossText
-              )
-            )
+        stockItemsList.forEach { stockItem ->
+          stockItem.assets.forEach { account ->
+            map.add(account.account)
           }
         }
 
+        val assetsAccounts =
+          map.map { account ->
+            account
+          }
+
+        if (assetsAccounts.size > 1) {
+          assetsAccounts.forEach { account ->
+
+            // Deep copy of the list because content gets removed.
+            var stockItemsListCopy = stockItemsList.map { it.copy() }
+
+            // Filter for stockitems matching the account.
+            stockItemsListCopy.forEach { stockItem ->
+              stockItem.assets = stockItem.assets.filter { asset ->
+                asset.account == account
+              }
+            }
+
+            stockItemsListCopy = stockItemsListCopy.filter { stockItem ->
+              stockItem.assets.isNotEmpty()
+            }
+
+            val accountStr = if (account.isEmpty()) {
+              getString(R.string.standard_account)
+            } else {
+              account
+            }
+
+            updateMap(stockItemsListCopy, accountStr, capitalGainLossMap)
+          }
+        }
+
+        // Timeline data.
         val gainLossList: MutableList<GainLossTimelineElement> = mutableListOf()
 
+        // Map gainloss to timeline data.
         capitalGainLossMap.toSortedMap()
           .forEach { (year, map) ->
-            val text = getCapitalGainLossText(requireContext(), map.gain, map.loss, 0.0, "-", "\n")
-            gainLossList.add(
-              GainLossTimelineElement(
-                date = "$year",
-                totalGainLoss = text,
-                map.stockList
+            // If map.size == 2 other accounts did not contribute.
+            // The map contains only all item and standard account items, which are the same.
+            val map1 = if (map.size == 2 && map.containsKey("")) {
+              mapOf<String, GainLoss2>(Pair("", map[""]!!))
+            } else {
+              map
+            }
+            map1.forEach { (account, gainloss) ->
+              val text = getCapitalGainLossText(
+                requireContext(),
+                gainloss.gain,
+                gainloss.loss,
+                0.0,
+                "-",
+                "\n"
               )
-            )
+
+              val accountName = if (account.isNotEmpty()) {
+                getString(R.string.account_overview_headline, account)
+              } else {
+                ""
+              }
+              gainLossList.add(
+                GainLossTimelineElement(
+                  date = "$year $accountName",
+                  totalGainLoss = text,
+                  gainloss.stockList
+                )
+              )
+            }
           }
 
         gainLossTimelineAdapter.updateData(gainLossList)
@@ -177,6 +195,70 @@ class GainLossTimelineFragment : Fragment() {
         recyclerView.addItemDecoration(getSectionCallback(gainLossList))
       }
     })
+  }
+
+  private fun updateMap(
+    stockItems: List<StockItem>,
+    account: String,
+    capitalGainLossMap: MutableMap<Int, MutableMap<String, GainLoss2>>
+  ) {
+    var capitalGain = 0.0
+    var capitalLoss = 0.0
+
+    stockItems.forEach { stockItem ->
+      val (gain, loss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
+      // Merge gain and loss of the individual stock to one gain/loss to prevent
+      // having individual loss/gain reported in the summary.
+      val capitalGainLoss = gain - loss
+
+      // Add the gain/loss of the stock
+      val capitalGainLossText = getCapitalGainLossText(
+        requireContext(),
+        gain,
+        loss,
+        0.0,
+        "-",
+        "\n"
+      )
+
+      when {
+        capitalGainLoss > 0.0 -> {
+          capitalGain += capitalGainLoss
+        }
+        capitalGainLoss < 0.0 -> {
+          capitalLoss += -capitalGainLoss
+        }
+        else -> {
+        }
+      }
+
+      gainLossMap.forEach { (year, map) ->
+        if (!capitalGainLossMap.containsKey(year)) {
+          capitalGainLossMap[year] = mutableMapOf()
+        }
+        val gainloss = map.gain - map.loss
+
+        if (capitalGainLossMap[year]?.containsKey(account) == false) {
+          capitalGainLossMap[year]?.put(account, GainLoss2())
+        }
+
+        if (gainloss >= 0.0) {
+          capitalGainLossMap[year]?.get(account)?.gain =
+            capitalGainLossMap[year]?.get(account)?.gain!! + gainloss
+        } else {
+          capitalGainLossMap[year]?.get(account)?.loss =
+            capitalGainLossMap[year]?.get(account)?.loss!! - gainloss
+        }
+
+        capitalGainLossMap[year]?.get(account)?.stockList?.add(
+          GainLossStockItem(
+            date = map.lastTransactionDate,
+            symbol = stockItem.stockDBdata.symbol,
+            text = capitalGainLossText
+          )
+        )
+      }
+    }
   }
 
   private fun getSectionCallback(timelineElementList: List<GainLossTimelineElement>): SectionCallback {

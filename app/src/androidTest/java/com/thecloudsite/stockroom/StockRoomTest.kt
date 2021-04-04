@@ -627,6 +627,7 @@ var events: List<Event>
     val paydate: Long,
     val exdate: Long?,
     val type: Int?,
+    val account: String?,
     val note: String?
   )
 
@@ -688,6 +689,7 @@ var events: List<Event>
             note = asset.note,
             date = asset.date,
             type = asset.type,
+            account = asset.account,
             sharesPerQuantity = asset.sharesPerQuantity,
             expirationDate = asset.expirationDate,
             premium = asset.premium,
@@ -705,6 +707,7 @@ var events: List<Event>
             exdate = dividend.exdate,
             paydate = dividend.paydate,
             type = dividend.type,
+            account = dividend.account,
             cycle = dividend.cycle,
             note = ""
           )

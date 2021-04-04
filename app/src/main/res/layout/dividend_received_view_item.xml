@@ -103,7 +103,7 @@ limitations under the License. -->
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewDividendReceivedNote"
+        android:id="@+id/textViewDividendReceivedAccount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -114,13 +114,24 @@ limitations under the License. -->
         />
 
     <TextView
+        android:id="@+id/textViewDividendReceivedNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
         android:id="@+id/textViewDividendReceivedDelete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:drawableStartCompat="@drawable/ic_action_delete2"
         app:drawableTint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toTopOf="parent"
         />
     <androidx.constraintlayout.widget.Guideline
@@ -157,6 +168,13 @@ limitations under the License. -->
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="740dp"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="890dp"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>

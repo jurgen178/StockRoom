@@ -23,13 +23,16 @@ import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.core.text.underline
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -45,6 +48,7 @@ import com.thecloudsite.stockroom.database.Assets
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Dividends
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.databinding.DialogAddAccountBinding
 import com.thecloudsite.stockroom.databinding.DialogAddDividendBinding
 import com.thecloudsite.stockroom.databinding.DialogAddNoteBinding
 import com.thecloudsite.stockroom.databinding.DialogSetAnnualDividendBinding
@@ -63,6 +67,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
+import java.util.HashSet
 import java.util.Locale
 
 enum class DividendType(val value: Int) {
@@ -103,6 +108,7 @@ class DividendFragment : Fragment() {
 
   private val assetChange = StockAssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
+  private var dividendsAccounts: List<String> = emptyList()
 
   companion object {
     fun newInstance() = DividendFragment()
@@ -127,6 +133,81 @@ class DividendFragment : Fragment() {
     dialogBinding.addDividend.setText(
       DecimalFormat(DecimalFormat0To6Digits).format(dividend.amount)
     )
+
+    val standardAccount = getString(R.string.standard_account)
+    dialogBinding.textViewAssetAccount.text =
+      if (dividend.account.isEmpty()) {
+        standardAccount
+      } else {
+        dividend.account
+      }
+    dialogBinding.textViewAssetAccount.setOnClickListener { view ->
+      val popupMenu = PopupMenu(requireContext(), view)
+
+      var menuIndex: Int = Menu.FIRST
+
+      dividendsAccounts.sortedBy {
+        it.toLowerCase(Locale.ROOT)
+      }
+        .forEach { account ->
+          val name = if (account.isEmpty()) {
+            // first entry in bold
+            SpannableStringBuilder()
+              .bold { append(standardAccount) }
+          } else {
+            account
+          }
+          popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+        }
+
+      // Last item is to add a new account
+      val addAccountItem = SpannableStringBuilder()
+        .color(context?.getColor(R.color.colorAccent)!!) {
+          bold { append(getString(R.string.add_account)) }
+        }
+      popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
+
+      popupMenu.show()
+
+      popupMenu.setOnMenuItemClickListener { menuitem ->
+        val addSelected = menuIndex - 1 == menuitem.itemId
+
+        if (addSelected) {
+          // Add/Rename account
+          val builderAdd = android.app.AlertDialog.Builder(requireContext())
+          // Get the layout account
+          val inflaterAdd = LayoutInflater.from(requireContext())
+
+          // Inflate and set the layout for the dialog
+          // Pass null as the parent view because its going in the dialog layout
+          val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
+
+          builderAdd.setView(addDialogBinding.root)
+            .setTitle(getString(R.string.add_account))
+            // Add action buttons
+            .setPositiveButton(R.string.add) { _, _ ->
+              // Add () to avoid cast exception.
+              val accountText = (addDialogBinding.addAccount.text).toString()
+                .trim()
+
+              dialogBinding.textViewAssetAccount.text = accountText
+            }
+            .setNegativeButton(
+              R.string.cancel
+            ) { _, _ ->
+            }
+          builderAdd
+            .create()
+            .show()
+        } else {
+          val account = menuitem.title.trim()
+            .toString()
+          dialogBinding.textViewAssetAccount.text = account
+        }
+        true
+      }
+    }
+
     dialogBinding.addNote.setText(dividend.note)
     val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
     // month is starting from zero
@@ -178,6 +259,12 @@ class DividendFragment : Fragment() {
             )
             val seconds = datetime.toEpochSecond() // in GMT
 
+            var accountText = (dialogBinding.textViewAssetAccount.text).toString()
+              .trim()
+            if (accountText == standardAccount) {
+              accountText = ""
+            }
+
             val noteText = (dialogBinding.addNote.text).toString()
               .trim()
 
@@ -187,6 +274,7 @@ class DividendFragment : Fragment() {
               )
 
             if (dividend.amount != dividendAmount
+              || dividend.account != accountText
               || dividend.note != noteText
               || dividend.cycle != cycle
               || dividend.paydate != seconds
@@ -197,6 +285,7 @@ class DividendFragment : Fragment() {
                   symbol = symbol,
                   amount = dividendAmount,
                   type = Received.value,
+                  account = accountText,
                   cycle = cycle,
                   paydate = seconds,
                   exdate = 0L,
@@ -496,6 +585,16 @@ class DividendFragment : Fragment() {
         dividendReceivedListAdapter.updateDividends(data)
         dividendAnnouncedListAdapter.updateDividends(data)
         binding.dividendNoteTextView.text = data.stockDBdata.dividendNote
+
+        val map: HashSet<String> = hashSetOf()
+
+        data.dividends.forEach { account ->
+          map.add(account.account)
+        }
+        dividendsAccounts =
+          map.map { account ->
+            account
+          }
       }
     })
 
@@ -561,6 +660,76 @@ class DividendFragment : Fragment() {
         dividendCycleToSelection(Quarterly.value)
       )
 
+      val standardAccount = getString(R.string.standard_account)
+      dialogBinding.textViewAssetAccount.text = standardAccount
+
+      dialogBinding.textViewAssetAccount.setOnClickListener { view ->
+        val popupMenu = PopupMenu(requireContext(), view)
+
+        var menuIndex: Int = Menu.FIRST
+
+        dividendsAccounts.sortedBy {
+          it.toLowerCase(Locale.ROOT)
+        }
+          .forEach { account ->
+            val name = if (account.isEmpty()) {
+              // first entry in bold
+              SpannableStringBuilder()
+                .bold { append(standardAccount) }
+            } else {
+              account
+            }
+            popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+          }
+
+        // Last item is to add a new account
+        val addAccountItem = SpannableStringBuilder()
+          .color(context?.getColor(R.color.colorAccent)!!) {
+            bold { append(getString(R.string.add_account)) }
+          }
+        popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
+
+        popupMenu.show()
+
+        popupMenu.setOnMenuItemClickListener { menuitem ->
+          val addSelected = menuIndex - 1 == menuitem.itemId
+
+          if (addSelected) {
+            // Add/Rename account
+            val builderAdd = android.app.AlertDialog.Builder(requireContext())
+            // Get the layout account
+            val inflaterAdd = LayoutInflater.from(requireContext())
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
+
+            builderAdd.setView(addDialogBinding.root)
+              .setTitle(getString(R.string.add_account))
+              // Add action buttons
+              .setPositiveButton(R.string.add) { _, _ ->
+                // Add () to avoid cast exception.
+                val accountText = (addDialogBinding.addAccount.text).toString()
+                  .trim()
+
+                dialogBinding.textViewAssetAccount.text = accountText
+              }
+              .setNegativeButton(
+                R.string.cancel
+              ) { _, _ ->
+              }
+            builderAdd
+              .create()
+              .show()
+          } else {
+            val account = menuitem.title.trim()
+              .toString()
+            dialogBinding.textViewAssetAccount.text = account
+          }
+          true
+        }
+      }
+
       builder.setView(dialogBinding.root)
         .setTitle(R.string.add_dividend)
         // Add action buttons
@@ -602,6 +771,12 @@ class DividendFragment : Fragment() {
               )
               val seconds = datetime.toEpochSecond() // in GMT
 
+              var accountText = (dialogBinding.textViewAssetAccount.text).toString()
+                .trim()
+              if (accountText == standardAccount) {
+                accountText = ""
+              }
+
               val noteText = (dialogBinding.addNote.text).toString()
                 .trim()
 
@@ -614,6 +789,7 @@ class DividendFragment : Fragment() {
                 symbol = symbol,
                 amount = dividendAmount,
                 type = Received.value,
+                account = accountText,
                 cycle = cycle,
                 paydate = seconds,
                 exdate = 0L,

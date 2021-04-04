@@ -187,6 +187,9 @@ class SummaryGroupAdapter internal constructor(
           stockItem.assets = stockItem.assets.filter { asset ->
             asset.account == account
           }
+          stockItem.dividends = stockItem.dividends.filter { dividend ->
+            dividend.account == account
+          }
         }
 
         stockItemsListCopy = stockItemsListCopy.filter { stockItem ->

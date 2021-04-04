@@ -13,7 +13,7 @@
     <item>Summary</item>
     <item>News</item>
     <item>Timeline Transactions</item>
-    <item>Timeline Gain/Loss</item>
+    <item>Timeline Executed Gain/Loss</item>
     <item>Timeline Events</item>
     <item>Timeline Dividends</item>
   </string-array>
@@ -30,7 +30,7 @@
     <item>Summary</item>
     <item>News</item>
     <item>Transactions</item>
-    <item>Gain/Loss</item>
+    <item>Executed Gain/Loss</item>
     <item>Events</item>
     <item>Dividends</item>
   </string-array>
