@@ -427,7 +427,14 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
   override val selectionList: List<SpannableStringBuilder>
     get() {
       return SharedFilterAccountList.accounts.map {
-        SpannableStringBuilder().append(it)
+
+        SpannableStringBuilder().append(
+          if (it.isEmpty()) {
+            context.getString(R.string.standard_account)
+          } else {
+            it
+          }
+        )
       }
     }
   override var data: String = ""
@@ -438,7 +445,12 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
 
       filterAccountValue =
         if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterAccountList.accounts.size) {
-          SharedFilterAccountList.accounts[filterSelectionIndex]
+          val account = SharedFilterAccountList.accounts[filterSelectionIndex]
+          if (account == context.getString(R.string.standard_account)) {
+            ""
+          } else {
+            account
+          }
         } else {
           ""
         }
@@ -447,7 +459,12 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
   override val displayData: SpannableStringBuilder
     get() {
       return if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterAccountList.accounts.size) {
-        SpannableStringBuilder().append(SharedFilterAccountList.accounts[filterSelectionIndex])
+        val account = SharedFilterAccountList.accounts[filterSelectionIndex]
+        if (account.isEmpty()) {
+          SpannableStringBuilder().append(context.getString(R.string.standard_account))
+        } else {
+          SpannableStringBuilder().append(account)
+        }
       } else {
         SpannableStringBuilder()
       }
@@ -831,17 +848,14 @@ class FilterAccountType(
   context: Context
 ) : FilterAccountBaseType(context) {
   override fun filter(stockItem: StockItem): Boolean {
+    val accounts = stockItem.assets.filter { asset ->
+      asset.account == filterAccountValue
+    }
     return when (subType) {
       FilterSubTypeEnum.IsType -> {
-        val accounts = stockItem.assets.filter { asset ->
-          asset.account == filterAccountValue
-        }
-        accounts.isEmpty()
+        accounts.isNotEmpty()
       }
       FilterSubTypeEnum.IsNotType -> {
-        val accounts = stockItem.assets.filter { asset ->
-          asset.account != filterAccountValue
-        }
         accounts.isEmpty()
       }
       else -> false
