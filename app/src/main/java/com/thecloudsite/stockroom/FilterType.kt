@@ -387,8 +387,8 @@ open class FilterQuoteTypeBaseType(override val context: Context) : FilterSelect
   override val selectionList: List<SpannableStringBuilder>
     get() {
       val quoteTypeNames = context.resources.getStringArray(array.quoteTypes)
-      return quoteTypeNames.map {
-        SpannableStringBuilder().append(it)
+      return quoteTypeNames.map { quoteTypeName ->
+        SpannableStringBuilder().append(quoteTypeName)
       }
     }
   override var data: String = ""
@@ -426,13 +426,13 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
 
   override val selectionList: List<SpannableStringBuilder>
     get() {
-      return SharedFilterAccountList.accounts.map {
+      return SharedFilterAccountList.accounts.map { account ->
 
         SpannableStringBuilder().append(
-          if (it.isEmpty()) {
+          if (account.isEmpty()) {
             context.getString(R.string.standard_account)
           } else {
-            it
+            account
           }
         )
       }
