@@ -64,6 +64,10 @@ import java.time.ZonedDateTime
 import java.util.HashSet
 import java.util.Locale
 
+object SharedAccountList {
+  var accounts: List<String> = listOf()
+}
+
 // App constants.
 // https://stackoverflow.com/questions/9947156/what-are-the-default-color-values-for-the-holo-theme-on-android-4-0
 // @android:color/holo_orange_light = 0xffffbb33
@@ -223,7 +227,7 @@ class MainActivity : AppCompatActivity() {
           map.add(dividend.account)
         }
 
-        SharedFilterAccountList.accounts =
+        SharedAccountList.accounts =
           map.map { account ->
             account
           }

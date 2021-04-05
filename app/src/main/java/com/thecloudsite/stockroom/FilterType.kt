@@ -130,10 +130,6 @@ object SharedFilterGroupList {
   var groups: List<Group> = emptyList()
 }
 
-object SharedFilterAccountList {
-  var accounts: List<String> = listOf()
-}
-
 object FilterFactory {
   fun create(
     type: FilterTypeEnum,
@@ -435,7 +431,7 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
 
   override val selectionList: List<SpannableStringBuilder>
     get() {
-      return SharedFilterAccountList.accounts.map { account ->
+      return SharedAccountList.accounts.map { account ->
 
         if (account.isEmpty()) {
           SpannableStringBuilder().bold { append(context.getString(R.string.standard_account)) }
@@ -451,8 +447,8 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
       filterSelectionIndex = strToInt(value)
 
       filterAccountValue =
-        if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterAccountList.accounts.size) {
-          val account = SharedFilterAccountList.accounts[filterSelectionIndex]
+        if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedAccountList.accounts.size) {
+          val account = SharedAccountList.accounts[filterSelectionIndex]
           if (account == context.getString(R.string.standard_account)) {
             ""
           } else {
@@ -465,8 +461,8 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
 
   override val displayData: SpannableStringBuilder
     get() {
-      return if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterAccountList.accounts.size) {
-        val account = SharedFilterAccountList.accounts[filterSelectionIndex]
+      return if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedAccountList.accounts.size) {
+        val account = SharedAccountList.accounts[filterSelectionIndex]
         if (account.isEmpty()) {
           SpannableStringBuilder().append(context.getString(R.string.standard_account))
         } else {

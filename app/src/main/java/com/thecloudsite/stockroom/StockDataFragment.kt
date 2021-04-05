@@ -113,7 +113,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.LONG
 import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
-import java.util.HashSet
 import java.util.Locale
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
@@ -215,7 +214,6 @@ class StockDataFragment : Fragment() {
 
   private val assetChange = StockAssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
-  private var assetsAccounts: List<String> = emptyList()
 
   companion object {
     fun newInstance() = StockDataFragment()
@@ -311,7 +309,7 @@ class StockDataFragment : Fragment() {
 
       var menuIndex: Int = Menu.FIRST
 
-      assetsAccounts.sortedBy {
+      SharedAccountList.accounts.sortedBy {
         it.toLowerCase(Locale.ROOT)
       }
         .forEach { account ->
@@ -825,20 +823,6 @@ class StockDataFragment : Fragment() {
           textViewDividend.text = dividendText
         */
         }
-      }
-    })
-
-    stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
-      if (assets != null) {
-        val map: HashSet<String> = hashSetOf()
-
-        assets.forEach { account ->
-          map.add(account.account)
-        }
-        assetsAccounts =
-          map.map { account ->
-            account
-          }
       }
     })
 
@@ -1539,7 +1523,7 @@ class StockDataFragment : Fragment() {
 
         var menuIndex: Int = Menu.FIRST
 
-        assetsAccounts.sortedBy {
+        SharedAccountList.accounts.sortedBy {
           it.toLowerCase(Locale.ROOT)
         }
           .forEach { account ->
@@ -1765,7 +1749,7 @@ class StockDataFragment : Fragment() {
 
           var menuIndex: Int = Menu.FIRST
 
-          assetsAccounts.sortedBy {
+          SharedAccountList.accounts.sortedBy {
             it.toLowerCase(Locale.ROOT)
           }
             .forEach { account ->

@@ -67,7 +67,6 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
-import java.util.HashSet
 import java.util.Locale
 
 enum class DividendType(val value: Int) {
@@ -108,7 +107,6 @@ class DividendFragment : Fragment() {
 
   private val assetChange = StockAssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
-  private var dividendsAccounts: List<String> = emptyList()
 
   companion object {
     fun newInstance() = DividendFragment()
@@ -146,7 +144,7 @@ class DividendFragment : Fragment() {
 
       var menuIndex: Int = Menu.FIRST
 
-      dividendsAccounts.sortedBy {
+      SharedAccountList.accounts.sortedBy {
         it.toLowerCase(Locale.ROOT)
       }
         .forEach { account ->
@@ -585,16 +583,6 @@ class DividendFragment : Fragment() {
         dividendReceivedListAdapter.updateDividends(data)
         dividendAnnouncedListAdapter.updateDividends(data)
         binding.dividendNoteTextView.text = data.stockDBdata.dividendNote
-
-        val map: HashSet<String> = hashSetOf()
-
-        data.dividends.forEach { account ->
-          map.add(account.account)
-        }
-        dividendsAccounts =
-          map.map { account ->
-            account
-          }
       }
     })
 
@@ -668,7 +656,7 @@ class DividendFragment : Fragment() {
 
         var menuIndex: Int = Menu.FIRST
 
-        dividendsAccounts.sortedBy {
+        SharedAccountList.accounts.sortedBy {
           it.toLowerCase(Locale.ROOT)
         }
           .forEach { account ->

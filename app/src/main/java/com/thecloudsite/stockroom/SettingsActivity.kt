@@ -49,7 +49,6 @@ import com.thecloudsite.stockroom.utils.setAppTheme
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
-import java.util.HashSet
 import java.util.Locale
 
 const val exportListActivityRequestCode = 3
@@ -385,27 +384,13 @@ class SettingsActivity : AppCompatActivity(),
             val inflater = LayoutInflater.from(requireContext())
             val dialogBinding = DialogRenameAccountBinding.inflate(inflater)
             val standardAccount = getString(R.string.standard_account)
-            var assetsAccounts: List<String> = emptyList()
 
-            stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
-              if (assets != null) {
-                val map: HashSet<String> = hashSetOf()
-
-                assets.forEach { account ->
-                  map.add(account.account)
-                }
-
-                assetsAccounts =
-                  map.filter { account ->
-                    account.isNotEmpty()
-                  }.map { account ->
-                    account
-                  }
-
-                dialogBinding.textViewAccountSpinner.adapter =
-                  ArrayAdapter(requireContext(), layout.simple_list_item_1, assetsAccounts)
-              }
-            })
+            dialogBinding.textViewAccountSpinner.adapter =
+              ArrayAdapter(
+                requireContext(),
+                layout.simple_list_item_1,
+                SharedAccountList.accounts
+              )
 
             builder.setView(dialogBinding.root)
               .setTitle(getString(R.string.rename_account))
@@ -436,7 +421,7 @@ class SettingsActivity : AppCompatActivity(),
                   return@setPositiveButton
                 }
 
-                val isUsed = assetsAccounts.find { account ->
+                val isUsed = SharedAccountList.accounts.find { account ->
                   account.equals(accountText, true)
                 }
                 if (isUsed != null) {
@@ -459,7 +444,7 @@ class SettingsActivity : AppCompatActivity(),
               .create()
               .show()
 
-        true
+            true
           }
       }
 
