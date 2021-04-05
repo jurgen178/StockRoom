@@ -70,15 +70,11 @@ class SummaryGroupAdapter internal constructor(
   class OnlineDataAllViewHolder(
     val binding: SummarygroupAllItemsBinding
   ) : BaseViewHolder<SummaryData>(binding.root) {
-    override fun bind(item: SummaryData) {
-    }
   }
 
   class OnlineDataViewHolder(
     val binding: SummarygroupItemBinding
   ) : BaseViewHolder<SummaryData>(binding.root) {
-    override fun bind(item: SummaryData) {
-    }
   }
 
   override fun onCreateViewHolder(
@@ -108,7 +104,6 @@ class SummaryGroupAdapter internal constructor(
     when (holder) {
 
       is OnlineDataAllViewHolder -> {
-        holder.bind(current)
 
         holder.binding.summaryItemDataDesc.text = current.desc
         holder.binding.summaryItemData.text = current.text1.append("\n")
@@ -116,7 +111,6 @@ class SummaryGroupAdapter internal constructor(
       }
 
       is OnlineDataViewHolder -> {
-        holder.bind(current)
 
         var color = current.color
         if (color == 0) {

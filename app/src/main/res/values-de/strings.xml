@@ -192,6 +192,7 @@ limitations under the License. -->
   <string name="asset_share_not_empty">Geben Sie eine Wertpapieranzahl ein.</string>
   <string name="asset_price_not_empty">Geben Sie einen Preis ein.</string>
   <string name="asset_summary_text">Gesamtwertpapierbestand:</string>
+  <string name="asset_summary_account_text">Gesamtwertpapierbestand für Konto \'%1$s\':</string>
   <string name="commission">Gebühr</string>
   <string name="asset_commission_not_valid">Geben Sie eine Gebühr ein.</string>
   <string name="title_activity_add">Wertpapiere hinzufügen</string>

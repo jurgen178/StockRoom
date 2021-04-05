@@ -169,6 +169,7 @@ limitations under the License. -->
   <string name="asset_share_not_empty">Enter a number of stocks.</string>
   <string name="asset_price_not_empty">Enter a price for the stock.</string>
   <string name="asset_summary_text">Total assets:</string>
+  <string name="asset_summary_account_text">Total assets for Account \'%1$s\':</string>
   <string name="commission">Commission</string>
   <string name="asset_commission_not_valid">Enter a commission for the stock.</string>
   <string name="title_activity_add">Add stocks</string>

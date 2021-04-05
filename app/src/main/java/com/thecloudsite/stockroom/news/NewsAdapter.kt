@@ -125,7 +125,6 @@ class NewsAdapter(
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(item: T)
   }
 
   private var newsDataList = if (headline.isNotEmpty()) {
@@ -144,29 +143,21 @@ class NewsAdapter(
   class NewsHeadlineViewHolder(
     val binding: NewsheadlineItemBinding
   ) : BaseViewHolder<NewsData>(binding.root) {
-    override fun bind(item: NewsData) {
-    }
   }
 
   class YahooNewsViewHolder(
     val binding: YahoonewsviewItemBinding
   ) : BaseViewHolder<NewsData>(binding.root) {
-    override fun bind(item: NewsData) {
-    }
   }
 
   class GoogleNewsViewHolder(
     val binding: GooglenewsviewItemBinding
   ) : BaseViewHolder<NewsData>(binding.root) {
-    override fun bind(item: NewsData) {
-    }
   }
 
   class NasdaqNewsViewHolder(
     val binding: NasdaqnewsviewItemBinding
   ) : BaseViewHolder<NewsData>(binding.root) {
-    override fun bind(item: NewsData) {
-    }
   }
 
   override fun onCreateViewHolder(
@@ -215,13 +206,11 @@ class NewsAdapter(
     when (holder) {
 
       is NewsHeadlineViewHolder -> {
-        holder.bind(current)
 
         holder.binding.newsHeadline.text = current.title
       }
 
       is YahooNewsViewHolder -> {
-        holder.bind(current)
 
         holder.binding.yahooNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -241,7 +230,6 @@ class NewsAdapter(
       }
 
       is GoogleNewsViewHolder -> {
-        holder.bind(current)
 
         holder.binding.googleNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -254,7 +242,6 @@ class NewsAdapter(
       }
 
       is NasdaqNewsViewHolder -> {
-        holder.bind(current)
 
         holder.binding.nasdaqNewsItemTitle.text =
           HtmlCompat.fromHtml(current.title, HtmlCompat.FROM_HTML_MODE_LEGACY)

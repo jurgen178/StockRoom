@@ -95,7 +95,6 @@ class ListDBAdapter(
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(item: T)
   }
 
   private var dbDataList: MutableList<DBData> = mutableListOf()
@@ -104,43 +103,31 @@ class ListDBAdapter(
   class HeadlineViewHolder(
     val binding: DbHeadlineTypeItemBinding
   ) : BaseViewHolder<DBData>(binding.root) {
-    override fun bind(item: DBData) {
-    }
   }
 
   class StockDBdataViewHolder(
     val binding: DbStockdbdataTypeItemBinding
   ) : BaseViewHolder<DBData>(binding.root) {
-    override fun bind(item: DBData) {
-    }
   }
 
   class GroupViewHolder(
     val binding: DbGroupTypeItemBinding
   ) : BaseViewHolder<DBData>(binding.root) {
-    override fun bind(item: DBData) {
-    }
   }
 
   class AssetViewHolder(
     val binding: DbAssetTypeItemBinding
   ) : BaseViewHolder<DBData>(binding.root) {
-    override fun bind(item: DBData) {
-    }
   }
 
   class EventViewHolder(
     val binding: DbEventTypeItemBinding
   ) : BaseViewHolder<DBData>(binding.root) {
-    override fun bind(item: DBData) {
-    }
   }
 
   class DividendViewHolder(
     val binding: DbDividendTypeItemBinding
   ) : BaseViewHolder<DBData>(binding.root) {
-    override fun bind(item: DBData) {
-    }
   }
 
   override fun onCreateViewHolder(
@@ -195,13 +182,11 @@ class ListDBAdapter(
     when (holder) {
 
       is HeadlineViewHolder -> {
-        holder.bind(data)
 
         holder.binding.dbHeadline.text = data.title
       }
 
       is StockDBdataViewHolder -> {
-        holder.bind(data)
 
         if (data.isHeader) {
           holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -246,7 +231,6 @@ class ListDBAdapter(
       }
 
       is GroupViewHolder -> {
-        holder.bind(data)
 
         if (data.isHeader) {
           holder.binding.dbGroupLayout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -270,7 +254,6 @@ class ListDBAdapter(
       }
 
       is AssetViewHolder -> {
-        holder.bind(data)
 
         if (data.isHeader) {
           holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -334,7 +317,6 @@ class ListDBAdapter(
       }
 
       is EventViewHolder -> {
-        holder.bind(data)
 
         if (data.isHeader) {
           holder.binding.dbEventLayout.setBackgroundColor(Color.rgb(139, 0, 0))
@@ -370,7 +352,6 @@ class ListDBAdapter(
       }
 
       is DividendViewHolder -> {
-        holder.bind(data)
 
         if (data.isHeader) {
           holder.binding.dbDividendLayout.setBackgroundColor(Color.rgb(139, 0, 0))

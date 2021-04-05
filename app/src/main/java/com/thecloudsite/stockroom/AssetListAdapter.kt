@@ -27,6 +27,7 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.AssetListAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
@@ -47,35 +48,75 @@ import kotlin.math.absoluteValue
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
+const val asset_headline_type: Int = 0
+const val asset_item_type: Int = 1
+const val asset_summary_type: Int = 2
+
 data class AssetListData(
+  val viewType: Int,
+  val deleteAll: Boolean = false,
   var asset: Asset,
   var onlineMarketData: OnlineMarketData? = null,
   var assetChangeText: SpannableStringBuilder = SpannableStringBuilder(),
-  var assetText: SpannableStringBuilder = SpannableStringBuilder()
+  var assetText: SpannableStringBuilder = SpannableStringBuilder(),
+  var capitalGainLossText: SpannableStringBuilder = SpannableStringBuilder()
 )
 
 class AssetListAdapter internal constructor(
   private val context: Context,
   private val clickListenerUpdateLambda: (Asset) -> Unit,
   private val clickListenerDeleteLambda: (String?, Asset?) -> Unit
-) : RecyclerView.Adapter<AssetListAdapter.AssetViewHolder>() {
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var assetList = mutableListOf<AssetListData>()
   private var assetsCopy = listOf<Asset>()
   private var defaultTextColor: Int? = null
 
+  abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    abstract fun bindUpdate(
+      asset: Asset,
+      clickListenerUpdateLambda: (Asset) -> Unit
+    )
+
+    abstract fun bindDelete(
+      symbol: String?,
+      asset: Asset?,
+      clickListenerDeleteLambda: (String?, Asset?) -> Unit
+    )
+  }
+
+  class HeadlineViewHolder(
+    val binding: AssetviewItemBinding
+  ) : BaseViewHolder<AssetListData>(binding.root) {
+
+    override fun bindUpdate(
+      asset: Asset,
+      clickListenerUpdateLambda: (Asset) -> Unit
+    ) {
+    }
+
+    override fun bindDelete(
+      symbol: String?,
+      asset: Asset?,
+      clickListenerDeleteLambda: (String?, Asset?) -> Unit
+    ) {
+    }
+  }
+
   class AssetViewHolder(
     val binding: AssetviewItemBinding
-  ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindUpdate(
+  ) : BaseViewHolder<AssetListData>(binding.root) {
+
+    override fun bindUpdate(
       asset: Asset,
       clickListenerUpdateLambda: (Asset) -> Unit
     ) {
       binding.textViewAssetItemsLayout.setOnClickListener { clickListenerUpdateLambda(asset) }
     }
 
-    fun bindDelete(
+    override fun bindDelete(
       symbol: String?,
       asset: Asset?,
       clickListenerDeleteLambda: (String?, Asset?) -> Unit
@@ -84,125 +125,87 @@ class AssetListAdapter internal constructor(
     }
   }
 
+  class SummaryViewHolder(
+    val binding: AssetviewItemBinding
+  ) : BaseViewHolder<AssetListData>(binding.root) {
+
+    override fun bindUpdate(
+      asset: Asset,
+      clickListenerUpdateLambda: (Asset) -> Unit
+    ) {
+    }
+
+    override fun bindDelete(
+      symbol: String?,
+      asset: Asset?,
+      clickListenerDeleteLambda: (String?, Asset?) -> Unit
+    ) {
+    }
+  }
+
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
-  ): AssetViewHolder {
+  ): BaseViewHolder<*> {
 
-    val binding = AssetviewItemBinding.inflate(inflater, parent, false)
-    return AssetViewHolder(binding)
+    return when (viewType) {
+      asset_headline_type -> {
+        val binding = AssetviewItemBinding.inflate(inflater, parent, false)
+        HeadlineViewHolder(binding)
+      }
+
+      asset_item_type -> {
+        val binding = AssetviewItemBinding.inflate(inflater, parent, false)
+        AssetViewHolder(binding)
+      }
+
+      asset_summary_type -> {
+        val binding = AssetviewItemBinding.inflate(inflater, parent, false)
+        SummaryViewHolder(binding)
+      }
+
+      else -> throw IllegalArgumentException("Invalid view type")
+    }
   }
 
   override fun onBindViewHolder(
-    holder: AssetViewHolder,
+    holder: BaseViewHolder<*>,
     position: Int
   ) {
+
     val current: AssetListData = assetList[position]
 
-    if (defaultTextColor == null) {
-      defaultTextColor = holder.binding.textViewAssetQuantity.currentTextColor
-    }
+    when (holder) {
 
-    // First entry is headline.
-    if (position == 0) {
-      holder.binding.textViewAssetQuantity.text = context.getString(R.string.assetlistquantity)
-      holder.binding.textViewAssetPrice.text = context.getString(R.string.assetlistprice)
-      holder.binding.textViewAssetTotal.text = context.getString(R.string.assetlisttotal)
-      holder.binding.textViewAssetChange.text = context.getString(R.string.assetlistchange)
-      holder.binding.textViewAssetValue.text = context.getString(R.string.assetlistvalue)
-      holder.binding.textViewAssetCommission.text = context.getString(R.string.assetlistcommission)
-      holder.binding.textViewAssetDate.text = context.getString(R.string.assetlistdate)
-      holder.binding.textViewAssetAccount.text = context.getString(R.string.assetlistaccount)
-      holder.binding.textViewAssetNote.text = context.getString(R.string.assetlistnote)
-      holder.binding.textViewAssetDelete.visibility = View.GONE
-      holder.binding.assetSummaryView.visibility = View.GONE
-      holder.binding.textViewAssetLayout.setBackgroundColor(
-        context.getColor(R.color.backgroundListColor)
-      )
+      is HeadlineViewHolder -> {
 
-      val background = TypedValue()
-      holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
-    } else {
-      // Last entry is summary.
-      if (position == assetList.size - 1) {
-        // handler for delete all
-        holder.bindDelete(current.asset.symbol, null, clickListenerDeleteLambda)
+        holder.binding.textViewAssetQuantity.text = context.getString(R.string.assetlistquantity)
+        holder.binding.textViewAssetPrice.text = context.getString(R.string.assetlistprice)
+        holder.binding.textViewAssetTotal.text = context.getString(R.string.assetlisttotal)
+        holder.binding.textViewAssetChange.text = context.getString(R.string.assetlistchange)
+        holder.binding.textViewAssetValue.text = context.getString(R.string.assetlistvalue)
+        holder.binding.textViewAssetCommission.text =
+          context.getString(R.string.assetlistcommission)
+        holder.binding.textViewAssetDate.text = context.getString(R.string.assetlistdate)
+        holder.binding.textViewAssetAccount.text = context.getString(R.string.assetlistaccount)
+        holder.binding.textViewAssetNote.text = context.getString(R.string.assetlistnote)
 
-        val isSum = current.asset.quantity > 0.0 && current.asset.price > 0.0
+        holder.binding.textViewAssetDelete.visibility = View.GONE
+        holder.binding.assetSummaryView.visibility = View.GONE
 
-        // Summary line is always black on yellow
-        holder.binding.textViewAssetQuantity.text = SpannableStringBuilder()
-          .color(Color.BLACK) {
-            append(
-              if (isSum) {
-                DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity)
-              } else {
-                ""
-              }
-            )
-          }
-
-        holder.binding.textViewAssetPrice.text = SpannableStringBuilder()
-          .color(Color.BLACK) {
-            append(
-              if (isSum) {
-                DecimalFormat(DecimalFormat2To4Digits).format(
-                  current.asset.price / current.asset.quantity
-                )
-              } else {
-                ""
-              }
-            )
-          }
-
-        holder.binding.textViewAssetCommission.text = if (current.asset.commission > 0.0) {
-          SpannableStringBuilder()
-            .color(Color.BLACK) {
-              append(
-                DecimalFormat(DecimalFormat2To4Digits).format(
-                  current.asset.commission
-                )
-              )
-            }
-        } else {
-          ""
-        }
-
-        holder.binding.textViewAssetTotal.text =
-          SpannableStringBuilder()
-            .color(Color.BLACK) { append(DecimalFormat(DecimalFormat2Digits).format(current.asset.price)) }
-        holder.binding.textViewAssetChange.text = current.assetChangeText
-        holder.binding.textViewAssetValue.text = SpannableStringBuilder()
-          .color(Color.BLACK) { append(current.assetText) }
-        holder.binding.textViewAssetDate.text = ""
-        holder.binding.textViewAssetAccount.text = ""
-        holder.binding.textViewAssetNote.text = ""
-
-        // no delete icon for empty list, headline + summaryline = 2
-        if (assetList.size <= 2) {
-          holder.binding.textViewAssetDelete.visibility = View.GONE
-        } else {
-          holder.binding.textViewAssetDelete.visibility = View.VISIBLE
-        }
-
-        holder.binding.assetSummaryView.visibility = View.VISIBLE
-
-        if (assetsCopy.isNotEmpty()) {
-          val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetsCopy)
-          val capitalGainLossText = getCapitalGainLossText(context, capitalGain, capitalLoss)
-          holder.binding.assetSummaryTextView.text = SpannableStringBuilder()
-            .append("${context.getString(R.string.summary_capital_gain)} ")
-            .append(capitalGainLossText)
-            .append("\n${context.getString(R.string.asset_summary_text)}")
-        } else {
-          holder.binding.assetSummaryTextView.text = context.getString(R.string.asset_summary_text)
-        }
-
-        holder.binding.textViewAssetLayout.setBackgroundColor(Color.YELLOW)
-
+        holder.binding.textViewAssetLayout.setBackgroundColor(
+          context.getColor(R.color.backgroundListColor)
+        )
         val background = TypedValue()
         holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
-      } else {
+      }
+
+      is AssetViewHolder -> {
+
+        if (defaultTextColor == null) {
+          defaultTextColor = holder.binding.textViewAssetQuantity.currentTextColor
+        }
+
         // Asset items
         holder.bindUpdate(current.asset, clickListenerUpdateLambda)
         holder.bindDelete(null, current.asset, clickListenerDeleteLambda)
@@ -295,11 +298,7 @@ class AssetListAdapter internal constructor(
           )
         val itemViewDateText =
           datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        val itemViewAccountText = if (current.asset.account.isEmpty()) {
-          context.getString(R.string.standard_account)
-        } else {
-          current.asset.account
-        }
+        val itemViewAccountText = current.asset.account
         val itemViewNoteText = current.asset.note
 
         // Negative values in italic.
@@ -336,13 +335,77 @@ class AssetListAdapter internal constructor(
 
         holder.binding.textViewAssetDelete.visibility = View.VISIBLE
         holder.binding.assetSummaryView.visibility = View.GONE
-        holder.binding.textViewAssetLayout.background = null
+      }
 
+      is SummaryViewHolder -> {
+
+        // handler for delete all
+        holder.bindDelete(current.asset.symbol, null, clickListenerDeleteLambda)
+
+        // Summary line is always black on yellow
+        holder.binding.textViewAssetQuantity.text = SpannableStringBuilder()
+          .color(Color.BLACK) {
+            append(DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity))
+          }
+
+        holder.binding.textViewAssetPrice.text = SpannableStringBuilder()
+          .color(Color.BLACK) {
+            append(
+              if (current.asset.quantity > 0.0) {
+                DecimalFormat(DecimalFormat2To4Digits).format(
+                  current.asset.price / current.asset.quantity
+                )
+              } else {
+                ""
+              }
+            )
+          }
+
+        holder.binding.textViewAssetCommission.text = if (current.asset.commission > 0.0) {
+          SpannableStringBuilder()
+            .color(Color.BLACK) {
+              append(
+                DecimalFormat(DecimalFormat2To4Digits).format(
+                  current.asset.commission
+                )
+              )
+            }
+        } else {
+          ""
+        }
+
+        holder.binding.textViewAssetTotal.text =
+          SpannableStringBuilder()
+            .color(Color.BLACK) { append(DecimalFormat(DecimalFormat2Digits).format(current.asset.price)) }
+        holder.binding.textViewAssetChange.text = current.assetChangeText
+        holder.binding.textViewAssetValue.text = SpannableStringBuilder()
+          .color(Color.BLACK) { append(current.assetText) }
+        holder.binding.textViewAssetDate.text = ""
+        holder.binding.textViewAssetAccount.text = current.asset.account
+        holder.binding.textViewAssetNote.text = ""
+
+        // no delete icon for empty list, headline + summaryline = 2
+        if (current.deleteAll || assetList.size <= 2) {
+          holder.binding.textViewAssetDelete.visibility = View.GONE
+        } else {
+          holder.binding.textViewAssetDelete.visibility = View.VISIBLE
+        }
+
+        holder.binding.assetSummaryView.visibility = View.VISIBLE
+
+        holder.binding.assetSummaryTextView.text = current.capitalGainLossText
+
+        holder.binding.textViewAssetLayout.setBackgroundColor(Color.YELLOW)
         val background = TypedValue()
-        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
         holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
       }
+
     }
+  }
+
+  override fun getItemViewType(position: Int): Int {
+    val element: AssetListData = assetList[position]
+    return element.viewType
   }
 
   internal fun updateAssets(assetData: StockAssetsLiveData) {
@@ -352,6 +415,7 @@ class AssetListAdapter internal constructor(
       // Headline placeholder
       assetList = mutableListOf(
         AssetListData(
+          viewType = asset_headline_type,
           asset = Asset(
             symbol = "",
             quantity = 0.0,
@@ -361,7 +425,7 @@ class AssetListAdapter internal constructor(
       )
 
       // Sort assets in the list by date.
-      val sortedList = assetData.assets!!.assets.sortedBy { asset ->
+      val sortedList = assetsCopy.sortedBy { asset ->
         asset.date
       }
 
@@ -369,6 +433,7 @@ class AssetListAdapter internal constructor(
 
       val sortedDataList = sortedList.map {
         AssetListData(
+          viewType = asset_item_type,
           asset = it,
           onlineMarketData = assetData.onlineMarketData
         )
@@ -377,10 +442,10 @@ class AssetListAdapter internal constructor(
       assetList.addAll(sortedDataList)
 
       // Summary
-      val symbol: String = assetData.assets!!.assets.firstOrNull()?.symbol ?: ""
+      val symbol: String = assetsCopy.firstOrNull()?.symbol ?: ""
       val assetChange = if (assetData.onlineMarketData != null) {
         getAssetChange(
-          assetData.assets!!.assets,
+          assetsCopy,
           assetData.onlineMarketData!!.marketPrice,
           assetData.onlineMarketData!!.postMarketData,
           Color.DKGRAY,
@@ -403,8 +468,20 @@ class AssetListAdapter internal constructor(
         SpannableStringBuilder()
       }
 
+      val capitalGainLossText = if (assetsCopy.isNotEmpty()) {
+        val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetsCopy)
+        SpannableStringBuilder()
+          .append(context.getString(R.string.asset_summary_text))
+          .append("\n${context.getString(R.string.summary_capital_gain)} ")
+          .append(getCapitalGainLossText(context, capitalGain, capitalLoss))
+      } else {
+        SpannableStringBuilder().append(context.getString(R.string.asset_summary_text))
+      }
+
       assetList.add(
         AssetListData(
+          viewType = asset_summary_type,
+          deleteAll = true, // only the main summary gets a delete icon
           asset = Asset(
             id = null,
             symbol = symbol,
@@ -413,9 +490,104 @@ class AssetListAdapter internal constructor(
             commission = totalCommission,
           ),
           assetChangeText = assetChange,
-          assetText = asset
+          assetText = asset,
+          capitalGainLossText = capitalGainLossText
         )
       )
+
+      // Add Summary for each Account.
+      val map: java.util.HashSet<String> = hashSetOf()
+
+      sortedList.forEach { account ->
+        map.add(account.account)
+      }
+
+      val assetsAccounts =
+        map.map { account ->
+          account
+        }
+
+      if (assetsAccounts.size > 1) {
+        assetsAccounts.forEach { account ->
+
+          // Deep copy of the list because content gets removed.
+          var assetsListCopy = sortedList.map { it.copy() }
+
+          // Filter for stockitems matching the account.
+          assetsListCopy = assetsListCopy.filter { asset ->
+            asset.account == account
+          }
+
+          val (totalQuantity2, totalPrice2, totalCommission2) = getAssets(
+            assetsListCopy,
+            obsoleteAssetType
+          )
+
+          val assetChangeAccount = if (assetData.onlineMarketData != null) {
+            getAssetChange(
+              assetsListCopy,
+              assetData.onlineMarketData!!.marketPrice,
+              assetData.onlineMarketData!!.postMarketData,
+              Color.DKGRAY,
+              context
+            ).second
+          } else {
+            SpannableStringBuilder()
+          }
+
+          val assetAccount = if (assetData.onlineMarketData != null) {
+            SpannableStringBuilder()
+              .bold {
+                append(
+                  DecimalFormat(DecimalFormat2Digits).format(
+                    totalQuantity2 * assetData.onlineMarketData!!.marketPrice
+                  )
+                )
+              }
+          } else {
+            SpannableStringBuilder()
+          }
+
+          val accountStr = if (account.isEmpty()) {
+            context.getString(R.string.standard_account)
+          } else {
+            account
+          }
+
+          val capitalGainLossTextAccount = if (assetsListCopy.isNotEmpty()) {
+            val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetsListCopy)
+            SpannableStringBuilder()
+              .append(context.getString(R.string.asset_summary_account_text, accountStr))
+              .append("\n${context.getString(R.string.summary_capital_gain)} ")
+              .append(getCapitalGainLossText(context, capitalGain, capitalLoss))
+          } else {
+            SpannableStringBuilder().append(
+              context.getString(
+                R.string.asset_summary_account_text,
+                accountStr
+              )
+            )
+          }
+
+          assetList.add(
+            AssetListData(
+              viewType = asset_summary_type,
+              asset = Asset(
+                id = null,
+                symbol = symbol,
+                quantity = totalQuantity2,
+                price = totalPrice2,
+                account = accountStr,
+                commission = totalCommission2,
+              ),
+              assetChangeText = assetChangeAccount,
+              assetText = assetAccount,
+              capitalGainLossText = capitalGainLossTextAccount
+            )
+          )
+        }
+      }
+
     }
 
     notifyDataSetChanged()
