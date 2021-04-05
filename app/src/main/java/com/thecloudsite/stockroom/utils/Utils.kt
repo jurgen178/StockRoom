@@ -18,6 +18,7 @@ package com.thecloudsite.stockroom.utils
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -37,6 +38,7 @@ import com.thecloudsite.stockroom.DividendCycle.Annual
 import com.thecloudsite.stockroom.DividendCycle.Monthly
 import com.thecloudsite.stockroom.DividendCycle.Quarterly
 import com.thecloudsite.stockroom.DividendCycle.SemiAnnual
+import com.thecloudsite.stockroom.FilterDataViewModel
 import com.thecloudsite.stockroom.OnlineMarketData
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.array
@@ -548,7 +550,7 @@ fun getAssetsRemoveOldestFirst(
       Asset(
         symbol = "",
         price = asset.price,
-        account = asset.account,
+        // account = asset.account,
         quantity = asset.quantity,
         commission = asset.commission,
         type = asset.type and tagObsoleteAssetType.inv()
@@ -564,7 +566,7 @@ fun getAssetsRemoveOldestFirst(
       if (asset.quantity < 0.0) {
         var quantityToRemove = -asset.quantity
         for (j in k until i) {
-          if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {
+          if (assetListSortedCopy[j].quantity > 0.0) {
             if (quantityToRemove > assetListSortedCopy[j].quantity) {
               quantityToRemove -= assetListSortedCopy[j].quantity
               assetListSortedCopy[j].quantity = 0.0
@@ -788,26 +790,29 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
 
       for (j in k until i) {
 
-        bought += assetListCopy[j].commission
-        assetListCopy[j].commission = 0.0
+        if (asset.account == assetListCopy[j].account) {
 
-        if (asset.account == assetListCopy[j].account && assetListCopy[j].quantity > 0.0) {
+          bought += assetListCopy[j].commission
+          assetListCopy[j].commission = 0.0
 
-          // Start removing the quantity from the beginning.
-          if (quantityToRemove > assetListCopy[j].quantity) {
-            // more quantities left than bought with this transaction
-            // add the (quantity) * (price) to the bought value
-            bought += assetListCopy[j].quantity * assetListCopy[j].price
-            quantityToRemove -= assetListCopy[j].quantity
-            assetListCopy[j].quantity = 0.0
-          } else {
-            // less quantities left than bought with this transaction,
-            // add the (remaining quantity) * (price) to the bought value
-            assetListCopy[j].quantity -= quantityToRemove
-            bought += quantityToRemove * assetListCopy[j].price
-            // Start with the index in the next iteration where it left off.
-            k = j
-            break
+          if (assetListCopy[j].quantity > 0.0) {
+
+            // Start removing the quantity from the beginning.
+            if (quantityToRemove > assetListCopy[j].quantity) {
+              // more quantities left than bought with this transaction
+              // add the (quantity) * (price) to the bought value
+              bought += assetListCopy[j].quantity * assetListCopy[j].price
+              quantityToRemove -= assetListCopy[j].quantity
+              assetListCopy[j].quantity = 0.0
+            } else {
+              // less quantities left than bought with this transaction,
+              // add the (remaining quantity) * (price) to the bought value
+              assetListCopy[j].quantity -= quantityToRemove
+              bought += quantityToRemove * assetListCopy[j].price
+              // Start with the index in the next iteration where it left off.
+              k = j
+              break
+            }
           }
         }
       }
@@ -1126,4 +1131,21 @@ fun frac(x: Double): Pair<Int?, Int> {
   }
 
   return Pair(null, 0)
+}
+
+fun updateFilterList(
+  context: Context,
+  filterDataViewModel: FilterDataViewModel,
+  preferences: SharedPreferences? = null
+) {
+
+  val sharedPreferences =
+    preferences ?: PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+  val selectedFilter = sharedPreferences.getString("selectedFilter", "")
+  val filterActive = sharedPreferences.getBoolean("filterActive", false)
+  val filterData = sharedPreferences.getString("filterSetting", "")
+  if (filterData != null) {
+    filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
+  }
+
 }

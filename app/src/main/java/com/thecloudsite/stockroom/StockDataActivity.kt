@@ -17,23 +17,40 @@
 package com.thecloudsite.stockroom
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thecloudsite.stockroom.calc.CalcActivity
+import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.ActivityStockBinding
 import com.thecloudsite.stockroom.news.NewsFragment
+import com.thecloudsite.stockroom.utils.updateFilterList
+import java.util.HashSet
 import java.util.Locale
 
 class StockDataActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityStockBinding
   private lateinit var symbol: String
+
+  private lateinit var stockRoomViewModel: StockRoomViewModel
+
+  private lateinit var filterDataViewModel: FilterDataViewModel
+
+  private val accountChange = AccountLiveData()
+  private val accountChangeLiveData = MediatorLiveData<AccountLiveData>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,8 +64,53 @@ class StockDataActivity : AppCompatActivity() {
     val symbolString = intent.getStringExtra("symbol")
     symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
 
+    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
+
+    filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
+
     // Query only this symbol when this activity is on.
     SharedRepository.selectedSymbol = symbol
+
+    // Use MediatorLiveView to combine the assets and dividend data changes.
+    val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
+    accountChangeLiveData.addSource(assetsLiveData) { value ->
+      if (value != null) {
+        accountChange.assets = value
+        accountChangeLiveData.postValue(accountChange)
+      }
+    }
+
+    val dividendsLiveData: LiveData<List<Dividend>> = stockRoomViewModel.allDividendTable
+    accountChangeLiveData.addSource(dividendsLiveData) { value ->
+      if (value != null) {
+        accountChange.dividends = value
+        accountChangeLiveData.postValue(accountChange)
+      }
+    }
+
+    // Observe asset or dividend changes.
+    accountChangeLiveData.observe(this, Observer { item ->
+      if (item != null) {
+        val map: HashSet<String> = hashSetOf()
+
+        item.assets.forEach { asset ->
+          map.add(asset.account)
+        }
+
+        item.dividends.forEach { dividend ->
+          map.add(dividend.account)
+        }
+
+        SharedAccountList.accounts =
+          map.map { account ->
+            account
+          }
+
+        // Account filters require assets and dividends.
+        // Update filters when assets or dividends change.
+        updateFilterList(this, filterDataViewModel)
+      }
+    })
 
     binding.stockViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {

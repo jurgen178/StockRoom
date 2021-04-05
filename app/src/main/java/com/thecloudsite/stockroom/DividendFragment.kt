@@ -189,6 +189,7 @@ class DividendFragment : Fragment() {
                 .trim()
 
               dialogBinding.textViewAssetAccount.text = accountText
+              SharedAccountList.accounts = SharedAccountList.accounts + accountText
             }
             .setNegativeButton(
               R.string.cancel
@@ -701,6 +702,7 @@ class DividendFragment : Fragment() {
                   .trim()
 
                 dialogBinding.textViewAssetAccount.text = accountText
+                SharedAccountList.accounts = SharedAccountList.accounts + accountText
               }
               .setNegativeButton(
                 R.string.cancel

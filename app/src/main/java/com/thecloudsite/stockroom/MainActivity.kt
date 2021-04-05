@@ -59,6 +59,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.isValidSymbol
 import com.thecloudsite.stockroom.utils.setAppTheme
+import com.thecloudsite.stockroom.utils.updateFilterList
 import java.text.DecimalFormat
 import java.time.ZonedDateTime
 import java.util.HashSet
@@ -90,9 +91,6 @@ class MainActivity : AppCompatActivity() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var eventList: MutableList<Events> = mutableListOf()
-
-  private val accountChange = AccountLiveData()
-  private val accountChangeLiveData = MediatorLiveData<AccountLiveData>()
 
   lateinit var onlineDataHandler: Handler
 
@@ -198,48 +196,7 @@ class MainActivity : AppCompatActivity() {
           group.name.toLowerCase(Locale.ROOT)
         }
 
-        updateFilterList()
-      }
-    })
-
-    // Use MediatorLiveView to combine the assets and dividend data changes.
-    val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
-    accountChangeLiveData.addSource(assetsLiveData) { value ->
-      if (value != null) {
-        accountChange.assets = value
-        accountChangeLiveData.postValue(accountChange)
-      }
-    }
-
-    val dividendsLiveData: LiveData<List<Dividend>> = stockRoomViewModel.allDividendTable
-    accountChangeLiveData.addSource(dividendsLiveData) { value ->
-      if (value != null) {
-        accountChange.dividends = value
-        accountChangeLiveData.postValue(accountChange)
-      }
-    }
-
-    // Observe asset or dividend changes.
-    accountChangeLiveData.observe(this, Observer { item ->
-      if (item != null) {
-        val map: HashSet<String> = hashSetOf()
-
-        item.assets.forEach { asset ->
-          map.add(asset.account)
-        }
-
-        item.dividends.forEach { dividend ->
-          map.add(dividend.account)
-        }
-
-        SharedAccountList.accounts =
-          map.map { account ->
-            account
-          }
-
-        // Account filters require assets and dividends.
-        // Update filters when assets or dividends change.
-        updateFilterList()
+        updateFilterList(this, filterDataViewModel)
       }
     })
 
@@ -511,7 +468,7 @@ class MainActivity : AppCompatActivity() {
         View.GONE
       }
 
-    updateFilterList(sharedPreferences)
+    updateFilterList(this, filterDataViewModel, sharedPreferences)
   }
 
   private var filterMenuIdMap: MutableMap<Int, String> = mutableMapOf()
@@ -845,18 +802,5 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         }
       }
     }
-  }
-
-  private fun updateFilterList(preferences: SharedPreferences? = null) {
-
-    val sharedPreferences =
-      preferences ?: PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
-    val selectedFilter = sharedPreferences.getString("selectedFilter", "")
-    val filterActive = sharedPreferences.getBoolean("filterActive", false)
-    val filterData = sharedPreferences.getString("filterSetting", "")
-    if (filterData != null) {
-      filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
-    }
-
   }
 }
