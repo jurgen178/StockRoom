@@ -60,11 +60,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
-data class AccountLiveData(
-  var assets: List<Asset> = emptyList(),
-  var dividends: List<Dividend> = emptyList(),
-)
-
 class FilterActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityFilterBinding
