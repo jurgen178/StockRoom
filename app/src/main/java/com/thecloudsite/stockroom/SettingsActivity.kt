@@ -385,11 +385,15 @@ class SettingsActivity : AppCompatActivity(),
             val dialogBinding = DialogRenameAccountBinding.inflate(inflater)
             val standardAccount = getString(R.string.standard_account)
 
+            // Default (empty) account cannot be renamed.
+            val accounts = SharedAccountList.accounts.filter { account ->
+              account.isNotEmpty()
+            }
             dialogBinding.textViewAccountSpinner.adapter =
               ArrayAdapter(
                 requireContext(),
                 layout.simple_list_item_1,
-                SharedAccountList.accounts
+                accounts
               )
 
             builder.setView(dialogBinding.root)

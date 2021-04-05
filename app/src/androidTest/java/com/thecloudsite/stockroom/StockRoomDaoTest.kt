@@ -403,6 +403,8 @@ class StockRoomDaoTest {
   fun updateAccountAssets() {
     val stockDBdata1 = StockDBdata("symbol1")
     stockRoomDao.insert(stockDBdata1)
+
+    // asset table
     val asset1 = Asset(symbol = "symbol1", quantity = 10.0, price = 1.0, account = "a")
     stockRoomDao.addAsset(asset1)
 
@@ -415,6 +417,17 @@ class StockRoomDaoTest {
     val assetsRename1 = stockRoomDao.getAssets("symbol1")
     assertEquals(assetsRename1.assets.size, 1)
     assertEquals(assetsRename1.assets[0].account, "b")
+
+    // dividend table
+    stockRoomDao.addDividend(
+      Dividend(symbol = "symbol1", amount = 13.0, type = 23, cycle = 1, account = "c", paydate = 23L, exdate = 33L)
+    )
+
+    stockRoomDao.updateAccount("c", "d")
+    val dividends = stockRoomDao.getDividends("symbol1")
+
+    assertEquals(dividends.dividends.size, 1)
+    assertEquals("d", dividends.dividends[0].account)
   }
 
   @Test

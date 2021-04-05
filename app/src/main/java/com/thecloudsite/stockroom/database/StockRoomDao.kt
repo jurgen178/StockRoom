@@ -286,10 +286,25 @@ interface StockRoomDao {
   )
 
   @Query("UPDATE asset_table SET account = :accountNew WHERE account = :accountOld")
-  fun updateAccount(
+  fun updateAssetAccount(
     accountOld: String,
     accountNew: String
   )
+
+  @Query("UPDATE dividend_table SET account = :accountNew WHERE account = :accountOld")
+  fun updateDividendAccount(
+    accountOld: String,
+    accountNew: String
+  )
+
+  @Transaction
+  fun updateAccount(
+    accountOld: String,
+    accountNew: String
+  ) {
+    updateAssetAccount(accountOld, accountNew)
+    updateDividendAccount(accountOld, accountNew)
+  }
 
   @Query("UPDATE stock_table SET group_color = :color WHERE symbol = :symbol")
   fun setStockGroupColor(
