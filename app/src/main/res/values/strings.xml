@@ -305,6 +305,7 @@ limitations under the License. -->
   <string name="dividend_deleted">Dividend entry deleted.</string>
   <string name="delete_dividend_confirm">Are you sure to delete the entry with the amount \'%1$s\' from %2$s</string>
   <string name="dividend_received_summary_text">Total dividends received</string>
+  <string name="dividend_received_summary_account_text">Total dividends received for Account \'%1$s\':</string>
   <string name="dividend_headline">Dividend</string>
   <string name="dividend_exdate">Ex-Dividend</string>
   <string name="totaldividend_paid">Dividend paid</string>

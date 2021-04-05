@@ -328,6 +328,7 @@ limitations under the License. -->
   <string name="dividend_deleted">Dividendeneintrag entfernt.</string>
   <string name="delete_dividend_confirm">Sind Sie sicher, dass Sie den Dividendeneintrag mit dem Wert \'%1$s\' vom %2$s entfernen möchten?</string>
   <string name="dividend_received_summary_text">Gesamtdividendenbetrag</string>
+  <string name="dividend_received_summary_account_text">Gesamtdividendenbetrag für Konto \'%1$s\':</string>
   <string name="dividend_headline">Dividende</string>
   <string name="dividend_exdate">Ex-Dividend</string>
   <string name="totaldividend_paid">Ausgezahlte Dividende</string>
