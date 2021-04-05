@@ -240,7 +240,7 @@ class FilterDataRepository(val context: Context) {
     get() {
       val filters = SharedRepository.filterMap.value
       return if (filters != null) {
-        SharedRepository.filterMap.value!!.filterMode
+        filters.filterMode
       } else {
         FilterModeTypeEnum.AndType
       }
@@ -248,7 +248,7 @@ class FilterDataRepository(val context: Context) {
     set(value) {
       val filters = SharedRepository.filterMap.value
       if (filters != null) {
-        SharedRepository.filterMap.value!!.filterMode = value
+        filters.filterMode = value
       }
     }
 

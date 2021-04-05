@@ -35,6 +35,8 @@ import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -46,6 +48,8 @@ import com.thecloudsite.stockroom.FilterDataTypeEnum.NoType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.SelectionType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.ActivityFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
@@ -57,6 +61,12 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
+import java.util.HashSet
+
+data class AccountLiveData(
+  var assets: List<Asset> = emptyList(),
+  var dividends: List<Dividend> = emptyList(),
+)
 
 class FilterActivity : AppCompatActivity() {
 
@@ -64,8 +74,7 @@ class FilterActivity : AppCompatActivity() {
   private val loadFilterActivityRequestCode = 5
   private val saveFilterActivityRequestCode = 6
   private lateinit var filterDataViewModel: FilterDataViewModel
-  //private lateinit var stockRoomViewModel: StockRoomViewModel
-  //private lateinit var groups: MutableList<Group>
+  // private lateinit var stockRoomViewModel: StockRoomViewModel
 
   // used by listener for FilterFactory.create because applicationContext cannot be used
   lateinit var thisCopy: FilterActivity
@@ -137,10 +146,7 @@ class FilterActivity : AppCompatActivity() {
       )
     })
 
-//    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
-//
-//    groups = stockRoomViewModel.getGroupsSync()
-//        .toMutableList()
+    // stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
     // initialize the display values for the sub type enum
     initSubTypeList(this)

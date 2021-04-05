@@ -60,11 +60,12 @@ enum class FilterTypeEnum {
   FilterProfitPercentageType,
   FilterAssetType,
   FilterAssetNoteType,
-  FilterAccountType,
+  FilterAssetAccountType,
   FilterCommissionType,
   FilterDividendPercentageType,
   FilterDividendPaidType,
   FilterDividendPaidYTDType,
+  FilterDividendAccountType,
   FilterQuantityType,
   FilterCapitalGainType,
   FilterPostMarketType,
@@ -130,7 +131,7 @@ object SharedFilterGroupList {
 }
 
 object SharedFilterAccountList {
-  var accounts: List<String> = emptyList()
+  var accounts: List<String> = listOf()
 }
 
 object FilterFactory {
@@ -145,7 +146,7 @@ object FilterFactory {
       FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
       FilterTypeEnum.FilterMarketCapType -> FilterMarketCapType(context)
       FilterTypeEnum.FilterQuoteType -> FilterQuoteType(context)
-      FilterTypeEnum.FilterAccountType -> FilterAccountType(context)
+      FilterTypeEnum.FilterAssetAccountType -> FilterAssetAccountType(context)
       FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
       FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
       FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
@@ -161,6 +162,7 @@ object FilterFactory {
       FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
       FilterTypeEnum.FilterDividendPaidType -> FilterDividendPaidType(context)
       FilterTypeEnum.FilterDividendPaidYTDType -> FilterDividendPaidYTDType(context)
+      FilterTypeEnum.FilterDividendAccountType -> FilterDividendAccountType(context)
       FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
       FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
       FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
@@ -849,7 +851,7 @@ class FilterQuoteType(
   override val desc = context.getString(R.string.filter_quotetype_desc)
 }
 
-class FilterAccountType(
+class FilterAssetAccountType(
   context: Context
 ) : FilterAccountBaseType(context) {
   override fun filter(stockItem: StockItem): Boolean {
@@ -867,9 +869,32 @@ class FilterAccountType(
     }
   }
 
-  override val typeId = FilterTypeEnum.FilterAccountType
-  override val displayName = context.getString(R.string.filter_accounttype_name)
-  override val desc = context.getString(R.string.filter_accounttype_desc)
+  override val typeId = FilterTypeEnum.FilterAssetAccountType
+  override val displayName = context.getString(R.string.filter_assetaccounttype_name)
+  override val desc = context.getString(R.string.filter_assetaccounttype_desc)
+}
+
+class FilterDividendAccountType(
+  context: Context
+) : FilterAccountBaseType(context) {
+  override fun filter(stockItem: StockItem): Boolean {
+    val accounts = stockItem.dividends.filter { dividend ->
+      dividend.account == filterAccountValue
+    }
+    return when (subType) {
+      FilterSubTypeEnum.ContainsTextType -> {
+        accounts.isNotEmpty()
+      }
+      FilterSubTypeEnum.NotContainsTextType -> {
+        accounts.isEmpty()
+      }
+      else -> false
+    }
+  }
+
+  override val typeId = FilterTypeEnum.FilterDividendAccountType
+  override val displayName = context.getString(R.string.filter_dividendaccounttype_name)
+  override val desc = context.getString(R.string.filter_dividendaccounttype_desc)
 }
 
 class FilterGroupType(

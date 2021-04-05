@@ -135,7 +135,7 @@ class DividendAnnouncedListAdapter internal constructor(
     dividendList =
       mutableListOf(
           Dividend(
-              symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, cycle = 0, note = ""
+              symbol = "", amount = 0.0, exdate = 0L, paydate = 0L, type = 0, account = "", cycle = 0, note = ""
           )
       )
     dividendList.addAll(dividends.dividends.filter { dividend ->

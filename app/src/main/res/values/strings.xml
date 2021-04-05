@@ -371,8 +371,10 @@ limitations under the License. -->
   <string name="filter_marketcap_desc">Market Capitalization is in Millions.\nFor example 42 is 42000000 = 42M Market Cap.\n\nLarge-Cap is more than 10B\nMid-Cap is between 2B and 10B\nSmall-Cap is between 300M and 2B\nMicro-Cap is between 50M and 300M\nNano-Cap is below 50M</string>
   <string name="filter_quotetype_name">Quote type</string>
   <string name="filter_quotetype_desc"></string>
-  <string name="filter_accounttype_name">Asset Account</string>
-  <string name="filter_accounttype_desc"></string>
+  <string name="filter_assetaccounttype_name">Asset Account</string>
+  <string name="filter_assetaccounttype_desc"></string>
+  <string name="filter_dividendaccounttype_name">Dividend Account</string>
+  <string name="filter_dividendaccounttype_desc"></string>
   <string name="filter_stockexchangename_name">Stock exchange name</string>
   <string name="filter_stockexchangename_desc"></string>
   <string name="filter_group_name">Group</string>
