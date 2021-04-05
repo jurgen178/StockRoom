@@ -565,9 +565,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allMediatorData.addSource(liveDataAssets) { value ->
       if (value != null) {
         updateAssetsFromDB(value)
-        val filters = SharedRepository.filterMap.value
-        SharedRepository.filterMap.value = null
-        SharedRepository.filterMap.value = filters
         //dataValidate()
         allMediatorData.value = allData.value?.let { process(it, false) }
       }
