@@ -361,6 +361,7 @@ class ListDBAdapter(
           holder.binding.dbDividendCycle.text = getHeaderStr("cycle")
           holder.binding.dbDividendPaydate.text = getHeaderStr("paydate")
           holder.binding.dbDividendType.text = getHeaderStr("type")
+          holder.binding.dbDividendAccount.text = getHeaderStr("account")
           holder.binding.dbDividendExdate.text = getHeaderStr("exdate")
           holder.binding.dbDividendNote.text = getHeaderStr("note")
         } else {
@@ -372,6 +373,7 @@ class ListDBAdapter(
           holder.binding.dbDividendCycle.text = data.cycle.toString()
           holder.binding.dbDividendPaydate.text = getDateStr(data.paydate)
           holder.binding.dbDividendType.text = data.type.toString()
+          holder.binding.dbDividendAccount.text = data.account.toString()
           holder.binding.dbDividendExdate.text = getDateStr(data.exdate)
           holder.binding.dbDividendNote.text = data.note
         }
@@ -580,6 +582,7 @@ class ListDBAdapter(
             quantity = asset.quantity,
             price = asset.price,
             type = asset.type,
+            account = asset.account,
             note = asset.note,
             date = asset.date,
             sharesPerQuantity = asset.sharesPerQuantity,
@@ -648,6 +651,7 @@ class ListDBAdapter(
             cycle = dividend.cycle,
             paydate = dividend.paydate,
             type = dividend.type,
+            account = dividend.account,
             exdate = dividend.exdate,
             note = dividend.note
           )

@@ -140,6 +140,7 @@ class AssetListAdapter internal constructor(
       asset: Asset?,
       clickListenerDeleteLambda: (String?, Asset?) -> Unit
     ) {
+      binding.textViewAssetDelete.setOnClickListener { clickListenerDeleteLambda(symbol, asset) }
     }
   }
 
@@ -339,9 +340,6 @@ class AssetListAdapter internal constructor(
 
       is SummaryViewHolder -> {
 
-        // handler for delete all
-        holder.bindDelete(current.asset.symbol, null, clickListenerDeleteLambda)
-
         // Summary line is always black on yellow
         holder.binding.textViewAssetQuantity.text = SpannableStringBuilder()
           .color(Color.BLACK) {
@@ -385,10 +383,12 @@ class AssetListAdapter internal constructor(
         holder.binding.textViewAssetNote.text = ""
 
         // no delete icon for empty list, headline + summaryline = 2
-        if (current.deleteAll || assetList.size <= 2) {
-          holder.binding.textViewAssetDelete.visibility = View.GONE
-        } else {
+        if (current.deleteAll && assetList.size > 1) {
           holder.binding.textViewAssetDelete.visibility = View.VISIBLE
+          // handler for delete all
+          holder.bindDelete(current.asset.symbol, null, clickListenerDeleteLambda)
+        } else {
+          holder.binding.textViewAssetDelete.visibility = View.GONE
         }
 
         holder.binding.assetSummaryView.visibility = View.VISIBLE
