@@ -336,6 +336,11 @@ class AssetListAdapter internal constructor(
 
         holder.binding.textViewAssetDelete.visibility = View.VISIBLE
         holder.binding.assetSummaryView.visibility = View.GONE
+
+        holder.binding.textViewAssetLayout.background = null
+        val background = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
+        holder.binding.textViewAssetItemsLayout.setBackgroundResource(background.resourceId)
       }
 
       is SummaryViewHolder -> {

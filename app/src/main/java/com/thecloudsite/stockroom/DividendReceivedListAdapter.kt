@@ -196,10 +196,10 @@ class DividendReceivedListAdapter internal constructor(
         holder.binding.textViewDividendReceivedNote.text = context.getString(R.string.note)
         holder.binding.textViewDividendReceivedDelete.visibility = View.GONE
         holder.binding.dividendReceivedSummaryView.visibility = View.GONE
+
         holder.binding.dividendReceivedConstraintLayout.setBackgroundColor(
           context.getColor(R.color.backgroundListColor)
         )
-
         val background = TypedValue()
         holder.binding.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
 
@@ -242,8 +242,8 @@ class DividendReceivedListAdapter internal constructor(
 
         holder.binding.textViewDividendReceivedDelete.visibility = View.VISIBLE
         holder.binding.dividendReceivedSummaryView.visibility = View.GONE
-        holder.binding.dividendReceivedConstraintLayout.background = null
 
+        holder.binding.dividendReceivedConstraintLayout.background = null
         val background = TypedValue()
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, background, true)
         holder.binding.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
