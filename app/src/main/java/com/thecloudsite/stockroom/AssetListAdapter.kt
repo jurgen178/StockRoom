@@ -577,7 +577,7 @@ class AssetListAdapter internal constructor(
                 symbol = symbol,
                 quantity = totalQuantity2,
                 price = totalPrice2,
-                account = accountStr,
+                account = account,
                 commission = totalCommission2,
               ),
               assetChangeText = assetChangeAccount,

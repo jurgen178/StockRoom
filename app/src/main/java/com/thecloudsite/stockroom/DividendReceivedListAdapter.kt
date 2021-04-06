@@ -142,6 +142,13 @@ class DividendReceivedListAdapter internal constructor(
       dividendList: List<DividendListData>?,
       clickListenerDeleteLambda: (String?, Dividend?, List<Dividend>?) -> Unit
     ) {
+      binding.textViewDividendReceivedDelete.setOnClickListener {
+        clickListenerDeleteLambda(
+          symbol, dividend, dividendList?.map { dividendListData ->
+            dividendListData.dividend
+          }
+        )
+      }
     }
   }
 
@@ -266,8 +273,8 @@ class DividendReceivedListAdapter internal constructor(
 
         holder.binding.dividendReceivedSummaryText.text = current.summaryText
         holder.binding.dividendReceivedSummaryView.visibility = View.VISIBLE
-        holder.binding.dividendReceivedConstraintLayout.setBackgroundColor(Color.YELLOW)
 
+        holder.binding.dividendReceivedConstraintLayout.setBackgroundColor(Color.YELLOW)
         val background = TypedValue()
         holder.binding.dividendReceivedLinearLayout.setBackgroundResource(background.resourceId)
       }
@@ -344,6 +351,7 @@ class DividendReceivedListAdapter internal constructor(
         dividendList.add(
           DividendListData(
             viewType = dividend_summary_type,
+            deleteAll = true,
             summaryText = context.getString(R.string.dividend_received_summary_text),
             dividend = Dividend(
               symbol = symbol,
@@ -394,7 +402,7 @@ class DividendReceivedListAdapter internal constructor(
                 dividend = Dividend(
                   symbol = symbol,
                   amount = dividendTotalAccount,
-                  account = accountStr,
+                  account = account,
                   type = 0,
                   cycle = 0,
                   paydate = 0L,
