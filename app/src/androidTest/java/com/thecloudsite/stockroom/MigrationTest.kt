@@ -24,10 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.thecloudsite.stockroom.database.Dividend
-import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDatabase
-import com.thecloudsite.stockroom.utils.epsilon
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,7 +34,7 @@ import java.io.IOException
 class MigrationTest {
   private val TEST_DB = "stockroom_database_test"
 
-  val helper: MigrationTestHelper = MigrationTestHelper(
+  private val helper: MigrationTestHelper = MigrationTestHelper(
     InstrumentationRegistry.getInstrumentation(),
     StockRoomDatabase::class.java.canonicalName,
     FrameworkSQLiteOpenHelperFactory()
@@ -118,7 +115,7 @@ class MigrationTest {
     assertEquals(2, cursor2.count)
   }
 
-  val MIGRATION_1_2 = object : Migration(1, 2) {
+  private val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
 
       // Add account to Asset table

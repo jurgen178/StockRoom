@@ -318,7 +318,8 @@ class DividendReceivedListAdapter internal constructor(
     }
 
     if (dividends != null) {
-      // Headline placeholder
+
+      // Headline
       dividendList =
         mutableListOf(
           DividendListData(

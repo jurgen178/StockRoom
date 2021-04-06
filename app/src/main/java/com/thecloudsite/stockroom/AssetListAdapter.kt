@@ -414,10 +414,11 @@ class AssetListAdapter internal constructor(
   }
 
   internal fun updateAssets(assetData: StockAssetsLiveData) {
+
     if (assetData.assets != null) {
       assetsCopy = assetData.assets!!.assets
 
-      // Headline placeholder
+      // Headline
       assetList = mutableListOf(
         AssetListData(
           viewType = asset_headline_type,

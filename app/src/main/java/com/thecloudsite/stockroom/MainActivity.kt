@@ -19,7 +19,6 @@ package com.thecloudsite.stockroom
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -32,8 +31,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -62,7 +59,6 @@ import com.thecloudsite.stockroom.utils.setAppTheme
 import com.thecloudsite.stockroom.utils.updateFilterList
 import java.text.DecimalFormat
 import java.time.ZonedDateTime
-import java.util.HashSet
 import java.util.Locale
 
 object SharedAccountList {

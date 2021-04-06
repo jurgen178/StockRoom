@@ -239,11 +239,7 @@ class FilterDataRepository(val context: Context) {
   var filterMode: FilterModeTypeEnum
     get() {
       val filters = SharedRepository.filterMap.value
-      return if (filters != null) {
-        filters.filterMode
-      } else {
-        FilterModeTypeEnum.AndType
-      }
+      return filters?.filterMode ?: FilterModeTypeEnum.AndType
     }
     set(value) {
       val filters = SharedRepository.filterMap.value

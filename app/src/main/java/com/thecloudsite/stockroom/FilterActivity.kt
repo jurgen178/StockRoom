@@ -46,8 +46,6 @@ import com.thecloudsite.stockroom.FilterDataTypeEnum.NoType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.SelectionType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.string
-import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.ActivityFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding

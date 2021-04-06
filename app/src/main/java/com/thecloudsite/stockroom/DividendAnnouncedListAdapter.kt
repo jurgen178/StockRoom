@@ -131,7 +131,8 @@ class DividendAnnouncedListAdapter internal constructor(
   }
 
   internal fun updateDividends(dividends: Dividends) {
-    // Headline placeholder
+
+    // Headline
     dividendList =
       mutableListOf(
           Dividend(

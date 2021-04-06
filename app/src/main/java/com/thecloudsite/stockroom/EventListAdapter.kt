@@ -107,8 +107,11 @@ class EventListAdapter internal constructor(
   }
 
   internal fun updateEvents(events: List<Event>) {
-    // Headline placeholder
+
+    // Headline
     eventList = mutableListOf(Event(symbol = "", type = 0, title = "", note = "", datetime = 0L))
+
+    // Event items
     eventList.addAll(events.sortedBy { event ->
       event.datetime
     })
