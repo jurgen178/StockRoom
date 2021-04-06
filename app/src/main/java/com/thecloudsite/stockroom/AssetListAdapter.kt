@@ -508,7 +508,7 @@ class AssetListAdapter internal constructor(
         }
 
       if (assetsAccounts.size > 1) {
-        assetsAccounts.forEach { account ->
+        assetsAccounts.sorted().forEach { account ->
 
           // Deep copy of the list because content gets removed.
           var assetsListCopy = sortedList.map { it.copy() }

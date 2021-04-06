@@ -320,26 +320,27 @@ class DividendReceivedListAdapter internal constructor(
           )
         )
 
-      dividendList.addAll(dividends!!.dividends.filter { dividend ->
+      val receivedList = dividends!!.dividends.filter { dividend ->
         dividend.type == DividendType.Received.value
       }
-        .sortedBy { dividend ->
-          dividend.paydate
-        }.map { dividend ->
-          DividendListData(
-            viewType = dividend_item_type,
-            dividend = dividend
-          )
-        }
+
+      dividendList.addAll(receivedList.sortedBy { dividend ->
+        dividend.paydate
+      }.map { dividend ->
+        DividendListData(
+          viewType = dividend_item_type,
+          dividend = dividend
+        )
+      }
       )
 
-      val dividendTotal = dividendList.sumByDouble { dividend ->
-        dividend.dividend.amount
+      val dividendTotal = receivedList.sumByDouble { dividend ->
+        dividend.amount
       }
 
       // Summary
-      if (dividendList.size > 1) {
-        val symbol: String = dividendList.firstOrNull()?.dividend?.symbol ?: ""
+      if (receivedList.size > 1) {
+        val symbol: String = receivedList.firstOrNull()?.symbol ?: ""
         dividendList.add(
           DividendListData(
             viewType = dividend_summary_type,
@@ -358,8 +359,8 @@ class DividendReceivedListAdapter internal constructor(
         // Add Summary for each Account.
         val map: java.util.HashSet<String> = hashSetOf()
 
-        dividendList.forEach { dividend ->
-          map.add(dividend.dividend.account)
+        receivedList.forEach { dividend ->
+          map.add(dividend.account)
         }
 
         val assetsAccounts =
@@ -368,13 +369,13 @@ class DividendReceivedListAdapter internal constructor(
           }
 
         if (assetsAccounts.size > 1) {
-          assetsAccounts.forEach { account ->
+          assetsAccounts.sorted().forEach { account ->
 
             // Get the dividend for the account.
-            val dividendTotalAccount = dividendList.filter { dividend ->
-              dividend.dividend.account == account
+            val dividendTotalAccount = receivedList.filter { dividend ->
+              dividend.account == account
             }.sumByDouble { dividend ->
-              dividend.dividend.amount
+              dividend.amount
             }
 
             val accountStr = if (account.isEmpty()) {

@@ -122,7 +122,7 @@ class GainLossTimelineFragment : Fragment() {
           }
 
         if (assetsAccounts.size > 1) {
-          assetsAccounts.forEach { account ->
+          assetsAccounts.sorted().forEach { account ->
 
             // Deep copy of the list because content gets removed.
             var stockItemsListCopy = stockItemsList.map { it.copy() }
