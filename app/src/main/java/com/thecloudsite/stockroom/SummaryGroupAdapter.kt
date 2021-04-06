@@ -106,6 +106,7 @@ class SummaryGroupAdapter internal constructor(
       is OnlineDataAllViewHolder -> {
 
         holder.binding.summaryItemDataDesc.text = current.desc
+        holder.binding.summaryItemDataSubDesc.text = current.subdesc
         holder.binding.summaryItemData.text = current.text1.append("\n")
           .append(current.text2)
       }
@@ -199,10 +200,21 @@ class SummaryGroupAdapter internal constructor(
           }
         )
 
+        // Get all symbols in that group as a comma separated string.
+        val symbolsList = stockItemsListCopy.map { stockItem ->
+          stockItem.stockDBdata.symbol
+        }
+          .sorted()
+          .joinToString(
+            prefix = "(",
+            separator = ",",
+            postfix = ")"
+          )
+
         data.add(
           SummaryData(
             overview + "\n$accountName",
-            "",
+            symbolsList,
             allText1Account,
             allText2Account,
             context.getColor(R.color.white),

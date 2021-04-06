@@ -18,6 +18,19 @@
       app:layout_constraintTop_toTopOf="parent"
       />
   <TextView
+      android:id="@+id/summaryItemDataSubDesc"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:textSize="11sp"
+      android:maxLines="1"
+      android:ellipsize="end"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/summaryItemDataDesc"
+      />
+  <TextView
       android:id="@+id/summaryItemData"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -26,7 +39,7 @@
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/summaryItemDataDesc"
+      app:layout_constraintTop_toBottomOf="@+id/summaryItemDataSubDesc"
       app:layout_constraintVertical_bias="0.0"
       />
 
