@@ -91,10 +91,13 @@ class EventListAdapter internal constructor(
 
       holder.binding.textViewEventTitle.text = current.title
       holder.binding.textViewEventNote.text = current.note
-      val datetime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.datetime), ZoneOffset.systemDefault())
+      val datetime: ZonedDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(current.datetime), ZoneOffset.systemDefault())
       holder.binding.textViewEventDateTime.text =
-        "${datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        }\n${datetime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
+        "${
+          datetime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+        }\n${
+          datetime.format(DateTimeFormatter.ofLocalizedTime(SHORT))
         }"
 
       val background = TypedValue()
@@ -106,7 +109,9 @@ class EventListAdapter internal constructor(
   internal fun updateEvents(events: List<Event>) {
     // Headline placeholder
     eventList = mutableListOf(Event(symbol = "", type = 0, title = "", note = "", datetime = 0L))
-    eventList.addAll(events)
+    eventList.addAll(events.sortedBy { event ->
+      event.datetime
+    })
 
     notifyDataSetChanged()
   }
