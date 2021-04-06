@@ -550,14 +550,14 @@ fun getAssetsRemoveOldestFirst(
       Asset(
         symbol = "",
         price = asset.price,
-        // account = asset.account,
+        account = asset.account,
         quantity = asset.quantity,
         commission = asset.commission,
         type = asset.type and tagObsoleteAssetType.inv()
       )
     }
 
-    var k = 0
+    //var k = 0
     for (i in assetListSortedCopy.indices) {
 
       val asset = assetListSortedCopy[i]
@@ -565,16 +565,18 @@ fun getAssetsRemoveOldestFirst(
       // remove shares from the beginning
       if (asset.quantity < 0.0) {
         var quantityToRemove = -asset.quantity
-        for (j in k until i) {
-          if (assetListSortedCopy[j].quantity > 0.0) {
+        // for (j in k until i) {
+          for (j in 0 until i) {
+          if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {
             if (quantityToRemove > assetListSortedCopy[j].quantity) {
               quantityToRemove -= assetListSortedCopy[j].quantity
               assetListSortedCopy[j].quantity = 0.0
               assetListSortedCopy[j].commission = 0.0
             } else {
               assetListSortedCopy[j].quantity -= quantityToRemove
+              // (Does not work with different accounts anymore)
               // Start with the index in the next iteration where it left off.
-              k = j
+              // k = j
               break
             }
           }
