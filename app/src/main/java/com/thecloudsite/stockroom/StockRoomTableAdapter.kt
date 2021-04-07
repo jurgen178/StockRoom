@@ -401,9 +401,18 @@ class StockRoomTableAdapter internal constructor(
                   )
               }
 
+            if (assetItem.account.isNotEmpty()) {
+              assetEntry.scale(textScale) {
+                append(
+                  "   ${context.getString(R.string.account_overview_headline, assetItem.account)}"
+                )
+              }
+            }
+
             if (assetItem.note.isNotEmpty()) {
               assetEntry.scale(textScale) { append("   '${assetItem.note}'") }
             }
+
             assetEntry.scale(textScale) { append("\n") }
 
             when {
@@ -464,7 +473,10 @@ class StockRoomTableAdapter internal constructor(
 
           events.scale(textScale) { append(eventStr) }
           current.events.forEach {
-            val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZoneOffset.systemDefault())
+            val localDateTime = ZonedDateTime.ofInstant(
+              Instant.ofEpochSecond(it.datetime),
+              ZoneOffset.systemDefault()
+            )
             val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
             events.scale(textScale) {
               append(
