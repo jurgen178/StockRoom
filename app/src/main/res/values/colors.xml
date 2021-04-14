@@ -35,6 +35,11 @@ limitations under the License. -->
 
   <color name="white">#ffffff</color>
   <color name="black">#000000</color>
+
+  <color name="transactionBackgroundBought">#FFC19E</color>
+  <color name="transactionBackgroundSold">#7FFFC5</color>
+  <color name="transactionBackgroundDividend">#A0D7FF</color>
+
   <color name="settingsblue">#33B5E5</color>
   <color name="calcShift">#0094FF</color>
   <color name="calcShiftPressed">#7FC9FF</color>

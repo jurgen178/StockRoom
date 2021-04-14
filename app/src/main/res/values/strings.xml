@@ -594,6 +594,10 @@ limitations under the License. -->
   <string name="rename_account_desc">Rename a stock account.</string>
   <string name="assetlistaccount">Account</string>
   <string name="account_overview_headline">Account \'%1$s\'</string>
+  <string name="transaction_bought">Bought</string>
+  <string name="transaction_sold">Sold</string>
+  <string name="transaction_stats">%1$d x Bought\n%2$d x Sold\n%3$d x Received Dividend</string>
+
   <string-array name="predefined_groups">
     <item>Buy</item>
     <item>Sell</item>

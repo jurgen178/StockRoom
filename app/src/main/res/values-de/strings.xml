@@ -617,4 +617,7 @@ limitations under the License. -->
   <string name="rename_account_desc">Benennt ein Wertpapier-Konto um.</string>
   <string name="assetlistaccount">Konto</string>
   <string name="account_overview_headline">Konto \'%1$s\'</string>
+  <string name="transaction_bought">Gekauft</string>
+  <string name="transaction_sold">Verkauft</string>
+  <string name="transaction_stats">%1$d mal Verkauft\n%2$d mal Gekauft\n%3$d mal Dividende bekommen</string>
 </resources>

@@ -12,7 +12,8 @@
     <item>Block</item>
     <item>Summary</item>
     <item>News</item>
-    <item>Timeline Transactions</item>
+    <item>Transactions</item>
+    <item>Timeline Bought/Sold</item>
     <item>Timeline Executed Gain/Loss</item>
     <item>Timeline Events</item>
     <item>Timeline Dividends</item>
@@ -30,6 +31,7 @@
     <item>Summary</item>
     <item>News</item>
     <item>Transactions</item>
+    <item>Bought/Sold</item>
     <item>Executed Gain/Loss</item>
     <item>Events</item>
     <item>Dividends</item>
@@ -46,10 +48,11 @@
     <item>08_StockRoomTreemapFragment</item>
     <item>09_SummaryGroupFragment</item>
     <item>10_AllNewsFragment</item>
-    <item>11_AssetTimelineFragment</item>
-    <item>12_GainLossTimelineFragment</item>
-    <item>13_EventTimelineFragment</item>
-    <item>14_DividendTimelineFragment</item>
+    <item>11_TransactionsFragment</item>
+    <item>12_AssetTimelineFragment</item>
+    <item>13_GainLossTimelineFragment</item>
+    <item>14_EventTimelineFragment</item>
+    <item>15_DividendTimelineFragment</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>

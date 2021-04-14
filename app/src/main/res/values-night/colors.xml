@@ -17,4 +17,8 @@
   <color name="white">#000000</color>
   <color name="black">#ffffff</color>
 
+  <color name="transactionBackgroundBought">#FFC19E</color>
+  <color name="transactionBackgroundSold">#7FFFC5</color>
+  <color name="transactionBackgroundDividend">#A0D7FF</color>
+
 </resources>

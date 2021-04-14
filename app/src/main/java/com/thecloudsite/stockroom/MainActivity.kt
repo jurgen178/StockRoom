@@ -258,16 +258,19 @@ class MainActivity : AppCompatActivity() {
           "10_AllNewsFragment" -> {
             AllNewsFragment.newInstance()
           }
-          "11_AssetTimelineFragment" -> {
+          "11_TransactionsFragment" -> {
+            StockRoomTransactionsFragment.newInstance()
+          }
+          "12_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "12_GainLossTimelineFragment" -> {
+          "13_GainLossTimelineFragment" -> {
             GainLossTimelineFragment.newInstance()
           }
-          "13_EventTimelineFragment" -> {
+          "14_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "14_DividendTimelineFragment" -> {
+          "15_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
           }
           else -> {
