@@ -109,7 +109,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = asset.date,
+          date = if (asset.date != 0L) asset.date else 1L, // ensure stats with date=0 is top entry.
           symbol = asset.symbol,
           type = TransactionType.AssetBoughtType,
           data = "${DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity)}@${
@@ -129,7 +129,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = asset.date,
+          date = if (asset.date != 0L) asset.date else 1L, // ensure stats with date=0 is top entry.
           symbol = asset.symbol,
           type = TransactionType.AssetSoldType,
           data = "${DecimalFormat(DecimalFormat0To4Digits).format(-asset.quantity)}@${
@@ -149,7 +149,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = dividend.paydate,
+          date = if (dividend.paydate != 0L) dividend.paydate else 1L, // ensure stats with date=0 is top entry.
           symbol = dividend.symbol,
           type = TransactionType.DividendReceivedType,
           data = DecimalFormat(DecimalFormat2To4Digits).format(dividend.amount),
