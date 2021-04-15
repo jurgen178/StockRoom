@@ -619,5 +619,5 @@ limitations under the License. -->
   <string name="account_overview_headline">Konto \'%1$s\'</string>
   <string name="transaction_bought">Gekauft</string>
   <string name="transaction_sold">Verkauft</string>
-  <string name="transaction_stats">%1$d x Verkauft\n%2$d x Gekauft\n%3$d x Dividende bekommen</string>
+  <string name="transaction_stats">%1$d x Gekauft\n%2$d x Verkauft\n%3$d x Dividende ausgezahlt</string>
 </resources>
