@@ -102,6 +102,14 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
     stockRoomViewModel.runOnlineTaskNow()
   }
 
+  private fun getDate(date: Long): Long =
+    if (date != 0L) date else 1L // ensure the stats with date=0 is top entry.
+
+  private fun getAssetData(quantity: Double, price: Double): String =
+    "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
+      DecimalFormat(DecimalFormat2To4Digits).format(price)
+    }=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}"
+
   fun resetTransactionDataList() {
     transactionDataList.clear()
     assetBought = 0
@@ -116,12 +124,10 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = if (asset.date != 0L) asset.date else 1L, // ensure the stats with date=0 is top entry.
+          date = getDate(asset.date),
           symbol = asset.symbol,
           type = TransactionType.AssetBoughtType,
-          data = "${DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity)}@${
-            DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
-          }=${DecimalFormat(DecimalFormat2To4Digits).format(asset.quantity * asset.price)}",
+          data = getAssetData(asset.quantity, asset.price),
         )
       )
 
@@ -136,12 +142,10 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = if (asset.date != 0L) asset.date else 1L, // ensure the stats with date=0 is top entry.
+          date = getDate(asset.date),
           symbol = asset.symbol,
           type = TransactionType.AssetSoldType,
-          data = "${DecimalFormat(DecimalFormat0To4Digits).format(-asset.quantity)}@${
-            DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
-          }=${DecimalFormat(DecimalFormat2To4Digits).format(-asset.quantity * asset.price)}",
+          data = getAssetData(-asset.quantity, asset.price),
         )
       )
 
@@ -156,7 +160,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = if (dividend.paydate != 0L) dividend.paydate else 1L, // ensure the stats with date=0 is top entry.
+          date = getDate(dividend.paydate),
           symbol = dividend.symbol,
           type = TransactionType.DividendReceivedType,
           data = DecimalFormat(DecimalFormat2To4Digits).format(dividend.amount),
