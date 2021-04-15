@@ -35,10 +35,7 @@ class StockRoomPortfolioTransactionsFragment : StockRoomBaseTransactionsFragment
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items.let { stockItems ->
 
-        transactionDataList.clear()
-        assetBought = 0
-        assetSold = 0
-        dividendReceived = 0
+        resetTransactionDataList()
 
         stockItems.forEach { stockItem ->
 
@@ -52,21 +49,8 @@ class StockRoomPortfolioTransactionsFragment : StockRoomBaseTransactionsFragment
           addDividendsReceived(stockItem.dividends)
         }
 
-        transactionDataList.add(
-          TransactionData(
-            viewType = transaction_stats_type,
-            date = 0, // sorted by date, get displayed first
-            symbol = "",
-            type = TransactionType.StatsType,
-            assetBought = assetBought,
-            assetSold = assetSold,
-            dividendReceived = dividendReceived,
-          )
-        )
-
-        adapter.updateData(transactionDataList.sortedBy { transactionData ->
-          transactionData.date
-        })
+        // Add stats and update the adapter.
+        updateData()
       }
     })
   }

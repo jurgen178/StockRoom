@@ -60,10 +60,7 @@ class StockRoomAllTransactionsFragment : StockRoomBaseTransactionsFragment() {
     accountChangeLiveData.observe(requireActivity(), Observer { item ->
       if (item != null) {
 
-        transactionDataList.clear()
-        assetBought = 0
-        assetSold = 0
-        dividendReceived = 0
+        resetTransactionDataList()
 
         // Asset bought
         addAssetsBought(item.assets)
@@ -74,21 +71,8 @@ class StockRoomAllTransactionsFragment : StockRoomBaseTransactionsFragment() {
         // Dividend received
         addDividendsReceived(item.dividends)
 
-        transactionDataList.add(
-          TransactionData(
-            viewType = transaction_stats_type,
-            date = 0, // sorted by date, get displayed first
-            symbol = "",
-            type = TransactionType.StatsType,
-            assetBought = assetBought,
-            assetSold = assetSold,
-            dividendReceived = dividendReceived,
-          )
-        )
-
-        adapter.updateData(transactionDataList.sortedBy { transactionData ->
-          transactionData.date
-        })
+        // Add stats and update the adapter.
+        updateData()
       }
     })
   }

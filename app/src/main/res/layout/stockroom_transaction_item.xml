@@ -28,6 +28,7 @@
   <TextView
       android:id="@+id/transactionSymbol"
       style="@style/table_item_style"
+      android:textStyle="bold"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline2"
       app:layout_constraintEnd_toStartOf="@id/guideline3"

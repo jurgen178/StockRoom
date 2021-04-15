@@ -40,13 +40,13 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
   val binding get() = _binding!!
 
   lateinit var stockRoomViewModel: StockRoomViewModel
-  lateinit var adapter: StockRoomTransactionsAdapter
+  private lateinit var adapter: StockRoomTransactionsAdapter
 
-  val transactionDataList: MutableList<TransactionData> = mutableListOf()
+  private val transactionDataList: MutableList<TransactionData> = mutableListOf()
 
-  var assetBought = 0
-  var assetSold = 0
-  var dividendReceived = 0
+  private var assetBought = 0
+  private var assetSold = 0
+  private var dividendReceived = 0
 
   private fun clickListenerSummary(transactionData: TransactionData) {
     if (transactionData.symbol.isNotEmpty()) {
@@ -102,6 +102,13 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
     stockRoomViewModel.runOnlineTaskNow()
   }
 
+  fun resetTransactionDataList() {
+    transactionDataList.clear()
+    assetBought = 0
+    assetSold = 0
+    dividendReceived = 0
+  }
+
   fun addAssetsBought(assets: List<Asset>) {
     assets.filter { asset ->
       asset.quantity > 0.0
@@ -109,7 +116,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = if (asset.date != 0L) asset.date else 1L, // ensure stats with date=0 is top entry.
+          date = if (asset.date != 0L) asset.date else 1L, // ensure the stats with date=0 is top entry.
           symbol = asset.symbol,
           type = TransactionType.AssetBoughtType,
           data = "${DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity)}@${
@@ -129,7 +136,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = if (asset.date != 0L) asset.date else 1L, // ensure stats with date=0 is top entry.
+          date = if (asset.date != 0L) asset.date else 1L, // ensure the stats with date=0 is top entry.
           symbol = asset.symbol,
           type = TransactionType.AssetSoldType,
           data = "${DecimalFormat(DecimalFormat0To4Digits).format(-asset.quantity)}@${
@@ -149,7 +156,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
       transactionDataList.add(
         TransactionData(
           viewType = transaction_data_type,
-          date = if (dividend.paydate != 0L) dividend.paydate else 1L, // ensure stats with date=0 is top entry.
+          date = if (dividend.paydate != 0L) dividend.paydate else 1L, // ensure the stats with date=0 is top entry.
           symbol = dividend.symbol,
           type = TransactionType.DividendReceivedType,
           data = DecimalFormat(DecimalFormat2To4Digits).format(dividend.amount),
@@ -158,5 +165,21 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
 
       dividendReceived++
     }
+  }
+
+  fun updateData() {
+    transactionDataList.add(
+      TransactionData(
+        viewType = transaction_stats_type,
+        date = 0, // sorted by date, get displayed first
+        symbol = "",
+        type = TransactionType.StatsType,
+        assetBought = assetBought,
+        assetSold = assetSold,
+        dividendReceived = dividendReceived,
+      )
+    )
+
+    adapter.updateData(transactionDataList)
   }
 }

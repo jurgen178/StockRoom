@@ -195,7 +195,9 @@ class StockRoomTransactionsAdapter internal constructor(
   override fun getItemCount() = transactionDataList.size
 
   fun updateData(transactionDataList: List<TransactionData>) {
-    this.transactionDataList = transactionDataList
+    this.transactionDataList = transactionDataList.sortedBy { transactionData ->
+      transactionData.date
+    }
 
     notifyDataSetChanged()
   }
