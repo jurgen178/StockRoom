@@ -12,7 +12,8 @@
     <item>Blockansicht</item>
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
-    <item>Transaktionen</item>
+    <item>Portfolio Transaktionen</item>
+    <item>Alle Transaktionen</item>
     <item>Zeitachse Kauf/Verkauf</item>
     <item>Zeitachse Ausgeführter Gewinn/Verlust</item>
     <item>Zeitachse Ereignisse</item>
@@ -30,7 +31,8 @@
     <item>Blockansicht</item>
     <item>Zusammenfassung</item>
     <item>Nachrichten</item>
-    <item>Transaktionen</item>
+    <item>Portfolio Transaktionen</item>
+    <item>Alle Transaktionen</item>
     <item>Kauf/Verkauf</item>
     <item>Ausgeführter Gewinn/Verlust</item>
     <item>Ereignisse</item>

@@ -33,6 +33,25 @@ import java.time.format.FormatStyle.MEDIUM
 const val transaction_stats_type: Int = 0
 const val transaction_data_type: Int = 1
 
+data class TransactionData
+  (
+  val viewType: Int,
+  var date: Long,
+  var symbol: String,
+  var type: TransactionType,
+  var data: String = "",
+  var assetBought: Int = 0,
+  var assetSold: Int = 0,
+  var dividendReceived: Int = 0,
+)
+
+enum class TransactionType {
+  AssetBoughtType,
+  AssetSoldType,
+  DividendReceivedType,
+  StatsType,
+}
+
 class StockRoomTransactionsAdapter internal constructor(
   val context: Context,
   private val clickListenerSymbolLambda: (TransactionData) -> Unit

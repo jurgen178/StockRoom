@@ -12,7 +12,8 @@
     <item>Block</item>
     <item>Summary</item>
     <item>News</item>
-    <item>Transactions</item>
+    <item>Portfolio Transactions</item>
+    <item>All Transactions</item>
     <item>Timeline Bought/Sold</item>
     <item>Timeline Executed Gain/Loss</item>
     <item>Timeline Events</item>
@@ -30,7 +31,8 @@
     <item>Block</item>
     <item>Summary</item>
     <item>News</item>
-    <item>Transactions</item>
+    <item>Portfolio Transactions</item>
+    <item>All Transactions</item>
     <item>Bought/Sold</item>
     <item>Executed Gain/Loss</item>
     <item>Events</item>
@@ -48,11 +50,12 @@
     <item>08_StockRoomTreemapFragment</item>
     <item>09_SummaryGroupFragment</item>
     <item>10_AllNewsFragment</item>
-    <item>11_TransactionsFragment</item>
-    <item>12_AssetTimelineFragment</item>
-    <item>13_GainLossTimelineFragment</item>
-    <item>14_EventTimelineFragment</item>
-    <item>15_DividendTimelineFragment</item>
+    <item>11_PortfolioTransactionsFragment</item>
+    <item>12_AllTransactionsFragment</item>
+    <item>13_AssetTimelineFragment</item>
+    <item>14_GainLossTimelineFragment</item>
+    <item>15_EventTimelineFragment</item>
+    <item>16_DividendTimelineFragment</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>
