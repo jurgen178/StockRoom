@@ -41,13 +41,14 @@ class StockRoomSmallTile2Fragment : StockRoomBaseFragment() {
     recyclerView.adapter = adapter
 
     // Set column number depending on screen width.
-    val scale = 156
+    //val scale = 156
+    val scale = 130
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
     recyclerView.layoutManager = GridLayoutManager(
-        context,
-        Integer.min(Integer.max(spanCount, 2), 10)
+      context,
+      Integer.min(Integer.max(spanCount, 2), 10)
     )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->

@@ -123,8 +123,8 @@ class StockRoomTileFragment : StockRoomBaseFragment() {
 //    5, 4, 4, 4,    // 609
 
     // Set column number depending on screen width.
-    val scale = 247 // 2 columns
-    // val scale = 156  // 3 columns
+    //val scale = 247
+    val scale = 200
     val spanCount =
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
