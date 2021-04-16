@@ -33,7 +33,7 @@ import java.text.DecimalFormat
 
 open class StockRoomBaseTransactionsFragment : Fragment() {
 
-  var _binding: FragmentTransactionsBinding? = null
+  private var _binding: FragmentTransactionsBinding? = null
 
   // This property is only valid between onCreateView and
   // onDestroyView.
