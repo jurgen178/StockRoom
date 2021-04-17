@@ -22,7 +22,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.databinding.TimelineAssetItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import java.text.DecimalFormat
@@ -104,7 +104,7 @@ class AssetTimelineAdapter(
           context.getString(
             R.string.timeline_asset_bought,
             date,
-            DecimalFormat(DecimalFormat0To4Digits).format(asset.quantity),
+            DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
             price,
             DecimalFormat(DecimalFormat2Digits).format(asset.quantity * asset.price + asset.commission)
           )
@@ -116,7 +116,7 @@ class AssetTimelineAdapter(
           context.getString(
             R.string.timeline_asset_sold,
             date,
-            DecimalFormat(DecimalFormat0To4Digits).format(-asset.quantity),
+            DecimalFormat(DecimalFormatQuantityDigits).format(-asset.quantity),
             price,
             DecimalFormat(DecimalFormat2Digits).format(-asset.quantity * asset.price - asset.commission)
           )

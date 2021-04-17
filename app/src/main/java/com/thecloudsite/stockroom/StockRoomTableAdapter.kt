@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.databinding.StockroomTableItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.DividendCycleStrIndex
@@ -191,7 +191,7 @@ class StockRoomTableAdapter internal constructor(
 
           val tableDataQuantity = SpannableStringBuilder()
           tableDataQuantity.append(
-            "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
+            "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
               DecimalFormat(DecimalFormat2To4Digits).format(
                 asset / quantity
               )
@@ -375,7 +375,7 @@ class StockRoomTableAdapter internal constructor(
             val assetEntry = SpannableStringBuilder()
               .scale(textScale) {
                 append(
-                  DecimalFormat(DecimalFormat0To4Digits).format(assetItem.quantity)
+                  DecimalFormat(DecimalFormatQuantityDigits).format(assetItem.quantity)
                 )
                   .append(
                     if (assetItem.price > 0.0) {
@@ -442,7 +442,7 @@ class StockRoomTableAdapter internal constructor(
           if (totalQuantity > 0.0 && totalPrice > 0.0) {
             var totalAssetStr =
               "\n${
-                DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)
+                DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity)
               }@${
                 DecimalFormat(DecimalFormat2To4Digits).format(
                   totalPrice / totalQuantity

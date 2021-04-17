@@ -38,7 +38,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomListItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.commissionScale
@@ -198,7 +198,7 @@ class StockRoomListAdapter internal constructor(
 //        }
 
         assets.append(
-          "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
+          "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
             DecimalFormat(DecimalFormat2To4Digits).format(
               asset / quantity
             )

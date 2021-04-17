@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.FragmentTransactionsBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import java.text.DecimalFormat
 
@@ -106,7 +106,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
     if (date != 0L) date else 1L // ensure the stats with date=0 is top entry.
 
   private fun getAssetData(quantity: Double, price: Double): String =
-    "${DecimalFormat(DecimalFormat0To4Digits).format(quantity)}@${
+    "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
       DecimalFormat(DecimalFormat2To4Digits).format(price)
     }=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}"
 

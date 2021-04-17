@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.AssetListAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.getAssetChange
@@ -246,7 +246,7 @@ class AssetListAdapter internal constructor(
         }
 
         val itemViewQuantityText =
-          DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity)
+          DecimalFormat(DecimalFormatQuantityDigits).format(current.asset.quantity)
         val itemViewPriceText = if (current.asset.price > 0.0) {
           DecimalFormat(DecimalFormat2To4Digits).format(current.asset.price)
         } else {
@@ -348,7 +348,7 @@ class AssetListAdapter internal constructor(
         // Summary line is always black on yellow
         holder.binding.textViewAssetQuantity.text = SpannableStringBuilder()
           .color(Color.BLACK) {
-            append(DecimalFormat(DecimalFormat0To4Digits).format(current.asset.quantity))
+            append(DecimalFormat(DecimalFormatQuantityDigits).format(current.asset.quantity))
           }
 
         holder.binding.textViewAssetPrice.text = SpannableStringBuilder()

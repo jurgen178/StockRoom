@@ -30,7 +30,7 @@ import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.databinding.SummarygroupAllItemsBinding
 import com.thecloudsite.stockroom.databinding.SummarygroupItemBinding
 import com.thecloudsite.stockroom.news.NewsAdapter.BaseViewHolder
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.GainLoss
 import com.thecloudsite.stockroom.utils.epsilon
@@ -513,7 +513,7 @@ class SummaryGroupAdapter internal constructor(
       .append("${context.getString(R.string.summary_notes)} ")
       .bold { append("$totalNotes\n") }
       .append("${context.getString(R.string.summary_number_of_stocks)} ")
-      .bold { append("${DecimalFormat(DecimalFormat0To4Digits).format(totalQuantity)}\n\n") }
+      .bold { append("${DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity)}\n\n") }
       .append("${context.getString(R.string.summary_capital_gain)} ")
       .append(capitalGainLossText)
       .append(totalAssetsStr)

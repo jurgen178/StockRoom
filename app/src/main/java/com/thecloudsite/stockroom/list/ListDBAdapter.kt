@@ -39,6 +39,7 @@ import com.thecloudsite.stockroom.databinding.DbHeadlineTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbStockdbdataTypeItemBinding
 import com.thecloudsite.stockroom.list.ListDBAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
@@ -274,7 +275,7 @@ class ListDBAdapter(
           holder.binding.dbAssetId.text = data.id?.toString() ?: ""
           holder.binding.dbAssetSymbol.text = data.symbol
           holder.binding.dbAssetQuantity.text =
-            DecimalFormat(DecimalFormat0To4Digits).format(data.quantity)
+            DecimalFormat(DecimalFormatQuantityDigits).format(data.quantity)
           holder.binding.dbAssetPrice.text =
             DecimalFormat(DecimalFormat0To4Digits).format(data.price)
           holder.binding.dbAssetType.text = data.type.toString()
@@ -298,7 +299,7 @@ class ListDBAdapter(
 //        assetTableRows.append("<tr>")
 //        assetTableRows.append("<td>${assetItem.id}</td>")
 //        assetTableRows.append("<td>${assetItem.symbol}</td>")
-//        assetTableRows.append("<td>${DecimalFormat(DecimalFormat0To4Digits).format(assetItem.quantity)}</td>")
+//        assetTableRows.append("<td>${DecimalFormat(DecimalFormat0To8Digits).format(assetItem.quantity)}</td>")
 //        assetTableRows.append("<td>${assetItem.price}</td>")
 //        assetTableRows.append("<td>${assetItem.type}</td>")
 //        assetTableRows.append("<td>${assetItem.note}</td>")
