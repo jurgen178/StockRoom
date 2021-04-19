@@ -2426,31 +2426,33 @@ class StockDataFragment : Fragment() {
           binding.newTotalAsset.text = asset
         }
 
-        // Bought for %1$s\n%2$s@%1$s%3$s = %4$s
-        val priceStr = DecimalFormat(DecimalFormat2To4Digits).format(price)
         val purchasePrice = SpannableStringBuilder()
-        purchasePrice.append(
-          getString(
-            R.string.bought_for
+        if (totalPrice >= 0.0001) {
+          // Bought for %1$s\n%2$s@%1$s%3$s = %4$s
+          val priceStr = DecimalFormat(DecimalFormat2To4Digits).format(price)
+          purchasePrice.append(
+            getString(
+              R.string.bought_for
+            )
           )
-        )
-        // %1$s
-        purchasePrice.append(" ")
-        purchasePrice.append(priceStr)
-        purchasePrice.append("\n")
-        // %2$s
-        purchasePrice.append(DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity))
-        purchasePrice.append("@")
-        purchasePrice.append(priceStr)
-        // %3$s
-        if (totalCommission > 0.0) {
-          purchasePrice.scale(commissionScale) {
-            append("+${DecimalFormat(DecimalFormat2To4Digits).format(totalCommission)}")
+          // %1$s
+          purchasePrice.append(" ")
+          purchasePrice.append(priceStr)
+          purchasePrice.append("\n")
+          // %2$s
+          purchasePrice.append(DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity))
+          purchasePrice.append("@")
+          purchasePrice.append(priceStr)
+          // %3$s
+          if (totalCommission > 0.0) {
+            purchasePrice.scale(commissionScale) {
+              append("+${DecimalFormat(DecimalFormat2To4Digits).format(totalCommission)}")
+            }
           }
+          // %4$s
+          purchasePrice.append(" = ")
+          purchasePrice.append(DecimalFormat(DecimalFormat2Digits).format(totalPrice + totalCommission))
         }
-        // %4$s
-        purchasePrice.append(" = ")
-        purchasePrice.append(DecimalFormat(DecimalFormat2Digits).format(totalPrice + totalCommission))
 
         binding.textViewPurchasePrice.text = purchasePrice
 
