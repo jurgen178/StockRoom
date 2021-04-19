@@ -18,9 +18,11 @@ package com.thecloudsite.stockroom
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.scale
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +31,7 @@ import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.FragmentTransactionsBinding
 import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.commissionScale
 import java.text.DecimalFormat
 
 open class StockRoomBaseTransactionsFragment : Fragment() {
@@ -105,10 +108,25 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
   private fun getDate(date: Long): Long =
     if (date != 0L) date else 1L // ensure the stats with date=0 is top entry.
 
-  private fun getAssetData(quantity: Double, price: Double): String =
-    "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
-      DecimalFormat(DecimalFormat2To4Digits).format(price)
-    }=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}"
+  private fun getAssetData(
+    quantity: Double,
+    price: Double,
+    commission: Double
+  ): SpannableStringBuilder {
+    val assetStr = SpannableStringBuilder().append(
+      "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
+        DecimalFormat(DecimalFormat2To4Digits).format(price)
+      }=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}"
+    )
+
+    if (commission > 0.0) {
+      assetStr.scale(commissionScale) {
+        append("+${DecimalFormat(DecimalFormat2To4Digits).format(commission)}")
+      }
+    }
+
+    return assetStr
+  }
 
   fun resetTransactionDataList() {
     transactionDataList.clear()
@@ -127,7 +145,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
           date = getDate(asset.date),
           symbol = asset.symbol,
           type = TransactionType.AssetBoughtType,
-          data = getAssetData(asset.quantity, asset.price),
+          data = getAssetData(asset.quantity, asset.price, asset.commission),
         )
       )
 
@@ -145,7 +163,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
           date = getDate(asset.date),
           symbol = asset.symbol,
           type = TransactionType.AssetSoldType,
-          data = getAssetData(-asset.quantity, asset.price),
+          data = getAssetData(-asset.quantity, asset.price, asset.commission),
         )
       )
 
@@ -163,7 +181,11 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
           date = getDate(dividend.paydate),
           symbol = dividend.symbol,
           type = TransactionType.DividendReceivedType,
-          data = DecimalFormat(DecimalFormat2To4Digits).format(dividend.amount),
+          data = SpannableStringBuilder().append(
+            DecimalFormat(DecimalFormat2To4Digits).format(
+              dividend.amount
+            )
+          ),
         )
       )
 

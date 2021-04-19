@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,7 @@ data class TransactionData
   var date: Long,
   var symbol: String,
   var type: TransactionType,
-  var data: String = "",
+  var data: SpannableStringBuilder = SpannableStringBuilder(),
   var assetBought: Int = 0,
   var assetSold: Int = 0,
   var dividendReceived: Int = 0,

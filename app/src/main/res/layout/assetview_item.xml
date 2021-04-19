@@ -183,14 +183,14 @@ limitations under the License. -->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="110dp"
+        app:layout_constraintGuide_begin="120dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="220dp"
+        app:layout_constraintGuide_begin="230dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -204,49 +204,49 @@ limitations under the License. -->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="550dp"
+        app:layout_constraintGuide_begin="560dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="650dp"
+        app:layout_constraintGuide_begin="660dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="750dp"
+        app:layout_constraintGuide_begin="760dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="900dp"
+        app:layout_constraintGuide_begin="910dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="1050dp"
+        app:layout_constraintGuide_begin="1060dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="1200dp"
+        app:layout_constraintGuide_begin="1210dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="1250dp"
+        app:layout_constraintGuide_begin="1260dp"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
