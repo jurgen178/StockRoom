@@ -287,6 +287,8 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
+    binding.viewpager.offscreenPageLimit = 3
+
     // Display the tab layout headers.
     TabLayoutMediator(binding.mainTabLayout, binding.viewpager) { tab, position ->
 
