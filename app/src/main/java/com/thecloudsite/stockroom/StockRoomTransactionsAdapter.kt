@@ -40,6 +40,7 @@ data class TransactionData
   var date: Long,
   var symbol: String,
   var type: TransactionType,
+  var account: String = "",
   var data: SpannableStringBuilder = SpannableStringBuilder(),
   var assetBought: Int = 0,
   var assetSold: Int = 0,
@@ -183,6 +184,9 @@ class StockRoomTransactionsAdapter internal constructor(
             ""
           }
         }
+
+        holder.binding.transactionAccount.text = current.account
+
         holder.binding.transactionData.text = current.data
       }
     }

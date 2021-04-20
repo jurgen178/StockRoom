@@ -145,6 +145,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
           date = getDate(asset.date),
           symbol = asset.symbol,
           type = TransactionType.AssetBoughtType,
+          account = asset.account,
           data = getAssetData(asset.quantity, asset.price, asset.commission),
         )
       )
@@ -163,6 +164,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
           date = getDate(asset.date),
           symbol = asset.symbol,
           type = TransactionType.AssetSoldType,
+          account = asset.account,
           data = getAssetData(-asset.quantity, asset.price, asset.commission),
         )
       )

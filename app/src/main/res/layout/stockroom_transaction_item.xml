@@ -59,11 +59,27 @@
       />
 
   <TextView
-      android:id="@+id/transactionData"
+      android:id="@+id/transactionAccount"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline4"
       app:layout_constraintEnd_toStartOf="@id/guideline5"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/table_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline5"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/transactionData"
+      style="@style/table_item_style"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline5"
+      app:layout_constraintEnd_toStartOf="@id/guideline6"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
@@ -104,7 +120,15 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="600dp"
+      app:layout_constraintGuide_begin="380dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline6"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="700dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
