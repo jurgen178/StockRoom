@@ -51,6 +51,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
   private var assetBought = 0
   private val assetSoldMap = HashMap<String, Int>()
   private var assetSold = 0
+  private val dividendReceivedMap = HashMap<String, Int>()
   private var dividendReceived = 0
 
   private fun clickListenerSummary(transactionData: TransactionData) {
@@ -136,6 +137,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
     assetBought = 0
     assetSoldMap.clear()
     assetSold = 0
+    dividendReceivedMap.clear()
     dividendReceived = 0
   }
 
@@ -154,15 +156,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
         )
       )
 
-      if(assetBoughtMap.containsKey(asset.account))
-      {
-        assetBoughtMap[asset.account] = assetBoughtMap[asset.account]!! + 1
-      }
-      else
-      {
-        assetBoughtMap[asset.account] = 1
-      }
-
+      updateMap(assetBoughtMap, asset.account)
       assetBought++
     }
   }
@@ -182,15 +176,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
         )
       )
 
-      if(assetSoldMap.containsKey(asset.account))
-      {
-        assetSoldMap[asset.account] = assetSoldMap[asset.account]!! + 1
-      }
-      else
-      {
-        assetSoldMap[asset.account] = 1
-      }
-
+      updateMap(assetSoldMap, asset.account)
       assetSold++
     }
   }
@@ -205,6 +191,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
           date = getDate(dividend.paydate),
           symbol = dividend.symbol,
           type = TransactionType.DividendReceivedType,
+          account = dividend.account,
           data = SpannableStringBuilder().append(
             DecimalFormat(DecimalFormat2To4Digits).format(
               dividend.amount
@@ -213,6 +200,7 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
         )
       )
 
+      updateMap(dividendReceivedMap, dividend.account)
       dividendReceived++
     }
   }
@@ -228,10 +216,19 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
         assetBought = assetBought,
         assetSoldMap = assetSoldMap,
         assetSold = assetSold,
+        dividendReceivedMap = dividendReceivedMap,
         dividendReceived = dividendReceived,
       )
     )
 
     adapter.updateData(transactionDataList)
+  }
+
+  private fun updateMap(map: HashMap<String, Int>, account: String) {
+    if (map.containsKey(account)) {
+      map[account] = map[account]!! + 1
+    } else {
+      map[account] = 1
+    }
   }
 }

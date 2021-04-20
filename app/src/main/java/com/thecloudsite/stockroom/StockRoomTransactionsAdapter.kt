@@ -47,6 +47,7 @@ data class TransactionData
   var assetBought: Int = 0,
   var assetSoldMap: HashMap<String, Int> = hashMapOf(),
   var assetSold: Int = 0,
+  var dividendReceivedMap: HashMap<String, Int> = hashMapOf(),
   var dividendReceived: Int = 0,
 )
 
@@ -146,6 +147,7 @@ class StockRoomTransactionsAdapter internal constructor(
           .append(current.dividendReceived.toString())
           .append(" x ")
           .append(context.getString(R.string.transaction_dividendReceived))
+          .scale(0.8f) { append(getAccounts(current.dividendReceivedMap)) }
 
         holder.binding.transactionStats.text = transactionStats
       }
