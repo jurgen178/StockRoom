@@ -47,7 +47,9 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
 
   private val transactionDataList: MutableList<TransactionData> = mutableListOf()
 
+  private val assetBoughtMap = HashMap<String, Int>()
   private var assetBought = 0
+  private val assetSoldMap = HashMap<String, Int>()
   private var assetSold = 0
   private var dividendReceived = 0
 
@@ -130,7 +132,9 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
 
   fun resetTransactionDataList() {
     transactionDataList.clear()
+    assetBoughtMap.clear()
     assetBought = 0
+    assetSoldMap.clear()
     assetSold = 0
     dividendReceived = 0
   }
@@ -150,6 +154,15 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
         )
       )
 
+      if(assetBoughtMap.containsKey(asset.account))
+      {
+        assetBoughtMap[asset.account] = assetBoughtMap[asset.account]!! + 1
+      }
+      else
+      {
+        assetBoughtMap[asset.account] = 1
+      }
+
       assetBought++
     }
   }
@@ -168,6 +181,15 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
           data = getAssetData(-asset.quantity, asset.price, asset.commission),
         )
       )
+
+      if(assetSoldMap.containsKey(asset.account))
+      {
+        assetSoldMap[asset.account] = assetSoldMap[asset.account]!! + 1
+      }
+      else
+      {
+        assetSoldMap[asset.account] = 1
+      }
 
       assetSold++
     }
@@ -202,7 +224,9 @@ open class StockRoomBaseTransactionsFragment : Fragment() {
         date = 0, // sorted by date, get displayed first
         symbol = "",
         type = TransactionType.StatsType,
+        assetBoughtMap = assetBoughtMap,
         assetBought = assetBought,
+        assetSoldMap = assetSoldMap,
         assetSold = assetSold,
         dividendReceived = dividendReceived,
       )

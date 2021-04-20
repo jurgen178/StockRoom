@@ -21,6 +21,7 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.StockRoomTransactionsAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.databinding.StockroomTransactionStatsItemBinding
@@ -42,7 +43,9 @@ data class TransactionData
   var type: TransactionType,
   var account: String = "",
   var data: SpannableStringBuilder = SpannableStringBuilder(),
+  var assetBoughtMap: HashMap<String, Int> = hashMapOf(),
   var assetBought: Int = 0,
+  var assetSoldMap: HashMap<String, Int> = hashMapOf(),
   var assetSold: Int = 0,
   var dividendReceived: Int = 0,
 )
@@ -126,12 +129,25 @@ class StockRoomTransactionsAdapter internal constructor(
           context.getColor(R.color.backgroundListColor)
         )
 
-        holder.binding.transactionStats.text = context.getString(
-          R.string.transaction_stats,
-          current.assetBought,
-          current.assetSold,
-          current.dividendReceived
-        )
+        //   %1$d x Bought%2$s\n%3$d x Sold%4$s\n%5$d x Received Dividend%6$s
+        val transactionStats = SpannableStringBuilder()
+          .append(current.assetBought.toString())
+          .append(" x ")
+          .append(context.getString(R.string.transaction_bought))
+          .scale(0.8f) { append(getAccounts(current.assetBoughtMap)) }
+          .append("\n")
+
+          .append(current.assetSold.toString())
+          .append(" x ")
+          .append(context.getString(R.string.transaction_sold))
+          .scale(0.8f) { append(getAccounts(current.assetSoldMap)) }
+          .append("\n")
+
+          .append(current.dividendReceived.toString())
+          .append(" x ")
+          .append(context.getString(R.string.transaction_dividendReceived))
+
+        holder.binding.transactionStats.text = transactionStats
       }
 
       is TransactionsViewHolder -> {
@@ -198,6 +214,29 @@ class StockRoomTransactionsAdapter internal constructor(
   }
 
   override fun getItemCount() = transactionDataList.size
+
+  private fun getAccounts(assetMap: HashMap<String, Int>): String {
+    if (assetMap.size > 1) {
+      val accounts: MutableList<String> = mutableListOf()
+      assetMap.toSortedMap().forEach { (account, n) ->
+        val accountName = if (account.isEmpty()) {
+          context.getString(R.string.standard_account)
+        } else {
+          account
+        }
+
+        accounts.add("$accountName (${n})")
+      }
+
+      return accounts.joinToString(
+        prefix = " [",
+        separator = ", ",
+        postfix = "]"
+      )
+    }
+
+    return ""
+  }
 
   fun updateData(transactionDataList: List<TransactionData>) {
     this.transactionDataList = transactionDataList.sortedBy { transactionData ->
