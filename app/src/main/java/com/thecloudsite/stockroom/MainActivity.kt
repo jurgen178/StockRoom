@@ -36,6 +36,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -280,13 +281,13 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    binding.viewpager.offscreenPageLimit = 1
+    //binding.viewpager.offscreenPageLimit = 1
 
     // Display the tab layout headers.
     TabLayoutMediator(binding.mainTabLayout, binding.viewpager) { tab, position ->
 
       if (position >= 0 && position < SharedRepository.displayedViewsList.size) {
-        // 00_StockRoomChartFragment, 01_StockRoomOverviewFragment, ... 12_DividendTimelineFragment
+        // 00_StockRoomChartFragment, 01_StockRoomOverviewFragment, ... 16_DividendTimelineFragment
         val viewlistEntry = SharedRepository.displayedViewsList[position].subSequence(0, 2)
           .toString()
         val index = viewlistEntry.toInt()
@@ -464,6 +465,13 @@ class MainActivity : AppCompatActivity() {
       } else {
         View.GONE
       }
+
+    // Jumps to the last fragment when fragment is selected the first time from the headlines. Bug?
+    if (tabHeadlines) {
+      binding.viewpager.offscreenPageLimit = 1
+    } else {
+      binding.viewpager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT_DEFAULT
+    }
 
     updateFilterList(this, filterDataViewModel, sharedPreferences)
   }
