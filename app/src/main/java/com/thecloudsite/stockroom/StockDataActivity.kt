@@ -38,6 +38,11 @@ import com.thecloudsite.stockroom.utils.updateFilterList
 import java.util.HashSet
 import java.util.Locale
 
+data class AccountLiveData(
+  var assets: List<Asset> = emptyList(),
+  var dividends: List<Dividend> = emptyList(),
+)
+
 class StockDataActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityStockBinding

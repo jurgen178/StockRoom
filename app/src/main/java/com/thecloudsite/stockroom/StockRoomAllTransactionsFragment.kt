@@ -24,10 +24,15 @@ import androidx.lifecycle.Observer
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 
+data class AssetDividendLiveData(
+  var assets: List<Asset> = emptyList(),
+  var dividends: List<Dividend> = emptyList(),
+)
+
 class StockRoomAllTransactionsFragment : StockRoomBaseTransactionsFragment() {
 
-  private val accountChange = AccountLiveData()
-  private val accountChangeLiveData = MediatorLiveData<AccountLiveData>()
+  private val assetDividendChange = AssetDividendLiveData()
+  private val assetDividendChangeLiveData = MediatorLiveData<AssetDividendLiveData>()
 
   companion object {
     fun newInstance() = StockRoomAllTransactionsFragment()
@@ -41,23 +46,23 @@ class StockRoomAllTransactionsFragment : StockRoomBaseTransactionsFragment() {
 
     // Use MediatorLiveView to combine the assets and dividend data changes.
     val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
-    accountChangeLiveData.addSource(assetsLiveData) { value ->
+    assetDividendChangeLiveData.addSource(assetsLiveData) { value ->
       if (value != null) {
-        accountChange.assets = value
-        accountChangeLiveData.postValue(accountChange)
+        assetDividendChange.assets = value
+        assetDividendChangeLiveData.postValue(assetDividendChange)
       }
     }
 
     val dividendsLiveData: LiveData<List<Dividend>> = stockRoomViewModel.allDividendTable
-    accountChangeLiveData.addSource(dividendsLiveData) { value ->
+    assetDividendChangeLiveData.addSource(dividendsLiveData) { value ->
       if (value != null) {
-        accountChange.dividends = value
-        accountChangeLiveData.postValue(accountChange)
+        assetDividendChange.dividends = value
+        assetDividendChangeLiveData.postValue(assetDividendChange)
       }
     }
 
     // Observe asset or dividend changes.
-    accountChangeLiveData.observe(requireActivity(), Observer { item ->
+    assetDividendChangeLiveData.observe(requireActivity(), Observer { item ->
       if (item != null) {
 
         resetTransactionDataList()

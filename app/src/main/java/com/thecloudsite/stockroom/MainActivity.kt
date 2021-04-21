@@ -65,11 +65,6 @@ object SharedAccountList {
   var accounts: List<String> = listOf()
 }
 
-data class AccountLiveData(
-  var assets: List<Asset> = emptyList(),
-  var dividends: List<Dividend> = emptyList(),
-)
-
 // App constants.
 // https://stackoverflow.com/questions/9947156/what-are-the-default-color-values-for-the-holo-theme-on-android-4-0
 // @android:color/holo_orange_light = 0xffffbb33
