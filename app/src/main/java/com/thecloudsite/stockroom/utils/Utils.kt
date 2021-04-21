@@ -72,7 +72,7 @@ const val DecimalFormat2To8Digits = "#,##0.00######"
 const val DecimalFormatQuantityDigits = "#,##0.########"
 
 // Rounding error
-const val epsilon = 0.000001
+const val epsilon = 0.00000001
 
 // SpannableStrings scale
 const val commissionScale = 0.8f
@@ -590,7 +590,7 @@ fun getAssetsRemoveOldestFirst(
 
     // Mark all removed entry with the obsolete flag.
     for (i in assetListSortedCopy.indices) {
-      if (tagObsoleteAssetType != 0 && assetListSortedCopy[i].quantity < 0.0001) {
+      if (tagObsoleteAssetType != 0 && assetListSortedCopy[i].quantity < epsilon) {
         // Set the type in the original list (not in assetListSorted2).
         assetListSorted[i].type = assetListSortedCopy[i].type or tagObsoleteAssetType
       }
@@ -603,7 +603,7 @@ fun getAssetsRemoveOldestFirst(
     }
   }
 
-  if (totalQuantity < 0.0001) {
+  if (totalQuantity < epsilon) {
     totalQuantity = 0.0
     totalPrice = 0.0
   }
@@ -712,8 +712,6 @@ fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<
 
   // gain/loss for each year
   val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
-
-  val epsilon = 0.0001
 
   assetList?.sortedBy { asset ->
     asset.date
