@@ -149,7 +149,7 @@ limitations under the License. -->
   <string name="delete_all_desc">Delete all stocks.</string>
   <string name="quantity_not_zero">The number of shares must not be 0.</string>
   <string name="removed_quantity_exceed_existing">You remove more stocks than you own. The amount will be adjusted from %1$s to %2$s.</string>
-  <string name="price_not_zero">The price of the stock must not be 0.</string>
+  <string name="price_not_negative">The price of the stock must not be negative.</string>
   <string name="add_asset">Add asset</string>
   <string name="remove_asset">Remove asset</string>
   <string name="current_assets">Assets</string>

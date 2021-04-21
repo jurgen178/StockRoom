@@ -74,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2"
+        app:layout_constraintGuide_percent="0.23"
         />
 
     <androidx.constraintlayout.widget.Guideline
@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.6"
+        app:layout_constraintGuide_percent="0.57"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>

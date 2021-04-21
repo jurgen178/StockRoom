@@ -432,9 +432,9 @@ class StockDataFragment : Fragment() {
             .show()
           return@setPositiveButton
         }
-        if (price <= 0.0) {
+        if (price < 0.0) {
           Toast.makeText(
-            requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+            requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
           )
             .show()
           return@setPositiveButton
@@ -1630,9 +1630,9 @@ class StockDataFragment : Fragment() {
               .show()
             return@setPositiveButton
           }
-          if (price <= 0.0) {
+          if (price < 0.0) {
             Toast.makeText(
-              requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+              requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
             )
               .show()
             return@setPositiveButton
@@ -1856,9 +1856,9 @@ class StockDataFragment : Fragment() {
                 .show()
               return@setPositiveButton
             }
-            if (price <= 0.0) {
+            if (price < 0.0) {
               Toast.makeText(
-                requireContext(), getString(R.string.price_not_zero), Toast.LENGTH_LONG
+                requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
               )
                 .show()
               return@setPositiveButton

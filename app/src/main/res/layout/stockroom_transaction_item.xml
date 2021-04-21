@@ -104,7 +104,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="180dp"
+      app:layout_constraintGuide_begin="200dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -112,7 +112,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="280dp"
+      app:layout_constraintGuide_begin="300dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -120,7 +120,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="380dp"
+      app:layout_constraintGuide_begin="400dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -128,7 +128,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="700dp"
+      app:layout_constraintGuide_begin="720dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

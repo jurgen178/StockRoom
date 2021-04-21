@@ -283,7 +283,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="80dp"
+      app:layout_constraintGuide_begin="100dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -291,7 +291,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="260dp"
+      app:layout_constraintGuide_begin="280dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -299,7 +299,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="360dp"
+      app:layout_constraintGuide_begin="380dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -307,7 +307,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="520dp"
+      app:layout_constraintGuide_begin="540dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -315,7 +315,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="570dp"
+      app:layout_constraintGuide_begin="590dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -323,7 +323,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="700dp"
+      app:layout_constraintGuide_begin="720dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -331,7 +331,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="810dp"
+      app:layout_constraintGuide_begin="830dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -339,7 +339,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="910dp"
+      app:layout_constraintGuide_begin="930dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -347,7 +347,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1060dp"
+      app:layout_constraintGuide_begin="1080dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -355,7 +355,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1160dp"
+      app:layout_constraintGuide_begin="1180dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -363,7 +363,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1290dp"
+      app:layout_constraintGuide_begin="1310dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -371,7 +371,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1390dp"
+      app:layout_constraintGuide_begin="1410dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -379,7 +379,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1490dp"
+      app:layout_constraintGuide_begin="1510dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -387,7 +387,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1840dp"
+      app:layout_constraintGuide_begin="1860dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -395,7 +395,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="2090dp"
+      app:layout_constraintGuide_begin="2110dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -403,7 +403,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="2340dp"
+      app:layout_constraintGuide_begin="2360dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
