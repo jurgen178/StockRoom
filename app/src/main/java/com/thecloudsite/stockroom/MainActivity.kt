@@ -44,8 +44,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
-import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.databinding.ActivityMainBinding
 import com.thecloudsite.stockroom.list.ListLogAdapter
