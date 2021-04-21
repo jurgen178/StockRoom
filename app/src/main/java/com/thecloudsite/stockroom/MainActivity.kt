@@ -467,10 +467,10 @@ class MainActivity : AppCompatActivity() {
       }
 
     // Jumps to the last fragment when fragment is selected the first time from the headlines. Bug?
-    if (tabHeadlines) {
-      binding.viewpager.offscreenPageLimit = 1
+    binding.viewpager.offscreenPageLimit = if (tabHeadlines) {
+      1
     } else {
-      binding.viewpager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT_DEFAULT
+      OFFSCREEN_PAGE_LIMIT_DEFAULT
     }
 
     updateFilterList(this, filterDataViewModel, sharedPreferences)
