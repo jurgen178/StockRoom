@@ -27,6 +27,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.utils.epsilon
+import kotlin.math.absoluteValue
 
 @Dao
 interface StockRoomDao {
@@ -418,7 +419,8 @@ interface StockRoomDao {
   ) {
     deleteAssets(symbol)
     assets.forEach { asset ->
-      if ((asset.quantity >= epsilon || asset.quantity <= epsilon) && asset.price >= 0.0) {
+      // no quantities below 0.00000001
+      if (asset.quantity.absoluteValue >= epsilon && asset.price >= 0.0) {
         addAsset(asset)
       }
     }
