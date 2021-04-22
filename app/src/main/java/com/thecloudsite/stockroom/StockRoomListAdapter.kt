@@ -225,42 +225,40 @@ class StockRoomListAdapter internal constructor(
           } "
         )
 
-        if (current.onlineMarketData.marketPrice > 0.0) {
-          val capital = quantity * current.onlineMarketData.marketPrice
+        val capital = quantity * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
 //            it.quantity * current.onlineMarketData.marketPrice
 //          }
 
-          val assetChange = capital - asset
-          val capitalPercent = assetChange * 100.0 / asset
+        val assetChange = capital - asset
+        val capitalPercent = assetChange * 100.0 / asset
 
-          assets.color(
-            getChangeColor(
-              assetChange,
-              current.onlineMarketData.postMarketData,
-              defaultTextColor!!,
-              context
-            )
+        assets.color(
+          getChangeColor(
+            assetChange,
+            current.onlineMarketData.postMarketData,
+            defaultTextColor!!,
+            context
           )
-          {
+        )
+        {
+          assets.append(
+            DecimalFormat("+ $DecimalFormat2Digits;- $DecimalFormat2Digits").format(assetChange)
+          )
+          if (capitalPercent < 10000.0) {
             assets.append(
-              DecimalFormat("+ $DecimalFormat2Digits;- $DecimalFormat2Digits").format(assetChange)
+              " (${
+                DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
+                  capitalPercent
+                )
+              }%)"
             )
-            if (capitalPercent < 10000.0) {
-              assets.append(
-                " (${
-                  DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
-                    capitalPercent
-                  )
-                }%)"
-              )
-            }
           }
-
-          assets.append(" = ")
-          assets.bold { append(DecimalFormat(DecimalFormat2Digits).format(capital)) }
-          assets.scale(currencyScale) { append(getCurrency(current.onlineMarketData)) }
         }
+
+        assets.append(" = ")
+        assets.bold { append(DecimalFormat(DecimalFormat2Digits).format(capital)) }
+        assets.scale(currencyScale) { append(getCurrency(current.onlineMarketData)) }
       }
 
 //      // set background to asset change
@@ -325,7 +323,8 @@ class StockRoomListAdapter internal constructor(
 
         assets.append(eventStr)
         current.events.forEach {
-          val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZoneOffset.systemDefault())
+          val localDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZoneOffset.systemDefault())
           val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
           assets.append(
             "\n${
