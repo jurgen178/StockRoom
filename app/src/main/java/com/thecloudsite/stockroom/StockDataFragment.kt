@@ -2861,32 +2861,34 @@ class StockDataFragment : Fragment() {
         }
 
         for (j in assetTimeEntriesCopy.indices) {
-          val t: Long = assetTimeEntriesCopy[j].date
-          val a = stockDataEntries!![i].dateTimePoint
-          val b = stockDataEntries!![i + 1].dateTimePoint
-          // In the time interval a..b or just bought in after hours >= b
-          if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
-            // use the index where the value is closest to t
-            // a <= t < b
-            // k=i: if t is closer to a
-            // k=i+1: if t is closer to b
-            val k = if (t <= (a + b) / 2) i else i + 1
-            val transactionPoints = listOf(
-              DataPoint(
-                stockDataEntries!![k].candleEntry.x,
-                assetTimeEntriesCopy[j].value.toFloat()
-                //stockDataEntries!![i].candleEntry.y
+          if(assetTimeEntriesCopy[j].value > 0.0) {
+            val t: Long = assetTimeEntriesCopy[j].date
+            val a = stockDataEntries!![i].dateTimePoint
+            val b = stockDataEntries!![i + 1].dateTimePoint
+            // In the time interval a..b or just bought in after hours >= b
+            if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
+              // use the index where the value is closest to t
+              // a <= t < b
+              // k=i: if t is closer to a
+              // k=i+1: if t is closer to b
+              val k = if (t <= (a + b) / 2) i else i + 1
+              val transactionPoints = listOf(
+                DataPoint(
+                  stockDataEntries!![k].candleEntry.x,
+                  assetTimeEntriesCopy[j].value.toFloat()
+                  //stockDataEntries!![i].candleEntry.y
+                )
               )
-            )
 
-            val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
-            transactionSeries.setCircleColor(if (assetTimeEntriesCopy[j].bought) Color.BLUE else Color.MAGENTA)
-            //transactionSeries.setDrawCircleHole(false)
+              val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
+              transactionSeries.setCircleColor(if (assetTimeEntriesCopy[j].bought) Color.BLUE else Color.MAGENTA)
+              //transactionSeries.setDrawCircleHole(false)
 
-            seriesList.add(transactionSeries)
+              seriesList.add(transactionSeries)
 
-            assetTimeEntriesCopy.removeAt(j)
-            break
+              assetTimeEntriesCopy.removeAt(j)
+              break
+            }
           }
         }
 

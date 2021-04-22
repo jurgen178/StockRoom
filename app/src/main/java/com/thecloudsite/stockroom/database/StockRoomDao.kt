@@ -418,7 +418,7 @@ interface StockRoomDao {
   ) {
     deleteAssets(symbol)
     assets.forEach { asset ->
-      if ((asset.quantity >= epsilon && asset.price >= epsilon) || (asset.quantity <= epsilon && asset.price >= 0.0)) {
+      if ((asset.quantity >= epsilon || asset.quantity <= epsilon) && asset.price >= 0.0) {
         addAsset(asset)
       }
     }

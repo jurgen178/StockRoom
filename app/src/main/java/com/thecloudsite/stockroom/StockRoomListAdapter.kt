@@ -192,7 +192,7 @@ class StockRoomListAdapter internal constructor(
 
 //      var asset: Double = 0.0
 
-      if (quantity > 0.0 && asset + commission > 0.0) {
+      if (quantity > 0.0) {
 //        asset = current.assets.sumByDouble {
 //          it.quantity * it.price
 //        }

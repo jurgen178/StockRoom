@@ -185,7 +185,7 @@ class StockRoomTableAdapter internal constructor(
 
         val (quantity, asset, commission) = getAssets(current.assets)
 
-        if (quantity > 0.0 && asset + commission > 0.0) {
+        if (quantity > 0.0) {
           holder.binding.tableDataPurchaseprice.text =
             DecimalFormat(DecimalFormat2Digits).format(asset + commission)
 

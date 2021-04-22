@@ -1283,7 +1283,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
             if (quantity != null && assetsObj.has("price")) {
               val price = assetsObj.getDouble("price").absoluteValue
-              if (quantity > 0.0 && price > 0.0 || quantity < 0.0) {
+              if (quantity != 0.0 && price >= 0.0) {
                 assets.add(
                   Asset(
                     symbol = symbol,
@@ -1351,7 +1351,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
               if (holdingObj.has("shares") && holdingObj.has("price")) {
                 val shares = holdingObj.getDouble("shares")
                 val price = holdingObj.getDouble("price")
-                if (shares > 0.0 && price > 0.0) {
+                if (shares > 0.0 && price >= 0.0) {
                   assets.add(
                     Asset(
                       symbol = symbol,
@@ -1691,7 +1691,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           val shares = csvStrToDouble(row[sharesColumn])
           val price = csvStrToDouble(row[priceColumn])
 
-          if (shares > 0.0 && price > 0.0) {
+          if (shares > 0.0 && price >= 0.0) {
             val asset = Asset(
               symbol = symbol,
               quantity = shares,

@@ -247,20 +247,12 @@ class AssetListAdapter internal constructor(
 
         val itemViewQuantityText =
           DecimalFormat(DecimalFormatQuantityDigits).format(current.asset.quantity)
-        val itemViewPriceText = if (current.asset.price > 0.0) {
-          DecimalFormat(DecimalFormat2To4Digits).format(current.asset.price)
-        } else {
-          ""
-        }
-        val itemViewTotalText = if (current.asset.price > 0.0) {
-          DecimalFormat(DecimalFormat2Digits).format(
-            current.asset.quantity.absoluteValue * current.asset.price
-          )
-        } else {
-          ""
-        }
+        val itemViewPriceText = DecimalFormat(DecimalFormat2To4Digits).format(current.asset.price)
+        val itemViewTotalText = DecimalFormat(DecimalFormat2Digits).format(
+          current.asset.quantity.absoluteValue * current.asset.price
+        )
         val itemViewChangeText =
-          if (current.asset.price > 0.0 && current.onlineMarketData != null) {
+          if (current.onlineMarketData != null) {
             getAssetChange(
               current.asset.quantity.absoluteValue,
               current.asset.quantity.absoluteValue * current.asset.price,
@@ -273,7 +265,7 @@ class AssetListAdapter internal constructor(
             ""
           }
         val itemViewValueText =
-          if (current.asset.price > 0.0 && current.onlineMarketData != null) {
+          if (current.onlineMarketData != null) {
             val marketPrice = current.onlineMarketData!!.marketPrice
             SpannableStringBuilder()
               .bold {
