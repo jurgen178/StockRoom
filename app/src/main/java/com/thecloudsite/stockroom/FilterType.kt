@@ -1166,7 +1166,7 @@ class FilterPurchasePriceType(
         totalPrice > filterValue
       }
       FilterSubTypeEnum.LessThanType -> {
-        totalPrice > 0.0 && totalPrice < filterValue
+        totalPrice < filterValue
       }
       else -> false
     }
@@ -1211,9 +1211,10 @@ class FilterProfitPercentageType(
 ) : FilterDoublePercentageBaseType() {
   override fun filter(stockItem: StockItem): Boolean {
     val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+    val total = totalPrice + totalCommission
     val profitPercentage =
-      if (stockItem.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
-        (totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice) / totalPrice
+      if (stockItem.onlineMarketData.marketPrice > 0.0 && total > 0.0) {
+        (totalQuantity * stockItem.onlineMarketData.marketPrice - total) / total
       } else {
         totalPrice
       }

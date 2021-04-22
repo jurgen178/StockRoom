@@ -1068,8 +1068,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       SortMode.ByProfitPercentage -> {
         stockItems.sortedByDescending { item ->
           val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
-          if (item.onlineMarketData.marketPrice > 0.0 && totalPrice > 0.0) {
-            (totalQuantity * item.onlineMarketData.marketPrice - (totalPrice + totalCommission)) / (totalPrice + totalCommission)
+          val total = totalPrice + totalCommission
+          if (item.onlineMarketData.marketPrice > 0.0 && total > 0.0) {
+            (totalQuantity * item.onlineMarketData.marketPrice - total) / total
           } else {
             totalPrice
           }

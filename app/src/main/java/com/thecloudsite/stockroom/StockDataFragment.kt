@@ -1465,10 +1465,10 @@ class StockDataFragment : Fragment() {
                 val splitRatio = splitRatioN / splitRatioZ
                 assets.assets.forEach { asset ->
                   asset.quantity *= splitRatio
-                  if (asset.price > 0) {
+                  if (asset.price > 0.0) {
                     asset.price /= splitRatio
                   }
-                  if (asset.quantity > 0) {
+                  if (asset.quantity > 0.0) {
                     minQuantity = min(asset.quantity, minQuantity)
                     minPrice = min(asset.price, minPrice)
                   }
