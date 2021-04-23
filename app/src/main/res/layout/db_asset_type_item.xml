@@ -180,7 +180,7 @@
   <View
       style="@style/db_item_vertical_line"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/guideline10"
+      app:layout_constraintStart_toStartOf="@+id/guideline11"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 

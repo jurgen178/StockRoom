@@ -28,6 +28,7 @@ import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDao
+import com.thecloudsite.stockroom.database.StoreData
 
 /*
  * Abstracted Repository as promoted by the Architecture Guide.
@@ -46,6 +47,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   val allAssetTable: LiveData<List<Asset>> = stockRoomDao.getAllAssetTableLiveData()
   val allEventTable: LiveData<List<Event>> = stockRoomDao.getAllEventTableLiveData()
   val allDividendTable: LiveData<List<Dividend>> = stockRoomDao.getAllDividendTableLiveData()
+  val allStoreTable: LiveData<List<StoreData>> = stockRoomDao.getAllStoreLiveData()
   val allGroupTable: LiveData<List<Group>> = stockRoomDao.getAllGroupTableLiveData()
 
   // You must call this on a non-UI thread or your app will crash. So we're making this a

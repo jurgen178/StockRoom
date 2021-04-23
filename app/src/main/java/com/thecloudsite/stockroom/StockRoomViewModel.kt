@@ -44,6 +44,7 @@ import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
 import com.thecloudsite.stockroom.database.StockRoomDatabase
+import com.thecloudsite.stockroom.database.StoreData
 import com.thecloudsite.stockroom.list.DebugData
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getGroupsMenuList
@@ -206,6 +207,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   val allAssetTable: LiveData<List<Asset>>
   val allEventTable: LiveData<List<Event>>
   val allDividendTable: LiveData<List<Dividend>>
+  val allStoreDataTable: LiveData<List<StoreData>>
   val allGroupTable: LiveData<List<Group>>
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
@@ -290,6 +292,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     allAssetTable = repository.allAssetTable
     allEventTable = repository.allEventTable
     allDividendTable = repository.allDividendTable
+    allStoreDataTable = repository.allStoreTable
     allGroupTable = repository.allGroupTable
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList

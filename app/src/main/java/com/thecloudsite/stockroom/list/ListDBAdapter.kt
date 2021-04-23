@@ -31,12 +31,14 @@ import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.database.StoreData
 import com.thecloudsite.stockroom.databinding.DbAssetTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbDividendTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbEventTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbGroupTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbHeadlineTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbStockdbdataTypeItemBinding
+import com.thecloudsite.stockroom.databinding.DbStoredataTypeItemBinding
 import com.thecloudsite.stockroom.list.ListDBAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
@@ -56,6 +58,7 @@ const val db_group_type: Int = 2
 const val db_asset_type: Int = 3
 const val db_event_type: Int = 4
 const val db_dividend_type: Int = 5
+const val db_storedata_type: Int = 6
 
 data class DBData(
   val viewType: Int,
@@ -64,6 +67,8 @@ data class DBData(
   val symbol: String = "",
   val portfolio: String = "",
   val data: String = "",
+  val keyId: String = "",
+  val value: Double = 0.0,
   val groupColor: Int = 0,
   val note: String = "",
   val dividendNote: String = "",
@@ -131,6 +136,11 @@ class ListDBAdapter(
   ) : BaseViewHolder<DBData>(binding.root) {
   }
 
+  class StoredataViewHolder(
+    val binding: DbStoredataTypeItemBinding
+  ) : BaseViewHolder<DBData>(binding.root) {
+  }
+
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
@@ -166,6 +176,11 @@ class ListDBAdapter(
       db_dividend_type -> {
         val binding = DbDividendTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
         DividendViewHolder(binding)
+      }
+
+      db_storedata_type -> {
+        val binding = DbStoredataTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        StoredataViewHolder(binding)
       }
 
       else -> throw IllegalArgumentException("Invalid view type")
@@ -393,6 +408,28 @@ class ListDBAdapter(
 //        dividendTableRows.append("<td>${dividendItem.note}</td>")
 //        dividendTableRows.append("</tr>")
 //      }
+
+      }
+
+      is StoredataViewHolder -> {
+
+        if (data.isHeader) {
+          holder.binding.dbStoredataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+          holder.binding.dbStoredataKeyid.text = getHeaderStr("keyId")
+          holder.binding.dbStoredataData.text = getHeaderStr("data")
+          holder.binding.dbStoredataValue.text = getHeaderStr("value")
+          holder.binding.dbStoredataDatetime.text = getHeaderStr("datetime")
+          holder.binding.dbStoredataType.text = getHeaderStr("type")
+          holder.binding.dbStoredataNote.text = getHeaderStr("note")
+        } else {
+          holder.binding.dbStoredataLayout.setBackgroundColor(Color.rgb(255, 0, 110))
+          holder.binding.dbStoredataKeyid.text = data.keyId
+          holder.binding.dbStoredataData.text = data.data
+          holder.binding.dbStoredataValue.text = data.value.toString()
+          holder.binding.dbStoredataDatetime.text = getDateTimeStr(data.datetime)
+          holder.binding.dbStoredataType.text = data.type.toString()
+          holder.binding.dbStoredataNote.text = data.note
+        }
 
       }
 
@@ -655,6 +692,37 @@ class ListDBAdapter(
             account = dividend.account,
             exdate = dividend.exdate,
             note = dividend.note
+          )
+        })
+
+    updateList()
+  }
+
+  fun updateStoreData(data: List<StoreData>) {
+
+    this.dbDataMap["5_store_table"] = mutableListOf(
+      DBData(
+        viewType = db_headline_type,
+        title = "\nstore_table (${data.size})"
+      ),
+      DBData(
+        viewType = db_storedata_type,
+        isHeader = true
+      )
+    )
+
+    this.dbDataMap["5_store_table"]?.addAll(
+      data
+        //.take(2)
+        .map { storedata ->
+          DBData(
+            viewType = db_storedata_type,
+            keyId = storedata.keyId,
+            data = storedata.data,
+            value = storedata.value,
+            datetime = storedata.datetime,
+            type = storedata.type,
+            note = storedata.note
           )
         })
 

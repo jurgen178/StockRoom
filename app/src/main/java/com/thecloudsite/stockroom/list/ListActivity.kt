@@ -120,6 +120,14 @@ class ListActivity : AppCompatActivity() {
         stockRoomViewModel.allDividendTable.removeObservers(this)
       }
     })
+
+    stockRoomViewModel.allStoreDataTable.observe(this, Observer { items ->
+      if (items != null) {
+        listDBAdapter.updateStoreData(items)
+
+        stockRoomViewModel.allStoreDataTable.removeObservers(this)
+      }
+    })
   }
 
   override fun onSupportNavigateUp(): Boolean {
