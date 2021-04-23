@@ -434,7 +434,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guidelineX1"
         app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
-        style="@style/calc_inidicator_style"
+        style="@style/calc_indicator_style"
         />
 
     <TextView
@@ -443,7 +443,7 @@
         app:layout_constraintEnd_toStartOf="@id/guidelineX2"
         app:layout_constraintStart_toEndOf="@id/guidelineX1"
         app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
-        style="@style/calc_inidicator_style"
+        style="@style/calc_indicator_style"
         />
 
     <TextView
@@ -452,7 +452,7 @@
         app:layout_constraintEnd_toStartOf="@id/guidelineX3"
         app:layout_constraintStart_toEndOf="@id/guidelineX2"
         app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
-        style="@style/calc_inidicator_style"
+        style="@style/calc_indicator_style"
         />
 
     <TextView
@@ -462,7 +462,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guidelineX3"
         app:layout_constraintBottom_toTopOf="@id/guidelineIndicator"
-        style="@style/calc_inidicator_style"
+        style="@style/calc_indicator_style"
         />
 
     <androidx.recyclerview.widget.RecyclerView
