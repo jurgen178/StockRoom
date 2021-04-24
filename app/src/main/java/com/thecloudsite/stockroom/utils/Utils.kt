@@ -757,10 +757,7 @@ fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<
   return Triple(totalGain, totalLoss, totalGainLossMap)
 }
 
-fun getAssetsCapitalGain(
-  assetList: List<Asset>?,
-  matchYear: Int = -1
-): Triple<Double, Double, Map<Int, GainLoss>> {
+fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
 
   if (assetList == null) {
     return Triple(0.0, 0.0, hashMapOf())
@@ -788,23 +785,16 @@ fun getAssetsCapitalGain(
     val asset = assetListCopy[i]
     if (asset.quantity < 0.0) {
 
-      val localDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZoneOffset.systemDefault())
-      val year = localDateTime.year
-
-      // only update sold/bought when year is matched or when all entries are matched (default=-1)
-      val updateSoldBought = matchYear == -1 || year == matchYear
-
-      sold = if (updateSoldBought) -asset.quantity * asset.price else 0.0
+      sold = -asset.quantity * asset.price
       lastTransactionDate = asset.date
-      bought = if (updateSoldBought) asset.commission else 0.0
+      bought = asset.commission
       var quantityToRemove = -asset.quantity
 
       for (j in k until i) {
 
         if (asset.account == assetListCopy[j].account) {
 
-          if (updateSoldBought) bought += assetListCopy[j].commission
+          bought += assetListCopy[j].commission
           assetListCopy[j].commission = 0.0
 
           if (assetListCopy[j].quantity > 0.0) {
@@ -813,14 +803,14 @@ fun getAssetsCapitalGain(
             if (quantityToRemove > assetListCopy[j].quantity) {
               // more quantities left than bought with this transaction
               // add the (quantity) * (price) to the bought value
-              if (updateSoldBought) bought += assetListCopy[j].quantity * assetListCopy[j].price
+              bought += assetListCopy[j].quantity * assetListCopy[j].price
               quantityToRemove -= assetListCopy[j].quantity
               assetListCopy[j].quantity = 0.0
             } else {
               // less quantities left than bought with this transaction,
               // add the (remaining quantity) * (price) to the bought value
               assetListCopy[j].quantity -= quantityToRemove
-              if (updateSoldBought) bought += quantityToRemove * assetListCopy[j].price
+              bought += quantityToRemove * assetListCopy[j].price
               // Start with the index in the next iteration where it left off.
               k = j
               break
@@ -828,6 +818,10 @@ fun getAssetsCapitalGain(
           }
         }
       }
+
+      val localDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZoneOffset.systemDefault())
+      val year = localDateTime.year
 
       if (!totalGainLossMap.containsKey(year)) {
         totalGainLossMap[year] = GainLoss()

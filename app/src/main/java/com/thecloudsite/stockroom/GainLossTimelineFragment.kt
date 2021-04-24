@@ -246,11 +246,10 @@ class GainLossTimelineFragment : Fragment() {
         }
 
         // Add the gain/loss of the stock per year
-        val (gainYear, lossYear, _) = getAssetsCapitalGain(stockItem.assets, year)
         val capitalGainLossText = getCapitalGainLossText(
           requireContext(),
-          gainYear,
-          lossYear,
+          map.gain,
+          map.loss,
           0.0,
           "-",
           "\n"
