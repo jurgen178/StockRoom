@@ -29,13 +29,13 @@ data class AssetDividendLiveData(
   var dividends: List<Dividend> = emptyList(),
 )
 
-class StockRoomAllTransactionsFragment : StockRoomBaseTransactionsFragment() {
+class StockRoomAllTransactionsBaseFragment : StockRoomTransactionsBaseFragment() {
 
   private val assetDividendChange = AssetDividendLiveData()
   private val assetDividendChangeLiveData = MediatorLiveData<AssetDividendLiveData>()
 
   companion object {
-    fun newInstance() = StockRoomAllTransactionsFragment()
+    fun newInstance() = StockRoomAllTransactionsBaseFragment()
   }
 
   override fun onViewCreated(
