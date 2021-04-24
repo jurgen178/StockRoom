@@ -36,12 +36,15 @@ class GainLossAllTimelineFragment : GainLossBaseTimelineFragment() {
 
 //    // all DB entries unfiltered
 //    // allStockItemsDB compose the StockItem at runtime
+//    // Gets called multiple times when asset, event and dividend gets loaded.
 //    stockRoomViewModel.allStockItemsDB.observe(viewLifecycleOwner, Observer { stockItemsDB ->
 //      if (stockItemsDB != null) {
 //        updateList(stockItemsDB)
 //      }
 //    })
 
+    // allAssets links StockDBdata and assets in the DB
+    // Get called only once.
     stockRoomViewModel.allAssets.observe(viewLifecycleOwner, Observer { assets ->
       if (assets != null) {
 

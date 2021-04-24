@@ -1927,6 +1927,7 @@ class StockDataFragment : Fragment() {
                 quantity = -quantity,
                 price = price,
                 account = accountText,
+                commission = commission,
                 date = date,
                 note = noteText
               )
@@ -2861,34 +2862,53 @@ class StockDataFragment : Fragment() {
         }
 
         for (j in assetTimeEntriesCopy.indices) {
-          if(assetTimeEntriesCopy[j].value > 0.0) {
-            val t: Long = assetTimeEntriesCopy[j].date
-            val a = stockDataEntries!![i].dateTimePoint
-            val b = stockDataEntries!![i + 1].dateTimePoint
-            // In the time interval a..b or just bought in after hours >= b
-            if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
-              // use the index where the value is closest to t
-              // a <= t < b
-              // k=i: if t is closer to a
-              // k=i+1: if t is closer to b
-              val k = if (t <= (a + b) / 2) i else i + 1
-              val transactionPoints = listOf(
-                DataPoint(
-                  stockDataEntries!![k].candleEntry.x,
-                  assetTimeEntriesCopy[j].value.toFloat()
-                  //stockDataEntries!![i].candleEntry.y
-                )
-              )
 
-              val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
-              transactionSeries.setCircleColor(if (assetTimeEntriesCopy[j].bought) Color.BLUE else Color.MAGENTA)
-              //transactionSeries.setDrawCircleHole(false)
+          val t: Long = assetTimeEntriesCopy[j].date
+          val a = stockDataEntries!![i].dateTimePoint
+          val b = stockDataEntries!![i + 1].dateTimePoint
+          // In the time interval a..b or just bought in after hours >= b
+          if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
+            // use the index where the value is closest to t
+            // a <= t < b
+            // k=i: if t is closer to a
+            // k=i+1: if t is closer to b
+            val k = if (t <= (a + b) / 2) i else i + 1
 
-              seriesList.add(transactionSeries)
-
-              assetTimeEntriesCopy.removeAt(j)
-              break
+            // Data points > 0.0 are blue, and Data points = 0.0 are yellow using the current value.
+            // For example rewarded stocks have bought=0.0, but would distort the diagram.
+            val isDataPoint = assetTimeEntriesCopy[j].value > 0.0
+            val value = if (isDataPoint) {
+              assetTimeEntriesCopy[j].value.toFloat()
+            } else {
+              stockDataEntries!![i].candleEntry.y
             }
+
+            val transactionPoints = listOf(
+              DataPoint(
+                stockDataEntries!![k].candleEntry.x,
+                value
+              )
+            )
+
+            val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
+
+            val color = if (assetTimeEntriesCopy[j].bought) {
+              if (isDataPoint) {
+                Color.BLUE  // data point > 0.0
+              } else {
+                0xffC23FFF.toInt()  // data point = 0.0
+              }
+            } else {
+              0xffFF6A00.toInt()
+            }
+
+            transactionSeries.setCircleColor(color)
+            //transactionSeries.setDrawCircleHole(false)
+
+            seriesList.add(transactionSeries)
+
+            assetTimeEntriesCopy.removeAt(j)
+            break
           }
         }
 
