@@ -228,14 +228,16 @@ class GainLossTimelineFragment : Fragment() {
       }
 
       gainLossMap.forEach { (year, map) ->
+
         if (!capitalGainLossMap.containsKey(year)) {
           capitalGainLossMap[year] = mutableMapOf()
         }
-        val gainloss = map.gain - map.loss
 
         if (capitalGainLossMap[year]?.containsKey(account) == false) {
           capitalGainLossMap[year]?.put(account, GainLoss2())
         }
+
+        val gainloss = map.gain - map.loss
 
         if (gainloss >= 0.0) {
           capitalGainLossMap[year]?.get(account)?.gain =
