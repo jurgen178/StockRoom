@@ -50,7 +50,7 @@ class GainLossAllTimelineFragment : GainLossBaseTimelineFragment() {
           stockMap[asset.symbol]?.add(asset)
         }
 
-        // Compose a stockitem list with symbol and asset list.
+        // Compose a stockitem list with symbol and asset list only.
         val stockItemsList: List<StockItem> = stockMap.map { mapEntry ->
           StockItem(
             stockDBdata = StockDBdata(symbol = mapEntry.key),
