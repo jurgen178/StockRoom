@@ -20,10 +20,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 
-class StockRoomPortfolioTransactionsFragment : StockRoomBaseTransactionsFragment() {
+class StockRoomTransactionsFragment : StockRoomTransactionsBaseFragment() {
 
   companion object {
-    fun newInstance() = StockRoomPortfolioTransactionsFragment()
+    fun newInstance() = StockRoomTransactionsFragment()
   }
 
   override fun onViewCreated(

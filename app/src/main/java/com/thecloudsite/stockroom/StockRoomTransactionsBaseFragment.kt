@@ -34,7 +34,7 @@ import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.commissionScale
 import java.text.DecimalFormat
 
-open class StockRoomBaseTransactionsFragment : Fragment() {
+open class StockRoomTransactionsBaseFragment : Fragment() {
 
   private var _binding: FragmentTransactionsBinding? = null
 

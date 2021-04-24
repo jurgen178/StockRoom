@@ -12,12 +12,15 @@
     <item>Block</item>
     <item>Summary</item>
     <item>News</item>
-    <item>Portfolio Transactions</item>
+    <item>Transactions</item>
     <item>All Transactions</item>
-    <item>Timeline Bought/Sold</item>
     <item>Timeline Executed Gain/Loss</item>
+    <item>Timeline Bought/Sold</item>
+    <item>Timeline All Bought/Sold</item>
     <item>Timeline Events</item>
+    <item>Timeline All Events</item>
     <item>Timeline Dividends</item>
+    <item>Timeline All Dividends</item>
   </string-array>
   <string-array name="displayed_views_headers">
     <item>Chart</item>
@@ -31,12 +34,15 @@
     <item>Block</item>
     <item>Summary</item>
     <item>News</item>
-    <item>Portfolio Transactions</item>
+    <item>Transactions</item>
     <item>All Transactions</item>
-    <item>Bought/Sold</item>
     <item>Executed Gain/Loss</item>
+    <item>Bought/Sold</item>
+    <item>All Bought/Sold</item>
     <item>Events</item>
+    <item>All Events</item>
     <item>Dividends</item>
+    <item>All Dividends</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_values">
     <item>00_StockRoomChartFragment</item>
@@ -50,12 +56,15 @@
     <item>08_StockRoomTreemapFragment</item>
     <item>09_SummaryGroupFragment</item>
     <item>10_AllNewsFragment</item>
-    <item>11_PortfolioTransactionsFragment</item>
+    <item>11_TransactionsFragment</item>
     <item>12_AllTransactionsFragment</item>
-    <item>13_AssetTimelineFragment</item>
-    <item>14_GainLossTimelineFragment</item>
-    <item>15_EventTimelineFragment</item>
-    <item>16_DividendTimelineFragment</item>
+    <item>13_GainLossTimelineFragment</item>
+    <item>14_AssetTimelineFragment</item>
+    <item>15_AllAssetTimelineFragment</item>
+    <item>16_EventTimelineFragment</item>
+    <item>17_AllEventTimelineFragment</item>
+    <item>18_DividendTimelineFragment</item>
+    <item>19_AllDividendTimelineFragment</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>

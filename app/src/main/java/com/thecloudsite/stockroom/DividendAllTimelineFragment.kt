@@ -19,14 +19,13 @@ package com.thecloudsite.stockroom
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import com.thecloudsite.stockroom.database.Asset
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
 
-class AssetTimelineFragment : AssetBaseTimelineFragment() {
+class DividendAllTimelineFragment : DividendBaseTimelineFragment() {
 
   companion object {
-    fun newInstance() = AssetTimelineFragment()
+    fun newInstance() = DividendAllTimelineFragment()
   }
 
   override fun onViewCreated(
@@ -35,16 +34,9 @@ class AssetTimelineFragment : AssetBaseTimelineFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    // allStockItems is the filtered list of the current portfolio
-    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { stockItems ->
-      if (stockItems != null) {
-        val assetList: MutableList<Asset> = mutableListOf()
-
-        stockItems.forEach { stockItem ->
-          assetList.addAll(stockItem.assets)
-        }
-
-        updateAssets(assetList)
+    stockRoomViewModel.allDividendTable.observe(viewLifecycleOwner, Observer { dividends ->
+      if (dividends != null) {
+        updateDividends(dividends)
       }
     })
   }
