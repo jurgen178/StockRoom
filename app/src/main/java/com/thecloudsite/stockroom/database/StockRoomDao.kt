@@ -248,7 +248,7 @@ interface StockRoomDao {
   fun deleteGroup(color: Int)
 
   @Query("SELECT * FROM stock_table")
-  fun getAllStockDBdata(): LiveData<List<StockDBdata>>
+  fun getAllStockDBdataLiveData(): LiveData<List<StockDBdata>>
 
   // With @Transaction randomly the stock group does not get set?
   //@Transaction

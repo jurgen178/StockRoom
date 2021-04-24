@@ -205,9 +205,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   // - Repository is completely separated from the UI through the ViewModel.
   val onlineMarketDataList: LiveData<List<OnlineMarketData>>
   val allStockDBdata: LiveData<List<StockDBdata>>
-  private val allAssets: LiveData<List<Assets>>
+  val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
-  private val allDividends: LiveData<List<Dividends>>
+  val allDividends: LiveData<List<Dividends>>
   val allAssetTable: LiveData<List<Asset>>
   val allEventTable: LiveData<List<Event>>
   val allDividendTable: LiveData<List<Dividend>>
@@ -216,7 +216,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<List<StockItem>>
-  val allStockItemsDB: LiveData<List<StockItem>>
+  //val allStockItemsDB: LiveData<List<StockItem>>
 
   private var filterList: List<IFilterType> = emptyList()
   private var filterMode: FilterModeTypeEnum = FilterModeTypeEnum.AndType
@@ -310,7 +310,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList
     allStockItems = getMediatorData()
-    allStockItemsDB = getMediatorDataDB()
+    //allStockItemsDB = getMediatorDataDB()
 
     // This setting requires the app to be restarted.
     // Initialize the setting only once at start.

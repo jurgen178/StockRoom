@@ -194,7 +194,7 @@ class StockRoomDaoTest {
   fun insertAndGet() {
     val data = StockDBdata("symbol")
     stockRoomDao.insert(data)
-    val allStockDBdata = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(allStockDBdata[0].symbol, data.symbol)
   }
@@ -204,7 +204,7 @@ class StockRoomDaoTest {
   fun updateProperties() {
     val stockDBdata1 = StockDBdata("symbol1")
     stockRoomDao.insert(stockDBdata1)
-    val allStockDBdata1 = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata1 = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(allStockDBdata1[0].symbol, stockDBdata1.symbol)
     assertEquals(allStockDBdata1[0].note, "")
@@ -213,7 +213,7 @@ class StockRoomDaoTest {
 
     val stockDBdata2 = StockDBdata("symbol1", alertBelow = 1.0, alertAbove = 2.0)
     stockRoomDao.insert(stockDBdata2)
-    val allStockDBdata2 = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata2 = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(allStockDBdata2.size, 1)
     assertEquals(allStockDBdata2[0].symbol, stockDBdata2.symbol)
@@ -222,7 +222,7 @@ class StockRoomDaoTest {
     assertEquals(allStockDBdata2[0].alertAbove, stockDBdata2.alertAbove, epsilon)
 
     stockRoomDao.updateAlertAbove("symbol1", 123.0, "noteAbove")
-    val allStockDBdata3 = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata3 = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(allStockDBdata3.size, 1)
     assertEquals(allStockDBdata3[0].symbol, stockDBdata2.symbol)
@@ -232,7 +232,7 @@ class StockRoomDaoTest {
     assertEquals(allStockDBdata3[0].alertAboveNote, "noteAbove")
 
     stockRoomDao.updateAlertBelow("symbol1", 10.0, "noteBelow")
-    val allStockDBdata4 = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata4 = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(allStockDBdata3.size, 1)
     assertEquals(allStockDBdata4[0].symbol, stockDBdata2.symbol)
@@ -242,7 +242,7 @@ class StockRoomDaoTest {
     assertEquals(allStockDBdata4[0].alertAbove, 123.0, epsilon)
 
     stockRoomDao.updateNote("symbol1", "new note")
-    val allStockDBdata5 = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata5 = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(allStockDBdata3.size, 1)
     assertEquals(allStockDBdata5[0].symbol, stockDBdata2.symbol)
@@ -766,7 +766,7 @@ class StockRoomDaoTest {
     val stockDBdata2 = StockDBdata("symbol2")
     stockRoomDao.insert(stockDBdata2)
     stockRoomDao.deleteSymbol("symbol1")
-    val allStockDBdata = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(allStockDBdata.size, 1)
     assertEquals(allStockDBdata[0].symbol, stockDBdata2.symbol)
@@ -780,7 +780,7 @@ class StockRoomDaoTest {
     val stockDBdata2 = StockDBdata("symbol2")
     stockRoomDao.insert(stockDBdata2)
     stockRoomDao.deleteAllStockTable()
-    val allStockDBdata = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertTrue(allStockDBdata.isEmpty())
   }
@@ -802,7 +802,7 @@ class StockRoomDaoTest {
     // should not be renamed as symbol2 already exist
     val rename1 = stockRoomDao.renameSymbol("symbol1", "symbol2")
     assertTrue(!rename1)
-    val allStockDBdata1 = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata1 = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(3, allStockDBdata1.size)
     assertEquals("symbol1", allStockDBdata1[0].symbol)
@@ -814,7 +814,7 @@ class StockRoomDaoTest {
     // rename symbol1 to symbol4
     val rename2 = stockRoomDao.renameSymbol("symbol1", "symbol4")
     assertTrue(rename2)
-    val allStockDBdata2 = stockRoomDao.getAllStockDBdata()
+    val allStockDBdata2 = stockRoomDao.getAllStockDBdataLiveData()
       .waitForValue()
     assertEquals(3, allStockDBdata2.size)
     assertEquals("symbol4", allStockDBdata2[0].symbol)

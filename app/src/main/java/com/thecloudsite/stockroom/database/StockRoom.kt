@@ -93,8 +93,8 @@ data class Assets(
   @Embedded
   val stockDBdata: StockDBdata,
   @Relation(
-      parentColumn = "symbol",
-      entityColumn = "symbol"
+    parentColumn = "symbol",
+    entityColumn = "symbol"
   )
   val assets: List<Asset>
 )

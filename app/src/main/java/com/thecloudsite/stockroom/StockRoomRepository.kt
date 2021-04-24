@@ -38,8 +38,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   // Room executes all queries on a separate thread.
   // Observed LiveData will notify the observer when the data has changed.
-  val allStockDBdata: LiveData<List<StockDBdata>> = stockRoomDao.getAllStockDBdata()
-
+  val allStockDBdata: LiveData<List<StockDBdata>> = stockRoomDao.getAllStockDBdataLiveData()
   val allAssets: LiveData<List<Assets>> = stockRoomDao.getAllAssetsLiveData()
   val allEvents: LiveData<List<Events>> = stockRoomDao.getAllEventsLiveData()
   val allDividends: LiveData<List<Dividends>> = stockRoomDao.getAllDividendsLiveData()

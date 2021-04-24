@@ -34,10 +34,28 @@ class GainLossAllTimelineFragment : GainLossBaseTimelineFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    // all DB entries unfiltered
-    stockRoomViewModel.allStockItemsDB.observe(viewLifecycleOwner, Observer { stockItemsDB ->
-      if (stockItemsDB != null) {
-        updateList(stockItemsDB)
+//    // all DB entries unfiltered
+//    // allStockItemsDB compose the StockItem at runtime
+//    stockRoomViewModel.allStockItemsDB.observe(viewLifecycleOwner, Observer { stockItemsDB ->
+//      if (stockItemsDB != null) {
+//        updateList(stockItemsDB)
+//      }
+//    })
+
+    stockRoomViewModel.allAssets.observe(viewLifecycleOwner, Observer { assets ->
+      if (assets != null) {
+
+        val stockItemList = assets.map { item ->
+          StockItem(
+            stockDBdata = item.stockDBdata,
+            assets = item.assets,
+            events = listOf(),
+            dividends = listOf(),
+            onlineMarketData = OnlineMarketData(symbol = item.stockDBdata.symbol)
+          )
+        }
+
+        updateList(stockItemList)
       }
     })
   }
