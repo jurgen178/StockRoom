@@ -161,7 +161,10 @@ class GainLossTimelineFragment : Fragment() {
             } else {
               map
             }
+
             map1.forEach { (account, gainloss) ->
+
+              // Get gain/loss for the header.
               val text = getCapitalGainLossText(
                 requireContext(),
                 gainloss.gain,
@@ -176,6 +179,8 @@ class GainLossTimelineFragment : Fragment() {
               } else {
                 ""
               }
+
+              // Add item with header (summary gain/loss) and stock list with each individual gain/loss.
               gainLossList.add(
                 GainLossTimelineElement(
                   date = "$year $accountName",
@@ -211,16 +216,6 @@ class GainLossTimelineFragment : Fragment() {
       // having individual loss/gain reported in the summary.
       val capitalGainLoss = gain - loss
 
-      // Add the gain/loss of the stock
-      val capitalGainLossText = getCapitalGainLossText(
-        requireContext(),
-        gain,
-        loss,
-        0.0,
-        "-",
-        "\n"
-      )
-
       when {
         capitalGainLoss > 0.0 -> {
           capitalGain += capitalGainLoss
@@ -249,6 +244,17 @@ class GainLossTimelineFragment : Fragment() {
           capitalGainLossMap[year]?.get(account)?.loss =
             capitalGainLossMap[year]?.get(account)?.loss!! - gainloss
         }
+
+        // Add the gain/loss of the stock per year
+        val (gainYear, lossYear, _) = getAssetsCapitalGain(stockItem.assets, year)
+        val capitalGainLossText = getCapitalGainLossText(
+          requireContext(),
+          gainYear,
+          lossYear,
+          0.0,
+          "-",
+          "\n"
+        )
 
         capitalGainLossMap[year]?.get(account)?.stockList?.add(
           GainLossStockItem(

@@ -567,7 +567,7 @@ fun getAssetsRemoveOldestFirst(
       if (asset.quantity < 0.0) {
         var quantityToRemove = -asset.quantity
         // for (j in k until i) {
-          for (j in 0 until i) {
+        for (j in 0 until i) {
           if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {
             if (quantityToRemove > assetListSortedCopy[j].quantity) {
               quantityToRemove -= assetListSortedCopy[j].quantity
@@ -757,7 +757,10 @@ fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<
   return Triple(totalGain, totalLoss, totalGainLossMap)
 }
 
-fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
+fun getAssetsCapitalGain(
+  assetList: List<Asset>?,
+  matchYear: Int = -1
+): Triple<Double, Double, Map<Int, GainLoss>> {
 
   if (assetList == null) {
     return Triple(0.0, 0.0, hashMapOf())
@@ -784,6 +787,17 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
 
     val asset = assetListCopy[i]
     if (asset.quantity < 0.0) {
+
+      val localDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZoneOffset.systemDefault())
+      val year = localDateTime.year
+
+      // skip entries that do not match the year
+      if(matchYear != -1 && year != matchYear)
+      {
+        continue
+      }
+
       sold = -asset.quantity * asset.price
       lastTransactionDate = asset.date
       bought = asset.commission
@@ -818,9 +832,6 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
         }
       }
 
-      val localDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZoneOffset.systemDefault())
-      val year = localDateTime.year
       if (!totalGainLossMap.containsKey(year)) {
         totalGainLossMap[year] = GainLoss()
       }
