@@ -792,22 +792,19 @@ fun getAssetsCapitalGain(
         ZonedDateTime.ofInstant(Instant.ofEpochSecond(asset.date), ZoneOffset.systemDefault())
       val year = localDateTime.year
 
-      // skip entries that do not match the year
-      if(matchYear != -1 && year != matchYear)
-      {
-        continue
-      }
+      // only update sold/bought when year is matched or when all entries are matched (default=-1)
+      val updateSoldBought = matchYear == -1 || year == matchYear
 
-      sold = -asset.quantity * asset.price
+      sold = if (updateSoldBought) -asset.quantity * asset.price else 0.0
       lastTransactionDate = asset.date
-      bought = asset.commission
+      bought = if (updateSoldBought) asset.commission else 0.0
       var quantityToRemove = -asset.quantity
 
       for (j in k until i) {
 
         if (asset.account == assetListCopy[j].account) {
 
-          bought += assetListCopy[j].commission
+          if (updateSoldBought) bought += assetListCopy[j].commission
           assetListCopy[j].commission = 0.0
 
           if (assetListCopy[j].quantity > 0.0) {
@@ -816,14 +813,14 @@ fun getAssetsCapitalGain(
             if (quantityToRemove > assetListCopy[j].quantity) {
               // more quantities left than bought with this transaction
               // add the (quantity) * (price) to the bought value
-              bought += assetListCopy[j].quantity * assetListCopy[j].price
+              if (updateSoldBought) bought += assetListCopy[j].quantity * assetListCopy[j].price
               quantityToRemove -= assetListCopy[j].quantity
               assetListCopy[j].quantity = 0.0
             } else {
               // less quantities left than bought with this transaction,
               // add the (remaining quantity) * (price) to the bought value
               assetListCopy[j].quantity -= quantityToRemove
-              bought += quantityToRemove * assetListCopy[j].price
+              if (updateSoldBought) bought += quantityToRemove * assetListCopy[j].price
               // Start with the index in the next iteration where it left off.
               k = j
               break
