@@ -261,22 +261,25 @@ class MainActivity : AppCompatActivity() {
           "13_GainLossTimelineFragment" -> {
             GainLossTimelineFragment.newInstance()
           }
-          "14_AssetTimelineFragment" -> {
+          "14_AllGainLossTimelineFragment" -> {
+            GainLossAllTimelineFragment.newInstance()
+          }
+          "15_AssetTimelineFragment" -> {
             AssetTimelineFragment.newInstance()
           }
-          "15_AllAssetTimelineFragment" -> {
+          "16_AllAssetTimelineFragment" -> {
             AssetAllTimelineFragment.newInstance()
           }
-          "16_EventTimelineFragment" -> {
+          "17_EventTimelineFragment" -> {
             EventTimelineFragment.newInstance()
           }
-          "17_AllEventTimelineFragment" -> {
+          "18_AllEventTimelineFragment" -> {
             EventAllTimelineFragment.newInstance()
           }
-          "18_DividendTimelineFragment" -> {
+          "19_DividendTimelineFragment" -> {
             DividendTimelineFragment.newInstance()
           }
-          "19_AllDividendTimelineFragment" -> {
+          "20_AllDividendTimelineFragment" -> {
             DividendAllTimelineFragment.newInstance()
           }
           else -> {

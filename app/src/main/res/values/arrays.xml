@@ -15,6 +15,7 @@
     <item>Transactions</item>
     <item>All Transactions</item>
     <item>Timeline Executed Gain/Loss</item>
+    <item>Timeline All Executed Gain/Loss</item>
     <item>Timeline Bought/Sold</item>
     <item>Timeline All Bought/Sold</item>
     <item>Timeline Events</item>
@@ -37,6 +38,7 @@
     <item>Transactions</item>
     <item>All Transactions</item>
     <item>Executed Gain/Loss</item>
+    <item>All Executed Gain/Loss</item>
     <item>Bought/Sold</item>
     <item>All Bought/Sold</item>
     <item>Events</item>
@@ -59,12 +61,13 @@
     <item>11_TransactionsFragment</item>
     <item>12_AllTransactionsFragment</item>
     <item>13_GainLossTimelineFragment</item>
-    <item>14_AssetTimelineFragment</item>
-    <item>15_AllAssetTimelineFragment</item>
-    <item>16_EventTimelineFragment</item>
-    <item>17_AllEventTimelineFragment</item>
-    <item>18_DividendTimelineFragment</item>
-    <item>19_AllDividendTimelineFragment</item>
+    <item>14_AllGainLossTimelineFragment</item>
+    <item>15_AssetTimelineFragment</item>
+    <item>16_AllAssetTimelineFragment</item>
+    <item>17_EventTimelineFragment</item>
+    <item>18_AllEventTimelineFragment</item>
+    <item>19_DividendTimelineFragment</item>
+    <item>20_AllDividendTimelineFragment</item>
   </string-array>
   <string-array translatable="false" name="displayed_views_entries_defaults">
     <item>00_StockRoomChartFragment</item>
