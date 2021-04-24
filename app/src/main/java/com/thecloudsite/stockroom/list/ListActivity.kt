@@ -81,11 +81,11 @@ class ListActivity : AppCompatActivity() {
     })
   */
 
-    stockRoomViewModel.allProperties.observe(this, Observer { items ->
+    stockRoomViewModel.allStockDBdata.observe(this, Observer { items ->
       if (items != null) {
         listDBAdapter.updateStockDBdata(items)
 
-        stockRoomViewModel.allProperties.removeObservers(this)
+        stockRoomViewModel.allStockDBdata.removeObservers(this)
       }
     })
 

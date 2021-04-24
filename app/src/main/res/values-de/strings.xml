@@ -620,4 +620,5 @@ limitations under the License. -->
   <string name="transaction_bought">Gekauft</string>
   <string name="transaction_sold">Verkauft</string>
   <string name="transaction_dividendReceived">Dividende ausgezahlt</string>
+  <string name="portfolio_overview_headline">Portfolio \'%1$s\'</string>
 </resources>

@@ -204,7 +204,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   //   the UI when the data actually changes.
   // - Repository is completely separated from the UI through the ViewModel.
   val onlineMarketDataList: LiveData<List<OnlineMarketData>>
-  val allProperties: LiveData<List<StockDBdata>>
+  val allStockDBdata: LiveData<List<StockDBdata>>
   private val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
   private val allDividends: LiveData<List<Dividends>>
@@ -216,6 +216,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   // allStockItems -> allMediatorData -> allData(_data->dataStore) = allAssets + onlineMarketData
   val allStockItems: LiveData<List<StockItem>>
+  val allStockItemsDB: LiveData<List<StockItem>>
 
   private var filterList: List<IFilterType> = emptyList()
   private var filterMode: FilterModeTypeEnum = FilterModeTypeEnum.AndType
@@ -228,6 +229,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     get() = _dataStore
 
   private val allMediatorData = MediatorLiveData<List<StockItem>>()
+
+  // all DB entries unfiltered
+  private val dataStoreDB: MutableList<StockItem> = mutableListOf()
+  private val _dataStoreDB = MutableLiveData<List<StockItem>>()
+  private val allDataDB: LiveData<List<StockItem>>
+    get() = _dataStoreDB
+
+  private val allMediatorDataDB = MediatorLiveData<List<StockItem>>()
 
   //private var assetDataValid = false
   //private var eventDataValid = false
@@ -289,7 +298,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       .stockRoomDao()
 
     repository = StockRoomRepository(stockRoomDao)
-    allProperties = repository.allProperties
+    allStockDBdata = repository.allStockDBdata
     allAssets = repository.allAssets
     allEvents = repository.allEvents
     allDividends = repository.allDividends
@@ -301,6 +310,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     onlineMarketDataList = stockMarketDataRepository.onlineMarketDataList
     allStockItems = getMediatorData()
+    allStockItemsDB = getMediatorDataDB()
 
     // This setting requires the app to be restarted.
     // Initialize the setting only once at start.
@@ -526,9 +536,47 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //    }
   }
 
+  private fun getMediatorDataDB(): LiveData<List<StockItem>> {
+
+    val liveDataProperties = allStockDBdata
+    val liveDataAssets = allAssets
+    val liveDataEvents = allEvents
+    val liveDataDividends = allDividends
+
+    allMediatorDataDB.addSource(liveDataProperties) { value ->
+      if (value != null) {
+        updateStockDataFromDB_DB(value)
+        allMediatorDataDB.value = allDataDB.value
+      }
+    }
+
+    allMediatorDataDB.addSource(liveDataAssets) { value ->
+      if (value != null) {
+        updateAssetsFromDB_DB(value)
+        allMediatorDataDB.value = allDataDB.value
+      }
+    }
+
+    allMediatorDataDB.addSource(liveDataEvents) { value ->
+      if (value != null) {
+        updateEventsFromDB_DB(value)
+        allMediatorDataDB.value = allDataDB.value
+      }
+    }
+
+    allMediatorDataDB.addSource(liveDataDividends) { value ->
+      if (value != null) {
+        updateDividendsFromDB_DB(value)
+        allMediatorDataDB.value = allDataDB.value
+      }
+    }
+
+    return allMediatorDataDB
+  }
+
   private fun getMediatorData(): LiveData<List<StockItem>> {
 
-    val liveDataProperties = allProperties
+    val liveDataProperties = allStockDBdata
     val liveDataAssets = allAssets
     val liveDataEvents = allEvents
     val liveDataDividends = allDividends
@@ -711,6 +759,44 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     _dataStore.value = dataStore
   }
 
+  // Only unfiltered DB items.
+  private fun updateStockDataFromDB_DB(stockDBdata: List<StockDBdata>) {
+    synchronized(dataStoreDB)
+    {
+      stockDBdata.forEach { data ->
+        val symbol = data.symbol
+
+        val dataStoreItem =
+          dataStoreDB.find { ds ->
+            symbol == ds.stockDBdata.symbol
+          }
+
+        if (dataStoreItem != null) {
+          dataStoreItem.stockDBdata = data
+        } else {
+          dataStoreDB.add(
+            StockItem(
+              onlineMarketData = OnlineMarketData(symbol = data.symbol),
+              stockDBdata = data,
+              assets = emptyList(),
+              events = emptyList(),
+              dividends = emptyList()
+            )
+          )
+        }
+      }
+
+      // Remove the item from the dataStore because it is not in the portfolio or was deleted from the DB.
+      dataStoreDB.removeIf {
+        stockDBdata.find { sd ->
+          it.stockDBdata.symbol == sd.symbol
+        } == null
+      }
+    }
+
+    _dataStoreDB.value = dataStoreDB
+  }
+
   private fun updateAssetsFromDB(assets: List<Assets>) {
     synchronized(dataStore)
     {
@@ -756,6 +842,38 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     _dataStore.value = dataStore
+  }
+
+  // Only unfiltered DB items.
+  private fun updateAssetsFromDB_DB(assets: List<Assets>) {
+    synchronized(dataStoreDB)
+    {
+      // Search the stock item and insert the data.
+      assets.forEach { asset ->
+
+        val symbol = asset.stockDBdata.symbol
+        val dataStoreItem =
+          dataStore.find { ds ->
+            symbol == ds.stockDBdata.symbol
+          }
+
+        if (dataStoreItem != null) {
+          dataStoreItem.assets = asset.assets
+        } else {
+          dataStoreDB.add(
+            StockItem(
+              onlineMarketData = OnlineMarketData(symbol = asset.stockDBdata.symbol),
+              stockDBdata = asset.stockDBdata,
+              assets = asset.assets,
+              events = emptyList(),
+              dividends = emptyList()
+            )
+          )
+        }
+      }
+    }
+
+    _dataStoreDB.value = dataStoreDB
   }
 
   private fun updateEventsFromDB(events: List<Events>) {
@@ -804,6 +922,37 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     _dataStore.value = dataStore
   }
 
+  // Only unfiltered DB items.
+  private fun updateEventsFromDB_DB(events: List<Events>) {
+    synchronized(dataStoreDB)
+    {
+      // Search the stock item and insert the data.
+      events.forEach { event ->
+        val symbol = event.stockDBdata.symbol
+        val dataStoreItem =
+          dataStoreDB.find { ds ->
+            symbol == ds.stockDBdata.symbol
+          }
+
+        if (dataStoreItem != null) {
+          dataStoreItem.events = event.events
+        } else {
+          dataStoreDB.add(
+            StockItem(
+              onlineMarketData = OnlineMarketData(symbol = event.stockDBdata.symbol),
+              stockDBdata = event.stockDBdata,
+              assets = emptyList(),
+              events = event.events,
+              dividends = emptyList()
+            )
+          )
+        }
+      }
+    }
+
+    _dataStoreDB.value = dataStoreDB
+  }
+
   private fun updateDividendsFromDB(dividends: List<Dividends>) {
     synchronized(dataStore)
     {
@@ -837,6 +986,38 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     _dataStore.value = dataStore
+  }
+
+  // Only unfiltered DB items.
+  private fun updateDividendsFromDB_DB(dividends: List<Dividends>) {
+    synchronized(dataStoreDB)
+    {
+      // Search the stock item and insert the data.
+      dividends.forEach { dividend ->
+
+        val symbol = dividend.stockDBdata.symbol
+        val dataStoreItem =
+          dataStoreDB.find { ds ->
+            symbol == ds.stockDBdata.symbol
+          }
+
+        if (dataStoreItem != null) {
+          dataStoreItem.dividends = dividend.dividends
+        } else {
+          dataStoreDB.add(
+            StockItem(
+              onlineMarketData = OnlineMarketData(symbol = dividend.stockDBdata.symbol),
+              stockDBdata = dividend.stockDBdata,
+              assets = emptyList(),
+              events = emptyList(),
+              dividends = dividend.dividends
+            )
+          )
+        }
+      }
+    }
+
+    _dataStoreDB.value = dataStoreDB
   }
 
   private fun updateFromOnline(onlineMarketDataList: List<OnlineMarketData>) {
@@ -1823,7 +2004,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   private fun getAllDBdata(): List<StockItem> {
-    val stockDBdata = allProperties.value ?: emptyList()
+    val stockDBdata = allStockDBdata.value ?: emptyList()
     val assets = allAssets.value ?: emptyList()
     val events = allEvents.value ?: emptyList()
     val dividends = allDividends.value ?: emptyList()

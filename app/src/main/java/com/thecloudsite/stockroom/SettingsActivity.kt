@@ -304,7 +304,7 @@ class SettingsActivity : AppCompatActivity(),
             val inflater = LayoutInflater.from(requireContext())
             val dialogBinding = DialogRenameSymbolBinding.inflate(inflater)
 
-            stockRoomViewModel.allProperties.observe(this, Observer { items ->
+            stockRoomViewModel.allStockDBdata.observe(this, Observer { items ->
               if (items != null) {
                 val spinnerData = items.map { stockItem ->
                   stockItem.symbol

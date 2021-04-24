@@ -19,8 +19,6 @@ package com.thecloudsite.stockroom
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.StockDBdata
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
 
@@ -36,32 +34,10 @@ class GainLossAllTimelineFragment : GainLossBaseTimelineFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    stockRoomViewModel.allAssetTable.observe(viewLifecycleOwner, Observer { assets ->
-      if (assets != null) {
-
-        val stockMap = HashMap<String, MutableList<Asset>>()
-
-        // Get all assets for each symbol.
-        assets.forEach { asset ->
-          if (!stockMap.containsKey(asset.symbol)) {
-            stockMap[asset.symbol] = mutableListOf()
-          }
-
-          stockMap[asset.symbol]?.add(asset)
-        }
-
-        // Compose a stockitem list with symbol and asset list only.
-        val stockItemsList: List<StockItem> = stockMap.map { mapEntry ->
-          StockItem(
-            stockDBdata = StockDBdata(symbol = mapEntry.key),
-            assets = mapEntry.value,
-            events = listOf(),
-            dividends = listOf(),
-            onlineMarketData = OnlineMarketData(symbol = mapEntry.key)
-          )
-        }
-
-        updateList(stockItemsList)
+    // all DB entries unfiltered
+    stockRoomViewModel.allStockItemsDB.observe(viewLifecycleOwner, Observer { stockItemsDB ->
+      if (stockItemsDB != null) {
+        updateList(stockItemsDB)
       }
     })
   }

@@ -597,6 +597,7 @@ limitations under the License. -->
   <string name="transaction_bought">Bought</string>
   <string name="transaction_sold">Sold</string>
   <string name="transaction_dividendReceived">Dividend Received</string>
+  <string name="portfolio_overview_headline">Portfolio \'%1$s\'</string>
 
   <string-array name="predefined_groups">
     <item>Buy</item>

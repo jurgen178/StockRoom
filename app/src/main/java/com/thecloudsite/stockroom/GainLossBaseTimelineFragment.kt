@@ -54,7 +54,7 @@ open class GainLossBaseTimelineFragment : Fragment() {
   private val binding get() = _binding!!
 
   lateinit var stockRoomViewModel: StockRoomViewModel
-  lateinit var gainLossTimelineAdapter: GainLossTimelineAdapter
+  private lateinit var gainLossTimelineAdapter: GainLossTimelineAdapter
   lateinit var recyclerView: TimeLineRecyclerView
 
   override fun onCreateView(
@@ -103,17 +103,52 @@ open class GainLossBaseTimelineFragment : Fragment() {
     // Add Summary for all accounts.
     updateMap(stockItemsList, "", capitalGainLossMap)
 
+    // Add Summary for each Portfolio.
+    val portfolioMap: java.util.HashSet<String> = hashSetOf()
+
+    stockItemsList.forEach { stockItem ->
+      if (stockItem.assets.isNotEmpty()) {
+        portfolioMap.add(stockItem.stockDBdata.portfolio)
+      }
+    }
+
+    val assetsPortfolio =
+      portfolioMap.map { portfolio ->
+        portfolio
+      }
+
+    if (assetsPortfolio.size > 1) {
+      assetsPortfolio.sorted().forEach { portfolio ->
+
+        // Deep copy of the list because content gets removed.
+        var stockItemsListCopy = stockItemsList.map { it.copy() }
+
+        // Filter for stockitems matching the portfolio.
+        stockItemsListCopy = stockItemsListCopy.filter { stockItem ->
+          stockItem.stockDBdata.portfolio == portfolio && stockItem.assets.isNotEmpty()
+        }
+
+        val portfolioStr = if (portfolio.isEmpty()) {
+          getString(R.string.standard_portfolio)
+        } else {
+          getString(R.string.portfolio_overview_headline, portfolio)
+        }
+
+        updateMap(stockItemsListCopy, portfolioStr, capitalGainLossMap)
+      }
+    }
+
     // Add Summary for each Account.
-    val map: java.util.HashSet<String> = hashSetOf()
+    val accountMap: java.util.HashSet<String> = hashSetOf()
 
     stockItemsList.forEach { stockItem ->
       stockItem.assets.forEach { asset ->
-        map.add(asset.account)
+        accountMap.add(asset.account)
       }
     }
 
     val assetsAccounts =
-      map.map { account ->
+      accountMap.map { account ->
         account
       }
 
@@ -137,7 +172,7 @@ open class GainLossBaseTimelineFragment : Fragment() {
         val accountStr = if (account.isEmpty()) {
           getString(R.string.standard_account)
         } else {
-          account
+          getString(R.string.account_overview_headline, account)
         }
 
         updateMap(stockItemsListCopy, accountStr, capitalGainLossMap)
@@ -153,12 +188,12 @@ open class GainLossBaseTimelineFragment : Fragment() {
         // If map.size == 2 other accounts did not contribute.
         // The map contains only all item and standard account items, which are the same.
         val map1 = if (map.size == 2 && map.containsKey("")) {
-          mapOf<String, GainLoss2>(Pair("", map[""]!!))
+          mapOf<String, GainLoss2>(Pair("", map[""]!!)) // return only one entry
         } else {
           map
         }
 
-        map1.forEach { (account, gainloss) ->
+        map1.forEach { (headline, gainloss) ->
 
           // Get gain/loss for the header.
           val text = getCapitalGainLossText(
@@ -170,16 +205,10 @@ open class GainLossBaseTimelineFragment : Fragment() {
             "\n"
           )
 
-          val accountName = if (account.isNotEmpty()) {
-            getString(R.string.account_overview_headline, account)
-          } else {
-            ""
-          }
-
           // Add item with header (summary gain/loss) and stock list with each individual gain/loss.
           gainLossList.add(
             GainLossTimelineElement(
-              date = "$year $accountName",
+              date = "$year $headline",
               totalGainLoss = text,
               gainloss.stockList
             )
@@ -198,7 +227,7 @@ open class GainLossBaseTimelineFragment : Fragment() {
 
   private fun updateMap(
     stockItems: List<StockItem>,
-    account: String,
+    headline: String,
     capitalGainLossMap: MutableMap<Int, MutableMap<String, GainLoss2>>
   ) {
     var capitalGain = 0.0
@@ -227,18 +256,18 @@ open class GainLossBaseTimelineFragment : Fragment() {
           capitalGainLossMap[year] = mutableMapOf()
         }
 
-        if (capitalGainLossMap[year]?.containsKey(account) == false) {
-          capitalGainLossMap[year]?.put(account, GainLoss2())
+        if (capitalGainLossMap[year]?.containsKey(headline) == false) {
+          capitalGainLossMap[year]?.put(headline, GainLoss2())
         }
 
         val gainloss = map.gain - map.loss
 
         if (gainloss >= 0.0) {
-          capitalGainLossMap[year]?.get(account)?.gain =
-            capitalGainLossMap[year]?.get(account)?.gain!! + gainloss
+          capitalGainLossMap[year]?.get(headline)?.gain =
+            capitalGainLossMap[year]?.get(headline)?.gain!! + gainloss
         } else {
-          capitalGainLossMap[year]?.get(account)?.loss =
-            capitalGainLossMap[year]?.get(account)?.loss!! - gainloss
+          capitalGainLossMap[year]?.get(headline)?.loss =
+            capitalGainLossMap[year]?.get(headline)?.loss!! - gainloss
         }
 
         // Add the gain/loss of the stock per year
@@ -251,7 +280,7 @@ open class GainLossBaseTimelineFragment : Fragment() {
           "\n"
         )
 
-        capitalGainLossMap[year]?.get(account)?.stockList?.add(
+        capitalGainLossMap[year]?.get(headline)?.stockList?.add(
           GainLossStockItem(
             date = map.lastTransactionDate,
             symbol = stockItem.stockDBdata.symbol,

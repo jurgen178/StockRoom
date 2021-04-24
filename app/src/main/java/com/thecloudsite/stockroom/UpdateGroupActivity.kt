@@ -155,7 +155,7 @@ class UpdateGroupActivity : AppCompatActivity() {
       }
     })
 
-    stockRoomViewModel.allProperties.observe(this, Observer { items ->
+    stockRoomViewModel.allStockDBdata.observe(this, Observer { items ->
       if (items != null) {
         updateGroupAdapter.updateData(items)
         stockDBdataList = items

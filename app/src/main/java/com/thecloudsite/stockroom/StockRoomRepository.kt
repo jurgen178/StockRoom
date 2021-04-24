@@ -38,7 +38,7 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   // Room executes all queries on a separate thread.
   // Observed LiveData will notify the observer when the data has changed.
-  val allProperties: LiveData<List<StockDBdata>> = stockRoomDao.getAllProperties()
+  val allStockDBdata: LiveData<List<StockDBdata>> = stockRoomDao.getAllStockDBdata()
 
   val allAssets: LiveData<List<Assets>> = stockRoomDao.getAllAssetsLiveData()
   val allEvents: LiveData<List<Events>> = stockRoomDao.getAllEventsLiveData()
@@ -394,13 +394,13 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
   @WorkerThread
   suspend fun deleteDividend(dividend: Dividend) {
     stockRoomDao.deleteDividend(
-        symbol = dividend.symbol,
-        amount = dividend.amount,
-        type = dividend.type,
-        cycle = dividend.cycle,
-        paydate = dividend.paydate,
-        exdate = dividend.exdate,
-        note = dividend.note
+      symbol = dividend.symbol,
+      amount = dividend.amount,
+      type = dividend.type,
+      cycle = dividend.cycle,
+      paydate = dividend.paydate,
+      exdate = dividend.exdate,
+      note = dividend.note
     )
   }
 

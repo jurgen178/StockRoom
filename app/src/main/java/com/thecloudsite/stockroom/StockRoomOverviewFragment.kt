@@ -187,7 +187,7 @@ class StockRoomOverviewFragment : Fragment() {
       val dialogBinding = DialogAddRemoveSelectionBinding.inflate(inflater)
 
       // add all symbols
-//      stockRoomViewModel.allProperties.observe(requireActivity(), Observer { items ->
+//      stockRoomViewModel.allStockDBdata.observe(requireActivity(), Observer { items ->
 //        if (items != null) {
 //          val spinnerData = items.map { stockItem ->
 //            stockItem.symbol
