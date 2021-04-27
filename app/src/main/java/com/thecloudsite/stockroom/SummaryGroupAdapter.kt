@@ -42,6 +42,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.Locale
+import kotlin.math.roundToInt
 
 const val summarygroup_all_items: Int = 0
 const val summarygroup_item: Int = 1
@@ -306,7 +307,7 @@ class SummaryGroupAdapter internal constructor(
     var totalCommission = 0.0
     var totalAssets = 0.0
     var totalGain = 0.0
-    //var totalLoss = 0.0
+    var totalLoss = 0.0
     var totalQuantity = 0.0
     var totalDividendAssets = 0.0
     var totalDividend = 0.0
@@ -424,9 +425,11 @@ class SummaryGroupAdapter internal constructor(
 
         if (gainLoss > 0.0) {
           totalGain += gainLoss
-        } //else {
-        //totalLoss -= gainLoss
-        //}
+        }
+
+        if (gainLoss < 0.0) {
+          totalLoss -= gainLoss
+        }
 
         totalAssets += assetsPrice
 
@@ -485,7 +488,7 @@ class SummaryGroupAdapter internal constructor(
       )
         .bold { append(DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)) }
 
-    if (totalAssets > 0.0) {
+    if (totalAssets >= epsilon) {
       totalAssetsStr.append(
         "\n${context.getString(R.string.summary_total_assets)} "
       )
@@ -526,36 +529,41 @@ class SummaryGroupAdapter internal constructor(
             .backgroundColor(green, { append("Background green") })
      */
 
-    val totalDividendChange: Double = if (totalDividendAssets > 0.0) {
+    val totalDividendChange: Double = if (totalDividendAssets >= epsilon) {
       totalDividend / totalDividendAssets
     } else {
       0.0
     }
 
     // Possible rounding error
-    val gain = if (totalGain > 0.0) {
+    val gain = if (totalGain >= epsilon) {
       totalGain
     } else {
       0.0
     }
 
-    val totalLoss = if (totalAssets > 0.0) {
-      totalGain - (totalAssets - totalPurchasePrice)
-    } else {
-      0.0
-    }
+    // Alternative total: sum all gains, and get the loss by subtracting from the total
+    // for minimal rounding error. But with no online data, only gain of the assets will be counted.
+//    val totalLoss = if (totalAssets >= epsilon) {
+//      totalGain - (totalAssets - totalPurchasePrice)
+//    } else {
+//      0.0
+//    }
 
-    val loss = if (totalLoss > epsilon) {
+    val loss = if (totalLoss >= epsilon) {
       totalLoss
     } else {
       0.0
     }
 
-    val total = if (totalAssets > 0.0) {
-      totalAssets - totalPurchasePrice
-    } else {
-      0.0
-    }
+//    val total = if (totalAssets >= epsilon) {
+//      totalAssets - totalPurchasePrice
+//    } else {
+//      0.0
+//    }
+
+    //val total = gain - loss
+    val total = gain.times(100).roundToInt() / 100.0 - loss.times(100).roundToInt() / 100.0
 
     var gainLossText = SpannableStringBuilder().append(
       "${context.getString(R.string.summary_gain_loss)}  "

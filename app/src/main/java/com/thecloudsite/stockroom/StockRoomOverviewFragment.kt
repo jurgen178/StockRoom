@@ -325,7 +325,7 @@ class StockRoomOverviewFragment : Fragment() {
     var totalPurchasePrice = 0.0
     var totalAssets = 0.0
     var totalGain = 0.0
-    //var totalLoss = 0.0
+    var totalLoss = 0.0
     var totalQuantity = 0.0
 
     var capitalGain = 0.0
@@ -360,34 +360,43 @@ class StockRoomOverviewFragment : Fragment() {
           totalGain += gainLoss
         }
 
+        if (gainLoss < 0.0) {
+          totalLoss -= gainLoss
+        }
+
         totalAssets += assetsPrice
       }
     }
 
     // Possible rounding error
-    val gain = if (totalGain > 0.0) {
+    val gain = if (totalGain >= epsilon) {
       totalGain
     } else {
       0.0
     }
 
-    val totalLoss = if (totalAssets > 0.0) {
-      totalGain - (totalAssets - totalPurchasePrice)
-    } else {
-      0.0
-    }
+    // Alternative total: sum all gains, and get the loss by subtracting from the total
+    // for minimal rounding error. But with no online data, only gain of the assets will be counted.
+//    val totalLoss = if (totalAssets >= epsilon) {
+//      totalGain - (totalAssets - totalPurchasePrice)
+//    } else {
+//      0.0
+//    }
 
-    val loss = if (totalLoss > epsilon) {
+    val loss = if (totalLoss >= epsilon) {
       totalLoss
     } else {
       0.0
     }
 
-    val total = if (totalAssets > 0.0) {
-      totalAssets - totalPurchasePrice
-    } else {
-      0.0
-    }
+//    val total = if (totalAssets >= epsilon) {
+//      totalAssets - totalPurchasePrice
+//    } else {
+//      0.0
+//    }
+
+    //val total = gain - loss
+    val total = gain.times(100).roundToInt() / 100.0 - loss.times(100).roundToInt() / 100.0
 
     val gainLossText = SpannableStringBuilder().append(
       "${requireContext().getString(R.string.summary_gain_loss)}  "
@@ -402,7 +411,7 @@ class StockRoomOverviewFragment : Fragment() {
       )
         .bold { append(DecimalFormat(DecimalFormat2Digits).format(totalPurchasePrice)) }
 
-    if (totalAssets > 0.0) {
+    if (totalAssets >= epsilon) {
       totalAssetsStr.append(
         "\n${requireContext().getString(R.string.summary_total_assets)} "
       )

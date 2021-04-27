@@ -42,6 +42,7 @@ import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.thecloudsite.stockroom.databinding.FragmentSummarygroupBinding
 import com.thecloudsite.stockroom.invaders.InvadersActivity
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
+import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -262,7 +263,7 @@ class SummaryGroupFragment : Fragment() {
       )
     }
 
-    if (totalAssets > 0.0) {
+    if (totalAssets >= epsilon) {
 
       binding.summarySectionHeader.visibility = View.VISIBLE
       binding.summaryPieChart.visibility = View.VISIBLE
