@@ -44,7 +44,6 @@ class GainLossAllTimelineFragment : GainLossBaseTimelineFragment() {
 //    })
 
     // allAssets links StockDBdata and assets in the DB
-    // Get called only once.
     stockRoomViewModel.allAssets.observe(viewLifecycleOwner, Observer { assets ->
       if (assets != null) {
 
