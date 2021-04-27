@@ -370,7 +370,7 @@ class StockRoomOverviewFragment : Fragment() {
 
     // Possible rounding error
     val gain = if (totalGain >= epsilon) {
-      totalGain
+      totalGain.times(100).roundToInt() / 100.0
     } else {
       0.0
     }
@@ -384,7 +384,7 @@ class StockRoomOverviewFragment : Fragment() {
 //    }
 
     val loss = if (totalLoss >= epsilon) {
-      totalLoss
+      totalLoss.times(100).roundToInt() / 100.0
     } else {
       0.0
     }
@@ -395,8 +395,7 @@ class StockRoomOverviewFragment : Fragment() {
 //      0.0
 //    }
 
-    //val total = gain - loss
-    val total = gain.times(100).roundToInt() / 100.0 - loss.times(100).roundToInt() / 100.0
+    val total = gain - loss
 
     val gainLossText = SpannableStringBuilder().append(
       "${requireContext().getString(R.string.summary_gain_loss)}  "
