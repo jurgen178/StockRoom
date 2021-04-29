@@ -587,6 +587,10 @@ class AssetListAdapter internal constructor(
       }
 
     }
+    else
+    {
+      assetList = mutableListOf()
+    }
 
     notifyDataSetChanged()
   }
