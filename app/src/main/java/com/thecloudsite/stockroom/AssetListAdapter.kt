@@ -70,7 +70,6 @@ class AssetListAdapter internal constructor(
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var assetList = mutableListOf<AssetListData>()
-  private var assetsCopy = listOf<Asset>()
   private var defaultTextColor: Int? = null
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -408,7 +407,7 @@ class AssetListAdapter internal constructor(
   internal fun updateAssets(assetData: StockAssetsLiveData) {
 
     if (assetData.assets != null) {
-      assetsCopy = assetData.assets!!.assets
+      val assets = assetData.assets!!.assets
 
       // Headline
       assetList = mutableListOf(
@@ -423,7 +422,7 @@ class AssetListAdapter internal constructor(
       )
 
       // Sort assets in the list by date.
-      val sortedList = assetsCopy.sortedBy { asset ->
+      val sortedList = assets.sortedBy { asset ->
         asset.date
       }
 
@@ -440,10 +439,10 @@ class AssetListAdapter internal constructor(
       assetList.addAll(sortedDataList)
 
       // Summary
-      val symbol: String = assetsCopy.firstOrNull()?.symbol ?: ""
+      val symbol: String = assets.firstOrNull()?.symbol ?: ""
       val assetChange = if (assetData.onlineMarketData != null) {
         getAssetChange(
-          assetsCopy,
+          assets,
           assetData.onlineMarketData!!.marketPrice,
           assetData.onlineMarketData!!.postMarketData,
           Color.DKGRAY,
@@ -466,8 +465,8 @@ class AssetListAdapter internal constructor(
         SpannableStringBuilder()
       }
 
-      val capitalGainLossText = if (assetsCopy.isNotEmpty()) {
-        val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetsCopy)
+      val capitalGainLossText = if (assets.isNotEmpty()) {
+        val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assets)
         SpannableStringBuilder()
           .append(context.getString(R.string.asset_summary_text))
           .append("\n${context.getString(R.string.summary_capital_gain)} ")
