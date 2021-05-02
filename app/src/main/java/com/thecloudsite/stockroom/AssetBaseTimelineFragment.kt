@@ -152,7 +152,7 @@ open class AssetBaseTimelineFragment : Fragment() {
     recyclerView.addItemDecoration(getSectionCallback(assetList))
   }
 
-  fun getSectionCallback(timelineElementList: List<AssetTimelineElement>): SectionCallback {
+  private fun getSectionCallback(timelineElementList: List<AssetTimelineElement>): SectionCallback {
     return object : SectionCallback {
       // In your data, implement a method to determine if this is a section.
       override fun isSection(position: Int): Boolean =

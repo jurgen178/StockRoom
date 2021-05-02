@@ -36,11 +36,11 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
 import com.thecloudsite.stockroom.databinding.OnlinedataviewItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.enNumberStrToDouble
 import com.thecloudsite.stockroom.utils.formatInt
 import com.thecloudsite.stockroom.utils.isOnline
+import com.thecloudsite.stockroom.utils.minValueCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -312,7 +312,7 @@ class OnlineDataAdapter internal constructor(
       // requested value is not in the JSON data
       return SpannableStringBuilder().append(context.getString(R.string.onlinedata_not_applicable))
     }
-    val str = DecimalFormat(DecimalFormat2Digits).format(value)
+    val str = DecimalFormat(DecimalFormat2To4Digits).format(minValueCheck(value))
     return if (value < 0.0) {
       SpannableStringBuilder().bold {
         color(context.getColor(R.color.red)) {
@@ -332,8 +332,11 @@ class OnlineDataAdapter internal constructor(
       // requested value is not in the JSON data
       SpannableStringBuilder().append(context.getString(R.string.onlinedata_not_applicable))
     } else {
+
       SpannableStringBuilder().bold {
-        append(DecimalFormat(formatStr).format(value))
+        append(
+          DecimalFormat(formatStr).format(minValueCheck(value))
+        )
       }
     }
   }
@@ -385,13 +388,13 @@ class OnlineDataAdapter internal constructor(
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_fiftyDayAverage),
-        text = formatDouble(DecimalFormat2Digits, onlineMarketData.fiftyDayAverage)
+        text = formatDouble(DecimalFormat2To4Digits, onlineMarketData.fiftyDayAverage)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
-        text = formatDouble(DecimalFormat2Digits, onlineMarketData.twoHundredDayAverage)
+        text = formatDouble(DecimalFormat2To4Digits, onlineMarketData.twoHundredDayAverage)
       )
     )
     data.add(

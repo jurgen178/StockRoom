@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thecloudsite.stockroom.database.Event
@@ -88,67 +87,6 @@ open class EventBaseTimelineFragment : Fragment() {
 
     // use requireActivity() instead of this to have only one shared viewmodel
     stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-
-    stockRoomViewModel.allEventTable.observe(viewLifecycleOwner, Observer { events ->
-      if (events != null) {
-
-        val hashMap: HashMap<String, HashMap<String, MutableList<Event>>> = hashMapOf()
-
-        events.forEach { event ->
-          if (event.datetime > 0) {
-
-            val localDateTime = ZonedDateTime.ofInstant(
-              Instant.ofEpochSecond(event.datetime),
-              ZoneOffset.systemDefault()
-            )
-            val yearMonth: YearMonth = YearMonth.from(localDateTime)
-            val dateYM = yearMonth.format(DateTimeFormatter.ofPattern("u.MM"))
-            val dateFull = localDateTime.format(DateTimeFormatter.ofLocalizedDate(FULL))
-
-            if (hashMap[dateYM] == null) {
-              hashMap[dateYM] = hashMapOf()
-            }
-
-            if (hashMap[dateYM]?.get(dateFull) == null) {
-              hashMap[dateYM]?.set(dateFull, mutableListOf())
-            }
-
-            hashMap[dateYM]?.get(dateFull)
-              ?.add(event)
-          }
-        }
-
-        val eventList: MutableList<EventTimelineElement> = mutableListOf()
-
-        // Copy the new structured data-date map to timeline elements.
-        hashMap.toSortedMap()
-          .forEach { (date, symbolMap) ->
-            // sort by first date entry in the event list
-            symbolMap.toList()
-              .sortedBy {
-                if (it.second.isNotEmpty()) {
-                  // sort the date list
-                  it.second.minByOrNull { event ->
-                    event.datetime
-                  }!!.datetime
-                } else {
-                  0
-                }
-              }
-              .forEach { (eventdate, list) ->
-                eventList.add(EventTimelineElement(date, eventdate, list))
-              }
-          }
-
-        eventTimelineAdapter.updateData(eventList)
-
-        for (i in 0 until recyclerView.itemDecorationCount) {
-          recyclerView.removeItemDecorationAt(0)
-        }
-
-        recyclerView.addItemDecoration(getSectionCallback(eventList))
-      }
-    })
   }
 
   fun updateEvents(events: List<Event>) {

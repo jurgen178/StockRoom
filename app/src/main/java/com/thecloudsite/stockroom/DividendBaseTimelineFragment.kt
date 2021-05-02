@@ -168,7 +168,7 @@ open class DividendBaseTimelineFragment : Fragment() {
     recyclerView.addItemDecoration(getSectionCallback(dividendList))
   }
 
-  fun getSectionCallback(timelineElementList: List<DividendTimelineElement>): SectionCallback {
+  private fun getSectionCallback(timelineElementList: List<DividendTimelineElement>): SectionCallback {
     return object : SectionCallback {
       // In your data, implement a method to determine if this is a section.
       override fun isSection(position: Int): Boolean =

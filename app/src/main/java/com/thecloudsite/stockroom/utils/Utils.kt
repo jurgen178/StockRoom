@@ -159,6 +159,14 @@ fun validateDouble(value: Double): Double {
     0.0
 }
 
+// Lowest amount greater 0 is 0.0001
+fun minValueCheck(value: Double): Double =
+  if (value > 0.0 && value < 0.0001) {
+    0.0001
+  } else {
+    value
+  }
+
 fun enNumberStrToDouble(str: String): Double {
   var value: Double
   try {
@@ -172,7 +180,7 @@ fun enNumberStrToDouble(str: String): Double {
     value = 0.0
   }
 
-  return value
+  return minValueCheck(value)
 }
 
 // first: abbr
