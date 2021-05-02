@@ -36,9 +36,10 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
 import com.thecloudsite.stockroom.databinding.OnlinedataviewItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.enNumberStrToDouble
 import com.thecloudsite.stockroom.utils.formatInt
+import com.thecloudsite.stockroom.utils.getFormatStr
 import com.thecloudsite.stockroom.utils.isOnline
 import com.thecloudsite.stockroom.utils.minValueCheck
 import kotlinx.coroutines.Dispatchers
@@ -306,13 +307,16 @@ class OnlineDataAdapter internal constructor(
     return formatInt(value, context)
   }
 
-  private fun formatDoubleToSpannableString(value: Double): SpannableStringBuilder {
+  private fun formatDoubleNegInRed(
+    formatStr: String,
+    value: Double
+  ): SpannableStringBuilder {
     // only negative values in red
     if (value.isNaN()) {
       // requested value is not in the JSON data
       return SpannableStringBuilder().append(context.getString(R.string.onlinedata_not_applicable))
     }
-    val str = DecimalFormat(DecimalFormat2To4Digits).format(minValueCheck(value))
+    val str = DecimalFormat(formatStr).format(minValueCheck(value))
     return if (value < 0.0) {
       SpannableStringBuilder().bold {
         color(context.getColor(R.color.red)) {
@@ -323,6 +327,14 @@ class OnlineDataAdapter internal constructor(
       SpannableStringBuilder().bold { append(str) }
     }
   }
+
+  private fun formatDoubleNegInRed2(
+    value: Double
+  ): SpannableStringBuilder = formatDoubleNegInRed(DecimalFormat2Digits, value)
+
+  private fun formatDoubleNegInRed2To4(
+    value: Double
+  ): SpannableStringBuilder = formatDoubleNegInRed(getFormatStr(value), value)
 
   private fun formatDouble(
     formatStr: String,
@@ -341,6 +353,14 @@ class OnlineDataAdapter internal constructor(
     }
   }
 
+  private fun formatDouble2(
+    value: Double
+  ): SpannableStringBuilder = formatDouble(DecimalFormat2Digits, value)
+
+  private fun formatDouble2To4(
+    value: Double
+  ): SpannableStringBuilder = formatDouble(getFormatStr(value), value)
+
   private fun convertRangeStr(rangeStr: String): SpannableStringBuilder {
 
     // "1.23 - 4.56" = "1,23 - 4,56"
@@ -350,10 +370,14 @@ class OnlineDataAdapter internal constructor(
     val rangeList = rangeStr.split(delimiter)
 
     if (rangeList.size == 2) {
+      val value1 = enNumberStrToDouble(rangeList[0])
       val rangeStr1 =
-        DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[0]))
+        DecimalFormat(getFormatStr(value1)).format(value1)
+
+      val value2 = enNumberStrToDouble(rangeList[1])
       val rangeStr2 =
-        DecimalFormat(DecimalFormat2To4Digits).format(enNumberStrToDouble(rangeList[1]))
+        DecimalFormat(getFormatStr(value2)).format(value2)
+
       return SpannableStringBuilder().bold {
         append("$rangeStr1$delimiter$rangeStr2")
       }
@@ -372,29 +396,25 @@ class OnlineDataAdapter internal constructor(
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
-        text = formatDouble(
-          DecimalFormat2To4Digits, onlineMarketData.regularMarketPreviousClose
-        )
+        text = formatDouble2To4(onlineMarketData.regularMarketPreviousClose)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_regularMarketOpen),
-        text = formatDouble(
-          DecimalFormat2To4Digits, onlineMarketData.regularMarketOpen
-        )
+        text = formatDouble2To4(onlineMarketData.regularMarketOpen)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_fiftyDayAverage),
-        text = formatDouble(DecimalFormat2To4Digits, onlineMarketData.fiftyDayAverage)
+        text = formatDouble2To4(onlineMarketData.fiftyDayAverage)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
-        text = formatDouble(DecimalFormat2To4Digits, onlineMarketData.twoHundredDayAverage)
+        text = formatDouble2To4(onlineMarketData.twoHundredDayAverage)
       )
     )
     data.add(
@@ -450,49 +470,49 @@ class OnlineDataAdapter internal constructor(
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
-        text = formatDoubleToSpannableString(onlineMarketData.epsTrailingTwelveMonths)
+        text = formatDoubleNegInRed2To4(onlineMarketData.epsTrailingTwelveMonths)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_epsCurrentYear),
-        text = formatDoubleToSpannableString(onlineMarketData.epsCurrentYear)
+        text = formatDoubleNegInRed2To4(onlineMarketData.epsCurrentYear)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_epsForward),
-        text = formatDoubleToSpannableString(onlineMarketData.epsForward)
+        text = formatDoubleNegInRed2To4(onlineMarketData.epsForward)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_trailingPE),
-        text = formatDoubleToSpannableString(onlineMarketData.trailingPE)
+        text = formatDoubleNegInRed2To4(onlineMarketData.trailingPE)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_priceEpsCurrentYear),
-        text = formatDoubleToSpannableString(onlineMarketData.priceEpsCurrentYear)
+        text = formatDoubleNegInRed2To4(onlineMarketData.priceEpsCurrentYear)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_forwardPE),
-        text = formatDoubleToSpannableString(onlineMarketData.forwardPE)
+        text = formatDoubleNegInRed2To4(onlineMarketData.forwardPE)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_bookValue),
-        text = formatDoubleToSpannableString(onlineMarketData.bookValue)
+        text = formatDoubleNegInRed2To4(onlineMarketData.bookValue)
       )
     )
     data.add(
       OnlineData(
         desc = context.getString(R.string.onlinedata_priceToBook),
-        text = formatDoubleToSpannableString(onlineMarketData.priceToBook)
+        text = formatDoubleNegInRed2(onlineMarketData.priceToBook)
       )
     )
 

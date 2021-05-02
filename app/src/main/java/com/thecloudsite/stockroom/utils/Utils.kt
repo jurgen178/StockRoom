@@ -167,6 +167,13 @@ fun minValueCheck(value: Double): Double =
     value
   }
 
+fun getFormatStr(value: Double): String =
+  if (value >= 1.0) {
+    DecimalFormat2Digits
+  } else {
+    DecimalFormat2To4Digits
+  }
+
 fun enNumberStrToDouble(str: String): Double {
   var value: Double
   try {
