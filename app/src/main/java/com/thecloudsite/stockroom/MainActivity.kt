@@ -28,6 +28,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -634,7 +635,8 @@ class MainActivity : AppCompatActivity() {
           .forEach { portfolio ->
             val standardPortfolio = getString(R.string.standard_portfolio)
             val portfolioName = if (portfolio.isEmpty()) {
-              standardPortfolio
+              // standard portfolio is first entry and displayed in bold
+              SpannableStringBuilder().bold { append(standardPortfolio) }
             } else {
               portfolio
             }
