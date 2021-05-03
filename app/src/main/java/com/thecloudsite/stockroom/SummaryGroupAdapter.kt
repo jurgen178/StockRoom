@@ -337,7 +337,7 @@ class SummaryGroupAdapter internal constructor(
     stockItemsSelected.forEach { stockItem ->
       val (quantity, price, commission) = getAssets(stockItem.assets)
 
-      totalPurchasePrice += price + commission
+      totalPurchasePrice += price // + commission
       totalQuantity += quantity
       totalCommission += commission
 
@@ -413,7 +413,7 @@ class SummaryGroupAdapter internal constructor(
 
       if (stockItem.onlineMarketData.marketPrice > 0.0) {
         val assetsPrice = quantity * stockItem.onlineMarketData.marketPrice
-        val gainLoss = assetsPrice - (price + commission)
+        val gainLoss = assetsPrice - (price)// + commission)
 
 //        val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
 //        val year = localDateTime.year
