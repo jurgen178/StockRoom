@@ -460,9 +460,11 @@ class StockRoomChartAdapter internal constructor(
 
           seriesRef.setDrawHorizontalHighlightIndicator(false)
           seriesRef.setDrawValues(false)
-          seriesRef.setDrawFilled(false)
           seriesRef.setDrawCircles(false)
           seriesRef.color = color
+
+          // No filling for overlay graphs.
+          seriesRef.setDrawFilled(false)
           //seriesRef.fillColor = color
 
           seriesList.add(seriesRef)
