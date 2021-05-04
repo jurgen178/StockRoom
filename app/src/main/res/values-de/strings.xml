@@ -344,7 +344,7 @@ limitations under the License. -->
   <string name="realtime">Immer Realtime verwenden</string>
   <string name="linegraph">Liniendiagramm</string>
   <string name="use_chart_overlay_symbols">Vergleichskurven in der Chart-Darstellung</string>
-  <string name="use_chart_overlay_symbols_desc">Stellt einen zusätzlichen Verlauf andere Wertpapierwerte zum Vergleich in der Chart-Darstellung dar.</string>
+  <string name="use_chart_overlay_symbols_desc">Stellt einen zusätzlichen Verlauf andere Wertpapierwerte zum Vergleich in der Chart-Darstellung dar.\nFarbreihenfolge:\nGrau, Rot, Grün, Gelb</string>
   <string name="chart_overlay_symbols_title">Zu verwendende Wertpapierkürzel</string>
   <string name="data_provider_details">Datensatz für %1$s</string>
   <string name="data_provider_details_sorted">[Sortiert]</string>

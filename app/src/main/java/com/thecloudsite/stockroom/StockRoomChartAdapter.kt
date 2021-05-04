@@ -69,9 +69,13 @@ class StockRoomChartAdapter internal constructor(
 
   // Comma separated symbols.
   private var chartOverlaySymbols: String = ""
-  // First entry match first color, ...
+  // First entry match first color.
   private val chartOverlayColors: List<Int> =
-    listOf(Color.LTGRAY, Color.DKGRAY, Color.BLUE, Color.YELLOW)
+    listOf(
+      Color.LTGRAY,
+      0xffFF70AE.toInt(), // Red
+      0xffA4E500.toInt(), // Green
+      0xffE5D064.toInt()) // Yellow
 
   class StockRoomViewHolder(
     val binding: StockroomChartItemBinding
@@ -454,10 +458,10 @@ class StockRoomChartAdapter internal constructor(
 
           seriesRef.setDrawHorizontalHighlightIndicator(false)
           seriesRef.setDrawValues(false)
-          seriesRef.setDrawFilled(true)
+          seriesRef.setDrawFilled(false)
           seriesRef.setDrawCircles(false)
           seriesRef.color = color
-          seriesRef.fillColor = color
+          //seriesRef.fillColor = color
 
           seriesList.add(seriesRef)
         }
