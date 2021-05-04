@@ -71,6 +71,17 @@ const val DecimalFormat2To4Digits = "#,##0.00##"
 const val DecimalFormat2To8Digits = "#,##0.00######"
 const val DecimalFormatQuantityDigits = "#,##0.########"
 
+const val MaxChartOverlays = 4
+
+// First entry match first color.
+val chartOverlayColors: List<Int> =
+  listOf(
+    0xff808080.toInt(), // Gray
+    0xffFF70AE.toInt(), // Red
+    0xffA4E500.toInt(), // Green
+    0xffFFD800.toInt()  // Yellow
+  )
+
 // Rounding error
 const val epsilon = 0.00000001
 

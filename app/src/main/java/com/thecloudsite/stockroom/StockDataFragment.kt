@@ -93,8 +93,10 @@ import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To8Digits
+import com.thecloudsite.stockroom.utils.MaxChartOverlays
 import com.thecloudsite.stockroom.utils.TextMarkerViewCandleChart
 import com.thecloudsite.stockroom.utils.TextMarkerViewLineChart
+import com.thecloudsite.stockroom.utils.chartOverlayColors
 import com.thecloudsite.stockroom.utils.commissionScale
 import com.thecloudsite.stockroom.utils.getAssetChange
 import com.thecloudsite.stockroom.utils.getAssets
@@ -210,6 +212,7 @@ class StockDataFragment : Fragment() {
 
   private lateinit var stockChartDataViewModel: StockChartDataViewModel
   private lateinit var stockRoomViewModel: StockRoomViewModel
+  private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
 
   private val assetChange = StockAssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
@@ -271,6 +274,37 @@ class StockDataFragment : Fragment() {
         putInt(settingStockViewMode, value.value)
         commit()
       }
+    }
+
+  private val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC"
+  private val settingOverlaySymbols = "chart_overlay_symbols"
+  private var chartOverlaySymbols: String
+    get() {
+      val sharedPref =
+        PreferenceManager.getDefaultSharedPreferences(activity)
+          ?: return settingChartOverlaySymbolsDefault
+      val symbols = sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
+      return if (symbols.isNullOrEmpty()) {
+        sharedPref.edit()
+          .putString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
+          .apply()
+        settingChartOverlaySymbolsDefault
+      } else {
+        symbols
+      }
+    }
+    set(value) {
+    }
+
+  private val settingUseChartOverlaySymbols = "use_chart_overlay_symbols"
+  private var useChartOverlaySymbols: Boolean
+    get() {
+      val sharedPref =
+        PreferenceManager.getDefaultSharedPreferences(activity)
+          ?: return false
+      return sharedPref.getBoolean(settingUseChartOverlaySymbols, false)
+    }
+    set(value) {
     }
 
   private fun assetItemUpdateClicked(asset: Asset) {
@@ -828,16 +862,39 @@ class StockDataFragment : Fragment() {
 
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
-    stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { data ->
-      if (data != null) {
-        stockDataEntries = data.stockDataEntries
+    stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
+      if (stockChartData != null) {
+        chartDataItems[stockChartData.symbol] = stockChartData.stockDataEntries
+
+        stockDataEntries = stockChartData.stockDataEntries
         setupCharts(stockViewRange, stockViewMode)
-        loadCharts(data.symbol, stockViewRange, stockViewMode)
+        loadCharts(stockViewRange, stockViewMode)
       }
     })
 
     binding.textViewSymbol.text =
       SpannableStringBuilder().underline { color(Color.BLUE) { append(symbol) } }
+
+    if (useChartOverlaySymbols) {
+
+      binding.textViewStockLegend.visibility = View.VISIBLE
+      var chartOverlayColorIndex = 0
+
+      val stockLegendText = SpannableStringBuilder()
+
+      chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
+        val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+        stockLegendText.color(color) { append("$symbolRef ") }
+
+      }
+      binding.textViewStockLegend.text = stockLegendText
+
+    } else {
+
+      binding.textViewStockLegend.visibility = View.GONE
+      binding.textViewStockLegend.text = ""
+
+    }
 
     // Setup community pages menu
     binding.textViewSymbol.setOnClickListener { viewSymbol ->
@@ -2521,7 +2578,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun updateStockViewRange(_stockViewRange: StockViewRange) {
-    stockDataEntries = null
+    chartDataItems.clear()
     updateStockView(_stockViewRange, stockViewMode)
   }
 
@@ -2549,15 +2606,21 @@ class StockDataFragment : Fragment() {
     stockViewRange: StockViewRange,
     stockViewMode: StockViewMode
   ) {
-    if (stockDataEntries == null) {
+    if (chartDataItems.isEmpty()) {
       getData(stockViewRange)
     } else {
-      loadCharts(symbol, stockViewRange, stockViewMode)
+      loadCharts(stockViewRange, stockViewMode)
     }
   }
 
   private fun getData(stockViewRange: StockViewRange) {
     stockChartDataViewModel.getChartData(symbol, stockViewRange)
+
+    if (useChartOverlaySymbols) {
+      chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
+        stockChartDataViewModel.getChartData(symbolRef, stockViewRange)
+      }
+    }
   }
 
   private fun setupCharts(
@@ -2577,16 +2640,15 @@ class StockDataFragment : Fragment() {
   }
 
   private fun loadCharts(
-    symbol: String,
     stockViewRange: StockViewRange,
     stockViewMode: StockViewMode
   ) {
     when (stockViewMode) {
       StockViewMode.Line -> {
-        loadLineChart(symbol, stockViewRange)
+        loadLineChart(stockViewRange)
       }
       StockViewMode.Candle -> {
-        loadCandleStickChart(symbol, stockViewRange)
+        loadCandleStickChart(stockViewRange)
       }
     }
   }
@@ -2615,24 +2677,34 @@ class StockDataFragment : Fragment() {
     get() =
       when (stockViewRange) {
         StockViewRange.OneDay -> {
-          IndexAxisValueFormatter(stockDataEntries!!.map { stockDataEntry ->
-            val date =
-              ZonedDateTime.ofInstant(
-                Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
-                ZoneOffset.systemDefault()
-              )
-            date.format(axisTimeFormatter)
-          })
+          val stockDataEntries = chartDataItems[symbol]
+          if (stockDataEntries != null) {
+            IndexAxisValueFormatter(stockDataEntries.map { stockDataEntry ->
+              val date =
+                ZonedDateTime.ofInstant(
+                  Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
+                  ZoneOffset.systemDefault()
+                )
+              date.format(axisTimeFormatter)
+            })
+          } else {
+            IndexAxisValueFormatter()
+          }
         }
         else -> {
-          IndexAxisValueFormatter(stockDataEntries!!.map { stockDataEntry ->
-            val date =
-              ZonedDateTime.ofInstant(
-                Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
-                ZoneOffset.systemDefault()
-              )
-            date.format(xAxisDateFormatter)
-          })
+          val stockDataEntries = chartDataItems[symbol]
+          if (stockDataEntries != null) {
+            IndexAxisValueFormatter(stockDataEntries.map { stockDataEntry ->
+              val date =
+                ZonedDateTime.ofInstant(
+                  Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
+                  ZoneOffset.systemDefault()
+                )
+              date.format(xAxisDateFormatter)
+            })
+          } else {
+            IndexAxisValueFormatter()
+          }
         }
       }
 
@@ -2722,7 +2794,6 @@ class StockDataFragment : Fragment() {
   }
 
   private fun loadCandleStickChart(
-    symbol: String,
     stockViewRange: StockViewRange
   ) {
     val candleStickChart: CandleStickChart = binding.candleStickChart
@@ -2731,8 +2802,13 @@ class StockDataFragment : Fragment() {
     val candleEntries: MutableList<CandleEntry> = mutableListOf()
     val seriesList: MutableList<ICandleDataSet> = mutableListOf()
 
-    if (stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
-      stockDataEntries!!.forEach { stockDataEntry ->
+    val stockDataEntries = chartDataItems[symbol]
+    var minY = Float.MAX_VALUE
+    var maxY = 0f
+    if (stockDataEntries != null && stockDataEntries.isNotEmpty()) {
+      stockDataEntries.forEach { stockDataEntry ->
+        minY = minOf(minY, stockDataEntry.candleEntry.y)
+        maxY = maxOf(maxY, stockDataEntry.candleEntry.y)
         candleEntries.add(stockDataEntry.candleEntry)
       }
 
@@ -2746,6 +2822,55 @@ class StockDataFragment : Fragment() {
       series.increasingPaintStyle = Paint.Style.FILL
       series.neutralColor = Color.LTGRAY
       series.setDrawValues(false)
+
+      // Get the ref chart data.
+      if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
+        var chartOverlayColorIndex = 0
+        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
+          val stockDataEntriesRef = chartDataItems[symbolRef]
+          if (stockDataEntriesRef != null) {
+            val candleEntriesRef: MutableList<CandleEntry> = mutableListOf()
+            var minRefY = Float.MAX_VALUE
+            var maxRefY = 0f
+            stockDataEntriesRef.forEach { stockDataEntry ->
+              minRefY = minOf(minRefY, stockDataEntry.candleEntry.y)
+              maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
+            }
+
+            // Scale ref data to stock data.
+            if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+              val scale = (maxY - minY) / (maxRefY - minRefY)
+              stockDataEntriesRef.forEach { stockDataEntry ->
+                val candleEntryRef: CandleEntry =
+                  CandleEntry(
+                    stockDataEntry.candleEntry.x,
+                    (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
+                    (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
+                    (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
+                    (stockDataEntry.candleEntry.close - minRefY) * scale + minY
+                  )
+
+                candleEntriesRef.add(candleEntryRef)
+              }
+
+              val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbolRef)
+              val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+
+              seriesRef.color = color
+              seriesRef.shadowColor = color
+              seriesRef.shadowWidth = 1f
+              seriesRef.decreasingColor = Color.rgb(255, 204, 204)
+              seriesRef.decreasingPaintStyle = Paint.Style.FILL
+              seriesRef.increasingColor = Color.rgb(204, 255, 204)
+              seriesRef.increasingPaintStyle = Paint.Style.FILL
+              seriesRef.neutralColor = color
+              seriesRef.setDrawValues(false)
+
+              seriesList.add(seriesRef)
+            }
+          }
+        }
+      }
 
       seriesList.add(series)
 
@@ -2807,7 +2932,6 @@ class StockDataFragment : Fragment() {
   }
 
   private fun loadLineChart(
-    symbol: String,
     stockViewRange: StockViewRange
   ) {
     val lineChart: LineChart = binding.lineChart
@@ -2817,8 +2941,13 @@ class StockDataFragment : Fragment() {
     val seriesList: MutableList<ILineDataSet> = mutableListOf()
 
     val dataPoints = ArrayList<DataPoint>()
-    if (stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
-      stockDataEntries!!.forEach { stockDataEntry ->
+    var minY = Float.MAX_VALUE
+    var maxY = 0f
+    val stockDataEntries = chartDataItems[symbol]
+    if (stockDataEntries != null && stockDataEntries.isNotEmpty()) {
+      stockDataEntries.forEach { stockDataEntry ->
+        minY = minOf(minY, stockDataEntry.candleEntry.y)
+        maxY = maxOf(maxY, stockDataEntry.candleEntry.y)
         dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
       }
     }
@@ -2831,6 +2960,54 @@ class StockDataFragment : Fragment() {
     series.setDrawCircles(false)
     series.color = context?.getColor(R.color.chartLine)!!
     series.fillColor = context?.getColor(R.color.chartLine)!!
+
+    // Get the ref chart data.
+    if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
+      var chartOverlayColorIndex = 0
+      chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
+        val stockDataEntriesRef = chartDataItems[symbolRef]
+        if (stockDataEntriesRef != null) {
+          val dataPointsRef = ArrayList<DataPoint>()
+          var minRefY = Float.MAX_VALUE
+          var maxRefY = 0f
+          stockDataEntriesRef.forEach { stockDataEntry ->
+            minRefY = minOf(minRefY, stockDataEntry.candleEntry.y)
+            maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
+          }
+
+          // Scale ref data to stock data.
+          // Then the ref stock data will always look the same in each stock chart.
+          if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+            val scale = (maxY - minY) / (maxRefY - minRefY)
+            stockDataEntriesRef.forEach { stockDataEntry ->
+              val dataPointRef: DataPoint =
+                DataPoint(
+                  x = stockDataEntry.candleEntry.x,
+                  y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
+                      * scale                                  // scale ref to match stock data range
+                      + minY                                   // shift up to min stock data
+                )
+
+              dataPointsRef.add(dataPointRef)
+            }
+          }
+
+          val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
+          val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+
+          seriesRef.setDrawHorizontalHighlightIndicator(false)
+          seriesRef.setDrawValues(false)
+          seriesRef.setDrawCircles(false)
+          seriesRef.color = color
+
+          // No filling for overlay graphs.
+          seriesRef.setDrawFilled(false)
+          //seriesRef.fillColor = color
+
+          seriesList.add(seriesRef)
+        }
+      }
+    }
 
     seriesList.add(series)
 
@@ -2851,11 +3028,11 @@ class StockDataFragment : Fragment() {
     val assetTimeEntriesCopy: MutableList<AssetsTimeData> = mutableListOf()
     assetTimeEntriesCopy.addAll(assetTimeEntries)
 
-    if (assetTimeEntriesCopy.isNotEmpty() && stockDataEntries != null && stockDataEntries!!.isNotEmpty()) {
+    if (assetTimeEntriesCopy.isNotEmpty() && stockDataEntries != null && stockDataEntries.isNotEmpty()) {
       var i: Int = 0
 
-      val lastIndex = stockDataEntries!!.size - 2
-      while (i < stockDataEntries!!.size - 1) {
+      val lastIndex = stockDataEntries.size - 2
+      while (i < stockDataEntries.size - 1) {
 
         if (assetTimeEntriesCopy.isEmpty()) {
           break
@@ -2864,8 +3041,8 @@ class StockDataFragment : Fragment() {
         for (j in assetTimeEntriesCopy.indices) {
 
           val t: Long = assetTimeEntriesCopy[j].date
-          val a = stockDataEntries!![i].dateTimePoint
-          val b = stockDataEntries!![i + 1].dateTimePoint
+          val a = stockDataEntries[i].dateTimePoint
+          val b = stockDataEntries[i + 1].dateTimePoint
           // In the time interval a..b or just bought in after hours >= b
           if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
             // use the index where the value is closest to t
@@ -2880,12 +3057,12 @@ class StockDataFragment : Fragment() {
             val value = if (isDataPoint) {
               assetTimeEntriesCopy[j].value.toFloat()
             } else {
-              stockDataEntries!![i].candleEntry.y
+              stockDataEntries[i].candleEntry.y
             }
 
             val transactionPoints = listOf(
               DataPoint(
-                stockDataEntries!![k].candleEntry.x,
+                stockDataEntries[k].candleEntry.x,
                 value
               )
             )

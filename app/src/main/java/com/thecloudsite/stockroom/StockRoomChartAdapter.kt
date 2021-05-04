@@ -48,12 +48,12 @@ import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomChartItemBinding
+import com.thecloudsite.stockroom.utils.MaxChartOverlays
+import com.thecloudsite.stockroom.utils.chartOverlayColors
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
-
-const val MaxChartOverlays = 4
 
 class StockRoomChartAdapter internal constructor(
   val context: Context,
@@ -69,15 +69,6 @@ class StockRoomChartAdapter internal constructor(
 
   // Comma separated symbols.
   private var chartOverlaySymbols: String = ""
-
-  // First entry match first color.
-  private val chartOverlayColors: List<Int> =
-    listOf(
-      0xff808080.toInt(), // Gray
-      0xffFF70AE.toInt(), // Red
-      0xffA4E500.toInt(), // Green
-      0xffE5D064.toInt()  // Yellow
-    )
 
   class StockRoomViewHolder(
     val binding: StockroomChartItemBinding

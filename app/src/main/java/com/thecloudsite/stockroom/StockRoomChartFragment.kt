@@ -27,6 +27,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import com.thecloudsite.stockroom.utils.MaxChartOverlays
 import kotlin.math.roundToInt
 
 class StockRoomChartFragment : StockRoomBaseFragment() {
