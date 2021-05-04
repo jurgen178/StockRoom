@@ -22,6 +22,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.edit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -70,26 +71,33 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     set(value) {
     }
 
-  private val settingChartOverlaySymbolDefault = "^GSPC"
-  private val settingOverlaySymbol = "chart_overlay_symbol"
-  private var chartOverlaySymbol: String
+  private val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC"
+  private val settingOverlaySymbols = "chart_overlay_symbols"
+  private var chartOverlaySymbols: String
     get() {
       val sharedPref =
         PreferenceManager.getDefaultSharedPreferences(activity)
-            ?: return settingChartOverlaySymbolDefault
-      return sharedPref.getString(settingOverlaySymbol, settingChartOverlaySymbolDefault)
-          ?: return settingChartOverlaySymbolDefault
+          ?: return settingChartOverlaySymbolsDefault
+      val symbols = sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
+      return if (symbols.isNullOrEmpty()) {
+        sharedPref.edit()
+          .putString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
+          .apply()
+        settingChartOverlaySymbolsDefault
+      } else {
+        symbols
+      }
     }
     set(value) {
     }
 
-  private val settingUseChartOverlaySymbol = "use_chart_overlay_symbol"
-  private var useChartOverlaySymbol: Boolean
+  private val settingUseChartOverlaySymbols = "use_chart_overlay_symbols"
+  private var useChartOverlaySymbols: Boolean
     get() {
       val sharedPref =
         PreferenceManager.getDefaultSharedPreferences(activity)
-            ?: return false
-      return sharedPref.getBoolean(settingUseChartOverlaySymbol, false)
+          ?: return false
+      return sharedPref.getBoolean(settingUseChartOverlaySymbols, false)
     }
     set(value) {
     }
@@ -104,9 +112,9 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
       { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
     val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
     val adapter = StockRoomChartAdapter(
-        requireContext(),
-        clickListenerGroupLambda,
-        clickListenerSymbolLambda
+      requireContext(),
+      clickListenerGroupLambda,
+      clickListenerSymbolLambda
     )
 
     val recyclerView = binding.recyclerview
@@ -118,8 +126,8 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
       (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
     recyclerView.layoutManager = GridLayoutManager(
-        context,
-        Integer.min(Integer.max(spanCount, 1), 10)
+      context,
+      Integer.min(Integer.max(spanCount, 1), 10)
     )
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
@@ -145,14 +153,14 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
       if (stockChartData != null) {
-        val overlaySymbol =
-          if (useChartOverlaySymbol) {
-            chartOverlaySymbol
+        val overlaySymbols =
+          if (useChartOverlaySymbols) {
+            chartOverlaySymbols
           } else {
             ""
           }
 
-        adapter.updateChartItem(stockChartData, overlaySymbol, stockViewRange, stockViewMode)
+        adapter.updateChartItem(stockChartData, overlaySymbols, stockViewRange, stockViewMode)
       }
     })
   }
@@ -183,8 +191,10 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     override fun run() {
       // Refresh the charts.
       // getChartData triggers stockChartDataViewModel.chartData.observe
-      if (useChartOverlaySymbol) {
-        stockChartDataViewModel.getChartData(chartOverlaySymbol, stockViewRange)
+      if (useChartOverlaySymbols) {
+        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
+          stockChartDataViewModel.getChartData(symbolRef, stockViewRange)
+        }
       }
 
       symbolList.forEach { symbol ->
@@ -193,7 +203,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
       val onlineChartTimerDelay: Long =
         if (stockViewRange == StockViewRange.OneDay
-            || stockViewRange == StockViewRange.FiveDays
+          || stockViewRange == StockViewRange.FiveDays
         ) {
           // Update daily and 5-day chart every 5min
           5 * 60 * 1000L

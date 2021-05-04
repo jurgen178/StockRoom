@@ -29,17 +29,17 @@
         />
 
     <SwitchPreferenceCompat
-        app:key="use_chart_overlay_symbol"
-        app:title="@string/use_chart_overlay_symbol"
-        app:summary="@string/use_chart_overlay_symbol_desc"
+        app:key="use_chart_overlay_symbols"
+        app:title="@string/use_chart_overlay_symbols"
+        app:summary="@string/use_chart_overlay_symbols_desc"
         app:defaultValue="false"
         app:icon="@drawable/ic_action_multiline_chart"
         />
     <EditTextPreference
-        app:key="chart_overlay_symbol"
-        app:title="@string/chart_overlay_symbol_title"
-        app:dependency="use_chart_overlay_symbol"
-        app:defaultValue="^GSPC"
+        app:key="chart_overlay_symbols"
+        app:title="@string/chart_overlay_symbols_title"
+        app:dependency="use_chart_overlay_symbols"
+        app:defaultValue="^GSPC,^IXIC"
         app:useSimpleSummaryProvider="true" />
 
     <Preference

@@ -320,9 +320,9 @@ limitations under the License. -->
   <string name="dividend_updated">Dividend updated.</string>
   <string name="realtime">Always use Realtime</string>
   <string name="linegraph">Line graph</string>
-  <string name="use_chart_overlay_symbol">Additional stock chart in the chart display</string>
-  <string name="use_chart_overlay_symbol_desc">Adds an additional stock chart of another symbol to the chart display.</string>
-  <string name="chart_overlay_symbol_title">Additional stock symbol</string>
+  <string name="use_chart_overlay_symbols">Additional stock charts in the chart display</string>
+  <string name="use_chart_overlay_symbols_desc">Adds an additional stock charts of another symbol to the chart display.</string>
+  <string name="chart_overlay_symbols_title">Additional stock symbols</string>
   <string name="data_provider_details">Data for %1$s</string>
   <string name="data_provider_details_sorted">[Sorted]</string>
   <string name="data_provider_details_unsorted">[Unsorted]</string>
