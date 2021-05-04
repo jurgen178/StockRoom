@@ -276,6 +276,11 @@ class StockRoomChartAdapter internal constructor(
       candleEntries.add(stockDataEntry.candleEntry)
     }
 
+    // Chart data is constant, add a zero point for correct scaling of the control.
+    if (minY == maxY) {
+      candleEntries.add(CandleEntry(0f, 0f, 0f, 0f, 0f))
+    }
+
     val series: CandleDataSet = CandleDataSet(candleEntries, symbol)
     series.color = Color.rgb(0, 0, 255)
     series.shadowColor = Color.rgb(255, 255, 0)
@@ -301,7 +306,7 @@ class StockRoomChartAdapter internal constructor(
             maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
           }
 
-          // Scale ref data to stock data.
+          // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
           if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
             val scale = (maxY - minY) / (maxRefY - minRefY)
             stockDataEntriesRef.forEach { stockDataEntry ->
@@ -429,8 +434,7 @@ class StockRoomChartAdapter internal constructor(
             maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
           }
 
-          // Scale ref data to stock data.
-          // Then the ref stock data will always look the same in each stock chart.
+          // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
           if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
             val scale = (maxY - minY) / (maxRefY - minRefY)
             stockDataEntriesRef.forEach { stockDataEntry ->
