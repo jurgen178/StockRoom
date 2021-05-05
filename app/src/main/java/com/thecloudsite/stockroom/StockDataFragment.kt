@@ -225,6 +225,8 @@ class StockDataFragment : Fragment() {
   private var stockDataEntries: List<StockDataEntry>? = null
   private var assetTimeEntries: List<AssetsTimeData> = emptyList()
   private var symbol: String = ""
+  private var chartOverlaySymbolsEnableList: MutableList<Boolean> =
+    MutableList(MaxChartOverlays) { true }
 
   private var isOnline: Boolean = false
 
@@ -875,25 +877,57 @@ class StockDataFragment : Fragment() {
     binding.textViewSymbol.text =
       SpannableStringBuilder().underline { color(Color.BLUE) { append(symbol) } }
 
+    binding.textViewStockLegend1.visibility = View.GONE
+    binding.textViewStockLegend1.text = ""
+    binding.textViewStockLegend2.visibility = View.GONE
+    binding.textViewStockLegend2.text = ""
+    binding.textViewStockLegend3.visibility = View.GONE
+    binding.textViewStockLegend3.text = ""
+    binding.textViewStockLegend4.visibility = View.GONE
+    binding.textViewStockLegend4.text = ""
+
     if (useChartOverlaySymbols) {
 
-      binding.textViewStockLegend.visibility = View.VISIBLE
       var chartOverlayColorIndex = 0
 
-      val stockLegendText = SpannableStringBuilder()
-
       chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
-        val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
-        stockLegendText.color(color) { append("$symbolRef ") }
 
+        if (symbolRef.isNotEmpty()) {
+          val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+
+          val stockLegendText = SpannableStringBuilder().color(color) { append(symbolRef) }
+          when (chartOverlayColorIndex) {
+            1 -> {
+              binding.textViewStockLegend1.text = stockLegendText
+              binding.textViewStockLegend1.visibility = View.VISIBLE
+              binding.textViewStockLegend1.setOnClickListener {
+                updateLegend(1)
+              }
+            }
+            2 -> {
+              binding.textViewStockLegend2.text = stockLegendText
+              binding.textViewStockLegend2.visibility = View.VISIBLE
+              binding.textViewStockLegend2.setOnClickListener {
+                updateLegend(2)
+              }
+            }
+            3 -> {
+              binding.textViewStockLegend3.text = stockLegendText
+              binding.textViewStockLegend3.visibility = View.VISIBLE
+              binding.textViewStockLegend3.setOnClickListener {
+                updateLegend(3)
+              }
+            }
+            4 -> {
+              binding.textViewStockLegend4.text = stockLegendText
+              binding.textViewStockLegend4.visibility = View.VISIBLE
+              binding.textViewStockLegend4.setOnClickListener {
+                updateLegend(4)
+              }
+            }
+          }
+        }
       }
-      binding.textViewStockLegend.text = stockLegendText
-
-    } else {
-
-      binding.textViewStockLegend.visibility = View.GONE
-      binding.textViewStockLegend.text = ""
-
     }
 
     // Setup community pages menu
@@ -2279,6 +2313,7 @@ class StockDataFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
+
     onlineDataHandler.post(onlineDataTask)
     stockRoomViewModel.runOnlineTaskNow()
   }
@@ -2830,10 +2865,9 @@ class StockDataFragment : Fragment() {
 
       // Get the ref chart data.
       if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
-        var chartOverlayColorIndex = 0
-        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
+        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEachIndexed { index, symbolRef ->
           val stockDataEntriesRef = chartDataItems[symbolRef]
-          if (stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
+          if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
             val candleEntriesRef: MutableList<CandleEntry> = mutableListOf()
             var minRefY = Float.MAX_VALUE
             var maxRefY = 0f
@@ -2897,7 +2931,7 @@ class StockDataFragment : Fragment() {
               }
 
               val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbolRef)
-              val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+              val color = chartOverlayColors[index % chartOverlayColors.size]
 
               seriesRef.color = color
               seriesRef.shadowColor = color
@@ -3010,10 +3044,9 @@ class StockDataFragment : Fragment() {
 
       // Get the ref chart data.
       if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
-        var chartOverlayColorIndex = 0
-        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
+        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEachIndexed { index, symbolRef ->
           val stockDataEntriesRef = chartDataItems[symbolRef]
-          if (stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
+          if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
             val dataPointsRef = ArrayList<DataPoint>()
             var minRefY = Float.MAX_VALUE
             var maxRefY = 0f
@@ -3080,7 +3113,7 @@ class StockDataFragment : Fragment() {
               }
 
               val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
-              val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+              val color = chartOverlayColors[index % chartOverlayColors.size]
 
               seriesRef.setDrawHorizontalHighlightIndicator(false)
               seriesRef.setDrawValues(false)
@@ -3209,5 +3242,11 @@ class StockDataFragment : Fragment() {
     }
 
     lineChart.invalidate()
+  }
+
+  private fun updateLegend(index: Int) {
+    chartOverlaySymbolsEnableList[index - 1] = !chartOverlaySymbolsEnableList[index - 1]
+
+    loadCharts(stockViewRange, stockViewMode)
   }
 }
