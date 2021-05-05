@@ -152,7 +152,8 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
           symbol = asset.symbol,
           type = TransactionType.AssetBoughtType,
           account = asset.account,
-          data = getAssetData(asset.quantity, asset.price, asset.commission),
+          value = asset.quantity * asset.price + asset.commission,
+          amountStr = getAssetData(asset.quantity, asset.price, asset.commission),
         )
       )
 
@@ -172,7 +173,8 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
           symbol = asset.symbol,
           type = TransactionType.AssetSoldType,
           account = asset.account,
-          data = getAssetData(-asset.quantity, asset.price, asset.commission),
+          value = -asset.quantity * asset.price + asset.commission,
+          amountStr = getAssetData(-asset.quantity, asset.price, asset.commission),
         )
       )
 
@@ -192,7 +194,8 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
           symbol = dividend.symbol,
           type = TransactionType.DividendReceivedType,
           account = dividend.account,
-          data = SpannableStringBuilder().append(
+          value = dividend.amount,
+          amountStr = SpannableStringBuilder().append(
             DecimalFormat(DecimalFormat2To4Digits).format(
               dividend.amount
             )
@@ -206,22 +209,21 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
   }
 
   fun updateData() {
-    transactionDataList.add(
-      TransactionData(
-        viewType = transaction_stats_type,
-        date = 0, // sorted by date, get displayed first
-        symbol = "",
-        type = TransactionType.StatsType,
-        assetBoughtMap = assetBoughtMap,
-        assetBought = assetBought,
-        assetSoldMap = assetSoldMap,
-        assetSold = assetSold,
-        dividendReceivedMap = dividendReceivedMap,
-        dividendReceived = dividendReceived,
-      )
-    )
 
-    adapter.updateData(transactionDataList)
+    adapter.updateData(
+      transactionDataList,
+      TransactionData(
+      viewType = transaction_stats_type,
+      date = 0,
+      symbol = "",
+      type = TransactionType.StatsType,
+      assetBoughtMap = assetBoughtMap,
+      assetBought = assetBought,
+      assetSoldMap = assetSoldMap,
+      assetSold = assetSold,
+      dividendReceivedMap = dividendReceivedMap,
+      dividendReceived = dividendReceived,
+    ))
   }
 
   private fun updateMap(map: HashMap<String, Int>, account: String) {

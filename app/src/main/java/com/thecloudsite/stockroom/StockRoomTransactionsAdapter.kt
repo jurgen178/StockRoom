@@ -47,7 +47,8 @@ data class TransactionData
   var symbol: String,
   var type: TransactionType,
   var account: String = "",
-  var data: SpannableStringBuilder = SpannableStringBuilder(),
+  var value: Double = 0.0,
+  var amountStr: SpannableStringBuilder = SpannableStringBuilder(),
   var assetBoughtMap: HashMap<String, Int> = hashMapOf(),
   var assetBought: Int = 0,
   var assetSoldMap: HashMap<String, Int> = hashMapOf(),
@@ -72,8 +73,8 @@ enum class TransactionSortMode {
   ByTypeDown,
   ByAccountUp,
   ByAccountDown,
-  ByDataUp,
-  ByDataDown,
+  ByAmountUp,
+  ByAmountDown,
 }
 
 class StockRoomTransactionsAdapter internal constructor(
@@ -82,7 +83,14 @@ class StockRoomTransactionsAdapter internal constructor(
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var transactionDataList: List<TransactionData> = listOf()
+  private var statsTransactionData: TransactionData = TransactionData(
+    viewType = -1,
+    date = -1,
+    symbol = "",
+    type = TransactionType.StatsType
+  )
+  private var transactionDataList: MutableList<TransactionData> = mutableListOf()
+  private var transactionDataListCopy: List<TransactionData> = listOf()
   private var transactionSortmode = TransactionSortMode.ByDateUp
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -209,17 +217,17 @@ class StockRoomTransactionsAdapter internal constructor(
         holder.binding.transactionType.text =
           getHeaderStr(context.getString(R.string.transaction_column_type))
 
-        holder.binding.transactionType.setOnClickListener {
+        holder.binding.transactionAccount.setOnClickListener {
           update(TransactionSortMode.ByAccountUp, TransactionSortMode.ByAccountDown)
         }
         holder.binding.transactionAccount.text =
           getHeaderStr(context.getString(R.string.transaction_column_account))
 
-        holder.binding.transactionData.setOnClickListener {
-          update(TransactionSortMode.ByDataUp, TransactionSortMode.ByDataDown)
+        holder.binding.transactionAmount.setOnClickListener {
+          update(TransactionSortMode.ByAmountUp, TransactionSortMode.ByAmountDown)
         }
-        holder.binding.transactionData.text =
-          getHeaderStr(context.getString(R.string.transaction_column_data))
+        holder.binding.transactionAmount.text =
+          getHeaderStr(context.getString(R.string.transaction_column_amount))
 
         when (transactionSortmode) {
           TransactionSortMode.ByDateUp -> updateTextviewUp(holder.binding.transactionDate)
@@ -234,8 +242,8 @@ class StockRoomTransactionsAdapter internal constructor(
           TransactionSortMode.ByAccountUp -> updateTextviewUp(holder.binding.transactionAccount)
           TransactionSortMode.ByAccountDown -> updateTextviewDown(holder.binding.transactionAccount)
 
-          TransactionSortMode.ByDataUp -> updateTextviewUp(holder.binding.transactionData)
-          TransactionSortMode.ByDataDown -> updateTextviewDown(holder.binding.transactionData)
+          TransactionSortMode.ByAmountUp -> updateTextviewUp(holder.binding.transactionAmount)
+          TransactionSortMode.ByAmountDown -> updateTextviewDown(holder.binding.transactionAmount)
         }
       }
 
@@ -292,7 +300,7 @@ class StockRoomTransactionsAdapter internal constructor(
 
         holder.binding.transactionAccount.text = current.account
 
-        holder.binding.transactionData.text = current.data
+        holder.binding.transactionAmount.text = current.amountStr
       }
     }
   }
@@ -318,14 +326,6 @@ class StockRoomTransactionsAdapter internal constructor(
     textView.text = textView.text.toString() + " ▼"
   }
 
-  internal fun update(transactionSortmodeUp: TransactionSortMode, TransactionSortmodeDown: TransactionSortMode) {
-    this.transactionSortmode = if (this.transactionSortmode == transactionSortmodeUp) {
-      TransactionSortmodeDown
-    } else {
-      transactionSortmodeUp
-    }
-  }
-
   private fun getAccounts(assetMap: HashMap<String, Int>): String {
     if (assetMap.size > 1) {
       val accounts: MutableList<String> = mutableListOf()
@@ -349,10 +349,73 @@ class StockRoomTransactionsAdapter internal constructor(
     return ""
   }
 
-  fun updateData(transactionDataList: List<TransactionData>) {
-    this.transactionDataList = transactionDataList.sortedBy { transactionData ->
-      transactionData.date
+  fun updateData(
+    transactionDataList: List<TransactionData>,
+    statsTransactionData: TransactionData
+  ) {
+    this.transactionDataListCopy = transactionDataList
+    this.statsTransactionData = statsTransactionData
+
+    update(transactionSortmode, transactionSortmode)
+  }
+
+  internal fun update(
+    transactionSortmodeUp: TransactionSortMode,
+    TransactionSortmodeDown: TransactionSortMode
+  ) {
+    this.transactionSortmode = if (this.transactionSortmode == transactionSortmodeUp) {
+      TransactionSortmodeDown
+    } else {
+      transactionSortmodeUp
     }
+
+    this.transactionDataList = mutableListOf(
+      statsTransactionData,
+      TransactionData(
+        viewType = transaction_headline_type,
+        date = 0L,
+        symbol = "",
+        type = TransactionType.StatsType
+      )
+    )
+
+    this.transactionDataList.addAll(when (transactionSortmode) {
+      TransactionSortMode.ByDateUp -> this.transactionDataListCopy.sortedBy { transactionData ->
+        transactionData.date
+      }
+      TransactionSortMode.ByDateDown -> this.transactionDataListCopy.sortedByDescending { transactionData ->
+        transactionData.date
+      }
+
+      TransactionSortMode.BySymbolUp -> this.transactionDataListCopy.sortedBy { transactionData ->
+        transactionData.symbol
+      }
+      TransactionSortMode.BySymbolDown -> this.transactionDataListCopy.sortedByDescending { transactionData ->
+        transactionData.symbol
+      }
+
+      TransactionSortMode.ByTypeUp -> this.transactionDataListCopy.sortedBy { transactionData ->
+        transactionData.type
+      }
+      TransactionSortMode.ByTypeDown -> this.transactionDataListCopy.sortedByDescending { transactionData ->
+        transactionData.type
+      }
+
+      TransactionSortMode.ByAccountUp -> this.transactionDataListCopy.sortedBy { transactionData ->
+        transactionData.account
+      }
+      TransactionSortMode.ByAccountDown -> this.transactionDataListCopy.sortedByDescending { transactionData ->
+        transactionData.account
+      }
+
+      TransactionSortMode.ByAmountUp -> this.transactionDataListCopy.sortedBy { transactionData ->
+        transactionData.value
+      }
+      TransactionSortMode.ByAmountDown -> this.transactionDataListCopy.sortedByDescending { transactionData ->
+        transactionData.value
+      }
+    }
+    )
 
     notifyDataSetChanged()
   }

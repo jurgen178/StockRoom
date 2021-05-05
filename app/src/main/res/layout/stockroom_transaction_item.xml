@@ -75,7 +75,7 @@
       />
 
   <TextView
-      android:id="@+id/transactionData"
+      android:id="@+id/transactionAmount"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline5"

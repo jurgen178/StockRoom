@@ -320,6 +320,10 @@ class StockRoomTableAdapter internal constructor(
 
           TableSortMode.ByNoteUp -> updateTextviewUp(holder.binding.tableDataNote)
           TableSortMode.ByNoteDown -> updateTextviewDown(holder.binding.tableDataNote)
+
+          // case: unsorted
+          else -> {
+          }
         }
       } else {
 

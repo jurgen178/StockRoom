@@ -474,7 +474,7 @@ limitations under the License. -->
   <string name="transaction_column_symbol">Symbol</string>
   <string name="transaction_column_type">Type</string>
   <string name="transaction_column_account">Account</string>
-  <string name="transaction_column_data">Data</string>
+  <string name="transaction_column_amount">Amount</string>
   <string name="table_column_symbol">Symbol</string>
   <string name="table_column_Name">Name</string>
   <string name="table_column_MarketPrice">Market price</string>
