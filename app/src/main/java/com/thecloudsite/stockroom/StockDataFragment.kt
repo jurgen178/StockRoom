@@ -3095,8 +3095,9 @@ class StockDataFragment : Fragment() {
             }
           }
         }
+      }
 
-        seriesList.add(series)
+      seriesList.add(series)
 
 //    // FFT
 //    val dataPointsFFT = GoertzelFFT(dataPoints)
@@ -3111,103 +3112,102 @@ class StockDataFragment : Fragment() {
 //
 //    seriesList.add(seriesFFT)
 
-        // Add line points (circles) for transaction dates.
-        val assetTimeEntriesCopy: MutableList<AssetsTimeData> = mutableListOf()
-        assetTimeEntriesCopy.addAll(assetTimeEntries)
+      // Add line points (circles) for transaction dates.
+      val assetTimeEntriesCopy: MutableList<AssetsTimeData> = mutableListOf()
+      assetTimeEntriesCopy.addAll(assetTimeEntries)
 
-        if (assetTimeEntriesCopy.isNotEmpty()) {
-          var i: Int = 0
+      if (assetTimeEntriesCopy.isNotEmpty()) {
+        var i: Int = 0
 
-          val lastIndex = stockDataEntries.size - 2
-          while (i < stockDataEntries.size - 1) {
+        val lastIndex = stockDataEntries.size - 2
+        while (i < stockDataEntries.size - 1) {
 
-            if (assetTimeEntriesCopy.isEmpty()) {
+          if (assetTimeEntriesCopy.isEmpty()) {
+            break
+          }
+
+          for (j in assetTimeEntriesCopy.indices) {
+
+            val t: Long = assetTimeEntriesCopy[j].date
+            val a = stockDataEntries[i].dateTimePoint
+            val b = stockDataEntries[i + 1].dateTimePoint
+            // In the time interval a..b or just bought in after hours >= b
+            if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
+              // use the index where the value is closest to t
+              // a <= t < b
+              // k=i: if t is closer to a
+              // k=i+1: if t is closer to b
+              val k = if (t <= (a + b) / 2) i else i + 1
+
+              // Data points > 0.0 are blue, and Data points = 0.0 are yellow using the current value.
+              // For example rewarded stocks have bought=0.0, but would distort the diagram.
+              val isDataPoint = assetTimeEntriesCopy[j].value > 0.0
+              val value = if (isDataPoint) {
+                assetTimeEntriesCopy[j].value.toFloat()
+              } else {
+                stockDataEntries[i].candleEntry.y
+              }
+
+              val transactionPoints = listOf(
+                DataPoint(
+                  stockDataEntries[k].candleEntry.x,
+                  value
+                )
+              )
+
+              val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
+
+              val color = if (assetTimeEntriesCopy[j].bought) {
+                if (isDataPoint) {
+                  Color.BLUE  // data point > 0.0
+                } else {
+                  0xffC23FFF.toInt()  // data point = 0.0
+                }
+              } else {
+                0xffFF6A00.toInt()
+              }
+
+              transactionSeries.setCircleColor(color)
+              //transactionSeries.setDrawCircleHole(false)
+
+              seriesList.add(transactionSeries)
+
+              assetTimeEntriesCopy.removeAt(j)
               break
             }
-
-            for (j in assetTimeEntriesCopy.indices) {
-
-              val t: Long = assetTimeEntriesCopy[j].date
-              val a = stockDataEntries[i].dateTimePoint
-              val b = stockDataEntries[i + 1].dateTimePoint
-              // In the time interval a..b or just bought in after hours >= b
-              if ((a <= t && t < b) || (i == lastIndex && t >= b)) {
-                // use the index where the value is closest to t
-                // a <= t < b
-                // k=i: if t is closer to a
-                // k=i+1: if t is closer to b
-                val k = if (t <= (a + b) / 2) i else i + 1
-
-                // Data points > 0.0 are blue, and Data points = 0.0 are yellow using the current value.
-                // For example rewarded stocks have bought=0.0, but would distort the diagram.
-                val isDataPoint = assetTimeEntriesCopy[j].value > 0.0
-                val value = if (isDataPoint) {
-                  assetTimeEntriesCopy[j].value.toFloat()
-                } else {
-                  stockDataEntries[i].candleEntry.y
-                }
-
-                val transactionPoints = listOf(
-                  DataPoint(
-                    stockDataEntries[k].candleEntry.x,
-                    value
-                  )
-                )
-
-                val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
-
-                val color = if (assetTimeEntriesCopy[j].bought) {
-                  if (isDataPoint) {
-                    Color.BLUE  // data point > 0.0
-                  } else {
-                    0xffC23FFF.toInt()  // data point = 0.0
-                  }
-                } else {
-                  0xffFF6A00.toInt()
-                }
-
-                transactionSeries.setCircleColor(color)
-                //transactionSeries.setDrawCircleHole(false)
-
-                seriesList.add(transactionSeries)
-
-                assetTimeEntriesCopy.removeAt(j)
-                break
-              }
-            }
-
-            i++
           }
-        }
 
-        val lineData = LineData(seriesList)
-
-        lineChart.data = lineData
-        lineChart.xAxis.valueFormatter = xAxisFormatter
-        val digits = if (lineData.yMax < 1.0) {
-          4
-        } else {
-          2
-        }
-        lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
-
-        when (stockViewRange) {
-          StockViewRange.OneDay -> {
-            lineChart.marker =
-              TextMarkerViewLineChart(requireContext(), axisTimeFormatter, stockDataEntries)
-          }
-          StockViewRange.FiveDays, StockViewRange.OneMonth -> {
-            lineChart.marker =
-              TextMarkerViewLineChart(requireContext(), axisDateTimeFormatter, stockDataEntries)
-          }
-          else -> {
-            lineChart.marker =
-              TextMarkerViewLineChart(requireContext(), axisDateFormatter, stockDataEntries)
-          }
+          i++
         }
       }
 
-      lineChart.invalidate()
+      val lineData = LineData(seriesList)
+
+      lineChart.data = lineData
+      lineChart.xAxis.valueFormatter = xAxisFormatter
+      val digits = if (lineData.yMax < 1.0) {
+        4
+      } else {
+        2
+      }
+      lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+
+      when (stockViewRange) {
+        StockViewRange.OneDay -> {
+          lineChart.marker =
+            TextMarkerViewLineChart(requireContext(), axisTimeFormatter, stockDataEntries)
+        }
+        StockViewRange.FiveDays, StockViewRange.OneMonth -> {
+          lineChart.marker =
+            TextMarkerViewLineChart(requireContext(), axisDateTimeFormatter, stockDataEntries)
+        }
+        else -> {
+          lineChart.marker =
+            TextMarkerViewLineChart(requireContext(), axisDateFormatter, stockDataEntries)
+        }
+      }
     }
+
+    lineChart.invalidate()
   }
 }

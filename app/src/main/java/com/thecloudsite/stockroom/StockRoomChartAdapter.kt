@@ -295,7 +295,7 @@ class StockRoomChartAdapter internal constructor(
       var chartOverlayColorIndex = 0
       chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
         val stockDataEntriesRef = chartDataItems[symbolRef]
-        if (stockDataEntriesRef != null) {
+        if (stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
           val candleEntriesRef: MutableList<CandleEntry> = mutableListOf()
           var minRefY = Float.MAX_VALUE
           var maxRefY = 0f
@@ -460,7 +460,7 @@ class StockRoomChartAdapter internal constructor(
       var chartOverlayColorIndex = 0
       chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
         val stockDataEntriesRef = chartDataItems[symbolRef]
-        if (stockDataEntriesRef != null) {
+        if (stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
           val dataPointsRef = ArrayList<DataPoint>()
           var minRefY = Float.MAX_VALUE
           var maxRefY = 0f
@@ -520,21 +520,21 @@ class StockRoomChartAdapter internal constructor(
 
               dataPointsRef.add(dataPointRef)
             }
+
+            val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
+            val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+
+            seriesRef.setDrawHorizontalHighlightIndicator(false)
+            seriesRef.setDrawValues(false)
+            seriesRef.setDrawCircles(false)
+            seriesRef.color = color
+
+            // No filling for overlay graphs.
+            seriesRef.setDrawFilled(false)
+            //seriesRef.fillColor = color
+
+            seriesList.add(seriesRef)
           }
-
-          val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
-          val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
-
-          seriesRef.setDrawHorizontalHighlightIndicator(false)
-          seriesRef.setDrawValues(false)
-          seriesRef.setDrawCircles(false)
-          seriesRef.color = color
-
-          // No filling for overlay graphs.
-          seriesRef.setDrawFilled(false)
-          //seriesRef.fillColor = color
-
-          seriesList.add(seriesRef)
         }
       }
     }
