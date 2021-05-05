@@ -22,6 +22,7 @@ import android.text.SpannableStringBuilder
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -54,6 +55,42 @@ import java.time.format.FormatStyle.MEDIUM
 import java.time.format.FormatStyle.SHORT
 import kotlin.math.absoluteValue
 
+enum class TableSortMode {
+  Unsorted,
+  BySymbolUp,
+  BySymbolDown,
+  ByNameUp,
+  ByNameDown,
+  ByMarketPriceUp,
+  ByMarketPriceDown,
+  ByMarketChangeUp,
+  ByMarketChangeDown,
+  ByMarketCurrencyUp,
+  ByMarketCurrencyDown,
+  ByQuantityUp,
+  ByQuantityDown,
+  ByPurchasepriceUp,
+  ByPurchasepriceDown,
+  ByAssetUp,
+  ByAssetDown,
+  ByAssetChangeUp,
+  ByAssetChangeDown,
+  ByAssetCommissionUp,
+  ByAssetCommissionDown,
+  ByDividendUp,
+  ByDividendDown,
+  ByAlertBelowUp,
+  ByAlertBelowDown,
+  ByAlertAboveUp,
+  ByAlertAboveDown,
+  ByAssetsUp,
+  ByAssetsDown,
+  ByEventsUp,
+  ByEventsDown,
+  ByNoteUp,
+  ByNoteDown,
+}
+
 class StockRoomTableAdapter internal constructor(
   val context: Context,
   private val clickListenerSymbolLambda: (StockItem) -> Unit
@@ -63,7 +100,9 @@ class StockRoomTableAdapter internal constructor(
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var stockItems: MutableList<StockItem> = mutableListOf()
+  private var stockItemsCopy: List<StockItem> = mutableListOf()
   private var defaultTextColor: Int? = null
+  private var tableSortmode = TableSortMode.Unsorted
 
   class StockRoomTableViewHolder(
     val binding: StockroomTableItemBinding
@@ -137,38 +176,151 @@ class StockRoomTableAdapter internal constructor(
 
         setBackgroundColor(holder.binding.tableDataGroup, Color.TRANSPARENT)
 
+        holder.binding.tableDataSymbol.setOnClickListener {
+          update(TableSortMode.BySymbolUp, TableSortMode.BySymbolDown)
+        }
         holder.binding.tableDataSymbol.text =
           getHeaderStr(context.getString(R.string.table_column_symbol))
+
+        holder.binding.tableDataName.setOnClickListener {
+          update(TableSortMode.ByNameUp, TableSortMode.ByNameDown)
+        }
         holder.binding.tableDataName.text =
           getHeaderStr(context.getString(R.string.table_column_Name))
+
+        holder.binding.tableDataMarketPrice.setOnClickListener {
+          update(TableSortMode.ByMarketPriceUp, TableSortMode.ByMarketPriceDown)
+        }
         holder.binding.tableDataMarketPrice.text =
           getHeaderStr(context.getString(R.string.table_column_MarketPrice))
+
+        holder.binding.tableDataMarketChange.setOnClickListener {
+          update(TableSortMode.ByMarketChangeUp, TableSortMode.ByMarketChangeDown)
+        }
         holder.binding.tableDataMarketChange.text =
           getHeaderStr(context.getString(R.string.table_column_MarketChange))
+
+        holder.binding.tableDataMarketCurrency.setOnClickListener {
+          update(TableSortMode.ByMarketCurrencyUp, TableSortMode.ByMarketCurrencyDown)
+        }
         holder.binding.tableDataMarketCurrency.text =
           getHeaderStr(context.getString(R.string.table_column_MarketCurrency))
+
+        holder.binding.tableDataQuantity.setOnClickListener {
+          update(TableSortMode.ByQuantityUp, TableSortMode.ByQuantityDown)
+        }
         holder.binding.tableDataQuantity.text =
           getHeaderStr(context.getString(R.string.table_column_Quantity))
+
+        holder.binding.tableDataPurchaseprice.setOnClickListener {
+          update(TableSortMode.ByPurchasepriceUp, TableSortMode.ByPurchasepriceDown)
+        }
         holder.binding.tableDataPurchaseprice.text =
           getHeaderStr(context.getString(R.string.table_column_Purchaseprice))
+
+        holder.binding.tableDataAsset.setOnClickListener {
+          update(TableSortMode.ByAssetUp, TableSortMode.ByAssetDown)
+        }
         holder.binding.tableDataAsset.text =
           getHeaderStr(context.getString(R.string.table_column_Asset))
+
+        holder.binding.tableDataAssetChange.setOnClickListener {
+          update(TableSortMode.ByAssetChangeUp, TableSortMode.ByAssetChangeDown)
+        }
         holder.binding.tableDataAssetChange.text =
           getHeaderStr(context.getString(R.string.table_column_AssetChange))
+
+        holder.binding.tableDataAssetCommission.setOnClickListener {
+          update(TableSortMode.ByAssetCommissionUp, TableSortMode.ByAssetCommissionDown)
+        }
         holder.binding.tableDataAssetCommission.text =
           getHeaderStr(context.getString(R.string.table_column_AssetCommission))
+
+        holder.binding.tableDataDividend.setOnClickListener {
+          update(TableSortMode.ByDividendUp, TableSortMode.ByDividendDown)
+        }
         holder.binding.tableDataDividend.text =
           getHeaderStr(context.getString(R.string.table_column_Dividend))
+
+        holder.binding.tableDataAlertBelow.setOnClickListener {
+          update(TableSortMode.ByAlertBelowUp, TableSortMode.ByAlertBelowDown)
+        }
         holder.binding.tableDataAlertBelow.text =
           getHeaderStr(context.getString(R.string.table_column_AlertBelow))
+
+        holder.binding.tableDataAlertAbove.setOnClickListener {
+          update(TableSortMode.ByAlertAboveUp, TableSortMode.ByAlertAboveDown)
+        }
         holder.binding.tableDataAlertAbove.text =
           getHeaderStr(context.getString(R.string.table_column_AlertAbove))
+
+        holder.binding.tableDataAssets.setOnClickListener {
+          update(TableSortMode.ByAssetsUp, TableSortMode.ByAssetsDown)
+        }
         holder.binding.tableDataAssets.text =
           getHeaderStr(context.getString(R.string.table_column_Assets))
+
+        holder.binding.tableDataEvents.setOnClickListener {
+          update(TableSortMode.ByEventsUp, TableSortMode.ByEventsDown)
+        }
         holder.binding.tableDataEvents.text =
           getHeaderStr(context.getString(R.string.table_column_Events))
+
+        holder.binding.tableDataNote.setOnClickListener {
+          update(TableSortMode.ByNoteUp, TableSortMode.ByNoteDown)
+        }
         holder.binding.tableDataNote.text =
           getHeaderStr(context.getString(R.string.table_column_Note))
+
+        when (tableSortmode) {
+          TableSortMode.BySymbolUp -> updateTextviewUp(holder.binding.tableDataSymbol)
+          TableSortMode.BySymbolDown -> updateTextviewDown(holder.binding.tableDataSymbol)
+
+          TableSortMode.ByNameUp -> updateTextviewUp(holder.binding.tableDataName)
+          TableSortMode.ByNameDown -> updateTextviewDown(holder.binding.tableDataName)
+
+          TableSortMode.ByMarketPriceUp -> updateTextviewUp(holder.binding.tableDataMarketPrice)
+          TableSortMode.ByMarketPriceDown -> updateTextviewDown(holder.binding.tableDataMarketPrice)
+
+          TableSortMode.ByMarketChangeUp -> updateTextviewUp(holder.binding.tableDataMarketChange)
+          TableSortMode.ByMarketChangeDown -> updateTextviewDown(holder.binding.tableDataMarketChange)
+
+          TableSortMode.ByMarketCurrencyUp -> updateTextviewUp(holder.binding.tableDataMarketCurrency)
+          TableSortMode.ByMarketCurrencyDown -> updateTextviewDown(holder.binding.tableDataMarketCurrency)
+
+          TableSortMode.ByQuantityUp -> updateTextviewUp(holder.binding.tableDataQuantity)
+          TableSortMode.ByQuantityDown -> updateTextviewDown(holder.binding.tableDataQuantity)
+
+          TableSortMode.ByPurchasepriceUp -> updateTextviewUp(holder.binding.tableDataPurchaseprice)
+          TableSortMode.ByPurchasepriceDown -> updateTextviewDown(holder.binding.tableDataPurchaseprice)
+
+          TableSortMode.ByAssetUp -> updateTextviewUp(holder.binding.tableDataAsset)
+          TableSortMode.ByAssetDown -> updateTextviewDown(holder.binding.tableDataAsset)
+
+          TableSortMode.ByAssetChangeUp -> updateTextviewUp(holder.binding.tableDataAssetChange)
+          TableSortMode.ByAssetChangeDown -> updateTextviewDown(holder.binding.tableDataAssetChange)
+
+          TableSortMode.ByAssetCommissionUp -> updateTextviewUp(holder.binding.tableDataAssetCommission)
+          TableSortMode.ByAssetCommissionDown -> updateTextviewDown(holder.binding.tableDataAssetCommission)
+
+          TableSortMode.ByDividendUp -> updateTextviewUp(holder.binding.tableDataDividend)
+          TableSortMode.ByDividendDown -> updateTextviewDown(holder.binding.tableDataDividend)
+
+          TableSortMode.ByAlertBelowUp -> updateTextviewUp(holder.binding.tableDataAlertBelow)
+          TableSortMode.ByAlertBelowDown -> updateTextviewDown(holder.binding.tableDataAlertBelow)
+
+          TableSortMode.ByAlertAboveUp -> updateTextviewUp(holder.binding.tableDataAlertAbove)
+          TableSortMode.ByAlertAboveDown -> updateTextviewDown(holder.binding.tableDataAlertAbove)
+
+          TableSortMode.ByAssetsUp -> updateTextviewUp(holder.binding.tableDataAssets)
+          TableSortMode.ByAssetsDown -> updateTextviewDown(holder.binding.tableDataAssets)
+
+          TableSortMode.ByEventsUp -> updateTextviewUp(holder.binding.tableDataEvents)
+          TableSortMode.ByEventsDown -> updateTextviewDown(holder.binding.tableDataEvents)
+
+          TableSortMode.ByNoteUp -> updateTextviewUp(holder.binding.tableDataNote)
+          TableSortMode.ByNoteDown -> updateTextviewDown(holder.binding.tableDataNote)
+        }
       } else {
 
         val backgroundColor = context.getColor(R.color.backgroundListColor)
@@ -496,7 +648,26 @@ class StockRoomTableAdapter internal constructor(
         bold { append(text) }
       }
 
+  private fun updateTextviewUp(textView: TextView) {
+    textView.text = textView.text.toString() + " ▲"
+  }
+
+  private fun updateTextviewDown(textView: TextView) {
+    textView.text = textView.text.toString() + " ▼"
+  }
+
   internal fun setStockItems(stockItems: List<StockItem>) {
+    this.stockItemsCopy = stockItems
+    update(this.tableSortmode, this.tableSortmode)
+  }
+
+  internal fun update(tableSortmodeUp: TableSortMode, tableSortmodeDown: TableSortMode) {
+    this.tableSortmode = if (this.tableSortmode == tableSortmodeUp) {
+      tableSortmodeDown
+    } else {
+      tableSortmodeUp
+    }
+
     this.stockItems = mutableListOf(
       StockItem(
         onlineMarketData = OnlineMarketData(symbol = ""),
@@ -507,7 +678,139 @@ class StockRoomTableAdapter internal constructor(
       )
     )
 
-    this.stockItems.addAll(stockItems)
+    this.stockItems.addAll(when (tableSortmode) {
+      TableSortMode.BySymbolUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.stockDBdata.symbol
+      }
+      TableSortMode.BySymbolDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.stockDBdata.symbol
+      }
+
+      TableSortMode.ByNameUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        getName(stockItem.onlineMarketData)
+      }
+      TableSortMode.ByNameDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        getName(stockItem.onlineMarketData)
+      }
+
+      TableSortMode.ByMarketPriceUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.onlineMarketData.marketPrice
+      }
+      TableSortMode.ByMarketPriceDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.onlineMarketData.marketPrice
+      }
+
+      TableSortMode.ByMarketChangeUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.onlineMarketData.marketChange
+      }
+      TableSortMode.ByMarketChangeDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.onlineMarketData.marketChange
+      }
+
+      TableSortMode.ByMarketCurrencyUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.onlineMarketData.currency
+      }
+      TableSortMode.ByMarketCurrencyDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.onlineMarketData.currency
+      }
+
+      TableSortMode.ByQuantityUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity
+      }
+      TableSortMode.ByQuantityDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity
+      }
+
+      TableSortMode.ByPurchasepriceUp,
+      TableSortMode.ByAssetsUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        asset + commission
+      }
+      TableSortMode.ByPurchasepriceDown,
+      TableSortMode.ByAssetsDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        asset + commission
+      }
+
+      TableSortMode.ByAssetUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity * stockItem.onlineMarketData.marketPrice
+      }
+      TableSortMode.ByAssetDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity * stockItem.onlineMarketData.marketPrice
+      }
+
+      TableSortMode.ByAssetChangeUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity * stockItem.onlineMarketData.marketPrice - asset
+      }
+      TableSortMode.ByAssetChangeDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity * stockItem.onlineMarketData.marketPrice - asset
+      }
+
+      TableSortMode.ByAssetCommissionUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        commission
+      }
+      TableSortMode.ByAssetCommissionDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        commission
+      }
+
+      TableSortMode.ByDividendUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        val dividendRate = if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
+          stockItem.stockDBdata.annualDividendRate
+        } else {
+          stockItem.onlineMarketData.annualDividendRate
+        }
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity * dividendRate
+      }
+      TableSortMode.ByDividendDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        val dividendRate = if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
+          stockItem.stockDBdata.annualDividendRate
+        } else {
+          stockItem.onlineMarketData.annualDividendRate
+        }
+        val (quantity, asset, commission) = getAssets(stockItem.assets)
+        quantity * dividendRate
+      }
+
+      TableSortMode.ByAlertBelowUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.stockDBdata.alertBelow
+      }
+      TableSortMode.ByAlertBelowDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.stockDBdata.alertBelow
+      }
+
+      TableSortMode.ByAlertAboveUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.stockDBdata.alertAbove
+      }
+      TableSortMode.ByAlertAboveDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.stockDBdata.alertAbove
+      }
+
+      TableSortMode.ByEventsUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.events.size
+      }
+      TableSortMode.ByEventsDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.events.size
+      }
+
+      TableSortMode.ByNoteUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        stockItem.stockDBdata.note
+      }
+      TableSortMode.ByNoteDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        stockItem.stockDBdata.note
+      }
+
+      else -> this.stockItemsCopy
+    }
+    )
 
     submitList(this.stockItems)
     notifyDataSetChanged()

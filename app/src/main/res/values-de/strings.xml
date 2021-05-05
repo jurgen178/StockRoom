@@ -493,6 +493,11 @@ limitations under the License. -->
   <string name="delayed_quote">Verzögerter Preis</string>
   <string name="nasdaq_real_time_price">Nasdaq-Echtzeitpreis</string>
   <string name="filter_regex_error_msg">Der reguläre Ausdruck \'%1$s\' für den Filter ist ungültig.</string>
+  <string name="transaction_column_date">Datum</string>
+  <string name="transaction_column_symbol">Wertpapier- kürzel</string>
+  <string name="transaction_column_type">Typ</string>
+  <string name="transaction_column_account">Konto</string>
+  <string name="transaction_column_data">Daten</string>
   <string name="table_column_symbol">Wertpapier- kürzel</string>
   <string name="table_column_Name">Name</string>
   <string name="table_column_MarketPrice">Marktpreis</string>

@@ -17,10 +17,14 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.StockRoomTransactionsAdapter.BaseViewHolder
@@ -33,7 +37,8 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 
 const val transaction_stats_type: Int = 0
-const val transaction_data_type: Int = 1
+const val transaction_headline_type: Int = 1
+const val transaction_data_type: Int = 2
 
 data class TransactionData
   (
@@ -58,6 +63,19 @@ enum class TransactionType {
   StatsType,
 }
 
+enum class TransactionSortMode {
+  ByDateUp,
+  ByDateDown,
+  BySymbolUp,
+  BySymbolDown,
+  ByTypeUp,
+  ByTypeDown,
+  ByAccountUp,
+  ByAccountDown,
+  ByDataUp,
+  ByDataDown,
+}
+
 class StockRoomTransactionsAdapter internal constructor(
   val context: Context,
   private val clickListenerSymbolLambda: (TransactionData) -> Unit
@@ -65,6 +83,7 @@ class StockRoomTransactionsAdapter internal constructor(
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var transactionDataList: List<TransactionData> = listOf()
+  private var transactionSortmode = TransactionSortMode.ByDateUp
 
   abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -77,6 +96,17 @@ class StockRoomTransactionsAdapter internal constructor(
   class StatsViewHolder(
     val binding: StockroomTransactionStatsItemBinding
   ) : BaseViewHolder<AssetListData>(binding.root) {
+
+    override fun bindOnClickListener(
+      transactionData: TransactionData,
+      clickListenerLambda: (TransactionData) -> Unit
+    ) {
+    }
+  }
+
+  class HeadlineViewHolder(
+    val binding: StockroomTransactionItemBinding
+  ) : BaseViewHolder<TransactionData>(binding.root) {
 
     override fun bindOnClickListener(
       transactionData: TransactionData,
@@ -106,6 +136,11 @@ class StockRoomTransactionsAdapter internal constructor(
       transaction_stats_type -> {
         val binding = StockroomTransactionStatsItemBinding.inflate(inflater, parent, false)
         StatsViewHolder(binding)
+      }
+
+      transaction_headline_type -> {
+        val binding = StockroomTransactionItemBinding.inflate(inflater, parent, false)
+        HeadlineViewHolder(binding)
       }
 
       transaction_data_type -> {
@@ -150,6 +185,58 @@ class StockRoomTransactionsAdapter internal constructor(
           .scale(0.8f) { append(getAccounts(current.dividendReceivedMap)) }
 
         holder.binding.transactionStats.text = transactionStats
+      }
+
+      is HeadlineViewHolder -> {
+
+        holder.binding.transactionLayout.setBackgroundColor(context.getColor(R.color.tableHeaderBackground))
+
+        holder.binding.transactionDate.setOnClickListener {
+          update(TransactionSortMode.ByDateUp, TransactionSortMode.ByDateDown)
+        }
+        holder.binding.transactionDate.text =
+          getHeaderStr(context.getString(R.string.transaction_column_date))
+
+        holder.binding.transactionSymbol.setOnClickListener {
+          update(TransactionSortMode.BySymbolUp, TransactionSortMode.BySymbolDown)
+        }
+        holder.binding.transactionSymbol.text =
+          getHeaderStr(context.getString(R.string.transaction_column_symbol))
+
+        holder.binding.transactionType.setOnClickListener {
+          update(TransactionSortMode.ByTypeUp, TransactionSortMode.ByTypeDown)
+        }
+        holder.binding.transactionType.text =
+          getHeaderStr(context.getString(R.string.transaction_column_type))
+
+        holder.binding.transactionType.setOnClickListener {
+          update(TransactionSortMode.ByAccountUp, TransactionSortMode.ByAccountDown)
+        }
+        holder.binding.transactionAccount.text =
+          getHeaderStr(context.getString(R.string.transaction_column_account))
+
+        holder.binding.transactionData.setOnClickListener {
+          update(TransactionSortMode.ByDataUp, TransactionSortMode.ByDataDown)
+        }
+        holder.binding.transactionData.text =
+          getHeaderStr(context.getString(R.string.transaction_column_data))
+
+        when (transactionSortmode) {
+          TransactionSortMode.ByDateUp -> updateTextviewUp(holder.binding.transactionDate)
+          TransactionSortMode.ByDateDown -> updateTextviewDown(holder.binding.transactionDate)
+
+          TransactionSortMode.BySymbolUp -> updateTextviewUp(holder.binding.transactionSymbol)
+          TransactionSortMode.BySymbolDown -> updateTextviewDown(holder.binding.transactionSymbol)
+
+          TransactionSortMode.ByTypeUp -> updateTextviewUp(holder.binding.transactionType)
+          TransactionSortMode.ByTypeDown -> updateTextviewDown(holder.binding.transactionType)
+
+          TransactionSortMode.ByAccountUp -> updateTextviewUp(holder.binding.transactionAccount)
+          TransactionSortMode.ByAccountDown -> updateTextviewDown(holder.binding.transactionAccount)
+
+          TransactionSortMode.ByDataUp -> updateTextviewUp(holder.binding.transactionData)
+          TransactionSortMode.ByDataDown -> updateTextviewDown(holder.binding.transactionData)
+        }
       }
 
       is TransactionsViewHolder -> {
@@ -216,6 +303,28 @@ class StockRoomTransactionsAdapter internal constructor(
   }
 
   override fun getItemCount() = transactionDataList.size
+
+  private fun getHeaderStr(text: String): SpannableStringBuilder =
+    SpannableStringBuilder()
+      .color(Color.WHITE) {
+        bold { append(text) }
+      }
+
+  private fun updateTextviewUp(textView: TextView) {
+    textView.text = textView.text.toString() + " ▲"
+  }
+
+  private fun updateTextviewDown(textView: TextView) {
+    textView.text = textView.text.toString() + " ▼"
+  }
+
+  internal fun update(transactionSortmodeUp: TransactionSortMode, TransactionSortmodeDown: TransactionSortMode) {
+    this.transactionSortmode = if (this.transactionSortmode == transactionSortmodeUp) {
+      TransactionSortmodeDown
+    } else {
+      transactionSortmodeUp
+    }
+  }
 
   private fun getAccounts(assetMap: HashMap<String, Int>): String {
     if (assetMap.size > 1) {
