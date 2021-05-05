@@ -358,20 +358,22 @@ class StockRoomChartAdapter internal constructor(
               candleEntriesRef.add(candleEntryRef)
             }
 
-            val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbolRef)
-            val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+            if(candleEntriesRef.isNotEmpty()) {
+              val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbolRef)
+              val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
 
-            seriesRef.color = color
-            seriesRef.shadowColor = color
-            seriesRef.shadowWidth = 1f
-            seriesRef.decreasingColor = Color.rgb(255, 204, 204)
-            seriesRef.decreasingPaintStyle = Paint.Style.FILL
-            seriesRef.increasingColor = Color.rgb(204, 255, 204)
-            seriesRef.increasingPaintStyle = Paint.Style.FILL
-            seriesRef.neutralColor = color
-            seriesRef.setDrawValues(false)
+              seriesRef.color = color
+              seriesRef.shadowColor = color
+              seriesRef.shadowWidth = 1f
+              seriesRef.decreasingColor = Color.rgb(255, 204, 204)
+              seriesRef.decreasingPaintStyle = Paint.Style.FILL
+              seriesRef.increasingColor = Color.rgb(204, 255, 204)
+              seriesRef.increasingPaintStyle = Paint.Style.FILL
+              seriesRef.neutralColor = color
+              seriesRef.setDrawValues(false)
 
-            seriesList.add(seriesRef)
+              seriesList.add(seriesRef)
+            }
           }
         }
       }
@@ -521,19 +523,21 @@ class StockRoomChartAdapter internal constructor(
               dataPointsRef.add(dataPointRef)
             }
 
-            val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
-            val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
+            if(dataPointsRef.isNotEmpty()) {
+              val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
+              val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
 
-            seriesRef.setDrawHorizontalHighlightIndicator(false)
-            seriesRef.setDrawValues(false)
-            seriesRef.setDrawCircles(false)
-            seriesRef.color = color
+              seriesRef.setDrawHorizontalHighlightIndicator(false)
+              seriesRef.setDrawValues(false)
+              seriesRef.setDrawCircles(false)
+              seriesRef.color = color
 
-            // No filling for overlay graphs.
-            seriesRef.setDrawFilled(false)
-            //seriesRef.fillColor = color
+              // No filling for overlay graphs.
+              seriesRef.setDrawFilled(false)
+              //seriesRef.fillColor = color
 
-            seriesList.add(seriesRef)
+              seriesList.add(seriesRef)
+            }
           }
         }
       }
