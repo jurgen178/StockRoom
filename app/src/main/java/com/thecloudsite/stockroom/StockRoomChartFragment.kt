@@ -161,7 +161,12 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
             ""
           }
 
-        adapter.updateChartItem(stockChartData, overlaySymbols, stockViewRange, stockViewMode)
+        adapter.updateChartItem(
+          stockChartData,
+          useChartOverlaySymbols,
+          overlaySymbols,
+          stockViewRange,
+          stockViewMode)
       }
     })
   }
