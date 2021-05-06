@@ -118,6 +118,10 @@ import java.util.Locale
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
+// Enabled/Disabled overlay symbols not per instance
+var chartOverlaySymbolsEnableList: MutableList<Boolean> =
+  MutableList(MaxChartOverlays) { true }
+
 enum class StockViewRange(val value: Int) {
   OneDay(0),
   FiveDays(1),
@@ -225,8 +229,6 @@ class StockDataFragment : Fragment() {
   private var stockDataEntries: List<StockDataEntry>? = null
   private var assetTimeEntries: List<AssetsTimeData> = emptyList()
   private var symbol: String = ""
-  private var chartOverlaySymbolsEnableList: MutableList<Boolean> =
-    MutableList(MaxChartOverlays) { true }
 
   private var isOnline: Boolean = false
 
@@ -2868,84 +2870,72 @@ class StockDataFragment : Fragment() {
         chartOverlaySymbols.split(",").take(MaxChartOverlays).forEachIndexed { index, symbolRef ->
           val stockDataEntriesRef = chartDataItems[symbolRef]
           if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
-            val candleEntriesRef: MutableList<CandleEntry> = mutableListOf()
+
             var minRefY = Float.MAX_VALUE
             var maxRefY = 0f
-            stockDataEntriesRef.forEach { stockDataEntry ->
-              minRefY = minOf(minRefY, stockDataEntry.candleEntry.y)
-              maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
+
+            val refList = ArrayList<StockDataEntry>()
+
+            // Reference charts might not cover the same time line.
+            // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
+            var indexRef = 0
+            var entriesRef1 = stockDataEntriesRef[indexRef]
+            var entriesRef2 = stockDataEntriesRef[indexRef + 1]
+
+            // Align the date points on stockDataEntries.
+            stockDataEntries.forEach { stockDataEntry ->
+
+              // Match stockDataEntriesRef to the stockDataEntry point.
+              // stockDataEntry between entriesRef1 and entriesRef2
+              while (!(entriesRef1.dateTimePoint <= stockDataEntry.dateTimePoint
+                    && stockDataEntry.dateTimePoint < entriesRef2.dateTimePoint
+                    )
+              ) {
+                // Check the next point to match.
+                if (indexRef < stockDataEntriesRef.size - 2) {
+                  indexRef++
+                  entriesRef1 = stockDataEntriesRef[indexRef]
+                  entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                } else {
+                  break
+                }
+              }
+
+              minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
+              maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
+
+              entriesRef1.candleEntry.x = stockDataEntry.candleEntry.x
+              refList.add(entriesRef1)
             }
 
             // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
             if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
               val scale = (maxY - minY) / (maxRefY - minRefY)
 
-//              stockDataEntriesRef.forEach { stockDataEntry ->
-//                val candleEntryRef: CandleEntry =
-//                  CandleEntry(
-//                    stockDataEntry.candleEntry.x,
-//                    (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
-//                    (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
-//                    (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
-//                    (stockDataEntry.candleEntry.close - minRefY) * scale + minY
-//                  )
-//
-//                candleEntriesRef.add(candleEntryRef)
-//              }
-
-              // Reference charts might not cover the same time line.
-              // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
-              var indexRef = 0
-              var entriesRef1 = stockDataEntriesRef[indexRef]
-              var entriesRef2 = stockDataEntriesRef[indexRef + 1]
-
-              // Align the date points on stockDataEntries.
-              stockDataEntries.forEach { stockDataEntry ->
-
-                // Match stockDataEntriesRef to the stockDataEntry point.
-                // stockDataEntry between entriesRef1 and entriesRef2
-                while (!(entriesRef1.dateTimePoint <= stockDataEntry.dateTimePoint
-                      && stockDataEntry.dateTimePoint < entriesRef2.dateTimePoint
-                      )
-                ) {
-                  // Check the next point to match.
-                  if (indexRef < stockDataEntriesRef.size - 2) {
-                    indexRef++
-                    entriesRef1 = stockDataEntriesRef[indexRef]
-                    entriesRef2 = stockDataEntriesRef[indexRef + 1]
-                  } else {
-                    break
-                  }
-                }
-
-                val candleEntryRef: CandleEntry =
-                  CandleEntry(
-                    stockDataEntry.candleEntry.x,
-                    (entriesRef1.candleEntry.high - minRefY) * scale + minY,
-                    (entriesRef1.candleEntry.low - minRefY) * scale + minY,
-                    (entriesRef1.candleEntry.open - minRefY) * scale + minY,
-                    (entriesRef1.candleEntry.close - minRefY) * scale + minY
-                  )
-
-                candleEntriesRef.add(candleEntryRef)
+              val candleEntriesRef = refList.map { stockDataEntry ->
+                CandleEntry(
+                  stockDataEntry.candleEntry.x,
+                  (entriesRef1.candleEntry.high - minRefY) * scale + minY,
+                  (entriesRef1.candleEntry.low - minRefY) * scale + minY,
+                  (entriesRef1.candleEntry.open - minRefY) * scale + minY,
+                  (entriesRef1.candleEntry.close - minRefY) * scale + minY
+                )
               }
 
-              if(candleEntriesRef.isNotEmpty()) {
-                val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbolRef)
-                val color = chartOverlayColors[index % chartOverlayColors.size]
+              val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbolRef)
+              val color = chartOverlayColors[index % chartOverlayColors.size]
 
-                seriesRef.color = color
-                seriesRef.shadowColor = color
-                seriesRef.shadowWidth = 1f
-                seriesRef.decreasingColor = Color.rgb(255, 204, 204)
-                seriesRef.decreasingPaintStyle = Paint.Style.FILL
-                seriesRef.increasingColor = Color.rgb(204, 255, 204)
-                seriesRef.increasingPaintStyle = Paint.Style.FILL
-                seriesRef.neutralColor = color
-                seriesRef.setDrawValues(false)
+              seriesRef.color = color
+              seriesRef.shadowColor = color
+              seriesRef.shadowWidth = 1f
+              seriesRef.decreasingColor = Color.rgb(255, 204, 204)
+              seriesRef.decreasingPaintStyle = Paint.Style.FILL
+              seriesRef.increasingColor = Color.rgb(204, 255, 204)
+              seriesRef.increasingPaintStyle = Paint.Style.FILL
+              seriesRef.neutralColor = color
+              seriesRef.setDrawValues(false)
 
-                seriesList.add(seriesRef)
-              }
+              seriesList.add(seriesRef)
             }
           }
         }
@@ -3049,86 +3039,70 @@ class StockDataFragment : Fragment() {
         chartOverlaySymbols.split(",").take(MaxChartOverlays).forEachIndexed { index, symbolRef ->
           val stockDataEntriesRef = chartDataItems[symbolRef]
           if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
-            val dataPointsRef = ArrayList<DataPoint>()
+
             var minRefY = Float.MAX_VALUE
             var maxRefY = 0f
-//          stockDataEntriesRef.forEach { stockDataEntry ->
-//            minRefY = minOf(minRefY, stockDataEntry.candleEntry.y)
-//            maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
-//          }
 
-            stockDataEntriesRef.forEach { stockDataEntry ->
-              minRefY = minOf(minRefY, stockDataEntry.candleEntry.y)
-              maxRefY = maxOf(maxRefY, stockDataEntry.candleEntry.y)
+            val refList = ArrayList<StockDataEntry>()
+
+            // Reference charts might not cover the same time line.
+            // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
+            var indexRef = 0
+            var entriesRef1 = stockDataEntriesRef[indexRef]
+            var entriesRef2 = stockDataEntriesRef[indexRef + 1]
+
+            // Align the date points on stockDataEntries.
+            stockDataEntries.forEach { stockDataEntry ->
+
+              // Match stockDataEntriesRef to the stockDataEntry point.
+              // stockDataEntry between entriesRef1 and entriesRef2
+              while (!(entriesRef1.dateTimePoint <= stockDataEntry.dateTimePoint
+                    && stockDataEntry.dateTimePoint < entriesRef2.dateTimePoint
+                    )
+              ) {
+                // Check the next point to match.
+                if (indexRef < stockDataEntriesRef.size - 2) {
+                  indexRef++
+                  entriesRef1 = stockDataEntriesRef[indexRef]
+                  entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                } else {
+                  break
+                }
+              }
+
+              minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
+              maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
+
+              entriesRef1.candleEntry.x = stockDataEntry.candleEntry.x
+              refList.add(entriesRef1)
             }
 
             // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
             if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
               val scale = (maxY - minY) / (maxRefY - minRefY)
 
-//            stockDataEntriesRef.forEach { stockDataEntry ->
-//              val dataPointRef: DataPoint =
-//                DataPoint(
-//                  x = stockDataEntry.candleEntry.x,
-//                  y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
-//                      * scale                                  // scale ref to match stock data range
-//                      + minY                                   // shift up to min stock data
-//                )
-//
-//              dataPointsRef.add(dataPointRef)
-//            }
-
-              // Reference charts might not cover the same time line.
-              // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
-              var indexRef = 0
-              var entriesRef1 = stockDataEntriesRef[indexRef]
-              var entriesRef2 = stockDataEntriesRef[indexRef + 1]
-
-              // Align the date points on stockDataEntries.
-              stockDataEntries.forEach { stockDataEntry ->
-
-                // Match stockDataEntriesRef to the stockDataEntry point.
-                // stockDataEntry between entriesRef1 and entriesRef2
-                while (!(entriesRef1.dateTimePoint <= stockDataEntry.dateTimePoint
-                      && stockDataEntry.dateTimePoint < entriesRef2.dateTimePoint
-                      )
-                ) {
-                  // Check the next point to match.
-                  if (indexRef < stockDataEntriesRef.size - 2) {
-                    indexRef++
-                    entriesRef1 = stockDataEntriesRef[indexRef]
-                    entriesRef2 = stockDataEntriesRef[indexRef + 1]
-                  } else {
-                    break
-                  }
-                }
-
-                val dataPointRef: DataPoint =
-                  DataPoint(
-                    x = stockDataEntry.candleEntry.x,
-                    y = (entriesRef1.candleEntry.y - minRefY)  // shift down ref data
-                        * scale                                // scale ref to match stock data range
-                        + minY                                 // shift up to min stock data
-                  )
-
-                dataPointsRef.add(dataPointRef)
+              val dataPointsRef = refList.map { stockDataEntry ->
+                DataPoint(
+                  x = stockDataEntry.candleEntry.x,
+                  y = (stockDataEntry.candleEntry.y - minRefY)  // shift down ref data
+                      * scale                                   // scale ref to match stock data range
+                      + minY                                    // shift up to min stock data
+                )
               }
 
-              if(dataPointsRef.isNotEmpty()) {
-                val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
-                val color = chartOverlayColors[index % chartOverlayColors.size]
+              val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
+              val color = chartOverlayColors[index % chartOverlayColors.size]
 
-                seriesRef.setDrawHorizontalHighlightIndicator(false)
-                seriesRef.setDrawValues(false)
-                seriesRef.setDrawCircles(false)
-                seriesRef.color = color
+              seriesRef.setDrawHorizontalHighlightIndicator(false)
+              seriesRef.setDrawValues(false)
+              seriesRef.setDrawCircles(false)
+              seriesRef.color = color
 
-                // No filling for overlay graphs.
-                seriesRef.setDrawFilled(false)
-                //seriesRef.fillColor = color
+              // No filling for overlay graphs.
+              seriesRef.setDrawFilled(false)
+              //seriesRef.fillColor = color
 
-                seriesList.add(seriesRef)
-              }
+              seriesList.add(seriesRef)
             }
           }
         }
