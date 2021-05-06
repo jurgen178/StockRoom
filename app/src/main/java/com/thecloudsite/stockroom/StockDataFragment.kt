@@ -190,6 +190,14 @@ class CustomCandleStickChart(
     }
     return false
   }
+
+  // https://github.com/PhilJay/MPAndroidChart/issues/2917
+  override fun drawMarkers(canvas: Canvas?) {
+    try {
+      super.drawMarkers(canvas)
+    } catch (e: Exception) {
+    }
+  }
 }
 
 class CustomTimePicker(
