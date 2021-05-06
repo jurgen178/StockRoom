@@ -373,21 +373,21 @@ fun getName(onlineMarketData: OnlineMarketData): String {
   } else {
     onlineMarketData.name2
   })
-      .replace("&amp;", "&")
-      .replace("&quot;", "'")
-      .replace("&lt;", "<")
-      .replace("&gt;", ">")
+    .replace("&amp;", "&")
+    .replace("&quot;", "'")
+    .replace("&lt;", "<")
+    .replace("&gt;", ">")
 }
 
 const val currencyScale = 0.8f
 fun getCurrency(onlineMarketData: OnlineMarketData): String {
 
   if (onlineMarketData.quoteType == "EQUITY"
-      || onlineMarketData.quoteType == "ETF"
-      || onlineMarketData.quoteType == "OPTION"
-      || onlineMarketData.quoteType == "MUTUALFUND"
-      || onlineMarketData.quoteType == "CURRENCY"
-      || onlineMarketData.quoteType == "CRYPTOCURRENCY"
+    || onlineMarketData.quoteType == "ETF"
+    || onlineMarketData.quoteType == "OPTION"
+    || onlineMarketData.quoteType == "MUTUALFUND"
+    || onlineMarketData.quoteType == "CURRENCY"
+    || onlineMarketData.quoteType == "CRYPTOCURRENCY"
   ) {
     val currency = onlineMarketData.currency
     if (currency.isNotEmpty()) {
@@ -403,34 +403,34 @@ fun getCurrency(onlineMarketData: OnlineMarketData): String {
 data class OnlineMarketData(
   val symbol: String,
   @field:Json(
-      name = "longName"
+    name = "longName"
   ) val name1: String = "",  // displayName is not available for "GlaxoSmithKline plc", but longName
 
   @field:Json(
-      name = "shortName"
+    name = "shortName"
   ) val name2: String = "",  // ^GSPC only has shortName
 
-    // Market values will be set with the post market values when the aftermarket option is set.
+  // Market values will be set with the post market values when the aftermarket option is set.
   @field:Json(
-      name = "regularMarketPrice"
+    name = "regularMarketPrice"
   ) var marketPrice: Double = 0.0,
   @field:Json(
-      name = "regularMarketChange"
+    name = "regularMarketChange"
   ) var marketChange: Double = 0.0,
   @field:Json(
-      name = "regularMarketChangePercent"
+    name = "regularMarketChangePercent"
   ) var marketChangePercent: Double = 0.0,
 
-    // Ignore
+  // Ignore
   @Transient
   var postMarketData: Boolean = false,
 
   var dividendDate: Long = 0,
   @field:Json(
-      name = "trailingAnnualDividendRate"
+    name = "trailingAnnualDividendRate"
   ) var annualDividendRate: Double = 0.0,
   @field:Json(
-      name = "trailingAnnualDividendYield"
+    name = "trailingAnnualDividendYield"
   ) var annualDividendYield: Double = 0.0,
 
   var marketState: String = "", // "marketState":"PREPRE" or "marketState":"PRE" or "marketState": "REGULAR" or "marketState":"POST" or "marketState":"POSTPOST" or "marketState":"CLOSED"
@@ -567,7 +567,7 @@ interface YahooApiMarketData {
   @GET("quote?format=json")
   fun getStockDataAsync(
     @Query(
-        value = "symbols"
+      value = "symbols"
     ) symbols: String
   ): Deferred<Response<YahooResponse>>
 }
@@ -576,7 +576,7 @@ interface YahooApiRawMarketData {
   @GET("quote?format=json")
   fun getStockDataAsync(
     @Query(
-        value = "symbols"
+      value = "symbols"
     ) symbols: String
   ): Deferred<Response<String>>
 }
@@ -589,13 +589,13 @@ interface YahooApiChartData {
   @GET("chart/")
   fun getYahooChartDataAsync(
     @Query(
-        value = "symbol"
+      value = "symbol"
     ) symbol: String,
     @Query(
-        value = "interval"
+      value = "interval"
     ) interval: String,
     @Query(
-        value = "range"
+      value = "range"
     ) range: String
   ): Deferred<Response<YahooChartData>>
 }
@@ -651,6 +651,26 @@ class StockDataEntry(
 ) {
   var candleEntry: CandleEntry =
     CandleEntry(x.toFloat(), high.toFloat(), low.toFloat(), open.toFloat(), close.toFloat())
+}
+
+class CandleEntryRef(
+  x: Float,
+  shadowH: Float,
+  shadowL: Float,
+  open: Float,
+  close: Float,
+  var refCandleEntry: CandleEntry,
+) : CandleEntry(x, shadowH, shadowL, open, close), Comparable<CandleEntryRef> {
+  override fun compareTo(other: CandleEntryRef): Int = x.compareTo(other.x)
+}
+
+class DataPointRef(
+  x: Float,
+  y: Float,
+  var refY: Float,
+) : Entry(x, y), Comparable<DataPointRef> {
+
+  override fun compareTo(other: DataPointRef): Int = x.compareTo(other.x)
 }
 
 class DataPoint(

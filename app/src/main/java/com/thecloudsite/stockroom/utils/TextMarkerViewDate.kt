@@ -23,6 +23,9 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import com.thecloudsite.stockroom.CandleEntryRef
+import com.thecloudsite.stockroom.DataPoint
+import com.thecloudsite.stockroom.DataPointRef
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.layout
 import com.thecloudsite.stockroom.StockDataEntry
@@ -47,7 +50,7 @@ class TextMarkerViewCandleChart(
     entry: Entry?,
     highlight: Highlight?
   ) {
-    if (entry is CandleEntry && stockDataEntries != null && stockDataEntries.isNotEmpty()) {
+    if (entry != null && stockDataEntries != null && stockDataEntries.isNotEmpty()) {
       val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =
@@ -57,14 +60,20 @@ class TextMarkerViewCandleChart(
           )
             .format(dateTimeFormatter)
 
-        if (entry.high != entry.low) {
-          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.low)}-${
+        val data = if (entry is CandleEntryRef) {
+          entry.refCandleEntry
+        } else {
+          entry as CandleEntry
+        }
+
+        if (data.high != data.low) {
+          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(data.low)}-${
             DecimalFormat(DecimalFormat2To4Digits).format(
-              entry.high
+              data.high
             )
           }\n$date"
         } else {
-          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.high)}\n$date"
+          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(data.high)}\n$date"
         }
 
       } else {
@@ -93,7 +102,7 @@ class TextMarkerViewLineChart(
     entry: Entry?,
     highlight: Highlight?
   ) {
-    if (entry is Entry && stockDataEntries != null && stockDataEntries.isNotEmpty()) {
+    if (entry != null && stockDataEntries != null && stockDataEntries.isNotEmpty()) {
       val index: Int = entry.x.toInt()
       if (index >= 0 && index < stockDataEntries.size) {
         val date =
@@ -103,7 +112,18 @@ class TextMarkerViewLineChart(
           )
             .format(dateTimeFormatter)
 
-        textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(entry.y)}\n$date"
+        val y =
+          when (entry) {
+            is DataPointRef -> {
+              val data = entry as DataPointRef
+              data.refY
+            }
+            else -> {
+              val data = entry as DataPoint
+              data.y
+            }
+          }
+        textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(y)}\n$date"
 
       } else {
         textmarker.text = ""

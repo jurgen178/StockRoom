@@ -40,7 +40,6 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
@@ -429,7 +428,12 @@ class StockRoomChartAdapter internal constructor(
     stockDataEntries.forEach { stockDataEntry ->
       minY = minOf(minY, stockDataEntry.candleEntry.y)
       maxY = maxOf(maxY, stockDataEntry.candleEntry.y)
-      dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
+      dataPoints.add(
+        DataPoint(
+          stockDataEntry.candleEntry.x,
+          stockDataEntry.candleEntry.y
+        )
+      )
     }
 
     // Chart data is constant, add a zero point for correct scaling of the control.
@@ -437,7 +441,7 @@ class StockRoomChartAdapter internal constructor(
       dataPoints.add(DataPoint(0f, 0f))
     }
 
-    val series = LineDataSet(dataPoints as List<Entry>?, symbol)
+    val series = LineDataSet(dataPoints as List<DataPoint>?, symbol)
     series.setDrawHorizontalHighlightIndicator(false)
     series.setDrawValues(false)
     series.setDrawFilled(true)
@@ -496,13 +500,13 @@ class StockRoomChartAdapter internal constructor(
             val dataPointsRef = refList.map { stockDataEntry ->
               DataPoint(
                 x = stockDataEntry.candleEntry.x,
-                y = (stockDataEntry.candleEntry.y - minRefY)  // shift down ref data
-                    * scale                                   // scale ref to match stock data range
-                    + minY                                    // shift up to min stock data
+                y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
+                    * scale                                  // scale ref to match stock data range
+                    + minY                                   // shift up to min stock data
               )
             }
 
-            val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
+            val seriesRef = LineDataSet(dataPointsRef as List<DataPoint>?, symbolRef)
             val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
 
             seriesRef.setDrawHorizontalHighlightIndicator(false)

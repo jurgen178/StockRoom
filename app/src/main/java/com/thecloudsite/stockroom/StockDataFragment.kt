@@ -66,7 +66,6 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
@@ -2913,12 +2912,13 @@ class StockDataFragment : Fragment() {
               val scale = (maxY - minY) / (maxRefY - minRefY)
 
               val candleEntriesRef = refList.map { stockDataEntry ->
-                CandleEntry(
+                CandleEntryRef(
                   stockDataEntry.candleEntry.x,
-                  (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
-                  (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
-                  (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
-                  (stockDataEntry.candleEntry.close - minRefY) * scale + minY
+                  shadowH = (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
+                  shadowL = (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
+                  open = (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
+                  close = (stockDataEntry.candleEntry.close - minRefY) * scale + minY,
+                  refCandleEntry = stockDataEntry.candleEntry // original data for the marker display
                 )
               }
 
@@ -3017,7 +3017,12 @@ class StockDataFragment : Fragment() {
       stockDataEntries.forEach { stockDataEntry ->
         minY = minOf(minY, stockDataEntry.candleEntry.y)
         maxY = maxOf(maxY, stockDataEntry.candleEntry.y)
-        dataPoints.add(DataPoint(stockDataEntry.candleEntry.x, stockDataEntry.candleEntry.y))
+        dataPoints.add(
+          DataPoint(
+            stockDataEntry.candleEntry.x,
+            stockDataEntry.candleEntry.y
+          )
+        )
       }
 
       // Chart data is constant, add a zero point for correct scaling of the control.
@@ -3025,7 +3030,7 @@ class StockDataFragment : Fragment() {
         dataPoints.add(DataPoint(0f, 0f))
       }
 
-      val series = LineDataSet(dataPoints as List<Entry>?, symbol)
+      val series = LineDataSet(dataPoints as List<DataPoint>?, symbol)
 
       series.setDrawHorizontalHighlightIndicator(false)
       series.setDrawValues(false)
@@ -3082,15 +3087,16 @@ class StockDataFragment : Fragment() {
               val scale = (maxY - minY) / (maxRefY - minRefY)
 
               val dataPointsRef = refList.map { stockDataEntry ->
-                DataPoint(
+                DataPointRef(
                   x = stockDataEntry.candleEntry.x,
-                  y = (stockDataEntry.candleEntry.y - minRefY)  // shift down ref data
-                      * scale                                   // scale ref to match stock data range
-                      + minY                                    // shift up to min stock data
+                  y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
+                      * scale                                  // scale ref to match stock data range
+                      + minY,                                  // shift up to min stock data
+                  refY = stockDataEntry.candleEntry.y          // original y for the marker display
                 )
               }
 
-              val seriesRef = LineDataSet(dataPointsRef as List<Entry>?, symbolRef)
+              val seriesRef = LineDataSet(dataPointsRef as List<DataPointRef>?, symbolRef)
               val color = chartOverlayColors[index % chartOverlayColors.size]
 
               seriesRef.setDrawHorizontalHighlightIndicator(false)
@@ -3166,7 +3172,7 @@ class StockDataFragment : Fragment() {
                 )
               )
 
-              val transactionSeries = LineDataSet(transactionPoints as List<Entry>?, symbol)
+              val transactionSeries = LineDataSet(transactionPoints as List<DataPoint>?, symbol)
 
               val color = if (assetTimeEntriesCopy[j].bought) {
                 if (isDataPoint) {
