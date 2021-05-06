@@ -334,7 +334,7 @@ class StockRoomChartAdapter internal constructor(
           }
 
           // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-          if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+          if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
             val scale = (maxY - minY) / (maxRefY - minRefY)
 
             val candleEntriesRef = refList.map { stockDataEntry ->
@@ -441,7 +441,7 @@ class StockRoomChartAdapter internal constructor(
       dataPoints.add(DataPoint(0f, 0f))
     }
 
-    val series = LineDataSet(dataPoints as List<DataPoint>?, symbol)
+    val series = LineDataSet(dataPoints as List<DataPoint>, symbol)
     series.setDrawHorizontalHighlightIndicator(false)
     series.setDrawValues(false)
     series.setDrawFilled(true)
@@ -494,7 +494,7 @@ class StockRoomChartAdapter internal constructor(
           }
 
           // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-          if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+          if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
             val scale = (maxY - minY) / (maxRefY - minRefY)
 
             val dataPointsRef = refList.map { stockDataEntry ->
@@ -506,7 +506,7 @@ class StockRoomChartAdapter internal constructor(
               )
             }
 
-            val seriesRef = LineDataSet(dataPointsRef as List<DataPoint>?, symbolRef)
+            val seriesRef = LineDataSet(dataPointsRef as List<DataPoint>, symbolRef)
             val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
 
             seriesRef.setDrawHorizontalHighlightIndicator(false)

@@ -2908,7 +2908,7 @@ class StockDataFragment : Fragment() {
             }
 
             // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-            if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+            if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
               val scale = (maxY - minY) / (maxRefY - minRefY)
 
               val candleEntriesRef = refList.map { stockDataEntry ->
@@ -3030,7 +3030,7 @@ class StockDataFragment : Fragment() {
         dataPoints.add(DataPoint(0f, 0f))
       }
 
-      val series = LineDataSet(dataPoints as List<DataPoint>?, symbol)
+      val series = LineDataSet(dataPoints as List<DataPoint>, symbol)
 
       series.setDrawHorizontalHighlightIndicator(false)
       series.setDrawValues(false)
@@ -3083,7 +3083,7 @@ class StockDataFragment : Fragment() {
             }
 
             // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-            if (maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+            if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
               val scale = (maxY - minY) / (maxRefY - minRefY)
 
               val dataPointsRef = refList.map { stockDataEntry ->
@@ -3096,7 +3096,7 @@ class StockDataFragment : Fragment() {
                 )
               }
 
-              val seriesRef = LineDataSet(dataPointsRef as List<DataPointRef>?, symbolRef)
+              val seriesRef = LineDataSet(dataPointsRef as List<DataPointRef>, symbolRef)
               val color = chartOverlayColors[index % chartOverlayColors.size]
 
               seriesRef.setDrawHorizontalHighlightIndicator(false)
@@ -3172,7 +3172,7 @@ class StockDataFragment : Fragment() {
                 )
               )
 
-              val transactionSeries = LineDataSet(transactionPoints as List<DataPoint>?, symbol)
+              val transactionSeries = LineDataSet(transactionPoints as List<DataPoint>, symbol)
 
               val color = if (assetTimeEntriesCopy[j].bought) {
                 if (isDataPoint) {
