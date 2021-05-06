@@ -2915,10 +2915,10 @@ class StockDataFragment : Fragment() {
               val candleEntriesRef = refList.map { stockDataEntry ->
                 CandleEntry(
                   stockDataEntry.candleEntry.x,
-                  (entriesRef1.candleEntry.high - minRefY) * scale + minY,
-                  (entriesRef1.candleEntry.low - minRefY) * scale + minY,
-                  (entriesRef1.candleEntry.open - minRefY) * scale + minY,
-                  (entriesRef1.candleEntry.close - minRefY) * scale + minY
+                  (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
+                  (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
+                  (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
+                  (stockDataEntry.candleEntry.close - minRefY) * scale + minY
                 )
               }
 
