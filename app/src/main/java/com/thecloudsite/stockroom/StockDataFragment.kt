@@ -3126,7 +3126,7 @@ class StockDataFragment : Fragment() {
 
 //    // FFT
 //    val dataPointsFFT = GoertzelFFT(dataPoints)
-//    val seriesFFT = LineDataSet(dataPointsFFT as List<Entry>, symbol)
+//    val seriesFFT = LineDataSet(dataPointsFFT as List<DataPoint>, symbol)
 //
 //    seriesFFT.setDrawHorizontalHighlightIndicator(false)
 //    seriesFFT.setDrawValues(false)
