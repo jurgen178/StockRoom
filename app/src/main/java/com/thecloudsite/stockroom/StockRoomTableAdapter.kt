@@ -44,6 +44,7 @@ import com.thecloudsite.stockroom.utils.getCapitalGainLossText
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getDividendStr
 import com.thecloudsite.stockroom.utils.getMarketValues
+import com.thecloudsite.stockroom.utils.getTotalCommission
 import com.thecloudsite.stockroom.utils.obsoleteAssetType
 import java.text.DecimalFormat
 import java.time.Instant
@@ -76,6 +77,8 @@ enum class TableSortMode {
   ByAssetChangeDown,
   ByAssetCommissionUp,
   ByAssetCommissionDown,
+  ByAssetTotalCommissionUp,
+  ByAssetTotalCommissionDown,
   ByDividendUp,
   ByDividendDown,
   ByAlertBelowUp,
@@ -149,6 +152,7 @@ class StockRoomTableAdapter internal constructor(
     holder.binding.tableDataAsset.gravity = alignmentNumbers
     holder.binding.tableDataAssetChange.gravity = alignmentNumbers
     holder.binding.tableDataAssetCommission.gravity = alignmentNumbers
+    holder.binding.tableDataAssetTotalCommission.gravity = alignmentNumbers
     holder.binding.tableDataDividend.gravity = alignmentNumbers
     holder.binding.tableDataAlertBelow.gravity = alignmentNumbers
     holder.binding.tableDataAlertAbove.gravity = alignmentNumbers
@@ -231,6 +235,12 @@ class StockRoomTableAdapter internal constructor(
       holder.binding.tableDataAssetCommission.text =
         getHeaderStr(context.getString(R.string.table_column_AssetCommission))
 
+      holder.binding.tableDataAssetTotalCommission.setOnClickListener {
+        update(TableSortMode.ByAssetTotalCommissionUp, TableSortMode.ByAssetTotalCommissionDown)
+      }
+      holder.binding.tableDataAssetTotalCommission.text =
+        getHeaderStr(context.getString(R.string.table_column_AssetTotalCommissions))
+
       holder.binding.tableDataDividend.setOnClickListener {
         update(TableSortMode.ByDividendUp, TableSortMode.ByDividendDown)
       }
@@ -297,6 +307,9 @@ class StockRoomTableAdapter internal constructor(
 
         TableSortMode.ByAssetCommissionUp -> updateTextviewUp(holder.binding.tableDataAssetCommission)
         TableSortMode.ByAssetCommissionDown -> updateTextviewDown(holder.binding.tableDataAssetCommission)
+
+        TableSortMode.ByAssetTotalCommissionUp -> updateTextviewUp(holder.binding.tableDataAssetTotalCommission)
+        TableSortMode.ByAssetTotalCommissionDown -> updateTextviewDown(holder.binding.tableDataAssetTotalCommission)
 
         TableSortMode.ByDividendUp -> updateTextviewUp(holder.binding.tableDataDividend)
         TableSortMode.ByDividendDown -> updateTextviewDown(holder.binding.tableDataDividend)
@@ -388,6 +401,16 @@ class StockRoomTableAdapter internal constructor(
           DecimalFormat(
             DecimalFormat2To4Digits
           ).format(commission)
+        } else {
+          ""
+        }
+
+      val totalCommission = getTotalCommission(current.assets)
+      holder.binding.tableDataAssetTotalCommission.text =
+        if (totalCommission > 0.0) {
+          DecimalFormat(
+            DecimalFormat2To4Digits
+          ).format(totalCommission)
         } else {
           ""
         }
@@ -509,7 +532,7 @@ class StockRoomTableAdapter internal constructor(
           assetItem.date
         }
 
-        val (totalQuantity, totalPrice, totalCommission) = getAssets(
+        val (totalQuantity, totalPrice, _) = getAssets(
           sortedList,
           obsoleteAssetType
         )
@@ -759,6 +782,13 @@ class StockRoomTableAdapter internal constructor(
       TableSortMode.ByAssetCommissionDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
         val (quantity, asset, commission) = getAssets(stockItem.assets)
         commission
+      }
+
+      TableSortMode.ByAssetTotalCommissionUp -> this.stockItemsCopy.sortedBy { stockItem ->
+        getTotalCommission(stockItem.assets)
+      }
+      TableSortMode.ByAssetTotalCommissionDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+        getTotalCommission(stockItem.assets)
       }
 
       TableSortMode.ByDividendUp -> this.stockItemsCopy.sortedBy { stockItem ->

@@ -621,6 +621,9 @@ fun getAssetsRemoveOldestFirst(
 
         // Sold entry is subtracted already. Set to 0.
         assetListSortedCopy[i].quantity = 0.0
+
+        // Commissions are not counted when stock is sold.
+        assetListSortedCopy[i].commission = 0.0
       }
     }
 
@@ -645,6 +648,17 @@ fun getAssetsRemoveOldestFirst(
   }
 
   return Triple(totalQuantity, totalPrice, totalCommission)
+}
+
+fun getTotalCommission(
+  assetList: List<Asset>
+): Double {
+
+  val totalCommission: Double = assetList.sumByDouble { asset ->
+    asset.commission
+  }
+
+  return totalCommission
 }
 
 // Only gets the assets that are added.

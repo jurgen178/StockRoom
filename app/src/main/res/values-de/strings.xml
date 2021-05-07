@@ -508,6 +508,7 @@ limitations under the License. -->
   <string name="table_column_Asset">Bestand</string>
   <string name="table_column_AssetChange">Bestandsänderung</string>
   <string name="table_column_AssetCommission">Gebühr</string>
+  <string name="table_column_AssetTotalCommissions">Gesamt- Gebühren</string>
   <string name="table_column_Dividend">Dividende</string>
   <string name="table_column_AlertAbove">Benachrichtigung über</string>
   <string name="table_column_AlertBelow">Benachrichtigung unter</string>
@@ -529,7 +530,7 @@ limitations under the License. -->
   <string name="add_selection">Zur Auswahl hinzufügen</string>
   <string name="remove_selection">Von der Auswahl entfernen</string>
   <string name="app_theme">Farbdesign</string>
-  <string name="summary_commission">Gebühren</string>
+  <string name="summary_total_commissions">Gesamtgebühren</string>
   <string name="calc_title">AI</string>
   <string name="calc_copy">Kopieren</string>
   <string name="calc_paste">Einfügen</string>

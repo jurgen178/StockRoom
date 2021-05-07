@@ -485,6 +485,7 @@ limitations under the License. -->
   <string name="table_column_Asset">Asset</string>
   <string name="table_column_AssetChange">Asset change</string>
   <string name="table_column_AssetCommission">Commission</string>
+  <string name="table_column_AssetTotalCommissions">Total Commissions</string>
   <string name="table_column_Dividend">Dividend</string>
   <string name="table_column_AlertAbove">Alert Above</string>
   <string name="table_column_AlertBelow">Alert Below</string>
@@ -506,7 +507,7 @@ limitations under the License. -->
   <string name="add_selection">Add to the selection</string>
   <string name="remove_selection">Remove from the selection</string>
   <string name="app_theme">App Theme</string>
-  <string name="summary_commission">Commissions</string>
+  <string name="summary_total_commissions">Total Commissions</string>
   <string name="calc_title">AI</string>
   <string name="calc_copy">Copy</string>
   <string name="calc_paste">Paste</string>

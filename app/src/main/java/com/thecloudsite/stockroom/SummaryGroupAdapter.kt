@@ -37,6 +37,7 @@ import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
+import com.thecloudsite.stockroom.utils.getTotalCommission
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneOffset
@@ -339,7 +340,7 @@ class SummaryGroupAdapter internal constructor(
 
       totalPurchasePrice += price // + commission
       totalQuantity += quantity
-      totalCommission += commission
+      totalCommission += getTotalCommission(stockItem.assets)
 
       val (gain, loss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
       // Merge gain and loss of the individual stock to one gain/loss to prevent
@@ -580,7 +581,7 @@ class SummaryGroupAdapter internal constructor(
 
     val summaryGroup1 = SpannableStringBuilder()
       .append(gainLossText)
-      .append("\n${context.getString(R.string.summary_commission)} ")
+      .append("\n${context.getString(R.string.summary_total_commissions)} ")
       .bold {
         append(
           "${
