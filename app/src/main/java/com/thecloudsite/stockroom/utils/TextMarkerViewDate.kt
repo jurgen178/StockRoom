@@ -67,13 +67,13 @@ class TextMarkerViewCandleChart(
         }
 
         if (data.high != data.low) {
-          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(data.low)}-${
-            DecimalFormat(DecimalFormat2To4Digits).format(
+          textmarker.text = "${to2To4Digits(data.low)}-${
+            to2To4Digits(
               data.high
             )
           }\n$date"
         } else {
-          textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(data.high)}\n$date"
+          textmarker.text = "${to2To4Digits(data.high)}\n$date"
         }
 
       } else {
@@ -123,7 +123,7 @@ class TextMarkerViewLineChart(
               data.y
             }
           }
-        textmarker.text = "${DecimalFormat(DecimalFormat2To4Digits).format(y)}\n$date"
+        textmarker.text = "${to2To4Digits(y)}\n$date"
 
       } else {
         textmarker.text = ""
