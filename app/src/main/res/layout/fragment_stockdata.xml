@@ -173,48 +173,33 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             >
+
           <TextView
               android:id="@+id/textViewStockLegend1"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent"
-              android:layout_marginStart="16dp"
-              android:layout_marginEnd="16dp"
-              android:textSize="12sp"
+              style="@style/stock_legend"
               />
 
           <TextView
               android:id="@+id/textViewStockLegend2"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
               app:layout_constraintStart_toEndOf="@id/textViewStockLegend1"
               app:layout_constraintTop_toTopOf="parent"
-              android:layout_marginStart="16dp"
-              android:layout_marginEnd="16dp"
-              android:textSize="12sp"
+              style="@style/stock_legend"
               />
 
           <TextView
               android:id="@+id/textViewStockLegend3"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
               app:layout_constraintStart_toEndOf="@id/textViewStockLegend2"
               app:layout_constraintTop_toTopOf="parent"
-              android:layout_marginStart="16dp"
-              android:layout_marginEnd="16dp"
-              android:textSize="12sp"
+              style="@style/stock_legend"
               />
 
           <TextView
               android:id="@+id/textViewStockLegend4"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
               app:layout_constraintStart_toEndOf="@id/textViewStockLegend3"
               app:layout_constraintTop_toTopOf="parent"
-              android:layout_marginStart="16dp"
-              android:layout_marginEnd="16dp"
-              android:textSize="12sp"
+              style="@style/stock_legend"
               />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

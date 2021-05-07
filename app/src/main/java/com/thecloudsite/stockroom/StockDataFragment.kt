@@ -37,6 +37,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -878,14 +879,17 @@ class StockDataFragment : Fragment() {
     binding.textViewSymbol.text =
       SpannableStringBuilder().underline { color(Color.BLUE) { append(symbol) } }
 
-    binding.textViewStockLegend1.visibility = View.GONE
-    binding.textViewStockLegend1.text = ""
-    binding.textViewStockLegend2.visibility = View.GONE
-    binding.textViewStockLegend2.text = ""
-    binding.textViewStockLegend3.visibility = View.GONE
-    binding.textViewStockLegend3.text = ""
-    binding.textViewStockLegend4.visibility = View.GONE
-    binding.textViewStockLegend4.text = ""
+    val textViewStockLegends: List<TextView> = listOf(
+      binding.textViewStockLegend1,
+      binding.textViewStockLegend2,
+      binding.textViewStockLegend3,
+      binding.textViewStockLegend4,
+    )
+
+    textViewStockLegends.forEach { textView ->
+      textView.visibility = View.GONE
+      textView.text = ""
+    }
 
     if (useChartOverlaySymbols) {
 
@@ -894,34 +898,32 @@ class StockDataFragment : Fragment() {
       chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
 
         if (symbolRef.isNotEmpty()) {
-          val color = chartOverlayColors[chartOverlayColorIndex++ % chartOverlayColors.size]
 
-          val stockLegendText = SpannableStringBuilder().color(color) { append(symbolRef) }
+          val color = chartOverlayColors[chartOverlayColorIndex % chartOverlayColors.size]
+          val textView = textViewStockLegends[chartOverlayColorIndex]
+          textView.text = SpannableStringBuilder().color(color) { append(symbolRef) }
+          textView.visibility = View.VISIBLE
+
+          chartOverlayColorIndex++
+
+          // Listeners cannot be assigned to the list items, needs to be done explicitly.
           when (chartOverlayColorIndex) {
             1 -> {
-              binding.textViewStockLegend1.text = stockLegendText
-              binding.textViewStockLegend1.visibility = View.VISIBLE
               binding.textViewStockLegend1.setOnClickListener {
                 updateLegend(1)
               }
             }
             2 -> {
-              binding.textViewStockLegend2.text = stockLegendText
-              binding.textViewStockLegend2.visibility = View.VISIBLE
               binding.textViewStockLegend2.setOnClickListener {
                 updateLegend(2)
               }
             }
             3 -> {
-              binding.textViewStockLegend3.text = stockLegendText
-              binding.textViewStockLegend3.visibility = View.VISIBLE
               binding.textViewStockLegend3.setOnClickListener {
                 updateLegend(3)
               }
             }
             4 -> {
-              binding.textViewStockLegend4.text = stockLegendText
-              binding.textViewStockLegend4.visibility = View.VISIBLE
               binding.textViewStockLegend4.setOnClickListener {
                 updateLegend(4)
               }
