@@ -51,6 +51,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 import java.util.Locale
 
+const val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC"
 const val exportListActivityRequestCode = 3
 //const val authActivityRequestCode = 4
 
@@ -179,6 +180,15 @@ class SettingsActivity : AppCompatActivity(),
       "app_theme" -> {
         setAppTheme(this)
         //delegate.applyDayNight()
+      }
+      "chart_overlay_symbols" -> {
+        // if empty reset entry to default
+        val symbols = sharedPreferences.getString(key, settingChartOverlaySymbolsDefault)
+        if (symbols.isNullOrEmpty()) {
+          sharedPreferences.edit()
+            .putString(key, settingChartOverlaySymbolsDefault)
+            .apply()
+        }
       }
     }
   }

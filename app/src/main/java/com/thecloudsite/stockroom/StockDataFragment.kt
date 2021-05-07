@@ -287,22 +287,14 @@ class StockDataFragment : Fragment() {
       }
     }
 
-  private val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC"
   private val settingOverlaySymbols = "chart_overlay_symbols"
   private var chartOverlaySymbols: String
     get() {
       val sharedPref =
         PreferenceManager.getDefaultSharedPreferences(activity)
           ?: return settingChartOverlaySymbolsDefault
-      val symbols = sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
-      return if (symbols.isNullOrEmpty()) {
-        sharedPref.edit()
-          .putString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
-          .apply()
-        settingChartOverlaySymbolsDefault
-      } else {
-        symbols
-      }
+      return sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
+        ?: return settingChartOverlaySymbolsDefault
     }
     set(value) {
     }
@@ -2911,9 +2903,21 @@ class StockDataFragment : Fragment() {
               minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
               maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
 
-              entriesRef1.candleEntry.x = stockDataEntry.candleEntry.x
-              refList.add(entriesRef1)
+              // clone entry and update the x value to match the original stock chart
+              val refEntry = StockDataEntry(
+                dateTimePoint = entriesRef1.dateTimePoint,
+                x = stockDataEntry.candleEntry.x.toDouble(),
+                high = entriesRef1.candleEntry.high.toDouble(),
+                low = entriesRef1.candleEntry.low.toDouble(),
+                open = entriesRef1.candleEntry.open.toDouble(),
+                close = entriesRef1.candleEntry.close.toDouble(),
+              )
+              refList.add(refEntry)
             }
+
+            // Include the right side value of the last entry.
+            minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
+            maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
 
             // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
             if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
@@ -3086,9 +3090,21 @@ class StockDataFragment : Fragment() {
               minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
               maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
 
-              entriesRef1.candleEntry.x = stockDataEntry.candleEntry.x
-              refList.add(entriesRef1)
+              // clone entry and update the x value to match the original stock chart
+              val refEntry = StockDataEntry(
+                dateTimePoint = entriesRef1.dateTimePoint,
+                x = stockDataEntry.candleEntry.x.toDouble(),
+                high = entriesRef1.candleEntry.high.toDouble(),
+                low = entriesRef1.candleEntry.low.toDouble(),
+                open = entriesRef1.candleEntry.open.toDouble(),
+                close = entriesRef1.candleEntry.close.toDouble(),
+              )
+              refList.add(refEntry)
             }
+
+            // Include the right side value of the last entry.
+            minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
+            maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
 
             // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
             if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {

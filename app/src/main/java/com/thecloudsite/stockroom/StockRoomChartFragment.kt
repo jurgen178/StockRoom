@@ -72,22 +72,14 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     set(value) {
     }
 
-  private val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC"
   private val settingOverlaySymbols = "chart_overlay_symbols"
   private var chartOverlaySymbols: String
     get() {
       val sharedPref =
         PreferenceManager.getDefaultSharedPreferences(activity)
           ?: return settingChartOverlaySymbolsDefault
-      val symbols = sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
-      return if (symbols.isNullOrEmpty()) {
-        sharedPref.edit()
-          .putString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
-          .apply()
-        settingChartOverlaySymbolsDefault
-      } else {
-        symbols
-      }
+      return sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
+        ?: return settingChartOverlaySymbolsDefault
     }
     set(value) {
     }
@@ -166,7 +158,8 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
           useChartOverlaySymbols,
           overlaySymbols,
           stockViewRange,
-          stockViewMode)
+          stockViewMode
+        )
       }
     })
   }
