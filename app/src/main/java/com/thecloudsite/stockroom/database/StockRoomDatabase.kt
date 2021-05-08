@@ -30,6 +30,7 @@ import com.thecloudsite.stockroom.R.raw
 import com.thecloudsite.stockroom.R.string
 import com.thecloudsite.stockroom.StockItemJson
 import com.thecloudsite.stockroom.StockMarketDataApiFactory
+import com.thecloudsite.stockroom.StockMarketDataCoingeckoApiFactory
 import com.thecloudsite.stockroom.StockMarketDataRepository
 import com.thecloudsite.stockroom.utils.getRawTextFile
 import com.thecloudsite.stockroom.utils.isOnline
@@ -83,6 +84,37 @@ abstract class StockRoomDatabase : RoomDatabase() {
 
     private val MIGRATION_1_2 = object : Migration(1, 2) {
       override fun migrate(database: SupportSQLiteDatabase) {
+
+        // Add type to stock table
+        val STOCK_TABLE_NAME = "stock_table"
+        val STOCK_TABLE_NAME_TEMP = "stock_table_temp"
+
+        database.execSQL(
+          """
+          CREATE TABLE `${STOCK_TABLE_NAME_TEMP}` (
+            symbol TEXT PRIMARY KEY NOT NULL,
+            portfolio TEXT NOT NULL, 
+            type INTEGER NOT NULL, 
+            data TEXT NOT NULL, 
+            group_color INTEGER NOT NULL, 
+            note TEXT NOT NULL,
+            dividend_note TEXT NOT NULL, 
+            annual_dividend_rate REAL NOT NULL,
+            alert_above REAL NOT NULL, 
+            alert_above_note TEXT NOT NULL,
+            alert_below REAL NOT NULL, 
+            alert_below_note TEXT NOT NULL
+          )
+          """.trimIndent()
+        )
+        database.execSQL(
+          """
+          INSERT INTO `${STOCK_TABLE_NAME_TEMP}` (symbol, portfolio, type, data, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note)
+          SELECT symbol, portfolio, 0, data, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note FROM `${STOCK_TABLE_NAME}`  
+          """.trimIndent()
+        )
+        database.execSQL("DROP TABLE `${STOCK_TABLE_NAME}`")
+        database.execSQL("ALTER TABLE `${STOCK_TABLE_NAME_TEMP}` RENAME TO `${STOCK_TABLE_NAME}`")
 
         // Add account to Asset table
         val ASSET_TABLE_NAME = "asset_table"
@@ -214,7 +246,10 @@ abstract class StockRoomDatabase : RoomDatabase() {
 
       if (isOnline(context)) {
         val stockMarketDataRepository: StockMarketDataRepository =
-          StockMarketDataRepository { StockMarketDataApiFactory.yahooApi }
+          StockMarketDataRepository(
+            { StockMarketDataApiFactory.yahooApi },
+            { StockMarketDataCoingeckoApiFactory.coingeckoApi }
+          )
 
         data class AssetPreset(
           val symbol: String,

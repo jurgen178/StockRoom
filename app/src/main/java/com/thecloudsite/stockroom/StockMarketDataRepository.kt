@@ -18,11 +18,13 @@ package com.thecloudsite.stockroom
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
+import java.util.Locale
 
 // Data from the DB and online data fields.
 data class StockItem
@@ -39,22 +41,82 @@ var responseCounter = 0
   responseCounter++
 }
 
-class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : BaseRepository() {
+class StockMarketDataRepository(
+  private val yahooApi: () -> YahooApiMarketData?,
+  private val coingeckoApi: () -> CoingeckoApiMarketData?
+) : BaseRepository() {
 
-  private val _data = MutableLiveData<List<OnlineMarketData>>()
-  val onlineMarketDataList: LiveData<List<OnlineMarketData>>
-    get() = _data
+  private val yahooMarketData = MutableLiveData<List<OnlineMarketData>>()
+  private val yahooMarketDataList: LiveData<List<OnlineMarketData>>
+    get() = yahooMarketData
 
-  suspend fun getStockData(symbols: List<String>): Pair<MarketState, String> {
+  private val coingeckoMarketData = MutableLiveData<List<OnlineMarketData>>()
+  private val coingeckoMarketDataList: LiveData<List<OnlineMarketData>>
+    get() = coingeckoMarketData
+
+  private var yahooMarketSourceDataList: List<OnlineMarketData> = emptyList()
+  private var coingeckoMarketSourceDataList: List<OnlineMarketData> = emptyList()
+  val onlineMarketDataList = MediatorLiveData<List<OnlineMarketData>>()
+
+  init {
+
+    onlineMarketDataList.addSource(yahooMarketDataList) { marketLiveData ->
+      if (marketLiveData != null) {
+        yahooMarketSourceDataList = marketLiveData
+        onlineMarketDataList.postValue(
+          combineData(
+            yahooMarketSourceDataList,
+            coingeckoMarketSourceDataList
+          )
+        )
+      }
+    }
+
+    onlineMarketDataList.addSource(coingeckoMarketDataList) { marketLiveData ->
+      if (marketLiveData != null) {
+        coingeckoMarketSourceDataList = marketLiveData
+        onlineMarketDataList.postValue(
+          combineData(
+            yahooMarketSourceDataList,
+            coingeckoMarketSourceDataList
+          )
+        )
+      }
+    }
+  }
+
+  private fun combineData(
+    list1: List<OnlineMarketData>,
+    list2: List<OnlineMarketData>
+  ): List<OnlineMarketData> {
+
+    val combinedList: MutableList<OnlineMarketData> = mutableListOf()
+    combinedList.addAll(list1)
+    combinedList.addAll(list2)
+
+    return combinedList
+  }
+
+  suspend fun getStockData(symbols: List<StockSymbol>): Pair<MarketState, String> {
 
     // When the app is in the background.
     if (symbols.isEmpty()) {
       // no _data.value because this is a background thread
-      _data.postValue(emptyList())
+      yahooMarketData.postValue(emptyList())
+      coingeckoMarketData.postValue(emptyList())
       return Pair(MarketState.NO_SYMBOL, "")
     }
 
-    val api: YahooApiMarketData? = api()
+    val yahooResult = getYahooStockData(symbols)
+
+    val coingeckoResult = getCoingeckoStockData(symbols)
+
+    return yahooResult
+  }
+
+  private suspend fun getYahooStockData(symbols: List<StockSymbol>): Pair<MarketState, String> {
+
+    val api: YahooApiMarketData? = yahooApi()
 
     if (api != null) {
       // for reference, all data in one go
@@ -74,7 +136,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 //      val onlineMarketDataResultList: List<OnlineMarketData> = quoteResponse?.quoteResponse?.result
 //          ?: emptyList()
 
-      val result = queryStockData(api, symbols)
+      val result = queryYahooStockData(api, symbols)
 
       // Get all results.
       val onlineMarketDataResultList = result.first
@@ -82,7 +144,7 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
       if (onlineMarketDataResultList.isEmpty()) {
         // no _data.value because this is a background thread
-        _data.postValue(onlineMarketDataResultList)
+        yahooMarketData.postValue(onlineMarketDataResultList)
         return Pair(MarketState.NO_NETWORK, errorMsg)
       }
 
@@ -125,9 +187,9 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
           onlineMarketData2
         }
 
-        _data.postValue(onlineMarketDataResultList2)
+        yahooMarketData.postValue(onlineMarketDataResultList2)
       } else {
-        _data.postValue(onlineMarketDataResultList)
+        yahooMarketData.postValue(onlineMarketDataResultList)
       }
 
       // Stocks could be from different markets.
@@ -172,13 +234,80 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
       return Pair(marketState, "")
     }
 
-    _data.postValue(emptyList())
+    yahooMarketData.postValue(emptyList())
     return Pair(MarketState.UNKNOWN, "")
   }
 
-  suspend fun getStockData2(symbols: List<String>): List<OnlineMarketData> {
+  private suspend fun getCoingeckoStockData(symbols: List<StockSymbol>): Pair<MarketState, String> {
 
-    val api: YahooApiMarketData = api() ?: return emptyList()
+    val api: CoingeckoApiMarketData? = coingeckoApi()
+
+    if (api != null) {
+
+      val result = queryCoingeckoStockData(api, symbols)
+
+      // Get all results.
+      val onlineMarketDataResultList = result.first
+      val errorMsg = result.second
+
+      if (onlineMarketDataResultList.isEmpty()) {
+        // no _data.value because this is a background thread
+        coingeckoMarketData.postValue(onlineMarketDataResultList)
+        return Pair(MarketState.NO_NETWORK, errorMsg)
+      }
+
+
+      coingeckoMarketData.postValue(onlineMarketDataResultList)
+
+      // Stocks could be from different markets.
+      // Check if stocks are from markets that have regular hours first, then post market,
+      // and then pre market hours.
+      val marketState: MarketState = when {
+        onlineMarketDataResultList.find { data ->
+          data.marketState == MarketState.REGULAR.value
+        } != null -> {
+          MarketState.REGULAR
+        }
+        onlineMarketDataResultList.find { data ->
+          data.marketState == MarketState.POST.value
+        } != null -> {
+          MarketState.POST
+        }
+        onlineMarketDataResultList.find { data ->
+          data.marketState == MarketState.POSTPOST.value
+        } != null -> {
+          MarketState.POSTPOST
+        }
+        onlineMarketDataResultList.find { data ->
+          data.marketState == MarketState.CLOSED.value
+        } != null -> {
+          MarketState.CLOSED
+        }
+        onlineMarketDataResultList.find { data ->
+          data.marketState == MarketState.PRE.value
+        } != null -> {
+          MarketState.PRE
+        }
+        onlineMarketDataResultList.find { data ->
+          data.marketState == MarketState.PREPRE.value
+        } != null -> {
+          MarketState.PREPRE
+        }
+        else -> {
+          MarketState.UNKNOWN
+        }
+      }
+
+      return Pair(marketState, "")
+    }
+
+    coingeckoMarketData.postValue(emptyList())
+    return Pair(MarketState.UNKNOWN, "")
+  }
+
+  suspend fun getStockData2(symbols: List<StockSymbol>): List<OnlineMarketData> {
+
+    val api: YahooApiMarketData = yahooApi() ?: return emptyList()
 
 //    val quoteResponse: YahooResponse? = try {
 //      safeApiCall(
@@ -195,26 +324,26 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 //
 //    return quoteResponse?.quoteResponse?.result ?: emptyList()
 
-    val result = queryStockData(api, symbols)
+    val result = queryYahooStockData(api, symbols)
     return result.first
   }
 
-  suspend fun getStockData(symbol: String): OnlineMarketData? {
+  suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
 
-    val api: YahooApiMarketData? = api()
+    val api: YahooApiMarketData? = yahooApi()
 
-    if (symbol.isNotEmpty() && api != null) {
-      val result = queryStockData(api, listOf(symbol))
+    if (symbol.symbol.isNotEmpty() && api != null) {
+      val result = queryYahooStockData(api, listOf(symbol))
       return result.first.firstOrNull()
     }
 
-    return OnlineMarketData(symbol = symbol)
+    return OnlineMarketData(symbol = symbol.symbol)
   }
 
   // Query stock data by splitting symbols to blocks.
-  private suspend fun queryStockData(
+  private suspend fun queryYahooStockData(
     api: YahooApiMarketData,
-    symbols: List<String>
+    symbols: List<StockSymbol>
   ): Pair<List<OnlineMarketData>, String> {
 
     // Get blockSize symbol data at a time.
@@ -227,7 +356,11 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
     do {
       // Get the first number of blockSize symbols.
-      val symbolsToQuery: List<String> = remainingSymbolsToQuery.take(blockSize)
+      val symbolsToQuery: List<String> = remainingSymbolsToQuery
+        .take(blockSize)
+        .map { symbol ->
+          symbol.symbol
+        }
 
       val quoteResponse: YahooResponse? = try {
         safeApiCall(
@@ -256,38 +389,89 @@ class StockMarketDataRepository(private val api: () -> YahooApiMarketData?) : Ba
 
     return Pair(onlineMarketDataResultList, errorMsg)
   }
-}
 
-class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?) :
-  BaseRepository() {
+  private suspend fun queryCoingeckoStockData(
+    api: CoingeckoApiMarketData,
+    symbols: List<StockSymbol>
+  ): Pair<List<OnlineMarketData>, String> {
 
-//  private val _data = MutableLiveData<List<OnlineMarketData>>()
-//  val onlineMarketDataList: LiveData<List<OnlineMarketData>>
-//    get() = _data
+    // Get blockSize symbol data at a time.
+    val blockSize = 1
+    var errorMsg = ""
 
-  suspend fun getStockRawData(symbol: String): String {
+    // Get online data in blocks.
+    val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
+    var remainingSymbolsToQuery = symbols
 
-    val api: YahooApiRawMarketData? = api()
+    do {
+      // Get the first number of blockSize symbols.
+      val symbolsToQuery: List<String> = remainingSymbolsToQuery
+        .take(blockSize)
+        .map { symbol ->
+          symbol.symbol
+        }
 
-    if (symbol.isNotEmpty() && api != null) {
-
-      val quoteResponse: String? = try {
+      val response: CoingeckoResponse? = try {
         safeApiCall(
           call = {
             updateCounter()
-            api.getStockDataAsync(symbol)
+            api.getStockDataAsync(symbolsToQuery.joinToString(",").toLowerCase(Locale.ROOT))
               .await()
-          },
-          errorMessage = "Error getting finance data."
+          }, errorMessage = "Error getting finance data."
         )
       } catch (e: Exception) {
-        Log.d("StockRawMarketDataRepository.getStockRawData($symbol) failed", "Exception=$e")
+        errorMsg += "StockMarketDataRepository.queryStockData failed, Exception=$e\n"
+        Log.d("StockMarketDataRepository.queryStockData failed", "Exception=$e")
         null
       }
 
-      return quoteResponse ?: ""
-    }
+      // Add the result.
+      if (response != null) {
+        onlineMarketDataResultList.add(
+          OnlineMarketData(
+            symbol = response.name,
+            marketPrice = 1.23,
+            name1 = "name1",
+            name2 = "name2"
+          )
+        )
+      }
 
-    return ""
+      // Remove the queried symbols.
+      remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
+
+    } while (remainingSymbolsToQuery.isNotEmpty())
+
+    return Pair(onlineMarketDataResultList, errorMsg)
+  }
+
+  class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?) :
+    BaseRepository() {
+
+    suspend fun getStockRawData(symbol: String): String {
+
+      val api: YahooApiRawMarketData? = api()
+
+      if (symbol.isNotEmpty() && api != null) {
+
+        val quoteResponse: String? = try {
+          safeApiCall(
+            call = {
+              updateCounter()
+              api.getStockDataAsync(symbol)
+                .await()
+            },
+            errorMessage = "Error getting finance data."
+          )
+        } catch (e: Exception) {
+          Log.d("StockRawMarketDataRepository.getStockRawData($symbol) failed", "Exception=$e")
+          null
+        }
+
+        return quoteResponse ?: ""
+      }
+
+      return ""
+    }
   }
 }

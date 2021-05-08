@@ -25,6 +25,22 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 // https://android.jlelse.eu/android-networking-in-2019-retrofit-with-kotlins-coroutines-aefe82c4d777
 
+// https://api.coingecko.com/api/v3/coins/list
+// https://api.coingecko.com/api/v3/simple/supported_vs_currencies
+
+// https://api.coingecko.com/api/v3/simple/price?ids=cartesi&vs_currencies=usd
+// {"cartesi":{"usd":1.24}}
+
+// https://api.coingecko.com/api/v3/coins/cartesi
+
+// https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=10
+// {"prices":[[1619625666845,0.6476699905697568],[1619629346430,0.6281418599606636],[1619632894402,0.6059910967268739],[1619636660847,0.6104612592139378],[1619640036142,0.614744809646869],[1619643737476,0.5964704609349185],[1619647401790,0.6035420239511216],[1619650863357,0.5966409608755056],[1619654439638,0.6023990725132919],[1619658440051,0.5994810706866857],[1619661847749,0.6002388209808079],[1619665320398,0.6024006879798155],[1619668987030,0.6004665467341181],[1619672639041,0.5862480715711115],[1619676206939,0.5951259328829168],[1619679826463,0.5940200145799716],[1619683304361,0.603884694731556],[1619686999431,0.6014750931964677],
+
+// https://api.coingecko.com/api/v3/coins/cartesi/market_chart/range?vs_currency=usd&from=1609625666&to=1619625666
+
+// https://api.coingecko.com/api/v3/coins/cartesi?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false
+
+
 //StockApiFactory to create the Yahoo Api
 object StockMarketDataApiFactory {
   // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
@@ -52,15 +68,15 @@ object StockMarketDataApiFactory {
 
   // building http request url
   private fun retrofit(): Retrofit = Retrofit.Builder()
-      .client(
-          OkHttpClient().newBuilder()
+    .client(
+      OkHttpClient().newBuilder()
 //      .addInterceptor(authInterceptor)
-              .build()
-      )
-      .baseUrl(url)
-      .addConverterFactory(MoshiConverterFactory.create())
-      .addCallAdapterFactory(CoroutineCallAdapterFactory())
-      .build()
+        .build()
+    )
+    .baseUrl(url)
+    .addConverterFactory(MoshiConverterFactory.create())
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .build()
 
   fun update(_url: String) {
     if (url != _url) {
@@ -83,6 +99,46 @@ object StockMarketDataApiFactory {
   }
 
   var yahooApi: YahooApiMarketData? = null
+}
+
+//StockApiFactory to create the Coingecko Api
+object StockMarketDataCoingeckoApiFactory {
+  // https://api.coingecko.com/api/v3/coins/cartesi/tickers
+  private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
+  private var url = ""
+
+  // building http request url
+  private fun retrofit(): Retrofit = Retrofit.Builder()
+    .client(
+      OkHttpClient().newBuilder()
+        .build()
+    )
+    .baseUrl(url)
+    .addConverterFactory(MoshiConverterFactory.create())
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .build()
+
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
+        coingeckoApi = null
+      } else {
+        url = checkUrl(_url)
+        coingeckoApi = try {
+          retrofit().create(CoingeckoApiMarketData::class.java)
+        } catch (e: Exception) {
+          null
+        }
+      }
+    }
+  }
+
+  init {
+    update(defaultUrl)
+  }
+
+  var coingeckoApi: CoingeckoApiMarketData? = null
 }
 
 object StockRawMarketDataApiFactory {

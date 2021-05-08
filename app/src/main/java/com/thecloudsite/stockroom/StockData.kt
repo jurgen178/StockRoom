@@ -24,6 +24,7 @@ import com.squareup.moshi.JsonClass
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 // https://www.google.com/finance?q=msft
@@ -570,6 +571,25 @@ interface YahooApiMarketData {
       value = "symbols"
     ) symbols: String
   ): Deferred<Response<YahooResponse>>
+}
+
+@JsonClass(generateAdapter = true)
+data class CoingeckoResponse(
+  val name: String,
+)
+/*
+{
+  "name": "Cartesi",
+  "tickers": [
+    {
+ */
+
+interface CoingeckoApiMarketData {
+  // https://api.coingecko.com/api/v3/coins/cartesi/tickers
+  @GET("{symbol}/tickers")
+  fun getStockDataAsync(
+    @Path("symbol") symbol: String
+  ): Deferred<Response<CoingeckoResponse>>
 }
 
 interface YahooApiRawMarketData {

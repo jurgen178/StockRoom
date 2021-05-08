@@ -40,7 +40,8 @@ class AddActivity : AppCompatActivity() {
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
   companion object {
-    const val EXTRA_REPLY = "com.thecloudsite.stockroom.ADDSYMBOL"
+    const val EXTRA_SYMBOL = "com.thecloudsite.stockroom.ADDSYMBOL"
+    const val EXTRA_TYPE = "com.thecloudsite.stockroom.STOCKTYPE"
   }
 
   public override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,13 +67,16 @@ class AddActivity : AppCompatActivity() {
         val symbol = addView.text.toString()
             .trim()
 
+        val type = binding.stockTypeSpinner.selectedItemPosition
+
         // https://convertcodes.com/unicode-converter-encode-decode-utf/
         if (symbol.toLowerCase(Locale.ROOT) == "\u0064\u0065\u0062\u0075\u0067") {
           val intent = Intent(this@AddActivity, ListActivity::class.java)
           startActivity(intent)
           setResult(Activity.RESULT_CANCELED, replyIntent)
         } else {
-          replyIntent.putExtra(EXTRA_REPLY, symbol)
+          replyIntent.putExtra(EXTRA_SYMBOL, symbol)
+          replyIntent.putExtra(EXTRA_TYPE, type)
           setResult(Activity.RESULT_OK, replyIntent)
         }
       }

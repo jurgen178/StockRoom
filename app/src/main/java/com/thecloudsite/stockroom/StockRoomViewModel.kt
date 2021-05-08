@@ -105,6 +105,7 @@ data class StockItemJson
   (
   var symbol: String,
   val portfolio: String,
+  val type: Int?,
   val data: String?,
   val groupColor: Int?,
   val groupName: String?,
@@ -118,6 +119,12 @@ data class StockItemJson
   var assets: List<AssetJson>?,
   var events: List<EventJson>?,
   var dividends: List<DividendJson>?
+)
+
+data class StockSymbol
+  (
+  var symbol: String,
+  val type: Int
 )
 
 object SharedHandler {
@@ -178,7 +185,7 @@ object SharedRepository {
   // an error with a delay for the next online task.
   var dbDataValid = false
 
-  var selectedSymbol: String = ""
+  var selectedSymbol: StockSymbol = StockSymbol(symbol = "", type = 0)
   var selectedPortfolio = MutableLiveData("")
   val selectedPortfolioLiveData: LiveData<String>
     get() = selectedPortfolio
@@ -197,13 +204,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
   private val repository: StockRoomRepository
   private val stockMarketDataRepository: StockMarketDataRepository =
-    StockMarketDataRepository { StockMarketDataApiFactory.yahooApi }
+    StockMarketDataRepository(
+      { StockMarketDataApiFactory.yahooApi },
+      { StockMarketDataCoingeckoApiFactory.coingeckoApi }
+    )
 
   // Using LiveData and caching returns has several benefits:
   // - We can put an observer on the data (instead of polling for changes) and only update the
   //   the UI when the data actually changes.
   // - Repository is completely separated from the UI through the ViewModel.
-  val onlineMarketDataList: LiveData<List<OnlineMarketData>>
+  val onlineMarketDataList: MediatorLiveData<List<OnlineMarketData>>
   val allStockDBdata: LiveData<List<StockDBdata>>
   val allAssets: LiveData<List<Assets>>
   val allEvents: LiveData<List<Events>>
@@ -221,7 +231,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var filterList: List<IFilterType> = emptyList()
   private var filterMode: FilterModeTypeEnum = FilterModeTypeEnum.AndType
 
-  private var portfolioSymbols: HashSet<String> = HashSet()
+  private var portfolioSymbols: HashSet<StockSymbol> = HashSet()
 
   private val dataStore: MutableList<StockItem> = mutableListOf()
   private val _dataStore = MutableLiveData<List<StockItem>>()
@@ -686,7 +696,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     synchronized(dataStore)
     {
       val stockDBdataPortfolios: HashSet<String> = hashSetOf("") // add Standard Portfolio
-      val usedPortfolioSymbols: HashSet<String> = HashSet()
+      val usedPortfolioSymbols: HashSet<StockSymbol> = HashSet()
 
       // Use only symbols matching the selected portfolio.
       var portfolio = SharedRepository.selectedPortfolio.value ?: ""
@@ -706,7 +716,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       portfolioData.forEach { data ->
         val symbol = data.symbol
-        usedPortfolioSymbols.add(symbol)
+        usedPortfolioSymbols.add(StockSymbol(symbol = symbol, type = data.type))
 
         val dataStoreItem =
           dataStore.find { ds ->
@@ -1034,7 +1044,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
           val dataStoreItem =
             dataStore.find { ds ->
-              symbol == ds.stockDBdata.symbol
+              symbol.equals(ds.stockDBdata.symbol, true)
             }
 
           if (dataStoreItem != null) {
@@ -1439,6 +1449,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       if (isValidSymbol(symbol)) {
         var portfolio = SharedRepository.selectedPortfolio.value ?: ""
+        var type = 0
 
         if (jsonObj.has("portfolio")) {
           portfolio = jsonObj.getString("portfolio")
@@ -1447,7 +1458,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
           //}
         }
 
-        insert(symbol = symbol, portfolio = portfolio.trim())
+        if (jsonObj.has("type")) {
+          type = jsonObj.getInt("type")
+          setType(symbol = symbol, type = type)
+        }
+
+        insert(symbol = symbol, portfolio = portfolio.trim(), type = type)
         imported++
 
         // get assets
@@ -1904,7 +1920,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     assetItems.forEach { (symbol, assets) ->
       if (imported < 100) {
         imported++
-        insert(symbol = symbol, portfolio = portfolio)
+        insert(symbol = symbol, portfolio = portfolio, type = 0)
         // updateAssets filters out empty shares@price
         updateAssets(symbol = symbol, assets = assets)
       }
@@ -1943,7 +1959,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       .take(100)
       .forEach { symbol ->
         if (isValidSymbol(symbol)) {
-          insert(symbol = symbol, portfolio = portfolio)
+          insert(symbol = symbol, portfolio = portfolio, type = 0)
           imported++
         }
       }
@@ -2057,6 +2073,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       }?.name ?: ""
 
       // Convert empty or 0 values to null to exclude them from serialized to JSON.
+      val typeValue = if (stockItem.stockDBdata.type != 0) {
+        stockItem.stockDBdata.type
+      } else {
+        null
+      }
+
       val dataValue = if (stockItem.stockDBdata.data.isNotEmpty()) {
         stockItem.stockDBdata.data
       } else {
@@ -2175,6 +2197,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         // Otherwise importing would set the current portfolio to missing portfolio json entries.
         portfolio = stockItem.stockDBdata.portfolio,
 
+        type = typeValue,
         data = dataValue,
         groupColor = groupColorValue,
         groupName = groupNameValue,
@@ -2220,13 +2243,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 // viewModelScope.launch(Dispatchers.IO) {
   fun insert(
     symbol: String,
-    portfolio: String
+    portfolio: String,
+    type: Int
   ) = scope.launch {
     if (symbol.isNotEmpty()) {
       repository.insert(
         StockDBdata(
           symbol = symbol.toUpperCase(Locale.ROOT),
-          portfolio = portfolio
+          portfolio = portfolio,
+          type = type
         )
       )
     }
@@ -2339,6 +2364,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.setPortfolio(symbol, portfolio)
   }
 
+  private fun setType(
+    symbol: String,
+    type: Int
+  ) = scope.launch {
+    repository.setType(symbol, type)
+  }
+
   private fun setData(
     symbol: String,
     data: String
@@ -2386,8 +2418,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     return groups
   }
 
-  suspend fun getStockData(symbol: String): OnlineMarketData? {
-    return stockMarketDataRepository.getStockData(symbol.toUpperCase(Locale.ROOT))
+  suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
+    return stockMarketDataRepository.getStockData(
+      StockSymbol(
+        symbol = symbol.symbol.toUpperCase(Locale.ROOT),
+        symbol.type
+      )
+    )
   }
 
   private suspend fun getStockData()
@@ -2395,7 +2432,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     // When the stock data activity is selected, query only the selected symbol.
     val selectedSymbol = SharedRepository.selectedSymbol
 
-    val symbols: List<String> = if (selectedSymbol.isNotEmpty()) {
+    val symbols: List<StockSymbol> = if (selectedSymbol.symbol.isNotEmpty()) {
       listOf(selectedSymbol)
     } else {
 //      // Get all stocks from the DB.

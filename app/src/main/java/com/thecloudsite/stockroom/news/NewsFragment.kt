@@ -112,7 +112,7 @@ class NewsFragment : Fragment() {
     stockRoomViewModel.onlineMarketDataList.observe(viewLifecycleOwner, Observer { data ->
       data?.let { onlineMarketDataList ->
         val onlineMarketData = onlineMarketDataList.find { onlineMarketDataItem ->
-          onlineMarketDataItem.symbol == symbol
+          onlineMarketDataItem.symbol.equals(symbol, true)
         }
         googleNewsQuery = if (onlineMarketData != null) {
           getName(onlineMarketData)

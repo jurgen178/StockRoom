@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "d825fa5362e1ee75aee91377ceeaddb8",
+    "identityHash": "e3c6490a4365cea8f32eabf40409f305",
     "entities": [
       {
         "tableName": "store_table",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "stock_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `note` TEXT NOT NULL, `dividend_note` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_above_note` TEXT NOT NULL, `alert_below` REAL NOT NULL, `alert_below_note` TEXT NOT NULL, PRIMARY KEY(`symbol`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `type` INTEGER NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `note` TEXT NOT NULL, `dividend_note` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_above_note` TEXT NOT NULL, `alert_below` REAL NOT NULL, `alert_below_note` TEXT NOT NULL, PRIMARY KEY(`symbol`))",
         "fields": [
           {
             "fieldPath": "symbol",
@@ -68,6 +68,12 @@
             "fieldPath": "portfolio",
             "columnName": "portfolio",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -368,7 +374,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd825fa5362e1ee75aee91377ceeaddb8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e3c6490a4365cea8f32eabf40409f305')"
     ]
   }
 }

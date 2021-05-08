@@ -79,6 +79,11 @@ limitations under the License. -->
     <item>Mindestens ein Kriterium muss erfüllt sein (||)</item>
   </string-array>
 
+  <string-array name="stock_type_items">
+    <item>Wertpapier</item>
+    <item>Krypto</item>
+  </string-array>
+
   <!-- Preference Titles -->
   <string name="title_activity_settings">Einstellungen</string>
   <string name="title_activity_calc">AI</string>

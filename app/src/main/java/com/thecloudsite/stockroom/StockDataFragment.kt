@@ -34,6 +34,8 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
@@ -818,7 +820,7 @@ class StockDataFragment : Fragment() {
     stockRoomViewModel.onlineMarketDataList.observe(viewLifecycleOwner, Observer { data ->
       data?.let { onlineMarketDataList ->
         val onlineMarketData = onlineMarketDataList.find { onlineMarketDataItem ->
-          onlineMarketDataItem.symbol == symbol
+          onlineMarketDataItem.symbol.equals(symbol, true)
         }
         if (onlineMarketData != null) {
           updateHeader(onlineMarketData)
@@ -1132,6 +1134,11 @@ class StockDataFragment : Fragment() {
         }
       }
 
+      // Setup type selection
+      binding.stockTypeSpinner.setSelection(
+        stockDBdata.type
+      )
+
       // Group color
       // color = 0 is not valid and not stored in the DB
       var color = stockDBdata.groupColor
@@ -1411,6 +1418,20 @@ class StockDataFragment : Fragment() {
           SharedRepository.selectedPortfolio.value = portfolio
         }
         true
+      }
+    }
+
+    binding.stockTypeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        stockRoomViewModel.setType(symbol, position)
       }
     }
 

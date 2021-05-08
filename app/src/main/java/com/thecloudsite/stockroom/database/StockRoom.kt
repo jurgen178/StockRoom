@@ -47,6 +47,7 @@ data class StoreData(
 data class StockDBdata(
   @PrimaryKey val symbol: String,
   var portfolio: String = "",
+  var type: Int = 0,
   var data: String = "",
   @ColumnInfo(name = "group_color") var groupColor: Int = 0,
   var note: String = "",
