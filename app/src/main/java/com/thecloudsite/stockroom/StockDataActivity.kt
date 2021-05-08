@@ -72,7 +72,12 @@ class StockDataActivity : AppCompatActivity() {
     filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
     // Query only this symbol when this activity is on.
-    SharedRepository.selectedSymbol = symbol
+    val type = if (stockRoomViewModel.stocktypes.containsKey(symbol)) {
+      stockRoomViewModel.stocktypes[symbol]!!
+    } else {
+      0
+    }
+    SharedRepository.selectedSymbol = StockSymbol(symbol = symbol, type = type)
 
     // Use MediatorLiveView to combine the assets and dividend data changes.
     val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
@@ -159,12 +164,17 @@ class StockDataActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    SharedRepository.selectedSymbol = ""
+    SharedRepository.selectedSymbol = StockSymbol(symbol = "", type = 0)
     super.onPause()
   }
 
   override fun onResume() {
-    SharedRepository.selectedSymbol = symbol
+    val type = if (stockRoomViewModel.stocktypes.containsKey(symbol)) {
+      stockRoomViewModel.stocktypes[symbol]!!
+    } else {
+      0
+    }
+    SharedRepository.selectedSymbol = StockSymbol(symbol = symbol, type = type)
     super.onResume()
   }
 
