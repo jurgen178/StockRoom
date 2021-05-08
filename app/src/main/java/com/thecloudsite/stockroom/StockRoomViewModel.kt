@@ -121,10 +121,18 @@ data class StockItemJson
   var dividends: List<DividendJson>?
 )
 
+enum class StockType(val value: Int) {
+  Standard(0),
+  Crypto(1)
+
+}
+
+fun StockTypeFromInt(value: Int) = StockType.values().first { it.value == value }
+
 data class StockSymbol
   (
-  var symbol: String,
-  val type: Int
+  val symbol: String,
+  val type: StockType
 )
 
 object SharedHandler {
@@ -185,7 +193,7 @@ object SharedRepository {
   // an error with a delay for the next online task.
   var dbDataValid = false
 
-  var selectedSymbol: StockSymbol = StockSymbol(symbol = "", type = 0)
+  var selectedSymbol: StockSymbol = StockSymbol(symbol = "", type = StockType.Standard)
   var selectedPortfolio = MutableLiveData("")
   val selectedPortfolioLiveData: LiveData<String>
     get() = selectedPortfolio
@@ -232,7 +240,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var filterMode: FilterModeTypeEnum = FilterModeTypeEnum.AndType
 
   private var portfolioSymbols: HashSet<StockSymbol> = HashSet()
-  val stocktypes: HashMap<String, Int> = hashMapOf()
+  val stocktypes: HashMap<String, StockType> = hashMapOf()
 
   private val dataStore: MutableList<StockItem> = mutableListOf()
   private val _dataStore = MutableLiveData<List<StockItem>>()
@@ -717,7 +725,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
       portfolioData.forEach { data ->
         val symbol = data.symbol
-        usedPortfolioSymbols.add(StockSymbol(symbol = symbol, type = data.type))
+        usedPortfolioSymbols.add(StockSymbol(symbol = symbol, type = StockTypeFromInt(data.type)))
 
         val dataStoreItem =
           dataStore.find { ds ->
@@ -750,12 +758,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         } == null
       }
 
+      stockDBdataPortfolios.clear()
+      stocktypes.clear()
+
       // Get the portfolios from the unfiltered list.
       stockDBdata.forEach { data ->
         stockDBdataPortfolios.add(data.portfolio)
 
         // Update the type for the stock to lookup the type when only stock symbol is passed.
-        stocktypes[data.symbol] = data.type
+        stocktypes[data.symbol] = StockTypeFromInt(data.type)
 
         // Test
 /*
@@ -2368,7 +2379,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     repository.setPortfolio(symbol, portfolio)
   }
 
-  private fun setType(
+  fun setType(
     symbol: String,
     type: Int
   ) = scope.launch {

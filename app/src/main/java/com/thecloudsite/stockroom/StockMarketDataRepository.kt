@@ -24,6 +24,7 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.enNumberStrToDouble
 import java.util.Locale
 
 // Data from the DB and online data fields.
@@ -107,9 +108,13 @@ class StockMarketDataRepository(
       return Pair(MarketState.NO_SYMBOL, "")
     }
 
-    val yahooResult = getYahooStockData(symbols)
+    val yahooResult = getYahooStockData(symbols.filter { stock ->
+      stock.type == StockType.Standard
+    })
 
-    val coingeckoResult = getCoingeckoStockData(symbols)
+    val coingeckoResult = getCoingeckoStockData(symbols.filter { stock ->
+      stock.type == StockType.Crypto
+    })
 
     return yahooResult
   }
@@ -420,21 +425,26 @@ class StockMarketDataRepository(
           }, errorMessage = "Error getting finance data."
         )
       } catch (e: Exception) {
-        errorMsg += "StockMarketDataRepository.queryStockData failed, Exception=$e\n"
-        Log.d("StockMarketDataRepository.queryStockData failed", "Exception=$e")
+        errorMsg += "StockMarketDataRepository.queryCoingeckoStockData failed, Exception=$e\n"
+        Log.d("StockMarketDataRepository.queryCoingeckoStockData failed", "Exception=$e")
         null
       }
 
       // Add the result.
       if (response != null) {
-        onlineMarketDataResultList.add(
-          OnlineMarketData(
-            symbol = response.name,
-            marketPrice = 1.23,
-            name1 = "name1",
-            name2 = "name2"
+        val tickers: List<CoingeckoTickerData> = response.tickers
+        val ticker: CoingeckoTickerData? = tickers.find { data ->
+          data.target == "BUSD"
+        }
+        if (ticker != null) {
+          onlineMarketDataResultList.add(
+            OnlineMarketData(
+              symbol = symbolsToQuery.joinToString(","),
+              marketPrice = enNumberStrToDouble(ticker.last),
+              name1 = ticker.coin_id
+            )
           )
-        )
+        }
       }
 
       // Remove the queried symbols.

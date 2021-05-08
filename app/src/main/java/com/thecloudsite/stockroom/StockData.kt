@@ -574,8 +574,50 @@ interface YahooApiMarketData {
 }
 
 @JsonClass(generateAdapter = true)
+data class CoingeckoTickerData(
+  var base: String,
+  var target: String,
+  var last: String,
+  var coin_id: String,
+)
+/*
+{
+      "base": "CTSI",
+      "target": "BUSD",
+      "market": {
+        "name": "Binance",
+        "identifier": "binance",
+        "has_trading_incentive": false
+      },
+      "last": 1.62425,
+      "volume": 24882923.551220562,
+      "converted_last": {
+        "btc": 0.00002756,
+        "eth": 0.00041019,
+        "usd": 1.62
+      },
+      "converted_volume": {
+        "btc": 685.863,
+        "eth": 10207,
+        "usd": 40343457
+      },
+      "trust_score": "green",
+      "bid_ask_spread_percentage": 0.860483,
+      "timestamp": "2021-05-08T22:16:02+00:00",
+      "last_traded_at": "2021-05-08T22:16:02+00:00",
+      "last_fetch_at": "2021-05-08T22:16:02+00:00",
+      "is_anomaly": false,
+      "is_stale": false,
+      "trade_url": "https://www.binance.com/en/trade/CTSI_BUSD?ref=37754157",
+      "token_info_url": null,
+      "coin_id": "cartesi",
+      "target_coin_id": "binance-usd"
+    },
+ */
+@JsonClass(generateAdapter = true)
 data class CoingeckoResponse(
   val name: String,
+  val tickers: List<CoingeckoTickerData>
 )
 /*
 {

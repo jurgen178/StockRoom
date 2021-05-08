@@ -32,6 +32,8 @@ import com.thecloudsite.stockroom.StockItemJson
 import com.thecloudsite.stockroom.StockMarketDataApiFactory
 import com.thecloudsite.stockroom.StockMarketDataCoingeckoApiFactory
 import com.thecloudsite.stockroom.StockMarketDataRepository
+import com.thecloudsite.stockroom.StockSymbol
+import com.thecloudsite.stockroom.StockType
 import com.thecloudsite.stockroom.utils.getRawTextFile
 import com.thecloudsite.stockroom.utils.isOnline
 import kotlinx.coroutines.CoroutineScope
@@ -273,7 +275,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
         )
 
         val symbols = assets.map { asset ->
-          asset.symbol
+          StockSymbol(symbol = asset.symbol, type = StockType.Standard)
         }
 
         var onlinedata: List<OnlineMarketData>

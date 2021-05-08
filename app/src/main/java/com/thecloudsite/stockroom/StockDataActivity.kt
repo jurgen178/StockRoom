@@ -75,7 +75,7 @@ class StockDataActivity : AppCompatActivity() {
     val type = if (stockRoomViewModel.stocktypes.containsKey(symbol)) {
       stockRoomViewModel.stocktypes[symbol]!!
     } else {
-      0
+      StockType.Standard
     }
     SharedRepository.selectedSymbol = StockSymbol(symbol = symbol, type = type)
 
@@ -164,7 +164,7 @@ class StockDataActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    SharedRepository.selectedSymbol = StockSymbol(symbol = "", type = 0)
+    SharedRepository.selectedSymbol = StockSymbol(symbol = "", type = StockType.Standard)
     super.onPause()
   }
 
@@ -172,7 +172,7 @@ class StockDataActivity : AppCompatActivity() {
     val type = if (stockRoomViewModel.stocktypes.containsKey(symbol)) {
       stockRoomViewModel.stocktypes[symbol]!!
     } else {
-      0
+      StockType.Standard
     }
     SharedRepository.selectedSymbol = StockSymbol(symbol = symbol, type = type)
     super.onResume()
