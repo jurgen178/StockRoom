@@ -23,6 +23,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
+import com.thecloudsite.stockroom.EXTRA_SYMBOL
 import com.thecloudsite.stockroom.R.drawable
 import com.thecloudsite.stockroom.StockDataActivity
 import java.util.concurrent.atomic.AtomicInteger
@@ -43,7 +44,7 @@ class NotificationFactory(
 
   private val intent = Intent(context, StockDataActivity::class.java).apply {
     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-    putExtra("symbol", symbol)
+    putExtra(EXTRA_SYMBOL, symbol)
   }
 
   private val pendingIntent: PendingIntent? = TaskStackBuilder.create(context)

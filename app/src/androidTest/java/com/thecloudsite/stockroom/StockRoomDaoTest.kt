@@ -420,7 +420,15 @@ class StockRoomDaoTest {
 
     // dividend table
     stockRoomDao.addDividend(
-      Dividend(symbol = "symbol1", amount = 13.0, type = 23, cycle = 1, account = "c", paydate = 23L, exdate = 33L)
+      Dividend(
+        symbol = "symbol1",
+        amount = 13.0,
+        type = 23,
+        cycle = 1,
+        account = "c",
+        paydate = 23L,
+        exdate = 33L
+      )
     )
 
     stockRoomDao.updateAccount("c", "d")
@@ -639,6 +647,20 @@ class StockRoomDaoTest {
     stockRoomDao.setStockGroupColor("MSFT", 123)
     val stockDBdata4 = stockRoomDao.getStockDBdata("MSFT")
     assertEquals(123, stockDBdata4.groupColor)
+  }
+
+  @Test
+  @Throws(Exception::class)
+  fun updateType() {
+    val stockDBdata1 = StockDBdata(symbol = "symbol1", type = 1)
+    stockRoomDao.insert(stockDBdata1)
+
+    val type1 = stockRoomDao.getType("symbol1")
+    assertEquals(type1, 1)
+
+    stockRoomDao.setType("symbol1", 2)
+    val type2 = stockRoomDao.getType("symbol1")
+    assertEquals(type2, 2)
   }
 
   @Test

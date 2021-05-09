@@ -120,6 +120,9 @@ import java.util.Locale
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
+const val EXTRA_SYMBOL = "com.thecloudsite.stockroom.STOCKSYMBOL"
+const val EXTRA_TYPE = "com.thecloudsite.stockroom.STOCKTYPE"
+
 // Enabled/Disabled overlay symbols not per instance
 var chartOverlaySymbolsEnableList: MutableList<Boolean> =
   MutableList(MaxChartOverlays) { true }
@@ -775,7 +778,7 @@ class StockDataFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
 
-    symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
+    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").toUpperCase(Locale.ROOT)
 
     // Setup online data every 2s for regular hours.
     onlineDataHandler = Handler(Looper.getMainLooper())
@@ -1252,7 +1255,7 @@ class StockDataFragment : Fragment() {
     assetChangeLiveData.addSource(stockRoomViewModel.onlineMarketDataList) { value ->
       if (value != null) {
         val onlineMarketData = value.find { data ->
-          data.symbol == symbol
+          data.symbol.equals(symbol, true)
         }
         if (onlineMarketData != null) {
           assetChange.onlineMarketData = onlineMarketData

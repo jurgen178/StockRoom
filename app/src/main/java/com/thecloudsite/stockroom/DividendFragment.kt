@@ -520,7 +520,7 @@ class DividendFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
 
-    symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
+    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").toUpperCase(Locale.ROOT)
 
     // Setup online data every 2s for regular hours.
     onlineDataHandler = Handler(Looper.getMainLooper())
@@ -618,7 +618,7 @@ class DividendFragment : Fragment() {
     assetChangeLiveData.addSource(stockRoomViewModel.onlineMarketDataList) { value ->
       if (value != null) {
         val onlineMarketData = value.find { data ->
-          data.symbol == symbol
+          data.symbol.equals(symbol, true)
         }
         if (onlineMarketData != null) {
           assetChange.onlineMarketData = onlineMarketData

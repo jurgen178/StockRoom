@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.thecloudsite.stockroom.EXTRA_SYMBOL
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.databinding.ActivityCalcBinding
 import java.util.Locale
@@ -41,7 +42,7 @@ class CalcActivity : AppCompatActivity() {
     val view = binding.root
     setContentView(view)
 
-    val symbolString = intent.getStringExtra("symbol")
+    val symbolString = intent.getStringExtra(EXTRA_SYMBOL)
     symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)

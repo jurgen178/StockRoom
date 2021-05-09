@@ -44,6 +44,8 @@ import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.StockItem
+import com.thecloudsite.stockroom.StockSymbol
+import com.thecloudsite.stockroom.StockType
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
 import com.thecloudsite.stockroom.database.Group

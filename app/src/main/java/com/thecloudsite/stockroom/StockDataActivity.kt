@@ -46,7 +46,7 @@ data class AccountLiveData(
 class StockDataActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityStockBinding
-  private lateinit var symbol: String
+  private lateinit var stockSymbol: StockSymbol
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
@@ -64,20 +64,23 @@ class StockDataActivity : AppCompatActivity() {
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    val symbolString = intent.getStringExtra("symbol")
-    symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
-
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
     filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
     // Query only this symbol when this activity is on.
-    val type = if (stockRoomViewModel.stocktypes.containsKey(symbol)) {
-      stockRoomViewModel.stocktypes[symbol]!!
-    } else {
-      StockType.Standard
+    val symbolString = intent.getStringExtra(EXTRA_SYMBOL)
+    var type = intent.getIntExtra(EXTRA_TYPE, -1)
+    if (symbolString != null && type == -1) {
+      type = stockRoomViewModel.getTypeSync(symbolString)
     }
-    SharedRepository.selectedSymbol = StockSymbol(symbol = symbol, type = type)
+    // Query only this symbol when this activity is on.
+    stockSymbol = StockSymbol(
+      symbol = symbolString?.toUpperCase(Locale.ROOT) ?: "",
+      type = StockTypeFromInt(type)
+    )
+
+    SharedRepository.selectedSymbol = stockSymbol
 
     // Use MediatorLiveView to combine the assets and dividend data changes.
     val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
@@ -126,21 +129,23 @@ class StockDataActivity : AppCompatActivity() {
           0 -> {
             val instance = DividendFragment.newInstance()
             instance.arguments = Bundle().apply {
-              putString("symbol", symbol)
+              putString(EXTRA_SYMBOL, stockSymbol.symbol)
+              putInt(EXTRA_TYPE, stockSymbol.type.value)
             }
             instance
           }
           1 -> {
             val instance = StockDataFragment.newInstance()
             instance.arguments = Bundle().apply {
-              putString("symbol", symbol)
+              putString(EXTRA_SYMBOL, stockSymbol.symbol)
+              putInt(EXTRA_TYPE, stockSymbol.type.value)
             }
             instance
           }
           else -> {
             val instance = NewsFragment.newInstance()
             instance.arguments = Bundle().apply {
-              putString("symbol", symbol)
+              putString(EXTRA_SYMBOL, stockSymbol.symbol)
             }
             instance
           }
@@ -158,7 +163,7 @@ class StockDataActivity : AppCompatActivity() {
       tab.text = when (position) {
         0 -> getString(R.string.dividend_headline)
         1 -> getString(R.string.data_headline)
-        else -> getString(R.string.news_headline, symbol)
+        else -> getString(R.string.news_headline, stockSymbol)
       }
     }.attach()
   }
@@ -169,12 +174,7 @@ class StockDataActivity : AppCompatActivity() {
   }
 
   override fun onResume() {
-    val type = if (stockRoomViewModel.stocktypes.containsKey(symbol)) {
-      stockRoomViewModel.stocktypes[symbol]!!
-    } else {
-      StockType.Standard
-    }
-    SharedRepository.selectedSymbol = StockSymbol(symbol = symbol, type = type)
+    SharedRepository.selectedSymbol = stockSymbol
     super.onResume()
   }
 
@@ -192,9 +192,9 @@ class StockDataActivity : AppCompatActivity() {
   fun onDelete(item: MenuItem) {
     AlertDialog.Builder(this)
       .setTitle(R.string.delete)
-      .setMessage(getString(R.string.delete_stock, symbol))
+      .setMessage(getString(R.string.delete_stock, stockSymbol))
       .setPositiveButton(R.string.delete) { dialog, _ ->
-        SharedHandler.deleteStockHandler.postValue(symbol)
+        SharedHandler.deleteStockHandler.postValue(stockSymbol.symbol)
 
         dialog.dismiss()
 
@@ -213,7 +213,7 @@ class StockDataActivity : AppCompatActivity() {
 
   fun onCalc(item: MenuItem) {
     val intent = Intent(this@StockDataActivity, CalcActivity::class.java)
-    intent.putExtra("symbol", symbol)
+    intent.putExtra(EXTRA_SYMBOL, stockSymbol.symbol)
     startActivity(intent)
   }
 }

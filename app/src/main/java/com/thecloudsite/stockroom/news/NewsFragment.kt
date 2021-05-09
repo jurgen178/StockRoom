@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.thecloudsite.stockroom.EXTRA_SYMBOL
 import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.StockRoomViewModel
 import com.thecloudsite.stockroom.databinding.FragmentNewsBinding
@@ -65,7 +66,7 @@ class NewsFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
 
-    symbol = (arguments?.getString("symbol") ?: "").toUpperCase(Locale.ROOT)
+    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").toUpperCase(Locale.ROOT)
     yahooNewsQuery = symbol
     googleNewsQuery = symbol
     nasdaqNewsQuery = symbol

@@ -695,7 +695,7 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
     if (requestCode == newSymbolActivityRequestCode && resultCode == Activity.RESULT_OK) {
       intentData?.let { data ->
-        val symbolText = data.getStringExtra(AddActivity.EXTRA_SYMBOL)
+        val symbolText = data.getStringExtra(EXTRA_SYMBOL)
         if (symbolText != null) {
           val symbols = symbolText.split("[ ,;\r\n\t]".toRegex())
 
@@ -709,7 +709,7 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
             }
 
           val portfolio = SharedRepository.selectedPortfolio.value ?: ""
-          val type: Int = data.getIntExtra(AddActivity.EXTRA_TYPE, 0)
+          val type: Int = data.getIntExtra(EXTRA_TYPE, 0)
 
           symbolList.forEach { symbol ->
             stockRoomViewModel.insert(symbol = symbol, portfolio = portfolio, type = type)

@@ -79,9 +79,9 @@ limitations under the License. -->
     <item>Mindestens ein Kriterium muss erfüllt sein (||)</item>
   </string-array>
 
-  <string-array name="stock_type_items">
-    <item>Wertpapier</item>
-    <item>Krypto</item>
+  <string-array name="stocktype_items">
+    <item>Aktien</item>
+    <item>Kryptowährung</item>
   </string-array>
 
   <!-- Preference Titles -->
@@ -310,6 +310,7 @@ limitations under the License. -->
   <string name="standard_portfolio">Standard-Portfolio</string>
   <string name="menu_portfolio_title">Portfolio auswählen</string>
   <string name="portfolio_header">Portfolio</string>
+  <string name="stocktype_header">Wertpapiertyp</string>
   <string name="add_portfolio">Portfolio hinzufügen</string>
   <string name="rename_portfolio">Portfolio umbenennen</string>
   <string name="rename_portfolio_header">Portfolio \'%1$s\' umbenennen</string>

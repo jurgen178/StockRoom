@@ -93,7 +93,8 @@ open class StockRoomBaseFragment : Fragment() {
 
   fun clickListenerSymbol(stockItem: StockItem) {
     val intent = Intent(context, StockDataActivity::class.java)
-    intent.putExtra("symbol", stockItem.onlineMarketData.symbol)
+    intent.putExtra(EXTRA_SYMBOL, stockItem.onlineMarketData.symbol)
+    intent.putExtra(EXTRA_TYPE, stockItem.stockDBdata.type)
     //stockRoomViewModel.runOnlineTaskNow()
     startActivity(intent)
   }

@@ -240,7 +240,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
   private var filterMode: FilterModeTypeEnum = FilterModeTypeEnum.AndType
 
   private var portfolioSymbols: HashSet<StockSymbol> = HashSet()
-  val stocktypes: HashMap<String, StockType> = hashMapOf()
 
   private val dataStore: MutableList<StockItem> = mutableListOf()
   private val _dataStore = MutableLiveData<List<StockItem>>()
@@ -758,15 +757,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         } == null
       }
 
-      stockDBdataPortfolios.clear()
-      stocktypes.clear()
-
       // Get the portfolios from the unfiltered list.
       stockDBdata.forEach { data ->
         stockDBdataPortfolios.add(data.portfolio)
-
-        // Update the type for the stock to lookup the type when only stock symbol is passed.
-        stocktypes[data.symbol] = StockTypeFromInt(data.type)
 
         // Test
 /*
@@ -2377,6 +2370,18 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     portfolio: String
   ) = scope.launch {
     repository.setPortfolio(symbol, portfolio)
+  }
+
+  fun getTypeSync(symbol: String)
+      : Int {
+    var type: Int?
+    runBlocking {
+      withContext(Dispatchers.IO) {
+        type = repository.getType(symbol)
+      }
+    }
+
+    return type ?: 0
   }
 
   fun setType(

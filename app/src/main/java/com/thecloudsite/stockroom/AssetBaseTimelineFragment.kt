@@ -174,7 +174,7 @@ open class AssetBaseTimelineFragment : Fragment() {
 
   private fun clickListenerCardItem(timelineElement: AssetTimelineElement) {
     val intent = Intent(context, StockDataActivity::class.java)
-    intent.putExtra("symbol", timelineElement.symbol)
+    intent.putExtra(EXTRA_SYMBOL, timelineElement.symbol)
     //stockRoomViewModel.runOnlineTaskNow()
     startActivity(intent)
   }

@@ -164,7 +164,7 @@ class StockRoomTreemapFragment : Fragment() {
     treemapView.setTreeModel(treeModel)
     treemapView.setOnClickCallback { symbol ->
       val intent = Intent(context, StockDataActivity::class.java)
-      intent.putExtra("symbol", symbol)
+      intent.putExtra(EXTRA_SYMBOL, symbol)
       startActivity(intent)
     }
 

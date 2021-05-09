@@ -432,19 +432,15 @@ class StockMarketDataRepository(
 
       // Add the result.
       if (response != null) {
-        val tickers: List<CoingeckoTickerData> = response.tickers
-        val ticker: CoingeckoTickerData? = tickers.find { data ->
-          data.target == "BUSD"
-        }
-        if (ticker != null) {
-          onlineMarketDataResultList.add(
-            OnlineMarketData(
-              symbol = symbolsToQuery.joinToString(","),
-              marketPrice = enNumberStrToDouble(ticker.last),
-              name1 = ticker.coin_id
-            )
+        val current_price = response.market_data.current_price.usd
+//        val image = response.image.small
+        onlineMarketDataResultList.add(
+          OnlineMarketData(
+            symbol = symbolsToQuery.joinToString(","),
+            marketPrice = enNumberStrToDouble(current_price),
+            name1 = response.name
           )
-        }
+        )
       }
 
       // Remove the queried symbols.

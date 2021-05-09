@@ -274,6 +274,9 @@ interface StockRoomDao {
     portfolio: String
   )
 
+  @Query("SELECT type FROM stock_table WHERE symbol = :symbol")
+  fun getType(symbol: String): Int
+
   @Query("UPDATE stock_table SET type = :type WHERE symbol = :symbol")
   fun setType(
     symbol: String,

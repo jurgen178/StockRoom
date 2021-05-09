@@ -100,6 +100,12 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun getType(symbol: String): Int {
+    return stockRoomDao.getType(symbol)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun setType(
     symbol: String,
     type: Int

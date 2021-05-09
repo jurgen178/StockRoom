@@ -574,63 +574,120 @@ interface YahooApiMarketData {
 }
 
 @JsonClass(generateAdapter = true)
-data class CoingeckoTickerData(
-  var base: String,
-  var target: String,
-  var last: String,
-  var coin_id: String,
+data class CoingeckoImage(
+  var small: String,
 )
-/*
-{
-      "base": "CTSI",
-      "target": "BUSD",
-      "market": {
-        "name": "Binance",
-        "identifier": "binance",
-        "has_trading_incentive": false
-      },
-      "last": 1.62425,
-      "volume": 24882923.551220562,
-      "converted_last": {
-        "btc": 0.00002756,
-        "eth": 0.00041019,
-        "usd": 1.62
-      },
-      "converted_volume": {
-        "btc": 685.863,
-        "eth": 10207,
-        "usd": 40343457
-      },
-      "trust_score": "green",
-      "bid_ask_spread_percentage": 0.860483,
-      "timestamp": "2021-05-08T22:16:02+00:00",
-      "last_traded_at": "2021-05-08T22:16:02+00:00",
-      "last_fetch_at": "2021-05-08T22:16:02+00:00",
-      "is_anomaly": false,
-      "is_stale": false,
-      "trade_url": "https://www.binance.com/en/trade/CTSI_BUSD?ref=37754157",
-      "token_info_url": null,
-      "coin_id": "cartesi",
-      "target_coin_id": "binance-usd"
-    },
- */
+
+@JsonClass(generateAdapter = true)
+data class CoingeckoCurrentPrice(
+  var usd: String,
+)
+
+@JsonClass(generateAdapter = true)
+data class CoingeckoMarketData(
+  var current_price: CoingeckoCurrentPrice,
+)
+
 @JsonClass(generateAdapter = true)
 data class CoingeckoResponse(
   val name: String,
-  val tickers: List<CoingeckoTickerData>
+  //val description: String,
+  //val image: CoingeckoImage,
+  val market_data: CoingeckoMarketData,
 )
 /*
 {
+{
+  "id": "cartesi",
+  "symbol": "ctsi",
   "name": "Cartesi",
-  "tickers": [
-    {
+  "asset_platform_id": "ethereum",
+  "platforms": {
+    "ethereum": "0x491604c0fdf08347dd1fa4ee062a822a5dd06b5d",
+    "polygon-pos": "0x2727ab1c2d22170abc9b595177b2d5c6e1ab7b7b"
+  },
+  "block_time_in_minutes": 0,
+  "hashing_algorithm": null,
+  "categories": [
+    "Infrastructure"
+  ],
+  "public_notice": null,
+  "additional_notices": [],
+  "description": {
+    "en": "What is Cartesi?\r\nEase of Adoption: Developers can work in a familiar environment with no artificial limitations and with access to all their favorite tools;\r\n\r\nPortability: Cartesi aims to make DApps portable across the most important public blockchains that support smart contracts;\r\n\r\nPrivacy: DApp states can be kept private among application participants.\r\n\r\nCTSI Overview and Use Cases\r\n\r\nCTSI is a utility token that works as a crypto-fuel for Noether. \r\nStakers receive CTSI rewards by staking their tokens and participating in the network. \r\nNode runners are selected randomly according to a PoS system and gain the right to create the next block. \r\nUsers of the network pay CTSI fees to insert data on the side-chain. \r\nCTSI will also be used for DApps to outsource the execution of verifiable and enforceable computation to entities running Descartes nodes. \r\n"
+  },
+  "links": {
+    "homepage": [
+      "https://cartesi.io/",
+      "",
+      ""
+    ],
+    "blockchain_site": [
+      "https://etherscan.io/token/0x491604c0fdf08347dd1fa4ee062a822a5dd06b5d",
+      "https://ethplorer.io/address/0x491604c0fdf08347dd1fa4ee062a822a5dd06b5d",
+      "https://explorer.cartesi.io",
+      "https://explorer-mainnet.maticvigil.com/address/0x2727Ab1c2D22170ABc9b595177B2D5C6E1Ab7B7B/transactions",
+      ""
+    ],
+    "official_forum_url": [
+      "",
+      "",
+      ""
+    ],
+    "chat_url": [
+      "https://discordapp.com/invite/Pt2NrnS",
+      "https://www.linkedin.com/company/cartesiproject/",
+      ""
+    ],
+    "announcement_url": [
+      "https://medium.com/cartesi",
+      ""
+    ],
+    "twitter_screen_name": "cartesiproject",
+    "facebook_username": "cartesiproject",
+    "bitcointalk_thread_identifier": 5211981,
+    "telegram_channel_identifier": "cartesiproject",
+    "subreddit_url": "https://www.reddit.com/r/cartesi/",
+    "repos_url": {
+      "github": [
+        "https://github.com/cartesi/machine-emulator",
+        "https://github.com/cartesi/arbitration-dlib",
+        "https://github.com/cartesi/machine-solidity-step"
+      ],
+      "bitbucket": []
+    }
+  },
+  "image": {
+    "thumb": "https://assets.coingecko.com/coins/images/11038/thumb/cartesi.png?1592288021",
+    "small": "https://assets.coingecko.com/coins/images/11038/small/cartesi.png?1592288021",
+    "large": "https://assets.coingecko.com/coins/images/11038/large/cartesi.png?1592288021"
+  },
+  "country_origin": "SG",
+  "genesis_date": null,
+  "contract_address": "0x491604c0fdf08347dd1fa4ee062a822a5dd06b5d",
+  "sentiment_votes_up_percentage": 91.11,
+  "sentiment_votes_down_percentage": 8.89,
+  "market_cap_rank": 154,
+  "coingecko_rank": 146,
+  "coingecko_score": 41.984,
+  "developer_score": 39.727,
+  "community_score": 31.926,
+  "liquidity_score": 55.088,
+  "public_interest_score": 0,
+  "market_data": {
+    "current_price": {
+      "aed": 5.87,
+      "ars": 149.73,
  */
 
 interface CoingeckoApiMarketData {
-  // https://api.coingecko.com/api/v3/coins/cartesi/tickers
-  @GET("{symbol}/tickers")
+  // https://api.coingecko.com/api/v3/coins/cartesi?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false
+  @GET("{symbol}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false")
   fun getStockDataAsync(
-    @Path("symbol") symbol: String
+    @Path(
+      value = "symbol"
+    )
+    symbol: String
   ): Deferred<Response<CoingeckoResponse>>
 }
 

@@ -39,11 +39,6 @@ class AddActivity : AppCompatActivity() {
   private lateinit var addView: EditText
   private lateinit var stockRoomViewModel: StockRoomViewModel
 
-  companion object {
-    const val EXTRA_SYMBOL = "com.thecloudsite.stockroom.ADDSYMBOL"
-    const val EXTRA_TYPE = "com.thecloudsite.stockroom.STOCKTYPE"
-  }
-
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
