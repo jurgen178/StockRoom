@@ -80,7 +80,7 @@ limitations under the License. -->
   </string-array>
 
   <string-array name="stocktype_items">
-    <item>Aktien</item>
+    <item>Aktie</item>
     <item>Kryptowährung</item>
   </string-array>
 

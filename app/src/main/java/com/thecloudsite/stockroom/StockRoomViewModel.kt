@@ -124,15 +124,14 @@ data class StockItemJson
 enum class StockType(val value: Int) {
   Standard(0),
   Crypto(1)
-
 }
 
 fun StockTypeFromInt(value: Int) = StockType.values().first { it.value == value }
 
 data class StockSymbol
   (
-  val symbol: String,
-  val type: StockType
+  val symbol: String = "",
+  val type: StockType = StockType.Standard
 )
 
 object SharedHandler {
@@ -193,7 +192,7 @@ object SharedRepository {
   // an error with a delay for the next online task.
   var dbDataValid = false
 
-  var selectedSymbol: StockSymbol = StockSymbol(symbol = "", type = StockType.Standard)
+  var selectedSymbol: StockSymbol = StockSymbol()
   var selectedPortfolio = MutableLiveData("")
   val selectedPortfolioLiveData: LiveData<String>
     get() = selectedPortfolio

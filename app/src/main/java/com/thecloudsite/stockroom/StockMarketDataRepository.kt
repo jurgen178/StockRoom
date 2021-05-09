@@ -263,46 +263,8 @@ class StockMarketDataRepository(
 
       coingeckoMarketData.postValue(onlineMarketDataResultList)
 
-      // Stocks could be from different markets.
-      // Check if stocks are from markets that have regular hours first, then post market,
-      // and then pre market hours.
-      val marketState: MarketState = when {
-        onlineMarketDataResultList.find { data ->
-          data.marketState == MarketState.REGULAR.value
-        } != null -> {
-          MarketState.REGULAR
-        }
-        onlineMarketDataResultList.find { data ->
-          data.marketState == MarketState.POST.value
-        } != null -> {
-          MarketState.POST
-        }
-        onlineMarketDataResultList.find { data ->
-          data.marketState == MarketState.POSTPOST.value
-        } != null -> {
-          MarketState.POSTPOST
-        }
-        onlineMarketDataResultList.find { data ->
-          data.marketState == MarketState.CLOSED.value
-        } != null -> {
-          MarketState.CLOSED
-        }
-        onlineMarketDataResultList.find { data ->
-          data.marketState == MarketState.PRE.value
-        } != null -> {
-          MarketState.PRE
-        }
-        onlineMarketDataResultList.find { data ->
-          data.marketState == MarketState.PREPRE.value
-        } != null -> {
-          MarketState.PREPRE
-        }
-        else -> {
-          MarketState.UNKNOWN
-        }
-      }
-
-      return Pair(marketState, "")
+      // Crypto is 24h.
+      return Pair(MarketState.REGULAR, "")
     }
 
     coingeckoMarketData.postValue(emptyList())
@@ -399,27 +361,18 @@ class StockMarketDataRepository(
     symbols: List<StockSymbol>
   ): Pair<List<OnlineMarketData>, String> {
 
-    // Get blockSize symbol data at a time.
-    val blockSize = 1
     var errorMsg = ""
 
-    // Get online data in blocks.
+    // Get online data.
     val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
-    var remainingSymbolsToQuery = symbols
 
-    do {
-      // Get the first number of blockSize symbols.
-      val symbolsToQuery: List<String> = remainingSymbolsToQuery
-        .take(blockSize)
-        .map { symbol ->
-          symbol.symbol
-        }
+    symbols.forEach { stockSymbol ->
 
       val response: CoingeckoResponse? = try {
         safeApiCall(
           call = {
             updateCounter()
-            api.getStockDataAsync(symbolsToQuery.joinToString(",").toLowerCase(Locale.ROOT))
+            api.getStockDataAsync(stockSymbol.symbol.toLowerCase(Locale.ROOT))
               .await()
           }, errorMessage = "Error getting finance data."
         )
@@ -433,7 +386,7 @@ class StockMarketDataRepository(
       if (response != null) {
         onlineMarketDataResultList.add(
           OnlineMarketData(
-            symbol = symbolsToQuery.joinToString(","),
+            symbol = stockSymbol.symbol,
             name1 = response.name,
             marketPrice = response.market_data.current_price.usd,
             marketChange = response.market_data.price_change_24h,
@@ -442,11 +395,7 @@ class StockMarketDataRepository(
           )
         )
       }
-
-      // Remove the queried symbols.
-      remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
-
-    } while (remainingSymbolsToQuery.isNotEmpty())
+    }
 
     return Pair(onlineMarketDataResultList, errorMsg)
   }

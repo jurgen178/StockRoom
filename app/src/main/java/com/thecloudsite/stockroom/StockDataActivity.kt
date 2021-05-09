@@ -169,7 +169,7 @@ class StockDataActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    SharedRepository.selectedSymbol = StockSymbol(symbol = "", type = StockType.Standard)
+    SharedRepository.selectedSymbol = StockSymbol()
     super.onPause()
   }
 

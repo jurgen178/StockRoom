@@ -242,6 +242,7 @@ class StockDataFragment : Fragment() {
   private var stockDataEntries: List<StockDataEntry>? = null
   private var assetTimeEntries: List<AssetsTimeData> = emptyList()
   private var symbol: String = ""
+  private var type: StockType = StockType.Standard
 
   private var isOnline: Boolean = false
 
@@ -779,6 +780,7 @@ class StockDataFragment : Fragment() {
   ): View {
 
     symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").toUpperCase(Locale.ROOT)
+    type = StockTypeFromInt(arguments?.getInt(EXTRA_TYPE, 0) ?: 0)
 
     // Setup online data every 2s for regular hours.
     onlineDataHandler = Handler(Looper.getMainLooper())
@@ -827,7 +829,13 @@ class StockDataFragment : Fragment() {
         }
         if (onlineMarketData != null) {
           updateHeader(onlineMarketData)
-          onlineDataAdapter.updateData(onlineMarketData)
+          onlineDataAdapter.updateData(
+            StockSymbol(
+              symbol = symbol,
+              type = type
+            ),
+            onlineMarketData
+          )
 
           // Update charts
           val timeInSecondsNow = ZonedDateTime.now()
@@ -1032,6 +1040,10 @@ class StockDataFragment : Fragment() {
         "Yahoo Daily Gainers" to LinkListEntry(
           linkType = LinkType.WebsiteGeneralType,
           link = "https://finance.yahoo.com/gainers"
+        ),
+        "Yahoo Cryptocurrencies" to LinkListEntry(
+          linkType = LinkType.WebsiteGeneralType,
+          link = "https://finance.yahoo.com/cryptocurrencies"
         )
       )
 

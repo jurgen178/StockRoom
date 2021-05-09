@@ -66,7 +66,7 @@ class OnlineDataAdapter internal constructor(
   private val inflater: LayoutInflater = LayoutInflater.from(context)
   private var data = mutableListOf<OnlineData>()
 
-  private var symbol = ""
+  private var stockSymbol: StockSymbol = StockSymbol()
 
   private var detailViewClickCounter = 0
 
@@ -219,7 +219,7 @@ class OnlineDataAdapter internal constructor(
           val onlineRawJsonData: String
           runBlocking {
             withContext(Dispatchers.IO) {
-              onlineRawJsonData = stockRawMarketDataRepository.getStockRawData(symbol)
+              onlineRawJsonData = stockRawMarketDataRepository.getStockRawData(stockSymbol.symbol)
             }
           }
 
@@ -280,7 +280,7 @@ class OnlineDataAdapter internal constructor(
 
           // Display the data.
           android.app.AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.data_provider_details, symbol))
+            .setTitle(context.getString(R.string.data_provider_details, stockSymbol))
             .setMessage(htmlText)
             .setPositiveButton(R.string.ok) { _, _ ->
             }
@@ -387,69 +387,70 @@ class OnlineDataAdapter internal constructor(
     return SpannableStringBuilder().append(rangeStr)
   }
 
-  fun updateData(onlineMarketData: OnlineMarketData) {
+  fun updateData(stockSymbol: StockSymbol, onlineMarketData: OnlineMarketData) {
     data.clear()
 
-    symbol = onlineMarketData.symbol
+    this.stockSymbol = stockSymbol
 
     // val separatorChar: Char = DecimalFormatSymbols.getInstance().decimalSeparator
 
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
-        text = formatDouble2To4(onlineMarketData.regularMarketPreviousClose)
+    if (stockSymbol.type == StockType.Standard) {
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),
+          text = formatDouble2To4(onlineMarketData.regularMarketPreviousClose)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_regularMarketOpen),
-        text = formatDouble2To4(onlineMarketData.regularMarketOpen)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_regularMarketOpen),
+          text = formatDouble2To4(onlineMarketData.regularMarketOpen)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_fiftyDayAverage),
-        text = formatDouble2To4(onlineMarketData.fiftyDayAverage)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_fiftyDayAverage),
+          text = formatDouble2To4(onlineMarketData.fiftyDayAverage)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
-        text = formatDouble2To4(onlineMarketData.twoHundredDayAverage)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_twoHundredDayAverage),
+          text = formatDouble2To4(onlineMarketData.twoHundredDayAverage)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
-        text = convertRangeStr(onlineMarketData.fiftyTwoWeekRange)
-        //onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_fiftyTwoWeekRange),
+          text = convertRangeStr(onlineMarketData.fiftyTwoWeekRange)
+          //onlineMarketData.fiftyTwoWeekRange.replace('.', separatorChar)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_regularMarketDayRange),
-        text = convertRangeStr(onlineMarketData.regularMarketDayRange)
-        //onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_regularMarketDayRange),
+          text = convertRangeStr(onlineMarketData.regularMarketDayRange)
+          //onlineMarketData.regularMarketDayRange.replace('.', separatorChar)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_regularMarketVolume),
-        text = formatInt(onlineMarketData.regularMarketVolume).first
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_regularMarketVolume),
+          text = formatInt(onlineMarketData.regularMarketVolume).first
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_sharesOutstanding),
-        text = formatInt(onlineMarketData.sharesOutstanding).first
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_sharesOutstanding),
+          text = formatInt(onlineMarketData.sharesOutstanding).first
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_marketCap),
-        text = formatInt(onlineMarketData.marketCap).first
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_marketCap),
+          text = formatInt(onlineMarketData.marketCap).first
+        )
       )
-    )
 
 /*
     data.add(
@@ -468,81 +469,82 @@ class OnlineDataAdapter internal constructor(
     )
  */
 
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
-        text = formatDoubleNegInRed2To4(onlineMarketData.epsTrailingTwelveMonths)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_epsTrailingTwelveMonths),
+          text = formatDoubleNegInRed2To4(onlineMarketData.epsTrailingTwelveMonths)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_epsCurrentYear),
-        text = formatDoubleNegInRed2To4(onlineMarketData.epsCurrentYear)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_epsCurrentYear),
+          text = formatDoubleNegInRed2To4(onlineMarketData.epsCurrentYear)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_epsForward),
-        text = formatDoubleNegInRed2To4(onlineMarketData.epsForward)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_epsForward),
+          text = formatDoubleNegInRed2To4(onlineMarketData.epsForward)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_trailingPE),
-        text = formatDoubleNegInRed2To4(onlineMarketData.trailingPE)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_trailingPE),
+          text = formatDoubleNegInRed2To4(onlineMarketData.trailingPE)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_priceEpsCurrentYear),
-        text = formatDoubleNegInRed2To4(onlineMarketData.priceEpsCurrentYear)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_priceEpsCurrentYear),
+          text = formatDoubleNegInRed2To4(onlineMarketData.priceEpsCurrentYear)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_forwardPE),
-        text = formatDoubleNegInRed2To4(onlineMarketData.forwardPE)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_forwardPE),
+          text = formatDoubleNegInRed2To4(onlineMarketData.forwardPE)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_bookValue),
-        text = formatDoubleNegInRed2To4(onlineMarketData.bookValue)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_bookValue),
+          text = formatDoubleNegInRed2To4(onlineMarketData.bookValue)
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_priceToBook),
-        text = formatDoubleNegInRed2(onlineMarketData.priceToBook)
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_priceToBook),
+          text = formatDoubleNegInRed2(onlineMarketData.priceToBook)
+        )
       )
-    )
 
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_market),
-        text = SpannableStringBuilder().bold {
-          append(
-            onlineMarketData.market.replace('_', ' ')
-          )
-        }
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_market),
+          text = SpannableStringBuilder().bold {
+            append(
+              onlineMarketData.market.replace('_', ' ')
+            )
+          }
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_fullExchangeName),
-        text = SpannableStringBuilder().bold { append(onlineMarketData.fullExchangeName) }
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_fullExchangeName),
+          text = SpannableStringBuilder().bold { append(onlineMarketData.fullExchangeName) }
+        )
       )
-    )
-    data.add(
-      OnlineData(
-        desc = context.getString(R.string.onlinedata_marketState),
-        text = SpannableStringBuilder().bold {
-          append(
-            getMarketText(context, onlineMarketData.marketState)
-          )
-        }
+      data.add(
+        OnlineData(
+          desc = context.getString(R.string.onlinedata_marketState),
+          text = SpannableStringBuilder().bold {
+            append(
+              getMarketText(context, onlineMarketData.marketState)
+            )
+          }
+        )
       )
-    )
+    }
 
     notifyDataSetChanged()
   }
