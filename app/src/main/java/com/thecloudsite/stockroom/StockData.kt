@@ -585,12 +585,14 @@ data class CoingeckoDescription(
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoCurrentPrice(
-  var usd: String,
+  var usd: Double,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoMarketData(
   var current_price: CoingeckoCurrentPrice,
+  var price_change_24h: Double,
+  var price_change_percentage_24h: Double,
 )
 
 @JsonClass(generateAdapter = true)
@@ -683,6 +685,11 @@ data class CoingeckoResponse(
     "current_price": {
       "aed": 5.87,
       "ars": 149.73,
+
+
+    "price_change_24h": 0.498375,
+    "price_change_percentage_24h": 46.52526,
+
  */
 
 interface CoingeckoApiMarketData {

@@ -24,7 +24,6 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
-import com.thecloudsite.stockroom.utils.enNumberStrToDouble
 import java.util.Locale
 
 // Data from the DB and online data fields.
@@ -432,14 +431,14 @@ class StockMarketDataRepository(
 
       // Add the result.
       if (response != null) {
-        val current_price = response.market_data.current_price.usd
-        val imageUrl = response.image.small
         onlineMarketDataResultList.add(
           OnlineMarketData(
             symbol = symbolsToQuery.joinToString(","),
-            marketPrice = enNumberStrToDouble(current_price),
             name1 = response.name,
-            coinImageUrl = imageUrl
+            marketPrice = response.market_data.current_price.usd,
+            marketChange = response.market_data.price_change_24h,
+            marketChangePercent = response.market_data.price_change_percentage_24h,
+            coinImageUrl = response.image.small,
           )
         )
       }
