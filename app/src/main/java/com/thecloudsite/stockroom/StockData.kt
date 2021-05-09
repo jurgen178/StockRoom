@@ -579,6 +579,11 @@ data class CoingeckoImage(
 )
 
 @JsonClass(generateAdapter = true)
+data class CoingeckoDescription(
+  var en: String,
+)
+
+@JsonClass(generateAdapter = true)
 data class CoingeckoCurrentPrice(
   var usd: String,
 )
@@ -591,8 +596,8 @@ data class CoingeckoMarketData(
 @JsonClass(generateAdapter = true)
 data class CoingeckoResponse(
   val name: String,
-  //val description: String,
-  //val image: CoingeckoImage,
+  val description: CoingeckoDescription,
+  val image: CoingeckoImage,
   val market_data: CoingeckoMarketData,
 )
 /*

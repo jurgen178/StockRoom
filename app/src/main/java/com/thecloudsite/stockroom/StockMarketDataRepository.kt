@@ -433,12 +433,13 @@ class StockMarketDataRepository(
       // Add the result.
       if (response != null) {
         val current_price = response.market_data.current_price.usd
-//        val image = response.image.small
+        val imageUrl = response.image.small
         onlineMarketDataResultList.add(
           OnlineMarketData(
             symbol = symbolsToQuery.joinToString(","),
             marketPrice = enNumberStrToDouble(current_price),
-            name1 = response.name
+            name1 = response.name,
+            coinImageUrl = imageUrl
           )
         )
       }
