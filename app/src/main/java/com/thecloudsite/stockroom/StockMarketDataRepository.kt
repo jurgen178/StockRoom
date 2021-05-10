@@ -107,15 +107,28 @@ class StockMarketDataRepository(
       return Pair(MarketState.NO_SYMBOL, "")
     }
 
-    val yahooResult = getYahooStockData(symbols.filter { stock ->
+    var marketState = MarketState.NO_SYMBOL
+    var msg = ""
+
+    val standardList = symbols.filter { stock ->
       stock.type == StockType.Standard
-    })
+    }
+    if (standardList.isNotEmpty()) {
+      val yahooResult = getYahooStockData(standardList)
+      marketState = yahooResult.first
+      msg += yahooResult.second
+    }
 
-    val coingeckoResult = getCoingeckoStockData(symbols.filter { stock ->
+    val cryptoList = symbols.filter { stock ->
       stock.type == StockType.Crypto
-    })
+    }
+    if (cryptoList.isNotEmpty()) {
+      val coingeckoResult = getCoingeckoStockData(cryptoList)
+      marketState = coingeckoResult.first
+      msg += coingeckoResult.second
+    }
 
-    return yahooResult
+    return Pair(marketState, msg)
   }
 
   private suspend fun getYahooStockData(symbols: List<StockSymbol>): Pair<MarketState, String> {

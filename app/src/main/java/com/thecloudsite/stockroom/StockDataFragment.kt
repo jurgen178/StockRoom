@@ -878,6 +878,8 @@ class StockDataFragment : Fragment() {
       }
     })
 
+    //type = StockTypeFromInt(stockRoomViewModel.getTypeSync(symbol))
+
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
@@ -893,11 +895,13 @@ class StockDataFragment : Fragment() {
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
       if (stockChartData != null) {
-        chartDataItems[stockChartData.symbol] = stockChartData.stockDataEntries
+        if (stockChartData.stockDataEntries?.isNotEmpty() == true) {
+          chartDataItems[stockChartData.symbol] = stockChartData.stockDataEntries
 
-        stockDataEntries = stockChartData.stockDataEntries
-        setupCharts(stockViewRange, stockViewMode)
-        loadCharts(stockViewRange, stockViewMode)
+          stockDataEntries = stockChartData.stockDataEntries
+          setupCharts(stockViewRange, stockViewMode)
+          loadCharts(stockViewRange, stockViewMode)
+        }
       }
     })
 
@@ -1458,7 +1462,7 @@ class StockDataFragment : Fragment() {
         position: Int,
         id: Long
       ) {
-        stockRoomViewModel.setType(symbol, position)
+        //stockRoomViewModel.setType(symbol, position)
       }
     }
 
@@ -2358,6 +2362,8 @@ class StockDataFragment : Fragment() {
 
   override fun onPause() {
     updateAlerts()
+    updateType()
+
     onlineDataHandler.removeCallbacks(onlineDataTask)
     super.onPause()
   }
@@ -2660,6 +2666,13 @@ class StockDataFragment : Fragment() {
       if (stockDBdata.alertBelow != alertBelow || stockDBdata.alertBelowNote != alertBelowNote) {
         stockRoomViewModel.updateAlertBelowSync(symbol, alertBelow, alertBelowNote)
       }
+    }
+  }
+
+  private fun updateType() {
+    val selectedType = binding.stockTypeSpinner.selectedItemPosition
+    if (type.value != selectedType) {
+      stockRoomViewModel.setType(symbol, selectedType)
     }
   }
 

@@ -26,13 +26,11 @@ import java.time.ZonedDateTime
 
 class StockChartDataViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val stockYahooChartDataRepository: StockYahooChartDataRepository =
-    StockYahooChartDataRepository { StockYahooChartDataApiFactory.yahooApi }
+  private val stockChartDataRepository: StockChartDataRepository =
+    StockChartDataRepository({ StockYahooChartDataApiFactory.yahooApi },
+      { com.thecloudsite.stockroom.StockCoingeckoChartDataApiFactory.coingeckoApi })
 
-  private val stockCoingeckoChartDataRepository: StockCoingeckoChartDataRepository =
-    StockCoingeckoChartDataRepository { StockCoingeckoChartDataApiFactory.coingeckoApi }
-
-  val chartData: LiveData<StockChartData> = stockYahooChartDataRepository.chartData
+  val chartData: LiveData<StockChartData> = stockChartDataRepository.chartData
 
   private fun getYahooChartData(
     stockSymbol: StockSymbol,
@@ -40,7 +38,7 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
     range: String
   ) {
     viewModelScope.launch {
-      stockYahooChartDataRepository.getChartData(stockSymbol, interval, range)
+      stockChartDataRepository.getYahooChartData(stockSymbol, interval, range)
     }
   }
 
@@ -49,7 +47,7 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
     days: Int
   ) {
     viewModelScope.launch {
-      stockCoingeckoChartDataRepository.getChartData(stockSymbol, "usd", days)
+      stockChartDataRepository.getCoingeckoChartData(stockSymbol, "usd", days)
     }
   }
 

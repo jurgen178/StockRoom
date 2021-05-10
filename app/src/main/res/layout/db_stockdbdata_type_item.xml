@@ -41,7 +41,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_data"
+      android:id="@+id/db_stockdbdata_type"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline2"
@@ -57,7 +57,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_groupColor"
+      android:id="@+id/db_stockdbdata_data"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline3"
@@ -73,7 +73,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_note"
+      android:id="@+id/db_stockdbdata_groupColor"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline4"
@@ -89,7 +89,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_dividendNote"
+      android:id="@+id/db_stockdbdata_note"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline5"
@@ -105,7 +105,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_annualDividendRate"
+      android:id="@+id/db_stockdbdata_dividendNote"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline6"
@@ -121,7 +121,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_alertAbove"
+      android:id="@+id/db_stockdbdata_annualDividendRate"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline7"
@@ -137,7 +137,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_alertAboveNote"
+      android:id="@+id/db_stockdbdata_alertAbove"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline8"
@@ -153,7 +153,7 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_alertBelow"
+      android:id="@+id/db_stockdbdata_alertAboveNote"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline9"
@@ -169,11 +169,27 @@
       />
 
   <TextView
-      android:id="@+id/db_stockdbdata_alertBelowNote"
+      android:id="@+id/db_stockdbdata_alertBelow"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline10"
       app:layout_constraintEnd_toStartOf="@id/guideline11"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <View
+      style="@style/db_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline11"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/db_stockdbdata_alertBelowNote"
+      style="@style/db_item_style"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline11"
+      app:layout_constraintEnd_toStartOf="@id/guideline12"
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
@@ -206,7 +222,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="400dp"
+      app:layout_constraintGuide_begin="360dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -214,7 +230,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="650dp"
+      app:layout_constraintGuide_begin="500dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -222,7 +238,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="900dp"
+      app:layout_constraintGuide_begin="750dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -246,7 +262,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1300dp"
+      app:layout_constraintGuide_begin="1200dp"
       />
 
   <androidx.constraintlayout.widget.Guideline
@@ -262,7 +278,15 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_begin="1600dp"
+      app:layout_constraintGuide_begin="1500dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline12"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="1700dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

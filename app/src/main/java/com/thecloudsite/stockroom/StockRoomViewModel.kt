@@ -1467,7 +1467,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         if (jsonObj.has("type")) {
           type = jsonObj.getInt("type")
-          setType(symbol = symbol, type = type)
         }
 
         insert(symbol = symbol, portfolio = portfolio.trim(), type = type)

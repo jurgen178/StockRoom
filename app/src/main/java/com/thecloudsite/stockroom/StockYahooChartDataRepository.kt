@@ -21,17 +21,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.util.Locale
 
-// https://query1.finance.yahoo.com/v7/finance/chart/?symbol=abbv&interval=1d&range=3mo
-
-class StockYahooChartDataRepository(
+class StockChartDataRepository(
   private val yahooApi: () -> YahooApiChartData?,
+  private val coingeckoApi: () -> CoingeckoApiChartData?
 ) : BaseRepository() {
 
   private val _data = MutableLiveData<StockChartData>()
   val chartData: LiveData<StockChartData>
     get() = _data
 
-  suspend fun getChartData(
+  suspend fun getYahooChartData(
     stockSymbol: StockSymbol,
     interval: String,
     range: String
@@ -39,11 +38,11 @@ class StockYahooChartDataRepository(
     _data.value =
       StockChartData(
         symbol = stockSymbol.symbol,
-        stockDataEntries = getYahooChartData(stockSymbol, interval, range)
+        stockDataEntries = getYahooChartDataEntries(stockSymbol, interval, range)
       )
   }
 
-  private suspend fun getYahooChartData(
+  private suspend fun getYahooChartDataEntries(
     stockSymbol: StockSymbol,
     interval: String,
     range: String
@@ -105,6 +104,68 @@ class StockYahooChartDataRepository(
     return stockDataEntries.toList()
   }
 
+  suspend fun getCoingeckoChartData(
+    stockSymbol: StockSymbol,
+    currency: String,
+    days: Int
+  ) {
+    _data.value =
+      StockChartData(
+        symbol = stockSymbol.symbol,
+        stockDataEntries = getCoingeckoChartDataEntries(stockSymbol, currency, days)
+      )
+  }
+
+  private suspend fun getCoingeckoChartDataEntries(
+    stockSymbol: StockSymbol,
+    currency: String,
+    days: Int
+  ): List<StockDataEntry> {
+
+    val api: CoingeckoApiChartData = coingeckoApi() ?: return emptyList()
+
+    val response: CoingeckoChartData? = try {
+      safeApiCall(
+        call = {
+          updateCounter()
+          val daysStr: String = if (days == 0) {
+            "max"
+          } else {
+            "$days"
+          }
+          api.getCoingeckoChartDataAsync(
+            stockSymbol.symbol.toLowerCase(Locale.ROOT),
+            currency,
+            daysStr
+          )
+            .await()
+        },
+        errorMessage = "Error getting finance data."
+      )
+    } catch (e: Exception) {
+      Log.d("StockChartDataRepository.getCoingeckoChartDataAsync() failed", "Exception=$e")
+      null
+    }
+
+    if (response?.prices != null) {
+      val prices: List<MutableList<Double>> = response.prices!!
+      var index = 0.0
+      return prices.map { price ->
+        val y = price[1]
+        StockDataEntry(
+          dateTimePoint = (price[0] / 1000.0).toLong(),
+          x = index++,
+          high = y,
+          low = y,
+          open = y,
+          close = y
+        )
+      }
+    }
+
+    return emptyList()
+  }
+
   // Interpolate values in case value is missing to avoid zero points.
   // For example: 3.2948999404907227,null,3.299999952316284,3.309799909591675,3.309999942779541,3.3299999237060547,...
   private fun interpolateData(
@@ -162,76 +223,5 @@ class StockYahooChartDataRepository(
         }
       }
     }
-  }
-}
-
-class StockCoingeckoChartDataRepository(
-  private val coingeckoApi: () -> CoingeckoApiChartData?
-) : BaseRepository() {
-
-  private val _data = MutableLiveData<StockChartData>()
-  val chartData: LiveData<StockChartData>
-    get() = _data
-
-  suspend fun getChartData(
-    stockSymbol: StockSymbol,
-    currency: String,
-    days: Int
-  ) {
-    _data.value =
-      StockChartData(
-        symbol = stockSymbol.symbol,
-        stockDataEntries = getCoingeckoChartData(stockSymbol, currency, days)
-      )
-  }
-
-  private suspend fun getCoingeckoChartData(
-    stockSymbol: StockSymbol,
-    currency: String,
-    days: Int
-  ): List<StockDataEntry> {
-
-    val api: CoingeckoApiChartData = coingeckoApi() ?: return emptyList()
-
-    val response: CoingeckoChartData? = try {
-      safeApiCall(
-        call = {
-          updateCounter()
-          val daysStr: String = if (days == 0) {
-            "max"
-          } else {
-            "$days"
-          }
-          api.getCoingeckoChartDataAsync(
-            stockSymbol.symbol.toLowerCase(Locale.ROOT),
-            currency,
-            daysStr
-          )
-            .await()
-        },
-        errorMessage = "Error getting finance data."
-      )
-    } catch (e: Exception) {
-      Log.d("StockChartDataRepository.getCoingeckoChartDataAsync() failed", "Exception=$e")
-      null
-    }
-
-    if (response?.prices != null) {
-      val prices: List<MutableList<Double>> = response.prices!!
-      var index = 0.0
-      return prices.map { price ->
-        val y = price[1]
-        StockDataEntry(
-          dateTimePoint = (price[0] / 1000.0).toLong(),
-          x = index++,
-          high = y,
-          low = y,
-          open = y,
-          close = y
-        )
-      }
-    }
-
-    return emptyList()
   }
 }

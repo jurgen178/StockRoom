@@ -179,7 +179,8 @@ class ListDBAdapter(
       }
 
       db_storedata_type -> {
-        val binding = DbStoredataTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding =
+          DbStoredataTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
         StoredataViewHolder(binding)
       }
 
@@ -208,6 +209,7 @@ class ListDBAdapter(
           holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
           holder.binding.dbStockdbdataSymbol.text = getHeaderStr("symbol")
           holder.binding.dbStockdbdataPortfolio.text = getHeaderStr("portfolio")
+          holder.binding.dbStockdbdataType.text = getHeaderStr("type")
           holder.binding.dbStockdbdataData.text = getHeaderStr("data")
           holder.binding.dbStockdbdataGroupColor.text = getHeaderStr("groupColor")
           holder.binding.dbStockdbdataNote.text = getHeaderStr("note")
@@ -221,6 +223,11 @@ class ListDBAdapter(
           holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(0, 148, 255))
           holder.binding.dbStockdbdataSymbol.text = data.symbol
           holder.binding.dbStockdbdataPortfolio.text = data.portfolio
+          holder.binding.dbStockdbdataType.text = if (data.type == 0) {
+            "Stock"
+          } else {
+            "Crypto"
+          }
           holder.binding.dbStockdbdataData.text = data.data
           holder.binding.dbStockdbdataGroupColor.text = getColorStr(data.groupColor)
           holder.binding.dbStockdbdataNote.text = data.note
@@ -557,6 +564,7 @@ class ListDBAdapter(
             viewType = db_stockdbdata_type,
             symbol = stockDBdata.symbol,
             portfolio = stockDBdata.portfolio,
+            type = stockDBdata.type,
             data = stockDBdata.data,
             groupColor = stockDBdata.groupColor,
             note = stockDBdata.note,
