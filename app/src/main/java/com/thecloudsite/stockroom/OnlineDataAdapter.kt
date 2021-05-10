@@ -280,7 +280,7 @@ class OnlineDataAdapter internal constructor(
 
           // Display the data.
           android.app.AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.data_provider_details, stockSymbol))
+            .setTitle(context.getString(R.string.data_provider_details, stockSymbol.symbol))
             .setMessage(htmlText)
             .setPositiveButton(R.string.ok) { _, _ ->
             }

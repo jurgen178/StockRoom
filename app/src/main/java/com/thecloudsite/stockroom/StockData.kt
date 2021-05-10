@@ -767,6 +767,31 @@ data class YahooChartQuoteEntries(
 //  var volume: MutableList<Double> = mutableListOf()
 )
 
+interface CrypoSymbolsData {
+  // https://api.coingecko.com/api/v3/coins/list
+
+  @GET("list")
+  fun getCrypoSymbolsDataAsync(
+  ): Deferred<Response<List<CrypoSymbolEntry>>>
+}
+
+@JsonClass(generateAdapter = true)
+data class CrypoSymbolEntry(
+  var id: String,
+  var symbol: String,
+  var name: String,
+)
+
+/*
+[
+{"id":"01coin","symbol":"zoc","name":"01coin"},
+{"id":"0-5x-long-algorand-token","symbol":"algohalf","name":"0.5X Long Algorand Token"},
+{"id":"0-5x-long-altcoin-index-token","symbol":"althalf","name":"0.5X Long Altcoin Index Token"},
+{"id":"0-5x-long-balancer-token","symbol":"balhalf","name":"0.5X Long Balancer Token"},
+{"id":"0-5x-long-bitcoin-cash-token","symbol":"bchhalf","name":"0.5X Long Bitcoin Cash Token"},
+{"id":"0-5x-long-bitcoin-sv-token","symbol":"bsvhalf","name":"0.5X Long Bitcoin SV Token"},
+ */
+
 data class StockChartData(
   var symbol: String,
   var stockDataEntries: List<StockDataEntry>?

@@ -167,7 +167,7 @@ fun isValidSymbol(symbol: String): Boolean {
   return symbol.isNotBlank()
       &&
       // valid length
-      (symbol.length in 1..20)
+      (symbol.length in 1..50)
       &&
       // valid chars
       symbolUpper.matches("[A-Z0-9.^*:=-]+".toRegex())

@@ -27,6 +27,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.utils.MaxChartOverlays
 import kotlin.math.roundToInt
 
@@ -40,6 +41,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
   lateinit var onlineChartHandler: Handler
   var symbolList: MutableList<String> = mutableListOf()
+  val symbolTypesMap = HashMap<String, StockType>()
 
   // Settings.
   private val settingStockViewRange = "SettingStockViewRange"
@@ -128,6 +130,10 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
         val emptyList = symbolList.isEmpty()
 
         stockItems.forEach { stockItem ->
+
+          // Cache the type for each symbol.
+          symbolTypesMap[stockItem.stockDBdata.symbol] = StockTypeFromInt(stockItem.stockDBdata.type)
+
           if (!symbolList.contains(stockItem.stockDBdata.symbol)) {
             symbolList.add(stockItem.stockDBdata.symbol)
 

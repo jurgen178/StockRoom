@@ -16,12 +16,18 @@
 
 package com.thecloudsite.stockroom
 
+import android.R.layout
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
+import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.thecloudsite.stockroom.databinding.ActivityAddBinding
 import com.thecloudsite.stockroom.list.ListActivity
@@ -38,6 +44,8 @@ class AddActivity : AppCompatActivity() {
   private lateinit var binding: ActivityAddBinding
   private lateinit var addView: EditText
   private lateinit var stockRoomViewModel: StockRoomViewModel
+  private lateinit var cryptoSymbolsViewModel: CryptoSymbolsViewModel
+  private var crypoSymbols: List<CrypoSymbolEntry> = emptyList()
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -54,13 +62,64 @@ class AddActivity : AppCompatActivity() {
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
+    cryptoSymbolsViewModel = ViewModelProvider(this).get(CryptoSymbolsViewModel::class.java)
+
+    cryptoSymbolsViewModel.symbols.observe(this, Observer { cryptoSymbols ->
+      this.crypoSymbols = cryptoSymbols
+
+      // maxL is 50 for coingecko ids
+      // see isValidSymbol
+//      val maxL = cryptoSymbols.maxOf { symbol ->
+//        symbol.id.length
+//      }
+
+      binding.symbolsSpinner.adapter =
+        ArrayAdapter(this, layout.simple_list_item_1, crypoSymbols.map { crypoSymbolEntry ->
+          crypoSymbolEntry.name
+        })
+    })
+
+    cryptoSymbolsViewModel.getData()
+
+    binding.stockTypeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        binding.symbolsSpinner.visibility = if (position == 1) {
+          View.VISIBLE
+        } else {
+          View.GONE
+        }
+      }
+    }
+
+    binding.symbolsSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        binding.editAdd.setText(crypoSymbols[position].id)
+      }
+    }
+
     binding.buttonAdd.setOnClickListener {
       val replyIntent = Intent()
       if (TextUtils.isEmpty(addView.text)) {
         setResult(Activity.RESULT_CANCELED, replyIntent)
       } else {
         val symbol = addView.text.toString()
-            .trim()
+          .trim()
 
         val type = binding.stockTypeSpinner.selectedItemPosition
 
@@ -82,17 +141,17 @@ class AddActivity : AppCompatActivity() {
       // match importList()
       val mimeTypes = arrayOf(
 
-          // .json
-          "application/json",
-          "text/x-json",
+        // .json
+        "application/json",
+        "text/x-json",
 
-          // .csv
-          "text/csv",
-          "text/comma-separated-values",
-          "application/octet-stream",
+        // .csv
+        "text/csv",
+        "text/comma-separated-values",
+        "application/octet-stream",
 
-          // .txt
-          "text/plain"
+        // .txt
+        "text/plain"
       )
 
       val intent = Intent()
@@ -101,8 +160,8 @@ class AddActivity : AppCompatActivity() {
       intent.action = Intent.ACTION_OPEN_DOCUMENT
 
       startActivityForResult(
-          Intent.createChooser(intent, getString(R.string.import_select_file)),
-          importListActivityRequestCode
+        Intent.createChooser(intent, getString(R.string.import_select_file)),
+        importListActivityRequestCode
       )
     }
 

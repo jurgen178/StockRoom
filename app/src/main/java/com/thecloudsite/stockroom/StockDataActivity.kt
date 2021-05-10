@@ -163,7 +163,7 @@ class StockDataActivity : AppCompatActivity() {
       tab.text = when (position) {
         0 -> getString(R.string.dividend_headline)
         1 -> getString(R.string.data_headline)
-        else -> getString(R.string.news_headline, stockSymbol)
+        else -> getString(R.string.news_headline, stockSymbol.symbol)
       }
     }.attach()
   }
@@ -192,7 +192,7 @@ class StockDataActivity : AppCompatActivity() {
   fun onDelete(item: MenuItem) {
     AlertDialog.Builder(this)
       .setTitle(R.string.delete)
-      .setMessage(getString(R.string.delete_stock, stockSymbol))
+      .setMessage(getString(R.string.delete_stock, stockSymbol.symbol))
       .setPositiveButton(R.string.delete) { dialog, _ ->
         SharedHandler.deleteStockHandler.postValue(stockSymbol.symbol)
 
