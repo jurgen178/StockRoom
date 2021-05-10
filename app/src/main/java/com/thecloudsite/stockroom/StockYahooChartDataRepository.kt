@@ -191,8 +191,7 @@ class StockCoingeckoChartDataRepository(
     days: Int
   ): List<StockDataEntry> {
 
-    val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
-    val api: CoingeckoApiChartData = coingeckoApi() ?: return stockDataEntries.toList()
+    val api: CoingeckoApiChartData = coingeckoApi() ?: return emptyList()
 
     val response: CoingeckoChartData? = try {
       safeApiCall(
@@ -203,51 +202,36 @@ class StockCoingeckoChartDataRepository(
           } else {
             "$days"
           }
-          api.getCoingeckoChartDataAsync(stockSymbol.symbol.toLowerCase(Locale.ROOT), currency, daysStr)
+          api.getCoingeckoChartDataAsync(
+            stockSymbol.symbol.toLowerCase(Locale.ROOT),
+            currency,
+            daysStr
+          )
             .await()
         },
         errorMessage = "Error getting finance data."
       )
     } catch (e: Exception) {
-      Log.d("StockChartDataRepository.getYahooChartDataAsync() failed", "Exception=$e")
+      Log.d("StockChartDataRepository.getCoingeckoChartDataAsync() failed", "Exception=$e")
       null
     }
 
-    if (response != null) {
-
-//      if (yahooChartData.chart != null) {
-//        val yahooChartDataEntry = yahooChartData.chart!!.result[0]
-//        val timestamps = yahooChartDataEntry.timestamp
-//        val yahooChartQuoteEntries = yahooChartDataEntry.indicators?.quote?.first()
-//        if (timestamps.size == yahooChartQuoteEntries?.close?.size && yahooChartQuoteEntries.close.size > 0) {
-//
-//          // Do not use gmtoffset but display the data in local time using the GMT time data.
-//          // default is -18000: NYSE and NASDAQ are -5hour (-18000=-5*60*60) from London GMT
-//          val gmtoffset: Long = 0 //yahooChartDataEntry.meta?.gmtoffset?.toLong() ?: -18000
-//
-//          // Interpolate values in case value is missing to avoid zero points.
-//          interpolateData(yahooChartQuoteEntries.high)
-//          interpolateData(yahooChartQuoteEntries.low)
-//          interpolateData(yahooChartQuoteEntries.open)
-//          interpolateData(yahooChartQuoteEntries.close)
-//
-//          for (i in timestamps.indices) {
-//            val dateTimePoint = timestamps[i] + gmtoffset
-//            stockDataEntries.add(
-//              StockDataEntry(
-//                dateTimePoint = dateTimePoint,
-//                x = i.toDouble(),
-//                high = yahooChartQuoteEntries.high[i],
-//                low = yahooChartQuoteEntries.low[i],
-//                open = yahooChartQuoteEntries.open[i],
-//                close = yahooChartQuoteEntries.close[i]
-//              )
-//            )
-//          }
-//        }
-//      }
+    if (response?.prices != null) {
+      val prices: List<MutableList<Double>> = response.prices!!
+      var index = 0.0
+      return prices.map { price ->
+        val y = price[1]
+        StockDataEntry(
+          dateTimePoint = (price[0] / 1000.0).toLong(),
+          x = index++,
+          high = y,
+          low = y,
+          open = y,
+          close = y
+        )
+      }
     }
 
-    return stockDataEntries.toList()
+    return emptyList()
   }
 }

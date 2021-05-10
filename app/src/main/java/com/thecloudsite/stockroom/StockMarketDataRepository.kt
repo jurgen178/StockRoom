@@ -296,11 +296,19 @@ class StockMarketDataRepository(
 
   suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
 
-    val api: YahooApiMarketData? = yahooApi()
-
-    if (symbol.symbol.isNotEmpty() && api != null) {
-      val result = queryYahooStockData(api, listOf(symbol))
-      return result.first.firstOrNull()
+    if (symbol.symbol.isNotEmpty()) {
+      if (symbol.type == StockType.Standard) {
+        val api: YahooApiMarketData? = yahooApi()
+        if (api != null) {
+          return queryYahooStockData(api, listOf(symbol)).first.firstOrNull()
+        }
+      } else
+        if (symbol.type == StockType.Crypto) {
+          val api: CoingeckoApiMarketData? = coingeckoApi()
+          if (api != null) {
+            return queryCoingeckoStockData(api, listOf(symbol)).first.firstOrNull()
+          }
+        }
     }
 
     return OnlineMarketData(symbol = symbol.symbol)
