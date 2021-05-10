@@ -53,6 +53,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/imageViewSymbol"
         app:layout_constraintTop_toTopOf="@+id/textViewName"
+        app:layout_constraintEnd_toStartOf="@id/textViewName"
         style="@style/stock_item_text"
         />
 

@@ -2467,7 +2467,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
       portfolioSymbolsCopy.toList()
     }
 
-    val symbollistStr = symbols.take(5)
+    val symbollistStr = symbols.map { symbol ->
+      symbol.symbol
+    }.take(5)
       .joinToString(",")
 
     when {
