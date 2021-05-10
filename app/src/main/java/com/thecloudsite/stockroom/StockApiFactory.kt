@@ -224,7 +224,7 @@ object CryptoSymbolsApiFactory {
   var coingeckoApi: CrypoSymbolsData? = null
 }
 
-object StockChartDataApiFactory {
+object StockYahooChartDataApiFactory {
 
   // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
   // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
@@ -282,6 +282,47 @@ object StockChartDataApiFactory {
   }
 
   var yahooApi: YahooApiChartData? = null
+}
+
+object StockCoingeckoChartDataApiFactory {
+
+  // https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=1
+
+  private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
+  private var url = ""
+
+  // building http request url
+  private fun retrofit(): Retrofit = Retrofit.Builder()
+    .client(
+      OkHttpClient().newBuilder()
+        .build()
+    )
+    .baseUrl(url)
+    .addConverterFactory(MoshiConverterFactory.create())
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .build()
+
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
+        coingeckoApi = null
+      } else {
+        url = checkUrl(_url)
+        coingeckoApi = try {
+          retrofit().create(CoingeckoApiChartData::class.java)
+        } catch (e: Exception) {
+          null
+        }
+      }
+    }
+  }
+
+  init {
+    update(defaultUrl)
+  }
+
+  var coingeckoApi: CoingeckoApiChartData? = null
 }
 
 /*

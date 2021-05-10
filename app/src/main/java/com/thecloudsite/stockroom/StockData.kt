@@ -698,8 +698,7 @@ interface CoingeckoApiMarketData {
   fun getStockDataAsync(
     @Path(
       value = "symbol"
-    )
-    symbol: String
+    ) symbol: String
   ): Deferred<Response<CoingeckoResponse>>
 }
 
@@ -765,6 +764,57 @@ data class YahooChartQuoteEntries(
   var open: MutableList<Double> = mutableListOf(),
   var close: MutableList<Double> = mutableListOf()
 //  var volume: MutableList<Double> = mutableListOf()
+)
+
+interface CoingeckoApiChartData {
+  // https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=1
+
+  @GET("{symbol}/market_chart")
+  fun getCoingeckoChartDataAsync(
+    @Path(
+      value = "symbol"
+    ) symbol: String,
+    @Query(
+      value = "vs_currency"
+    ) vs_currency: String,
+    @Query(
+      value = "days"
+      ) days: String
+  ): Deferred<Response<CoingeckoChartData>>
+}
+/*
+{
+  "prices": [
+    [
+      1620524698519,
+      1.6048302372840442
+    ],
+    [
+      1620524967406,
+      1.5635617095120644
+    ],
+    [
+      1620525298772,
+      1.56956596141516
+    ],
+
+ */
+@JsonClass(generateAdapter = true)
+data class CoingeckoChartData(
+  var prices: CoingeckoChartResult? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class CoingeckoChartResult(
+  var result: List<CoingeckoChartDataEntry> = emptyList()
+)
+
+@JsonClass(generateAdapter = true)
+data class CoingeckoChartDataEntry(
+  var high: MutableList<Double> = mutableListOf(),
+  var low: MutableList<Double> = mutableListOf(),
+  var open: MutableList<Double> = mutableListOf(),
+  var close: MutableList<Double> = mutableListOf()
 )
 
 interface CrypoSymbolsData {

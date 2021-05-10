@@ -2688,11 +2688,19 @@ class StockDataFragment : Fragment() {
   }
 
   private fun getData(stockViewRange: StockViewRange) {
-    stockChartDataViewModel.getChartData(symbol, stockViewRange)
+    val stockSymbol = StockSymbol(
+      symbol = symbol,
+      type = type
+    )
+    stockChartDataViewModel.getChartData(stockSymbol, stockViewRange)
 
     if (useChartOverlaySymbols) {
       chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
-        stockChartDataViewModel.getChartData(symbolRef, stockViewRange)
+        val stockSymbolRef = StockSymbol(
+          symbol = symbolRef,
+          type = type
+        )
+        stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
       }
     }
   }

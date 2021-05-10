@@ -132,14 +132,19 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
         stockItems.forEach { stockItem ->
 
           // Cache the type for each symbol.
-          symbolTypesMap[stockItem.stockDBdata.symbol] = StockTypeFromInt(stockItem.stockDBdata.type)
+          val stocktype = StockTypeFromInt(stockItem.stockDBdata.type)
+          symbolTypesMap[stockItem.stockDBdata.symbol] = stocktype
 
           if (!symbolList.contains(stockItem.stockDBdata.symbol)) {
             symbolList.add(stockItem.stockDBdata.symbol)
 
             // onlineChartTask runs first (emptyList==true) and no update needed
             if (!emptyList) {
-              stockChartDataViewModel.getChartData(stockItem.stockDBdata.symbol, stockViewRange)
+              val stockSymbol = StockSymbol(
+                symbol = stockItem.stockDBdata.symbol,
+                type = stocktype
+              )
+              stockChartDataViewModel.getChartData(stockSymbol, stockViewRange)
             }
           }
         }
@@ -198,12 +203,24 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
       // getChartData triggers stockChartDataViewModel.chartData.observe
       if (useChartOverlaySymbols) {
         chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
-          stockChartDataViewModel.getChartData(symbolRef, stockViewRange)
+          if(symbolTypesMap.containsKey(symbolRef)) {
+            val stockSymbolRef = StockSymbol(
+              symbol = symbolRef,
+              type = symbolTypesMap[symbolRef]!!
+            )
+            stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
+          }
         }
       }
 
       symbolList.forEach { symbol ->
-        stockChartDataViewModel.getChartData(symbol, stockViewRange)
+        if(symbolTypesMap.containsKey(symbol)) {
+          val stockSymbol = StockSymbol(
+            symbol = symbol,
+            type = symbolTypesMap[symbol]!!
+          )
+          stockChartDataViewModel.getChartData(stockSymbol, stockViewRange)
+        }
       }
 
       val onlineChartTimerDelay: Long =

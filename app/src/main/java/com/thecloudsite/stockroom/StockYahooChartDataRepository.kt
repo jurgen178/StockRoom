@@ -22,9 +22,8 @@ import androidx.lifecycle.MutableLiveData
 
 // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=abbv&interval=1d&range=3mo
 
-class StockChartDataRepository(
+class StockYahooChartDataRepository(
   private val yahooApi: () -> YahooApiChartData?,
-  private val coingeckoApi: () -> CoingeckoApiChartData?
 ) : BaseRepository() {
 
   private val _data = MutableLiveData<StockChartData>()
@@ -37,11 +36,14 @@ class StockChartDataRepository(
     range: String
   ) {
     _data.value =
-      StockChartData(stockSymbol = stockSymbol, stockDataEntries = getYahooChartData(stockSymbol, interval, range))
+      StockChartData(
+        symbol = stockSymbol.symbol,
+        stockDataEntries = getYahooChartData(stockSymbol, interval, range)
+      )
   }
 
   private suspend fun getYahooChartData(
-    symbol: String,
+    stockSymbol: StockSymbol,
     interval: String,
     range: String
   ): List<StockDataEntry> {
@@ -53,68 +55,7 @@ class StockChartDataRepository(
       safeApiCall(
         call = {
           updateCounter()
-          api.getYahooChartDataAsync(symbol, interval, range)
-            .await()
-        },
-        errorMessage = "Error getting finance data."
-      )
-    } catch (e: Exception) {
-      Log.d("StockChartDataRepository.getYahooChartDataAsync() failed", "Exception=$e")
-      null
-    }
-
-    if (quoteResponse != null) {
-      val yahooChartData = quoteResponse
-
-      if (yahooChartData.chart != null) {
-        val yahooChartDataEntry = yahooChartData.chart!!.result[0]
-        val timestamps = yahooChartDataEntry.timestamp
-        val yahooChartQuoteEntries = yahooChartDataEntry.indicators?.quote?.first()
-        if (timestamps.size == yahooChartQuoteEntries?.close?.size && yahooChartQuoteEntries.close.size > 0) {
-
-          // Do not use gmtoffset but display the data in local time using the GMT time data.
-          // default is -18000: NYSE and NASDAQ are -5hour (-18000=-5*60*60) from London GMT
-          val gmtoffset: Long = 0 //yahooChartDataEntry.meta?.gmtoffset?.toLong() ?: -18000
-
-          // Interpolate values in case value is missing to avoid zero points.
-          interpolateData(yahooChartQuoteEntries.high)
-          interpolateData(yahooChartQuoteEntries.low)
-          interpolateData(yahooChartQuoteEntries.open)
-          interpolateData(yahooChartQuoteEntries.close)
-
-          for (i in timestamps.indices) {
-            val dateTimePoint = timestamps[i] + gmtoffset
-            stockDataEntries.add(
-              StockDataEntry(
-                dateTimePoint = dateTimePoint,
-                x = i.toDouble(),
-                high = yahooChartQuoteEntries.high[i],
-                low = yahooChartQuoteEntries.low[i],
-                open = yahooChartQuoteEntries.open[i],
-                close = yahooChartQuoteEntries.close[i]
-              )
-            )
-          }
-        }
-      }
-    }
-
-    return stockDataEntries.toList()
-  }
-
-  private suspend fun getCoingeckoChartData(
-    symbol: String,
-    range: String
-  ): List<StockDataEntry> {
-
-    val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
-    val api: CoingeckoApiChartData = coingeckoApi() ?: return stockDataEntries.toList()
-
-    val quoteResponse: CoingeckoChartData? = try {
-      safeApiCall(
-        call = {
-          updateCounter()
-          api.getCoingeckoChartDataAsync(symbol, currency, range)
+          api.getYahooChartDataAsync(stockSymbol.symbol, interval, range)
             .await()
         },
         errorMessage = "Error getting finance data."
@@ -220,5 +161,93 @@ class StockChartDataRepository(
         }
       }
     }
+  }
+}
+
+class StockCoingeckoChartDataRepository(
+  private val coingeckoApi: () -> CoingeckoApiChartData?
+) : BaseRepository() {
+
+  private val _data = MutableLiveData<StockChartData>()
+  val chartData: LiveData<StockChartData>
+    get() = _data
+
+  suspend fun getChartData(
+    stockSymbol: StockSymbol,
+    currency: String,
+    days: Int
+  ) {
+    _data.value =
+      StockChartData(
+        symbol = stockSymbol.symbol,
+        stockDataEntries = getCoingeckoChartData(stockSymbol, currency, days)
+      )
+  }
+
+  private suspend fun getCoingeckoChartData(
+    stockSymbol: StockSymbol,
+    currency: String,
+    days: Int
+  ): List<StockDataEntry> {
+
+    val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
+    val api: CoingeckoApiChartData = coingeckoApi() ?: return stockDataEntries.toList()
+
+    val quoteResponse: CoingeckoChartData? = try {
+      safeApiCall(
+        call = {
+          updateCounter()
+          val daysStr: String = if (days == 0) {
+            "max"
+          } else {
+            "$days"
+          }
+          api.getCoingeckoChartDataAsync(stockSymbol.symbol, currency, daysStr)
+            .await()
+        },
+        errorMessage = "Error getting finance data."
+      )
+    } catch (e: Exception) {
+      Log.d("StockChartDataRepository.getYahooChartDataAsync() failed", "Exception=$e")
+      null
+    }
+
+    if (quoteResponse != null) {
+      val yahooChartData = quoteResponse
+
+//      if (yahooChartData.chart != null) {
+//        val yahooChartDataEntry = yahooChartData.chart!!.result[0]
+//        val timestamps = yahooChartDataEntry.timestamp
+//        val yahooChartQuoteEntries = yahooChartDataEntry.indicators?.quote?.first()
+//        if (timestamps.size == yahooChartQuoteEntries?.close?.size && yahooChartQuoteEntries.close.size > 0) {
+//
+//          // Do not use gmtoffset but display the data in local time using the GMT time data.
+//          // default is -18000: NYSE and NASDAQ are -5hour (-18000=-5*60*60) from London GMT
+//          val gmtoffset: Long = 0 //yahooChartDataEntry.meta?.gmtoffset?.toLong() ?: -18000
+//
+//          // Interpolate values in case value is missing to avoid zero points.
+//          interpolateData(yahooChartQuoteEntries.high)
+//          interpolateData(yahooChartQuoteEntries.low)
+//          interpolateData(yahooChartQuoteEntries.open)
+//          interpolateData(yahooChartQuoteEntries.close)
+//
+//          for (i in timestamps.indices) {
+//            val dateTimePoint = timestamps[i] + gmtoffset
+//            stockDataEntries.add(
+//              StockDataEntry(
+//                dateTimePoint = dateTimePoint,
+//                x = i.toDouble(),
+//                high = yahooChartQuoteEntries.high[i],
+//                low = yahooChartQuoteEntries.low[i],
+//                open = yahooChartQuoteEntries.open[i],
+//                close = yahooChartQuoteEntries.close[i]
+//              )
+//            )
+//          }
+//        }
+//      }
+    }
+
+    return stockDataEntries.toList()
   }
 }

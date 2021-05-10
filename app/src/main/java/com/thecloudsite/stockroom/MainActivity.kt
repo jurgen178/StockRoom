@@ -399,7 +399,7 @@ class MainActivity : AppCompatActivity() {
           //stockRoomViewModel.logDebug("Remote Config [url=$marketDataUrl]")
 
           val chartDataUrl = remoteConfig[STOCKCHARTDATA_URL].asString()
-          StockChartDataApiFactory.update(chartDataUrl)
+          StockYahooChartDataApiFactory.update(chartDataUrl)
           //stockRoomViewModel.logDebug("Remote Config [url=$chartDataUrl]")
 
 //            val yahooNewsUrl = remoteConfig[YAHOONEWS_URL].asString()
