@@ -72,8 +72,10 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
         StockViewRange.YTD -> {
           val datetimeYTD =
             ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZoneOffset.systemDefault())
+          val datetime = ZonedDateTime.now()
           val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
-          val daysYTD = secondsYTD / 60 / 60 / 24
+          val seconds = datetime.toEpochSecond() // in GMT
+          val daysYTD = (seconds - secondsYTD) / 60 / 60 / 24
           getCoingeckoChartData(stockSymbol, daysYTD.toInt())
         }
         StockViewRange.OneYear -> {

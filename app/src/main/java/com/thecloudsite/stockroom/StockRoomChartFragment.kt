@@ -203,7 +203,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
       // getChartData triggers stockChartDataViewModel.chartData.observe
       if (useChartOverlaySymbols) {
         chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
-          if(symbolTypesMap.containsKey(symbolRef)) {
+          if (symbolTypesMap.containsKey(symbolRef)) {
             val stockSymbolRef = StockSymbol(
               symbol = symbolRef,
               type = symbolTypesMap[symbolRef]!!
@@ -214,7 +214,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
       }
 
       symbolList.forEach { symbol ->
-        if(symbolTypesMap.containsKey(symbol)) {
+        if (symbolTypesMap.containsKey(symbol)) {
           val stockSymbol = StockSymbol(
             symbol = symbol,
             type = symbolTypesMap[symbol]!!

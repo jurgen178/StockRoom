@@ -2963,16 +2963,17 @@ class StockDataFragment : Fragment() {
             stockDataEntries.forEach { stockDataEntry ->
 
               // Match stockDataEntriesRef to the stockDataEntry point.
-              // stockDataEntry between entriesRef1 and entriesRef2
-              while (!(entriesRef1.dateTimePoint <= stockDataEntry.dateTimePoint
-                    && stockDataEntry.dateTimePoint < entriesRef2.dateTimePoint
-                    )
+              while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
               ) {
                 // Check the next point to match.
-                if (indexRef < stockDataEntriesRef.size - 2) {
+                if (indexRef < stockDataEntriesRef.size - 1) {
                   indexRef++
                   entriesRef1 = stockDataEntriesRef[indexRef]
-                  entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                  if (indexRef < stockDataEntriesRef.size - 2) {
+                    entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                  } else {
+                    break
+                  }
                 } else {
                   break
                 }
@@ -3144,31 +3145,23 @@ class StockDataFragment : Fragment() {
             // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
             var indexRef = 0
             var entriesRef1 = stockDataEntriesRef[indexRef]
-
-            val firstStockDataEntry = stockDataEntries.first()
-            while (entriesRef1.dateTimePoint >= firstStockDataEntry.dateTimePoint) {
-              if (indexRef < stockDataEntriesRef.size - 2) {
-                indexRef++
-                entriesRef1 = stockDataEntriesRef[indexRef]
-              }
-            }
-
             var entriesRef2 = stockDataEntriesRef[indexRef + 1]
 
             // Align the date points on stockDataEntries.
             stockDataEntries.forEach { stockDataEntry ->
 
               // Match stockDataEntriesRef to the stockDataEntry point.
-              // stockDataEntry between entriesRef1 and entriesRef2
-              while (!(entriesRef1.dateTimePoint <= stockDataEntry.dateTimePoint
-                    && stockDataEntry.dateTimePoint < entriesRef2.dateTimePoint
-                    )
+              while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
               ) {
                 // Check the next point to match.
-                if (indexRef < stockDataEntriesRef.size - 2) {
+                if (indexRef < stockDataEntriesRef.size - 1) {
                   indexRef++
                   entriesRef1 = stockDataEntriesRef[indexRef]
-                  entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                  if (indexRef < stockDataEntriesRef.size - 2) {
+                    entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                  } else {
+                    break
+                  }
                 } else {
                   break
                 }
