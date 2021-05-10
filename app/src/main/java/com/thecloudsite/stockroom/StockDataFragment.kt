@@ -230,6 +230,7 @@ class StockDataFragment : Fragment() {
   private lateinit var stockChartDataViewModel: StockChartDataViewModel
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
+  private val symbolTypesMap = HashMap<String, StockType>()
 
   private val assetChange = StockAssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
@@ -878,6 +879,17 @@ class StockDataFragment : Fragment() {
     })
 
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
+
+    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
+      items?.let { stockItems ->
+
+        stockItems.forEach { stockItem ->
+          // Cache the type for each symbol used by the ref symbols.
+          val stocktype = StockTypeFromInt(stockItem.stockDBdata.type)
+          symbolTypesMap[stockItem.stockDBdata.symbol] = stocktype
+        }
+      }
+    })
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
       if (stockChartData != null) {
@@ -2688,6 +2700,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun getData(stockViewRange: StockViewRange) {
+
     val stockSymbol = StockSymbol(
       symbol = symbol,
       type = type
@@ -2696,11 +2709,14 @@ class StockDataFragment : Fragment() {
 
     if (useChartOverlaySymbols) {
       chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
-        val stockSymbolRef = StockSymbol(
-          symbol = symbolRef,
-          type = type
-        )
-        stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
+
+        if (symbolTypesMap.containsKey(symbolRef)) {
+          val stockSymbolRef = StockSymbol(
+            symbol = symbolRef,
+            type = symbolTypesMap[symbolRef]!!
+          )
+          stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
+        }
       }
     }
   }

@@ -41,7 +41,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
   lateinit var onlineChartHandler: Handler
   var symbolList: MutableList<String> = mutableListOf()
-  val symbolTypesMap = HashMap<String, StockType>()
+  private val symbolTypesMap = HashMap<String, StockType>()
 
   // Settings.
   private val settingStockViewRange = "SettingStockViewRange"

@@ -19,6 +19,7 @@ package com.thecloudsite.stockroom
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.util.Locale
 
 // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=abbv&interval=1d&range=3mo
 
@@ -193,7 +194,7 @@ class StockCoingeckoChartDataRepository(
     val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
     val api: CoingeckoApiChartData = coingeckoApi() ?: return stockDataEntries.toList()
 
-    val quoteResponse: CoingeckoChartData? = try {
+    val response: CoingeckoChartData? = try {
       safeApiCall(
         call = {
           updateCounter()
@@ -202,7 +203,7 @@ class StockCoingeckoChartDataRepository(
           } else {
             "$days"
           }
-          api.getCoingeckoChartDataAsync(stockSymbol.symbol, currency, daysStr)
+          api.getCoingeckoChartDataAsync(stockSymbol.symbol.toLowerCase(Locale.ROOT), currency, daysStr)
             .await()
         },
         errorMessage = "Error getting finance data."
@@ -212,8 +213,7 @@ class StockCoingeckoChartDataRepository(
       null
     }
 
-    if (quoteResponse != null) {
-      val yahooChartData = quoteResponse
+    if (response != null) {
 
 //      if (yahooChartData.chart != null) {
 //        val yahooChartDataEntry = yahooChartData.chart!!.result[0]

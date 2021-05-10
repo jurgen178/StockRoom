@@ -765,7 +765,9 @@ data class YahooChartQuoteEntries(
   var close: MutableList<Double> = mutableListOf()
 //  var volume: MutableList<Double> = mutableListOf()
 )
-
+/*
+[{"low":[103.72000122070312,103.31999969482422,103.1500015258789,104.0199966430664,104.1500015258789,105.20999908447266,104.91000366210938,104.2300033569336,105.95999908447266,105.5999984741211,107.06999969482422,105.36000061035156,108.06999969482422,107.80999755859375,105.45999908447266,104.94999694824219,104.06999969482422,105.80000305175781,106.440002
+ */
 interface CoingeckoApiChartData {
   // https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=1
 
@@ -801,20 +803,7 @@ interface CoingeckoApiChartData {
  */
 @JsonClass(generateAdapter = true)
 data class CoingeckoChartData(
-  var prices: CoingeckoChartResult? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class CoingeckoChartResult(
-  var result: List<CoingeckoChartDataEntry> = emptyList()
-)
-
-@JsonClass(generateAdapter = true)
-data class CoingeckoChartDataEntry(
-  var high: MutableList<Double> = mutableListOf(),
-  var low: MutableList<Double> = mutableListOf(),
-  var open: MutableList<Double> = mutableListOf(),
-  var close: MutableList<Double> = mutableListOf()
+  var prices: List<MutableList<Double>>? = null
 )
 
 interface CrypoSymbolsData {
