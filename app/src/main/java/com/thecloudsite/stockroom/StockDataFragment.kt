@@ -882,16 +882,16 @@ class StockDataFragment : Fragment() {
 
     stockChartDataViewModel = ViewModelProvider(this).get(StockChartDataViewModel::class.java)
 
-    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItems ->
-
-        stockItems.forEach { stockItem ->
-          // Cache the type for each symbol used by the ref symbols.
-          val stocktype = StockTypeFromInt(stockItem.stockDBdata.type)
-          symbolTypesMap[stockItem.stockDBdata.symbol] = stocktype
-        }
-      }
-    })
+//    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
+//      items?.let { stockItems ->
+//
+//        stockItems.forEach { stockItem ->
+//          // Cache the type for each symbol used by the ref symbols.
+//          val stocktype = StockTypeFromInt(stockItem.stockDBdata.type)
+//          symbolTypesMap[stockItem.stockDBdata.symbol] = stocktype
+//        }
+//      }
+//    })
 
     stockChartDataViewModel.chartData.observe(viewLifecycleOwner, Observer { stockChartData ->
       if (stockChartData != null) {
@@ -2723,13 +2723,16 @@ class StockDataFragment : Fragment() {
     if (useChartOverlaySymbols) {
       chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
 
-        if (symbolTypesMap.containsKey(symbolRef)) {
-          val stockSymbolRef = StockSymbol(
-            symbol = symbolRef,
-            type = symbolTypesMap[symbolRef]!!
-          )
-          stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
+        // Cache the type for each symbol used by the ref symbols.
+        // stockRoomViewModel.allStockItems.observe is not ready yet.
+        if (!symbolTypesMap.containsKey(symbolRef)) {
+          symbolTypesMap[symbolRef] = StockTypeFromInt(stockRoomViewModel.getTypeSync(symbolRef))
         }
+        val stockSymbolRef = StockSymbol(
+          symbol = symbolRef,
+          type = symbolTypesMap[symbolRef]!!
+        )
+        stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
       }
     }
   }
@@ -3141,6 +3144,15 @@ class StockDataFragment : Fragment() {
             // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
             var indexRef = 0
             var entriesRef1 = stockDataEntriesRef[indexRef]
+
+            val firstStockDataEntry = stockDataEntries.first()
+            while (entriesRef1.dateTimePoint >= firstStockDataEntry.dateTimePoint) {
+              if (indexRef < stockDataEntriesRef.size - 2) {
+                indexRef++
+                entriesRef1 = stockDataEntriesRef[indexRef]
+              }
+            }
+
             var entriesRef2 = stockDataEntriesRef[indexRef + 1]
 
             // Align the date points on stockDataEntries.
