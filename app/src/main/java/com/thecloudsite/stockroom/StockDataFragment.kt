@@ -806,6 +806,11 @@ class StockDataFragment : Fragment() {
     val onlineDataAdapter = OnlineDataAdapter(requireContext())
     binding.onlineDataView.adapter = onlineDataAdapter
 
+    // Coingecko has no candle data for crypto.
+    if (type == StockType.Crypto) {
+      stockViewMode = StockViewMode.Line
+    }
+
     // Set column number depending on screen width.
     val scale = 299
     val spanCount =
@@ -2878,6 +2883,11 @@ class StockDataFragment : Fragment() {
         binding.imageButtonIconLine.visibility = View.GONE
         binding.imageButtonIconCandle.visibility = View.VISIBLE
       }
+    }
+
+    if (type == StockType.Crypto) {
+      binding.imageButtonIconLine.visibility = View.GONE
+      binding.imageButtonIconCandle.visibility = View.GONE
     }
   }
 

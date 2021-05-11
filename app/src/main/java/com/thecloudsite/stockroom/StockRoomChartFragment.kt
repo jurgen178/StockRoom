@@ -22,12 +22,10 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.edit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.utils.MaxChartOverlays
 import kotlin.math.roundToInt
 
@@ -131,20 +129,13 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
         stockItems.forEach { stockItem ->
 
-          // Cache the type for each symbol.
-          val stocktype = StockTypeFromInt(stockItem.stockDBdata.type)
-          symbolTypesMap[stockItem.stockDBdata.symbol] = stocktype
-
-          if (!symbolList.contains(stockItem.stockDBdata.symbol)) {
-            symbolList.add(stockItem.stockDBdata.symbol)
+          val symbol = stockItem.stockDBdata.symbol
+          if (!symbolList.contains(symbol)) {
+            symbolList.add(symbol)
 
             // onlineChartTask runs first (emptyList==true) and no update needed
             if (!emptyList) {
-              val stockSymbol = StockSymbol(
-                symbol = stockItem.stockDBdata.symbol,
-                type = stocktype
-              )
-              stockChartDataViewModel.getChartData(stockSymbol, stockViewRange)
+              stockChartDataViewModel.getChartData(getStockSymbol(symbol), stockViewRange)
             }
           }
         }
@@ -203,24 +194,12 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
       // getChartData triggers stockChartDataViewModel.chartData.observe
       if (useChartOverlaySymbols) {
         chartOverlaySymbols.split(",").take(MaxChartOverlays).forEach { symbolRef ->
-          if (symbolTypesMap.containsKey(symbolRef)) {
-            val stockSymbolRef = StockSymbol(
-              symbol = symbolRef,
-              type = symbolTypesMap[symbolRef]!!
-            )
-            stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
-          }
+          stockChartDataViewModel.getChartData(getStockSymbol(symbolRef), stockViewRange)
         }
       }
 
       symbolList.forEach { symbol ->
-        if (symbolTypesMap.containsKey(symbol)) {
-          val stockSymbol = StockSymbol(
-            symbol = symbol,
-            type = symbolTypesMap[symbol]!!
-          )
-          stockChartDataViewModel.getChartData(stockSymbol, stockViewRange)
-        }
+        stockChartDataViewModel.getChartData(getStockSymbol(symbol), stockViewRange)
       }
 
       val onlineChartTimerDelay: Long =
@@ -236,5 +215,16 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
       onlineChartHandler.postDelayed(this, onlineChartTimerDelay)
     }
+  }
+
+  private fun getStockSymbol(symbol: String): StockSymbol {
+    if (!symbolTypesMap.containsKey(symbol)) {
+      symbolTypesMap[symbol] = StockTypeFromInt(stockRoomViewModel.getTypeSync(symbol))
+    }
+
+    return StockSymbol(
+      symbol = symbol,
+      type = symbolTypesMap[symbol]!!
+    )
   }
 }
