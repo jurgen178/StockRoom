@@ -49,7 +49,7 @@ class StockChartDataRepository(
   ): List<StockDataEntry> {
 
     val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
-    val api: YahooApiChartData = yahooApi() ?: return stockDataEntries.toList()
+    val api: YahooApiChartData = yahooApi() ?: return emptyList()
 
     val quoteResponse: YahooChartData? = try {
       safeApiCall(
