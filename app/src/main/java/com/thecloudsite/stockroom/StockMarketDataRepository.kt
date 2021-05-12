@@ -270,7 +270,7 @@ class StockMarketDataRepository(
       if (onlineMarketDataResultList.isEmpty()) {
         // no _data.value because this is a background thread
         coingeckoMarketData.postValue(onlineMarketDataResultList)
-        return Pair(MarketState.NO_NETWORK, errorMsg)
+        return Pair(MarketState.UNKNOWN, errorMsg)
       }
 
 
