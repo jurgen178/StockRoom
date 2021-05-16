@@ -482,6 +482,7 @@ enum class MarketState(val value: String) {
   CLOSED("CLOSED"),
   NO_NETWORK("NO_NETWORK"),
   NO_SYMBOL("NO_SYMBOL"),
+  QUOTA_EXCEEDED("QUOTA_EXCEEDED"),
   UNKNOWN("")
 }
 
@@ -528,8 +529,14 @@ fun <K> Enum.Companion.toString(marketState: K): String {
     MarketState.CLOSED -> {
       "market closed"
     }
-    MarketState.NO_NETWORK, MarketState.UNKNOWN -> {
+    MarketState.NO_NETWORK -> {
       "network not available"
+    }
+    MarketState.UNKNOWN -> {
+      "unknown"
+    }
+    MarketState.QUOTA_EXCEEDED -> {
+      "Quota exceeded"
     }
     MarketState.NO_SYMBOL -> {
       "no symbol"
