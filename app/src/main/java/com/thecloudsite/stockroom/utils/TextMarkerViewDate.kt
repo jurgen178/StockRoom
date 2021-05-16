@@ -23,13 +23,8 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
-import com.thecloudsite.stockroom.CandleEntryRef
-import com.thecloudsite.stockroom.DataPoint
-import com.thecloudsite.stockroom.DataPointRef
-import com.thecloudsite.stockroom.R
+import com.thecloudsite.stockroom.*
 import com.thecloudsite.stockroom.R.layout
-import com.thecloudsite.stockroom.StockDataEntry
-import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime

@@ -45,7 +45,7 @@
         app:layout_constraintTop_toTopOf="@+id/textViewSymbol"
         app:layout_constraintBottom_toBottomOf="@id/textViewSymbol"
         app:layout_constraintEnd_toStartOf="@id/textViewSymbol"
-        />
+        android:contentDescription="Symbol image" />
 
     <TextView
         android:id="@+id/textViewSymbol"

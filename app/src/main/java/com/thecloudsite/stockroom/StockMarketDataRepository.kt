@@ -24,7 +24,8 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
-import java.util.Locale
+import java.util.*
+import kotlin.math.max
 
 // Data from the DB and online data fields.
 data class StockItem
@@ -297,12 +298,13 @@ class StockMarketDataRepository(
 
             // Crypto is 24h.
             // Coingecko allows 100 access per minute
-            val delayInSeconds = 60 * onlineMarketDataResultList.size / 100
+            // Query not faster than every 10s
+            val delayInSeconds = max(5, 60 * onlineMarketDataResultList.size / 100)
 
-            // add 20% to not exceed quota too often
+            // add 100% to not exceed quota too often
             return MarketDataResult(
                 marketState = MarketState.REGULAR,
-                delayInMs = 12 * delayInSeconds / 10 * 1000L,
+                delayInMs = 2 * delayInSeconds * 1000L,
                 msg = ""
             )
         }
