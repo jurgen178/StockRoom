@@ -200,8 +200,6 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
 
     binding.calcEnter.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcEnter.setOnClickListener { calcViewModel.enter() }
-    binding.calcSign.setOnTouchListener { view, event -> touchHelper(view, event); false }
-    binding.calcSign.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SIGN) }
     binding.calcDrop.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcDrop.setOnClickListener { calcViewModel.drop() }
 
@@ -227,6 +225,8 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
     binding.calc0.setOnClickListener { calcViewModel.addNum('0') }
     binding.calcDot.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcDot.setOnClickListener { calcViewModel.addNum(separatorChar, context) }
+    binding.calcSign.setOnTouchListener { view, event -> touchHelper(view, event); false }
+    binding.calcSign.setOnClickListener { calcViewModel.opUnary(UnaryArgument.SIGN) }
 
     binding.calcDiv.setOnTouchListener { view, event -> touchHelper(view, event); false }
     binding.calcDiv.setOnClickListener { calcViewModel.opBinary(BinaryArgument.DIV) }

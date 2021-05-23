@@ -141,6 +141,18 @@ object StockMarketDataCoingeckoApiFactory {
   var coingeckoApi: CoingeckoApiMarketData? = null
 }
 
+// https://api.coinpaprika.com/
+
+// https://api.coinpaprika.com/v1/coins
+// {"id":"ada-cardano","name":"Cardano","symbol":"ADA","rank":5,"is_new":false,"is_active":true,"type":"coin"},{"id":"doge-dogecoin","name":"Dogecoin","symbol":"DOGE","rank":6,"is_new":false,"is_active":true,"type":"coin"},{"id":"usdt-tether","name":"Tether","symbol":"USDT","rank":7,"is_new":false,"is_active":true,"type":"token"},{"id":"dot-polkadot","name":"Polkadot","symbol":"DOT","rank":8,"is_new":false,"is_active":true,"type":"coin"},
+
+// https://api.coinpaprika.com/v1/tickers
+// ,{"id":"ada-cardano","name":"Cardano","symbol":"ADA","rank":4,"circulating_supply":31112484646,"total_supply":45000000000,"max_supply":45000000000,"beta_value":0.994793,"first_data_at":"2017-10-01T00:00:00Z","last_updated":"2021-05-17T04:53:47Z","quotes":{"USD":{"price":2.13071104,"volume_24h":8561645413.6285,"volume_24h_change_24h":-17.2,"market_cap":66291714517,"market_cap_change_24h":-8.91,"percent_change_15m":-0.23,"percent_change_30m":0.61,"percent_change_1h":1.08,"percent_change_6h":-4.41,"percent_change_12h":-4.83,"percent_change_24h":-8.91,"percent_change_7d":20.51,"percent_change_30d":43.97,"percent_change_1y":4064.5,"ath_price":2.46475647,"ath_date":"2021-05-16T07:31:20Z","percent_from_price_ath":-13.55}}},
+
+// https://api.coinpaprika.com/v1/tickers/ada-cardano
+// {"id":"ada-cardano","name":"Cardano","symbol":"ADA","rank":4,"circulating_supply":31112484646,"total_supply":45000000000,"max_supply":45000000000,"beta_value":0.994793,"first_data_at":"2017-10-01T00:00:00Z","last_updated":"2021-05-17T04:48:39Z","quotes":{"USD":{"price":2.12002421,"volume_24h":8503083622.9605,"volume_24h_change_24h":-16.85,"market_cap":65959220682,"market_cap_change_24h":-8.4,"percent_change_15m":-0.27,"percent_change_30m":0.45,"percent_change_1h":0.39,"percent_change_6h":-4.21,"percent_change_12h":-5.03,"percent_change_24h":-8.4,"percent_change_7d":20.16,"percent_change_30d":43.97,"percent_change_1y":4064.5,"ath_price":2.46475647,"ath_date":"2021-05-16T07:31:20Z","percent_from_price_ath":-13.99}}}
+
+
 object StockRawMarketDataApiFactory {
   // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
