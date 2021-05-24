@@ -756,10 +756,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           validArgs = opUnary(calcData, UnaryArgument.LOG)
         }
         "sq" -> {
-          success = opUnary(calcData, UnaryArgument.SQ)
+          validArgs = opUnary(calcData, UnaryArgument.SQ)
         }
         "sqrt" -> {
-          success = opUnary(calcData, UnaryArgument.SQRT)
+          validArgs = opUnary(calcData, UnaryArgument.SQRT)
         }
         "inv" -> {
           validArgs = opUnary(calcData, UnaryArgument.INV)
