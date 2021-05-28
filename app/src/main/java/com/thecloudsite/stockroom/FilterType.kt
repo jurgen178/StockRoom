@@ -851,7 +851,7 @@ class FilterAssetAccountType(
     context: Context
 ) : FilterAccountBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
-        
+
         if (stockItem.assets.isEmpty()) {
             return false
         }
