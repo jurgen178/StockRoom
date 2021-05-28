@@ -347,7 +347,7 @@ class DividendReceivedListAdapter internal constructor(
       }
 
       // Summary
-      if (receivedList.size > 0) {
+      if (receivedList.isNotEmpty()) {
         val symbol: String = receivedList.firstOrNull()?.symbol ?: ""
         dividendList.add(
           DividendListData(
