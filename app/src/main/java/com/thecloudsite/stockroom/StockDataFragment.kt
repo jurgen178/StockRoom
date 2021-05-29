@@ -1249,6 +1249,9 @@ class StockDataFragment : Fragment() {
 
         // Reset when assets are changed.
         binding.pickerKnob.setValue(0.0, 100.0, 0.0)
+        binding.rotaryControl.onValueChangeListener { value ->
+          binding.pickerKnob.incValue(value)
+        }
 
 //        val (totalQuantity, totalPrice) = getAssets(data.assets)
 //
