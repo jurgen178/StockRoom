@@ -2,19 +2,15 @@ package com.thecloudsite.stockroom.utils
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import android.widget.RelativeLayout
-import androidx.core.view.GestureDetectorCompat
-import java.text.DecimalFormat
 import kotlin.math.*
 
-
 class RotaryControl : View {
+
     var rot = 0.0
+    var prevAngle = 0.0
     var rotationDegrees = 0.0
 
     private lateinit var paint: Paint
@@ -38,14 +34,6 @@ class RotaryControl : View {
         defStyleAttr: Int
     ) : super(context, attrs, defStyleAttr) {
         init(context, attrs)
-    }
-
-    private fun calculateAngle(x: Float, y: Float): Double {
-        val px = (x / width) - 0.5
-        val py = (1.0 - y / height) - 0.5
-        var angle = -(Math.toDegrees(atan2(py, px))) + 90.0
-        if (angle > 180.0) angle -= 360.0
-        return angle
     }
 
     private fun init(
@@ -76,18 +64,36 @@ class RotaryControl : View {
         val r = min(width, height).toFloat() / 2f
         canvas.drawCircle(width / 2f, height / 2f, r, paintC1)
 
+        val a = rotationDegrees
         val rr = r * 0.8f
-        val x = rr * sin(rotationDegrees * 2.0 * Math.PI / 360.0).toFloat()
-        val y = rr * cos(rotationDegrees * 2.0 * Math.PI / 360.0).toFloat()
+        val x = rr * sin(a * 2.0 * Math.PI / 360.0).toFloat()
+        val y = rr * cos(a * 2.0 * Math.PI / 360.0).toFloat()
         canvas.drawCircle(width / 2f + x, height / 2f - y, r * 0.1f, paintC2)
 
-        canvas.drawText("$rot", 20f, 40f, paint)
+        canvas.drawText("${rot.toInt()}", 20f, 40f, paint)
+    }
+
+    private fun calculateAngle(x: Float, y: Float): Double {
+        val px = (x / width) - 0.5
+        val py = (y / height) - 0.5
+        var angle = Math.toDegrees(atan2(py, px)) + 90.0 + 360.0
+        if (angle > 360.0) angle -= 360.0
+        return angle
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
+        prevAngle = rotationDegrees
         rotationDegrees = calculateAngle(event.x, event.y)
-        rot += rotationDegrees
+        if (prevAngle - rotationDegrees < -180) {
+            rot -= 360.0 + prevAngle - rotationDegrees
+        } else
+            if (prevAngle - rotationDegrees > 180) {
+            rot += 360.0 - prevAngle + rotationDegrees
+        } else {
+            rot += rotationDegrees - prevAngle
+        }
+
         valueChangeListener(rot)
         invalidate()
 
