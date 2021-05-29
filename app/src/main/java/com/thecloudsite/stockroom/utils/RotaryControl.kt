@@ -9,9 +9,9 @@ import kotlin.math.*
 
 class RotaryControl : View {
 
-    var totalAngle = 0.0
-    var curentAngle = 0.0
-    var prevAngle = 0.0
+    private var curentAngle = 0.0
+    private var totalAngle = 0.0
+    private var prevAngle = 0.0
 
     //    private lateinit var paint: Paint
     private lateinit var paintC1: Paint
@@ -77,7 +77,7 @@ class RotaryControl : View {
         val px = (x / width) - 0.5
         val py = (y / height) - 0.5
 
-        // move origin to top position
+        // move origin to top position (+90.0)
         var angle = atan2(py, px) * 180.0 / Math.PI + 90.0 + 360.0
 
         // map range to 0..360
@@ -92,18 +92,21 @@ class RotaryControl : View {
         prevAngle = curentAngle
         curentAngle = calculateAngle(event.x, event.y)
 
+        val diff = curentAngle - prevAngle
+        totalAngle += diff
+
         when {
+
             // transition from pos to neg
-            prevAngle - curentAngle < -180 -> {
-                totalAngle -= 360.0 + prevAngle - curentAngle
+            diff > 180 -> {
+                totalAngle -= 360.0
             }
+
             // transition from neg to pos
-            prevAngle - curentAngle > 180 -> {
-                totalAngle += 360.0 - prevAngle + curentAngle
+            diff < -180 -> {
+                totalAngle += 360.0
             }
-            else -> {
-                totalAngle += curentAngle - prevAngle
-            }
+
         }
 
         valueChangeListener(totalAngle)
