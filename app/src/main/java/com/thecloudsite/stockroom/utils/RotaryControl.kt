@@ -70,14 +70,18 @@ class RotaryControl : View {
         val y = rr * cos(a * 2.0 * Math.PI / 360.0).toFloat()
         canvas.drawCircle(width / 2f + x, height / 2f - y, r * 0.1f, paintC2)
 
-        canvas.drawText("${rot.toInt()}", 20f, 40f, paint)
+        // canvas.drawText("${rot.toInt()}", 20f, 40f, paint)
     }
 
     private fun calculateAngle(x: Float, y: Float): Double {
         val px = (x / width) - 0.5
         val py = (y / height) - 0.5
         var angle = Math.toDegrees(atan2(py, px)) + 90.0 + 360.0
-        if (angle > 360.0) angle -= 360.0
+
+        // map top position from 0..360
+        if (angle > 360.0) {
+            angle -= 360.0
+        }
         return angle
     }
 
@@ -85,13 +89,19 @@ class RotaryControl : View {
 
         prevAngle = rotationDegrees
         rotationDegrees = calculateAngle(event.x, event.y)
-        if (prevAngle - rotationDegrees < -180) {
-            rot -= 360.0 + prevAngle - rotationDegrees
-        } else
-            if (prevAngle - rotationDegrees > 180) {
-            rot += 360.0 - prevAngle + rotationDegrees
-        } else {
-            rot += rotationDegrees - prevAngle
+
+        when {
+            // from pos to neg
+            prevAngle - rotationDegrees < -180 -> {
+                rot -= 360.0 + prevAngle - rotationDegrees
+            }
+            // from neg to pos
+            prevAngle - rotationDegrees > 180 -> {
+                rot += 360.0 - prevAngle + rotationDegrees
+            }
+            else -> {
+                rot += rotationDegrees - prevAngle
+            }
         }
 
         valueChangeListener(rot)

@@ -284,7 +284,7 @@ class PickerKnob : View {
     }
 
     fun incValue(value: Double) {
-        rotate((value - incValue) / 10000.0)
+        rotate((value - incValue) / 3600.0)
         incValue = value
     }
 
