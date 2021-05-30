@@ -93,21 +93,24 @@ class RotaryControl : View {
         curentAngle = calculateAngle(event.x, event.y)
 
         val diff = curentAngle - prevAngle
-        totalAngle += diff
+        
+        totalAngle += diff +
+                when {
 
-        when {
+                    // transition from pos to neg
+                    diff > 180 -> {
+                        -360.0
+                    }
 
-            // transition from pos to neg
-            diff > 180 -> {
-                totalAngle -= 360.0
-            }
+                    // transition from neg to pos
+                    diff < -180 -> {
+                        360.0
+                    }
 
-            // transition from neg to pos
-            diff < -180 -> {
-                totalAngle += 360.0
-            }
-
-        }
+                    else -> {
+                        0.0
+                    }
+                }
 
         valueChangeListener(totalAngle)
         invalidate()
