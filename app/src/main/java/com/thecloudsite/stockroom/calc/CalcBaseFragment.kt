@@ -175,7 +175,7 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
       sharedPreferences.getBoolean("calc_format_radian", true)) {
       1.0
     } else {
-      Math.PI / 180
+      Math.PI / 180.0
     }
 
     calcViewModel.radian = radian

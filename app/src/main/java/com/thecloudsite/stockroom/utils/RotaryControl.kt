@@ -66,8 +66,8 @@ class RotaryControl : View {
 
     val a = currentAngle
     val rr = r * 0.75f
-    val x = rr * sin(a * 2.0 * Math.PI / 360.0).toFloat()
-    val y = rr * cos(a * 2.0 * Math.PI / 360.0).toFloat()
+    val x = rr * sin(a * Math.PI / 180.0).toFloat()
+    val y = rr * cos(a * Math.PI / 180.0).toFloat()
     canvas.drawCircle(width / 2f + x, height / 2f - y, r * 0.15f, paintC2)
 
 //         canvas.drawText("${rot.toInt()}", 20f, 40f, paint)

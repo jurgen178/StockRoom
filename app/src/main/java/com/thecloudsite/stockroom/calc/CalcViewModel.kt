@@ -880,7 +880,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           codeMap.clear()
         }
         ":degree" -> {
-          radian = Math.PI / 180
+          radian = Math.PI / 180.0
         }
         "pi", "π" -> {
           opZero(calcData, ZeroArgument.PI)

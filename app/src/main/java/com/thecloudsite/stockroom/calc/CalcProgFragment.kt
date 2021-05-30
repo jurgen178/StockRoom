@@ -320,7 +320,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     binding.calcIndicatorRadian.setOnClickListener {
       radian = if (radian == 1.0) {
         binding.calcIndicatorRadian.text = "360°"
-        Math.PI / 180
+        Math.PI / 180.0
       } else {
         binding.calcIndicatorRadian.text = "2π"
         1.0
