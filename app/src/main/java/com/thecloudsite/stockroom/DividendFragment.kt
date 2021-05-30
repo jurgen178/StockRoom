@@ -208,7 +208,10 @@ class DividendFragment : Fragment() {
     }
 
     dialogBinding.addNote.setText(dividend.note)
-    val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
+    val localDateTime = ZonedDateTime.ofInstant(
+      Instant.ofEpochSecond(dividend.paydate),
+      ZoneOffset.systemDefault()
+    )
     // month is starting from zero
     dialogBinding.datePickerDividendDate.updateDate(
       localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
@@ -239,7 +242,9 @@ class DividendFragment : Fragment() {
           }
           if (dividendAmount <= 0.0) {
             Toast.makeText(
-              requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
+              requireContext(),
+              getString(R.string.dividend_not_zero),
+              Toast.LENGTH_LONG
             )
               .show()
             valid = false
@@ -293,13 +298,19 @@ class DividendFragment : Fragment() {
               )
 
               Toast.makeText(
-                requireContext(), getString(R.string.dividend_updated), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.dividend_updated),
+                Toast.LENGTH_LONG
               )
                 .show()
             }
           }
         } else {
-          Toast.makeText(requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG)
+          Toast.makeText(
+            requireContext(),
+            getString(R.string.invalid_entry),
+            Toast.LENGTH_LONG
+          )
             .show()
         }
       }
@@ -328,14 +339,19 @@ class DividendFragment : Fragment() {
           }
 
           Toast.makeText(
-            requireContext(), getString(R.string.delete_all_dividends_msg), Toast.LENGTH_LONG
+            requireContext(),
+            getString(R.string.delete_all_dividends_msg),
+            Toast.LENGTH_LONG
           )
             .show()
         }
         .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
         .show()
     } else if (dividend != null && dividendList == null) {
-      val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
+      val localDateTime = ZonedDateTime.ofInstant(
+        Instant.ofEpochSecond(dividend.paydate),
+        ZoneOffset.systemDefault()
+      )
       android.app.AlertDialog.Builder(requireContext())
         .setTitle(R.string.delete_dividend)
         .setMessage(
@@ -372,14 +388,20 @@ class DividendFragment : Fragment() {
     dialogBinding.addNote.setText(dividend.note)
 
     val localDateTime =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
+      ZonedDateTime.ofInstant(
+        Instant.ofEpochSecond(dividend.paydate),
+        ZoneOffset.systemDefault()
+      )
     // month is starting from zero
     dialogBinding.datePickerDividendDate.updateDate(
       localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
     )
 
     val localDateTimeEx =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.exdate), ZoneOffset.systemDefault())
+      ZonedDateTime.ofInstant(
+        Instant.ofEpochSecond(dividend.exdate),
+        ZoneOffset.systemDefault()
+      )
     // month is starting from zero
     dialogBinding.datePickerDividendExDate.updateDate(
       localDateTimeEx.year, localDateTimeEx.month.value - 1, localDateTimeEx.dayOfMonth
@@ -480,7 +502,10 @@ class DividendFragment : Fragment() {
   ) {
     // Summary tag?
     if (dividend != null) {
-      val localDateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(dividend.paydate), ZoneOffset.systemDefault())
+      val localDateTime = ZonedDateTime.ofInstant(
+        Instant.ofEpochSecond(dividend.paydate),
+        ZoneOffset.systemDefault()
+      )
       android.app.AlertDialog.Builder(requireContext())
         .setTitle(R.string.delete_dividend)
         .setMessage(
@@ -542,7 +567,8 @@ class DividendFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     // use requireActivity() instead of this to have only one shared viewmodel
-    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+    stockRoomViewModel =
+      ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     // received dividends
     val dividendReceivedClickListenerUpdate =
@@ -555,7 +581,9 @@ class DividendFragment : Fragment() {
       }
     val dividendReceivedListAdapter =
       DividendReceivedListAdapter(
-        requireContext(), dividendReceivedClickListenerUpdate, dividendReceivedClickListenerDelete
+        requireContext(),
+        dividendReceivedClickListenerUpdate,
+        dividendReceivedClickListenerDelete
       )
     binding.dividendsReceivedView.adapter = dividendReceivedListAdapter
     binding.dividendsReceivedView.layoutManager = LinearLayoutManager(requireContext())
@@ -702,7 +730,8 @@ class DividendFragment : Fragment() {
                   .trim()
 
                 dialogBinding.textViewAssetAccount.text = accountText
-                SharedAccountList.accounts = SharedAccountList.accounts + accountText
+                SharedAccountList.accounts =
+                  SharedAccountList.accounts + accountText
               }
               .setNegativeButton(
                 R.string.cancel
@@ -741,7 +770,9 @@ class DividendFragment : Fragment() {
             }
             if (dividendAmount <= 0.0) {
               Toast.makeText(
-                requireContext(), getString(R.string.dividend_not_zero), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.dividend_not_zero),
+                Toast.LENGTH_LONG
               )
                 .show()
               valid = false
@@ -788,7 +819,9 @@ class DividendFragment : Fragment() {
               stockRoomViewModel.updateDividend(dividend)
 
               Toast.makeText(
-                requireContext(), getString(R.string.dividend_added), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.dividend_added),
+                Toast.LENGTH_LONG
               )
                 .show()
             }
@@ -1079,7 +1112,10 @@ class DividendFragment : Fragment() {
       .toEpochSecond() // in GMT
     if (dividendDate > 0 && dividendDate > dateTimeNow) {
       val datetime: ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(data.onlineMarketData?.dividendDate!!), ZoneOffset.systemDefault())
+        ZonedDateTime.ofInstant(
+          Instant.ofEpochSecond(data.onlineMarketData?.dividendDate!!),
+          ZoneOffset.systemDefault()
+        )
       dividend
         .append(
           "\n${getString(R.string.dividend_pay_date)}"

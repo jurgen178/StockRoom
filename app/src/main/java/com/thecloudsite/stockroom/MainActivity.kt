@@ -526,7 +526,8 @@ class MainActivity : AppCompatActivity() {
         .italic { append(filterSet) }
 
       // Add the menu item to the group R.id.filter
-      val newMenuFilterItem = menuItem.subMenu.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
+      val newMenuFilterItem =
+        menuItem.subMenu.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
       if (filterActive) {
         newMenuFilterItem.isCheckable = true
         newMenuFilterItem.isChecked = selectedFilter == filterSet
@@ -643,7 +644,8 @@ class MainActivity : AppCompatActivity() {
             val subMenuItem = submenu?.add(portfolioName)
 
             subMenuItem?.isCheckable = true
-            subMenuItem?.isChecked = portfolio == SharedRepository.selectedPortfolio.value
+            subMenuItem?.isChecked =
+              portfolio == SharedRepository.selectedPortfolio.value
 
             subMenuItem?.setOnMenuItemClickListener { item ->
               if (item != null) {
@@ -712,7 +714,11 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
           val type: Int = data.getIntExtra(EXTRA_TYPE, 0)
 
           symbolList.forEach { symbol ->
-            stockRoomViewModel.insert(symbol = symbol, portfolio = portfolio, type = type)
+            stockRoomViewModel.insert(
+              symbol = symbol,
+              portfolio = portfolio,
+              type = type
+            )
 
             val msg = getString(R.string.add_stock, symbol)
             stockRoomViewModel.logDebug("AddActivity '$msg'")
@@ -804,9 +810,18 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         events.events.forEach { event ->
           if (datetimeNow >= event.datetime) {
             val title =
-              getString(R.string.alert_event_notification_title, event.title, event.symbol)
+              getString(
+                R.string.alert_event_notification_title,
+                event.title,
+                event.symbol
+              )
             val text =
-              getString(R.string.alert_event_notification, event.symbol, event.title, event.note)
+              getString(
+                R.string.alert_event_notification,
+                event.symbol,
+                event.title,
+                event.note
+              )
             val notification = NotificationFactory(this, title, text, event.symbol)
             notification.sendNotification()
 

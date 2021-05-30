@@ -88,14 +88,17 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.NotSimilarTextType.value =
     context.getString(R.string.filter_NotSimilarTextType)
   FilterSubTypeEnum.IsEmptyTextType.value = context.getString(R.string.filter_IsEmptyTextType)
-  FilterSubTypeEnum.IsNotEmptyTextType.value = context.getString(R.string.filter_IsNotEmptyTextType)
-  FilterSubTypeEnum.StartsWithTextType.value = context.getString(R.string.filter_StartsWithTextType)
+  FilterSubTypeEnum.IsNotEmptyTextType.value =
+    context.getString(R.string.filter_IsNotEmptyTextType)
+  FilterSubTypeEnum.StartsWithTextType.value =
+    context.getString(R.string.filter_StartsWithTextType)
   FilterSubTypeEnum.EndsWithTextType.value = context.getString(R.string.filter_EndsWithTextType)
   FilterSubTypeEnum.IsTextType.value = context.getString(R.string.filter_IsTextType)
   FilterSubTypeEnum.IsNotTextType.value = context.getString(R.string.filter_IsNotTextType)
   FilterSubTypeEnum.IsType.value = context.getString(R.string.filter_IsType)
   FilterSubTypeEnum.IsNotType.value = context.getString(R.string.filter_IsNotType)
-  FilterSubTypeEnum.MatchRegexTextType.value = context.getString(R.string.filter_MatchRegexTextType)
+  FilterSubTypeEnum.MatchRegexTextType.value =
+    context.getString(R.string.filter_MatchRegexTextType)
   FilterSubTypeEnum.NotMatchRegexTextType.value =
     context.getString(R.string.filter_NotMatchRegexTextType)
   FilterSubTypeEnum.IsPresentType.value = context.getString(R.string.filter_IsPresentType)
@@ -104,11 +107,16 @@ fun initSubTypeList(context: Context) {
   FilterSubTypeEnum.IsNotPresentType.value = context.getString(R.string.filter_IsNotPresentType)
   FilterSubTypeEnum.IsUsedType.value = context.getString(R.string.filter_IsUsedType)
   FilterSubTypeEnum.IsNotUsedType.value = context.getString(R.string.filter_IsNotUsedType)
-  FilterSubTypeEnum.IsMarketLargeCapType.value = context.getString(R.string.filter_IsMarketLargeCapType)
-  FilterSubTypeEnum.IsMarketSmallCapType.value = context.getString(R.string.filter_IsMarketSmallCapType)
-  FilterSubTypeEnum.IsMarketMidCapType.value = context.getString(R.string.filter_IsMarketMidCapType)
-  FilterSubTypeEnum.IsMarketMicroCapType.value = context.getString(R.string.filter_IsMarketMicroCapType)
-  FilterSubTypeEnum.IsMarketNanoCapType.value = context.getString(R.string.filter_IsMarketNanoCapType)
+  FilterSubTypeEnum.IsMarketLargeCapType.value =
+    context.getString(R.string.filter_IsMarketLargeCapType)
+  FilterSubTypeEnum.IsMarketSmallCapType.value =
+    context.getString(R.string.filter_IsMarketSmallCapType)
+  FilterSubTypeEnum.IsMarketMidCapType.value =
+    context.getString(R.string.filter_IsMarketMidCapType)
+  FilterSubTypeEnum.IsMarketMicroCapType.value =
+    context.getString(R.string.filter_IsMarketMicroCapType)
+  FilterSubTypeEnum.IsMarketNanoCapType.value =
+    context.getString(R.string.filter_IsMarketNanoCapType)
 }
 
 fun getFilterTypeList(context: Context): List<String> {

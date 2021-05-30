@@ -259,7 +259,8 @@ class StockDataFragment : Fragment() {
   private var stockViewRange: StockViewRange
     get() {
       val sharedPref =
-        PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewRange.OneDay
+        PreferenceManager.getDefaultSharedPreferences(activity)
+          ?: return StockViewRange.OneDay
       val index = sharedPref.getInt(settingStockViewRange, StockViewRange.OneDay.value)
       return if (index >= 0 && index < StockViewRange.values().size) {
         StockViewRange.values()[index]
@@ -450,7 +451,9 @@ class StockDataFragment : Fragment() {
           }
         } catch (e: Exception) {
           Toast.makeText(
-            requireContext(), getString(R.string.asset_share_not_empty), Toast.LENGTH_LONG
+            requireContext(),
+            getString(R.string.asset_share_not_empty),
+            Toast.LENGTH_LONG
           )
             .show()
           return@setPositiveButton
@@ -472,7 +475,9 @@ class StockDataFragment : Fragment() {
             .toDouble()
         } catch (e: Exception) {
           Toast.makeText(
-            requireContext(), getString(R.string.asset_price_not_empty), Toast.LENGTH_LONG
+            requireContext(),
+            getString(R.string.asset_price_not_empty),
+            Toast.LENGTH_LONG
           )
             .show()
           return@setPositiveButton
@@ -495,7 +500,9 @@ class StockDataFragment : Fragment() {
               .toDouble()
           } catch (e: Exception) {
             Toast.makeText(
-              requireContext(), getString(R.string.asset_commission_not_valid), Toast.LENGTH_LONG
+              requireContext(),
+              getString(R.string.asset_commission_not_valid),
+              Toast.LENGTH_LONG
             )
               .show()
             return@setPositiveButton
@@ -601,7 +608,9 @@ class StockDataFragment : Fragment() {
         .setPositiveButton(R.string.delete) { _, _ ->
           stockRoomViewModel.deleteAssets(symbol)
           Toast.makeText(
-            requireContext(), getString(R.string.delete_all_assets_msg), Toast.LENGTH_LONG
+            requireContext(),
+            getString(R.string.delete_all_assets_msg),
+            Toast.LENGTH_LONG
           )
             .show()
         }
@@ -672,7 +681,10 @@ class StockDataFragment : Fragment() {
     dialogBinding.textInputEditEventTitle.setText(event.title)
     dialogBinding.textInputEditEventNote.setText(event.note)
     val localDateTime =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZoneOffset.systemDefault())
+      ZonedDateTime.ofInstant(
+        Instant.ofEpochSecond(event.datetime),
+        ZoneOffset.systemDefault()
+      )
     // month is starting from zero
     dialogBinding.datePickerEventDate.updateDate(
       localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
@@ -690,7 +702,11 @@ class StockDataFragment : Fragment() {
         val title = (dialogBinding.textInputEditEventTitle.text).toString()
           .trim()
         if (title.isEmpty()) {
-          Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
+          Toast.makeText(
+            requireContext(),
+            getString(R.string.event_empty),
+            Toast.LENGTH_LONG
+          )
             .show()
         } else {
           val note = (dialogBinding.textInputEditEventNote.text).toString()
@@ -707,7 +723,13 @@ class StockDataFragment : Fragment() {
           )
           val seconds = datetime.toEpochSecond() // in GMT
           val eventNew =
-            Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
+            Event(
+              symbol = symbol,
+              type = 0,
+              title = title,
+              note = note,
+              datetime = seconds
+            )
           if (event.title != eventNew.title || event.note != eventNew.note || event.datetime != eventNew.datetime) {
             // Each event has an id. Delete the event with that id and then add eventNew.
             stockRoomViewModel.updateEvent2(event, eventNew)
@@ -736,7 +758,10 @@ class StockDataFragment : Fragment() {
 
   private fun eventItemDeleteClicked(event: Event) {
     val localDateTime =
-      ZonedDateTime.ofInstant(Instant.ofEpochSecond(event.datetime), ZoneOffset.systemDefault())
+      ZonedDateTime.ofInstant(
+        Instant.ofEpochSecond(event.datetime),
+        ZoneOffset.systemDefault()
+      )
     val datetime = localDateTime.format(
       DateTimeFormatter.ofLocalizedDateTime(
         MEDIUM
@@ -826,7 +851,8 @@ class StockDataFragment : Fragment() {
     var timeInSeconds24hUpdate = timeInSeconds5minUpdate
 
     // use requireActivity() instead of this to have only one shared viewmodel
-    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+    stockRoomViewModel =
+      ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
     stockRoomViewModel.onlineMarketDataList.observe(viewLifecycleOwner, Observer { data ->
       data?.let { onlineMarketDataList ->
@@ -1075,7 +1101,12 @@ class StockDataFragment : Fragment() {
           bold { append(getString(R.string.community_search_links)) }
         }
 
-      popupMenu.menu.add(LinkType.HeadlineType.value, menuIndex++, Menu.NONE, menuHeadlineItem)
+      popupMenu.menu.add(
+        LinkType.HeadlineType.value,
+        menuIndex++,
+        Menu.NONE,
+        menuHeadlineItem
+      )
 
       // One group for each link type.
       linkList.forEach { (name, entry) ->
@@ -1249,6 +1280,8 @@ class StockDataFragment : Fragment() {
 
         // Reset when assets are changed.
         binding.pickerKnob.setValue(0.0, 100.0, 0.0)
+
+        // Connect the fine tune rotary to the picker knob.
         binding.rotaryControl.onValueChangeListener { value ->
           binding.pickerKnob.incValue(value)
         }
@@ -1368,16 +1401,19 @@ class StockDataFragment : Fragment() {
           //val dialogView = inflater.inflate(R.layout.dialog_add_portfolio, null)
 
           val selectedPortfolio =
-            SharedRepository.selectedPortfolio.value ?: if (stockDBdata.portfolio.isEmpty()) {
-              standardPortfolio
-            } else {
-              stockDBdata.portfolio
-            }
+            SharedRepository.selectedPortfolio.value
+              ?: if (stockDBdata.portfolio.isEmpty()) {
+                standardPortfolio
+              } else {
+                stockDBdata.portfolio
+              }
 
           if (addSelected) {
-            dialogBinding.portfolioTextView.text = getString(R.string.portfolio_name_text)
+            dialogBinding.portfolioTextView.text =
+              getString(R.string.portfolio_name_text)
           } else {
-            dialogBinding.portfolioTextView.text = getString(R.string.portfolio_rename_text)
+            dialogBinding.portfolioTextView.text =
+              getString(R.string.portfolio_rename_text)
             // set the current portfolio name as default
             dialogBinding.addPortfolioName.setText(selectedPortfolio)
           }
@@ -1644,7 +1680,9 @@ class StockDataFragment : Fragment() {
                 }
               } else {
                 Toast.makeText(
-                  requireContext(), getString(R.string.invalid_split_entry), Toast.LENGTH_LONG
+                  requireContext(),
+                  getString(R.string.invalid_split_entry),
+                  Toast.LENGTH_LONG
                 )
                   .show()
               }
@@ -1722,7 +1760,8 @@ class StockDataFragment : Fragment() {
                   .trim()
 
                 dialogBinding.textViewAssetAccount.text = accountText
-                SharedAccountList.accounts = SharedAccountList.accounts + accountText
+                SharedAccountList.accounts =
+                  SharedAccountList.accounts + accountText
               }
               .setNegativeButton(
                 R.string.cancel
@@ -1757,14 +1796,18 @@ class StockDataFragment : Fragment() {
               .toDouble()
           } catch (e: Exception) {
             Toast.makeText(
-              requireContext(), getString(R.string.asset_share_not_empty), Toast.LENGTH_LONG
+              requireContext(),
+              getString(R.string.asset_share_not_empty),
+              Toast.LENGTH_LONG
             )
               .show()
             return@setPositiveButton
           }
           if (quantity <= 0.0) {
             Toast.makeText(
-              requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
+              requireContext(),
+              getString(R.string.quantity_not_zero),
+              Toast.LENGTH_LONG
             )
               .show()
             return@setPositiveButton
@@ -1779,14 +1822,18 @@ class StockDataFragment : Fragment() {
               .toDouble()
           } catch (e: Exception) {
             Toast.makeText(
-              requireContext(), getString(R.string.asset_price_not_empty), Toast.LENGTH_LONG
+              requireContext(),
+              getString(R.string.asset_price_not_empty),
+              Toast.LENGTH_LONG
             )
               .show()
             return@setPositiveButton
           }
           if (price < 0.0) {
             Toast.makeText(
-              requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
+              requireContext(),
+              getString(R.string.price_not_negative),
+              Toast.LENGTH_LONG
             )
               .show()
             return@setPositiveButton
@@ -1802,7 +1849,9 @@ class StockDataFragment : Fragment() {
                 .toDouble()
             } catch (e: Exception) {
               Toast.makeText(
-                requireContext(), getString(R.string.asset_commission_not_valid), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.asset_commission_not_valid),
+                Toast.LENGTH_LONG
               )
                 .show()
               return@setPositiveButton
@@ -1949,7 +1998,8 @@ class StockDataFragment : Fragment() {
                     .trim()
 
                   dialogBinding.textViewAssetAccount.text = accountText
-                  SharedAccountList.accounts = SharedAccountList.accounts + accountText
+                  SharedAccountList.accounts =
+                    SharedAccountList.accounts + accountText
                 }
                 .setNegativeButton(
                   R.string.cancel
@@ -1983,14 +2033,18 @@ class StockDataFragment : Fragment() {
                 .toDouble()
             } catch (e: Exception) {
               Toast.makeText(
-                requireContext(), getString(R.string.asset_share_not_empty), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.asset_share_not_empty),
+                Toast.LENGTH_LONG
               )
                 .show()
               return@setPositiveButton
             }
             if (quantity <= 0.0) {
               Toast.makeText(
-                requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.quantity_not_zero),
+                Toast.LENGTH_LONG
               )
                 .show()
               return@setPositiveButton
@@ -2005,14 +2059,18 @@ class StockDataFragment : Fragment() {
                 .toDouble()
             } catch (e: Exception) {
               Toast.makeText(
-                requireContext(), getString(R.string.asset_price_not_empty), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.asset_price_not_empty),
+                Toast.LENGTH_LONG
               )
                 .show()
               return@setPositiveButton
             }
             if (price < 0.0) {
               Toast.makeText(
-                requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
+                requireContext(),
+                getString(R.string.price_not_negative),
+                Toast.LENGTH_LONG
               )
                 .show()
               return@setPositiveButton
@@ -2219,7 +2277,11 @@ class StockDataFragment : Fragment() {
             .trim()
           // add new event
           if (title.isEmpty()) {
-            Toast.makeText(requireContext(), getString(R.string.event_empty), Toast.LENGTH_LONG)
+            Toast.makeText(
+              requireContext(),
+              getString(R.string.event_empty),
+              Toast.LENGTH_LONG
+            )
               .show()
           } else {
             val note = (dialogBinding.textInputEditEventNote.text).toString()
@@ -2235,7 +2297,13 @@ class StockDataFragment : Fragment() {
             )
             val seconds = datetime.toEpochSecond() // in GMT
             stockRoomViewModel.addEvent(
-              Event(symbol = symbol, type = 0, title = title, note = note, datetime = seconds)
+              Event(
+                symbol = symbol,
+                type = 0,
+                title = title,
+                note = note,
+                datetime = seconds
+              )
             )
             Toast.makeText(
               requireContext(), getString(
@@ -2288,7 +2356,8 @@ class StockDataFragment : Fragment() {
             }
             if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
               if (valid && alertBelow >= alertAbove) {
-                binding.alertAboveInputLayout.error = getString(R.string.alert_below_error)
+                binding.alertAboveInputLayout.error =
+                  getString(R.string.alert_below_error)
                 valid = false
               }
             }
@@ -2340,7 +2409,8 @@ class StockDataFragment : Fragment() {
           }
           if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
             if (valid && alertBelow >= alertAbove) {
-              binding.alertBelowInputLayout.error = getString(R.string.alert_above_error)
+              binding.alertBelowInputLayout.error =
+                getString(R.string.alert_above_error)
               valid = false
             }
           }
@@ -2598,7 +2668,11 @@ class StockDataFragment : Fragment() {
           purchasePrice.append(priceStr)
           purchasePrice.append("\n")
           // %2$s
-          purchasePrice.append(DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity))
+          purchasePrice.append(
+            DecimalFormat(DecimalFormatQuantityDigits).format(
+              totalQuantity
+            )
+          )
           purchasePrice.append("@")
           purchasePrice.append(priceStr)
           // %3$s
@@ -2734,7 +2808,8 @@ class StockDataFragment : Fragment() {
         // Cache the type for each symbol used by the ref symbols.
         // stockRoomViewModel.allStockItems.observe is not ready yet.
         if (!symbolTypesMap.containsKey(symbolRef)) {
-          symbolTypesMap[symbolRef] = StockTypeFromInt(stockRoomViewModel.getTypeSync(symbolRef))
+          symbolTypesMap[symbolRef] =
+            StockTypeFromInt(stockRoomViewModel.getTypeSync(symbolRef))
         }
         val stockSymbolRef = StockSymbol(
           symbol = symbolRef,
@@ -2896,7 +2971,7 @@ class StockDataFragment : Fragment() {
 
   private fun setupCandleStickChart() {
     val candleStickChart
-        : CandleStickChart = binding.candleStickChart
+            : CandleStickChart = binding.candleStickChart
     candleStickChart.isDoubleTapToZoomEnabled = false
 
     candleStickChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -2957,92 +3032,94 @@ class StockDataFragment : Fragment() {
 
       // Get the ref chart data.
       if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
-        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEachIndexed { index, symbolRef ->
-          val stockDataEntriesRef = chartDataItems[symbolRef]
-          if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
+        chartOverlaySymbols.split(",").take(MaxChartOverlays)
+          .forEachIndexed { index, symbolRef ->
+            val stockDataEntriesRef = chartDataItems[symbolRef]
+            if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
 
-            var minRefY = Float.MAX_VALUE
-            var maxRefY = 0f
+              var minRefY = Float.MAX_VALUE
+              var maxRefY = 0f
 
-            val refList = ArrayList<StockDataEntry>()
+              val refList = ArrayList<StockDataEntry>()
 
-            // Reference charts might not cover the same time line.
-            // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
-            var indexRef = 0
-            var entriesRef1 = stockDataEntriesRef[indexRef]
-            var entriesRef2 = stockDataEntriesRef[indexRef + 1]
+              // Reference charts might not cover the same time line.
+              // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
+              var indexRef = 0
+              var entriesRef1 = stockDataEntriesRef[indexRef]
+              var entriesRef2 = stockDataEntriesRef[indexRef + 1]
 
-            // Align the date points on stockDataEntries.
-            stockDataEntries.forEach { stockDataEntry ->
+              // Align the date points on stockDataEntries.
+              stockDataEntries.forEach { stockDataEntry ->
 
-              // Match stockDataEntriesRef to the stockDataEntry point.
-              while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
-              ) {
-                // Check the next point to match.
-                if (indexRef < stockDataEntriesRef.size - 1) {
-                  indexRef++
-                  entriesRef1 = stockDataEntriesRef[indexRef]
-                  if (indexRef < stockDataEntriesRef.size - 2) {
-                    entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                // Match stockDataEntriesRef to the stockDataEntry point.
+                while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
+                ) {
+                  // Check the next point to match.
+                  if (indexRef < stockDataEntriesRef.size - 1) {
+                    indexRef++
+                    entriesRef1 = stockDataEntriesRef[indexRef]
+                    if (indexRef < stockDataEntriesRef.size - 2) {
+                      entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                    } else {
+                      break
+                    }
                   } else {
                     break
                   }
-                } else {
-                  break
                 }
-              }
 
-              minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
-              maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
+                minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
+                maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
 
-              // clone entry and update the x value to match the original stock chart
-              val refEntry = StockDataEntry(
-                dateTimePoint = entriesRef1.dateTimePoint,
-                x = stockDataEntry.candleEntry.x.toDouble(),
-                high = entriesRef1.candleEntry.high.toDouble(),
-                low = entriesRef1.candleEntry.low.toDouble(),
-                open = entriesRef1.candleEntry.open.toDouble(),
-                close = entriesRef1.candleEntry.close.toDouble(),
-              )
-              refList.add(refEntry)
-            }
-
-            // Include the right side value of the last entry.
-            minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
-            maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
-
-            // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-            if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
-              val scale = (maxY - minY) / (maxRefY - minRefY)
-
-              val candleEntriesRef = refList.map { stockDataEntry ->
-                CandleEntryRef(
-                  stockDataEntry.candleEntry.x,
-                  shadowH = (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
-                  shadowL = (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
-                  open = (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
-                  close = (stockDataEntry.candleEntry.close - minRefY) * scale + minY,
-                  refCandleEntry = stockDataEntry.candleEntry // original data for the marker display
+                // clone entry and update the x value to match the original stock chart
+                val refEntry = StockDataEntry(
+                  dateTimePoint = entriesRef1.dateTimePoint,
+                  x = stockDataEntry.candleEntry.x.toDouble(),
+                  high = entriesRef1.candleEntry.high.toDouble(),
+                  low = entriesRef1.candleEntry.low.toDouble(),
+                  open = entriesRef1.candleEntry.open.toDouble(),
+                  close = entriesRef1.candleEntry.close.toDouble(),
                 )
+                refList.add(refEntry)
               }
 
-              val seriesRef: CandleDataSet = CandleDataSet(candleEntriesRef, symbolRef)
-              val color = chartOverlayColors[index % chartOverlayColors.size]
+              // Include the right side value of the last entry.
+              minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
+              maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
 
-              seriesRef.color = color
-              seriesRef.shadowColor = color
-              seriesRef.shadowWidth = 1f
-              seriesRef.decreasingColor = Color.rgb(255, 204, 204)
-              seriesRef.decreasingPaintStyle = Paint.Style.FILL
-              seriesRef.increasingColor = Color.rgb(204, 255, 204)
-              seriesRef.increasingPaintStyle = Paint.Style.FILL
-              seriesRef.neutralColor = color
-              seriesRef.setDrawValues(false)
+              // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
+              if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+                val scale = (maxY - minY) / (maxRefY - minRefY)
 
-              seriesList.add(seriesRef)
+                val candleEntriesRef = refList.map { stockDataEntry ->
+                  CandleEntryRef(
+                    stockDataEntry.candleEntry.x,
+                    shadowH = (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
+                    shadowL = (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
+                    open = (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
+                    close = (stockDataEntry.candleEntry.close - minRefY) * scale + minY,
+                    refCandleEntry = stockDataEntry.candleEntry // original data for the marker display
+                  )
+                }
+
+                val seriesRef: CandleDataSet =
+                  CandleDataSet(candleEntriesRef, symbolRef)
+                val color = chartOverlayColors[index % chartOverlayColors.size]
+
+                seriesRef.color = color
+                seriesRef.shadowColor = color
+                seriesRef.shadowWidth = 1f
+                seriesRef.decreasingColor = Color.rgb(255, 204, 204)
+                seriesRef.decreasingPaintStyle = Paint.Style.FILL
+                seriesRef.increasingColor = Color.rgb(204, 255, 204)
+                seriesRef.increasingPaintStyle = Paint.Style.FILL
+                seriesRef.neutralColor = color
+                seriesRef.setDrawValues(false)
+
+                seriesList.add(seriesRef)
+              }
             }
           }
-        }
       }
 
       seriesList.add(series)
@@ -3069,7 +3146,11 @@ class StockDataFragment : Fragment() {
       }
       StockViewRange.FiveDays, StockViewRange.OneMonth -> {
         candleStickChart.marker =
-          TextMarkerViewCandleChart(requireContext(), axisDateTimeFormatter, stockDataEntries)
+          TextMarkerViewCandleChart(
+            requireContext(),
+            axisDateTimeFormatter,
+            stockDataEntries
+          )
       }
       else -> {
         candleStickChart.marker =
@@ -3145,90 +3226,92 @@ class StockDataFragment : Fragment() {
 
       // Get the ref chart data.
       if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
-        chartOverlaySymbols.split(",").take(MaxChartOverlays).forEachIndexed { index, symbolRef ->
-          val stockDataEntriesRef = chartDataItems[symbolRef]
-          if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
+        chartOverlaySymbols.split(",").take(MaxChartOverlays)
+          .forEachIndexed { index, symbolRef ->
+            val stockDataEntriesRef = chartDataItems[symbolRef]
+            if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
 
-            var minRefY = Float.MAX_VALUE
-            var maxRefY = 0f
+              var minRefY = Float.MAX_VALUE
+              var maxRefY = 0f
 
-            val refList = ArrayList<StockDataEntry>()
+              val refList = ArrayList<StockDataEntry>()
 
-            // Reference charts might not cover the same time line.
-            // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
-            var indexRef = 0
-            var entriesRef1 = stockDataEntriesRef[indexRef]
-            var entriesRef2 = stockDataEntriesRef[indexRef + 1]
+              // Reference charts might not cover the same time line.
+              // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
+              var indexRef = 0
+              var entriesRef1 = stockDataEntriesRef[indexRef]
+              var entriesRef2 = stockDataEntriesRef[indexRef + 1]
 
-            // Align the date points on stockDataEntries.
-            stockDataEntries.forEach { stockDataEntry ->
+              // Align the date points on stockDataEntries.
+              stockDataEntries.forEach { stockDataEntry ->
 
-              // Match stockDataEntriesRef to the stockDataEntry point.
-              while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
-              ) {
-                // Check the next point to match.
-                if (indexRef < stockDataEntriesRef.size - 1) {
-                  indexRef++
-                  entriesRef1 = stockDataEntriesRef[indexRef]
-                  if (indexRef < stockDataEntriesRef.size - 2) {
-                    entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                // Match stockDataEntriesRef to the stockDataEntry point.
+                while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
+                ) {
+                  // Check the next point to match.
+                  if (indexRef < stockDataEntriesRef.size - 1) {
+                    indexRef++
+                    entriesRef1 = stockDataEntriesRef[indexRef]
+                    if (indexRef < stockDataEntriesRef.size - 2) {
+                      entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                    } else {
+                      break
+                    }
                   } else {
                     break
                   }
-                } else {
-                  break
                 }
-              }
 
-              minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
-              maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
+                minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
+                maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
 
-              // clone entry and update the x value to match the original stock chart
-              val refEntry = StockDataEntry(
-                dateTimePoint = entriesRef1.dateTimePoint,
-                x = stockDataEntry.candleEntry.x.toDouble(),
-                high = entriesRef1.candleEntry.high.toDouble(),
-                low = entriesRef1.candleEntry.low.toDouble(),
-                open = entriesRef1.candleEntry.open.toDouble(),
-                close = entriesRef1.candleEntry.close.toDouble(),
-              )
-              refList.add(refEntry)
-            }
-
-            // Include the right side value of the last entry.
-            minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
-            maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
-
-            // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-            if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
-              val scale = (maxY - minY) / (maxRefY - minRefY)
-
-              val dataPointsRef = refList.map { stockDataEntry ->
-                DataPointRef(
-                  x = stockDataEntry.candleEntry.x,
-                  y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
-                      * scale                                  // scale ref to match stock data range
-                      + minY,                                  // shift up to min stock data
-                  refY = stockDataEntry.candleEntry.y          // original y for the marker display
+                // clone entry and update the x value to match the original stock chart
+                val refEntry = StockDataEntry(
+                  dateTimePoint = entriesRef1.dateTimePoint,
+                  x = stockDataEntry.candleEntry.x.toDouble(),
+                  high = entriesRef1.candleEntry.high.toDouble(),
+                  low = entriesRef1.candleEntry.low.toDouble(),
+                  open = entriesRef1.candleEntry.open.toDouble(),
+                  close = entriesRef1.candleEntry.close.toDouble(),
                 )
+                refList.add(refEntry)
               }
 
-              val seriesRef = LineDataSet(dataPointsRef as List<DataPointRef>, symbolRef)
-              val color = chartOverlayColors[index % chartOverlayColors.size]
+              // Include the right side value of the last entry.
+              minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
+              maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
 
-              seriesRef.setDrawHorizontalHighlightIndicator(false)
-              seriesRef.setDrawValues(false)
-              seriesRef.setDrawCircles(false)
-              seriesRef.color = color
+              // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
+              if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+                val scale = (maxY - minY) / (maxRefY - minRefY)
 
-              // No filling for overlay graphs.
-              seriesRef.setDrawFilled(false)
-              //seriesRef.fillColor = color
+                val dataPointsRef = refList.map { stockDataEntry ->
+                  DataPointRef(
+                    x = stockDataEntry.candleEntry.x,
+                    y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
+                            * scale                                  // scale ref to match stock data range
+                            + minY,                                  // shift up to min stock data
+                    refY = stockDataEntry.candleEntry.y          // original y for the marker display
+                  )
+                }
 
-              seriesList.add(seriesRef)
+                val seriesRef =
+                  LineDataSet(dataPointsRef as List<DataPointRef>, symbolRef)
+                val color = chartOverlayColors[index % chartOverlayColors.size]
+
+                seriesRef.setDrawHorizontalHighlightIndicator(false)
+                seriesRef.setDrawValues(false)
+                seriesRef.setDrawCircles(false)
+                seriesRef.color = color
+
+                // No filling for overlay graphs.
+                seriesRef.setDrawFilled(false)
+                //seriesRef.fillColor = color
+
+                seriesList.add(seriesRef)
+              }
             }
           }
-        }
       }
 
       seriesList.add(series)
@@ -3289,7 +3372,8 @@ class StockDataFragment : Fragment() {
                 )
               )
 
-              val transactionSeries = LineDataSet(transactionPoints as List<DataPoint>, symbol)
+              val transactionSeries =
+                LineDataSet(transactionPoints as List<DataPoint>, symbol)
 
               val color = if (assetTimeEntriesCopy[j].bought) {
                 if (isDataPoint) {
@@ -3329,15 +3413,27 @@ class StockDataFragment : Fragment() {
       when (stockViewRange) {
         StockViewRange.OneDay -> {
           lineChart.marker =
-            TextMarkerViewLineChart(requireContext(), axisTimeFormatter, stockDataEntries)
+            TextMarkerViewLineChart(
+              requireContext(),
+              axisTimeFormatter,
+              stockDataEntries
+            )
         }
         StockViewRange.FiveDays, StockViewRange.OneMonth -> {
           lineChart.marker =
-            TextMarkerViewLineChart(requireContext(), axisDateTimeFormatter, stockDataEntries)
+            TextMarkerViewLineChart(
+              requireContext(),
+              axisDateTimeFormatter,
+              stockDataEntries
+            )
         }
         else -> {
           lineChart.marker =
-            TextMarkerViewLineChart(requireContext(), axisDateFormatter, stockDataEntries)
+            TextMarkerViewLineChart(
+              requireContext(),
+              axisDateFormatter,
+              stockDataEntries
+            )
         }
       }
     }
