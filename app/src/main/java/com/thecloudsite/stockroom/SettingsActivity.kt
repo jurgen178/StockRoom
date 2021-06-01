@@ -17,11 +17,9 @@
 package com.thecloudsite.stockroom
 
 import android.R.layout
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -29,6 +27,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -52,8 +52,8 @@ import java.time.format.FormatStyle.MEDIUM
 import java.util.Locale
 
 const val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC"
-const val exportListActivityRequestCode = 3
-//const val authActivityRequestCode = 4
+
+private lateinit var exportRequest: ActivityResultLauncher<String>
 
 class SettingsActivity : AppCompatActivity(),
   SharedPreferences.OnSharedPreferenceChangeListener {
@@ -103,50 +103,18 @@ class SettingsActivity : AppCompatActivity(),
       items?.let {
       }
     })
+
+    exportRequest =
+      registerForActivityResult(ActivityResultContracts.CreateDocument())
+      { uri ->
+        stockRoomViewModel.exportJSON(applicationContext, uri)
+        finish()
+      }
   }
 
   override fun onSupportNavigateUp(): Boolean {
     onBackPressed()
     return true
-  }
-
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    data: Intent?
-  ) {
-    super.onActivityResult(requestCode, resultCode, data)
-
-    val resultCodeShort = requestCode.toShort()
-      .toInt()
-    if (resultCode == Activity.RESULT_OK) {
-      if (resultCodeShort == exportListActivityRequestCode) {
-        if (data != null && data.data is Uri) {
-
-          val exportJsonUri = data.data!!
-          stockRoomViewModel.exportJSON(applicationContext, exportJsonUri)
-          finish()
-        }
-      }
-    }
-    /*
-    else
-      if (requestCode == authActivityRequestCode) {
-        val response = IdpResponse.fromResultIntent(data)
-
-        if (resultCode == Activity.RESULT_OK) {
-          // Successfully signed in
-          val user = FirebaseAuth.getInstance().currentUser
-
-          exportListToCloud()
-          // ...
-        } else {
-          // Sign in failed. If response is null the user canceled the
-          // sign-in flow using the back button. Otherwise check
-          // response.getError().getErrorCode() and handle the error.
-          // ...
-        }
-      }*/
   }
 
   override fun onResume() {
@@ -543,20 +511,22 @@ class SettingsActivity : AppCompatActivity(),
     }
 
     private fun onExportList() {
+
       // Set default filename.
       val date = ZonedDateTime.now()
         .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
         .replace(":", "_")
-      val jsonFileName = context?.getString(R.string.json_default_filename, date)
-      val intent = Intent()
-        .setType("application/json")
-        .setAction(Intent.ACTION_CREATE_DOCUMENT)
-        .addCategory(Intent.CATEGORY_OPENABLE)
-        .putExtra(Intent.EXTRA_TITLE, jsonFileName)
-      startActivityForResult(
-        Intent.createChooser(intent, getString(R.string.export_select_file)),
-        exportListActivityRequestCode
-      )
+      val jsonFileName = context?.getString(R.string.json_default_filename, date) + ".json"
+      exportRequest.launch(jsonFileName)
+//      val intent = Intent()
+//        .setType("application/json")
+//        .setAction(Intent.ACTION_CREATE_DOCUMENT)
+//        .addCategory(Intent.CATEGORY_OPENABLE)
+//        .putExtra(Intent.EXTRA_TITLE, jsonFileName)
+//      startActivityForResult(
+//        Intent.createChooser(intent, getString(R.string.export_select_file)),
+//        exportListActivityRequestCode
+//      )
     }
 
     /*

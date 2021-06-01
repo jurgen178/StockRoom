@@ -16,13 +16,14 @@
 
 package com.thecloudsite.stockroom.calc
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -35,8 +36,38 @@ import com.thecloudsite.stockroom.utils.saveTextToFile
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-const val importCalcActivityRequestCode = 7
-const val exportCalcActivityRequestCode = 8
+private lateinit var loadRequest: ActivityResultLauncher<String>
+private lateinit var saveRequest: ActivityResultLauncher<String>
+
+// https://developer.android.com/reference/androidx/activity/result/contract/ActivityResultContracts.CreateDocument
+class GetJsonContent : ActivityResultContracts.GetContent() {
+  override fun createIntent(context: Context, input: String): Intent {
+    val mimeTypes = arrayOf(
+
+      // .json
+      "application/json",
+      "text/x-json",
+
+      )
+
+// Intent.createChooser(intent, getString(R.string.import_select_file)),
+
+    return super.createIntent(context, input)
+      .setType("*/*")
+      .setAction(Intent.ACTION_OPEN_DOCUMENT)
+      .putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+  }
+}
+
+class CreateJsonDocument : ActivityResultContracts.CreateDocument() {
+  override fun createIntent(context: Context, input: String): Intent {
+    return super.createIntent(context, input)
+      .setType("application/json")
+      .setAction(Intent.ACTION_CREATE_DOCUMENT)
+      .addCategory(Intent.CATEGORY_OPENABLE)
+      .putExtra(Intent.EXTRA_TITLE, input)
+  }
+}
 
 class CalcSettingsActivity : AppCompatActivity(),
   SharedPreferences.OnSharedPreferenceChangeListener {
@@ -58,40 +89,25 @@ class CalcSettingsActivity : AppCompatActivity(),
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+    loadRequest =
+      registerForActivityResult(GetJsonContent())
+      { uri ->
+        loadCode(this, uri)
+        finish()
+      }
+
+    saveRequest =
+      registerForActivityResult(CreateJsonDocument())
+      { uri ->
+        saveCode(this, uri)
+        finish()
+      }
   }
 
   override fun onSupportNavigateUp(): Boolean {
     onBackPressed()
     return true
-  }
-
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    resultData: Intent?
-  ) {
-    super.onActivityResult(requestCode, resultCode, resultData)
-
-    if (resultCode == Activity.RESULT_OK) {
-      val resultCodeShort = requestCode.toShort()
-        .toInt()
-      if (resultCodeShort == importCalcActivityRequestCode) {
-        resultData?.data?.also { uri ->
-
-          // Perform operations on the document using its URI.
-          loadCode(this, uri)
-          finish()
-        }
-      } else
-        if (resultCodeShort == exportCalcActivityRequestCode) {
-          resultData?.data?.also { uri ->
-
-            // Perform operations on the document using its URI.
-            saveCode(this, uri)
-            finish()
-          }
-        }
-    }
   }
 
   private fun loadCode(
@@ -204,37 +220,15 @@ class CalcSettingsActivity : AppCompatActivity(),
     }
 
     private fun onImportCode() {
-      val mimeTypes = arrayOf(
 
-        // .json
-        "application/json",
-        "text/x-json",
-
-        )
-
-      val intent = Intent()
-      intent.type = "*/*"
-      intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-      intent.action = Intent.ACTION_OPEN_DOCUMENT
-
-      startActivityForResult(
-        Intent.createChooser(intent, getString(R.string.import_select_file)),
-        importCalcActivityRequestCode
-      )
+      loadRequest.launch("")
     }
 
     private fun onExportCode() {
       // Set default filename.
-      val jsonFileName = "AI-Code"
-      val intent = Intent()
-        .setType("application/json")
-        .setAction(Intent.ACTION_CREATE_DOCUMENT)
-        .addCategory(Intent.CATEGORY_OPENABLE)
-        .putExtra(Intent.EXTRA_TITLE, jsonFileName)
-      startActivityForResult(
-        Intent.createChooser(intent, getString(R.string.export_select_file)),
-        exportCalcActivityRequestCode
-      )
+      val jsonFileName = "AI-Code.json"
+
+      saveRequest.launch(jsonFileName)
     }
   }
 }

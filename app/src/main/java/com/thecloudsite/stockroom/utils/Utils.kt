@@ -160,18 +160,18 @@ fun isValidSymbol(symbol: String): Boolean {
   val symbolUpper = symbol.toUpperCase(Locale.ROOT)
 
   return symbol.isNotBlank()
-      &&
-      // valid length
-      (symbol.length in 1..50)
-      &&
-      // valid chars
-      symbolUpper.matches("[A-Z0-9.^*:=-]+".toRegex())
-      &&
-      // at least one A-Z or 0-9
-      symbolUpper.matches(".*[A-Z0-9]+.*".toRegex())
-      &&
-      // no trailing **
-      symbolUpper.matches(".*(?<!\\*\\*)".toRegex())
+          &&
+          // valid length
+          (symbol.length in 1..50)
+          &&
+          // valid chars
+          symbolUpper.matches("[A-Z0-9.^*:=-]+".toRegex())
+          &&
+          // at least one A-Z or 0-9
+          symbolUpper.matches(".*[A-Z0-9]+.*".toRegex())
+          &&
+          // no trailing **
+          symbolUpper.matches(".*(?<!\\*\\*)".toRegex())
 }
 
 // Used when export to Json as Gson cannot handle NaN.
@@ -335,7 +335,7 @@ fun getAssetChange(
 
   return getAssetChange(
     quantity,
-    asset,
+    asset + commission,
     marketPrice,
     isPostMarket,
     neutralColor,

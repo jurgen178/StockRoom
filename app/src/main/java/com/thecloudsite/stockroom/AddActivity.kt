@@ -18,6 +18,7 @@ package com.thecloudsite.stockroom
 
 import android.R.layout
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +28,8 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.thecloudsite.stockroom.databinding.ActivityAddBinding
@@ -37,12 +40,36 @@ import java.util.Locale
  * Activity for entering a new symbol.
  */
 
-const val importListActivityRequestCode = 2
+class GetImportContent : ActivityResultContracts.GetContent() {
+  override fun createIntent(context: Context, input: String): Intent {
+    val mimeTypes = arrayOf(
+
+      // .json
+      "application/json",
+      "text/x-json",
+
+      // .csv
+      "text/csv",
+      "text/comma-separated-values",
+      "application/octet-stream",
+
+      // .txt
+      "text/plain"
+    )
+
+    return super.createIntent(context, input)
+      .setType("*/*")
+      .setAction(Intent.ACTION_OPEN_DOCUMENT)
+      .putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+  }
+}
 
 class AddActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityAddBinding
   private lateinit var addView: EditText
+  private lateinit var importRequest: ActivityResultLauncher<String>
+
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private lateinit var cryptoSymbolsViewModel: CryptoSymbolsViewModel
   private var crypoSymbols: List<CrypoSymbolEntry> = emptyList()
@@ -139,77 +166,21 @@ class AddActivity : AppCompatActivity() {
 
     binding.importButton.setOnClickListener {
       // match importList()
-      val mimeTypes = arrayOf(
 
-        // .json
-        "application/json",
-        "text/x-json",
-
-        // .csv
-        "text/csv",
-        "text/comma-separated-values",
-        "application/octet-stream",
-
-        // .txt
-        "text/plain"
-      )
-
-      val intent = Intent()
-      intent.type = "*/*"
-      intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-      intent.action = Intent.ACTION_OPEN_DOCUMENT
-
-      startActivityForResult(
-        Intent.createChooser(intent, getString(R.string.import_select_file)),
-        importListActivityRequestCode
-      )
+      importRequest.launch(getString(R.string.import_select_file))
     }
 
-    /*
-    exportButton.setOnClickListener {
-      val intent = Intent()
-          .setType("application/json")
-          .setAction(Intent.ACTION_CREATE_DOCUMENT)
-          .addCategory(Intent.CATEGORY_OPENABLE)
-      startActivityForResult(
-          Intent.createChooser(intent, "Select a file"), exportListActivityRequestCode
-      )
-    }
-*/
+    importRequest =
+      registerForActivityResult(GetImportContent())
+      { uri ->
+        stockRoomViewModel.importList(applicationContext, uri)
+        finish()
+      }
   }
 
   override fun onSupportNavigateUp(): Boolean {
     onBackPressed()
     return true
-  }
-
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    resultData: Intent?
-  ) {
-    super.onActivityResult(requestCode, resultCode, resultData)
-
-    if (resultCode == Activity.RESULT_OK) {
-      if (requestCode == importListActivityRequestCode) {
-        resultData?.data?.also { uri ->
-
-          // Perform operations on the document using its URI.
-          stockRoomViewModel.importList(applicationContext, uri)
-          finish()
-        }
-      }
-      /*
-      else
-        if (requestCode == exportListActivityRequestCode) {
-          if (data != null && data.data is Uri) {
-            val exportListUri = data.data!!
-            stockRoomViewModel.exportList(applicationContext, exportListUri)
-            finish()
-          }
-        }
-      */
-    }
   }
 }
 

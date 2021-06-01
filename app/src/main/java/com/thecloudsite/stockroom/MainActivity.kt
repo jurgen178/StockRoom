@@ -16,7 +16,6 @@
 
 package com.thecloudsite.stockroom
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -27,6 +26,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.italic
@@ -74,7 +75,7 @@ object SharedAccountList {
 class MainActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityMainBinding
-  private val newSymbolActivityRequestCode = 1
+  private lateinit var addSymbolRequest: ActivityResultLauncher<Intent>
 
   private lateinit var remoteConfig: FirebaseRemoteConfig
 
@@ -355,6 +356,47 @@ class MainActivity : AppCompatActivity() {
     eventHandler = Handler(Looper.getMainLooper())
 
     //supportActionBar?.title = "test\n123"
+    addSymbolRequest =
+      registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+      { result ->
+        val data = result.data
+        if (data != null) {
+          val symbolText = data.getStringExtra(EXTRA_SYMBOL)
+          if (symbolText != null) {
+            val symbols = symbolText.split("[ ,;\r\n\t]".toRegex())
+
+            val symbolList: List<String> = symbols.map { symbol ->
+              symbol.replace("\"", "")
+                .toUpperCase(Locale.ROOT)
+            }
+              .distinct()
+              .filter { symbol ->
+                isValidSymbol(symbol)
+              }
+
+            val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+            val type: Int = data.getIntExtra(EXTRA_TYPE, 0)
+
+            symbolList.forEach { symbol ->
+              stockRoomViewModel.insert(
+                symbol = symbol,
+                portfolio = portfolio,
+                type = type
+              )
+
+              val msg = getString(R.string.add_stock, symbol)
+              stockRoomViewModel.logDebug("AddActivity '$msg'")
+
+              Toast.makeText(
+                applicationContext,
+                msg,
+                Toast.LENGTH_LONG
+              )
+                .show()
+            }
+          }
+        }
+      }
   }
 
   private fun updateRemoteConfig() {
@@ -685,65 +727,7 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
   fun onAdd(item: MenuItem) {
     val intent = Intent(this@MainActivity, AddActivity::class.java)
-    startActivityForResult(intent, newSymbolActivityRequestCode)
-  }
-
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    intentData: Intent?
-  ) {
-    super.onActivityResult(requestCode, resultCode, intentData)
-
-    if (requestCode == newSymbolActivityRequestCode && resultCode == Activity.RESULT_OK) {
-      intentData?.let { data ->
-        val symbolText = data.getStringExtra(EXTRA_SYMBOL)
-        if (symbolText != null) {
-          val symbols = symbolText.split("[ ,;\r\n\t]".toRegex())
-
-          val symbolList: List<String> = symbols.map { symbol ->
-            symbol.replace("\"", "")
-              .toUpperCase(Locale.ROOT)
-          }
-            .distinct()
-            .filter { symbol ->
-              isValidSymbol(symbol)
-            }
-
-          val portfolio = SharedRepository.selectedPortfolio.value ?: ""
-          val type: Int = data.getIntExtra(EXTRA_TYPE, 0)
-
-          symbolList.forEach { symbol ->
-            stockRoomViewModel.insert(
-              symbol = symbol,
-              portfolio = portfolio,
-              type = type
-            )
-
-            val msg = getString(R.string.add_stock, symbol)
-            stockRoomViewModel.logDebug("AddActivity '$msg'")
-
-            Toast.makeText(
-              applicationContext,
-              msg,
-              Toast.LENGTH_LONG
-            )
-              .show()
-          }
-        }
-      }
-    }
-
-    /*
-    else {
-      Toast.makeText(
-          applicationContext,
-          R.string.empty_not_saved,
-          Toast.LENGTH_LONG
-      )
-          .show()
-    }
-  */
+    addSymbolRequest.launch(intent)
   }
 
   private fun showAlerts(alerts: List<AlertData>) {

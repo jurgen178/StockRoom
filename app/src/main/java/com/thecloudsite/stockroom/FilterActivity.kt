@@ -16,10 +16,8 @@
 
 package com.thecloudsite.stockroom
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -31,6 +29,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
@@ -46,6 +45,8 @@ import com.thecloudsite.stockroom.FilterDataTypeEnum.NoType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.SelectionType
 import com.thecloudsite.stockroom.FilterDataTypeEnum.TextType
 import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.calc.CreateJsonDocument
+import com.thecloudsite.stockroom.calc.GetJsonContent
 import com.thecloudsite.stockroom.databinding.ActivityFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilterBinding
 import com.thecloudsite.stockroom.databinding.DialogAddFilternameBinding
@@ -61,8 +62,8 @@ import java.time.format.FormatStyle.MEDIUM
 class FilterActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityFilterBinding
-  private val loadFilterActivityRequestCode = 5
-  private val saveFilterActivityRequestCode = 6
+  private lateinit var loadFilterRequest: ActivityResultLauncher<String>
+  private lateinit var saveFilterRequest: ActivityResultLauncher<String>
   private lateinit var filterDataViewModel: FilterDataViewModel
   // private lateinit var stockRoomViewModel: StockRoomViewModel
 
@@ -249,21 +250,7 @@ class FilterActivity : AppCompatActivity() {
           }
           loadSelected -> {
             // match importList()
-            val mimeTypes = arrayOf(
-              // .json
-              "application/json",
-              "text/x-json",
-            )
-
-            val intent = Intent()
-            intent.type = "*/*"
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-            intent.action = Intent.ACTION_OPEN_DOCUMENT
-
-            startActivityForResult(
-              Intent.createChooser(intent, getString(R.string.import_select_file)),
-              loadFilterActivityRequestCode
-            )
+            loadFilterRequest.launch("")
           }
           saveSelected -> {
             // Set default filename.
@@ -271,15 +258,8 @@ class FilterActivity : AppCompatActivity() {
               .format(DateTimeFormatter.ofLocalizedDateTime(MEDIUM))
               .replace(":", "_")
             val jsonFileName = this.getString(R.string.json_default_filter_filename, date)
-            val intent = Intent()
-              .setType("application/json")
-              .setAction(Intent.ACTION_CREATE_DOCUMENT)
-              .addCategory(Intent.CATEGORY_OPENABLE)
-              .putExtra(Intent.EXTRA_TITLE, jsonFileName)
-            startActivityForResult(
-              Intent.createChooser(intent, getString(R.string.export_select_file)),
-              saveFilterActivityRequestCode
-            )
+
+            saveFilterRequest.launch(jsonFileName)
           }
           else -> {
             val filterName = menuitem.title.trim()
@@ -320,35 +300,22 @@ class FilterActivity : AppCompatActivity() {
         }
       }
     }
-  }
 
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    resultData: Intent?
-  ) {
-    super.onActivityResult(requestCode, resultCode, resultData)
+    loadFilterRequest =
+      registerForActivityResult(GetJsonContent())
+      { uri ->
+        // Perform operations on the document using its URI.
+        loadFilter(this, uri)
+        finish()
+      }
 
-    if (resultCode == Activity.RESULT_OK) {
-      val resultCodeShort = requestCode.toShort()
-        .toInt()
-      if (requestCode == loadFilterActivityRequestCode) {
-        resultData?.data?.also { uri ->
-
-          // Perform operations on the document using its URI.
-          loadFilter(this, uri)
-          finish()
-        }
-      } else
-        if (resultCodeShort == saveFilterActivityRequestCode) {
-          resultData?.data?.also { uri ->
-
-            // Perform operations on the document using its URI.
-            saveFilter(this, uri)
-            finish()
-          }
-        }
-    }
+    saveFilterRequest =
+      registerForActivityResult(CreateJsonDocument())
+      { uri ->
+        // Perform operations on the document using its URI.
+        saveFilter(this, uri)
+        finish()
+      }
   }
 
   override fun onSupportNavigateUp(): Boolean {
