@@ -422,7 +422,7 @@ class StockMarketDataRepository(
                 safeApiCall(
                     call = {
                         updateCounter()
-                        api.getStockDataAsync(stockSymbol.symbol.toLowerCase(Locale.ROOT))
+                        api.getStockDataAsync(stockSymbol.symbol.lowercase(Locale.ROOT))
                             .await()
                     }, errorMessage = "Error getting finance data."
                 )

@@ -145,7 +145,7 @@ class DividendFragment : Fragment() {
       var menuIndex: Int = Menu.FIRST
 
       SharedAccountList.accounts.sortedBy {
-        it.toLowerCase(Locale.ROOT)
+        it.lowercase(Locale.ROOT)
       }
         .forEach { account ->
           val name = if (account.isEmpty()) {
@@ -545,7 +545,7 @@ class DividendFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
 
-    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").toUpperCase(Locale.ROOT)
+    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").uppercase(Locale.ROOT)
 
     // Setup online data every 2s for regular hours.
     onlineDataHandler = Handler(Looper.getMainLooper())
@@ -686,7 +686,7 @@ class DividendFragment : Fragment() {
         var menuIndex: Int = Menu.FIRST
 
         SharedAccountList.accounts.sortedBy {
-          it.toLowerCase(Locale.ROOT)
+          it.lowercase(Locale.ROOT)
         }
           .forEach { account ->
             val name = if (account.isEmpty()) {

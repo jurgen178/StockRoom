@@ -202,7 +202,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
       val stockItemJsonList = gson.fromJson<List<StockItemJson>>(json, sType)
 
       stockItemJsonList.forEach { stockItemJson ->
-        val symbol = stockItemJson.symbol.toUpperCase(Locale.ROOT)
+        val symbol = stockItemJson.symbol.uppercase(Locale.ROOT)
         stockRoomDao.insert(
           StockDBdata(
             symbol = symbol,

@@ -66,7 +66,7 @@ class NewsFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
 
-    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").toUpperCase(Locale.ROOT)
+    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").uppercase(Locale.ROOT)
     yahooNewsQuery = symbol
     googleNewsQuery = symbol
     nasdaqNewsQuery = symbol

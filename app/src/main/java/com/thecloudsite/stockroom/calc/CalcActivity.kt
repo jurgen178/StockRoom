@@ -43,7 +43,7 @@ class CalcActivity : AppCompatActivity() {
     setContentView(view)
 
     val symbolString = intent.getStringExtra(EXTRA_SYMBOL)
-    symbol = symbolString?.toUpperCase(Locale.ROOT) ?: ""
+    symbol = symbolString?.uppercase(Locale.ROOT) ?: ""
 
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

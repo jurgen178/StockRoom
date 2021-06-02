@@ -247,7 +247,7 @@ class SummaryGroupAdapter internal constructor(
     // Display stats for each group.
     if (groups.size > 1) {
       groups.sortedBy { group ->
-        group.name.toLowerCase(Locale.ROOT)
+        group.name.lowercase(Locale.ROOT)
       }
         .forEach { group ->
           val (text1, text2) = getTotal(group.color, false, stockItemsList)

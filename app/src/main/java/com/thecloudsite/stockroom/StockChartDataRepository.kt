@@ -134,7 +134,7 @@ class StockChartDataRepository(
             "$days"
           }
           api.getCoingeckoChartDataAsync(
-            stockSymbol.symbol.toLowerCase(Locale.ROOT),
+            stockSymbol.symbol.lowercase(Locale.ROOT),
             currency,
             daysStr
           )

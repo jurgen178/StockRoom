@@ -151,7 +151,7 @@ class AddActivity : AppCompatActivity() {
         val type = binding.stockTypeSpinner.selectedItemPosition
 
         // https://convertcodes.com/unicode-converter-encode-decode-utf/
-        if (symbol.toLowerCase(Locale.ROOT) == "\u0064\u0065\u0062\u0075\u0067") {
+        if (symbol.lowercase(Locale.ROOT) == "\u0064\u0065\u0062\u0075\u0067") {
           val intent = Intent(this@AddActivity, ListActivity::class.java)
           startActivity(intent)
           setResult(Activity.RESULT_CANCELED, replyIntent)

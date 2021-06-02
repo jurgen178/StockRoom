@@ -308,7 +308,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       val labelMatch = getRegexOneGroup(word, labelRegex)
       // is label?
       if (labelMatch != null) {
-        val label = labelMatch.toLowerCase(Locale.ROOT)
+        val label = labelMatch.lowercase(Locale.ROOT)
 
         if (labelMap.containsKey(label)) {
           calcData.errorMsg = context.getString(R.string.calc_duplicate_label, labelMatch)
@@ -321,7 +321,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           labelMap[label] = index
         }
       } else {
-        when (word.toLowerCase(Locale.ROOT)) {
+        when (word.lowercase(Locale.ROOT)) {
           // disable loop check
           ":loop" -> {
             checkLoop = false
@@ -340,7 +340,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         val isWhile = whileIfMatch.first.equals("while", true)
         val compare = whileIfMatch.second
         val labelStr = whileIfMatch.third
-        val label = labelStr.toLowerCase(Locale.ROOT)
+        val label = labelStr.lowercase(Locale.ROOT)
 
         if (!compare.matches("eq|le|lt|ge|gt".toRegex())) {
           calcData.errorMsg = if (isWhile) {
@@ -488,7 +488,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         val isWhile = whileIfMatch.first.equals("while", true)
         val compare = whileIfMatch.second
         val labelStr = whileIfMatch.third
-        val label = labelStr.toLowerCase(Locale.ROOT)
+        val label = labelStr.lowercase(Locale.ROOT)
 
         // already checked in validation, kept as runtime test-case
         if (!labelMap.containsKey(label)) {
@@ -511,7 +511,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           val op1 = calcData.numberList.removeLast()
           val op2 = calcData.numberList.removeLast()
 
-          when (compare.toLowerCase(Locale.ROOT)) {
+          when (compare.lowercase(Locale.ROOT)) {
 
             "ge" -> {
               if (op2.value >= op1.value) {
@@ -579,7 +579,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
         getRegexOneGroup(word, gotoRegex)
       if (gotoMatch != null) {
         loopCounter++
-        val label = gotoMatch.toLowerCase(Locale.ROOT)
+        val label = gotoMatch.lowercase(Locale.ROOT)
 
         if (!labelMap.containsKey(label)) {
           calcData.errorMsg = context.getString(R.string.calc_missing_label, gotoMatch)
@@ -631,7 +631,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       }
 
       // definition function?
-      val wordLwr = word.toLowerCase(Locale.ROOT)
+      val wordLwr = word.lowercase(Locale.ROOT)
       if (definitionMap.containsKey(wordLwr)) {
         loopCounter++
 
@@ -648,7 +648,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
       if (definitionMatch != null) {
         loopCounter++
 
-        val definition = definitionMatch.toLowerCase(Locale.ROOT)
+        val definition = definitionMatch.lowercase(Locale.ROOT)
         if (definitionMap.containsKey(definition)) {
           loopCounter++
 
@@ -1054,14 +1054,14 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     // word[.property]
     val match = getRegexTwoGroups(expression, "(.+?)([.].+?)?$".toRegex())
 
-    var word = expression.toUpperCase(Locale.ROOT)
+    var word = expression.uppercase(Locale.ROOT)
     var property = ""
     if (match != null) {
       // first group (groups[0]) is entire src
       // captured word is in groups[1]
       // captured property is in groups[2]
-      word = match.first.toUpperCase(Locale.ROOT)
-      property = match.second.toLowerCase(Locale.ROOT)
+      word = match.first.uppercase(Locale.ROOT)
+      property = match.second.lowercase(Locale.ROOT)
     }
 
     val stockItem = stockitemList.find { stockItem ->
@@ -1558,7 +1558,10 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
             if (op1.value.isNaN() && op1.desc.isNotEmpty()) {
               // set comment to op2 if exists, same as add comments if both NaN
               calcData.numberList.add(CalcLine(desc = op2.desc + op1.desc, value = op2.value))
-            } else {
+            } else
+              if (op2.value.isNaN() && op2.desc.isNotEmpty()) {
+                calcData.numberList.add(CalcLine(desc = op2.desc + op1.desc, value = op1.value))
+              } else {
               // default op, add two numbers
               calcData.numberList.add(CalcLine(desc = "", value = op2.value + op1.value))
             }

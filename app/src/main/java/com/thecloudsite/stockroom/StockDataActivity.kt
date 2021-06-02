@@ -76,7 +76,7 @@ class StockDataActivity : AppCompatActivity() {
     }
     // Query only this symbol when this activity is on.
     stockSymbol = StockSymbol(
-      symbol = symbolString?.toUpperCase(Locale.ROOT) ?: "",
+      symbol = symbolString?.uppercase(Locale.ROOT) ?: "",
       type = StockTypeFromInt(type)
     )
 

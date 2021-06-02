@@ -327,7 +327,7 @@ class StockRoomTest {
   }
 
   private fun isValidSymbol(symbol: String): Boolean {
-    val symbolUpper = symbol.toUpperCase(Locale.ROOT)
+    val symbolUpper = symbol.uppercase(Locale.ROOT)
 
     return symbol.isNotBlank()
         &&
@@ -416,7 +416,7 @@ class StockRoomTest {
     // only a-z from 1..7 chars in length
     val symbolList: List<String> = symbols.map { symbol ->
       symbol.replace("\"", "")
-        .toUpperCase(Locale.ROOT)
+        .uppercase(Locale.ROOT)
     }
       .filter { symbol ->
         symbol.matches("[A-Z]{1,7}".toRegex())
@@ -485,7 +485,7 @@ class StockRoomTest {
 
     rows.drop(1)
       .forEach { row ->
-        val symbol = row[symbolColumn].toUpperCase()
+        val symbol = row[symbolColumn].uppercase()
         val amount = csvStrToDouble(row[sharesColumn])
         val price = csvStrToDouble(row[priceColumn])
 

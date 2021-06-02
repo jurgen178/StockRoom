@@ -355,7 +355,7 @@ class StockDataFragment : Fragment() {
       var menuIndex: Int = Menu.FIRST
 
       SharedAccountList.accounts.sortedBy {
-        it.toLowerCase(Locale.ROOT)
+        it.lowercase(Locale.ROOT)
       }
         .forEach { account ->
           val name = if (account.isEmpty()) {
@@ -805,7 +805,7 @@ class StockDataFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
 
-    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").toUpperCase(Locale.ROOT)
+    symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").uppercase(Locale.ROOT)
     type = StockTypeFromInt(arguments?.getInt(EXTRA_TYPE, 0) ?: 0)
 
     // Setup online data every 2s for regular hours.
@@ -1347,7 +1347,7 @@ class StockDataFragment : Fragment() {
       var menuIndex: Int = Menu.FIRST
 
       SharedRepository.portfolios.value?.sortedBy {
-        it.toLowerCase(Locale.ROOT)
+        it.lowercase(Locale.ROOT)
       }
         ?.forEach { portfolio ->
           val name = if (portfolio.isEmpty()) {
@@ -1716,7 +1716,7 @@ class StockDataFragment : Fragment() {
         var menuIndex: Int = Menu.FIRST
 
         SharedAccountList.accounts.sortedBy {
-          it.toLowerCase(Locale.ROOT)
+          it.lowercase(Locale.ROOT)
         }
           .forEach { account ->
             val name = if (account.isEmpty()) {
@@ -1954,7 +1954,7 @@ class StockDataFragment : Fragment() {
           var menuIndex: Int = Menu.FIRST
 
           SharedAccountList.accounts.sortedBy {
-            it.toLowerCase(Locale.ROOT)
+            it.lowercase(Locale.ROOT)
           }
             .forEach { account ->
               val name = if (account.isEmpty()) {

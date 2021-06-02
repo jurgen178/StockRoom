@@ -1466,7 +1466,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             logDebug("Import JSONObject '$jsonObj'")
 
             val symbol = jsonObj.getString("symbol")
-                .toUpperCase(Locale.ROOT)
+                .uppercase(Locale.ROOT)
 
             if (isValidSymbol(symbol)) {
                 var portfolio = SharedRepository.selectedPortfolio.value ?: ""
@@ -1911,7 +1911,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         // skip header row
         rows.drop(1)
             .forEach { row ->
-                val symbol = row[symbolColumn].toUpperCase(Locale.ROOT)
+                val symbol = row[symbolColumn].uppercase(Locale.ROOT)
                 if (symbol.isNotEmpty() && isValidSymbol(symbol)) {
                     val shares = csvStrToDouble(row[sharesColumn])
                     val price = csvStrToDouble(row[priceColumn])
@@ -1969,7 +1969,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         val portfolio = SharedRepository.selectedPortfolio.value ?: ""
         symbols.map { symbol ->
             symbol.replace("\"", "")
-                .toUpperCase(Locale.ROOT)
+                .uppercase(Locale.ROOT)
         }
             // only a-z from 1..7 chars in length
 //        .filter { symbol ->
@@ -2269,7 +2269,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (symbol.isNotEmpty()) {
             repository.insert(
                 StockDBdata(
-                    symbol = symbol.toUpperCase(Locale.ROOT),
+                    symbol = symbol.uppercase(Locale.ROOT),
                     portfolio = portfolio,
                     type = type
                 )
@@ -2293,7 +2293,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             withContext(Dispatchers.IO) {
                 if (symbol.isNotEmpty()) {
                     repository.updateAlertAbove(
-                        symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote
+                        symbol.uppercase(Locale.ROOT), alertAbove, alertAboveNote
                     )
                 }
             }
@@ -2309,7 +2309,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             withContext(Dispatchers.IO) {
                 if (symbol.isNotEmpty()) {
                     repository.updateAlertBelow(
-                        symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote
+                        symbol.uppercase(Locale.ROOT), alertBelow, alertBelowNote
                     )
                 }
             }
@@ -2323,7 +2323,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         alertAboveNote: String
     ) = scope.launch {
         if (symbol.isNotEmpty()) {
-            repository.updateAlertAbove(symbol.toUpperCase(Locale.ROOT), alertAbove, alertAboveNote)
+            repository.updateAlertAbove(symbol.uppercase(Locale.ROOT), alertAbove, alertAboveNote)
         }
     }
 
@@ -2333,7 +2333,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         alertBelowNote: String
     ) = scope.launch {
         if (symbol.isNotEmpty()) {
-            repository.updateAlertBelow(symbol.toUpperCase(Locale.ROOT), alertBelow, alertBelowNote)
+            repository.updateAlertBelow(symbol.uppercase(Locale.ROOT), alertBelow, alertBelowNote)
         }
     }
 
@@ -2342,7 +2342,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         note: String
     ) = scope.launch {
         if (symbol.isNotEmpty()) {
-            repository.updateNote(symbol.toUpperCase(Locale.ROOT), note)
+            repository.updateNote(symbol.uppercase(Locale.ROOT), note)
         }
     }
 
@@ -2351,7 +2351,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         note: String
     ) = scope.launch {
         if (symbol.isNotEmpty()) {
-            repository.updateDividendNote(symbol.toUpperCase(Locale.ROOT), note)
+            repository.updateDividendNote(symbol.uppercase(Locale.ROOT), note)
         }
     }
 
@@ -2360,7 +2360,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         annualDividendRate: Double
     ) = scope.launch {
         if (symbol.isNotEmpty()) {
-            repository.updateAnnualDividendRate(symbol.toUpperCase(Locale.ROOT), annualDividendRate)
+            repository.updateAnnualDividendRate(symbol.uppercase(Locale.ROOT), annualDividendRate)
         }
     }
 
@@ -2369,7 +2369,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         runBlocking {
             withContext(Dispatchers.IO) {
                 if (symbol.isNotEmpty()) {
-                    stockDBdata = repository.getStockDBdata(symbol.toUpperCase(Locale.ROOT))
+                    stockDBdata = repository.getStockDBdata(symbol.uppercase(Locale.ROOT))
                 }
             }
         }
@@ -2453,7 +2453,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
         return stockMarketDataRepository.getStockData(
             StockSymbol(
-                symbol = symbol.symbol.toUpperCase(Locale.ROOT),
+                symbol = symbol.symbol.uppercase(Locale.ROOT),
                 symbol.type
             )
         )
@@ -2517,7 +2517,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         name: String,
         color: Int
     ) = scope.launch {
-        repository.setGroup(symbol.toUpperCase(Locale.ROOT), name, color)
+        repository.setGroup(symbol.uppercase(Locale.ROOT), name, color)
     }
 
     fun updateGroupName(
@@ -2570,7 +2570,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         runBlocking {
             withContext(Dispatchers.IO) {
                 if (symbol.isNotEmpty()) {
-                    assets = repository.getAssets(symbol.toUpperCase(Locale.ROOT))
+                    assets = repository.getAssets(symbol.uppercase(Locale.ROOT))
                 }
             }
         }
@@ -2616,7 +2616,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         if (symbol.isNotEmpty()) {
             repository.addAsset(
                 Asset(
-                    symbol = symbol.toUpperCase(Locale.ROOT),
+                    symbol = symbol.uppercase(Locale.ROOT),
                     quantity = quantity,
                     price = price,
                     date = date
@@ -2627,7 +2627,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun deleteStock(symbol: String) = scope.launch {
         if (symbol.isNotEmpty()) {
-            repository.deleteStock(symbol.toUpperCase(Locale.ROOT))
+            repository.deleteStock(symbol.uppercase(Locale.ROOT))
         }
     }
 
@@ -2638,7 +2638,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun deleteAssets(symbol: String) =
         scope.launch {
-            repository.deleteAssets(symbol.toUpperCase(Locale.ROOT))
+            repository.deleteAssets(symbol.uppercase(Locale.ROOT))
         }
 
     fun updateAsset2(
@@ -2654,25 +2654,25 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         assets: List<Asset>
     ) =
         scope.launch {
-            repository.updateAssets(symbol = symbol.toUpperCase(Locale.ROOT), assets = assets)
+            repository.updateAssets(symbol = symbol.uppercase(Locale.ROOT), assets = assets)
         }
 
     fun getStockDBLiveData(symbol: String): LiveData<StockDBdata> {
-        return repository.getStockDBLiveData(symbol.toUpperCase(Locale.ROOT))
+        return repository.getStockDBLiveData(symbol.uppercase(Locale.ROOT))
     }
 
     fun getAssetsLiveData(symbol: String)
             : LiveData<Assets> {
-        return repository.getAssetsLiveData(symbol.toUpperCase(Locale.ROOT))
+        return repository.getAssetsLiveData(symbol.uppercase(Locale.ROOT))
     }
 
     fun getEventsLiveData(symbol: String): LiveData<Events> {
-        return repository.getEventsLiveData(symbol.toUpperCase(Locale.ROOT))
+        return repository.getEventsLiveData(symbol.uppercase(Locale.ROOT))
     }
 
     fun getDividendsLiveData(symbol: String)
             : LiveData<Dividends> {
-        return repository.getDividendsLiveData(symbol.toUpperCase(Locale.ROOT))
+        return repository.getDividendsLiveData(symbol.uppercase(Locale.ROOT))
     }
 
     fun updateEvent2(
@@ -2688,7 +2688,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         events: List<Event>
     ) =
         scope.launch {
-            repository.updateEvents(symbol = symbol.toUpperCase(Locale.ROOT), events = events)
+            repository.updateEvents(symbol = symbol.uppercase(Locale.ROOT), events = events)
         }
 
     fun updateDividend2(
@@ -2708,7 +2708,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun deleteDividends(symbol: String) = scope.launch {
-        repository.deleteDividends(symbol.toUpperCase(Locale.ROOT))
+        repository.deleteDividends(symbol.uppercase(Locale.ROOT))
     }
 
     fun deleteEvent(event: Event) =
@@ -2718,7 +2718,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun deleteEvents(symbol: String) =
         scope.launch {
-            repository.deleteEvents(symbol.toUpperCase(Locale.ROOT))
+            repository.deleteEvents(symbol.uppercase(Locale.ROOT))
         }
 
     fun resetPortfolios() {

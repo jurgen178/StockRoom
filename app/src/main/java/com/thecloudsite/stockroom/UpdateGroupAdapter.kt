@@ -104,7 +104,7 @@ class UpdateGroupAdapter internal constructor(
 
   internal fun addGroups(groups: List<Group>) {
     groupList = groups.sortedBy { group ->
-      group.name.toLowerCase(Locale.ROOT)
+      group.name.lowercase(Locale.ROOT)
     }
 
     mergeData()

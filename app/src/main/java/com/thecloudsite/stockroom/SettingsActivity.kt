@@ -313,7 +313,7 @@ class SettingsActivity : AppCompatActivity(),
                 // Add () to avoid cast exception.
                 val symbolNew = (dialogBinding.symbolNew.text).toString()
                   .trim()
-                  .toUpperCase(Locale.ROOT)
+                  .uppercase(Locale.ROOT)
                 if (symbolNew.isEmpty() || symbolNew.contains(" ")) {
                   Toast.makeText(
                     requireContext(),

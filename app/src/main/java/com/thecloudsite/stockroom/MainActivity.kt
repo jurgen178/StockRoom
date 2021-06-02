@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity() {
     stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
       if (groups != null) {
         SharedFilterGroupList.groups = groups.sortedBy { group ->
-          group.name.toLowerCase(Locale.ROOT)
+          group.name.lowercase(Locale.ROOT)
         }
 
         updateFilterList(this, filterDataViewModel)
@@ -367,7 +367,7 @@ class MainActivity : AppCompatActivity() {
 
             val symbolList: List<String> = symbols.map { symbol ->
               symbol.replace("\"", "")
-                .toUpperCase(Locale.ROOT)
+                .uppercase(Locale.ROOT)
             }
               .distinct()
               .filter { symbol ->
@@ -673,7 +673,7 @@ class MainActivity : AppCompatActivity() {
 
         // Add portfolios as submenu items.
         portfolios.sortedBy {
-          it.toLowerCase(Locale.ROOT)
+          it.lowercase(Locale.ROOT)
         }
           .forEach { portfolio ->
             val standardPortfolio = getString(R.string.standard_portfolio)

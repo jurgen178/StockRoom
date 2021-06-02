@@ -157,7 +157,7 @@ fun dividendCycleStr(
 }
 
 fun isValidSymbol(symbol: String): Boolean {
-  val symbolUpper = symbol.toUpperCase(Locale.ROOT)
+  val symbolUpper = symbol.uppercase(Locale.ROOT)
 
   return symbol.isNotBlank()
           &&
@@ -976,7 +976,7 @@ fun parseStockOption(symbol: String): StockOptionData {
 
   // named groups are not yet supported
   val match = "([A-Z.]+)(7?)\\s*(\\d+)([A-Z])(\\d+)".toRegex()
-    .matchEntire(symbol.toUpperCase(Locale.ROOT))
+    .matchEntire(symbol.uppercase(Locale.ROOT))
 
   if (match != null && match.groups.size == 6) {
     val sym = match.groups[1]?.value
