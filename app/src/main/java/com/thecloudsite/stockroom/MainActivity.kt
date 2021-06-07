@@ -343,7 +343,7 @@ class MainActivity : AppCompatActivity() {
         //take action when network connection is gained
       }
 
-      override fun onLost(network: Network) {sha
+      override fun onLost(network: Network) {
         //take action when network connection is lost
       }
     })

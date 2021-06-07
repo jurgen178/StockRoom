@@ -20,25 +20,25 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class CryptoSymbolsRepository(private val api: () -> CrypoSymbolsData?) : BaseRepository() {
+class CryptoSymbolsRepository(private val api: () -> CryptoSymbolsData?) : BaseRepository() {
 
-  private val _symbols = MutableLiveData<List<CrypoSymbolEntry>>()
-  val symbols: LiveData<List<CrypoSymbolEntry>>
+  private val _symbols = MutableLiveData<List<CryptoSymbolEntry>>()
+  val symbols: LiveData<List<CryptoSymbolEntry>>
     get() = _symbols
 
   suspend fun getData() {
     _symbols.value = getCryptoSymbols()
   }
 
-  private suspend fun getCryptoSymbols(): List<CrypoSymbolEntry> {
+  private suspend fun getCryptoSymbols(): List<CryptoSymbolEntry> {
 
-    val api: CrypoSymbolsData = api() ?: return emptyList()
+    val api: CryptoSymbolsData = api() ?: return emptyList()
 
-    val cryptoSymbols: List<CrypoSymbolEntry>? = try {
+    val cryptoSymbols: List<CryptoSymbolEntry>? = try {
       safeApiCall(
         call = {
           updateCounter()
-          api.getCrypoSymbolsDataAsync()
+          api.getCryptoSymbolsDataAsync()
             .await()
         },
         errorMessage = "Error getting list data."

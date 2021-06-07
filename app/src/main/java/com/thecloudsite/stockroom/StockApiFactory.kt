@@ -221,7 +221,7 @@ object CryptoSymbolsApiFactory {
       } else {
         url = checkUrl(_url)
         coingeckoApi = try {
-          retrofit().create(CrypoSymbolsData::class.java)
+          retrofit().create(CryptoSymbolsData::class.java)
         } catch (e: Exception) {
           null
         }
@@ -233,7 +233,7 @@ object CryptoSymbolsApiFactory {
     update(defaultUrl)
   }
 
-  var coingeckoApi: CrypoSymbolsData? = null
+  var coingeckoApi: CryptoSymbolsData? = null
 }
 
 object StockYahooChartDataApiFactory {

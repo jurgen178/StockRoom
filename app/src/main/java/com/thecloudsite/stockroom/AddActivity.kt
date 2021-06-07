@@ -72,7 +72,7 @@ class AddActivity : AppCompatActivity() {
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private lateinit var cryptoSymbolsViewModel: CryptoSymbolsViewModel
-  private var crypoSymbols: List<CrypoSymbolEntry> = emptyList()
+  private var cryptoSymbols: List<CryptoSymbolEntry> = emptyList()
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -92,7 +92,7 @@ class AddActivity : AppCompatActivity() {
     cryptoSymbolsViewModel = ViewModelProvider(this).get(CryptoSymbolsViewModel::class.java)
 
     cryptoSymbolsViewModel.symbols.observe(this, Observer { cryptoSymbols ->
-      this.crypoSymbols = cryptoSymbols
+      this.cryptoSymbols = cryptoSymbols
 
       // maxL is 50 for coingecko ids
       // see isValidSymbol
@@ -101,8 +101,8 @@ class AddActivity : AppCompatActivity() {
 //      }
 
       binding.symbolsSpinner.adapter =
-        ArrayAdapter(this, layout.simple_list_item_1, crypoSymbols.map { crypoSymbolEntry ->
-          crypoSymbolEntry.name
+        ArrayAdapter(this, layout.simple_list_item_1, this.cryptoSymbols.map { cryptoSymbolEntry ->
+          cryptoSymbolEntry.name
         })
     })
 
@@ -136,7 +136,7 @@ class AddActivity : AppCompatActivity() {
         position: Int,
         id: Long
       ) {
-        binding.editAdd.setText(crypoSymbols[position].id)
+        binding.editAdd.setText(cryptoSymbols[position].id)
       }
     }
 

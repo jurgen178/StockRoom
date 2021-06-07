@@ -27,7 +27,7 @@ class CryptoSymbolsViewModel(application: Application) : AndroidViewModel(applic
   private val cryptoSymbolsRepository: CryptoSymbolsRepository =
     CryptoSymbolsRepository { CryptoSymbolsApiFactory.coingeckoApi }
 
-  val symbols: LiveData<List<CrypoSymbolEntry>> = cryptoSymbolsRepository.symbols
+  val symbols: LiveData<List<CryptoSymbolEntry>> = cryptoSymbolsRepository.symbols
 
   fun getData() {
     viewModelScope.launch {

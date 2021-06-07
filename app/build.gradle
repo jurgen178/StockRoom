@@ -86,9 +86,9 @@ dependencies {
   implementation 'com.google.firebase:firebase-config-ktx:21.0.0'
   implementation 'com.google.firebase:firebase-analytics-ktx:19.0.0'
   // Add the Firebase Crashlytics SDK.
-  implementation 'com.google.firebase:firebase-crashlytics-ktx:18.0.0'
+  implementation 'com.google.firebase:firebase-crashlytics-ktx:18.0.1'
   // Add the dependency for the Performance Monitoring library
-  implementation 'com.google.firebase:firebase-perf:20.0.0'
+  implementation 'com.google.firebase:firebase-perf:20.0.1'
   // Add the Realtime Database SDK
   implementation 'com.google.firebase:firebase-database-ktx:20.0.0'
   implementation 'androidx.cardview:cardview:1.0.0'
