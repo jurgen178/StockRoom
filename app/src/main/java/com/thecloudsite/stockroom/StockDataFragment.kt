@@ -1064,10 +1064,6 @@ class StockDataFragment : Fragment() {
           linkType = LinkType.WebsiteType,
           link = "https://otcmarkets.com/stock/$symbol/overview"
         ),
-        "Seeking Alpha" to LinkListEntry(
-          linkType = LinkType.WebsiteType,
-          link = "https://seekingalpha.com/symbol/$symbol"
-        ),
         "TD Ameritrade" to LinkListEntry(
           linkType = LinkType.WebsiteType,
           link = "https://research.tdameritrade.com/grid/public/research/stocks/summary?symbol=$symbol"
@@ -1079,10 +1075,6 @@ class StockDataFragment : Fragment() {
         "Real Money (TheStreet)" to LinkListEntry(
           linkType = LinkType.WebsiteType,
           link = "https://realmoney.thestreet.com/quote/$symbol"
-        ),
-        "Zacks" to LinkListEntry(
-          linkType = LinkType.WebsiteType,
-          link = "https://www.zacks.com/stock/quote/$symbol"
         ),
         "Yahoo Daily Gainers" to LinkListEntry(
           linkType = LinkType.WebsiteGeneralType,
