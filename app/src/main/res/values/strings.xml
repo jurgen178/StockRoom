@@ -282,7 +282,7 @@ limitations under the License. -->
   <string name="standard_portfolio">Standard Portfolio</string>
   <string name="menu_portfolio_title">Select Portfolio</string>
   <string name="portfolio_header">Portfolio</string>
-  <string name="stocktype_header">Stock type</string>
+  <string name="dataprovider_header">Data provider</string>
   <string name="add_portfolio">Add Portfolio</string>
   <string name="rename_portfolio">Rename Portfolio</string>
   <string name="rename_portfolio_header">Rename Portfolio \'%1$s\'</string>
@@ -634,9 +634,9 @@ limitations under the License. -->
     <item>At least one filter match (||)</item>
   </string-array>
 
-  <string-array name="stocktype_items">
-    <item>Stock</item>
-    <item>Cryptocurrency</item>
+  <string-array name="dataprovider_items">
+    <item>Yahoo Finance</item>
+    <item>Coinbase (Cryptocurrency)</item>
   </string-array>
 
 </resources>

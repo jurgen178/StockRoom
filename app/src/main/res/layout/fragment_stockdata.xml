@@ -355,19 +355,19 @@
           <TextView
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@string/stocktype_header"
+              android:text="@string/dataprovider_header"
               style="@style/section_header"
               />
 
           <Spinner
-              android:id="@+id/stockTypeSpinner"
+              android:id="@+id/dataproviderSpinner"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginTop="8dp"
               android:layout_marginStart="16dp"
               android:layout_marginEnd="16dp"
               android:layout_marginBottom="16dp"
-              android:entries="@array/stocktype_items"
+              android:entries="@array/dataprovider_items"
               />
 
         </LinearLayout>

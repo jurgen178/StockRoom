@@ -108,7 +108,7 @@ class AddActivity : AppCompatActivity() {
 
     cryptoSymbolsViewModel.getData()
 
-    binding.stockTypeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+    binding.dataproviderSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
       }
 
@@ -148,7 +148,7 @@ class AddActivity : AppCompatActivity() {
         val symbol = addView.text.toString()
           .trim()
 
-        val type = binding.stockTypeSpinner.selectedItemPosition
+        val type = binding.dataproviderSpinner.selectedItemPosition
 
         // https://convertcodes.com/unicode-converter-encode-decode-utf/
         if (symbol.lowercase(Locale.ROOT) == "\u0064\u0065\u0062\u0075\u0067") {

@@ -1194,7 +1194,7 @@ class StockDataFragment : Fragment() {
       }
 
       // Setup type selection
-      binding.stockTypeSpinner.setSelection(
+      binding.dataproviderSpinner.setSelection(
         stockDBdata.type
       )
 
@@ -1488,7 +1488,7 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    binding.stockTypeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+    binding.dataproviderSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
       }
 
@@ -2744,7 +2744,7 @@ class StockDataFragment : Fragment() {
   }
 
   private fun updateType() {
-    val selectedType = binding.stockTypeSpinner.selectedItemPosition
+    val selectedType = binding.dataproviderSpinner.selectedItemPosition
     if (type.value != selectedType) {
       stockRoomViewModel.setType(symbol, selectedType)
     }
