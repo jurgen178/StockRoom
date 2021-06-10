@@ -24,14 +24,13 @@ import kotlinx.coroutines.launch
 
 class CryptoSymbolsViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val cryptoSymbolsRepository: CryptoSymbolsRepository =
-    CryptoSymbolsRepository { CryptoSymbolsApiFactory.coingeckoApi }
+  private val cryptoSymbolsRepository: CryptoSymbolsRepository = CryptoSymbolsRepository()
 
   val symbols: LiveData<List<CryptoSymbolEntry>> = cryptoSymbolsRepository.symbols
 
-  fun getData() {
+  fun getData(api: () -> CryptoSymbolsData?) {
     viewModelScope.launch {
-      cryptoSymbolsRepository.getData()
+      cryptoSymbolsRepository.getData(api)
     }
   }
 }
