@@ -81,7 +81,7 @@ limitations under the License. -->
 
   <string-array name="dataprovider_items">
     <item>Yahoo Finanzdaten</item>
-    <item>Coinbase (Kryptowährung)</item>
+    <item>Coingecko (Kryptowährung)</item>
   </string-array>
 
   <!-- Preference Titles -->
