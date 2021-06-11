@@ -77,7 +77,7 @@ class StockDataActivity : AppCompatActivity() {
     // Query only this symbol when this activity is on.
     stockSymbol = StockSymbol(
       symbol = symbolString?.uppercase(Locale.ROOT) ?: "",
-      type = StockTypeFromInt(type)
+      type = dataProviderFromInt(type)
     )
 
     SharedRepository.selectedSymbol = stockSymbol

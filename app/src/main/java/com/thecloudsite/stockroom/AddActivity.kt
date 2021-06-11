@@ -71,8 +71,8 @@ class AddActivity : AppCompatActivity() {
   private lateinit var importRequest: ActivityResultLauncher<String>
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
-  private lateinit var cryptoSymbolsViewModel: CryptoSymbolsViewModel
-  private var cryptoSymbols: List<CryptoSymbolEntry> = emptyList()
+  private lateinit var dataProviderSymbolsViewModel: DataProviderSymbolsViewModel
+  private var dataProviderSymbols: List<DataProviderSymbolEntry> = emptyList()
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -89,10 +89,10 @@ class AddActivity : AppCompatActivity() {
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
-    cryptoSymbolsViewModel = ViewModelProvider(this).get(CryptoSymbolsViewModel::class.java)
+    dataProviderSymbolsViewModel = ViewModelProvider(this).get(DataProviderSymbolsViewModel::class.java)
 
-    cryptoSymbolsViewModel.symbols.observe(this, Observer { cryptoSymbols ->
-      this.cryptoSymbols = cryptoSymbols
+    dataProviderSymbolsViewModel.symbols.observe(this, Observer { symbols ->
+      this.dataProviderSymbols = symbols
 
       // maxL is 50 for coingecko ids
       // see isValidSymbol
@@ -101,12 +101,12 @@ class AddActivity : AppCompatActivity() {
 //      }
 
       binding.symbolsSpinner.adapter =
-        ArrayAdapter(this, layout.simple_list_item_1, this.cryptoSymbols.map { cryptoSymbolEntry ->
-          cryptoSymbolEntry.name
+        ArrayAdapter(this, layout.simple_list_item_1, this.dataProviderSymbols.map { symbolEntry ->
+          symbolEntry.name
         })
     })
 
-    cryptoSymbolsViewModel.getData()
+    dataProviderSymbolsViewModel.getData { CoingeckoSymbolsApiFactory.coingeckoApi }
 
     binding.dataproviderSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -136,7 +136,7 @@ class AddActivity : AppCompatActivity() {
         position: Int,
         id: Long
       ) {
-        binding.editAdd.setText(cryptoSymbols[position].id)
+        binding.editAdd.setText(dataProviderSymbols[position].id)
       }
     }
 

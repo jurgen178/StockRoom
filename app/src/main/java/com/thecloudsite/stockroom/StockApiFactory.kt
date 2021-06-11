@@ -199,7 +199,7 @@ object StockRawMarketDataApiFactory {
   var yahooApi: YahooApiRawMarketData? = null
 }
 
-object CryptoSymbolsApiFactory {
+object CoingeckoSymbolsApiFactory {
 
   // https://api.coingecko.com/api/v3/coins/
 
@@ -225,7 +225,7 @@ object CryptoSymbolsApiFactory {
       } else {
         url = checkUrl(_url)
         coingeckoApi = try {
-          retrofit().create(CryptoSymbolsData::class.java)
+          retrofit().create(DataProviderSymbolsData::class.java)
         } catch (e: Exception) {
           null
         }
@@ -237,7 +237,7 @@ object CryptoSymbolsApiFactory {
     update(defaultUrl)
   }
 
-  var coingeckoApi: CryptoSymbolsData? = null
+  var coingeckoApi: DataProviderSymbolsData? = null
 }
 
 object StockYahooChartDataApiFactory {

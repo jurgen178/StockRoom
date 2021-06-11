@@ -121,17 +121,17 @@ data class StockItemJson
     var dividends: List<DividendJson>?
 )
 
-enum class StockType(val value: Int) {
+enum class DataProvider(val value: Int) {
     Standard(0),
-    Crypto(1)
+    Coingecko(1)
 }
 
-fun StockTypeFromInt(value: Int) = StockType.values().first { it.value == value }
+fun dataProviderFromInt(value: Int) = DataProvider.values().first { it.value == value }
 
 data class StockSymbol
     (
     val symbol: String = "",
-    val type: StockType = StockType.Standard
+    val type: DataProvider = DataProvider.Standard
 )
 
 object SharedHandler {
@@ -735,7 +735,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 usedPortfolioSymbols.add(
                     StockSymbol(
                         symbol = symbol,
-                        type = StockTypeFromInt(data.type)
+                        type = dataProviderFromInt(data.type)
                     )
                 )
 

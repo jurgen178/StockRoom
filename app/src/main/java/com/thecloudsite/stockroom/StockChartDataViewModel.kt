@@ -28,7 +28,7 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
 
   private val stockChartDataRepository: StockChartDataRepository =
     StockChartDataRepository({ StockYahooChartDataApiFactory.yahooApi },
-      { com.thecloudsite.stockroom.StockCoingeckoChartDataApiFactory.coingeckoApi })
+      { StockCoingeckoChartDataApiFactory.coingeckoApi })
 
   val chartData: LiveData<StockChartData> = stockChartDataRepository.chartData
 
@@ -55,7 +55,7 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
     stockSymbol: StockSymbol,
     stockViewRange: StockViewRange
   ) {
-    if (stockSymbol.type == StockType.Crypto) {
+    if (stockSymbol.type == DataProvider.Coingecko) {
       when (stockViewRange) {
         StockViewRange.OneDay -> {
           getCoingeckoChartData(stockSymbol, 1)

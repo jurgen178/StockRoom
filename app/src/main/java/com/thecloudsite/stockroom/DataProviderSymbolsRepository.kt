@@ -20,36 +20,36 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class CryptoSymbolsRepository() : BaseRepository() {
+class DataProviderSymbolsRepository() : BaseRepository() {
 
-  private val _symbols = MutableLiveData<List<CryptoSymbolEntry>>()
-  val symbols: LiveData<List<CryptoSymbolEntry>>
+  private val _symbols = MutableLiveData<List<DataProviderSymbolEntry>>()
+  val symbols: LiveData<List<DataProviderSymbolEntry>>
     get() = _symbols
 
-  suspend fun getData(api: () -> CryptoSymbolsData?) {
-    _symbols.value = getCryptoSymbols(api)
+  suspend fun getData(api: () -> DataProviderSymbolsData?) {
+    _symbols.value = getDataProviderSymbols(api)
   }
 
-  private suspend fun getCryptoSymbols(api: () -> CryptoSymbolsData?): List<CryptoSymbolEntry> {
+  private suspend fun getDataProviderSymbols(api: () -> DataProviderSymbolsData?): List<DataProviderSymbolEntry> {
 
     if (api() == null) {
       return emptyList()
     }
 
-    val cryptoSymbols: List<CryptoSymbolEntry>? = try {
+    val dataProviderSymbols: List<DataProviderSymbolEntry>? = try {
       safeApiCall(
         call = {
           updateCounter()
-          api()!!.getCryptoSymbolsDataAsync()
+          api()!!.getDataProviderSymbolsDataAsync()
             .await()
         },
         errorMessage = "Error getting list data."
       )
     } catch (e: Exception) {
-      Log.d("StockChartDataRepository.getYahooChartDataAsync() failed", "Exception=$e")
+      Log.d("DataProviderSymbolsRepository.getDataProviderSymbols() failed", "Exception=$e")
       null
     }
 
-    return cryptoSymbols ?: emptyList()
+    return dataProviderSymbols ?: emptyList()
   }
 }

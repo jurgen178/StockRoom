@@ -394,7 +394,7 @@ class OnlineDataAdapter internal constructor(
 
     // val separatorChar: Char = DecimalFormatSymbols.getInstance().decimalSeparator
 
-    if (stockSymbol.type == StockType.Standard) {
+    if (stockSymbol.type == DataProvider.Standard) {
       data.add(
         OnlineData(
           desc = context.getString(R.string.onlinedata_regularMarketPreviousClose),

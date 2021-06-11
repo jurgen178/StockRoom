@@ -22,15 +22,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class CryptoSymbolsViewModel(application: Application) : AndroidViewModel(application) {
+// Get all the available symbols from the provider.
+class DataProviderSymbolsViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val cryptoSymbolsRepository: CryptoSymbolsRepository = CryptoSymbolsRepository()
+  private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
 
-  val symbols: LiveData<List<CryptoSymbolEntry>> = cryptoSymbolsRepository.symbols
+  val symbols: LiveData<List<DataProviderSymbolEntry>> = dataProviderSymbolsRepository.symbols
 
-  fun getData(api: () -> CryptoSymbolsData?) {
+  fun getData(api: () -> DataProviderSymbolsData?) {
     viewModelScope.launch {
-      cryptoSymbolsRepository.getData(api)
+      dataProviderSymbolsRepository.getData(api)
     }
   }
 }

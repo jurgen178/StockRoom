@@ -26,6 +26,7 @@ import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.recyclerview.widget.RecyclerView
+import com.thecloudsite.stockroom.dataProviderFromInt
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
@@ -223,11 +224,7 @@ class ListDBAdapter(
           holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(0, 148, 255))
           holder.binding.dbStockdbdataSymbol.text = data.symbol
           holder.binding.dbStockdbdataPortfolio.text = data.portfolio
-          holder.binding.dbStockdbdataType.text = if (data.type == 0) {
-            "Stock"
-          } else {
-            "Crypto"
-          }
+          holder.binding.dbStockdbdataType.text = dataProviderFromInt(data.type).toString()
           holder.binding.dbStockdbdataData.text = data.data
           holder.binding.dbStockdbdataGroupColor.text = getColorStr(data.groupColor)
           holder.binding.dbStockdbdataNote.text = data.note

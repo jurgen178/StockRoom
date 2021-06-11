@@ -121,7 +121,7 @@ class StockMarketDataRepository(
             MarketDataResult(marketState = MarketState.NO_SYMBOL, delayInMs = -1, msg = "")
 
         val standardList = symbols.filter { stock ->
-            stock.type == StockType.Standard
+            stock.type == DataProvider.Standard
         }
         if (standardList.isNotEmpty()) {
             val yahooResult = getYahooStockData(standardList)
@@ -131,7 +131,7 @@ class StockMarketDataRepository(
         }
 
         val cryptoList = symbols.filter { stock ->
-            stock.type == StockType.Crypto
+            stock.type == DataProvider.Coingecko
         }
         if (cryptoList.isNotEmpty()) {
             val coingeckoResult = getCoingeckoStockData(cryptoList)
@@ -339,13 +339,13 @@ class StockMarketDataRepository(
     suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
 
         if (symbol.symbol.isNotEmpty()) {
-            if (symbol.type == StockType.Standard) {
+            if (symbol.type == DataProvider.Standard) {
                 val api: YahooApiMarketData? = yahooApi()
                 if (api != null) {
                     return queryYahooStockData(api, listOf(symbol)).first.firstOrNull()
                 }
             } else
-                if (symbol.type == StockType.Crypto) {
+                if (symbol.type == DataProvider.Coingecko) {
                     val api: CoingeckoApiMarketData? = coingeckoApi()
                     if (api != null) {
                         return queryCoingeckoStockData(api, listOf(symbol)).first.firstOrNull()

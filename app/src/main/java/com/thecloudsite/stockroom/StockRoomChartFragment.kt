@@ -39,7 +39,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
   lateinit var onlineChartHandler: Handler
   var symbolList: MutableList<String> = mutableListOf()
-  private val symbolTypesMap = HashMap<String, StockType>()
+  private val symbolTypesMap = HashMap<String, DataProvider>()
 
   // Settings.
   private val settingStockViewRange = "SettingStockViewRange"
@@ -219,7 +219,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
 
   private fun getStockSymbol(symbol: String): StockSymbol {
     if (!symbolTypesMap.containsKey(symbol)) {
-      symbolTypesMap[symbol] = StockTypeFromInt(stockRoomViewModel.getTypeSync(symbol))
+      symbolTypesMap[symbol] = dataProviderFromInt(stockRoomViewModel.getTypeSync(symbol))
     }
 
     return StockSymbol(

@@ -230,7 +230,7 @@ class StockDataFragment : Fragment() {
   private lateinit var stockChartDataViewModel: StockChartDataViewModel
   private lateinit var stockRoomViewModel: StockRoomViewModel
   private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
-  private val symbolTypesMap = HashMap<String, StockType>()
+  private val symbolTypesMap = HashMap<String, DataProvider>()
 
   private val assetChange = StockAssetsLiveData()
   private val assetChangeLiveData = MediatorLiveData<StockAssetsLiveData>()
@@ -243,7 +243,7 @@ class StockDataFragment : Fragment() {
   private var stockDataEntries: List<StockDataEntry>? = null
   private var assetTimeEntries: List<AssetsTimeData> = emptyList()
   private var symbol: String = ""
-  private var type: StockType = StockType.Standard
+  private var type: DataProvider = DataProvider.Standard
 
   private var isOnline: Boolean = false
 
@@ -806,7 +806,7 @@ class StockDataFragment : Fragment() {
   ): View {
 
     symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").uppercase(Locale.ROOT)
-    type = StockTypeFromInt(arguments?.getInt(EXTRA_TYPE, 0) ?: 0)
+    type = dataProviderFromInt(arguments?.getInt(EXTRA_TYPE, 0) ?: 0)
 
     // Setup online data every 2s for regular hours.
     onlineDataHandler = Handler(Looper.getMainLooper())
@@ -832,7 +832,7 @@ class StockDataFragment : Fragment() {
     binding.onlineDataView.adapter = onlineDataAdapter
 
     // Coingecko has no candle data for crypto.
-    if (type == StockType.Crypto) {
+    if (type == DataProvider.Coingecko) {
       stockViewMode = StockViewMode.Line
     }
 
@@ -2801,7 +2801,7 @@ class StockDataFragment : Fragment() {
         // stockRoomViewModel.allStockItems.observe is not ready yet.
         if (!symbolTypesMap.containsKey(symbolRef)) {
           symbolTypesMap[symbolRef] =
-            StockTypeFromInt(stockRoomViewModel.getTypeSync(symbolRef))
+            dataProviderFromInt(stockRoomViewModel.getTypeSync(symbolRef))
         }
         val stockSymbolRef = StockSymbol(
           symbol = symbolRef,
@@ -2955,7 +2955,7 @@ class StockDataFragment : Fragment() {
       }
     }
 
-    if (type == StockType.Crypto) {
+    if (type == DataProvider.Coingecko) {
       binding.imageButtonIconLine.visibility = View.GONE
       binding.imageButtonIconCandle.visibility = View.GONE
     }

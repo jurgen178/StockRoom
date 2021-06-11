@@ -813,16 +813,16 @@ data class CoingeckoChartData(
   var prices: List<MutableList<Double>>? = null
 )
 
-interface CryptoSymbolsData {
+interface DataProviderSymbolsData {
   // https://api.coingecko.com/api/v3/coins/list
 
   @GET("list")
-  fun getCryptoSymbolsDataAsync(
-  ): Deferred<Response<List<CryptoSymbolEntry>>>
+  fun getDataProviderSymbolsDataAsync(
+  ): Deferred<Response<List<DataProviderSymbolEntry>>>
 }
 
 @JsonClass(generateAdapter = true)
-data class CryptoSymbolEntry(
+data class DataProviderSymbolEntry(
   var id: String,
   var symbol: String,
   var name: String,
