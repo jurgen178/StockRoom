@@ -411,6 +411,9 @@ class DividendFragment : Fragment() {
       dividendCycleToSelection(dividend.cycle)
     )
 
+    dialogBinding.textViewAccount.visibility = View.GONE
+    dialogBinding.textViewAssetAccount.visibility = View.GONE
+
     builder.setView(dialogBinding.root)
       .setTitle(R.string.update_dividend)
       // Add action buttons
@@ -895,6 +898,9 @@ class DividendFragment : Fragment() {
       dialogBinding.textViewDividendCycleSpinner.setSelection(
         dividendCycleToSelection(Quarterly.value)
       )
+
+      dialogBinding.textViewAccount.visibility = View.GONE
+      dialogBinding.textViewAssetAccount.visibility = View.GONE
 
       builder.setView(dialogBinding.root)
         .setTitle(R.string.add_dividend)
