@@ -137,10 +137,7 @@ class SummaryGroupFragment : Fragment() {
       override fun onChartLongPressed(me: MotionEvent?) {
         longPressedCounter++
 
-        if (longPressedCounter == 2) {
-          binding.summaryPieChart.visibility = View.GONE
-          binding.imageView.visibility = View.VISIBLE
-        }
+        updatePieChartAndBitmap()
       }
 
       override fun onChartDoubleTapped(me: MotionEvent?) {
@@ -183,23 +180,21 @@ class SummaryGroupFragment : Fragment() {
         )
         .setNegativeButton("\u004c\u0061\u0074\u0065\u0072") { dialog, _ ->
           dialog.dismiss()
-          binding.summaryPieChart.visibility = View.VISIBLE
-          binding.imageView.visibility = View.GONE
+          longPressedCounter = 0
+          updatePieChartAndBitmap()
         }
         .setPositiveButton("\u004e\u006f\u0077") { dialog, _ ->
           val intent = Intent(activity, InvadersActivity::class.java)
           activity?.startActivity(intent)
           dialog.dismiss()
-          binding.summaryPieChart.visibility = View.VISIBLE
-          binding.imageView.visibility = View.GONE
+          longPressedCounter = 0
+          updatePieChartAndBitmap()
         }
         .setOnCancelListener {
-          binding.summaryPieChart.visibility = View.VISIBLE
-          binding.imageView.visibility = View.GONE
+          longPressedCounter = 0
+          updatePieChartAndBitmap()
         }
         .show()
-
-      longPressedCounter = 0
     }
 
     // Rotating device keeps sending alerts.
@@ -211,8 +206,7 @@ class SummaryGroupFragment : Fragment() {
     super.onPause()
 
     longPressedCounter = 0
-    binding.summaryPieChart.visibility = View.VISIBLE
-    binding.imageView.visibility = View.GONE
+    updatePieChartAndBitmap()
   }
 
   override fun onResume() {
@@ -266,8 +260,9 @@ class SummaryGroupFragment : Fragment() {
     if (totalAssets >= epsilon) {
 
       binding.summarySectionHeader.visibility = View.VISIBLE
-      binding.summaryPieChart.visibility = View.VISIBLE
       binding.summaryDivider.visibility = View.VISIBLE
+
+      updatePieChartAndBitmap()
 
       val sortedAssetList = assetList.filter { assetSummary ->
         assetSummary.assets > 0.0
@@ -363,6 +358,16 @@ class SummaryGroupFragment : Fragment() {
       binding.summarySectionHeader.visibility = View.GONE
       binding.summaryPieChart.visibility = View.GONE
       binding.summaryDivider.visibility = View.GONE
+    }
+  }
+
+  private fun updatePieChartAndBitmap() {
+    if (longPressedCounter == 2) {
+      binding.summaryPieChart.visibility = View.GONE
+      binding.imageView.visibility = View.VISIBLE
+    } else {
+      binding.summaryPieChart.visibility = View.VISIBLE
+      binding.imageView.visibility = View.GONE
     }
   }
 }
