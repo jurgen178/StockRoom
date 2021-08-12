@@ -37,6 +37,9 @@ import retrofit2.http.Query
 
 // https://api.nyse.com/docs/
 
+// query stock names
+// https://autoc.finance.yahoo.com/autoc?query=a&region=US&lang=en-US&guccounter=1
+
 /*
 {
     "quoteResponse": {
