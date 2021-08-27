@@ -47,10 +47,7 @@ import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomChartItemBinding
-import com.thecloudsite.stockroom.utils.MaxChartOverlays
-import com.thecloudsite.stockroom.utils.chartOverlayColors
-import com.thecloudsite.stockroom.utils.getChangeColor
-import com.thecloudsite.stockroom.utils.getMarketValues
+import com.thecloudsite.stockroom.utils.*
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
@@ -61,6 +58,7 @@ class StockRoomChartAdapter internal constructor(
 ) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
+  private var defaultTextColor: Int? = null
 
   private var stockViewRange: StockViewRange = StockViewRange.OneDay
   private var stockViewMode: StockViewMode = StockViewMode.Line
@@ -104,6 +102,10 @@ class StockRoomChartAdapter internal constructor(
   ) {
     val current = getItem(position)
     if (current != null) {
+      if (defaultTextColor == null) {
+        defaultTextColor = holder.binding.textViewMarketPrice.currentTextColor
+      }
+
       holder.bindGroupOnClickListener(current, clickListenerGroup)
       holder.bindSummaryOnClickListener(current, clickListenerSymbol)
 
@@ -216,6 +218,16 @@ class StockRoomChartAdapter internal constructor(
           context
         )
       )
+
+      if (useWhiteOnRed && current.onlineMarketData.marketChange < 0.0) {
+        holder.binding.textViewMarketPrice.setTextColor(Color.WHITE)
+        holder.binding.textViewChange.setTextColor(Color.WHITE)
+        holder.binding.textViewChangePercent.setTextColor(Color.WHITE)
+      } else {
+        holder.binding.textViewMarketPrice.setTextColor(defaultTextColor!!)
+        holder.binding.textViewChange.setTextColor(defaultTextColor!!)
+        holder.binding.textViewChangePercent.setTextColor(defaultTextColor!!)
+      }
 
       var color = current.stockDBdata.groupColor
       if (color == 0) {

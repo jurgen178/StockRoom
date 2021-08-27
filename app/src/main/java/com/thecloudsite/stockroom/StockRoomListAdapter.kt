@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.text.SpannableStringBuilder
@@ -38,14 +39,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomListItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
-import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
-import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
-import com.thecloudsite.stockroom.utils.commissionScale
-import com.thecloudsite.stockroom.utils.getAssets
-import com.thecloudsite.stockroom.utils.getChangeColor
-import com.thecloudsite.stockroom.utils.getDividendStr
-import com.thecloudsite.stockroom.utils.getMarketValues
+import com.thecloudsite.stockroom.utils.*
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneOffset
@@ -56,338 +50,354 @@ import java.time.format.FormatStyle.SHORT
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#4
 
 fun setBackgroundColor(
-  view: View,
-  color: Int
+    view: View,
+    color: Int
 ) {
-  // Keep the corner radii and only change the background color.
-  val gradientDrawable = view.background as GradientDrawable
-  gradientDrawable.setColor(color)
-  view.background = gradientDrawable
+    // Keep the corner radii and only change the background color.
+    val gradientDrawable = view.background as GradientDrawable
+    gradientDrawable.setColor(color)
+    view.background = gradientDrawable
 }
 
 class StockRoomListAdapter internal constructor(
-  val context: Context,
-  private val clickListenerGroupLambda: (StockItem, View) -> Unit,
-  private val clickListenerSymbolLambda: (StockItem) -> Unit
+    val context: Context,
+    private val clickListenerGroupLambda: (StockItem, View) -> Unit,
+    private val clickListenerSymbolLambda: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
-  private val inflater: LayoutInflater = LayoutInflater.from(context)
-  private var defaultTextColor: Int? = null
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private var defaultTextColor: Int? = null
 
-  class StockRoomViewHolder(
-    val binding: StockroomListItemBinding
-  ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindGroupOnClickListener(
-      stockItem: StockItem,
-      clickListenerLambda: (StockItem, View) -> Unit
-    ) {
-      binding.itemviewGroup.setOnClickListener { clickListenerLambda(stockItem, itemView) }
-    }
-
-    fun bindSummaryOnClickListener(
-      stockItem: StockItem,
-      clickListenerLambda: (StockItem) -> Unit
-    ) {
-      binding.itemSummary.setOnClickListener { clickListenerLambda(stockItem) }
-      binding.itemRedGreen.setOnClickListener { clickListenerLambda(stockItem) }
-    }
-  }
-
-  override fun onCreateViewHolder(
-    parent: ViewGroup,
-    viewType: Int
-  ): StockRoomViewHolder {
-
-    val binding = StockroomListItemBinding.inflate(inflater, parent, false)
-    return StockRoomViewHolder(binding)
-  }
-
-  override fun onBindViewHolder(
-    holder: StockRoomViewHolder,
-    position: Int
-  ) {
-    val current = getItem(position)
-
-    if (defaultTextColor == null) {
-      defaultTextColor = holder.binding.textViewAssets.currentTextColor
-    }
-
-    if (current != null) {
-      holder.bindGroupOnClickListener(current, clickListenerGroupLambda)
-      holder.bindSummaryOnClickListener(current, clickListenerSymbolLambda)
-
-      holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-
-      holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
-
-      holder.binding.imageViewSymbol.visibility = View.GONE
-      // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"
-      val imgUrl = current.onlineMarketData.coinImageUrl
-      if (imgUrl.isNotEmpty()) {
-        val imgView: ImageView = holder.binding.imageViewSymbol
-        val imgUri = imgUrl.toUri()
-        // use imgUrl as it is, no need to build upon the https scheme (https://...)
-        //.buildUpon()
-        //.scheme("https")
-        //.build()
-
-        Glide.with(imgView.context)
-          .load(imgUri)
-          .listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-              e: GlideException?,
-              model: Any?,
-              target: com.bumptech.glide.request.target.Target<Drawable?>?,
-              isFirstResource: Boolean
-            ): Boolean {
-              return false
-            }
-
-            override fun onResourceReady(
-              resource: Drawable?,
-              model: Any?,
-              target: com.bumptech.glide.request.target.Target<Drawable>?,
-              dataSource: DataSource?,
-              isFirstResource: Boolean
-            ): Boolean {
-              holder.binding.imageViewSymbol.visibility = View.VISIBLE
-              return false
-            }
-          })
-          .into(imgView)
-      }
-
-      holder.binding.textViewName.text = getName(current.onlineMarketData)
-
-      if (current.onlineMarketData.marketPrice > 0.0) {
-        val marketValues = getMarketValues(current.onlineMarketData)
-
-        if (current.onlineMarketData.postMarketData) {
-          holder.binding.textViewMarketPrice.text = SpannableStringBuilder()
-            .italic { append(marketValues.first) }
-
-          holder.binding.textViewChange.text = SpannableStringBuilder()
-            .italic { append(marketValues.second) }
-
-          holder.binding.textViewChangePercent.text = SpannableStringBuilder()
-            .italic { append(marketValues.third) }
-        } else {
-          holder.binding.textViewMarketPrice.text = marketValues.first
-          holder.binding.textViewChange.text = marketValues.second
-          holder.binding.textViewChangePercent.text = marketValues.third
+    class StockRoomViewHolder(
+        val binding: StockroomListItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bindGroupOnClickListener(
+            stockItem: StockItem,
+            clickListenerLambda: (StockItem, View) -> Unit
+        ) {
+            binding.itemviewGroup.setOnClickListener { clickListenerLambda(stockItem, itemView) }
         }
-      } else {
-        holder.binding.textViewMarketPrice.text = ""
-        holder.binding.textViewChange.text = ""
-        holder.binding.textViewChangePercent.text = ""
-        holder.binding.textViewAssets.text = ""
-      }
 
-      val (quantity, asset, commission) = getAssets(current.assets)
+        fun bindSummaryOnClickListener(
+            stockItem: StockItem,
+            clickListenerLambda: (StockItem) -> Unit
+        ) {
+            binding.itemSummary.setOnClickListener { clickListenerLambda(stockItem) }
+            binding.itemRedGreen.setOnClickListener { clickListenerLambda(stockItem) }
+        }
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): StockRoomViewHolder {
+
+        val binding = StockroomListItemBinding.inflate(inflater, parent, false)
+        return StockRoomViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(
+        holder: StockRoomViewHolder,
+        position: Int
+    ) {
+        val current = getItem(position)
+
+        if (current != null) {
+            if (defaultTextColor == null) {
+                defaultTextColor = holder.binding.textViewAssets.currentTextColor
+            }
+
+            holder.bindGroupOnClickListener(current, clickListenerGroupLambda)
+            holder.bindSummaryOnClickListener(current, clickListenerSymbolLambda)
+
+            holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+
+            holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
+
+            holder.binding.imageViewSymbol.visibility = View.GONE
+            // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"
+            val imgUrl = current.onlineMarketData.coinImageUrl
+            if (imgUrl.isNotEmpty()) {
+                val imgView: ImageView = holder.binding.imageViewSymbol
+                val imgUri = imgUrl.toUri()
+                // use imgUrl as it is, no need to build upon the https scheme (https://...)
+                //.buildUpon()
+                //.scheme("https")
+                //.build()
+
+                Glide.with(imgView.context)
+                    .load(imgUri)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            holder.binding.imageViewSymbol.visibility = View.VISIBLE
+                            return false
+                        }
+                    })
+                    .into(imgView)
+            }
+
+            holder.binding.textViewName.text = getName(current.onlineMarketData)
+
+            if (current.onlineMarketData.marketPrice > 0.0) {
+                val marketValues = getMarketValues(current.onlineMarketData)
+
+                if (current.onlineMarketData.postMarketData) {
+                    holder.binding.textViewMarketPrice.text = SpannableStringBuilder()
+                        .italic { append(marketValues.first) }
+
+                    holder.binding.textViewChange.text = SpannableStringBuilder()
+                        .italic { append(marketValues.second) }
+
+                    holder.binding.textViewChangePercent.text = SpannableStringBuilder()
+                        .italic { append(marketValues.third) }
+                } else {
+                    holder.binding.textViewMarketPrice.text = marketValues.first
+                    holder.binding.textViewChange.text = marketValues.second
+                    holder.binding.textViewChangePercent.text = marketValues.third
+                }
+            } else {
+                holder.binding.textViewMarketPrice.text = ""
+                holder.binding.textViewChange.text = ""
+                holder.binding.textViewChangePercent.text = ""
+                holder.binding.textViewAssets.text = ""
+            }
+
+            val (quantity, asset, commission) = getAssets(current.assets)
 //      val quantity = current.assets.sumByDouble {
 //        it.quantity
 //      }
 
-      val assets = SpannableStringBuilder()
+            val assets = SpannableStringBuilder()
 
 //      var asset: Double = 0.0
 
-      if (quantity > 0.0) {
+            if (quantity > 0.0) {
 //        asset = current.assets.sumByDouble {
 //          it.quantity * it.price
 //        }
 
-        assets.append(
-          "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
-            DecimalFormat(DecimalFormat2To4Digits).format(
-              asset / quantity
-            )
-          }"
-        )
-
-        if (commission > 0.0) {
-          assets.scale(commissionScale) {
-            append(
-              "+${
-                DecimalFormat(DecimalFormat2To4Digits).format(
-                  commission
+                assets.append(
+                    "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
+                        DecimalFormat(DecimalFormat2To4Digits).format(
+                            asset / quantity
+                        )
+                    }"
                 )
-              }"
-            )
-          }
-        }
 
-        assets.append(
-          "\n${
-            DecimalFormat(
-              DecimalFormat2Digits
-            ).format(asset)
-          } "
-        )
+                if (commission > 0.0) {
+                    assets.scale(commissionScale) {
+                        append(
+                            "+${
+                                DecimalFormat(DecimalFormat2To4Digits).format(
+                                    commission
+                                )
+                            }"
+                        )
+                    }
+                }
 
-        if (current.onlineMarketData.marketPrice > 0.0) {
-          val capital = quantity * current.onlineMarketData.marketPrice
+                assets.append(
+                    "\n${
+                        DecimalFormat(
+                            DecimalFormat2Digits
+                        ).format(asset)
+                    } "
+                )
+
+                if (current.onlineMarketData.marketPrice > 0.0) {
+                    val capital = quantity * current.onlineMarketData.marketPrice
 //          capital = current.assets.sumByDouble {
 //            it.quantity * current.onlineMarketData.marketPrice
 //          }
 
-          val assetChange = capital - asset
-          val capitalPercent = assetChange * 100.0 / asset
+                    val assetChange = capital - asset
+                    val capitalPercent = assetChange * 100.0 / asset
 
-          assets.color(
-            getChangeColor(
-              assetChange,
-              current.onlineMarketData.postMarketData,
-              defaultTextColor!!,
-              context
-            )
-          )
-          {
-            assets.append(
-              DecimalFormat("+ $DecimalFormat2Digits;- $DecimalFormat2Digits").format(assetChange)
-            )
-            if (capitalPercent < 10000.0) {
-              assets.append(
-                " (${
-                  DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
-                    capitalPercent
-                  )
-                }%)"
-              )
+                    assets.color(
+                        getChangeColor(
+                            assetChange,
+                            current.onlineMarketData.postMarketData,
+                            defaultTextColor!!,
+                            context
+                        )
+                    )
+                    {
+                        assets.append(
+                            DecimalFormat("+ $DecimalFormat2Digits;- $DecimalFormat2Digits").format(
+                                assetChange
+                            )
+                        )
+                        if (capitalPercent < 10000.0) {
+                            assets.append(
+                                " (${
+                                    DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
+                                        capitalPercent
+                                    )
+                                }%)"
+                            )
+                        }
+                    }
+
+                    assets.append(" = ")
+                    assets.bold { append(DecimalFormat(DecimalFormat2Digits).format(capital)) }
+                    assets.scale(currencyScale) { append(getCurrency(current.onlineMarketData)) }
+                }
             }
-          }
-
-          assets.append(" = ")
-          assets.bold { append(DecimalFormat(DecimalFormat2Digits).format(capital)) }
-          assets.scale(currencyScale) { append(getCurrency(current.onlineMarketData)) }
-        }
-      }
 
 //      // set background to asset change
 //      holder.itemRedGreen.setBackgroundColor(
 //          getChangeColor(capital, asset, context.getColor(R.color.backgroundListColor), context)
 //      )
-      // set background to market change
-      holder.binding.itemRedGreen.setBackgroundColor(
-        getChangeColor(
-          current.onlineMarketData.marketChange,
-          current.onlineMarketData.postMarketData,
-          context.getColor(color.backgroundListColor),
-          context
-        )
-      )
-
-      val dividendStr = getDividendStr(current, context)
-      if (dividendStr.isNotEmpty()) {
-        if (assets.isNotEmpty()) {
-          assets.append("\n")
-        }
-
-        assets.append(
-          dividendStr
-        )
-      }
-
-      if (current.stockDBdata.alertAbove > 0.0) {
-        if (assets.isNotEmpty()) {
-          assets.append("\n")
-        }
-
-        assets.append(
-          "${context.getString(R.string.alert_above_in_list)} ${
-            DecimalFormat(
-              DecimalFormat2To4Digits
-            ).format(current.stockDBdata.alertAbove)
-          }"
-        )
-      }
-      if (current.stockDBdata.alertBelow > 0.0) {
-        if (assets.isNotEmpty()) {
-          assets.append("\n")
-        }
-
-        assets.append(
-          "${context.getString(R.string.alert_below_in_list)} ${
-            DecimalFormat(
-              DecimalFormat2To4Digits
-            ).format(current.stockDBdata.alertBelow)
-          }"
-        )
-      }
-      if (current.events.isNotEmpty()) {
-        val count = current.events.size
-        val eventStr =
-          context.resources.getQuantityString(R.plurals.events_in_list, count, count)
-
-        if (assets.isNotEmpty()) {
-          assets.append("\n")
-        }
-
-        assets.append(eventStr)
-        current.events.forEach {
-          val localDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.datetime), ZoneOffset.systemDefault())
-          val datetime = localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
-          assets.append(
-            "\n${
-              context.getString(
-                R.string.event_datetime_format, it.title, datetime
-              )
-            }"
-          )
-        }
-      }
-      if (current.stockDBdata.note.isNotEmpty()) {
-        if (assets.isNotEmpty()) {
-          assets.append("\n")
-        }
-
-        assets.append(
-          "${
-            context.getString(
-              R.string.note_in_list
+            // set background to market change
+            holder.binding.itemRedGreen.setBackgroundColor(
+                getChangeColor(
+                    current.onlineMarketData.marketChange,
+                    current.onlineMarketData.postMarketData,
+                    context.getColor(color.backgroundListColor),
+                    context
+                )
             )
-          } ${current.stockDBdata.note}"
-        )
-      }
 
-      holder.binding.textViewAssets.text = assets
+            if (useWhiteOnRed && current.onlineMarketData.marketChange < 0.0) {
+                holder.binding.textViewMarketPrice.setTextColor(Color.WHITE)
+                holder.binding.textViewChange.setTextColor(Color.WHITE)
+                holder.binding.textViewChangePercent.setTextColor(Color.WHITE)
+            } else {
+                holder.binding.textViewMarketPrice.setTextColor(defaultTextColor!!)
+                holder.binding.textViewChange.setTextColor(defaultTextColor!!)
+                holder.binding.textViewChangePercent.setTextColor(defaultTextColor!!)
+            }
 
-      var color = current.stockDBdata.groupColor
-      if (color == 0) {
-        color = context.getColor(R.color.backgroundListColor)
-      }
-      setBackgroundColor(holder.binding.itemviewGroup, color)
+            val dividendStr = getDividendStr(current, context)
+            if (dividendStr.isNotEmpty()) {
+                if (assets.isNotEmpty()) {
+                    assets.append("\n")
+                }
 
-      /*
-      // Keep the corner radii and only change the background color.
-      val gradientDrawable = holder.itemLinearLayoutGroup.background as GradientDrawable
-      gradientDrawable.setColor(color)
-      holder.itemLinearLayoutGroup.background = gradientDrawable
-      */
+                assets.append(
+                    dividendStr
+                )
+            }
+
+            if (current.stockDBdata.alertAbove > 0.0) {
+                if (assets.isNotEmpty()) {
+                    assets.append("\n")
+                }
+
+                assets.append(
+                    "${context.getString(R.string.alert_above_in_list)} ${
+                        DecimalFormat(
+                            DecimalFormat2To4Digits
+                        ).format(current.stockDBdata.alertAbove)
+                    }"
+                )
+            }
+            if (current.stockDBdata.alertBelow > 0.0) {
+                if (assets.isNotEmpty()) {
+                    assets.append("\n")
+                }
+
+                assets.append(
+                    "${context.getString(R.string.alert_below_in_list)} ${
+                        DecimalFormat(
+                            DecimalFormat2To4Digits
+                        ).format(current.stockDBdata.alertBelow)
+                    }"
+                )
+            }
+            if (current.events.isNotEmpty()) {
+                val count = current.events.size
+                val eventStr =
+                    context.resources.getQuantityString(R.plurals.events_in_list, count, count)
+
+                if (assets.isNotEmpty()) {
+                    assets.append("\n")
+                }
+
+                assets.append(eventStr)
+                current.events.forEach {
+                    val localDateTime =
+                        ZonedDateTime.ofInstant(
+                            Instant.ofEpochSecond(it.datetime),
+                            ZoneOffset.systemDefault()
+                        )
+                    val datetime =
+                        localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(SHORT))
+                    assets.append(
+                        "\n${
+                            context.getString(
+                                R.string.event_datetime_format, it.title, datetime
+                            )
+                        }"
+                    )
+                }
+            }
+            if (current.stockDBdata.note.isNotEmpty()) {
+                if (assets.isNotEmpty()) {
+                    assets.append("\n")
+                }
+
+                assets.append(
+                    "${
+                        context.getString(
+                            R.string.note_in_list
+                        )
+                    } ${current.stockDBdata.note}"
+                )
+            }
+
+            holder.binding.textViewAssets.text = assets
+
+            var color = current.stockDBdata.groupColor
+            if (color == 0) {
+                color = context.getColor(R.color.backgroundListColor)
+            }
+            setBackgroundColor(holder.binding.itemviewGroup, color)
+
+            /*
+            // Keep the corner radii and only change the background color.
+            val gradientDrawable = holder.itemLinearLayoutGroup.background as GradientDrawable
+            gradientDrawable.setColor(color)
+            holder.itemLinearLayoutGroup.background = gradientDrawable
+            */
+        }
     }
-  }
 
-  internal fun setStockItems(stockItems: List<StockItem>) {
-    submitList(stockItems)
-    notifyDataSetChanged()
-  }
+    internal fun setStockItems(stockItems: List<StockItem>) {
+        submitList(stockItems)
+        notifyDataSetChanged()
+    }
 }
 
 // https://codelabs.developers.google.com/codelabs/kotlin-android-training-diffutil-databinding/#3
 
 class StockRoomDiffCallback : DiffUtil.ItemCallback<StockItem>() {
-  override fun areItemsTheSame(
-    oldItem: StockItem,
-    newItem: StockItem
-  ): Boolean {
-    return oldItem.onlineMarketData.symbol == newItem.onlineMarketData.symbol
-  }
+    override fun areItemsTheSame(
+        oldItem: StockItem,
+        newItem: StockItem
+    ): Boolean {
+        return oldItem.onlineMarketData.symbol == newItem.onlineMarketData.symbol
+    }
 
-  override fun areContentsTheSame(
-    oldItem: StockItem,
-    newItem: StockItem
-  ): Boolean {
-    return oldItem == newItem
-  }
+    override fun areContentsTheSame(
+        oldItem: StockItem,
+        newItem: StockItem
+    ): Boolean {
+        return oldItem == newItem
+    }
 }
