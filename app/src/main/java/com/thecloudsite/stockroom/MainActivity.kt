@@ -53,17 +53,13 @@ import com.thecloudsite.stockroom.list.ListLogAdapter
 import com.thecloudsite.stockroom.news.AllNewsFragment
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
-import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
-import com.thecloudsite.stockroom.utils.isOnline
-import com.thecloudsite.stockroom.utils.isValidSymbol
-import com.thecloudsite.stockroom.utils.setAppTheme
-import com.thecloudsite.stockroom.utils.updateFilterList
+import com.thecloudsite.stockroom.utils.*
 import java.text.DecimalFormat
 import java.time.ZonedDateTime
 import java.util.Locale
 
 object SharedAccountList {
-  var accounts: List<String> = listOf()
+    var accounts: List<String> = listOf()
 }
 
 // App constants.
@@ -74,69 +70,69 @@ object SharedAccountList {
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var binding: ActivityMainBinding
-  private lateinit var addSymbolRequest: ActivityResultLauncher<Intent>
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var addSymbolRequest: ActivityResultLauncher<Intent>
 
-  private lateinit var remoteConfig: FirebaseRemoteConfig
+    private lateinit var remoteConfig: FirebaseRemoteConfig
 
-  private lateinit var filterDataViewModel: FilterDataViewModel
+    private lateinit var filterDataViewModel: FilterDataViewModel
 
-  private lateinit var stockRoomViewModel: StockRoomViewModel
-  private var eventList: MutableList<Events> = mutableListOf()
+    private lateinit var stockRoomViewModel: StockRoomViewModel
+    private var eventList: MutableList<Events> = mutableListOf()
 
-  lateinit var onlineDataHandler: Handler
+    lateinit var onlineDataHandler: Handler
 
-  lateinit var eventHandler: Handler
-  val eventDelay: Long = 5000L
+    lateinit var eventHandler: Handler
+    val eventDelay: Long = 5000L
 
-  companion object {
+    companion object {
 
-    // Remote Config keys
-    private const val STOCKMARKETDATA_URL = "stockMarketDataUrl"
-    private const val STOCKCHARTDATA_URL = "stockChartDataUrl"
+        // Remote Config keys
+        private const val STOCKMARKETDATA_URL = "stockMarketDataUrl"
+        private const val STOCKCHARTDATA_URL = "stockChartDataUrl"
 
-    //    private const val YAHOONEWS_URL = "yahooNewsUrl"
-    //    private const val YAHOOALLNEWS_URL = "yahooAllNewsUrl"
-    //    private const val GOOGLENEWS_URL = "googleNewsUrl"
-    //    private const val GOOGLEALLNEWS_URL = "googleAllNewsUrl"
-    private const val USER_MSG_TITLE = "userMsgTitle"
-    private const val USER_MSG = "userMsg"
+        //    private const val YAHOONEWS_URL = "yahooNewsUrl"
+        //    private const val YAHOOALLNEWS_URL = "yahooAllNewsUrl"
+        //    private const val GOOGLENEWS_URL = "googleNewsUrl"
+        //    private const val GOOGLEALLNEWS_URL = "googleAllNewsUrl"
+        private const val USER_MSG_TITLE = "userMsgTitle"
+        private const val USER_MSG = "userMsg"
 
-    const val onlineDataTimerDelay: Long = 2000L
-    var debugList: Boolean = false
-    var realtimeOverride: Boolean = false
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    setAppTheme(this)
-    //delegate.applyDayNight()
-
-    super.onCreate(savedInstanceState)
-
-    binding = ActivityMainBinding.inflate(layoutInflater)
-    val view = binding.root
-    setContentView(view)
-
-    // Setup the notification channel.
-    NotificationChannelFactory(this)
-
-    val debugListAdapter = ListLogAdapter(this)
-    val debugList = binding.recyclerViewDebug
-    debugList.adapter = debugListAdapter
-
-    val linearLayoutManager = LinearLayoutManager(this)
-    linearLayoutManager.stackFromEnd = true
-    debugList.layoutManager = linearLayoutManager
-
-    // Get a new or existing ViewModel from the ViewModelProvider.
-    stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
-    stockRoomViewModel.logDebug("Main activity started.")
-
-    if (!isOnline(applicationContext)) {
-      stockRoomViewModel.logDebug("Network is offline.")
+        const val onlineDataTimerDelay: Long = 2000L
+        var debugList: Boolean = false
+        var realtimeOverride: Boolean = false
     }
 
-    filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setAppTheme(this)
+        //delegate.applyDayNight()
+
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        // Setup the notification channel.
+        NotificationChannelFactory(this)
+
+        val debugListAdapter = ListLogAdapter(this)
+        val debugList = binding.recyclerViewDebug
+        debugList.adapter = debugListAdapter
+
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.stackFromEnd = true
+        debugList.layoutManager = linearLayoutManager
+
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
+        stockRoomViewModel.logDebug("Main activity started.")
+
+        if (!isOnline(applicationContext)) {
+            stockRoomViewModel.logDebug("Network is offline.")
+        }
+
+        filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
 /*
     // When you enable disk persistence, your app writes the data locally
@@ -168,281 +164,284 @@ class MainActivity : AppCompatActivity() {
     })
 */
 
-    updateRemoteConfig()
+        updateRemoteConfig()
 
-    SharedRepository.alerts.observe(this, Observer { alerts ->
-      showAlerts(alerts)
-    })
+        SharedRepository.alerts.observe(this, Observer { alerts ->
+            showAlerts(alerts)
+        })
 
-    stockRoomViewModel.allEvents.observe(this, Observer { events ->
-      events?.let {
-        eventList = events.toMutableList()
-        checkEvents()
-      }
-    })
+        stockRoomViewModel.allEvents.observe(this, Observer { events ->
+            events?.let {
+                eventList = events.toMutableList()
+                checkEvents()
+            }
+        })
 
-    // Update groups to be used by the filter.
-    stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
-      if (groups != null) {
-        SharedFilterGroupList.groups = groups.sortedBy { group ->
-          group.name.lowercase(Locale.ROOT)
+        // Update groups to be used by the filter.
+        stockRoomViewModel.allGroupTable.observe(this, Observer { groups ->
+            if (groups != null) {
+                SharedFilterGroupList.groups = groups.sortedBy { group ->
+                    group.name.lowercase(Locale.ROOT)
+                }
+
+                updateFilterList(this, filterDataViewModel)
+            }
+        })
+
+        SharedRepository.debugData.observe(this, Observer { debugdatalist ->
+            if (debugdatalist != null) {
+                val s = binding.recyclerViewDebug.canScrollVertically(1)
+                debugListAdapter.updateData(debugdatalist)
+                // Scroll only if last item at the bottom to allow scrolling up without jumping
+                // to the bottom for each update.
+                if (!s) {
+                    binding.recyclerViewDebug.adapter?.itemCount?.minus(1)
+                        ?.let { binding.recyclerViewDebug.scrollToPosition(it) }
+                }
+            }
+        })
+
+        SharedHandler.deleteStockHandler.observe(this, Observer { symbol ->
+            if (symbol != null) {
+                stockRoomViewModel.deleteStock(symbol)
+            }
+        })
+
+        binding.viewpager.adapter = object : FragmentStateAdapter(this) {
+            override fun createFragment(position: Int): Fragment {
+
+                val displayedViewsList = SharedRepository.displayedViewsList
+
+                if (position < 0 || position >= displayedViewsList.size) {
+                    return StockRoomListFragment.newInstance()
+                }
+
+                return when (displayedViewsList[position]) {
+                    "00_StockRoomChartFragment" -> {
+                        StockRoomChartFragment.newInstance()
+                    }
+                    "01_StockRoomOverviewFragment" -> {
+                        StockRoomOverviewFragment.newInstance()
+                    }
+                    "02_StockRoomListFragment" -> {
+                        StockRoomListFragment.newInstance()
+                    }
+                    "03_StockRoomTileFragment" -> {
+                        StockRoomTileFragment.newInstance()
+                    }
+                    "04_StockRoomSmallListFragment" -> {
+                        StockRoomSmallListFragment.newInstance()
+                    }
+                    "05_StockRoomSmallTile1Fragment" -> {
+                        StockRoomSmallTile1Fragment.newInstance()
+                    }
+                    "06_StockRoomSmallTile2Fragment" -> {
+                        StockRoomSmallTile2Fragment.newInstance()
+                    }
+                    "07_StockRoomTableFragment" -> {
+                        StockRoomTableFragment.newInstance()
+                    }
+                    "08_StockRoomTreemapFragment" -> {
+                        StockRoomTreemapFragment.newInstance()
+                    }
+                    "09_SummaryGroupFragment" -> {
+                        SummaryGroupFragment.newInstance()
+                    }
+                    "10_AllNewsFragment" -> {
+                        AllNewsFragment.newInstance()
+                    }
+                    "11_TransactionsFragment" -> {
+                        StockRoomTransactionsFragment.newInstance()
+                    }
+                    "12_AllTransactionsFragment" -> {
+                        StockRoomTransactionsAllFragment.newInstance()
+                    }
+                    "13_GainLossTimelineFragment" -> {
+                        GainLossTimelineFragment.newInstance()
+                    }
+                    "14_AllGainLossTimelineFragment" -> {
+                        GainLossAllTimelineFragment.newInstance()
+                    }
+                    "15_AssetTimelineFragment" -> {
+                        AssetTimelineFragment.newInstance()
+                    }
+                    "16_AllAssetTimelineFragment" -> {
+                        AssetAllTimelineFragment.newInstance()
+                    }
+                    "17_EventTimelineFragment" -> {
+                        EventTimelineFragment.newInstance()
+                    }
+                    "18_AllEventTimelineFragment" -> {
+                        EventAllTimelineFragment.newInstance()
+                    }
+                    "19_DividendTimelineFragment" -> {
+                        DividendTimelineFragment.newInstance()
+                    }
+                    "20_AllDividendTimelineFragment" -> {
+                        DividendAllTimelineFragment.newInstance()
+                    }
+                    else -> {
+                        StockRoomListFragment.newInstance()
+                    }
+                }
+            }
+
+            override fun getItemCount(): Int {
+                return SharedRepository.displayedViewsList.size
+            }
         }
 
-        updateFilterList(this, filterDataViewModel)
-      }
-    })
+        //binding.viewpager.offscreenPageLimit = 1
 
-    SharedRepository.debugData.observe(this, Observer { debugdatalist ->
-      if (debugdatalist != null) {
-        val s = binding.recyclerViewDebug.canScrollVertically(1)
-        debugListAdapter.updateData(debugdatalist)
-        // Scroll only if last item at the bottom to allow scrolling up without jumping
-        // to the bottom for each update.
-        if (!s) {
-          binding.recyclerViewDebug.adapter?.itemCount?.minus(1)
-            ?.let { binding.recyclerViewDebug.scrollToPosition(it) }
-        }
-      }
-    })
+        // Display the tab layout headers.
+        TabLayoutMediator(binding.mainTabLayout, binding.viewpager) { tab, position ->
 
-    SharedHandler.deleteStockHandler.observe(this, Observer { symbol ->
-      if (symbol != null) {
-        stockRoomViewModel.deleteStock(symbol)
-      }
-    })
+            if (position >= 0 && position < SharedRepository.displayedViewsList.size) {
+                // 00_StockRoomChartFragment, 01_StockRoomOverviewFragment, ... 16_DividendTimelineFragment
+                val viewlistEntry = SharedRepository.displayedViewsList[position].subSequence(0, 2)
+                    .toString()
+                val index = viewlistEntry.toInt()
+                val headers = this.resources.getStringArray(array.displayed_views_headers)
+                if (index >= 0 && index < headers.size) {
+                    tab.text = headers[index]
+                }
+            }
+        }.attach()
 
-    binding.viewpager.adapter = object : FragmentStateAdapter(this) {
-      override fun createFragment(position: Int): Fragment {
+        binding.viewpager.setCurrentItem(
+            if (SharedRepository.displayedViewsList.contains("02_StockRoomListFragment")) {
+                SharedRepository.displayedViewsList.indexOf("02_StockRoomListFragment")
+            } else {
+                0
+            }, false
+        )
 
-        val displayedViewsList = SharedRepository.displayedViewsList
+        // Update the menu when filter data changed.
+        filterDataViewModel.filterLiveData.observe(this, Observer { filter ->
+            invalidateOptionsMenu()
+        })
 
-        if (position < 0 || position >= displayedViewsList.size) {
-          return StockRoomListFragment.newInstance()
-        }
+        // Update the menu when portfolio data changed.
+        SharedRepository.portfoliosLiveData.observe(this, Observer {
+            invalidateOptionsMenu()
+        })
 
-        return when (displayedViewsList[position]) {
-          "00_StockRoomChartFragment" -> {
-            StockRoomChartFragment.newInstance()
-          }
-          "01_StockRoomOverviewFragment" -> {
-            StockRoomOverviewFragment.newInstance()
-          }
-          "02_StockRoomListFragment" -> {
-            StockRoomListFragment.newInstance()
-          }
-          "03_StockRoomTileFragment" -> {
-            StockRoomTileFragment.newInstance()
-          }
-          "04_StockRoomSmallListFragment" -> {
-            StockRoomSmallListFragment.newInstance()
-          }
-          "05_StockRoomSmallTile1Fragment" -> {
-            StockRoomSmallTile1Fragment.newInstance()
-          }
-          "06_StockRoomSmallTile2Fragment" -> {
-            StockRoomSmallTile2Fragment.newInstance()
-          }
-          "07_StockRoomTableFragment" -> {
-            StockRoomTableFragment.newInstance()
-          }
-          "08_StockRoomTreemapFragment" -> {
-            StockRoomTreemapFragment.newInstance()
-          }
-          "09_SummaryGroupFragment" -> {
-            SummaryGroupFragment.newInstance()
-          }
-          "10_AllNewsFragment" -> {
-            AllNewsFragment.newInstance()
-          }
-          "11_TransactionsFragment" -> {
-            StockRoomTransactionsFragment.newInstance()
-          }
-          "12_AllTransactionsFragment" -> {
-            StockRoomTransactionsAllFragment.newInstance()
-          }
-          "13_GainLossTimelineFragment" -> {
-            GainLossTimelineFragment.newInstance()
-          }
-          "14_AllGainLossTimelineFragment" -> {
-            GainLossAllTimelineFragment.newInstance()
-          }
-          "15_AssetTimelineFragment" -> {
-            AssetTimelineFragment.newInstance()
-          }
-          "16_AllAssetTimelineFragment" -> {
-            AssetAllTimelineFragment.newInstance()
-          }
-          "17_EventTimelineFragment" -> {
-            EventTimelineFragment.newInstance()
-          }
-          "18_AllEventTimelineFragment" -> {
-            EventAllTimelineFragment.newInstance()
-          }
-          "19_DividendTimelineFragment" -> {
-            DividendTimelineFragment.newInstance()
-          }
-          "20_AllDividendTimelineFragment" -> {
-            DividendAllTimelineFragment.newInstance()
-          }
-          else -> {
-            StockRoomListFragment.newInstance()
-          }
-        }
-      }
+        // Update the menu check marks when sorting is changed.
+        stockRoomViewModel.sortingLiveData.observe(this, Observer {
+            invalidateOptionsMenu()
+        })
 
-      override fun getItemCount(): Int {
-        return SharedRepository.displayedViewsList.size
-      }
+        /*
+        val connectivityManager =
+          application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+          override fun onAvailable(network: Network) {
+            //take action when network connection is gained
+          }
+
+          override fun onLost(network: Network) {
+            //take action when network connection is lost
+          }
+        })
+        */
+
+        // Setup online data every 2s for regular hours.
+        onlineDataHandler = Handler(Looper.getMainLooper())
+
+        // Setup event handler every 5s.
+        eventHandler = Handler(Looper.getMainLooper())
+
+        //supportActionBar?.title = "test\n123"
+        addSymbolRequest =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                val data = result.data
+                if (data != null) {
+                    val symbolText = data.getStringExtra(EXTRA_SYMBOL)
+                    if (symbolText != null) {
+                        val symbols = symbolText.split("[ ,;\r\n\t]".toRegex())
+
+                        val symbolList: List<String> = symbols.map { symbol ->
+                            symbol.replace("\"", "")
+                                .uppercase(Locale.ROOT)
+                        }
+                            .distinct()
+                            .filter { symbol ->
+                                isValidSymbol(symbol)
+                            }
+
+                        val portfolio = SharedRepository.selectedPortfolio.value ?: ""
+                        val type: Int = data.getIntExtra(EXTRA_TYPE, 0)
+
+                        symbolList.forEach { symbol ->
+                            stockRoomViewModel.insert(
+                                symbol = symbol,
+                                portfolio = portfolio,
+                                type = type
+                            )
+
+                            val msg = getString(R.string.add_stock, symbol)
+                            stockRoomViewModel.logDebug("AddActivity '$msg'")
+
+                            Toast.makeText(
+                                applicationContext,
+                                msg,
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                        }
+                    }
+                }
+            }
+
+        // Delegates for setting the night mode have now been run, get the night mode and set the useWhiteOnRed property.
+        getAppThemeColorRed(this)
     }
 
-    //binding.viewpager.offscreenPageLimit = 1
+    private fun updateRemoteConfig() {
+        // Get Remote Config instance.
+        // [START get_remote_config_instance]
+        remoteConfig = Firebase.remoteConfig
+        // [END get_remote_config_instance]
 
-    // Display the tab layout headers.
-    TabLayoutMediator(binding.mainTabLayout, binding.viewpager) { tab, position ->
+        // Create a Remote Config Setting to enable developer mode, which you can use to increase
+        // the number of fetches available per hour during development. Also use Remote Config
+        // Setting to set the minimum fetch interval.
+        // [START enable_dev_mode]
 
-      if (position >= 0 && position < SharedRepository.displayedViewsList.size) {
-        // 00_StockRoomChartFragment, 01_StockRoomOverviewFragment, ... 16_DividendTimelineFragment
-        val viewlistEntry = SharedRepository.displayedViewsList[position].subSequence(0, 2)
-          .toString()
-        val index = viewlistEntry.toInt()
-        val headers = this.resources.getStringArray(array.displayed_views_headers)
-        if (index >= 0 && index < headers.size) {
-          tab.text = headers[index]
-        }
-      }
-    }.attach()
-
-    binding.viewpager.setCurrentItem(
-      if (SharedRepository.displayedViewsList.contains("02_StockRoomListFragment")) {
-        SharedRepository.displayedViewsList.indexOf("02_StockRoomListFragment")
-      } else {
-        0
-      }, false
-    )
-
-    // Update the menu when filter data changed.
-    filterDataViewModel.filterLiveData.observe(this, Observer { filter ->
-      invalidateOptionsMenu()
-    })
-
-    // Update the menu when portfolio data changed.
-    SharedRepository.portfoliosLiveData.observe(this, Observer {
-      invalidateOptionsMenu()
-    })
-
-    // Update the menu check marks when sorting is changed.
-    stockRoomViewModel.sortingLiveData.observe(this, Observer {
-      invalidateOptionsMenu()
-    })
-
-    /*
-    val connectivityManager =
-      application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-      override fun onAvailable(network: Network) {
-        //take action when network connection is gained
-      }
-
-      override fun onLost(network: Network) {
-        //take action when network connection is lost
-      }
-    })
-    */
-
-    // Setup online data every 2s for regular hours.
-    onlineDataHandler = Handler(Looper.getMainLooper())
-
-    // Setup event handler every 5s.
-    eventHandler = Handler(Looper.getMainLooper())
-
-    //supportActionBar?.title = "test\n123"
-    addSymbolRequest =
-      registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-      { result ->
-        val data = result.data
-        if (data != null) {
-          val symbolText = data.getStringExtra(EXTRA_SYMBOL)
-          if (symbolText != null) {
-            val symbols = symbolText.split("[ ,;\r\n\t]".toRegex())
-
-            val symbolList: List<String> = symbols.map { symbol ->
-              symbol.replace("\"", "")
-                .uppercase(Locale.ROOT)
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) {
+                1
+            } else {
+                3600
             }
-              .distinct()
-              .filter { symbol ->
-                isValidSymbol(symbol)
-              }
-
-            val portfolio = SharedRepository.selectedPortfolio.value ?: ""
-            val type: Int = data.getIntExtra(EXTRA_TYPE, 0)
-
-            symbolList.forEach { symbol ->
-              stockRoomViewModel.insert(
-                symbol = symbol,
-                portfolio = portfolio,
-                type = type
-              )
-
-              val msg = getString(R.string.add_stock, symbol)
-              stockRoomViewModel.logDebug("AddActivity '$msg'")
-
-              Toast.makeText(
-                applicationContext,
-                msg,
-                Toast.LENGTH_LONG
-              )
-                .show()
-            }
-          }
         }
-      }
-  }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        // [END enable_dev_mode]
 
-  private fun updateRemoteConfig() {
-    // Get Remote Config instance.
-    // [START get_remote_config_instance]
-    remoteConfig = Firebase.remoteConfig
-    // [END get_remote_config_instance]
+        // Set default Remote Config parameter values. An app uses the in-app default values, and
+        // when you need to adjust those defaults, you set an updated value for only the values you
+        // want to change in the Firebase console. See Best Practices in the README for more
+        // information.
+        // [START set_default_values]
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        // [END set_default_values]
 
-    // Create a Remote Config Setting to enable developer mode, which you can use to increase
-    // the number of fetches available per hour during development. Also use Remote Config
-    // Setting to set the minimum fetch interval.
-    // [START enable_dev_mode]
+        // [START fetch_config_with_callback]
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    //val updated = task.result
+                    stockRoomViewModel.logDebug("Config activated.")
 
-    val configSettings = remoteConfigSettings {
-      minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) {
-        1
-      } else {
-        3600
-      }
-    }
-    remoteConfig.setConfigSettingsAsync(configSettings)
-    // [END enable_dev_mode]
+                    // Update configuration
+                    val marketDataUrl = remoteConfig[STOCKMARKETDATA_URL].asString()
+                    StockMarketDataApiFactory.update(marketDataUrl)
+                    //stockRoomViewModel.logDebug("Remote Config [url=$marketDataUrl]")
 
-    // Set default Remote Config parameter values. An app uses the in-app default values, and
-    // when you need to adjust those defaults, you set an updated value for only the values you
-    // want to change in the Firebase console. See Best Practices in the README for more
-    // information.
-    // [START set_default_values]
-    remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-    // [END set_default_values]
-
-    // [START fetch_config_with_callback]
-    remoteConfig.fetchAndActivate()
-      .addOnCompleteListener(this) { task ->
-        if (task.isSuccessful) {
-          //val updated = task.result
-          stockRoomViewModel.logDebug("Config activated.")
-
-          // Update configuration
-          val marketDataUrl = remoteConfig[STOCKMARKETDATA_URL].asString()
-          StockMarketDataApiFactory.update(marketDataUrl)
-          //stockRoomViewModel.logDebug("Remote Config [url=$marketDataUrl]")
-
-          val chartDataUrl = remoteConfig[STOCKCHARTDATA_URL].asString()
-          StockYahooChartDataApiFactory.update(chartDataUrl)
-          //stockRoomViewModel.logDebug("Remote Config [url=$chartDataUrl]")
+                    val chartDataUrl = remoteConfig[STOCKCHARTDATA_URL].asString()
+                    StockYahooChartDataApiFactory.update(chartDataUrl)
+                    //stockRoomViewModel.logDebug("Remote Config [url=$chartDataUrl]")
 
 //            val yahooNewsUrl = remoteConfig[YAHOONEWS_URL].asString()
 //            YahooNewsApiFactory.update(yahooNewsUrl)
@@ -460,252 +459,252 @@ class MainActivity : AppCompatActivity() {
 //            GoogleAllNewsApiFactory.update(googleAllNewsUrl)
 //            //stockRoomViewModel.logDebug("Remote Config [url=$googleNewsUrl]")
 
-          val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
-          val userMsg = remoteConfig[USER_MSG].asString()
-          if (userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
-            AlertDialog.Builder(this)
-              .setTitle(userMsgTitle)
-              .setMessage(userMsg)
-              .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-              .show()
-          }
-        } else {
-          stockRoomViewModel.logDebug("Config failed, using defaults.")
+                    val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
+                    val userMsg = remoteConfig[USER_MSG].asString()
+                    if (userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
+                        AlertDialog.Builder(this)
+                            .setTitle(userMsgTitle)
+                            .setMessage(userMsg)
+                            .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+                            .show()
+                    }
+                } else {
+                    stockRoomViewModel.logDebug("Config failed, using defaults.")
+                }
+            }
+        // [END fetch_config_with_callback]
+    }
+
+    private val onlineDataTask = object : Runnable {
+        override fun run() {
+            stockRoomViewModel.runOnlineTask()
+            onlineDataHandler.postDelayed(this, onlineDataTimerDelay)
         }
-      }
-    // [END fetch_config_with_callback]
-  }
-
-  private val onlineDataTask = object : Runnable {
-    override fun run() {
-      stockRoomViewModel.runOnlineTask()
-      onlineDataHandler.postDelayed(this, onlineDataTimerDelay)
     }
-  }
 
-  private val eventTask = object : Runnable {
-    override fun run() {
-      checkEvents()
-      //stockRoomViewModel.logDebug("Check events.")
-      eventHandler.postDelayed(this, eventDelay)
+    private val eventTask = object : Runnable {
+        override fun run() {
+            checkEvents()
+            //stockRoomViewModel.logDebug("Check events.")
+            eventHandler.postDelayed(this, eventDelay)
+        }
     }
-  }
 
-  override fun onPause() {
-    super.onPause()
+    override fun onPause() {
+        super.onPause()
 
-    onlineDataHandler.removeCallbacks(onlineDataTask)
-    eventHandler.removeCallbacks(eventTask)
-  }
+        onlineDataHandler.removeCallbacks(onlineDataTask)
+        eventHandler.removeCallbacks(eventTask)
+    }
 
-  override fun onResume() {
-    super.onResume()
+    override fun onResume() {
+        super.onResume()
 
-    onlineDataHandler.post(onlineDataTask)
-    eventHandler.post(eventTask)
+        onlineDataHandler.post(onlineDataTask)
+        eventHandler.post(eventTask)
 
-    val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+        val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
 //    val debug: Boolean = sharedPreferences.getBoolean("list", false)
-    binding.recyclerViewDebug.visibility = if (Companion.debugList) {
-      View.VISIBLE
-    } else {
-      View.GONE
+        binding.recyclerViewDebug.visibility = if (Companion.debugList) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
+        val tabHeadlines: Boolean = sharedPreferences.getBoolean("tab_headlines", true)
+        binding.mainTabLayout.visibility =
+            if (SharedRepository.displayedViewsList.size > 1 && tabHeadlines) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+        // Jumps to the last fragment when fragment is selected the first time from the headlines. Bug?
+        binding.viewpager.offscreenPageLimit = if (tabHeadlines) {
+            1
+        } else {
+            OFFSCREEN_PAGE_LIMIT_DEFAULT
+        }
+
+        updateFilterList(this, filterDataViewModel, sharedPreferences)
     }
 
-    val tabHeadlines: Boolean = sharedPreferences.getBoolean("tab_headlines", true)
-    binding.mainTabLayout.visibility =
-      if (SharedRepository.displayedViewsList.size > 1 && tabHeadlines) {
-        View.VISIBLE
-      } else {
-        View.GONE
-      }
+    private var filterMenuIdMap: MutableMap<Int, String> = mutableMapOf()
 
-    // Jumps to the last fragment when fragment is selected the first time from the headlines. Bug?
-    binding.viewpager.offscreenPageLimit = if (tabHeadlines) {
-      1
-    } else {
-      OFFSCREEN_PAGE_LIMIT_DEFAULT
-    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.main_menu, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true)
 
-    updateFilterList(this, filterDataViewModel, sharedPreferences)
-  }
-
-  private var filterMenuIdMap: MutableMap<Int, String> = mutableMapOf()
-
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    menuInflater.inflate(R.menu.main_menu, menu)
-    MenuCompat.setGroupDividerEnabled(menu, true)
-
-    // Remove previous filter items.
-    filterMenuIdMap.forEach { (id, _) ->
-      menu.removeItem(id)
-    }
-    filterMenuIdMap.clear()
+        // Remove previous filter items.
+        filterMenuIdMap.forEach { (id, _) ->
+            menu.removeItem(id)
+        }
+        filterMenuIdMap.clear()
 
 //    // Change the Filter menu item to bold style.
 //    val menuFilterItem = menu.findItem(R.id.menu_filter)
 //    menuFilterItem.title = SpannableStringBuilder()
 //        .bold { append(getString(R.string.menu_filter)) }
 
-    // long click on sync menu
+        // long click on sync menu
 //    val menuItemSync = menu.findItem(R.id.menu_sync)
 //    menuItemSync.actionView = ImageButton(this) // this is a Context.class object
 //    menuItemSync.actionView.setOnLongClickListener {
 //      false
 //    }
 
-    val menuItem = menu.findItem(R.id.menu_sort)
-    val filterActive = filterDataViewModel.filterActive
-    val selectedFilter = filterDataViewModel.selectedFilter
+        val menuItem = menu.findItem(R.id.menu_sort)
+        val filterActive = filterDataViewModel.filterActive
+        val selectedFilter = filterDataViewModel.selectedFilter
 
-    // Add the new filter items.
-    var id: Int = 1
-    filterDataViewModel.filterNameList.forEach { filterSet ->
+        // Add the new filter items.
+        var id: Int = 1
+        filterDataViewModel.filterNameList.forEach { filterSet ->
 
-      val filterSetMenuName = SpannableStringBuilder()
-        .italic { append(filterSet) }
+            val filterSetMenuName = SpannableStringBuilder()
+                .italic { append(filterSet) }
 
-      // Add the menu item to the group R.id.filter
-      val newMenuFilterItem =
-        menuItem.subMenu.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
-      if (filterActive) {
-        newMenuFilterItem.isCheckable = true
-        newMenuFilterItem.isChecked = selectedFilter == filterSet
-      }
+            // Add the menu item to the group R.id.filter
+            val newMenuFilterItem =
+                menuItem.subMenu.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
+            if (filterActive) {
+                newMenuFilterItem.isCheckable = true
+                newMenuFilterItem.isChecked = selectedFilter == filterSet
+            }
 
-      filterMenuIdMap[id] = filterSet
-      id++
+            filterMenuIdMap[id] = filterSet
+            id++
+        }
+
+        return true
     }
 
-    return true
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-      R.id.menu_sort_change_percentage -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByChangePercentage)
-        true
-      }
-      R.id.menu_sort_name -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByName)
-        true
-      }
-      R.id.menu_sort_assets -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByAssets)
-        true
-      }
-      R.id.menu_sort_profit -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByProfit)
-        true
-      }
-      R.id.menu_sort_profit_percentage -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByProfitPercentage)
-        true
-      }
-      R.id.menu_sort_dividend_percentage -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByDividendPercentage)
-        true
-      }
-      R.id.menu_sort_group -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByGroup)
-        true
-      }
-      R.id.menu_sort_activity -> {
-        stockRoomViewModel.updateSortMode(SortMode.ByActivity)
-        true
-      }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_sort_change_percentage -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByChangePercentage)
+                true
+            }
+            R.id.menu_sort_name -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByName)
+                true
+            }
+            R.id.menu_sort_assets -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByAssets)
+                true
+            }
+            R.id.menu_sort_profit -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByProfit)
+                true
+            }
+            R.id.menu_sort_profit_percentage -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByProfitPercentage)
+                true
+            }
+            R.id.menu_sort_dividend_percentage -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByDividendPercentage)
+                true
+            }
+            R.id.menu_sort_group -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByGroup)
+                true
+            }
+            R.id.menu_sort_activity -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByActivity)
+                true
+            }
 //      R.id.menu_sort_unsorted -> {
 //        stockRoomViewModel.updateSortMode(SortMode.ByUnsorted)
 //        true
 //      }
-      R.id.menu_sync -> {
-        stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
-        true
-      }
-      R.id.menu_filter -> {
-        val intent = Intent(this, FilterActivity::class.java)
-        startActivity(intent)
-        true
-      }
-      else -> {
-        if (filterMenuIdMap.contains(item.itemId)) {
-          filterDataViewModel.filterActive = true
-          filterDataViewModel.selectedFilter = filterMenuIdMap[item.itemId].toString()
-
-          true
-        } else {
-          super.onOptionsItemSelected(item)
-        }
-      }
-    }
-  }
-
-  override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-    val portfolioMenuItem = menu?.findItem(R.id.menu_portfolio)
-    portfolioMenuItem?.isVisible = false
-
-    val sortMode = stockRoomViewModel.sortMode()
-    menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked =
-      sortMode == SortMode.ByChangePercentage
-    menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
-    menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
-    menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
-    menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
-      sortMode == SortMode.ByProfitPercentage
-    menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
-      sortMode == SortMode.ByDividendPercentage
-    menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
-    menu?.findItem(R.id.menu_sort_activity)?.isChecked = sortMode == SortMode.ByActivity
-    //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
-
-    menu?.findItem(R.id.menu_filter)?.isChecked =
-      filterDataViewModel.filterActive == true
-
-    if (SharedRepository.portfolios.value != null) {
-
-      val portfolios = SharedRepository.portfolios.value!!
-      if (portfolios.size > 1) {
-        portfolioMenuItem?.isVisible = true
-        val submenu = portfolioMenuItem?.subMenu
-        submenu?.clear()
-
-        // Add portfolios as submenu items.
-        portfolios.sortedBy {
-          it.lowercase(Locale.ROOT)
-        }
-          .forEach { portfolio ->
-            val standardPortfolio = getString(R.string.standard_portfolio)
-            val portfolioName = if (portfolio.isEmpty()) {
-              // standard portfolio is first entry and displayed in bold
-              SpannableStringBuilder().bold { append(standardPortfolio) }
-            } else {
-              portfolio
+            R.id.menu_sync -> {
+                stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
+                true
             }
-            val subMenuItem = submenu?.add(portfolioName)
+            R.id.menu_filter -> {
+                val intent = Intent(this, FilterActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> {
+                if (filterMenuIdMap.contains(item.itemId)) {
+                    filterDataViewModel.filterActive = true
+                    filterDataViewModel.selectedFilter = filterMenuIdMap[item.itemId].toString()
 
-            subMenuItem?.isCheckable = true
-            subMenuItem?.isChecked =
-              portfolio == SharedRepository.selectedPortfolio.value
-
-            subMenuItem?.setOnMenuItemClickListener { item ->
-              if (item != null) {
-                var itemText = item.toString()
-                stockRoomViewModel.logDebug("Selected portfolio '$itemText'")
-                if (itemText == standardPortfolio) {
-                  itemText = ""
+                    true
+                } else {
+                    super.onOptionsItemSelected(item)
                 }
-                SharedRepository.selectedPortfolio.value = itemText
-              }
-              true
             }
-          }
-      }
+        }
     }
 
-    return super.onPrepareOptionsMenu(menu)
-  }
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val portfolioMenuItem = menu?.findItem(R.id.menu_portfolio)
+        portfolioMenuItem?.isVisible = false
+
+        val sortMode = stockRoomViewModel.sortMode()
+        menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked =
+            sortMode == SortMode.ByChangePercentage
+        menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
+        menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
+        menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
+        menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
+            sortMode == SortMode.ByProfitPercentage
+        menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
+            sortMode == SortMode.ByDividendPercentage
+        menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
+        menu?.findItem(R.id.menu_sort_activity)?.isChecked = sortMode == SortMode.ByActivity
+        //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
+
+        menu?.findItem(R.id.menu_filter)?.isChecked =
+            filterDataViewModel.filterActive == true
+
+        if (SharedRepository.portfolios.value != null) {
+
+            val portfolios = SharedRepository.portfolios.value!!
+            if (portfolios.size > 1) {
+                portfolioMenuItem?.isVisible = true
+                val submenu = portfolioMenuItem?.subMenu
+                submenu?.clear()
+
+                // Add portfolios as submenu items.
+                portfolios.sortedBy {
+                    it.lowercase(Locale.ROOT)
+                }
+                    .forEach { portfolio ->
+                        val standardPortfolio = getString(R.string.standard_portfolio)
+                        val portfolioName = if (portfolio.isEmpty()) {
+                            // standard portfolio is first entry and displayed in bold
+                            SpannableStringBuilder().bold { append(standardPortfolio) }
+                        } else {
+                            portfolio
+                        }
+                        val subMenuItem = submenu?.add(portfolioName)
+
+                        subMenuItem?.isCheckable = true
+                        subMenuItem?.isChecked =
+                            portfolio == SharedRepository.selectedPortfolio.value
+
+                        subMenuItem?.setOnMenuItemClickListener { item ->
+                            if (item != null) {
+                                var itemText = item.toString()
+                                stockRoomViewModel.logDebug("Selected portfolio '$itemText'")
+                                if (itemText == standardPortfolio) {
+                                    itemText = ""
+                                }
+                                SharedRepository.selectedPortfolio.value = itemText
+                            }
+                            true
+                        }
+                    }
+            }
+        }
+
+        return super.onPrepareOptionsMenu(menu)
+    }
 
 /*
 override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -720,107 +719,107 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 }
  */
 
-  fun onSettings(item: MenuItem) {
-    val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-    startActivity(intent)
-  }
+    fun onSettings(item: MenuItem) {
+        val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+        startActivity(intent)
+    }
 
-  fun onAdd(item: MenuItem) {
-    val intent = Intent(this@MainActivity, AddActivity::class.java)
-    addSymbolRequest.launch(intent)
-  }
+    fun onAdd(item: MenuItem) {
+        val intent = Intent(this@MainActivity, AddActivity::class.java)
+        addSymbolRequest.launch(intent)
+    }
 
-  private fun showAlerts(alerts: List<AlertData>) {
-    alerts.forEach { alert ->
-      if (alert.alertAbove > 0.0) {
-        val title = getString(
-          R.string.alert_above_notification_title, alert.symbol,
-          DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
-          DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
-        )
+    private fun showAlerts(alerts: List<AlertData>) {
+        alerts.forEach { alert ->
+            if (alert.alertAbove > 0.0) {
+                val title = getString(
+                    R.string.alert_above_notification_title, alert.symbol,
+                    DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
+                    DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                )
 
-        var text = getString(
-          R.string.alert_above_notification, alert.symbol, alert.name,
-          DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
-          DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
-        )
-        if (alert.alertAboveNote.isNotEmpty()) {
-          text += "\n───\n${alert.alertAboveNote}"  // '─' = \u2500
-        }
+                var text = getString(
+                    R.string.alert_above_notification, alert.symbol, alert.name,
+                    DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
+                    DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                )
+                if (alert.alertAboveNote.isNotEmpty()) {
+                    text += "\n───\n${alert.alertAboveNote}"  // '─' = \u2500
+                }
 
-        val notification = NotificationFactory(this, title, text, alert.symbol)
-        notification.sendNotification()
-        // Alert is shown, remove alert.
-        stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0, "")
+                val notification = NotificationFactory(this, title, text, alert.symbol)
+                notification.sendNotification()
+                // Alert is shown, remove alert.
+                stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0, "")
 
-        stockRoomViewModel.logDebug("Alert '$title'")
-        stockRoomViewModel.logDebug("Alert '$text'")
-      } else
-        if (alert.alertBelow > 0.0) {
-          val title = getString(
-            R.string.alert_below_notification_title, alert.symbol,
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
-          )
+                stockRoomViewModel.logDebug("Alert '$title'")
+                stockRoomViewModel.logDebug("Alert '$text'")
+            } else
+                if (alert.alertBelow > 0.0) {
+                    val title = getString(
+                        R.string.alert_below_notification_title, alert.symbol,
+                        DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
+                        DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                    )
 
-          var text = getString(
-            R.string.alert_below_notification, alert.symbol, alert.name,
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
-            DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
-          )
-          if (alert.alertBelowNote.isNotEmpty()) {
-            text += "\n───\n${alert.alertBelowNote}"
-          }
+                    var text = getString(
+                        R.string.alert_below_notification, alert.symbol, alert.name,
+                        DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
+                        DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                    )
+                    if (alert.alertBelowNote.isNotEmpty()) {
+                        text += "\n───\n${alert.alertBelowNote}"
+                    }
 
-          val notification = NotificationFactory(this, title, text, alert.symbol)
-          notification.sendNotification()
-          // Alert is shown, remove alert.
-          stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0, "")
+                    val notification = NotificationFactory(this, title, text, alert.symbol)
+                    notification.sendNotification()
+                    // Alert is shown, remove alert.
+                    stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0, "")
 
-          stockRoomViewModel.logDebug("Alert '$title'")
-          stockRoomViewModel.logDebug("Alert '$text'")
+                    stockRoomViewModel.logDebug("Alert '$title'")
+                    stockRoomViewModel.logDebug("Alert '$text'")
+                }
         }
     }
-  }
 
-  private fun checkEvents() {
-    if (SharedRepository.notifications) {
-      val datetimeNow = ZonedDateTime.now()
-        .toEpochSecond() // in GMT
+    private fun checkEvents() {
+        if (SharedRepository.notifications) {
+            val datetimeNow = ZonedDateTime.now()
+                .toEpochSecond() // in GMT
 
-      // Each stock item
-      eventList.forEach { events ->
-        // Each event item per stock
-        events.events.forEach { event ->
-          if (datetimeNow >= event.datetime) {
-            val title =
-              getString(
-                R.string.alert_event_notification_title,
-                event.title,
-                event.symbol
-              )
-            val text =
-              getString(
-                R.string.alert_event_notification,
-                event.symbol,
-                event.title,
-                event.note
-              )
-            val notification = NotificationFactory(this, title, text, event.symbol)
-            notification.sendNotification()
+            // Each stock item
+            eventList.forEach { events ->
+                // Each event item per stock
+                events.events.forEach { event ->
+                    if (datetimeNow >= event.datetime) {
+                        val title =
+                            getString(
+                                R.string.alert_event_notification_title,
+                                event.title,
+                                event.symbol
+                            )
+                        val text =
+                            getString(
+                                R.string.alert_event_notification,
+                                event.symbol,
+                                event.title,
+                                event.note
+                            )
+                        val notification = NotificationFactory(this, title, text, event.symbol)
+                        notification.sendNotification()
 
-            // Delete event from the DB. This is turn causes an update of the list
-            // and runs checkEvents() again.
-            stockRoomViewModel.deleteEvent(event)
+                        // Delete event from the DB. This is turn causes an update of the list
+                        // and runs checkEvents() again.
+                        stockRoomViewModel.deleteEvent(event)
 
-            stockRoomViewModel.logDebug("Event '$title'")
-            stockRoomViewModel.logDebug("Event '$text'")
+                        stockRoomViewModel.logDebug("Event '$title'")
+                        stockRoomViewModel.logDebug("Event '$text'")
 
-            // process only one entry
-            return
-          }
+                        // process only one entry
+                        return
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

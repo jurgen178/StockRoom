@@ -12,6 +12,15 @@
         app:icon="@drawable/ic_action_app_theme"
         />
 
+    <ListPreference
+        android:key="app_theme_textcolor_red"
+        android:title="@string/app_theme_textcolor_red"
+        android:defaultValue="0"
+        android:entryValues="@array/app_theme_textcolor_red_values"
+        android:entries="@array/app_theme_textcolor_red"
+        app:icon="@drawable/ic_action_app_theme_textcolor_red"
+        />
+
     <SwitchPreferenceCompat
         app:key="notifications"
         app:title="@string/enable_notifications"

@@ -536,6 +536,7 @@ limitations under the License. -->
   <string name="add_selection">Zur Auswahl hinzufügen</string>
   <string name="remove_selection">Von der Auswahl entfernen</string>
   <string name="app_theme">Farbdesign</string>
+  <string name="app_theme_textcolor_red">Textfarbe für rote Felder</string>
   <string name="summary_total_commissions">Gesamtgebühren</string>
   <string name="calc_title">AI</string>
   <string name="calc_copy">Kopieren</string>

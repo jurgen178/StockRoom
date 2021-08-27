@@ -26,108 +26,117 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomSmalllistItemBinding
-import com.thecloudsite.stockroom.utils.getAssetChange
-import com.thecloudsite.stockroom.utils.getChangeColor
-import com.thecloudsite.stockroom.utils.getDividendStr
-import com.thecloudsite.stockroom.utils.getMarketValues
+import com.thecloudsite.stockroom.utils.*
 
 class StockRoomSmallListAdapter internal constructor(
-  val context: Context,
-  private val clickListenerSymbolLambda: (StockItem) -> Unit
+    val context: Context,
+    private val clickListenerSymbolLambda: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomSmallListAdapter.StockRoomViewHolder>(
     StockRoomDiffCallback()
 ) {
 
-  private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private var defaultTextColor: Int? = null
 
-  class StockRoomViewHolder(
-    val binding: StockroomSmalllistItemBinding
-  ) : RecyclerView.ViewHolder(binding.root) {
-    fun bindOnClickListener(
-      stockItem: StockItem,
-      clickListenerLambda: (StockItem) -> Unit
-    ) {
-      binding.smalllistItemLayout.setOnClickListener { clickListenerLambda(stockItem) }
-    }
-  }
-
-  override fun onCreateViewHolder(
-    parent: ViewGroup,
-    viewType: Int
-  ): StockRoomViewHolder {
-
-    val binding = StockroomSmalllistItemBinding.inflate(inflater, parent, false)
-    return StockRoomViewHolder(binding)
-  }
-
-  override fun onBindViewHolder(
-    holder: StockRoomViewHolder,
-    position: Int
-  ) {
-    val current = getItem(position)
-    if (current != null) {
-      holder.bindOnClickListener(current, clickListenerSymbolLambda)
-
-      holder.binding.smalllistItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-      holder.binding.smalllistTextViewSymbol.text = current.onlineMarketData.symbol
-
-      if (current.onlineMarketData.marketPrice > 0.0) {
-        val marketValues = getMarketValues(current.onlineMarketData)
-        val marketPriceStr = "${marketValues.first} ${marketValues.second} ${marketValues.third}"
-
-        if (current.onlineMarketData.postMarketData) {
-          holder.binding.smalllistTextViewMarketPrice.text = SpannableStringBuilder()
-              .italic { append(marketPriceStr) }
-        } else {
-          holder.binding.smalllistTextViewMarketPrice.text = marketPriceStr
+    class StockRoomViewHolder(
+        val binding: StockroomSmalllistItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bindOnClickListener(
+            stockItem: StockItem,
+            clickListenerLambda: (StockItem) -> Unit
+        ) {
+            binding.smalllistItemLayout.setOnClickListener { clickListenerLambda(stockItem) }
         }
-      } else {
-        holder.binding.smalllistTextViewMarketPrice.text = ""
-      }
+    }
 
-      val assetChange =
-        getAssetChange(
-            current.assets,
-            current.onlineMarketData.marketPrice,
-            current.onlineMarketData.postMarketData,
-            Color.DKGRAY,
-            context,
-            false
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): StockRoomViewHolder {
 
-      val changeText = assetChange.second
-      val dividendStr = getDividendStr(current, context)
-      if (assetChange.first.isNotEmpty() && dividendStr.isNotEmpty()) {
-        changeText.append("\n")
-      }
-      holder.binding.smalllistTextViewChange.text =
-        changeText.append(dividendStr)
+        val binding = StockroomSmalllistItemBinding.inflate(inflater, parent, false)
+        return StockRoomViewHolder(binding)
+    }
 
-      // set the background color to the market change
-      holder.binding.smalllistTextViewMarketPrice.setBackgroundColor(
-          getChangeColor(
-              current.onlineMarketData.marketChange,
-              current.onlineMarketData.postMarketData,
-              context.getColor(color.backgroundListColor),
-              context
-          )
-      )
+    override fun onBindViewHolder(
+        holder: StockRoomViewHolder,
+        position: Int
+    ) {
+        val current = getItem(position)
+        if (current != null) {
+            if (defaultTextColor == null) {
+                defaultTextColor = holder.binding.smalllistTextViewMarketPrice.currentTextColor
+            }
+
+            holder.bindOnClickListener(current, clickListenerSymbolLambda)
+
+            holder.binding.smalllistItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
+            holder.binding.smalllistTextViewSymbol.text = current.onlineMarketData.symbol
+
+            if (current.onlineMarketData.marketPrice > 0.0) {
+                val marketValues = getMarketValues(current.onlineMarketData)
+                val marketPriceStr =
+                    "${marketValues.first} ${marketValues.second} ${marketValues.third}"
+
+                if (current.onlineMarketData.postMarketData) {
+                    holder.binding.smalllistTextViewMarketPrice.text = SpannableStringBuilder()
+                        .italic { append(marketPriceStr) }
+                } else {
+                    holder.binding.smalllistTextViewMarketPrice.text = marketPriceStr
+                }
+            } else {
+                holder.binding.smalllistTextViewMarketPrice.text = ""
+            }
+
+            val assetChange =
+                getAssetChange(
+                    current.assets,
+                    current.onlineMarketData.marketPrice,
+                    current.onlineMarketData.postMarketData,
+                    Color.DKGRAY,
+                    context,
+                    false
+                )
+
+            val changeText = assetChange.second
+            val dividendStr = getDividendStr(current, context)
+            if (assetChange.first.isNotEmpty() && dividendStr.isNotEmpty()) {
+                changeText.append("\n")
+            }
+            holder.binding.smalllistTextViewChange.text =
+                changeText.append(dividendStr)
+
+            // set the background color to the market change
+            holder.binding.smalllistTextViewMarketPrice.setBackgroundColor(
+                getChangeColor(
+                    current.onlineMarketData.marketChange,
+                    current.onlineMarketData.postMarketData,
+                    context.getColor(color.backgroundListColor),
+                    context
+                )
+            )
+
+            if (useWhiteOnRed && current.onlineMarketData.marketChange < 0.0) {
+                holder.binding.smalllistTextViewMarketPrice.setTextColor(Color.WHITE)
+            } else {
+                holder.binding.smalllistTextViewMarketPrice.setTextColor(defaultTextColor!!)
+            }
 
 //      // Set the background color to the market change.
 //      holder.itemViewMarketPriceLayout.setBackgroundColor(
 //          getChangeColor(assetChange.third, context)
 //      )
 
-      var color = current.stockDBdata.groupColor
-      if (color == 0) {
-        color = context.getColor(R.color.backgroundListColor)
-      }
-      setBackgroundColor(holder.binding.smalllistItemviewGroup, color)
+            var color = current.stockDBdata.groupColor
+            if (color == 0) {
+                color = context.getColor(R.color.backgroundListColor)
+            }
+            setBackgroundColor(holder.binding.smalllistItemviewGroup, color)
+        }
     }
-  }
 
-  internal fun setStockItems(stockItems: List<StockItem>) {
-    submitList(stockItems)
-    notifyDataSetChanged()
-  }
+    internal fun setStockItems(stockItems: List<StockItem>) {
+        submitList(stockItems)
+        notifyDataSetChanged()
+    }
 }
