@@ -1129,8 +1129,6 @@ fun setAppTheme(context: Context) {
             }
         }
     }
-
-    getAppThemeColorRed(context)
 }
 
 fun getAppThemeColorRed(context: Context) {
