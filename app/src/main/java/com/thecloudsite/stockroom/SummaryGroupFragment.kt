@@ -17,6 +17,7 @@
 package com.thecloudsite.stockroom
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -60,6 +61,8 @@ class SummaryGroupFragment : Fragment() {
 
     private lateinit var stockRoomViewModel: StockRoomViewModel
     private var longPressedCounter = 0
+    private var stockItemsList: List<StockItem> = emptyList()
+    private var groupList: List<Group> = emptyList()
 
     companion object {
         fun newInstance() = SummaryGroupFragment()
@@ -114,13 +117,14 @@ class SummaryGroupFragment : Fragment() {
             items?.let { stockItems ->
                 summaryGroupAdapter.updateData(stockItems)
                 updatePieData(stockItems)
-                updateGroupPieData(stockItems)
+                updateGroupPieData(requireContext(), stockItems, null)
             }
         })
 
         stockRoomViewModel.allGroupTable.observe(viewLifecycleOwner, Observer { groups ->
             if (groups != null) {
                 summaryGroupAdapter.addGroups(groups)
+                updateGroupPieData(requireContext(), null, groups)
             }
         })
 
@@ -142,7 +146,7 @@ class SummaryGroupFragment : Fragment() {
             override fun onChartLongPressed(me: MotionEvent?) {
                 longPressedCounter++
 
-                updatePieChartAndBitmap()
+                updatePieChartsAndBitmap()
             }
 
             override fun onChartDoubleTapped(me: MotionEvent?) {
@@ -186,18 +190,18 @@ class SummaryGroupFragment : Fragment() {
                 .setNegativeButton("\u004c\u0061\u0074\u0065\u0072") { dialog, _ ->
                     dialog.dismiss()
                     longPressedCounter = 0
-                    updatePieChartAndBitmap()
+                    updatePieChartsAndBitmap()
                 }
                 .setPositiveButton("\u004e\u006f\u0077") { dialog, _ ->
                     val intent = Intent(activity, InvadersActivity::class.java)
                     activity?.startActivity(intent)
                     dialog.dismiss()
                     longPressedCounter = 0
-                    updatePieChartAndBitmap()
+                    updatePieChartsAndBitmap()
                 }
                 .setOnCancelListener {
                     longPressedCounter = 0
-                    updatePieChartAndBitmap()
+                    updatePieChartsAndBitmap()
                 }
                 .show()
         }
@@ -211,7 +215,7 @@ class SummaryGroupFragment : Fragment() {
         super.onPause()
 
         longPressedCounter = 0
-        updatePieChartAndBitmap()
+        updatePieChartsAndBitmap()
     }
 
     override fun onResume() {
@@ -267,7 +271,7 @@ class SummaryGroupFragment : Fragment() {
             binding.summarySectionHeader.visibility = View.VISIBLE
             binding.summaryDivider.visibility = View.VISIBLE
 
-            updatePieChartAndBitmap()
+            updatePieChartsAndBitmap()
 
             val sortedAssetList = assetList.filter { assetSummary ->
                 assetSummary.assets > 0.0
@@ -368,8 +372,18 @@ class SummaryGroupFragment : Fragment() {
     }
 
     private fun updateGroupPieData(
-        stockItems: List<StockItem>
+        context: Context,
+        stockItems: List<StockItem>?,
+        groupList: List<Group>?
     ) {
+        if (groupList != null) {
+            this.groupList = groupList
+        }
+
+        if (stockItems != null) {
+            stockItemsList = stockItems
+        }
+
         val listPie = ArrayList<PieEntry>()
         val listColors = ArrayList<Int>()
 
@@ -378,186 +392,142 @@ class SummaryGroupFragment : Fragment() {
             val assets: Double,
             val color: Int
         )
-/*
-    val assetList: MutableList<AssetSummary> = mutableListOf()
 
-    // Get all groups.
-    val groupSet = HashSet<Int>()
-    stockItems.forEach { stockItem ->
-      groupSet.add(stockItem.stockDBdata.groupColor)
-    }
+        val assetList: MutableList<AssetSummary> = mutableListOf()
 
-    // Get all names assigned to each color.
-    val groups = groupSet.map { color ->
-      val name = groups.find { group ->
-        group.color == color
-      }?.name
-      if (name == null) {
-        Group(color = 0, name = groupStandardName)
-      } else {
-        Group(color = color, name = name)
-      }
-    }
+        val groupStandardName = context.getString(R.string.standard_group)
 
-    // Display stats for each group.
-    if (groups.size > 1) {
-      groups.sortedBy { group ->
-        group.name.lowercase(Locale.ROOT)
-      }
-        .forEach { group ->
-          val (text1, text2) = getTotal(group.color, false, stockItemsList)
+        // Get all groups.
+        val groupSet = HashSet<Int>()
+        stockItemsList.forEach { stockItem ->
+            groupSet.add(stockItem.stockDBdata.groupColor)
+        }
 
-          // Get all symbols in that group as a comma separated string.
-          val symbolsList = stockItemsList.filter { stockItem ->
-            stockItem.stockDBdata.groupColor == group.color
-          }
-            .map { stockItem ->
-              stockItem.stockDBdata.symbol
+        // Get all names assigned to each color.
+        val groups = groupSet.map { color ->
+            val name = this.groupList.find { group ->
+                group.color == color
+            }?.name
+            if (name == null) {
+                Group(color = 0, name = groupStandardName)
+            } else {
+                Group(color = color, name = name)
             }
-            .sorted()
-            .joinToString(
-              prefix = "(",
-              separator = ",",
-              postfix = ")"
-            )
-
-          data.add(
-            SummaryData(
-              context.getString(R.string.group_name, group.name),
-              symbolsList,
-              text1,
-              text2,
-              group.color,
-              summarygroup_item
-            )
-          )
-        }
-    }
-
-    stockItems.forEach { stockItem ->
-      val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
-
-//      val totalShares: Double = stockItem.assets.sumByDouble { asset ->
-//        asset.shares
-//      }
-      val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
-      totalAssets += assets
-      val color = if (stockItem.stockDBdata.groupColor != 0) {
-        stockItem.stockDBdata.groupColor
-      } else {
-        context?.getColor(R.color.backgroundListColor)
-      }
-
-      assetList.add(
-        AssetSummary(stockItem.stockDBdata.symbol, assets, color!!)
-      )
-    }
-
-    if (totalAssets >= epsilon) {
-
-//      binding.summarySectionHeader.visibility = View.VISIBLE
-//      binding.summaryDivider.visibility = View.VISIBLE
-
-      val sortedAssetList = assetList.filter { assetSummary ->
-        assetSummary.assets > 0.0
-      }
-        .sortedByDescending { assetSummary ->
-          assetSummary.assets
         }
 
-      // Display first 10 values from asset high to low.
-      val n = 10
-      sortedAssetList.take(n)
-        .forEach { assetItem ->
-          listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
-          //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
-          listColors.add(assetItem.color)
-        }
+        // Display stats for each group.
+        if (groups.size > 1) {
+            groups.forEach { group ->
+                //val (text1, text2) = getTotal(group.color, false, stockItemsList)
 
-      // Add the sum of the remaining values.
-      if (sortedAssetList.size == n + 1) {
-        val assetItem = sortedAssetList.last()
+                val totalAssets = stockItemsList.filter { stockItem ->
+                    stockItem.stockDBdata.groupColor == group.color
+                }
+                    .sumByDouble { stockItem ->
+                        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
-        listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
-        listColors.add(Color.GRAY)
-      } else
-        if (sortedAssetList.size > n + 1) {
-          val otherAssetList = sortedAssetList.drop(n)
-          val otherAssets = otherAssetList.sumByDouble { assetItem ->
-            assetItem.assets
-          }
-
-          listPie.add(
-            PieEntry(
-              otherAssets.toFloat(),
-              "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
-            )
-          )
-          listColors.add(Color.GRAY)
-        }
-
-      val pieDataSet = PieDataSet(listPie, "")
-      pieDataSet.colors = listColors
-      pieDataSet.valueTextColor = requireContext().getColor(R.color.black)
-      pieDataSet.valueTextSize = 10f
-      // pieDataSet.valueFormatter = DefaultValueFormatter(2)
-      pieDataSet.valueFormatter = object : ValueFormatter() {
-        override fun getFormattedValue(value: Float) =
-          DecimalFormat(DecimalFormat2Digits).format(value)
-      }
-
-      // Line start
-      pieDataSet.valueLinePart1OffsetPercentage = 80f
-      // Radial length
-      pieDataSet.valueLinePart1Length = 0.4f
-      // Horizontal length
-      pieDataSet.valueLinePart2Length = .2f
-      pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-
-      val pieData = PieData(pieDataSet)
-      binding.summaryGroupPieChart.data = pieData
-
-      //view.summaryGroupPieChart.setUsePercentValues(true)
-      binding.summaryGroupPieChart.isDrawHoleEnabled = true
-
-      val centerText =
-        SpannableStringBuilder()
-          .append("${context?.getString(R.string.summary_total_assets)} ")
-          .underline {
-            bold {
-              append(
-                DecimalFormat(DecimalFormat2Digits).format(totalAssets)
-              )
+                        totalQuantity * stockItem.onlineMarketData.marketPrice
+                    }
+                assetList.add(
+                    AssetSummary(group.name, totalAssets, group.color)
+                )
             }
-          }
 
-      binding.summaryGroupPieChart.centerText = centerText
+            val sortedAssetList = assetList.filter { assetSummary ->
+                assetSummary.assets > 0.0
+            }
+                .sortedByDescending { assetSummary ->
+                    assetSummary.assets
+                }
 
-      binding.summaryGroupPieChart.description.isEnabled = false
-      binding.summaryGroupPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
-      binding.summaryGroupPieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+            // Display first 10 values from asset high to low.
+            val n = 10
+            sortedAssetList.take(n)
+                .forEach { assetItem ->
+                    listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
+                    //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
+                    listColors.add(assetItem.color)
+                }
 
-      binding.summaryGroupPieChart.setCenterTextColor(requireContext().getColor(R.color.black))
-      binding.summaryGroupPieChart.setHoleColor(requireContext().getColor(R.color.white))
-      binding.summaryGroupPieChart.setBackgroundColor(requireContext().getColor(R.color.white))
-      binding.summaryGroupPieChart.legend.textColor = requireContext().getColor(R.color.black)
-      binding.summaryGroupPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
+            // Add the sum of the remaining values.
+            if (sortedAssetList.size == n + 1) {
+                val assetItem = sortedAssetList.last()
 
-      //val legendList: MutableList<LegendEntry> = mutableListOf()
-      //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
-      //view.summaryGroupPieChart.legend.setCustom(legendList)
+                listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
+                listColors.add(Color.GRAY)
+            } else
+                if (sortedAssetList.size > n + 1) {
+                    val otherAssetList = sortedAssetList.drop(n)
+                    val otherAssets = otherAssetList.sumByDouble { assetItem ->
+                        assetItem.assets
+                    }
 
-      binding.summaryGroupPieChart.invalidate()
-    } else {
-//      binding.summarySectionHeader.visibility = View.GONE
-//      binding.summaryGroupPieChart.visibility = View.GONE
-//      binding.summaryDivider.visibility = View.GONE
+                    listPie.add(
+                        PieEntry(
+                            otherAssets.toFloat(),
+                            "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
+                        )
+                    )
+                    listColors.add(Color.GRAY)
+                }
+
+            val pieDataSet = PieDataSet(listPie, "")
+            pieDataSet.colors = listColors
+            pieDataSet.valueTextColor = requireContext().getColor(R.color.black)
+            pieDataSet.valueTextSize = 10f
+            // pieDataSet.valueFormatter = DefaultValueFormatter(2)
+            pieDataSet.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float) =
+                    DecimalFormat(DecimalFormat2Digits).format(value)
+            }
+
+            // Line start
+            pieDataSet.valueLinePart1OffsetPercentage = 80f
+            // Radial length
+            pieDataSet.valueLinePart1Length = 0.4f
+            // Horizontal length
+            pieDataSet.valueLinePart2Length = .2f
+            pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+
+            val pieData = PieData(pieDataSet)
+            binding.summaryGroupPieChart.data = pieData
+
+            //view.summaryGroupPieChart.setUsePercentValues(true)
+            binding.summaryGroupPieChart.isDrawHoleEnabled = true
+
+//            val centerText =
+//                SpannableStringBuilder()
+//                    .append("${context?.getString(R.string.summary_total_assets)} ")
+//                    .underline {
+//                        bold {
+//                            append(
+//                                DecimalFormat(DecimalFormat2Digits).format(totalAssets)
+//                            )
+//                        }
+//                    }
+//
+//            binding.summaryGroupPieChart.centerText = centerText
+
+            binding.summaryGroupPieChart.description.isEnabled = false
+            binding.summaryGroupPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+            binding.summaryGroupPieChart.legend.verticalAlignment =
+                Legend.LegendVerticalAlignment.CENTER
+
+            binding.summaryGroupPieChart.setCenterTextColor(requireContext().getColor(R.color.black))
+            binding.summaryGroupPieChart.setHoleColor(requireContext().getColor(R.color.white))
+            binding.summaryGroupPieChart.setBackgroundColor(requireContext().getColor(R.color.white))
+            binding.summaryGroupPieChart.legend.textColor = requireContext().getColor(R.color.black)
+            binding.summaryGroupPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
+
+            //val legendList: MutableList<LegendEntry> = mutableListOf()
+            //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
+            //view.summaryGroupPieChart.legend.setCustom(legendList)
+
+            binding.summaryGroupPieChart.invalidate()
+        }
     }
 
- */
-    }
-
-    private fun updatePieChartAndBitmap() {
+    private fun updatePieChartsAndBitmap() {
         if (longPressedCounter == 2) {
             binding.summaryPieChart.visibility = View.GONE
             binding.summaryGroupPieChart.visibility = View.GONE
