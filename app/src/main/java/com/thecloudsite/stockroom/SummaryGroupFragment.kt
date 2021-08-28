@@ -63,10 +63,17 @@ class SummaryGroupFragment : Fragment() {
     private var longPressedCounter = 0
     private var stockItemsList: List<StockItem> = emptyList()
     private var groupList: List<Group> = emptyList()
+    private var summaryGroupPieChartVisible = true
 
     companion object {
         fun newInstance() = SummaryGroupFragment()
     }
+
+    data class AssetSummary(
+        val name: String,
+        val assets: Double,
+        val color: Int
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,8 +123,8 @@ class SummaryGroupFragment : Fragment() {
         stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
             items?.let { stockItems ->
                 summaryGroupAdapter.updateData(stockItems)
-                updatePieData(stockItems)
                 updateGroupPieData(requireContext(), stockItems, null)
+                updatePieData(stockItems)
             }
         })
 
@@ -239,12 +246,6 @@ class SummaryGroupFragment : Fragment() {
         val listPie = ArrayList<PieEntry>()
         val listColors = ArrayList<Int>()
 
-        data class AssetSummary(
-            val symbol: String,
-            val assets: Double,
-            val color: Int
-        )
-
         val assetList: MutableList<AssetSummary> = mutableListOf()
         var totalAssets = 0.0
         stockItems.forEach { stockItem ->
@@ -284,7 +285,7 @@ class SummaryGroupFragment : Fragment() {
             val n = 10
             sortedAssetList.take(n)
                 .forEach { assetItem ->
-                    listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
+                    listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.name))
                     //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
                     listColors.add(assetItem.color)
                 }
@@ -293,7 +294,7 @@ class SummaryGroupFragment : Fragment() {
             if (sortedAssetList.size == n + 1) {
                 val assetItem = sortedAssetList.last()
 
-                listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
+                listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.name))
                 listColors.add(Color.GRAY)
             } else
                 if (sortedAssetList.size > n + 1) {
@@ -305,7 +306,7 @@ class SummaryGroupFragment : Fragment() {
                     listPie.add(
                         PieEntry(
                             otherAssets.toFloat(),
-                            "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
+                            "[${otherAssetList.first().name}-${otherAssetList.last().name}]"
                         )
                     )
                     listColors.add(Color.GRAY)
@@ -387,12 +388,6 @@ class SummaryGroupFragment : Fragment() {
         val listPie = ArrayList<PieEntry>()
         val listColors = ArrayList<Int>()
 
-        data class AssetSummary(
-            val symbol: String,
-            val assets: Double,
-            val color: Int
-        )
-
         val assetList: MutableList<AssetSummary> = mutableListOf()
 
         val groupStandardName = context.getString(R.string.standard_group)
@@ -415,11 +410,9 @@ class SummaryGroupFragment : Fragment() {
             }
         }
 
-        // Display stats for each group.
+        // Get total assets for each group.
         if (groups.size > 1) {
             groups.forEach { group ->
-                //val (text1, text2) = getTotal(group.color, false, stockItemsList)
-
                 val totalAssets = stockItemsList.filter { stockItem ->
                     stockItem.stockDBdata.groupColor == group.color
                 }
@@ -440,91 +433,82 @@ class SummaryGroupFragment : Fragment() {
                     assetSummary.assets
                 }
 
-            // Display first 10 values from asset high to low.
-            val n = 10
-            sortedAssetList.take(n)
-                .forEach { assetItem ->
-                    listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
-                    //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
-                    listColors.add(assetItem.color)
-                }
-
-            // Add the sum of the remaining values.
-            if (sortedAssetList.size == n + 1) {
-                val assetItem = sortedAssetList.last()
-
-                listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.symbol))
-                listColors.add(Color.GRAY)
-            } else
-                if (sortedAssetList.size > n + 1) {
-                    val otherAssetList = sortedAssetList.drop(n)
-                    val otherAssets = otherAssetList.sumByDouble { assetItem ->
-                        assetItem.assets
+            if (sortedAssetList.size > 1) {
+                // Display first 10 values from asset high to low.
+                val n = 10
+                sortedAssetList.take(n)
+                    .forEach { assetItem ->
+                        listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.name))
+                        //listPie.add(PieEntry(assetItem.assets.toFloat(), "${assetItem.symbol} ${DecimalFormat(DecimalFormat2Digits).format(assetItem.assets)}"))
+                        listColors.add(assetItem.color)
                     }
 
-                    listPie.add(
-                        PieEntry(
-                            otherAssets.toFloat(),
-                            "[${otherAssetList.first().symbol}-${otherAssetList.last().symbol}]"
-                        )
-                    )
+                // Add the sum of the remaining values.
+                if (sortedAssetList.size == n + 1) {
+                    val assetItem = sortedAssetList.last()
+
+                    listPie.add(PieEntry(assetItem.assets.toFloat(), assetItem.name))
                     listColors.add(Color.GRAY)
+                } else
+                    if (sortedAssetList.size > n + 1) {
+                        val otherAssetList = sortedAssetList.drop(n)
+                        val otherAssets = otherAssetList.sumByDouble { assetItem ->
+                            assetItem.assets
+                        }
+
+                        listPie.add(
+                            PieEntry(
+                                otherAssets.toFloat(),
+                                "[${otherAssetList.first().name}-${otherAssetList.last().name}]"
+                            )
+                        )
+                        listColors.add(Color.GRAY)
+                    }
+
+                val pieDataSet = PieDataSet(listPie, "")
+                pieDataSet.colors = listColors
+                pieDataSet.valueTextColor = requireContext().getColor(R.color.black)
+                pieDataSet.valueTextSize = 10f
+                // pieDataSet.valueFormatter = DefaultValueFormatter(2)
+                pieDataSet.valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float) =
+                        DecimalFormat(DecimalFormat2Digits).format(value)
                 }
 
-            val pieDataSet = PieDataSet(listPie, "")
-            pieDataSet.colors = listColors
-            pieDataSet.valueTextColor = requireContext().getColor(R.color.black)
-            pieDataSet.valueTextSize = 10f
-            // pieDataSet.valueFormatter = DefaultValueFormatter(2)
-            pieDataSet.valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float) =
-                    DecimalFormat(DecimalFormat2Digits).format(value)
+                // Line start
+                pieDataSet.valueLinePart1OffsetPercentage = 80f
+                // Radial length
+                pieDataSet.valueLinePart1Length = 0.4f
+                // Horizontal length
+                pieDataSet.valueLinePart2Length = .2f
+                pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+
+                val pieData = PieData(pieDataSet)
+                binding.summaryGroupPieChart.data = pieData
+
+                //view.summaryGroupPieChart.setUsePercentValues(true)
+                binding.summaryGroupPieChart.isDrawHoleEnabled = true
+
+                binding.summaryGroupPieChart.description.isEnabled = false
+                binding.summaryGroupPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+                binding.summaryGroupPieChart.legend.verticalAlignment =
+                    Legend.LegendVerticalAlignment.CENTER
+
+                binding.summaryGroupPieChart.setCenterTextColor(requireContext().getColor(R.color.black))
+                binding.summaryGroupPieChart.setHoleColor(requireContext().getColor(R.color.white))
+                binding.summaryGroupPieChart.setBackgroundColor(requireContext().getColor(R.color.white))
+                binding.summaryGroupPieChart.legend.textColor =
+                    requireContext().getColor(R.color.black)
+                binding.summaryGroupPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
+
+                binding.summaryGroupPieChart.invalidate()
+
+                summaryGroupPieChartVisible = true
+                return
             }
-
-            // Line start
-            pieDataSet.valueLinePart1OffsetPercentage = 80f
-            // Radial length
-            pieDataSet.valueLinePart1Length = 0.4f
-            // Horizontal length
-            pieDataSet.valueLinePart2Length = .2f
-            pieDataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-
-            val pieData = PieData(pieDataSet)
-            binding.summaryGroupPieChart.data = pieData
-
-            //view.summaryGroupPieChart.setUsePercentValues(true)
-            binding.summaryGroupPieChart.isDrawHoleEnabled = true
-
-//            val centerText =
-//                SpannableStringBuilder()
-//                    .append("${context?.getString(R.string.summary_total_assets)} ")
-//                    .underline {
-//                        bold {
-//                            append(
-//                                DecimalFormat(DecimalFormat2Digits).format(totalAssets)
-//                            )
-//                        }
-//                    }
-//
-//            binding.summaryGroupPieChart.centerText = centerText
-
-            binding.summaryGroupPieChart.description.isEnabled = false
-            binding.summaryGroupPieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
-            binding.summaryGroupPieChart.legend.verticalAlignment =
-                Legend.LegendVerticalAlignment.CENTER
-
-            binding.summaryGroupPieChart.setCenterTextColor(requireContext().getColor(R.color.black))
-            binding.summaryGroupPieChart.setHoleColor(requireContext().getColor(R.color.white))
-            binding.summaryGroupPieChart.setBackgroundColor(requireContext().getColor(R.color.white))
-            binding.summaryGroupPieChart.legend.textColor = requireContext().getColor(R.color.black)
-            binding.summaryGroupPieChart.setExtraOffsets(0f, 3f, 26f, 4f)
-
-            //val legendList: MutableList<LegendEntry> = mutableListOf()
-            //legendList.add(LegendEntry("test", SQUARE, 10f, 100f, null, Color.RED))
-            //view.summaryGroupPieChart.legend.setCustom(legendList)
-
-            binding.summaryGroupPieChart.invalidate()
         }
+
+        summaryGroupPieChartVisible = false
     }
 
     private fun updatePieChartsAndBitmap() {
@@ -534,7 +518,8 @@ class SummaryGroupFragment : Fragment() {
             binding.imageView.visibility = View.VISIBLE
         } else {
             binding.summaryPieChart.visibility = View.VISIBLE
-            binding.summaryGroupPieChart.visibility = View.VISIBLE
+            binding.summaryGroupPieChart.visibility =
+                if (summaryGroupPieChartVisible) View.VISIBLE else View.GONE
             binding.imageView.visibility = View.GONE
         }
     }
