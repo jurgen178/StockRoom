@@ -35,6 +35,13 @@
         android:layout_margin="8dp"
         />
 
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/summaryGroupPieChart"
+        android:layout_width="match_parent"
+        android:layout_height="290dp"
+        android:layout_margin="8dp"
+        />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_margin="20dp"
