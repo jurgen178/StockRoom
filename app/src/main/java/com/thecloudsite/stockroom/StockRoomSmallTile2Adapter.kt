@@ -28,7 +28,7 @@ import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomSmalltile2ItemBinding
 import com.thecloudsite.stockroom.utils.getChangeColor
 import com.thecloudsite.stockroom.utils.getMarketValues
-import com.thecloudsite.stockroom.utils.useWhiteOnRed
+import com.thecloudsite.stockroom.utils.useWhiteOnRedGreen
 
 class StockRoomSmallTile2Adapter internal constructor(
     val context: Context,
@@ -104,7 +104,7 @@ class StockRoomSmallTile2Adapter internal constructor(
                 )
             )
 
-            if (useWhiteOnRed && current.onlineMarketData.marketChange < 0.0) {
+            if (useWhiteOnRedGreen && current.onlineMarketData.marketChange != 0.0) {
                 holder.binding.smalltileTextViewSymbol.setTextColor(Color.WHITE)
                 holder.binding.smalltileTextViewMarketPrice.setTextColor(Color.WHITE)
                 holder.binding.smalltileTextViewMarketChange.setTextColor(Color.WHITE)

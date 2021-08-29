@@ -116,7 +116,7 @@ class StockRoomSmallListAdapter internal constructor(
                 )
             )
 
-            if (useWhiteOnRed && current.onlineMarketData.marketChange < 0.0) {
+            if (useWhiteOnRedGreen && current.onlineMarketData.marketChange != 0.0) {
                 holder.binding.smalllistTextViewMarketPrice.setTextColor(Color.WHITE)
             } else {
                 holder.binding.smalllistTextViewMarketPrice.setTextColor(defaultTextColor!!)

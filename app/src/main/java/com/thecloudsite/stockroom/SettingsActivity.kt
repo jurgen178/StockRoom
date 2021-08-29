@@ -45,7 +45,7 @@ import com.thecloudsite.stockroom.calc.CalcActivity
 import com.thecloudsite.stockroom.databinding.ActivitySettingsBinding
 import com.thecloudsite.stockroom.databinding.DialogRenameAccountBinding
 import com.thecloudsite.stockroom.databinding.DialogRenameSymbolBinding
-import com.thecloudsite.stockroom.utils.getAppThemeColorRed
+import com.thecloudsite.stockroom.utils.getAppThemeColorRedGreen
 import com.thecloudsite.stockroom.utils.setAppTheme
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -150,8 +150,8 @@ class SettingsActivity : AppCompatActivity(),
                 setAppTheme(this)
                 //delegate.applyDayNight()
             }
-            "app_theme_textcolor_red" -> {
-                getAppThemeColorRed(this)
+            "app_theme_textcolor_redgreen" -> {
+                getAppThemeColorRedGreen(this)
             }
             "chart_overlay_symbols" -> {
                 // if empty reset entry to default

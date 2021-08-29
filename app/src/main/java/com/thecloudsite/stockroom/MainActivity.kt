@@ -395,7 +395,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         // Delegates for setting the night mode have now been run, get the night mode and set the useWhiteOnRed property.
-        getAppThemeColorRed(this)
+        getAppThemeColorRedGreen(this)
     }
 
     private fun updateRemoteConfig() {

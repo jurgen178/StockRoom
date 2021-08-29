@@ -57,7 +57,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlin.math.sign
 
-var useWhiteOnRed: Boolean = false
+var useWhiteOnRedGreen: Boolean = false
 
 // https://developer.android.com/reference/java/text/DecimalFormat
 // #,## add thousand separator: 1.234,56
@@ -1131,14 +1131,14 @@ fun setAppTheme(context: Context) {
     }
 }
 
-fun getAppThemeColorRed(context: Context) {
+fun getAppThemeColorRedGreen(context: Context) {
     val sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
 
-    val appThemeColorRed = sharedPreferences.getString("app_theme_textcolor_red", "0")
+    val appThemeColorRedGreen = sharedPreferences.getString("app_theme_textcolor_redgreen", "0")
 
-    // Use white on red background when this setting is set and the night mode is off.
-    useWhiteOnRed = appThemeColorRed == "1" &&
+    // Use white on red/green background when this setting is set and the night mode is off.
+    useWhiteOnRedGreen = appThemeColorRedGreen == "1" &&
             context.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO
 }
 

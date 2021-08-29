@@ -62,7 +62,7 @@
     <item>Dunkel</item>
     <item>Automatisch entsprechend dem Batteriestand</item>
   </string-array>
-  <string-array name="app_theme_textcolor_red">
+  <string-array name="app_theme_textcolor_redgreen">
     <item>Standardfarbe</item>
     <item>Weiß</item>
   </string-array>

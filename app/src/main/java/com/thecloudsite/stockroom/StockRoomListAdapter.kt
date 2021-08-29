@@ -273,7 +273,7 @@ class StockRoomListAdapter internal constructor(
                 )
             )
 
-            if (useWhiteOnRed && current.onlineMarketData.marketChange < 0.0) {
+            if (useWhiteOnRedGreen && current.onlineMarketData.marketChange != 0.0) {
                 holder.binding.textViewMarketPrice.setTextColor(Color.WHITE)
                 holder.binding.textViewChange.setTextColor(Color.WHITE)
                 holder.binding.textViewChangePercent.setTextColor(Color.WHITE)
