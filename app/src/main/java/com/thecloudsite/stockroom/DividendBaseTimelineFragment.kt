@@ -141,11 +141,11 @@ open class DividendBaseTimelineFragment : Fragment() {
         // get dividend total of the month
         val dividendTotal =
           DecimalFormat(DecimalFormat2Digits).format(
-            dividendlist.sumByDouble { (dividenddate, list) ->
+            dividendlist.sumOf { (dividenddate, list) ->
               list.filter { dividend ->
                 dividend.type == DividendType.Received.value
               }
-                .sumByDouble { dividend ->
+                .sumOf { dividend ->
                   dividend.amount
                 }
             })

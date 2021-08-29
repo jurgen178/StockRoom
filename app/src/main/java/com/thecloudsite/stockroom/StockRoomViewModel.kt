@@ -1257,12 +1257,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
                     if (item.onlineMarketData.marketPrice > 0.0) {
                         totalQuantity * item.onlineMarketData.marketPrice
-//              item.assets.sumByDouble {
+//              item.assets.sumOf {
 //                it.shares * item.onlineMarketData.marketPrice
 //              }
                     } else {
                         totalPrice + totalCommission
-//              item.assets.sumByDouble {
+//              item.assets.sumOf {
 //                it.shares * it.price
 //              }
                     }
@@ -1273,12 +1273,12 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
                     if (item.onlineMarketData.marketPrice > 0.0) {
                         totalQuantity * item.onlineMarketData.marketPrice - totalPrice - totalCommission
-//              item.assets.sumByDouble {
+//              item.assets.sumOf {
 //                it.shares * (item.onlineMarketData.marketPrice - it.price)
 //              }
                     } else {
                         totalPrice
-//              item.assets.sumByDouble {
+//              item.assets.sumOf {
 //                it.shares * it.price
 //              }
                     }

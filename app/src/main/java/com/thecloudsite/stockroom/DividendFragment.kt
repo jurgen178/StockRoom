@@ -1144,7 +1144,7 @@ class DividendFragment : Fragment() {
     if (data.assets != null) {
       val (totalQuantity, totalPrice, totalCommission) = getAssets(data.assets?.assets)
 
-//      val totalQuantity = data.assets?.assets?.sumByDouble {
+//      val totalQuantity = data.assets?.assets?.sumOf {
 //        it.totalQuantity
 //      } ?: 0.0
 

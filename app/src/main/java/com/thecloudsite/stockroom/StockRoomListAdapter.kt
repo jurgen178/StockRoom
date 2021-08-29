@@ -178,7 +178,7 @@ class StockRoomListAdapter internal constructor(
             }
 
             val (quantity, asset, commission) = getAssets(current.assets)
-//      val quantity = current.assets.sumByDouble {
+//      val quantity = current.assets.sumOf {
 //        it.quantity
 //      }
 
@@ -187,7 +187,7 @@ class StockRoomListAdapter internal constructor(
 //      var asset: Double = 0.0
 
             if (quantity > 0.0) {
-//        asset = current.assets.sumByDouble {
+//        asset = current.assets.sumOf {
 //          it.quantity * it.price
 //        }
 
@@ -221,7 +221,7 @@ class StockRoomListAdapter internal constructor(
 
                 if (current.onlineMarketData.marketPrice > 0.0) {
                     val capital = quantity * current.onlineMarketData.marketPrice
-//          capital = current.assets.sumByDouble {
+//          capital = current.assets.sumOf {
 //            it.quantity * current.onlineMarketData.marketPrice
 //          }
 

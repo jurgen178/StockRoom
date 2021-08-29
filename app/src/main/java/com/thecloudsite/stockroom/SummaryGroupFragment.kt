@@ -251,7 +251,7 @@ class SummaryGroupFragment : Fragment() {
         stockItems.forEach { stockItem ->
             val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
-//      val totalShares: Double = stockItem.assets.sumByDouble { asset ->
+//      val totalShares: Double = stockItem.assets.sumOf { asset ->
 //        asset.shares
 //      }
             val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
@@ -299,7 +299,7 @@ class SummaryGroupFragment : Fragment() {
             } else
                 if (sortedAssetList.size > n + 1) {
                     val otherAssetList = sortedAssetList.drop(n)
-                    val otherAssets = otherAssetList.sumByDouble { assetItem ->
+                    val otherAssets = otherAssetList.sumOf { assetItem ->
                         assetItem.assets
                     }
 
@@ -416,7 +416,7 @@ class SummaryGroupFragment : Fragment() {
                 val totalAssets = stockItemsList.filter { stockItem ->
                     stockItem.stockDBdata.groupColor == group.color
                 }
-                    .sumByDouble { stockItem ->
+                    .sumOf { stockItem ->
                         val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
                         totalQuantity * stockItem.onlineMarketData.marketPrice
@@ -452,7 +452,7 @@ class SummaryGroupFragment : Fragment() {
                 } else
                     if (sortedAssetList.size > n + 1) {
                         val otherAssetList = sortedAssetList.drop(n)
-                        val otherAssets = otherAssetList.sumByDouble { assetItem ->
+                        val otherAssets = otherAssetList.sumOf { assetItem ->
                             assetItem.assets
                         }
 

@@ -93,7 +93,7 @@ class StockRoomTile1Adapter internal constructor(
 
       if (quantity > 0.0) {
         val capital = quantity * current.onlineMarketData.marketPrice
-//        capital = current.assets.sumByDouble {
+//        capital = current.assets.sumOf {
 //          it.quantity * current.onlineMarketData.marketPrice
 //        }
 

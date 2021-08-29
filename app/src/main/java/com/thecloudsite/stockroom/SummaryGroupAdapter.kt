@@ -479,7 +479,7 @@ class SummaryGroupAdapter internal constructor(
     val stockEvents = stockItemsSelected.filter {
       it.events.isNotEmpty()
     }
-      .sumBy {
+      .sumOf {
         it.events.size
       }
 

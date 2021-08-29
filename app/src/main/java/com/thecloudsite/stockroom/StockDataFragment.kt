@@ -1579,7 +1579,7 @@ class StockDataFragment : Fragment() {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
 //      val (totalQuantity, totalPrice) = getAssets(assets?.assets)
 
-//      val totalQuantity = assets?.assets?.sumByDouble {
+//      val totalQuantity = assets?.assets?.sumOf {
 //        it.shares
 //      }
 //          ?: 0.0
@@ -1918,7 +1918,7 @@ class StockDataFragment : Fragment() {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
       val (totalQuantity, totalPrice, totalCommission) = getAssets(assets?.assets)
 
-//      val totalQuantity = assets?.assets?.sumByDouble {
+//      val totalQuantity = assets?.assets?.sumOf {
 //        it.shares
 //      }
 //          ?: 0.0
@@ -2168,7 +2168,7 @@ class StockDataFragment : Fragment() {
 /*
     removeAssetButton.setOnClickListener {
       val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val totalShares = assets?.assets?.sumByDouble {
+      val totalShares = assets?.assets?.sumOf {
         it.shares
       }
           ?: 0.0
@@ -2207,7 +2207,7 @@ class StockDataFragment : Fragment() {
 
                 if (valid) {
                   // Avoid wrong data due to rounding errors.
-                  val totalPaidPrice = assets?.assets?.sumByDouble {
+                  val totalPaidPrice = assets?.assets?.sumOf {
                     it.shares * it.price
                   } ?: 0.0
                   val averagePrice = totalPaidPrice / totalShares

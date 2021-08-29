@@ -1405,7 +1405,7 @@ class FilterDividendPaidType(
         val totalDividendPaid: Double = stockItem.dividends.filter { dividend ->
             dividend.type == DividendType.Received.value
         }
-            .sumByDouble { dividend ->
+            .sumOf { dividend ->
                 dividend.amount
             }
 
@@ -1434,7 +1434,7 @@ class FilterDividendPaidYTDType(
             dividend.type == DividendType.Received.value
                     && dividend.paydate >= secondsYTD
         }
-            .sumByDouble { dividend ->
+            .sumOf { dividend ->
                 dividend.amount
             }
 

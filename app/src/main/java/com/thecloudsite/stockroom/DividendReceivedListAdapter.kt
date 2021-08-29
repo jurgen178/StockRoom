@@ -302,7 +302,7 @@ class DividendReceivedListAdapter internal constructor(
       marketValue = if (data!!.assets != null) {
         val (totalQuantity, totalPrice, totalCommission) = getAssets(data!!.assets?.assets)
 
-//        val totalQuantity = data!!.assets?.assets?.sumByDouble {
+//        val totalQuantity = data!!.assets?.assets?.sumOf {
 //          it.shares
 //        } ?: 0.0
 
@@ -342,7 +342,7 @@ class DividendReceivedListAdapter internal constructor(
       }
       )
 
-      val dividendTotal = receivedList.sumByDouble { dividend ->
+      val dividendTotal = receivedList.sumOf { dividend ->
         dividend.amount
       }
 
@@ -383,7 +383,7 @@ class DividendReceivedListAdapter internal constructor(
             // Get the dividend for the account.
             val dividendTotalAccount = receivedList.filter { dividend ->
               dividend.account == account
-            }.sumByDouble { dividend ->
+            }.sumOf { dividend ->
               dividend.amount
             }
 

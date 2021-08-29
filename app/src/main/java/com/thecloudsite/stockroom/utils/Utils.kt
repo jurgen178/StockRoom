@@ -658,7 +658,7 @@ fun getTotalCommission(
     assetList: List<Asset>
 ): Double {
 
-    val totalCommission: Double = assetList.sumByDouble { asset ->
+    val totalCommission: Double = assetList.sumOf { asset ->
         asset.commission
     }
 
