@@ -3371,10 +3371,10 @@ class StockDataFragment : Fragment() {
                 if (isDataPoint) {
                   Color.BLUE  // data point > 0.0
                 } else {
-                  0xffC23FFF.toInt()  // data point = 0.0
+                  0xffC23FFF.toInt()  // data point = 0.0, C23FF=Violet
                 }
               } else {
-                0xffFF6A00.toInt()
+                0xffFF6A00.toInt()  // FF6A00=Orange
               }
 
               transactionSeries.setCircleColor(color)
