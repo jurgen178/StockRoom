@@ -2649,7 +2649,6 @@ class StockDataFragment : Fragment() {
         val purchasePrice = SpannableStringBuilder()
         if (totalPrice >= 0.0001) {
           // Bought for %1$s\n%2$s@%1$s%3$s = %4$s
-          val priceStr = DecimalFormat(DecimalFormat2To4Digits).format(price)
           purchasePrice.append(
             getString(
               R.string.bought_for
@@ -2657,7 +2656,8 @@ class StockDataFragment : Fragment() {
           )
           // %1$s
           purchasePrice.append(" ")
-          purchasePrice.append(priceStr)
+          // Display bought for price exact as possible.
+          purchasePrice.append(DecimalFormat(DecimalFormat2To8Digits).format(price))
           purchasePrice.append("\n")
           // %2$s
           purchasePrice.append(
@@ -2666,7 +2666,8 @@ class StockDataFragment : Fragment() {
             )
           )
           purchasePrice.append("@")
-          purchasePrice.append(priceStr)
+          // Display bought price rounded.
+          purchasePrice.append(DecimalFormat(DecimalFormat2To4Digits).format(price))
           // %3$s
           if (totalCommission > 0.0) {
             purchasePrice.scale(commissionScale) {

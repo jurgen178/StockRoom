@@ -9,7 +9,7 @@
 
   <TextView
       android:id="@+id/textViewSelectSymbol"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:text="@string/select_symbol"
       app:layout_constraintHorizontal_bias="0.0"
@@ -30,7 +30,7 @@
 
   <TextView
       android:id="@+id/textViewNewSymbol"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:text="@string/new_symbol"
       app:layout_constraintHorizontal_bias="0.0"
@@ -59,11 +59,12 @@
         />
   </com.google.android.material.textfield.TextInputLayout>
 
-  <androidx.constraintlayout.widget.Barrier
+  <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      app:barrierDirection="start"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.4"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

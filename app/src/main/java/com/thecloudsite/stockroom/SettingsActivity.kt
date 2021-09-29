@@ -108,7 +108,9 @@ class SettingsActivity : AppCompatActivity(),
         exportRequest =
             registerForActivityResult(ActivityResultContracts.CreateDocument())
             { uri ->
-                stockRoomViewModel.exportJSON(applicationContext, uri)
+                if (uri != null) {
+                    stockRoomViewModel.exportJSON(applicationContext, uri)
+                }
                 finish()
             }
     }
