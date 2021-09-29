@@ -2656,7 +2656,7 @@ class StockDataFragment : Fragment() {
           )
           // %1$s
           purchasePrice.append(" ")
-          // Display bought for price exact as possible.
+          // Display 'bought price' exact as possible.
           purchasePrice.append(DecimalFormat(DecimalFormat2To8Digits).format(price))
           purchasePrice.append("\n")
           // %2$s
@@ -2666,7 +2666,7 @@ class StockDataFragment : Fragment() {
             )
           )
           purchasePrice.append("@")
-          // Display bought price rounded.
+          // Display 'bought price' rounded.
           purchasePrice.append(DecimalFormat(DecimalFormat2To4Digits).format(price))
           // %3$s
           if (totalCommission > 0.0) {

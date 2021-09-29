@@ -9,12 +9,12 @@
 
   <TextView
       android:id="@+id/textViewSelectSymbol"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:text="@string/select_symbol"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintBottom_toBottomOf="@+id/textViewSymbolSpinner"
-      app:layout_constraintEnd_toStartOf="@+id/textViewSymbolSpinner"
+      app:layout_constraintEnd_toStartOf="@+id/guideline1"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/textViewSymbolSpinner"
       />
@@ -24,8 +24,16 @@
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/textViewSelectSymbol"
+      app:layout_constraintStart_toEndOf="@+id/guideline1"
       app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.4"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -543,10 +544,16 @@ class MainActivity : AppCompatActivity() {
         }
         filterMenuIdMap.clear()
 
-//    // Change the Filter menu item to bold style.
-//    val menuFilterItem = menu.findItem(R.id.menu_filter)
-//    menuFilterItem.title = SpannableStringBuilder()
-//        .bold { append(getString(R.string.menu_filter)) }
+        // Change the Filter menu item to bold style.
+        val menuFilterItem = menu.findItem(R.id.menu_filter)
+
+        //menuFilterItem.title = SpannableStringBuilder()
+        //    .bold { append(getString(R.string.menu_filter)) }
+
+        menuFilterItem.title = SpannableStringBuilder()
+            .color(applicationContext.getColor(R.color.colorAccent)) {
+                bold { append(getString(R.string.menu_filter)) }
+            }
 
         // long click on sync menu
 //    val menuItemSync = menu.findItem(R.id.menu_sync)
