@@ -308,7 +308,7 @@ limitations under the License. -->
   <string name="dividend_received_summary_text">Total dividends received</string>
   <string name="dividend_received_summary_account_text">Total dividends received for Account \'%1$s\':</string>
   <string name="dividend_headline">Dividend</string>
-  <string name="dividend_exdate">Ex-Dividend</string>
+  <string name="dividend_exdate">Ex-Dividend Date</string>
   <string name="totaldividend_paid">Dividend paid</string>
   <string name="rename_symbol_title">Rename symbol</string>
   <string name="rename_symbol_desc">Rename a symbol to a different name when the security changed.</string>
