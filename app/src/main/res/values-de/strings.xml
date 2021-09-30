@@ -636,4 +636,5 @@ limitations under the License. -->
   <string name="portfolio_overview_headline">Portfolio \'%1$s\'</string>
     <string name="symbol_image">Symbolbild</string>
     <string name="marker_header">Markierung</string>
+    <string name="no_marker">Keine Markierung</string>
 </resources>

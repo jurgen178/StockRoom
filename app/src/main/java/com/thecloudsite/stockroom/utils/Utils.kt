@@ -25,6 +25,7 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import android.provider.Settings.Global.getString
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
@@ -1094,8 +1095,9 @@ fun getGroupsMenuList(
     return menuStrings
 }
 
-fun getMarkerColor(index: Int): Int {
+fun getMarkerColor(context: Context, index: Int): Int {
     return when (index) {
+        0 -> context.getColor(R.color.backgroundListColor)
         1 -> Color.RED
         2 -> 0xFFFF6A00.toInt() // orange
         3 -> Color.YELLOW
@@ -1109,19 +1111,44 @@ fun getMarkerColor(index: Int): Int {
     }
 }
 
-fun getMarkerText(index: Int): SpannableStringBuilder =
-    SpannableStringBuilder()
-        .backgroundColor(getMarkerColor(index))
-        {
-            append("          ")
-        }
-        .backgroundColor(Color.WHITE)
-        {
-            color(Color.BLACK)
+fun getMarkerSymbol(context: Context, index: Int): String {
+    return when (index) {
+        // https://www.alt-codes.net/animal-symbols.php
+        0 -> context.getString(R.string.no_marker) // No marker
+        1 -> "\uD83D\uDC31" // Cat
+        2 -> "\uD83D\uDC34" // Horse
+        3 -> "\uD83D\uDC10" // Goat
+        4 -> "\uD83D\uDC30" // Rabbit
+        5 -> "\uD83D\uDC28" // Koala
+        6 -> "\uD83D\uDC25" // Chicken
+        7 -> "\uD83E\uDD86" // Duck
+        8 -> "\uD83E\uDD84" // Unicorn
+        9 -> "\uD83D\uDC20" // Fish
+        else -> "\uD83D\uDC0C" // Snail
+    }
+}
+
+fun getMarkerText(context: Context, index: Int): SpannableStringBuilder =
+    if (index == 0) {
+        SpannableStringBuilder()
+            .backgroundColor(getMarkerColor(context, index))
             {
-                append(" $index ")
+                append(" ${getMarkerSymbol(context, index)} ")
             }
-        }
+    } else {
+        SpannableStringBuilder()
+            .backgroundColor(getMarkerColor(context, index))
+            {
+                append("${getMarkerSymbol(context, index)}          ")
+            }
+            .backgroundColor(Color.WHITE)
+            {
+                color(Color.BLACK)
+                {
+                    append(" $index ")
+                }
+            }
+    }
 
 fun isWhiteColor(color: Int, colorRef: Int): Boolean {
     val r = color shr 16 and 0xff

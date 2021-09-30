@@ -1205,14 +1205,13 @@ class StockDataFragment : Fragment() {
                 if (stockDBdata.marker == 0) {
                     context?.getColor(R.color.backgroundListColor)!!
                 } else {
-                    getMarkerColor(stockDBdata.marker)
+                    context?.let { getMarkerColor(it, stockDBdata.marker) }
                 }
-            setBackgroundColor(binding.textViewMarkerColor, markerColor)
-            binding.textViewMarkerText.text = if (stockDBdata.marker != 0) {
-                "${stockDBdata.marker}"
-            } else {
-                ""
+            if (markerColor != null) {
+                setBackgroundColor(binding.textViewMarkerColor, markerColor)
             }
+            binding.textViewMarkerText.text =
+                context?.let { "${getMarkerText(it, stockDBdata.marker)}" }
 
             alertAbove = stockDBdata.alertAbove
             alertBelow = stockDBdata.alertBelow
@@ -1516,23 +1515,16 @@ class StockDataFragment : Fragment() {
             val groups: List<Group> = stockRoomViewModel.getGroupsSync()
             popupMenu.setOnMenuItemClickListener { menuitem ->
                 val i: Int = menuitem.itemId - 1
-                val clr: Int
                 val clrDB: Int
                 val name: String
 
                 if (i >= groups.size) {
-                    clr = context?.getColor(R.color.backgroundListColor)!!
                     clrDB = 0
                     name = getString(R.string.standard_group)
                 } else {
-                    clr = groups[i].color
-                    clrDB = clr
+                    clrDB = groups[i].color
                     name = groups[i].name
                 }
-
-                // Set the preview color in the activity.
-                setBackgroundColor(binding.textViewGroupColor, clr)
-                binding.textViewGroup.text = name
 
                 // Store the selection.
                 stockRoomViewModel.setGroup(symbol, name, clrDB)
@@ -1543,8 +1535,8 @@ class StockDataFragment : Fragment() {
         binding.markerLayout.setOnClickListener { viewLayout ->
             val popupMenu = PopupMenu(requireContext(), viewLayout)
 
-            for (index in 1..10) {
-                val text = getMarkerText(index)
+            for (index in 0..10) {
+                val text = context?.let { getMarkerText(it, index) }
                 popupMenu.menu.add(0, Menu.FIRST + index, Menu.NONE, text)
             }
 
