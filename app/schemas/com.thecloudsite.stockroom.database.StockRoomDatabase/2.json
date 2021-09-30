@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "e3c6490a4365cea8f32eabf40409f305",
+    "identityHash": "762348f9eb36d068c97565270a558a4a",
     "entities": [
       {
         "tableName": "store_table",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "stock_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `type` INTEGER NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `note` TEXT NOT NULL, `dividend_note` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_above_note` TEXT NOT NULL, `alert_below` REAL NOT NULL, `alert_below_note` TEXT NOT NULL, PRIMARY KEY(`symbol`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `portfolio` TEXT NOT NULL, `type` INTEGER NOT NULL, `data` TEXT NOT NULL, `group_color` INTEGER NOT NULL, `selection` INTEGER NOT NULL, `note` TEXT NOT NULL, `dividend_note` TEXT NOT NULL, `annual_dividend_rate` REAL NOT NULL, `alert_above` REAL NOT NULL, `alert_above_note` TEXT NOT NULL, `alert_below` REAL NOT NULL, `alert_below_note` TEXT NOT NULL, PRIMARY KEY(`symbol`))",
         "fields": [
           {
             "fieldPath": "symbol",
@@ -85,6 +85,12 @@
           {
             "fieldPath": "groupColor",
             "columnName": "group_color",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selection",
+            "columnName": "selection",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -374,7 +380,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e3c6490a4365cea8f32eabf40409f305')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '762348f9eb36d068c97565270a558a4a')"
     ]
   }
 }

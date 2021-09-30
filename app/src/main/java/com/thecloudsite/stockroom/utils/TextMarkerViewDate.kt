@@ -62,13 +62,13 @@ class TextMarkerViewCandleChart(
         }
 
         if (data.high != data.low) {
-          textmarker.text = "${to2To4Digits(data.low)}-${
-            to2To4Digits(
+          textmarker.text = "${to2To8Digits(data.low)}-${
+            to2To8Digits(
               data.high
             )
           }\n$date"
         } else {
-          textmarker.text = "${to2To4Digits(data.high)}\n$date"
+          textmarker.text = "${to2To8Digits(data.high)}\n$date"
         }
 
       } else {
@@ -118,7 +118,7 @@ class TextMarkerViewLineChart(
               data.y
             }
           }
-        textmarker.text = "${to2To4Digits(y)}\n$date"
+        textmarker.text = "${to2To8Digits(y)}\n$date"
 
       } else {
         textmarker.text = ""

@@ -105,19 +105,22 @@ enum class DividendCycleStrIndex(val value: Int) {
     Annual(3)
 }
 
-// 0..5: 2..4 digits
-// >5: 2 digits
-fun to2To4Digits(value: Double): String = if (value > 5.0) {
-    DecimalFormat(DecimalFormat2Digits).format(value)
-} else {
-    DecimalFormat(DecimalFormat2To4Digits).format(value)
+// > 5:       2 digits
+// < 0.0001:  4..8 digits
+// 0.0001..5: 2..4 digits
+fun to2To8Digits(value: Double): String = when {
+    value > 5.0 -> {
+        DecimalFormat(DecimalFormat2Digits).format(value)
+    }
+    value < 0.0001 -> {
+        DecimalFormat(DecimalFormat2To8Digits).format(value)
+    }
+    else -> {
+        DecimalFormat(DecimalFormat2To4Digits).format(value)
+    }
 }
 
-fun to2To4Digits(value: Float): String = if (value > 5.0) {
-    DecimalFormat(DecimalFormat2Digits).format(value)
-} else {
-    DecimalFormat(DecimalFormat2To4Digits).format(value)
-}
+fun to2To8Digits(value: Float): String = to2To8Digits(value)
 
 fun openNewTabWindow(
     url: String,
@@ -280,7 +283,7 @@ fun Resources.getRawTextFile(@RawRes id: Int) =
 
 fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, String> {
 
-    val marketPrice = to2To4Digits(onlineMarketData.marketPrice)
+    val marketPrice = to2To8Digits(onlineMarketData.marketPrice)
     val change =
         DecimalFormat("+$DecimalFormat2To4Digits;-$DecimalFormat2To4Digits").format(onlineMarketData.marketChange)
     val changePercent =

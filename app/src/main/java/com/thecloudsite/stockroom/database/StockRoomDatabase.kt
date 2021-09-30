@@ -99,6 +99,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
             type INTEGER NOT NULL, 
             data TEXT NOT NULL, 
             group_color INTEGER NOT NULL, 
+            selection INTEGER NOT NULL, 
             note TEXT NOT NULL,
             dividend_note TEXT NOT NULL, 
             annual_dividend_rate REAL NOT NULL,
@@ -111,8 +112,8 @@ abstract class StockRoomDatabase : RoomDatabase() {
         )
         database.execSQL(
           """
-          INSERT INTO `${STOCK_TABLE_NAME_TEMP}` (symbol, portfolio, type, data, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note)
-          SELECT symbol, portfolio, 0, data, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note FROM `${STOCK_TABLE_NAME}`  
+          INSERT INTO `${STOCK_TABLE_NAME_TEMP}` (symbol, portfolio, type, data, group_color, selection, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note)
+          SELECT symbol, portfolio, 0, data, group_color, 0, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note FROM `${STOCK_TABLE_NAME}`  
           """.trimIndent()
         )
         database.execSQL("DROP TABLE `${STOCK_TABLE_NAME}`")
