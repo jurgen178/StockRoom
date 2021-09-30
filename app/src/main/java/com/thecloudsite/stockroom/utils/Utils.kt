@@ -108,7 +108,7 @@ enum class DividendCycleStrIndex(val value: Int) {
 // > 5:       2 digits
 // < 0.0001:  4..8 digits
 // 0.0001..5: 2..4 digits
-fun to2To8Digits(value: Double): String = when {
+private fun to2To8DigitsImpl(value: Double): String = when {
     value > 5.0 -> {
         DecimalFormat(DecimalFormat2Digits).format(value)
     }
@@ -120,7 +120,8 @@ fun to2To8Digits(value: Double): String = when {
     }
 }
 
-fun to2To8Digits(value: Float): String = to2To8Digits(value)
+fun to2To8Digits(value: Double): String = to2To8DigitsImpl(value)
+fun to2To8Digits(value: Float): String = to2To8DigitsImpl(value.toDouble())
 
 fun openNewTabWindow(
     url: String,

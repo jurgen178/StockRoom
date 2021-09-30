@@ -50,7 +50,7 @@ data class StockDBdata(
   var type: Int = 0,  // data provider type
   var data: String = "",
   @ColumnInfo(name = "group_color") var groupColor: Int = 0,
-  var selection: Int = 0,
+  var marker: Int = 0,
   var note: String = "",
   @ColumnInfo(name = "dividend_note") var dividendNote: String = "",
   @ColumnInfo(name = "annual_dividend_rate") var annualDividendRate: Double = -1.0,
