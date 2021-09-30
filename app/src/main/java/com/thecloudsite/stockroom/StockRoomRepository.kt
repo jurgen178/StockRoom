@@ -342,6 +342,15 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun setMarker(
+    symbol: String,
+    marker: Int
+  ) {
+    stockRoomDao.setMarker(symbol, marker)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun deleteAllGroups() {
     stockRoomDao.deleteAllGroupTable()
   }

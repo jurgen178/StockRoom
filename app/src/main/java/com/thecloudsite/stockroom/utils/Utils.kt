@@ -21,6 +21,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -32,6 +33,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.preference.PreferenceManager
@@ -1091,6 +1093,35 @@ fun getGroupsMenuList(
 
     return menuStrings
 }
+
+fun getMarkerColor(index: Int): Int {
+    return when (index) {
+        1 -> Color.RED
+        2 -> 0xFFFF6A00.toInt() // orange
+        3 -> Color.YELLOW
+        4 -> Color.GREEN
+        5 -> Color.CYAN
+        6 -> Color.BLUE
+        7 -> 0xFF9000FF.toInt() // purple
+        8 -> Color.MAGENTA
+        9 -> Color.GRAY
+        else -> Color.BLACK
+    }
+}
+
+fun getMarkerText(index: Int): SpannableStringBuilder =
+    SpannableStringBuilder()
+        .backgroundColor(getMarkerColor(index))
+        {
+            append("          ")
+        }
+        .backgroundColor(Color.WHITE)
+        {
+            color(Color.BLACK)
+            {
+                append(" $index ")
+            }
+        }
 
 fun isWhiteColor(color: Int, colorRef: Int): Boolean {
     val r = color shr 16 and 0xff

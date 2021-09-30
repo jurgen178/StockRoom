@@ -322,6 +322,12 @@ interface StockRoomDao {
     color: Int
   )
 
+  @Query("UPDATE stock_table SET marker = :marker WHERE symbol = :symbol")
+  fun setMarker(
+    symbol: String,
+    marker: Int
+  )
+
   @Query(
     "UPDATE stock_table SET alert_above = :alertAbove, alert_above_note = :alertAboveNote WHERE symbol = :symbol"
   )

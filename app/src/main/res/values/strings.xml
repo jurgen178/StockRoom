@@ -607,6 +607,7 @@ limitations under the License. -->
   <string name="transaction_dividendReceived">Dividend Received</string>
   <string name="portfolio_overview_headline">Portfolio \'%1$s\'</string>
     <string name="symbol_image">Symbol image</string>
+    <string name="marker_header">Marker</string>
 
     <string-array name="predefined_groups">
     <item>Buy</item>

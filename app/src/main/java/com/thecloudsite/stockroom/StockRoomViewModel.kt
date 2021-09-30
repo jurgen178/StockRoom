@@ -2555,6 +2555,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         repository.setStockGroupColor(symbol, color)
     }
 
+    fun setMarker(
+        symbol: String,
+        marker: Int
+    ) = scope.launch {
+        repository.setMarker(symbol, marker)
+    }
+
     fun deleteGroup(color: Int) = scope.launch {
         repository.deleteGroup(color)
     }

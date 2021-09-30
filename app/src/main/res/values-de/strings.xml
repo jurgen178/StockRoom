@@ -635,4 +635,5 @@ limitations under the License. -->
   <string name="transaction_dividendReceived">Dividende ausgezahlt</string>
   <string name="portfolio_overview_headline">Portfolio \'%1$s\'</string>
     <string name="symbol_image">Symbolbild</string>
+    <string name="marker_header">Markierung</string>
 </resources>
