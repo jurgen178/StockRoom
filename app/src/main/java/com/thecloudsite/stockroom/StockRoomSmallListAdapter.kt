@@ -132,6 +132,19 @@ class StockRoomSmallListAdapter internal constructor(
                 color = context.getColor(R.color.backgroundListColor)
             }
             setBackgroundColor(holder.binding.smalllistItemviewGroup, color)
+            if (current.stockDBdata.marker == 0) {
+                // TextView
+                holder.binding.smalllistItemviewGroupSep.setBackgroundColor(color)
+                // TextView with gradient background set.
+                setBackgroundColor(holder.binding.smalllistItemviewGroupMarker, color)
+            } else {
+                val markerColor = getMarkerColor(context, current.stockDBdata.marker)
+
+                holder.binding.smalllistItemviewGroupSep.setBackgroundColor(
+                    context.getColor(R.color.backgroundListColor)
+                )
+                setBackgroundColor(holder.binding.smalllistItemviewGroupMarker, markerColor)
+            }
         }
     }
 
