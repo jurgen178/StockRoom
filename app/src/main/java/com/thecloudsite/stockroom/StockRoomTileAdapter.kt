@@ -26,10 +26,7 @@ import androidx.core.text.italic
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.databinding.StockroomTileItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
-import com.thecloudsite.stockroom.utils.getAssetChange
-import com.thecloudsite.stockroom.utils.getAssets
-import com.thecloudsite.stockroom.utils.getMarketValues
+import com.thecloudsite.stockroom.utils.*
 import java.text.DecimalFormat
 
 class StockRoomTile1Adapter internal constructor(
@@ -74,6 +71,19 @@ class StockRoomTile1Adapter internal constructor(
       color = context.getColor(R.color.backgroundListColor)
     }
     setBackgroundColor(holder.binding.stockRoomTileItemGroup, color)
+    if (current.stockDBdata.marker == 0) {
+      // TextView
+      holder.binding.stockRoomTileItemGroupSep.setBackgroundColor(color)
+      // TextView with gradient background set.
+      setBackgroundColor(holder.binding.stockRoomTileItemGroupMarker, color)
+    } else {
+      val markerColor = getMarkerColor(context, current.stockDBdata.marker)
+
+      holder.binding.stockRoomTileItemGroupSep.setBackgroundColor(
+        context.getColor(R.color.backgroundListColor)
+      )
+      setBackgroundColor(holder.binding.stockRoomTileItemGroupMarker, markerColor)
+    }
 
     val (quantity, asset, commission) = getAssets(current.assets)
 

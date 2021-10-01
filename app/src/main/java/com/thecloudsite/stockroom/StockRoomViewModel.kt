@@ -1729,7 +1729,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
                 if (jsonObj.has("marker")) {
                     val marker = jsonObj.getInt("marker")
-                    setMarker(symbol = symbol, marker = marker)
+                    if (marker in 0..10) {
+                        setMarker(symbol = symbol, marker = marker)
+                    }
                 }
 
                 if (jsonObj.has("notes")) {

@@ -1097,7 +1097,6 @@ fun getGroupsMenuList(
 
 fun getMarkerColor(context: Context, index: Int): Int {
     return when (index) {
-        0 -> context.getColor(R.color.backgroundListColor)
         1 -> Color.RED
         2 -> 0xFFFF6A00.toInt() // orange
         3 -> Color.YELLOW
@@ -1107,14 +1106,14 @@ fun getMarkerColor(context: Context, index: Int): Int {
         7 -> 0xFF9000FF.toInt() // purple
         8 -> Color.MAGENTA
         9 -> Color.GRAY
-        else -> Color.BLACK
+        10 -> Color.BLACK
+        else -> context.getColor(R.color.backgroundListColor)
     }
 }
 
 fun getMarkerSymbol(context: Context, index: Int): String {
     return when (index) {
         // https://www.alt-codes.net/animal-symbols.php
-        0 -> context.getString(R.string.no_marker) // No marker
         1 -> "\uD83D\uDC31" // Cat
         2 -> "\uD83D\uDC34" // Horse
         3 -> "\uD83D\uDC10" // Goat
@@ -1124,7 +1123,8 @@ fun getMarkerSymbol(context: Context, index: Int): String {
         7 -> "\uD83E\uDD86" // Duck
         8 -> "\uD83E\uDD84" // Unicorn
         9 -> "\uD83D\uDC20" // Fish
-        else -> "\uD83D\uDC0C" // Snail
+        10 -> "\uD83D\uDC0C" // Snail
+        else -> context.getString(R.string.no_marker) // No marker
     }
 }
 

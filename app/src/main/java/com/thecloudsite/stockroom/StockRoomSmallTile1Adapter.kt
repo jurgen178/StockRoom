@@ -28,10 +28,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.databinding.StockroomSmalltile1ItemBinding
-import com.thecloudsite.stockroom.utils.getAssetChange
-import com.thecloudsite.stockroom.utils.getChangeColor
-import com.thecloudsite.stockroom.utils.getMarketValues
-import com.thecloudsite.stockroom.utils.useWhiteOnRedGreen
+import com.thecloudsite.stockroom.utils.*
 
 class StockRoomSmallTile1Adapter internal constructor(
     val context: Context,
@@ -141,6 +138,19 @@ class StockRoomSmallTile1Adapter internal constructor(
                 color = context.getColor(R.color.backgroundListColor)
             }
             setBackgroundColor(holder.binding.smalltileItemviewGroup, color)
+            if (current.stockDBdata.marker == 0) {
+                // TextView
+                holder.binding.smalltileItemviewGroupSep.setBackgroundColor(color)
+                // TextView with gradient background set.
+                setBackgroundColor(holder.binding.smalltileItemviewGroupMarker, color)
+            } else {
+                val markerColor = getMarkerColor(context, current.stockDBdata.marker)
+
+                holder.binding.smalltileItemviewGroupSep.setBackgroundColor(
+                    context.getColor(R.color.backgroundListColor)
+                )
+                setBackgroundColor(holder.binding.smalltileItemviewGroupMarker, markerColor)
+            }
         }
     }
 
