@@ -109,6 +109,7 @@ data class StockItemJson
     val data: String?,
     val groupColor: Int?,
     val groupName: String?,
+    val marker: Int?,
     val note: String?,
     var dividendNote: String?,
     val annualDividendRate: Double?,
@@ -1711,6 +1712,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     }
                 }
 
+                if (jsonObj.has("marker")) {
+                    val marker = jsonObj.getInt("marker")
+                    setMarker(symbol = symbol, marker = marker)
+                }
+
                 if (jsonObj.has("notes")) {
                     val notes = jsonObj.getString("notes")
                     if (notes.isNotEmpty()) {
@@ -2109,6 +2115,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             } else {
                 null
             }
+            val markerValue = if (stockItem.stockDBdata.marker != 0) {
+                stockItem.stockDBdata.marker
+            } else {
+                null
+            }
             val groupNameValue = if (groupName.isNotEmpty()) {
                 groupName
             } else {
@@ -2221,6 +2232,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 data = dataValue,
                 groupColor = groupColorValue,
                 groupName = groupNameValue,
+                marker = markerValue,
                 note = noteValue,
                 dividendNote = dividendNoteValue,
                 annualDividendRate = annualDividendRateValue,

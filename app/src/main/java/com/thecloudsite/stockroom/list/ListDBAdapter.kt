@@ -41,9 +41,8 @@ import com.thecloudsite.stockroom.databinding.DbHeadlineTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbStockdbdataTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbStoredataTypeItemBinding
 import com.thecloudsite.stockroom.list.ListDBAdapter.BaseViewHolder
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
-import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
-import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
+import com.thecloudsite.stockroom.utils.*
+import com.thecloudsite.stockroom.utils.getMarkerSymbol
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
 import java.time.Instant
@@ -62,205 +61,224 @@ const val db_dividend_type: Int = 5
 const val db_storedata_type: Int = 6
 
 data class DBData(
-  val viewType: Int,
-  val isHeader: Boolean = false,
-  val id: Long? = null,
-  val symbol: String = "",
-  val portfolio: String = "",
-  val data: String = "",
-  val keyId: String = "",
-  val value: Double = 0.0,
-  val groupColor: Int = 0,
-  val note: String = "",
-  val dividendNote: String = "",
-  val annualDividendRate: Double = -1.0,
-  val alertAbove: Double = 0.0,
-  val alertAboveNote: String = "",
-  val alertBelow: Double = 0.0,
-  val alertBelowNote: String = "",
-  val color: Int = 0,
-  val name: String = "",
-  val quantity: Double = 0.0,
-  val price: Double = 0.0,
-  val type: Int = 0,
-  val account: String = "",
-  val date: Long = 0L,
-  val sharesPerQuantity: Int = 1,
-  val expirationDate: Long = 0L,
-  val premium: Double = 0.0,
-  val commission: Double = 0.0,
-  val title: String = "",
-  val datetime: Long = 0L,
-  val amount: Double = 0.0,
-  val cycle: Int = 0,
-  val paydate: Long = 0L,
-  val exdate: Long = 0L
+    val viewType: Int,
+    val isHeader: Boolean = false,
+    val id: Long? = null,
+    val symbol: String = "",
+    val portfolio: String = "",
+    val data: String = "",
+    val keyId: String = "",
+    val value: Double = 0.0,
+    val groupColor: Int = 0,
+    val marker: Int = 0,
+    val note: String = "",
+    val dividendNote: String = "",
+    val annualDividendRate: Double = -1.0,
+    val alertAbove: Double = 0.0,
+    val alertAboveNote: String = "",
+    val alertBelow: Double = 0.0,
+    val alertBelowNote: String = "",
+    val color: Int = 0,
+    val name: String = "",
+    val quantity: Double = 0.0,
+    val price: Double = 0.0,
+    val type: Int = 0,
+    val account: String = "",
+    val date: Long = 0L,
+    val sharesPerQuantity: Int = 1,
+    val expirationDate: Long = 0L,
+    val premium: Double = 0.0,
+    val commission: Double = 0.0,
+    val title: String = "",
+    val datetime: Long = 0L,
+    val amount: Double = 0.0,
+    val cycle: Int = 0,
+    val paydate: Long = 0L,
+    val exdate: Long = 0L
 )
 
 class ListDBAdapter(
-  private val context: Context
+    private val context: Context
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-  abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
-  }
-
-  private var dbDataList: MutableList<DBData> = mutableListOf()
-  private var dbDataMap: MutableMap<String, MutableList<DBData>> = mutableMapOf()
-
-  class HeadlineViewHolder(
-    val binding: DbHeadlineTypeItemBinding
-  ) : BaseViewHolder<DBData>(binding.root) {
-  }
-
-  class StockDBdataViewHolder(
-    val binding: DbStockdbdataTypeItemBinding
-  ) : BaseViewHolder<DBData>(binding.root) {
-  }
-
-  class GroupViewHolder(
-    val binding: DbGroupTypeItemBinding
-  ) : BaseViewHolder<DBData>(binding.root) {
-  }
-
-  class AssetViewHolder(
-    val binding: DbAssetTypeItemBinding
-  ) : BaseViewHolder<DBData>(binding.root) {
-  }
-
-  class EventViewHolder(
-    val binding: DbEventTypeItemBinding
-  ) : BaseViewHolder<DBData>(binding.root) {
-  }
-
-  class DividendViewHolder(
-    val binding: DbDividendTypeItemBinding
-  ) : BaseViewHolder<DBData>(binding.root) {
-  }
-
-  class StoredataViewHolder(
-    val binding: DbStoredataTypeItemBinding
-  ) : BaseViewHolder<DBData>(binding.root) {
-  }
-
-  override fun onCreateViewHolder(
-    parent: ViewGroup,
-    viewType: Int
-  ): BaseViewHolder<*> {
-
-    return when (viewType) {
-      db_headline_type -> {
-        val binding = DbHeadlineTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        HeadlineViewHolder(binding)
-      }
-
-      db_stockdbdata_type -> {
-        val binding =
-          DbStockdbdataTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        StockDBdataViewHolder(binding)
-      }
-
-      db_group_type -> {
-        val binding = DbGroupTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        GroupViewHolder(binding)
-      }
-
-      db_asset_type -> {
-        val binding = DbAssetTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        AssetViewHolder(binding)
-      }
-
-      db_event_type -> {
-        val binding = DbEventTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        EventViewHolder(binding)
-      }
-
-      db_dividend_type -> {
-        val binding = DbDividendTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        DividendViewHolder(binding)
-      }
-
-      db_storedata_type -> {
-        val binding =
-          DbStoredataTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        StoredataViewHolder(binding)
-      }
-
-      else -> throw IllegalArgumentException("Invalid view type")
+    abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
-  }
 
-  //-----------onCreateViewHolder: bind view with data model---------
-  override fun onBindViewHolder(
-    holder: BaseViewHolder<*>,
-    position: Int
-  ) {
+    private var dbDataList: MutableList<DBData> = mutableListOf()
+    private var dbDataMap: MutableMap<String, MutableList<DBData>> = mutableMapOf()
 
-    val data: DBData = dbDataList[position]
+    class HeadlineViewHolder(
+        val binding: DbHeadlineTypeItemBinding
+    ) : BaseViewHolder<DBData>(binding.root) {
+    }
 
-    when (holder) {
+    class StockDBdataViewHolder(
+        val binding: DbStockdbdataTypeItemBinding
+    ) : BaseViewHolder<DBData>(binding.root) {
+    }
 
-      is HeadlineViewHolder -> {
+    class GroupViewHolder(
+        val binding: DbGroupTypeItemBinding
+    ) : BaseViewHolder<DBData>(binding.root) {
+    }
 
-        holder.binding.dbHeadline.text = data.title
-      }
+    class AssetViewHolder(
+        val binding: DbAssetTypeItemBinding
+    ) : BaseViewHolder<DBData>(binding.root) {
+    }
 
-      is StockDBdataViewHolder -> {
+    class EventViewHolder(
+        val binding: DbEventTypeItemBinding
+    ) : BaseViewHolder<DBData>(binding.root) {
+    }
 
-        if (data.isHeader) {
-          holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.binding.dbStockdbdataSymbol.text = getHeaderStr("symbol")
-          holder.binding.dbStockdbdataPortfolio.text = getHeaderStr("portfolio")
-          holder.binding.dbStockdbdataType.text = getHeaderStr("type")
-          holder.binding.dbStockdbdataData.text = getHeaderStr("data")
-          holder.binding.dbStockdbdataGroupColor.text = getHeaderStr("groupColor")
-          holder.binding.dbStockdbdataNote.text = getHeaderStr("note")
-          holder.binding.dbStockdbdataDividendNote.text = getHeaderStr("dividendNote")
-          holder.binding.dbStockdbdataAnnualDividendRate.text = getHeaderStr("annualDividendRate")
-          holder.binding.dbStockdbdataAlertAbove.text = getHeaderStr("alertAbove")
-          holder.binding.dbStockdbdataAlertAboveNote.text = getHeaderStr("alertAboveNote")
-          holder.binding.dbStockdbdataAlertBelow.text = getHeaderStr("alertBelow")
-          holder.binding.dbStockdbdataAlertBelowNote.text = getHeaderStr("alertBelowNote")
-        } else {
-          holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(0, 148, 255))
-          holder.binding.dbStockdbdataSymbol.text = data.symbol
-          holder.binding.dbStockdbdataPortfolio.text = data.portfolio
-          holder.binding.dbStockdbdataType.text = dataProviderFromInt(data.type).toString()
-          holder.binding.dbStockdbdataData.text = data.data
-          holder.binding.dbStockdbdataGroupColor.text = getColorStr(data.groupColor)
-          holder.binding.dbStockdbdataNote.text = data.note
-          holder.binding.dbStockdbdataDividendNote.text = data.dividendNote
-          holder.binding.dbStockdbdataAnnualDividendRate.text =
-            if (data.annualDividendRate >= 0.0) {
-              DecimalFormat(DecimalFormat2To4Digits).format(data.annualDividendRate)
-            } else {
-              ""
+    class DividendViewHolder(
+        val binding: DbDividendTypeItemBinding
+    ) : BaseViewHolder<DBData>(binding.root) {
+    }
+
+    class StoredataViewHolder(
+        val binding: DbStoredataTypeItemBinding
+    ) : BaseViewHolder<DBData>(binding.root) {
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseViewHolder<*> {
+
+        return when (viewType) {
+            db_headline_type -> {
+                val binding =
+                    DbHeadlineTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                HeadlineViewHolder(binding)
             }
-          holder.binding.dbStockdbdataAlertAbove.text = if (data.alertAbove > 0.0) {
-            DecimalFormat(DecimalFormat2To4Digits).format(data.alertAbove)
-          } else {
-            ""
-          }
-          holder.binding.dbStockdbdataAlertAboveNote.text = data.alertAboveNote
-          holder.binding.dbStockdbdataAlertBelow.text = if (data.alertBelow > 0.0) {
-            DecimalFormat(DecimalFormat2To4Digits).format(data.alertBelow)
-          } else {
-            ""
-          }
-          holder.binding.dbStockdbdataAlertBelowNote.text = data.alertBelowNote
-        }
-      }
 
-      is GroupViewHolder -> {
+            db_stockdbdata_type -> {
+                val binding =
+                    DbStockdbdataTypeItemBinding.inflate(
+                        LayoutInflater.from(context),
+                        parent,
+                        false
+                    )
+                StockDBdataViewHolder(binding)
+            }
 
-        if (data.isHeader) {
-          holder.binding.dbGroupLayout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.binding.dbGroupColor.text = getHeaderStr("color")
-          holder.binding.dbGroupName.text = getHeaderStr("name")
-        } else {
-          holder.binding.dbGroupLayout.setBackgroundColor(Color.rgb(255, 127, 182))
-          holder.binding.dbGroupColor.text = getColorStr(data.color)
-          holder.binding.dbGroupName.text = data.name
+            db_group_type -> {
+                val binding =
+                    DbGroupTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                GroupViewHolder(binding)
+            }
+
+            db_asset_type -> {
+                val binding =
+                    DbAssetTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                AssetViewHolder(binding)
+            }
+
+            db_event_type -> {
+                val binding =
+                    DbEventTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                EventViewHolder(binding)
+            }
+
+            db_dividend_type -> {
+                val binding =
+                    DbDividendTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                DividendViewHolder(binding)
+            }
+
+            db_storedata_type -> {
+                val binding =
+                    DbStoredataTypeItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                StoredataViewHolder(binding)
+            }
+
+            else -> throw IllegalArgumentException("Invalid view type")
         }
+    }
+
+    //-----------onCreateViewHolder: bind view with data model---------
+    override fun onBindViewHolder(
+        holder: BaseViewHolder<*>,
+        position: Int
+    ) {
+
+        val data: DBData = dbDataList[position]
+
+        when (holder) {
+
+            is HeadlineViewHolder -> {
+
+                holder.binding.dbHeadline.text = data.title
+            }
+
+            is StockDBdataViewHolder -> {
+
+                if (data.isHeader) {
+                    holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+                    holder.binding.dbStockdbdataSymbol.text = getHeaderStr("symbol")
+                    holder.binding.dbStockdbdataPortfolio.text = getHeaderStr("portfolio")
+                    holder.binding.dbStockdbdataType.text = getHeaderStr("type")
+                    holder.binding.dbStockdbdataData.text = getHeaderStr("data")
+                    holder.binding.dbStockdbdataGroupColor.text = getHeaderStr("groupColor")
+                    holder.binding.dbStockdbdataMarker.text = getHeaderStr("marker")
+                    holder.binding.dbStockdbdataNote.text = getHeaderStr("note")
+                    holder.binding.dbStockdbdataDividendNote.text = getHeaderStr("dividendNote")
+                    holder.binding.dbStockdbdataAnnualDividendRate.text =
+                        getHeaderStr("annualDividendRate")
+                    holder.binding.dbStockdbdataAlertAbove.text = getHeaderStr("alertAbove")
+                    holder.binding.dbStockdbdataAlertAboveNote.text = getHeaderStr("alertAboveNote")
+                    holder.binding.dbStockdbdataAlertBelow.text = getHeaderStr("alertBelow")
+                    holder.binding.dbStockdbdataAlertBelowNote.text = getHeaderStr("alertBelowNote")
+                } else {
+                    holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(0, 148, 255))
+                    holder.binding.dbStockdbdataSymbol.text = data.symbol
+                    holder.binding.dbStockdbdataPortfolio.text = data.portfolio
+                    holder.binding.dbStockdbdataType.text =
+                        dataProviderFromInt(data.type).toString()
+                    holder.binding.dbStockdbdataData.text = data.data
+                    holder.binding.dbStockdbdataGroupColor.text = getColorStr(data.groupColor)
+                    holder.binding.dbStockdbdataMarker.text = if (data.marker > 0) {
+                        holder.binding.dbStockdbdataMarker.setBackgroundColor(getMarkerColor(context, data.marker))
+                        "${getMarkerText(context, data.marker)}"
+                    } else {
+                        ""
+                    }
+                    holder.binding.dbStockdbdataNote.text = data.note
+                    holder.binding.dbStockdbdataDividendNote.text = data.dividendNote
+                    holder.binding.dbStockdbdataAnnualDividendRate.text =
+                        if (data.annualDividendRate >= 0.0) {
+                            DecimalFormat(DecimalFormat2To4Digits).format(data.annualDividendRate)
+                        } else {
+                            ""
+                        }
+                    holder.binding.dbStockdbdataAlertAbove.text = if (data.alertAbove > 0.0) {
+                        DecimalFormat(DecimalFormat2To4Digits).format(data.alertAbove)
+                    } else {
+                        ""
+                    }
+                    holder.binding.dbStockdbdataAlertAboveNote.text = data.alertAboveNote
+                    holder.binding.dbStockdbdataAlertBelow.text = if (data.alertBelow > 0.0) {
+                        DecimalFormat(DecimalFormat2To4Digits).format(data.alertBelow)
+                    } else {
+                        ""
+                    }
+                    holder.binding.dbStockdbdataAlertBelowNote.text = data.alertBelowNote
+                }
+            }
+
+            is GroupViewHolder -> {
+
+                if (data.isHeader) {
+                    holder.binding.dbGroupLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+                    holder.binding.dbGroupColor.text = getHeaderStr("color")
+                    holder.binding.dbGroupName.text = getHeaderStr("name")
+                } else {
+                    holder.binding.dbGroupLayout.setBackgroundColor(Color.rgb(255, 127, 182))
+                    holder.binding.dbGroupColor.text = getColorStr(data.color)
+                    holder.binding.dbGroupName.text = data.name
+                }
 
 //      groupTableRowsCount = items.size
 //
@@ -271,47 +289,47 @@ class ListDBAdapter(
 //        groupTableRows.append("</tr>")
 //      }
 
-      }
+            }
 
-      is AssetViewHolder -> {
+            is AssetViewHolder -> {
 
-        if (data.isHeader) {
-          holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.binding.dbAssetId.text = getHeaderStr("id")
-          holder.binding.dbAssetSymbol.text = getHeaderStr("symbol")
-          holder.binding.dbAssetQuantity.text = getHeaderStr("quantity")
-          holder.binding.dbAssetPrice.text = getHeaderStr("price")
-          holder.binding.dbAssetType.text = getHeaderStr("type")
-          holder.binding.dbAssetAccount.text = getHeaderStr("account")
-          holder.binding.dbAssetNote.text = getHeaderStr("note")
-          holder.binding.dbAssetDate.text = getHeaderStr("date")
-          holder.binding.dbAssetSharesPerQuantity.text = getHeaderStr("sharesPerQuantity")
-          holder.binding.dbAssetExpirationDate.text = getHeaderStr("expirationDate")
-          holder.binding.dbAssetPremium.text = getHeaderStr("premium")
-          holder.binding.dbAssetCommission.text = getHeaderStr("commission")
-        } else {
-          holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(255, 106, 0))
-          holder.binding.dbAssetId.text = data.id?.toString() ?: ""
-          holder.binding.dbAssetSymbol.text = data.symbol
-          holder.binding.dbAssetQuantity.text =
-            DecimalFormat(DecimalFormatQuantityDigits).format(data.quantity)
-          holder.binding.dbAssetPrice.text =
-            DecimalFormat(DecimalFormat0To4Digits).format(data.price)
-          holder.binding.dbAssetType.text = data.type.toString()
-          holder.binding.dbAssetAccount.text = data.account.toString()
-          holder.binding.dbAssetNote.text = data.note
-          holder.binding.dbAssetDate.text = getDateTimeStr(data.date)
-          holder.binding.dbAssetSharesPerQuantity.text = "${data.sharesPerQuantity}"
-          holder.binding.dbAssetExpirationDate.text = getDateStr(data.expirationDate)
-          holder.binding.dbAssetPremium.text =
-            if (data.premium > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
-              data.premium
-            ) else ""
-          holder.binding.dbAssetCommission.text =
-            if (data.commission > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
-              data.commission
-            ) else ""
-        }
+                if (data.isHeader) {
+                    holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+                    holder.binding.dbAssetId.text = getHeaderStr("id")
+                    holder.binding.dbAssetSymbol.text = getHeaderStr("symbol")
+                    holder.binding.dbAssetQuantity.text = getHeaderStr("quantity")
+                    holder.binding.dbAssetPrice.text = getHeaderStr("price")
+                    holder.binding.dbAssetType.text = getHeaderStr("type")
+                    holder.binding.dbAssetAccount.text = getHeaderStr("account")
+                    holder.binding.dbAssetNote.text = getHeaderStr("note")
+                    holder.binding.dbAssetDate.text = getHeaderStr("date")
+                    holder.binding.dbAssetSharesPerQuantity.text = getHeaderStr("sharesPerQuantity")
+                    holder.binding.dbAssetExpirationDate.text = getHeaderStr("expirationDate")
+                    holder.binding.dbAssetPremium.text = getHeaderStr("premium")
+                    holder.binding.dbAssetCommission.text = getHeaderStr("commission")
+                } else {
+                    holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(255, 106, 0))
+                    holder.binding.dbAssetId.text = data.id?.toString() ?: ""
+                    holder.binding.dbAssetSymbol.text = data.symbol
+                    holder.binding.dbAssetQuantity.text =
+                        DecimalFormat(DecimalFormatQuantityDigits).format(data.quantity)
+                    holder.binding.dbAssetPrice.text =
+                        DecimalFormat(DecimalFormat0To4Digits).format(data.price)
+                    holder.binding.dbAssetType.text = data.type.toString()
+                    holder.binding.dbAssetAccount.text = data.account.toString()
+                    holder.binding.dbAssetNote.text = data.note
+                    holder.binding.dbAssetDate.text = getDateTimeStr(data.date)
+                    holder.binding.dbAssetSharesPerQuantity.text = "${data.sharesPerQuantity}"
+                    holder.binding.dbAssetExpirationDate.text = getDateStr(data.expirationDate)
+                    holder.binding.dbAssetPremium.text =
+                        if (data.premium > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
+                            data.premium
+                        ) else ""
+                    holder.binding.dbAssetCommission.text =
+                        if (data.commission > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
+                            data.commission
+                        ) else ""
+                }
 //      assetTableRowsCount = items.size
 //
 //      items.forEach { assetItem ->
@@ -334,27 +352,27 @@ class ListDBAdapter(
 //        assetTableRows.append("</tr>")
 //      }
 
-      }
+            }
 
-      is EventViewHolder -> {
+            is EventViewHolder -> {
 
-        if (data.isHeader) {
-          holder.binding.dbEventLayout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.binding.dbEventId.text = getHeaderStr("id")
-          holder.binding.dbEventSymbol.text = getHeaderStr("symbol")
-          holder.binding.dbEventTitle.text = getHeaderStr("title")
-          holder.binding.dbEventDatetime.text = getHeaderStr("datetime")
-          holder.binding.dbEventType.text = getHeaderStr("type")
-          holder.binding.dbEventNote.text = getHeaderStr("note")
-        } else {
-          holder.binding.dbEventLayout.setBackgroundColor(Color.rgb(127, 255, 197))
-          holder.binding.dbEventId.text = data.id?.toString() ?: ""
-          holder.binding.dbEventSymbol.text = data.symbol
-          holder.binding.dbEventTitle.text = data.title
-          holder.binding.dbEventDatetime.text = getDateTimeStr(data.datetime)
-          holder.binding.dbEventType.text = data.type.toString()
-          holder.binding.dbEventNote.text = data.note
-        }
+                if (data.isHeader) {
+                    holder.binding.dbEventLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+                    holder.binding.dbEventId.text = getHeaderStr("id")
+                    holder.binding.dbEventSymbol.text = getHeaderStr("symbol")
+                    holder.binding.dbEventTitle.text = getHeaderStr("title")
+                    holder.binding.dbEventDatetime.text = getHeaderStr("datetime")
+                    holder.binding.dbEventType.text = getHeaderStr("type")
+                    holder.binding.dbEventNote.text = getHeaderStr("note")
+                } else {
+                    holder.binding.dbEventLayout.setBackgroundColor(Color.rgb(127, 255, 197))
+                    holder.binding.dbEventId.text = data.id?.toString() ?: ""
+                    holder.binding.dbEventSymbol.text = data.symbol
+                    holder.binding.dbEventTitle.text = data.title
+                    holder.binding.dbEventDatetime.text = getDateTimeStr(data.datetime)
+                    holder.binding.dbEventType.text = data.type.toString()
+                    holder.binding.dbEventNote.text = data.note
+                }
 
 //      eventTableRowsCount = items.size
 //
@@ -369,34 +387,34 @@ class ListDBAdapter(
 //        eventTableRows.append("</tr>")
 //      }
 
-      }
+            }
 
-      is DividendViewHolder -> {
+            is DividendViewHolder -> {
 
-        if (data.isHeader) {
-          holder.binding.dbDividendLayout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.binding.dbDividendId.text = getHeaderStr("id")
-          holder.binding.dbDividendSymbol.text = getHeaderStr("symbol")
-          holder.binding.dbDividendAmount.text = getHeaderStr("amount")
-          holder.binding.dbDividendCycle.text = getHeaderStr("cycle")
-          holder.binding.dbDividendPaydate.text = getHeaderStr("paydate")
-          holder.binding.dbDividendType.text = getHeaderStr("type")
-          holder.binding.dbDividendAccount.text = getHeaderStr("account")
-          holder.binding.dbDividendExdate.text = getHeaderStr("exdate")
-          holder.binding.dbDividendNote.text = getHeaderStr("note")
-        } else {
-          holder.binding.dbDividendLayout.setBackgroundColor(Color.rgb(255, 233, 127))
-          holder.binding.dbDividendId.text = data.id?.toString() ?: ""
-          holder.binding.dbDividendSymbol.text = data.symbol
-          holder.binding.dbDividendAmount.text =
-            DecimalFormat(DecimalFormat2To4Digits).format(data.amount)
-          holder.binding.dbDividendCycle.text = data.cycle.toString()
-          holder.binding.dbDividendPaydate.text = getDateStr(data.paydate)
-          holder.binding.dbDividendType.text = data.type.toString()
-          holder.binding.dbDividendAccount.text = data.account.toString()
-          holder.binding.dbDividendExdate.text = getDateStr(data.exdate)
-          holder.binding.dbDividendNote.text = data.note
-        }
+                if (data.isHeader) {
+                    holder.binding.dbDividendLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+                    holder.binding.dbDividendId.text = getHeaderStr("id")
+                    holder.binding.dbDividendSymbol.text = getHeaderStr("symbol")
+                    holder.binding.dbDividendAmount.text = getHeaderStr("amount")
+                    holder.binding.dbDividendCycle.text = getHeaderStr("cycle")
+                    holder.binding.dbDividendPaydate.text = getHeaderStr("paydate")
+                    holder.binding.dbDividendType.text = getHeaderStr("type")
+                    holder.binding.dbDividendAccount.text = getHeaderStr("account")
+                    holder.binding.dbDividendExdate.text = getHeaderStr("exdate")
+                    holder.binding.dbDividendNote.text = getHeaderStr("note")
+                } else {
+                    holder.binding.dbDividendLayout.setBackgroundColor(Color.rgb(255, 233, 127))
+                    holder.binding.dbDividendId.text = data.id?.toString() ?: ""
+                    holder.binding.dbDividendSymbol.text = data.symbol
+                    holder.binding.dbDividendAmount.text =
+                        DecimalFormat(DecimalFormat2To4Digits).format(data.amount)
+                    holder.binding.dbDividendCycle.text = data.cycle.toString()
+                    holder.binding.dbDividendPaydate.text = getDateStr(data.paydate)
+                    holder.binding.dbDividendType.text = data.type.toString()
+                    holder.binding.dbDividendAccount.text = data.account.toString()
+                    holder.binding.dbDividendExdate.text = getDateStr(data.exdate)
+                    holder.binding.dbDividendNote.text = data.note
+                }
 
 //      dividendTableRowsCount = items.size
 //
@@ -413,326 +431,327 @@ class ListDBAdapter(
 //        dividendTableRows.append("</tr>")
 //      }
 
-      }
+            }
 
-      is StoredataViewHolder -> {
+            is StoredataViewHolder -> {
 
-        if (data.isHeader) {
-          holder.binding.dbStoredataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
-          holder.binding.dbStoredataKeyid.text = getHeaderStr("keyId")
-          holder.binding.dbStoredataData.text = getHeaderStr("data")
-          holder.binding.dbStoredataValue.text = getHeaderStr("value")
-          holder.binding.dbStoredataDatetime.text = getHeaderStr("datetime")
-          holder.binding.dbStoredataType.text = getHeaderStr("type")
-          holder.binding.dbStoredataNote.text = getHeaderStr("note")
+                if (data.isHeader) {
+                    holder.binding.dbStoredataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
+                    holder.binding.dbStoredataKeyid.text = getHeaderStr("keyId")
+                    holder.binding.dbStoredataData.text = getHeaderStr("data")
+                    holder.binding.dbStoredataValue.text = getHeaderStr("value")
+                    holder.binding.dbStoredataDatetime.text = getHeaderStr("datetime")
+                    holder.binding.dbStoredataType.text = getHeaderStr("type")
+                    holder.binding.dbStoredataNote.text = getHeaderStr("note")
+                } else {
+                    holder.binding.dbStoredataLayout.setBackgroundColor(Color.rgb(255, 0, 110))
+                    holder.binding.dbStoredataKeyid.text = data.keyId
+                    holder.binding.dbStoredataData.text = data.data
+                    holder.binding.dbStoredataValue.text = data.value.toString()
+                    holder.binding.dbStoredataDatetime.text = getDateTimeStr(data.datetime)
+                    holder.binding.dbStoredataType.text = data.type.toString()
+                    holder.binding.dbStoredataNote.text = data.note
+                }
+
+            }
+
+            else -> {
+                throw IllegalArgumentException()
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        val element: DBData = dbDataList[position]
+        return element.viewType
+    }
+
+    private fun getDateStr(datetime: Long): String {
+        return if (datetime != 0L) {
+            val gmtDateTime: LocalDateTime =
+                LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+            val localDateTime: ZonedDateTime =
+                ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZoneOffset.systemDefault())
+            val dateTimeStr =
+                "${datetime}\n${
+                    gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+                }\nLokales Datum: ${
+                    localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+                }"
+            dateTimeStr
         } else {
-          holder.binding.dbStoredataLayout.setBackgroundColor(Color.rgb(255, 0, 110))
-          holder.binding.dbStoredataKeyid.text = data.keyId
-          holder.binding.dbStoredataData.text = data.data
-          holder.binding.dbStoredataValue.text = data.value.toString()
-          holder.binding.dbStoredataDatetime.text = getDateTimeStr(data.datetime)
-          holder.binding.dbStoredataType.text = data.type.toString()
-          holder.binding.dbStoredataNote.text = data.note
+            ""
+        }
+    }
+
+    private fun getDateTimeStr(datetime: Long): String {
+        return if (datetime != 0L) {
+            val gmtDateTime: LocalDateTime =
+                LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
+            val localDateTime: ZonedDateTime =
+                ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZoneOffset.systemDefault())
+            val dateTimeStr =
+                "${datetime}\n${
+                    gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+                } ${
+                    gmtDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+                }\nLokale Zeit: ${
+                    localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
+                } ${
+                    localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
+                }"
+            dateTimeStr
+        } else {
+            ""
+        }
+    }
+
+    private fun getHeaderStr(text: String): SpannableStringBuilder =
+        SpannableStringBuilder()
+            .color(Color.WHITE) {
+                bold { append(text) }
+            }
+
+    private fun getHeaderStr2(text: String): SpannableStringBuilder =
+        SpannableStringBuilder()
+            .backgroundColor(Color.rgb(139, 0, 0)) {
+                color(Color.WHITE) {
+                    bold { append(text) }
+                }
+            }
+
+    private fun getColorStr(color: Int): SpannableStringBuilder =
+        if (color == 0) {
+            SpannableStringBuilder()
+        } else {
+            val hexStr = "0x${color.toHexString()}"
+            val colorCode = hexStr.replace("0xff", "#")
+            SpannableStringBuilder()
+                .append("$color\n")
+                .backgroundColor(Color.WHITE) {
+                    color(color) {
+                        append("▐█████▌\n")
+                    }
+                }
+                .append(colorCode)
         }
 
-      }
-
-      else -> {
-        throw IllegalArgumentException()
-      }
-    }
-  }
-
-  override fun getItemViewType(position: Int): Int {
-    val element: DBData = dbDataList[position]
-    return element.viewType
-  }
-
-  private fun getDateStr(datetime: Long): String {
-    return if (datetime != 0L) {
-      val gmtDateTime: LocalDateTime =
-        LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
-      val localDateTime: ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZoneOffset.systemDefault())
-      val dateTimeStr =
-        "${datetime}\n${
-          gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        }\nLokales Datum: ${
-          localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        }"
-      dateTimeStr
-    } else {
-      ""
-    }
-  }
-
-  private fun getDateTimeStr(datetime: Long): String {
-    return if (datetime != 0L) {
-      val gmtDateTime: LocalDateTime =
-        LocalDateTime.ofEpochSecond(datetime, 0, ZoneOffset.UTC)
-      val localDateTime: ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(datetime), ZoneOffset.systemDefault())
-      val dateTimeStr =
-        "${datetime}\n${
-          gmtDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        } ${
-          gmtDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-        }\nLokale Zeit: ${
-          localDateTime.format(DateTimeFormatter.ofLocalizedDate(MEDIUM))
-        } ${
-          localDateTime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
-        }"
-      dateTimeStr
-    } else {
-      ""
-    }
-  }
-
-  private fun getHeaderStr(text: String): SpannableStringBuilder =
-    SpannableStringBuilder()
-      .color(Color.WHITE) {
-        bold { append(text) }
-      }
-
-  private fun getHeaderStr2(text: String): SpannableStringBuilder =
-    SpannableStringBuilder()
-      .backgroundColor(Color.rgb(139, 0, 0)) {
-        color(Color.WHITE) {
-          bold { append(text) }
+    private fun getHtmlColorStr(color: Int): String =
+        if (color == 0) {
+            ""
+        } else {
+            val hexStr = "0x${color.toHexString()}"
+            val colorCode = hexStr.replace("0xff", "#")
+            val colorSample =
+                "<font style=\"background-color: $colorCode;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>"
+            "$color</br>$colorSample&nbsp;$colorCode"
         }
-      }
 
-  private fun getColorStr(color: Int): SpannableStringBuilder =
-    if (color == 0) {
-      SpannableStringBuilder()
-    } else {
-      val hexStr = "0x${color.toHexString()}"
-      val colorCode = hexStr.replace("0xff", "#")
-      SpannableStringBuilder()
-        .append("$color\n")
-        .backgroundColor(Color.WHITE) {
-          color(color) {
-            append("▐█████▌\n")
-          }
-        }
-        .append(colorCode)
+    private fun updateList() {
+
+        dbDataList.clear()
+        dbDataMap.toSortedMap()
+            .forEach { (_, dbData) ->
+                dbDataList.addAll(dbData)
+            }
+
+        notifyDataSetChanged()
     }
 
-  private fun getHtmlColorStr(color: Int): String =
-    if (color == 0) {
-      ""
-    } else {
-      val hexStr = "0x${color.toHexString()}"
-      val colorCode = hexStr.replace("0xff", "#")
-      val colorSample =
-        "<font style=\"background-color: $colorCode;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>"
-      "$color</br>$colorSample&nbsp;$colorCode"
+    fun updateStockDBdata(data: List<StockDBdata>) {
+
+        this.dbDataMap["0_stock_table"] = mutableListOf(
+            DBData(
+                viewType = db_headline_type,
+                title = "\nstock_table (${data.size})"
+            ),
+            DBData(
+                viewType = db_stockdbdata_type,
+                isHeader = true
+            )
+        )
+
+        this.dbDataMap["0_stock_table"]?.addAll(
+            data
+                //.take(2)
+                .map { stockDBdata ->
+                    DBData(
+                        viewType = db_stockdbdata_type,
+                        symbol = stockDBdata.symbol,
+                        portfolio = stockDBdata.portfolio,
+                        type = stockDBdata.type,
+                        data = stockDBdata.data,
+                        groupColor = stockDBdata.groupColor,
+                        marker = stockDBdata.marker,
+                        note = stockDBdata.note,
+                        dividendNote = stockDBdata.dividendNote,
+                        annualDividendRate = stockDBdata.annualDividendRate,
+                        alertAbove = stockDBdata.alertAbove,
+                        alertAboveNote = stockDBdata.alertAboveNote,
+                        alertBelow = stockDBdata.alertBelow,
+                        alertBelowNote = stockDBdata.alertBelowNote
+                    )
+                })
+
+        updateList()
     }
 
-  private fun updateList() {
+    fun updateGroup(data: List<Group>) {
 
-    dbDataList.clear()
-    dbDataMap.toSortedMap()
-      .forEach { (_, dbData) ->
-        dbDataList.addAll(dbData)
-      }
+        this.dbDataMap["1_group_table"] = mutableListOf(
+            DBData(
+                viewType = db_headline_type,
+                title = "\ngroup_table (${data.size})"
+            ),
+            DBData(
+                viewType = db_group_type,
+                isHeader = true
+            )
+        )
 
-    notifyDataSetChanged()
-  }
-
-  fun updateStockDBdata(data: List<StockDBdata>) {
-
-    this.dbDataMap["0_stock_table"] = mutableListOf(
-      DBData(
-        viewType = db_headline_type,
-        title = "\nstock_table (${data.size})"
-      ),
-      DBData(
-        viewType = db_stockdbdata_type,
-        isHeader = true
-      )
-    )
-
-    this.dbDataMap["0_stock_table"]?.addAll(
-      data
-        //.take(2)
-        .map { stockDBdata ->
-          DBData(
-            viewType = db_stockdbdata_type,
-            symbol = stockDBdata.symbol,
-            portfolio = stockDBdata.portfolio,
-            type = stockDBdata.type,
-            data = stockDBdata.data,
-            groupColor = stockDBdata.groupColor,
-            note = stockDBdata.note,
-            dividendNote = stockDBdata.dividendNote,
-            annualDividendRate = stockDBdata.annualDividendRate,
-            alertAbove = stockDBdata.alertAbove,
-            alertAboveNote = stockDBdata.alertAboveNote,
-            alertBelow = stockDBdata.alertBelow,
-            alertBelowNote = stockDBdata.alertBelowNote
-          )
+        this.dbDataMap["1_group_table"]?.addAll(data.map { group ->
+            DBData(
+                viewType = db_group_type,
+                color = group.color,
+                name = group.name
+            )
         })
 
-    updateList()
-  }
+        updateList()
+    }
 
-  fun updateGroup(data: List<Group>) {
+    fun updateAsset(data: List<Asset>) {
 
-    this.dbDataMap["1_group_table"] = mutableListOf(
-      DBData(
-        viewType = db_headline_type,
-        title = "\ngroup_table (${data.size})"
-      ),
-      DBData(
-        viewType = db_group_type,
-        isHeader = true
-      )
-    )
+        this.dbDataMap["2_asset_table"] = mutableListOf(
+            DBData(
+                viewType = db_headline_type,
+                title = "\nasset_table (${data.size})"
+            ),
+            DBData(
+                viewType = db_asset_type,
+                isHeader = true
+            )
+        )
 
-    this.dbDataMap["1_group_table"]?.addAll(data.map { group ->
-      DBData(
-        viewType = db_group_type,
-        color = group.color,
-        name = group.name
-      )
-    })
+        this.dbDataMap["2_asset_table"]?.addAll(
+            data
+                //.take(2)
+                .map { asset ->
+                    DBData(
+                        viewType = db_asset_type,
+                        id = asset.id,
+                        symbol = asset.symbol,
+                        quantity = asset.quantity,
+                        price = asset.price,
+                        type = asset.type,
+                        account = asset.account,
+                        note = asset.note,
+                        date = asset.date,
+                        sharesPerQuantity = asset.sharesPerQuantity,
+                        expirationDate = asset.expirationDate,
+                        premium = asset.premium,
+                        commission = asset.commission
+                    )
+                })
 
-    updateList()
-  }
+        updateList()
+    }
 
-  fun updateAsset(data: List<Asset>) {
+    fun updateEvent(data: List<Event>) {
 
-    this.dbDataMap["2_asset_table"] = mutableListOf(
-      DBData(
-        viewType = db_headline_type,
-        title = "\nasset_table (${data.size})"
-      ),
-      DBData(
-        viewType = db_asset_type,
-        isHeader = true
-      )
-    )
+        this.dbDataMap["3_event_table"] = mutableListOf(
+            DBData(
+                viewType = db_headline_type,
+                title = "\nevent_table (${data.size})"
+            ),
+            DBData(
+                viewType = db_event_type,
+                isHeader = true
+            )
+        )
 
-    this.dbDataMap["2_asset_table"]?.addAll(
-      data
-        //.take(2)
-        .map { asset ->
-          DBData(
-            viewType = db_asset_type,
-            id = asset.id,
-            symbol = asset.symbol,
-            quantity = asset.quantity,
-            price = asset.price,
-            type = asset.type,
-            account = asset.account,
-            note = asset.note,
-            date = asset.date,
-            sharesPerQuantity = asset.sharesPerQuantity,
-            expirationDate = asset.expirationDate,
-            premium = asset.premium,
-            commission = asset.commission
-          )
-        })
+        this.dbDataMap["3_event_table"]?.addAll(
+            data
+                //.take(2)
+                .map { event ->
+                    DBData(
+                        viewType = db_event_type,
+                        id = event.id,
+                        symbol = event.symbol,
+                        title = event.title,
+                        datetime = event.datetime,
+                        type = event.type,
+                        note = event.note
+                    )
+                })
 
-    updateList()
-  }
+        updateList()
+    }
 
-  fun updateEvent(data: List<Event>) {
+    fun updateDividend(data: List<Dividend>) {
 
-    this.dbDataMap["3_event_table"] = mutableListOf(
-      DBData(
-        viewType = db_headline_type,
-        title = "\nevent_table (${data.size})"
-      ),
-      DBData(
-        viewType = db_event_type,
-        isHeader = true
-      )
-    )
+        this.dbDataMap["4_dividend_table"] = mutableListOf(
+            DBData(
+                viewType = db_headline_type,
+                title = "\ndividend_table (${data.size})"
+            ),
+            DBData(
+                viewType = db_dividend_type,
+                isHeader = true
+            )
+        )
 
-    this.dbDataMap["3_event_table"]?.addAll(
-      data
-        //.take(2)
-        .map { event ->
-          DBData(
-            viewType = db_event_type,
-            id = event.id,
-            symbol = event.symbol,
-            title = event.title,
-            datetime = event.datetime,
-            type = event.type,
-            note = event.note
-          )
-        })
+        this.dbDataMap["4_dividend_table"]?.addAll(
+            data
+                //.take(2)
+                .map { dividend ->
+                    DBData(
+                        viewType = db_dividend_type,
+                        id = dividend.id,
+                        symbol = dividend.symbol,
+                        amount = dividend.amount,
+                        cycle = dividend.cycle,
+                        paydate = dividend.paydate,
+                        type = dividend.type,
+                        account = dividend.account,
+                        exdate = dividend.exdate,
+                        note = dividend.note
+                    )
+                })
 
-    updateList()
-  }
+        updateList()
+    }
 
-  fun updateDividend(data: List<Dividend>) {
+    fun updateStoreData(data: List<StoreData>) {
 
-    this.dbDataMap["4_dividend_table"] = mutableListOf(
-      DBData(
-        viewType = db_headline_type,
-        title = "\ndividend_table (${data.size})"
-      ),
-      DBData(
-        viewType = db_dividend_type,
-        isHeader = true
-      )
-    )
+        this.dbDataMap["5_store_table"] = mutableListOf(
+            DBData(
+                viewType = db_headline_type,
+                title = "\nstore_table (${data.size})"
+            ),
+            DBData(
+                viewType = db_storedata_type,
+                isHeader = true
+            )
+        )
 
-    this.dbDataMap["4_dividend_table"]?.addAll(
-      data
-        //.take(2)
-        .map { dividend ->
-          DBData(
-            viewType = db_dividend_type,
-            id = dividend.id,
-            symbol = dividend.symbol,
-            amount = dividend.amount,
-            cycle = dividend.cycle,
-            paydate = dividend.paydate,
-            type = dividend.type,
-            account = dividend.account,
-            exdate = dividend.exdate,
-            note = dividend.note
-          )
-        })
+        this.dbDataMap["5_store_table"]?.addAll(
+            data
+                //.take(2)
+                .map { storedata ->
+                    DBData(
+                        viewType = db_storedata_type,
+                        keyId = storedata.keyId,
+                        data = storedata.data,
+                        value = storedata.value,
+                        datetime = storedata.datetime,
+                        type = storedata.type,
+                        note = storedata.note
+                    )
+                })
 
-    updateList()
-  }
+        updateList()
+    }
 
-  fun updateStoreData(data: List<StoreData>) {
-
-    this.dbDataMap["5_store_table"] = mutableListOf(
-      DBData(
-        viewType = db_headline_type,
-        title = "\nstore_table (${data.size})"
-      ),
-      DBData(
-        viewType = db_storedata_type,
-        isHeader = true
-      )
-    )
-
-    this.dbDataMap["5_store_table"]?.addAll(
-      data
-        //.take(2)
-        .map { storedata ->
-          DBData(
-            viewType = db_storedata_type,
-            keyId = storedata.keyId,
-            data = storedata.data,
-            value = storedata.value,
-            datetime = storedata.datetime,
-            type = storedata.type,
-            note = storedata.note
-          )
-        })
-
-    updateList()
-  }
-
-  override fun getItemCount() = dbDataList.size
+    override fun getItemCount() = dbDataList.size
 }
