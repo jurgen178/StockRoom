@@ -37,7 +37,8 @@ enum class SortMode(val value: Int) {
   ByProfitPercentage(4),
   ByDividendPercentage(5),
   ByGroup(6),
-  ByActivity(7)
+  ByMarker(7),
+  ByActivity(8)
   //ByUnsorted(7),
 }
 

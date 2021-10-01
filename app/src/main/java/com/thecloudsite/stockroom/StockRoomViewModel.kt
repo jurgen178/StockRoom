@@ -1336,6 +1336,21 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         }
                     }
             }
+            SortMode.ByMarker -> {
+                // Sort the group items alphabetically.
+                stockItems.sortedBy { item ->
+                    item.stockDBdata.symbol
+                }
+                    .sortedByDescending { item ->
+                        // Sort with smallest marker number first, then all not marked items (marker=0)
+                        if (item.stockDBdata.marker == 0) {
+                            0
+                        } else {
+                            // 1..10 -> 10..1
+                            11 - item.stockDBdata.marker
+                        }
+                    }
+            }
             SortMode.ByActivity -> {
                 stockItems.sortedByDescending { item ->
 
