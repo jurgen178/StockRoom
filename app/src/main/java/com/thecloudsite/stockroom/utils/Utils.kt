@@ -31,6 +31,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatDelegate
@@ -38,13 +39,10 @@ import androidx.core.text.backgroundColor
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.preference.PreferenceManager
+import com.thecloudsite.stockroom.*
 import com.thecloudsite.stockroom.DividendCycle.*
-import com.thecloudsite.stockroom.FilterDataViewModel
-import com.thecloudsite.stockroom.OnlineMarketData
-import com.thecloudsite.stockroom.R
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.color
-import com.thecloudsite.stockroom.StockItem
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.AssetType
 import com.thecloudsite.stockroom.database.Group
@@ -1284,4 +1282,33 @@ fun updateFilterList(
         filterDataViewModel.setSerializedStr(filterData, selectedFilter, filterActive)
     }
 
+}
+
+fun setGroupBackground(
+    context: Context,
+    marker: Int,
+    color: Int,
+    itemviewGroup: TextView,
+    itemviewGroupSep: TextView,
+    itemviewGroupMarker: TextView
+) {
+    // top textview group color
+    setBackgroundColor(itemviewGroup, color)
+    if (marker == 0) {
+        // No marker, set separator and bottom textview to the same group color.
+        // TextView
+        itemviewGroupSep.setBackgroundColor(color)
+        // TextView with gradient background set.
+        setBackgroundColor(itemviewGroupMarker, color)
+    } else {
+        val markerColor = getMarkerColor(context, marker)
+
+        // Set separator textview to background color.
+        itemviewGroupSep.setBackgroundColor(
+            context.getColor(R.color.backgroundListColor)
+        )
+
+        // Set bottom textview to marker cmolor.
+        setBackgroundColor(itemviewGroupMarker, markerColor)
+    }
 }

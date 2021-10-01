@@ -367,20 +367,14 @@ class StockRoomListAdapter internal constructor(
             if (color == 0) {
                 color = context.getColor(R.color.backgroundListColor)
             }
-            setBackgroundColor(holder.binding.itemviewGroup, color)
-            if (current.stockDBdata.marker == 0) {
-                // TextView
-                holder.binding.itemviewGroupSep.setBackgroundColor(color)
-                // TextView with gradient background set.
-                setBackgroundColor(holder.binding.itemviewGroupMarker, color)
-            } else {
-                val markerColor = getMarkerColor(context, current.stockDBdata.marker)
-
-                holder.binding.itemviewGroupSep.setBackgroundColor(
-                    context.getColor(R.color.backgroundListColor)
-                )
-                setBackgroundColor(holder.binding.itemviewGroupMarker, markerColor)
-            }
+            setGroupBackground(
+                context,
+                current.stockDBdata.marker,
+                color,
+                holder.binding.itemviewGroup,
+                holder.binding.itemviewGroupSep,
+                holder.binding.itemviewGroupMarker
+            )
 
             /*
             // Keep the corner radii and only change the background color.

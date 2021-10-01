@@ -70,20 +70,14 @@ class StockRoomTile1Adapter internal constructor(
     if (color == 0) {
       color = context.getColor(R.color.backgroundListColor)
     }
-    setBackgroundColor(holder.binding.stockRoomTileItemGroup, color)
-    if (current.stockDBdata.marker == 0) {
-      // TextView
-      holder.binding.stockRoomTileItemGroupSep.setBackgroundColor(color)
-      // TextView with gradient background set.
-      setBackgroundColor(holder.binding.stockRoomTileItemGroupMarker, color)
-    } else {
-      val markerColor = getMarkerColor(context, current.stockDBdata.marker)
-
-      holder.binding.stockRoomTileItemGroupSep.setBackgroundColor(
-        context.getColor(R.color.backgroundListColor)
-      )
-      setBackgroundColor(holder.binding.stockRoomTileItemGroupMarker, markerColor)
-    }
+    setGroupBackground(
+      context,
+      current.stockDBdata.marker,
+      color,
+      holder.binding.stockRoomTileItemGroup,
+      holder.binding.stockRoomTileItemGroupSep,
+      holder.binding.stockRoomTileItemGroupMarker
+    )
 
     val (quantity, asset, commission) = getAssets(current.assets)
 

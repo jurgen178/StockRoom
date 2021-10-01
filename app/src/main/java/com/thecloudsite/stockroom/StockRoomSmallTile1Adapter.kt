@@ -137,20 +137,14 @@ class StockRoomSmallTile1Adapter internal constructor(
             if (color == 0) {
                 color = context.getColor(R.color.backgroundListColor)
             }
-            setBackgroundColor(holder.binding.smalltileItemviewGroup, color)
-            if (current.stockDBdata.marker == 0) {
-                // TextView
-                holder.binding.smalltileItemviewGroupSep.setBackgroundColor(color)
-                // TextView with gradient background set.
-                setBackgroundColor(holder.binding.smalltileItemviewGroupMarker, color)
-            } else {
-                val markerColor = getMarkerColor(context, current.stockDBdata.marker)
-
-                holder.binding.smalltileItemviewGroupSep.setBackgroundColor(
-                    context.getColor(R.color.backgroundListColor)
-                )
-                setBackgroundColor(holder.binding.smalltileItemviewGroupMarker, markerColor)
-            }
+            setGroupBackground(
+                context,
+                current.stockDBdata.marker,
+                color,
+                holder.binding.smalltileItemviewGroup,
+                holder.binding.smalltileItemviewGroupSep,
+                holder.binding.smalltileItemviewGroupMarker
+            )
         }
     }
 

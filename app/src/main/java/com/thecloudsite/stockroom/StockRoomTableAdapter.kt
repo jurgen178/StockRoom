@@ -336,20 +336,14 @@ class StockRoomTableAdapter internal constructor(
             if (color == 0) {
                 color = backgroundColor
             }
-            setBackgroundColor(holder.binding.tableDataGroup, color)
-            if (current.stockDBdata.marker == 0) {
-                // TextView
-                holder.binding.tableDataGroupSep.setBackgroundColor(color)
-                // TextView with gradient background set.
-                setBackgroundColor(holder.binding.tableDataGroupMarker, color)
-            } else {
-                val markerColor = getMarkerColor(context, current.stockDBdata.marker)
-
-                holder.binding.tableDataGroupSep.setBackgroundColor(
-                    context.getColor(R.color.backgroundListColor)
-                )
-                setBackgroundColor(holder.binding.tableDataGroupMarker, markerColor)
-            }
+            setGroupBackground(
+                context,
+                current.stockDBdata.marker,
+                color,
+                holder.binding.tableDataGroup,
+                holder.binding.tableDataGroupSep,
+                holder.binding.tableDataGroupMarker
+            )
 
             holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
             holder.binding.tableDataName.text = getName(current.onlineMarketData)
