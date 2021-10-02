@@ -23,14 +23,9 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.string
+import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Group
-import com.thecloudsite.stockroom.utils.DecimalFormat0To2Digits
-import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
-import com.thecloudsite.stockroom.utils.formatInt
-import com.thecloudsite.stockroom.utils.getAssets
-import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
-import com.thecloudsite.stockroom.utils.getGroupsMenuList
-import com.thecloudsite.stockroom.utils.isSimilarColor
+import com.thecloudsite.stockroom.utils.*
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneOffset
@@ -49,6 +44,7 @@ enum class FilterTypeEnum {
     FilterStockExchangeNameType,
     FilterMarketCapType,
     FilterGroupType,
+    FilterMarkerType,
     FilterNoteType,
     FilterDividendNoteType,
     FilterAlertType,
@@ -145,6 +141,7 @@ object FilterFactory {
             FilterTypeEnum.FilterAssetAccountType -> FilterAssetAccountType(context)
             FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
             FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
+            FilterTypeEnum.FilterMarkerType -> FilterMarkerType(context)
             FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
             FilterTypeEnum.FilterDividendNoteType -> FilterDividendNoteType(context)
             FilterTypeEnum.FilterAlertNoteType -> FilterAlertNoteType(context)
@@ -534,6 +531,35 @@ open class FilterGroupBaseType(override val context: Context) : FilterSelectionB
         }
 }
 
+open class FilterMarkerBaseType(override val context: Context) : FilterSelectionBaseType(context) {
+
+    var filterMarkerValue: Int = 0
+
+    override val selectionList: List<SpannableStringBuilder>
+        get() {
+            val markers: MutableList<SpannableStringBuilder> = mutableListOf()
+            for (index in 0..10) {
+                markers.add(getMarkerText(context, index))
+            }
+            return markers
+        }
+
+    override var data: String = ""
+        get() = filterSelectionIndex.toString()
+        set(value) {
+            field = value
+            filterSelectionIndex = strToInt(value)
+            filterMarkerValue = filterSelectionIndex
+        }
+
+    override val displayData: SpannableStringBuilder
+        get() = getMarkerText(
+            context,
+            filterSelectionIndex,
+            false
+        ) // FilterType uses the Application Context and gets the wrong background color.
+}
+
 open class FilterBooleanBaseType(val context: Context) : FilterBaseType() {
 
     override val dataType = FilterDataTypeEnum.NoType
@@ -921,6 +947,26 @@ class FilterGroupType(
     override val typeId = FilterTypeEnum.FilterGroupType
     override val displayName = context.getString(R.string.filter_group_name)
     override val desc = context.getString(R.string.filter_group_desc)
+}
+
+class FilterMarkerType(
+    context: Context
+) : FilterMarkerBaseType(context) {
+    override fun filter(stockItem: StockItem): Boolean {
+        return when (subType) {
+            FilterSubTypeEnum.IsType -> {
+                stockItem.stockDBdata.marker == filterMarkerValue
+            }
+            FilterSubTypeEnum.IsNotType -> {
+                stockItem.stockDBdata.marker != filterMarkerValue
+            }
+            else -> false
+        }
+    }
+
+    override val typeId = FilterTypeEnum.FilterMarkerType
+    override val displayName = context.getString(R.string.filter_marker_name)
+    override val desc = context.getString(R.string.filter_marker_desc)
 }
 
 class FilterNoteType(

@@ -25,7 +25,6 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
-import android.provider.Settings.Global.getString
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
@@ -1126,13 +1125,22 @@ fun getMarkerSymbol(context: Context, index: Int): String {
     }
 }
 
-fun getMarkerText(context: Context, index: Int): SpannableStringBuilder =
+fun getMarkerText(
+    context: Context,
+    index: Int,
+    setBackgroundColor: Boolean = true
+): SpannableStringBuilder =
     if (index == 0) {
-        SpannableStringBuilder()
-            .backgroundColor(getMarkerColor(context, index))
-            {
-                append(" ${getMarkerSymbol(context, index)} ")
-            }
+        if (setBackgroundColor) {
+            SpannableStringBuilder()
+                .backgroundColor(getMarkerColor(context, index))
+                {
+                    append(" ${getMarkerSymbol(context, index)} ")
+                }
+        } else {
+            SpannableStringBuilder()
+                .append(" ${getMarkerSymbol(context, index)} ")
+        }
     } else {
         SpannableStringBuilder()
             .backgroundColor(getMarkerColor(context, index))
@@ -1288,27 +1296,29 @@ fun setGroupBackground(
     context: Context,
     marker: Int,
     color: Int,
-    itemviewGroup: TextView,
-    itemviewGroupSep: TextView,
-    itemviewGroupMarker: TextView
+    textViewGroup: TextView,
+    textViewGroupSep: TextView,
+    textViewGroupMarker: TextView
 ) {
-    // top textview group color
-    setBackgroundColor(itemviewGroup, color)
+    // Set top textview to group color
+    setBackgroundColor(textViewGroup, color)
+
     if (marker == 0) {
         // No marker, set separator and bottom textview to the same group color.
         // TextView
-        itemviewGroupSep.setBackgroundColor(color)
+        textViewGroupSep.setBackgroundColor(color)
         // TextView with gradient background set.
-        setBackgroundColor(itemviewGroupMarker, color)
+        // Use helper function to set background to avoid reset the rounded edges.
+        setBackgroundColor(textViewGroupMarker, color)
     } else {
         val markerColor = getMarkerColor(context, marker)
 
         // Set separator textview to background color.
-        itemviewGroupSep.setBackgroundColor(
+        textViewGroupSep.setBackgroundColor(
             context.getColor(R.color.backgroundListColor)
         )
 
         // Set bottom textview to marker cmolor.
-        setBackgroundColor(itemviewGroupMarker, markerColor)
+        setBackgroundColor(textViewGroupMarker, markerColor)
     }
 }

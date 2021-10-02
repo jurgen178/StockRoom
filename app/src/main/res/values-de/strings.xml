@@ -411,6 +411,8 @@ limitations under the License. -->
   <string name="filter_stockexchangename_desc"></string>
   <string name="filter_group_name">Gruppe</string>
   <string name="filter_group_desc"></string>
+  <string name="filter_marker_name">Markierung</string>
+  <string name="filter_marker_desc"></string>
   <string name="filter_note_name">Anmerkung</string>
   <string name="filter_note_desc"></string>
   <string name="filter_dividendnote_name">Dividendenanmerkung</string>
