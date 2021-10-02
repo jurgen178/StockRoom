@@ -536,13 +536,7 @@ open class FilterMarkerBaseType(override val context: Context) : FilterSelection
     var filterMarkerValue: Int = 0
 
     override val selectionList: List<SpannableStringBuilder>
-        get() {
-            val markers: MutableList<SpannableStringBuilder> = mutableListOf()
-            for (index in 0..10) {
-                markers.add(getMarkerText(context, index))
-            }
-            return markers
-        }
+        get() = (0..10).map { getMarkerText(context, it) }
 
     override var data: String = ""
         get() = filterSelectionIndex.toString()
@@ -557,7 +551,7 @@ open class FilterMarkerBaseType(override val context: Context) : FilterSelection
             context,
             filterSelectionIndex,
             false
-        ) // FilterType uses the Application Context and gets the wrong background color.
+        ) // false: FilterType uses the Application Context and gets the wrong background color.
 }
 
 open class FilterBooleanBaseType(val context: Context) : FilterBaseType() {
