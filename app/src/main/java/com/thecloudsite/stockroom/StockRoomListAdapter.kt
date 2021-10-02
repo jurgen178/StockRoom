@@ -62,6 +62,7 @@ fun setBackgroundColor(
 class StockRoomListAdapter internal constructor(
     val context: Context,
     private val clickListenerGroupLambda: (StockItem, View) -> Unit,
+    private val clickListenerMarkerLambda: (StockItem, View) -> Unit,
     private val clickListenerSymbolLambda: (StockItem) -> Unit
 ) : ListAdapter<StockItem, StockRoomListAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
@@ -76,6 +77,13 @@ class StockRoomListAdapter internal constructor(
             clickListenerLambda: (StockItem, View) -> Unit
         ) {
             binding.itemviewGroup.setOnClickListener { clickListenerLambda(stockItem, itemView) }
+        }
+
+        fun bindMarkerOnClickListener(
+            stockItem: StockItem,
+            clickListenerLambda: (StockItem, View) -> Unit
+        ) {
+            binding.itemviewGroupMarker.setOnClickListener { clickListenerLambda(stockItem, itemView) }
         }
 
         fun bindSummaryOnClickListener(
@@ -108,6 +116,7 @@ class StockRoomListAdapter internal constructor(
             }
 
             holder.bindGroupOnClickListener(current, clickListenerGroupLambda)
+            holder.bindMarkerOnClickListener(current, clickListenerMarkerLambda)
             holder.bindSummaryOnClickListener(current, clickListenerSymbolLambda)
 
             holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))

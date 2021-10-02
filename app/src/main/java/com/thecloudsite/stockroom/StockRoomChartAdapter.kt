@@ -53,8 +53,9 @@ import com.thecloudsite.stockroom.utils.*
 
 class StockRoomChartAdapter internal constructor(
   val context: Context,
-  private val clickListenerGroup: (StockItem, View) -> Unit,
-  private val clickListenerSymbol: (StockItem) -> Unit,
+  private val clickListenerGroupLambda: (StockItem, View) -> Unit,
+  private val clickListenerMarkerLambda: (StockItem, View) -> Unit,
+  private val clickListenerSymbolLambda: (StockItem) -> Unit,
 ) : ListAdapter<StockItem, StockRoomChartAdapter.StockRoomViewHolder>(StockRoomDiffCallback()) {
 
   private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -76,6 +77,13 @@ class StockRoomChartAdapter internal constructor(
       clickListener: (StockItem, View) -> Unit
     ) {
       binding.itemviewGroup.setOnClickListener { clickListener(stockItem, itemView) }
+    }
+
+    fun bindMarkerOnClickListener(
+      stockItem: StockItem,
+      clickListenerLambda: (StockItem, View) -> Unit
+    ) {
+      binding.itemviewGroupMarker.setOnClickListener { clickListenerLambda(stockItem, itemView) }
     }
 
     fun bindSummaryOnClickListener(
@@ -106,8 +114,9 @@ class StockRoomChartAdapter internal constructor(
         defaultTextColor = holder.binding.textViewMarketPrice.currentTextColor
       }
 
-      holder.bindGroupOnClickListener(current, clickListenerGroup)
-      holder.bindSummaryOnClickListener(current, clickListenerSymbol)
+      holder.bindGroupOnClickListener(current, clickListenerGroupLambda)
+      holder.bindMarkerOnClickListener(current, clickListenerMarkerLambda)
+      holder.bindSummaryOnClickListener(current, clickListenerSymbolLambda)
 
       val stockDataEntries: List<StockDataEntry>? =
         chartDataItems[current.onlineMarketData.symbol]

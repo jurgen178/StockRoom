@@ -104,9 +104,18 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     val clickListenerGroupLambda =
       { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
     val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
+    val clickListenerMarkerLambda =
+      { stockItem: StockItem, itemView: View ->
+        clickListenerMarker(
+          requireContext(),
+          stockItem,
+          itemView
+        )
+      }
     val adapter = StockRoomChartAdapter(
       requireContext(),
       clickListenerGroupLambda,
+      clickListenerMarkerLambda,
       clickListenerSymbolLambda
     )
 

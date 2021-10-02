@@ -24,37 +24,51 @@ import kotlin.math.roundToInt
 
 class StockRoomListFragment : StockRoomBaseFragment() {
 
-  companion object {
-    fun newInstance() = StockRoomListFragment()
-  }
+    companion object {
+        fun newInstance() = StockRoomListFragment()
+    }
 
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
 
-    val clickListenerGroup =
-      { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
-    val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
-    val adapter = StockRoomListAdapter(requireContext(), clickListenerGroup, clickListenerSymbolLambda)
+        val clickListenerGroupLambda =
+            { stockItem: StockItem, itemView: View -> clickListenerGroup(stockItem, itemView) }
+        val clickListenerMarkerLambda =
+            { stockItem: StockItem, itemView: View ->
+                clickListenerMarker(
+                    requireContext(),
+                    stockItem,
+                    itemView
+                )
+            }
+        val clickListenerSymbolLambda = { stockItem: StockItem -> clickListenerSymbol(stockItem) }
+        val adapter = StockRoomListAdapter(
+            requireContext(),
+            clickListenerGroupLambda,
+            clickListenerMarkerLambda,
+            clickListenerSymbolLambda
+        )
 
-    val recyclerView = binding.recyclerview
-    recyclerView.adapter = adapter
+        val recyclerView = binding.recyclerview
+        recyclerView.adapter = adapter
 
-    // Set column number depending on screen width.
-    val scale = 494
-    val spanCount =
-      (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
+        // Set column number depending on screen width.
+        val scale = 494
+        val spanCount =
+            (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
-    recyclerView.layoutManager = GridLayoutManager(context,
-        Integer.min(Integer.max(spanCount, 1), 10)
-    )
+        recyclerView.layoutManager = GridLayoutManager(
+            context,
+            Integer.min(Integer.max(spanCount, 1), 10)
+        )
 
-    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let {
-        adapter.setStockItems(it)
-      }
-    })
-  }
+        stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
+            items?.let {
+                adapter.setStockItems(it)
+            }
+        })
+    }
 }

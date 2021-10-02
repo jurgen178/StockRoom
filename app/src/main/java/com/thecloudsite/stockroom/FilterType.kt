@@ -23,7 +23,6 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.string
-import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.utils.*
 import java.text.DecimalFormat
