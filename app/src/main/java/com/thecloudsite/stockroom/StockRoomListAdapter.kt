@@ -83,7 +83,12 @@ class StockRoomListAdapter internal constructor(
             stockItem: StockItem,
             clickListenerLambda: (StockItem, View) -> Unit
         ) {
-            binding.itemviewGroupMarker.setOnClickListener { clickListenerLambda(stockItem, itemView) }
+            binding.itemviewGroupMarker.setOnClickListener {
+                clickListenerLambda(
+                    stockItem,
+                    itemView
+                )
+            }
         }
 
         fun bindSummaryOnClickListener(
