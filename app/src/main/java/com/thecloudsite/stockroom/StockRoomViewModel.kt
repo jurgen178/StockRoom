@@ -2311,8 +2311,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     // Run the alerts synchronous to avoid duplicate alerts.
-// Each alerts gets send, and then removed from the DB. If the alerts are send non-blocking,
-// the alert is still valid for some time and gets send multiple times.
+    // Each alerts gets send, and then removed/updated from the DB. If the alerts are send non-blocking,
+    // the alert is still valid for some time and gets send multiple times.
     fun updateAlertAboveSync(
         symbol: String,
         alertAbove: Double,

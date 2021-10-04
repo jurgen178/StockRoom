@@ -761,8 +761,10 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
                 val notification = NotificationFactory(this, title, text, alert.symbol)
                 notification.sendNotification()
-                // Alert is shown, remove alert.
-                stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0, "")
+//                // Alert is shown, remove alert.
+//                stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0, "")
+                // Alert is shown, update alert with +5%.
+                stockRoomViewModel.updateAlertAboveSync(alert.symbol, alert.alertAbove * 1.05, alert.alertAboveNote)
 
                 stockRoomViewModel.logDebug("Alert '$title'")
                 stockRoomViewModel.logDebug("Alert '$text'")
@@ -785,8 +787,10 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
                     val notification = NotificationFactory(this, title, text, alert.symbol)
                     notification.sendNotification()
-                    // Alert is shown, remove alert.
-                    stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0, "")
+//                    // Alert is shown, remove alert.
+//                    stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0, "")
+                    // Alert is shown, update alert with -5%.
+                    stockRoomViewModel.updateAlertBelowSync(alert.symbol, alert.alertBelow * 0.95, alert.alertBelowNote)
 
                     stockRoomViewModel.logDebug("Alert '$title'")
                     stockRoomViewModel.logDebug("Alert '$text'")
