@@ -2629,11 +2629,18 @@ class StockDataFragment : Fragment() {
 
                 // Update the new price and asset.
                 binding.pickerKnob.onValueChangeListener { value ->
-                    binding.newStockPrice.text = if (marketPrice > 5.0 || price > 5.0) {
-                        DecimalFormat(DecimalFormat2Digits).format(value)
-                    } else {
-                        DecimalFormat(DecimalFormat2To4Digits).format(value)
-                    }
+                    binding.newStockPrice.text =
+                        when {
+                            marketPrice > 5.0 || price > 5.0 -> {
+                                DecimalFormat(DecimalFormat2Digits).format(value)
+                            }
+                            marketPrice < 0.0001 || price < 0.0001 -> {
+                                DecimalFormat(DecimalFormat2To8Digits).format(value)
+                            }
+                            else -> {
+                                DecimalFormat(DecimalFormat2To4Digits).format(value)
+                            }
+                        }
 
                     val assetChange = getAssetChange(
                         totalQuantity,
