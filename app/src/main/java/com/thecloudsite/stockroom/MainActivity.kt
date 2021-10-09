@@ -34,6 +34,8 @@ import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -48,6 +50,8 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.StockRoomViewModel.AlertData
+import com.thecloudsite.stockroom.database.Asset
+import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.databinding.ActivityMainBinding
 import com.thecloudsite.stockroom.list.ListLogAdapter
@@ -57,6 +61,7 @@ import com.thecloudsite.stockroom.notification.NotificationFactory
 import com.thecloudsite.stockroom.utils.*
 import java.text.DecimalFormat
 import java.time.ZonedDateTime
+import java.util.HashSet
 import java.util.Locale
 
 object SharedAccountList {
@@ -80,6 +85,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var stockRoomViewModel: StockRoomViewModel
     private var eventList: MutableList<Events> = mutableListOf()
+
+    private val accountChange = AccountLiveData()
+    private val accountChangeLiveData = MediatorLiveData<AccountLiveData>()
 
     lateinit var onlineDataHandler: Handler
 
@@ -185,6 +193,47 @@ class MainActivity : AppCompatActivity() {
                     group.name.lowercase(Locale.ROOT)
                 }
 
+                updateFilterList(this, filterDataViewModel)
+            }
+        })
+
+        // Use MediatorLiveView to combine the assets and dividend data changes.
+        val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
+        accountChangeLiveData.addSource(assetsLiveData) { value ->
+            if (value != null) {
+                accountChange.assets = value
+                accountChangeLiveData.postValue(accountChange)
+            }
+        }
+
+        val dividendsLiveData: LiveData<List<Dividend>> = stockRoomViewModel.allDividendTable
+        accountChangeLiveData.addSource(dividendsLiveData) { value ->
+            if (value != null) {
+                accountChange.dividends = value
+                accountChangeLiveData.postValue(accountChange)
+            }
+        }
+
+        // Observe asset or dividend changes.
+        accountChangeLiveData.observe(this, Observer { item ->
+            if (item != null) {
+                val map: HashSet<String> = hashSetOf()
+
+                item.assets.forEach { asset ->
+                    map.add(asset.account)
+                }
+
+                item.dividends.forEach { dividend ->
+                    map.add(dividend.account)
+                }
+
+                SharedAccountList.accounts =
+                    map.map { account ->
+                        account
+                    }
+
+                // Account filters require assets and dividends.
+                // Update filters when assets or dividends change.
                 updateFilterList(this, filterDataViewModel)
             }
         })

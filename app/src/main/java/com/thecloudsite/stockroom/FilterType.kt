@@ -880,10 +880,14 @@ class FilterAssetAccountType(
         }
         return when (subType) {
             FilterSubTypeEnum.ContainsTextType -> {
-                accounts.isNotEmpty()
+                stockItem.assets.filter { asset ->
+                    asset.account == filterAccountValue
+                }.isNotEmpty()
             }
             FilterSubTypeEnum.NotContainsTextType -> {
-                accounts.isEmpty()
+                stockItem.assets.filter { asset ->
+                    asset.account != filterAccountValue
+                }.isNotEmpty()
             }
             else -> false
         }

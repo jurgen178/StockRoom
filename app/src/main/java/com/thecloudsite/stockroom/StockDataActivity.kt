@@ -52,8 +52,8 @@ class StockDataActivity : AppCompatActivity() {
 
   private lateinit var filterDataViewModel: FilterDataViewModel
 
-  private val accountChange = AccountLiveData()
-  private val accountChangeLiveData = MediatorLiveData<AccountLiveData>()
+//  private val accountChange = AccountLiveData()
+//  private val accountChangeLiveData = MediatorLiveData<AccountLiveData>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -82,46 +82,49 @@ class StockDataActivity : AppCompatActivity() {
 
     SharedRepository.selectedSymbol = stockSymbol
 
-    // Use MediatorLiveView to combine the assets and dividend data changes.
-    val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
-    accountChangeLiveData.addSource(assetsLiveData) { value ->
-      if (value != null) {
-        accountChange.assets = value
-        accountChangeLiveData.postValue(accountChange)
-      }
-    }
+    // Moved to MainActivity, baecuase otherwise a stock need to be selected to
+    // update the SharedAccountList.accounts
 
-    val dividendsLiveData: LiveData<List<Dividend>> = stockRoomViewModel.allDividendTable
-    accountChangeLiveData.addSource(dividendsLiveData) { value ->
-      if (value != null) {
-        accountChange.dividends = value
-        accountChangeLiveData.postValue(accountChange)
-      }
-    }
-
-    // Observe asset or dividend changes.
-    accountChangeLiveData.observe(this, Observer { item ->
-      if (item != null) {
-        val map: HashSet<String> = hashSetOf()
-
-        item.assets.forEach { asset ->
-          map.add(asset.account)
-        }
-
-        item.dividends.forEach { dividend ->
-          map.add(dividend.account)
-        }
-
-        SharedAccountList.accounts =
-          map.map { account ->
-            account
-          }
-
-        // Account filters require assets and dividends.
-        // Update filters when assets or dividends change.
-        updateFilterList(this, filterDataViewModel)
-      }
-    })
+//    // Use MediatorLiveView to combine the assets and dividend data changes.
+//    val assetsLiveData: LiveData<List<Asset>> = stockRoomViewModel.allAssetTable
+//    accountChangeLiveData.addSource(assetsLiveData) { value ->
+//      if (value != null) {
+//        accountChange.assets = value
+//        accountChangeLiveData.postValue(accountChange)
+//      }
+//    }
+//
+//    val dividendsLiveData: LiveData<List<Dividend>> = stockRoomViewModel.allDividendTable
+//    accountChangeLiveData.addSource(dividendsLiveData) { value ->
+//      if (value != null) {
+//        accountChange.dividends = value
+//        accountChangeLiveData.postValue(accountChange)
+//      }
+//    }
+//
+//    // Observe asset or dividend changes.
+//    accountChangeLiveData.observe(this, Observer { item ->
+//      if (item != null) {
+//        val map: HashSet<String> = hashSetOf()
+//
+//        item.assets.forEach { asset ->
+//          map.add(asset.account)
+//        }
+//
+//        item.dividends.forEach { dividend ->
+//          map.add(dividend.account)
+//        }
+//
+//        SharedAccountList.accounts =
+//          map.map { account ->
+//            account
+//          }
+//
+//        // Account filters require assets and dividends.
+//        // Update filters when assets or dividends change.
+//        updateFilterList(this, filterDataViewModel)
+//      }
+//    })
 
     binding.stockViewpager.adapter = object : FragmentStateAdapter(this) {
       override fun createFragment(position: Int): Fragment {
