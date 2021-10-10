@@ -53,6 +53,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 // {"id":"ada-cardano","name":"Cardano","symbol":"ADA","rank":4,"circulating_supply":31112484646,"total_supply":45000000000,"max_supply":45000000000,"beta_value":0.994793,"first_data_at":"2017-10-01T00:00:00Z","last_updated":"2021-05-17T04:48:39Z","quotes":{"USD":{"price":2.12002421,"volume_24h":8503083622.9605,"volume_24h_change_24h":-16.85,"market_cap":65959220682,"market_cap_change_24h":-8.4,"percent_change_15m":-0.27,"percent_change_30m":0.45,"percent_change_1h":0.39,"percent_change_6h":-4.21,"percent_change_12h":-5.03,"percent_change_24h":-8.4,"percent_change_7d":20.16,"percent_change_30d":43.97,"percent_change_1y":4064.5,"ath_price":2.46475647,"ath_date":"2021-05-16T07:31:20Z","percent_from_price_ath":-13.99}}}
 
 
+// https://api.pro.coinbase.com/products
+// https://api.pro.coinbase.com/products/ADA-USD/ticker
+// https://api.pro.coinbase.com/products/ADA-USD/candles?start=2021-07-10T12:00:00&granularity=300
+
 
 // https://api.cryptowat.ch/markets/prices
 
