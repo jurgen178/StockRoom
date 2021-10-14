@@ -1226,7 +1226,7 @@ class StockDataFragment : Fragment() {
 
             binding.alertAboveInputEditText.setText(
                 if (alertAbove > 0.0) {
-                    DecimalFormat(DecimalFormat2To4Digits).format(alertAbove)
+                    to2To8Digits(alertAbove)
                 } else {
                     ""
                 }
@@ -1235,7 +1235,7 @@ class StockDataFragment : Fragment() {
 
             binding.alertBelowInputEditText.setText(
                 if (alertBelow > 0.0) {
-                    DecimalFormat(DecimalFormat2To4Digits).format(alertBelow)
+                    to2To8Digits(alertBelow)
                 } else {
                     ""
                 }
@@ -1246,14 +1246,10 @@ class StockDataFragment : Fragment() {
         binding.buttonSetAlertDefault.setOnClickListener {
             if (marketPriceForDefaultAlertValue > 0.000001) {
                 binding.alertAboveInputEditText.setText(
-                    DecimalFormat(DecimalFormat2To4Digits).format(
-                        marketPriceForDefaultAlertValue * 1.05
-                    )
+                    to2To8Digits(marketPriceForDefaultAlertValue * 1.05)
                 )
                 binding.alertBelowInputEditText.setText(
-                    DecimalFormat(DecimalFormat2To4Digits).format(
-                        marketPriceForDefaultAlertValue * 0.95
-                    )
+                    to2To8Digits(marketPriceForDefaultAlertValue * 0.95)
                 )
             }
         }
@@ -2689,7 +2685,7 @@ class StockDataFragment : Fragment() {
                     )
                     // %1$s
                     purchasePrice.append(" ")
-                    // Display 'bought price' exact as possible.
+                    // Display 'bought price' exact as possible. Do not use to2To8Digits()
                     purchasePrice.append(DecimalFormat(DecimalFormat2To8Digits).format(price))
                     purchasePrice.append("\n")
                     // %2$s
