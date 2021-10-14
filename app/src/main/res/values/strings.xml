@@ -612,6 +612,7 @@ limitations under the License. -->
     <string name="symbol_image">Symbol image</string>
     <string name="marker_header">Marker</string>
     <string name="no_marker">No Marker</string>
+    <string name="button_set_alert_default">Set ±5%</string>
 
     <string-array name="predefined_groups">
     <item>Buy</item>

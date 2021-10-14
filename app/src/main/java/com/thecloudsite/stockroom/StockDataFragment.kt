@@ -232,6 +232,7 @@ class StockDataFragment : Fragment() {
 
     private var alertAbove: Double = 0.0
     private var alertBelow: Double = 0.0
+    private var marketPriceForDefaultAlertValue: Double = 0.0
 
     private lateinit var standardPortfolio: String
 
@@ -852,6 +853,8 @@ class StockDataFragment : Fragment() {
                         onlineMarketData
                     )
 
+                    marketPriceForDefaultAlertValue = onlineMarketData.marketPrice
+
                     // Update charts
                     val timeInSecondsNow = ZonedDateTime.now()
                         .toEpochSecond() // in GMT
@@ -1239,6 +1242,21 @@ class StockDataFragment : Fragment() {
             )
             binding.alertBelowNoteInputEditText.setText(stockDBdata.alertBelowNote)
         })
+
+        binding.buttonSetAlertDefault.setOnClickListener {
+            if (marketPriceForDefaultAlertValue > 0.0) {
+                binding.alertAboveInputEditText.setText(
+                    DecimalFormat(DecimalFormat2To4Digits).format(
+                        marketPriceForDefaultAlertValue * 1.05
+                    )
+                )
+                binding.alertBelowInputEditText.setText(
+                    DecimalFormat(DecimalFormat2To4Digits).format(
+                        marketPriceForDefaultAlertValue * 0.95
+                    )
+                )
+            }
+        }
 
         // Use MediatorLiveView to combine the assets, stockDB and online data changes.
         assetChangeLiveData.addSource(stockDBLiveData) { value ->
