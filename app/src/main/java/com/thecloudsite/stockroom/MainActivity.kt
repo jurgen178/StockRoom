@@ -813,7 +813,11 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 //                // Alert is shown, remove alert.
 //                stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0, "")
                 // Alert is shown, update alert with +5%.
-                stockRoomViewModel.updateAlertAboveSync(alert.symbol, alert.marketPrice * 1.05, alert.alertAboveNote)
+                stockRoomViewModel.updateAlertAboveSync(
+                    alert.symbol,
+                    alert.marketPrice * 1.05,
+                    alert.alertAboveNote
+                )
 
                 stockRoomViewModel.logDebug("Alert '$title'")
                 stockRoomViewModel.logDebug("Alert '$text'")
@@ -839,7 +843,20 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 //                    // Alert is shown, remove alert.
 //                    stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0, "")
                     // Alert is shown, update alert with -5%.
-                    stockRoomViewModel.updateAlertBelowSync(alert.symbol, alert.marketPrice * 0.95, alert.alertBelowNote)
+                    if (alert.marketPrice > 0.000001) {
+                        stockRoomViewModel.updateAlertBelowSync(
+                            alert.symbol,
+                            alert.marketPrice * 0.95,
+                            alert.alertBelowNote
+                        )
+                    }else
+                    {
+                        stockRoomViewModel.updateAlertBelowSync(
+                            alert.symbol,
+                            0.0,
+                            ""
+                        )
+                    }
 
                     stockRoomViewModel.logDebug("Alert '$title'")
                     stockRoomViewModel.logDebug("Alert '$text'")

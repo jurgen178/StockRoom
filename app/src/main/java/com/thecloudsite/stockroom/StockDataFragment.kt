@@ -1244,7 +1244,7 @@ class StockDataFragment : Fragment() {
         })
 
         binding.buttonSetAlertDefault.setOnClickListener {
-            if (marketPriceForDefaultAlertValue > 0.0) {
+            if (marketPriceForDefaultAlertValue > 0.000001) {
                 binding.alertAboveInputEditText.setText(
                     DecimalFormat(DecimalFormat2To4Digits).format(
                         marketPriceForDefaultAlertValue * 1.05
