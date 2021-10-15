@@ -2630,6 +2630,29 @@ class StockDataFragment : Fragment() {
 
             val marketPrice = data.onlineMarketData?.marketPrice ?: 0.0
 
+            // Add this value even if the purchase price is 0.0
+            if (data.onlineMarketData != null && totalQuantity > 0.0 && marketPrice > 0.0) {
+                val assetChange = getAssetChange(
+                    assets,
+                    data.onlineMarketData?.marketPrice!!,
+                    data.onlineMarketData?.postMarketData!!,
+                    Color.DKGRAY,
+                    requireActivity()
+                ).second
+
+                val asset = SpannableStringBuilder()
+                    .append(assetChange)
+                    .append("\n")
+                    .bold {
+                        append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
+                    }
+
+                binding.textViewAssetChange.visibility = View.VISIBLE
+                binding.textViewAssetChange.text = asset
+            } else {
+                binding.textViewAssetChange.visibility = View.GONE
+            }
+
             if (totalQuantity > 0.0 && totalPrice + totalCommission > 0.0) {
 
                 binding.pricePreviewDivider.visibility = View.VISIBLE
@@ -2637,7 +2660,6 @@ class StockDataFragment : Fragment() {
                 binding.pricePreviewLayout.visibility = View.VISIBLE
 
                 binding.textViewPurchasePrice.visibility = View.VISIBLE
-                binding.textViewAssetChange.visibility = View.VISIBLE
 
                 val price = totalPrice / totalQuantity
 
@@ -2710,25 +2732,6 @@ class StockDataFragment : Fragment() {
 
                 binding.textViewPurchasePrice.text = purchasePrice
 
-                if (data.onlineMarketData != null && marketPrice > 0.0) {
-                    val assetChange = getAssetChange(
-                        assets,
-                        data.onlineMarketData?.marketPrice!!,
-                        data.onlineMarketData?.postMarketData!!,
-                        Color.DKGRAY,
-                        requireActivity()
-                    ).second
-
-                    val asset = SpannableStringBuilder()
-                        .append(assetChange)
-                        .append("\n")
-                        .bold {
-                            append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
-                        }
-
-                    binding.textViewAssetChange.text = asset
-                }
-
                 val currentPrice = if (data.onlineMarketData != null && marketPrice > 0.0) {
                     if (!isOnline) {
                         isOnline = true
@@ -2739,10 +2742,13 @@ class StockDataFragment : Fragment() {
                 } else {
                     price
                 }
+
                 // min, max, start
                 binding.pickerKnob.setValue(currentPrice / 10, 4 * currentPrice, currentPrice)
                 return
             }
+        } else {
+            binding.textViewAssetChange.visibility = View.GONE
         }
 
         binding.pricePreviewDivider.visibility = View.GONE
@@ -2750,7 +2756,6 @@ class StockDataFragment : Fragment() {
         binding.pricePreviewLayout.visibility = View.GONE
 
         binding.textViewPurchasePrice.visibility = View.GONE
-        binding.textViewAssetChange.visibility = View.GONE
     }
 
     private fun updateAlerts() {

@@ -59,7 +59,6 @@ import com.thecloudsite.stockroom.news.AllNewsFragment
 import com.thecloudsite.stockroom.notification.NotificationChannelFactory
 import com.thecloudsite.stockroom.notification.NotificationFactory
 import com.thecloudsite.stockroom.utils.*
-import java.text.DecimalFormat
 import java.time.ZonedDateTime
 import java.util.HashSet
 import java.util.Locale
