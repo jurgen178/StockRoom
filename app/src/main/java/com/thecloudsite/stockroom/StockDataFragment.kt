@@ -554,7 +554,7 @@ class StockDataFragment : Fragment() {
                         resources.getQuantityString(
                             R.plurals.asset_updated, count,
                             DecimalFormat(DecimalFormatQuantityDigits).format(quantityAbs),
-                            DecimalFormat(DecimalFormat2To4Digits).format(price)
+                            to2To8Digits(price)
                         )
                     } else {
                         resources.getQuantityString(
@@ -620,7 +620,7 @@ class StockDataFragment : Fragment() {
                         resources.getQuantityString(
                             R.plurals.delete_asset_confirm, count,
                             DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
-                            DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
+                            to2To8Digits(asset.price)
                         )
                     } else {
                         resources.getQuantityString(
@@ -635,7 +635,7 @@ class StockDataFragment : Fragment() {
                         resources.getQuantityString(
                             R.plurals.delete_asset_msg, count,
                             DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
-                            DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
+                            to2To8Digits(asset.price)
                         )
                     } else {
                         resources.getQuantityString(
@@ -1922,7 +1922,7 @@ class StockDataFragment : Fragment() {
                     val pluralstr = resources.getQuantityString(
                         R.plurals.asset_added, count,
                         DecimalFormat(DecimalFormatQuantityDigits).format(quantity),
-                        DecimalFormat(DecimalFormat2To4Digits).format(price)
+                        to2To8Digits(price)
                     )
                     Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
                         .show()

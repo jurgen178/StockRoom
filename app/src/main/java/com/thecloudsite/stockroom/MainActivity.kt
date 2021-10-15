@@ -795,14 +795,14 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
             if (alert.alertAbove > 0.0) {
                 val title = getString(
                     R.string.alert_above_notification_title, alert.symbol,
-                    DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
-                    DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                    to2To8Digits(alert.alertAbove),
+                    to2To8Digits(alert.marketPrice)
                 )
 
                 var text = getString(
                     R.string.alert_above_notification, alert.symbol, alert.name,
-                    DecimalFormat(DecimalFormat2To4Digits).format(alert.alertAbove),
-                    DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                    to2To8Digits(alert.alertAbove),
+                    to2To8Digits(alert.marketPrice)
                 )
                 if (alert.alertAboveNote.isNotEmpty()) {
                     text += "\n───\n${alert.alertAboveNote}"  // '─' = \u2500
@@ -825,14 +825,14 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
                 if (alert.alertBelow > 0.0) {
                     val title = getString(
                         R.string.alert_below_notification_title, alert.symbol,
-                        DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
-                        DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                        to2To8Digits(alert.alertBelow),
+                        to2To8Digits(alert.marketPrice)
                     )
 
                     var text = getString(
                         R.string.alert_below_notification, alert.symbol, alert.name,
-                        DecimalFormat(DecimalFormat2To4Digits).format(alert.alertBelow),
-                        DecimalFormat(DecimalFormat2To4Digits).format(alert.marketPrice)
+                        to2To8Digits(alert.alertBelow),
+                        to2To8Digits(alert.marketPrice)
                     )
                     if (alert.alertBelowNote.isNotEmpty()) {
                         text += "\n───\n${alert.alertBelowNote}"
