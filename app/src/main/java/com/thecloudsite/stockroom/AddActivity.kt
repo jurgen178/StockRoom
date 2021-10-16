@@ -71,8 +71,11 @@ class AddActivity : AppCompatActivity() {
   private lateinit var importRequest: ActivityResultLauncher<String>
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
-  private lateinit var dataProviderSymbolsViewModel: DataProviderSymbolsViewModel
-  private var dataProviderSymbols: List<DataProviderSymbolEntry> = emptyList()
+  private lateinit var dataProviderSymbolsViewModelCoingecko: DataProviderSymbolsViewModel
+  private var dataProviderSymbolsCoingecko: List<DataProviderSymbolEntry> = emptyList()
+
+  private lateinit var dataProviderSymbolsViewModelCoinpaprika: DataProviderSymbolsViewModel
+  private var dataProviderSymbolsCoinpaprika: List<DataProviderSymbolEntry> = emptyList()
 
   public override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -89,10 +92,10 @@ class AddActivity : AppCompatActivity() {
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
-    dataProviderSymbolsViewModel = ViewModelProvider(this).get(DataProviderSymbolsViewModel::class.java)
+    dataProviderSymbolsViewModelCoingecko = ViewModelProvider(this).get(DataProviderSymbolsViewModel::class.java)
 
-    dataProviderSymbolsViewModel.symbols.observe(this, Observer { symbols ->
-      this.dataProviderSymbols = symbols
+    dataProviderSymbolsViewModelCoingecko.symbols.observe(this, Observer { symbols ->
+      this.dataProviderSymbolsCoingecko = symbols
 
       // maxL is 50 for coingecko ids
       // see isValidSymbol
@@ -100,13 +103,62 @@ class AddActivity : AppCompatActivity() {
 //        symbol.id.length
 //      }
 
-      binding.symbolsSpinner.adapter =
-        ArrayAdapter(this, layout.simple_list_item_1, this.dataProviderSymbols.map { symbolEntry ->
+      binding.symbolsSpinnerCoingecko.adapter =
+        ArrayAdapter(this, layout.simple_list_item_1, this.dataProviderSymbolsCoingecko.map { symbolEntry ->
           symbolEntry.name
         })
     })
 
-    dataProviderSymbolsViewModel.getData { CoingeckoSymbolsApiFactory.coingeckoApi }
+    dataProviderSymbolsViewModelCoingecko.getData { CoingeckoSymbolsApiFactory.coingeckoApi }
+
+    binding.symbolsSpinnerCoingecko.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        binding.editAdd.setText(dataProviderSymbolsCoingecko[position].id)
+      }
+    }
+
+
+    dataProviderSymbolsViewModelCoinpaprika = ViewModelProvider(this).get(DataProviderSymbolsViewModel::class.java)
+
+    dataProviderSymbolsViewModelCoinpaprika.symbols.observe(this, Observer { symbols ->
+      this.dataProviderSymbolsCoinpaprika = symbols.sortedBy { symbol -> symbol.name }
+
+      // maxL is 50 for coingecko ids
+      // see isValidSymbol
+//      val maxL = cryptoSymbols.maxOf { symbol ->
+//        symbol.id.length
+//      }
+
+      binding.symbolsSpinnerCoinpaprika.adapter =
+        ArrayAdapter(this, layout.simple_list_item_1, this.dataProviderSymbolsCoinpaprika.map { symbolEntry ->
+          symbolEntry.name
+        })
+    })
+
+    dataProviderSymbolsViewModelCoinpaprika.getData { CoinpaprikaSymbolsApiFactory.coinpaprikaApi }
+
+    binding.symbolsSpinnerCoinpaprika.onItemSelectedListener = object : OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+
+      override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+      ) {
+        binding.editAdd.setText(dataProviderSymbolsCoinpaprika[position].id)
+      }
+    }
+
 
     binding.dataproviderSpinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -118,25 +170,16 @@ class AddActivity : AppCompatActivity() {
         position: Int,
         id: Long
       ) {
-        binding.symbolsSpinner.visibility = if (position == 1) {
+        binding.symbolsSpinnerCoingecko.visibility = if (position == 1) {
           View.VISIBLE
         } else {
           View.GONE
         }
-      }
-    }
-
-    binding.symbolsSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-      }
-
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View?,
-        position: Int,
-        id: Long
-      ) {
-        binding.editAdd.setText(dataProviderSymbols[position].id)
+        binding.symbolsSpinnerCoinpaprika.visibility = if (position == 2) {
+          View.VISIBLE
+        } else {
+          View.GONE
+        }
       }
     }
 

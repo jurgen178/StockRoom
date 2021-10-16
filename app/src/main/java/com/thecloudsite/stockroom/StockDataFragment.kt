@@ -2630,7 +2630,7 @@ class StockDataFragment : Fragment() {
 
             val marketPrice = data.onlineMarketData?.marketPrice ?: 0.0
 
-            // Add this value even if the purchase price is 0.0
+            // Display the asset even if the purchase price is 0.0
             if (data.onlineMarketData != null && totalQuantity > 0.0 && marketPrice > 0.0) {
                 val assetChange = getAssetChange(
                     assets,

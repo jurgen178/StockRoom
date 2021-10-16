@@ -712,6 +712,48 @@ interface CoingeckoApiMarketData {
   ): Deferred<Response<CoingeckoResponse>>
 }
 
+
+@JsonClass(generateAdapter = true)
+data class CoinpaprikaMarketData(
+  var price: Double,
+  var percent_change_24h: Double,
+)
+
+@JsonClass(generateAdapter = true)
+data class CoinpaprikaMarket(
+  var curreny: CoinpaprikaMarketData,
+)
+
+@JsonClass(generateAdapter = true)
+data class CoinpaprikaResponse(
+  val name: String,
+  val quotes: CoinpaprikaMarket,
+)
+
+interface CoinpaprikaApiMarketData {
+  // https://api.coinpaprika.com/v1/tickers/ada-cardano
+  @GET("{symbol}")
+  fun getStockDataAsync(
+    @Path(
+      value = "symbol"
+    ) symbol: String
+  ): Deferred<Response<CoinpaprikaResponse>>
+}
+/*
+{"id":"ada-cardano","name":"Cardano","symbol":"ADA","rank":5,"circulating_supply":31946328269,
+"total_supply":32704886184,"max_supply":45000000000,"beta_value":1.00354,
+"first_data_at":"2017-10-01T00:00:00Z","last_updated":"2021-10-16T17:15:44Z",
+"quotes":{"USD":{"price":2.1919832006499,"volume_24h":2351858079.2294,
+ "volume_24h_change_24h":-18.5,"market_cap":70025814888,
+  "market_cap_change_24h":-1.54,"percent_change_15m":-0.54,
+  "percent_change_30m":-0.63,"percent_change_1h":-0.73,
+  "percent_change_6h":-1.75,"percent_change_12h":-1.02,
+  "percent_change_24h":-1.54,"percent_change_7d":-3.9,
+  "percent_change_30d":-10.03,"percent_change_1y":2032.09,
+  "ath_price":3.0950278974839,"ath_date":"2021-09-02T06:01:10Z",
+  "percent_from_price_ath":-29.18}}}
+*/
+
 interface YahooApiRawMarketData {
   @GET("quote?format=json")
   fun getStockDataAsync(
@@ -817,12 +859,18 @@ data class CoingeckoChartData(
 )
 
 interface DataProviderSymbolsData {
-  // https://api.coingecko.com/api/v3/coins/list
-
-  @GET("list")
   fun getDataProviderSymbolsDataAsync(
   ): Deferred<Response<List<DataProviderSymbolEntry>>>
 }
+
+interface DataProviderSymbolsDataCoingecko : DataProviderSymbolsData {
+  // https://api.coingecko.com/api/v3/coins/list
+
+  @GET("list")
+  override fun getDataProviderSymbolsDataAsync(
+  ): Deferred<Response<List<DataProviderSymbolEntry>>>
+}
+// [{"id":"01coin","symbol":"zoc","name":"01coin"},{"id":"0-5x-long-algorand-token","symbol":"algohalf","name":"0.5X Long Algorand Token"},{"id":
 
 @JsonClass(generateAdapter = true)
 data class DataProviderSymbolEntry(
@@ -830,7 +878,6 @@ data class DataProviderSymbolEntry(
   var symbol: String,
   var name: String,
 )
-
 /*
 [
 {"id":"01coin","symbol":"zoc","name":"01coin"},
@@ -840,6 +887,16 @@ data class DataProviderSymbolEntry(
 {"id":"0-5x-long-bitcoin-cash-token","symbol":"bchhalf","name":"0.5X Long Bitcoin Cash Token"},
 {"id":"0-5x-long-bitcoin-sv-token","symbol":"bsvhalf","name":"0.5X Long Bitcoin SV Token"},
  */
+
+interface DataProviderSymbolsDataCoinpaprika : DataProviderSymbolsData {
+  // https://api.coinpaprika.com/v1/coins
+
+  @GET("coins")
+  override fun getDataProviderSymbolsDataAsync(
+  ): Deferred<Response<List<DataProviderSymbolEntry>>>
+}
+// [{"id":"btc-bitcoin","name":"Bitcoin","symbol":"BTC","rank":1,"is_new":false,"is_active":true,"type":"coin"},{"id":
+
 
 data class StockChartData(
   var symbol: String,

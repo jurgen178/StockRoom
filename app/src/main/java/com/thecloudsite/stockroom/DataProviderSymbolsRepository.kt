@@ -22,34 +22,34 @@ import androidx.lifecycle.MutableLiveData
 
 class DataProviderSymbolsRepository() : BaseRepository() {
 
-  private val _symbols = MutableLiveData<List<DataProviderSymbolEntry>>()
-  val symbols: LiveData<List<DataProviderSymbolEntry>>
-    get() = _symbols
+    private val _symbols = MutableLiveData<List<DataProviderSymbolEntry>>()
+    val symbols: LiveData<List<DataProviderSymbolEntry>>
+        get() = _symbols
 
-  suspend fun getData(api: () -> DataProviderSymbolsData?) {
-    _symbols.value = getDataProviderSymbols(api)
-  }
-
-  private suspend fun getDataProviderSymbols(api: () -> DataProviderSymbolsData?): List<DataProviderSymbolEntry> {
-
-    if (api() == null) {
-      return emptyList()
+    suspend fun getData(api: () -> DataProviderSymbolsData?) {
+        _symbols.value = getDataProviderSymbols(api)
     }
 
-    val dataProviderSymbols: List<DataProviderSymbolEntry>? = try {
-      safeApiCall(
-        call = {
-          updateCounter()
-          api()!!.getDataProviderSymbolsDataAsync()
-            .await()
-        },
-        errorMessage = "Error getting list data."
-      )
-    } catch (e: Exception) {
-      Log.d("DataProviderSymbolsRepository.getDataProviderSymbols() failed", "Exception=$e")
-      null
-    }
+    private suspend fun getDataProviderSymbols(api: () -> DataProviderSymbolsData?): List<DataProviderSymbolEntry> {
 
-    return dataProviderSymbols ?: emptyList()
-  }
+        if (api() == null) {
+            return emptyList()
+        }
+
+        val dataProviderSymbols: List<DataProviderSymbolEntry>? = try {
+            safeApiCall(
+                call = {
+                    updateCounter()
+                    api()!!.getDataProviderSymbolsDataAsync()
+                        .await()
+                },
+                errorMessage = "Error getting list data."
+            )
+        } catch (e: Exception) {
+            Log.d("DataProviderSymbolsRepository.getDataProviderSymbols() failed", "Exception=$e")
+            null
+        }
+
+        return dataProviderSymbols ?: emptyList()
+    }
 }

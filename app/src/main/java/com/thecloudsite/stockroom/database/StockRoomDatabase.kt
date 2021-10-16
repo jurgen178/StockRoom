@@ -25,15 +25,9 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.thecloudsite.stockroom.OnlineMarketData
+import com.thecloudsite.stockroom.*
 import com.thecloudsite.stockroom.R.raw
 import com.thecloudsite.stockroom.R.string
-import com.thecloudsite.stockroom.StockItemJson
-import com.thecloudsite.stockroom.StockMarketDataApiFactory
-import com.thecloudsite.stockroom.StockMarketDataCoingeckoApiFactory
-import com.thecloudsite.stockroom.StockMarketDataRepository
-import com.thecloudsite.stockroom.StockSymbol
-import com.thecloudsite.stockroom.DataProvider
 import com.thecloudsite.stockroom.utils.getRawTextFile
 import com.thecloudsite.stockroom.utils.isOnline
 import kotlinx.coroutines.CoroutineScope
@@ -251,7 +245,8 @@ abstract class StockRoomDatabase : RoomDatabase() {
         val stockMarketDataRepository: StockMarketDataRepository =
           StockMarketDataRepository(
             { StockMarketDataApiFactory.yahooApi },
-            { StockMarketDataCoingeckoApiFactory.coingeckoApi }
+            { StockMarketDataCoingeckoApiFactory.coingeckoApi },
+            { StockMarketDataCoinpaprikaApiFactory.coinpaprikaApi }
           )
 
         data class AssetPreset(

@@ -56,7 +56,17 @@ limitations under the License. -->
             />
 
         <Spinner
-            android:id="@+id/symbolsSpinner"
+            android:id="@+id/symbolsSpinnerCoingecko"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            />
+
+        <Spinner
+            android:id="@+id/symbolsSpinnerCoinpaprika"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -124,7 +124,8 @@ data class StockItemJson
 
 enum class DataProvider(val value: Int) {
     Standard(0),
-    Coingecko(1)
+    Coingecko(1),
+    Coinpaprika(2)
 }
 
 fun dataProviderFromInt(value: Int) = DataProvider.values().first { it.value == value }
@@ -214,7 +215,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     private val stockMarketDataRepository: StockMarketDataRepository =
         StockMarketDataRepository(
             { StockMarketDataApiFactory.yahooApi },
-            { StockMarketDataCoingeckoApiFactory.coingeckoApi }
+            { StockMarketDataCoingeckoApiFactory.coingeckoApi },
+            { StockMarketDataCoinpaprikaApiFactory.coinpaprikaApi }
         )
 
     // Using LiveData and caching returns has several benefits:

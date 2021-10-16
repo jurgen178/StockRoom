@@ -644,6 +644,7 @@ limitations under the License. -->
   <string-array name="dataprovider_items">
     <item>Yahoo Finance</item>
     <item>Coingecko (Cryptocurrency)</item>
+    <item>Coinpaprika (Cryptocurrency)</item>
   </string-array>
 
 </resources>
