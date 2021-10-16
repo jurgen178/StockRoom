@@ -23,7 +23,19 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 // Get all the available symbols from the provider.
-class DataProviderSymbolsViewModel(application: Application) : AndroidViewModel(application) {
+class DataProviderSymbolsViewModel1(application: Application) : AndroidViewModel(application) {
+
+  private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
+
+  val symbols: LiveData<List<DataProviderSymbolEntry>> = dataProviderSymbolsRepository.symbols
+
+  fun getData(api: () -> DataProviderSymbolsData?) {
+    viewModelScope.launch {
+      dataProviderSymbolsRepository.getData(api)
+    }
+  }
+}
+class DataProviderSymbolsViewModel2(application: Application) : AndroidViewModel(application) {
 
   private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
 

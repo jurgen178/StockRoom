@@ -71,10 +71,10 @@ class AddActivity : AppCompatActivity() {
   private lateinit var importRequest: ActivityResultLauncher<String>
 
   private lateinit var stockRoomViewModel: StockRoomViewModel
-  private lateinit var dataProviderSymbolsViewModelCoingecko: DataProviderSymbolsViewModel
+  private lateinit var dataProviderSymbolsViewModelCoingecko: DataProviderSymbolsViewModel1
   private var dataProviderSymbolsCoingecko: List<DataProviderSymbolEntry> = emptyList()
 
-  private lateinit var dataProviderSymbolsViewModelCoinpaprika: DataProviderSymbolsViewModel
+  private lateinit var dataProviderSymbolsViewModelCoinpaprika: DataProviderSymbolsViewModel2
   private var dataProviderSymbolsCoinpaprika: List<DataProviderSymbolEntry> = emptyList()
 
   public override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +92,7 @@ class AddActivity : AppCompatActivity() {
 
     stockRoomViewModel = ViewModelProvider(this).get(StockRoomViewModel::class.java)
 
-    dataProviderSymbolsViewModelCoingecko = ViewModelProvider(this).get(DataProviderSymbolsViewModel::class.java)
+    dataProviderSymbolsViewModelCoingecko = ViewModelProvider(this).get(DataProviderSymbolsViewModel1::class.java)
 
     dataProviderSymbolsViewModelCoingecko.symbols.observe(this, Observer { symbols ->
       this.dataProviderSymbolsCoingecko = symbols
@@ -126,7 +126,7 @@ class AddActivity : AppCompatActivity() {
     }
 
 
-    dataProviderSymbolsViewModelCoinpaprika = ViewModelProvider(this).get(DataProviderSymbolsViewModel::class.java)
+    dataProviderSymbolsViewModelCoinpaprika = ViewModelProvider(this).get(DataProviderSymbolsViewModel2::class.java)
 
     dataProviderSymbolsViewModelCoinpaprika.symbols.observe(this, Observer { symbols ->
       this.dataProviderSymbolsCoinpaprika = symbols.sortedBy { symbol -> symbol.name }
