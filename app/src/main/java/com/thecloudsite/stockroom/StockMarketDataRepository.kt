@@ -567,9 +567,9 @@ class StockMarketDataRepository(
                             OnlineMarketData(
                                 symbol = stockSymbol,
                                 name1 = response.name,
-                                marketPrice = response.quotes.curreny.price,
-                                marketChange = response.quotes.curreny.price * response.quotes.curreny.percent_change_24h / 100,
-                                marketChangePercent = response.quotes.curreny.percent_change_24h,
+                                marketPrice = response.quotes.USD.price,
+                                marketChange = response.quotes.USD.price * response.quotes.USD.percent_change_24h / 100,
+                                marketChangePercent = response.quotes.USD.percent_change_24h,
                                 //coinImageUrl = ,
                                 quoteType = "CRYPTOCURRENCY",
                             )

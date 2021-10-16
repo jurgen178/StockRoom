@@ -721,7 +721,7 @@ data class CoinpaprikaMarketData(
 
 @JsonClass(generateAdapter = true)
 data class CoinpaprikaMarket(
-  var curreny: CoinpaprikaMarketData,
+  var USD: CoinpaprikaMarketData,
 )
 
 @JsonClass(generateAdapter = true)
@@ -877,6 +877,9 @@ data class DataProviderSymbolEntry(
   var id: String,
   var symbol: String,
   var name: String,
+
+  // only present in Coinpaprika
+  var is_active: Boolean?,
 )
 /*
 [

@@ -165,7 +165,7 @@ object StockMarketDataCoingeckoApiFactory {
 
 object StockMarketDataCoinpaprikaApiFactory {
   // https://api.coinpaprika.com/v1/tickers/
-  private var defaultUrl = "ttps://api.coinpaprika.com/v1/tickers/"
+  private var defaultUrl = "https://api.coinpaprika.com/v1/tickers/"
   private var url = ""
 
   // building http request url
