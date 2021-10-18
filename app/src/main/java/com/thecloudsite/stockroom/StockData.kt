@@ -853,6 +853,7 @@ interface CoingeckoApiChartData {
     ],
 
  */
+
 @JsonClass(generateAdapter = true)
 data class CoingeckoChartData(
   var prices: List<MutableList<Double>>? = null

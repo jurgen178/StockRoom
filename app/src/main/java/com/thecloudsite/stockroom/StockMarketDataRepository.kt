@@ -532,6 +532,7 @@ class StockMarketDataRepository(
     ): Pair<List<OnlineMarketData>, String> {
 
         // Get blockSize symbol data at a time.
+        // 10 requests per second.
         val blockSize = 10
         var errorMsg = ""
 
@@ -579,6 +580,11 @@ class StockMarketDataRepository(
 
             // Remove the queried symbols.
             remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
+
+            // TODO
+            // 1 second delay for the next query.
+            if (remainingSymbolsToQuery.isNotEmpty()) {
+            }
 
         } while (remainingSymbolsToQuery.isNotEmpty())
 
