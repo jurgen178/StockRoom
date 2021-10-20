@@ -32,6 +32,7 @@ import com.thecloudsite.stockroom.databinding.FragmentTransactionsBinding
 import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
 import com.thecloudsite.stockroom.utils.commissionScale
+import com.thecloudsite.stockroom.utils.to2To8Digits
 import java.text.DecimalFormat
 
 open class StockRoomTransactionsBaseFragment : Fragment() {
@@ -118,7 +119,7 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
   ): SpannableStringBuilder {
     val assetStr = SpannableStringBuilder().append(
       "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
-        DecimalFormat(DecimalFormat2To4Digits).format(price)
+        to2To8Digits(price)
       }=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}"
     )
 

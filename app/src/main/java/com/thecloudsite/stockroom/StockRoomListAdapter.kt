@@ -207,9 +207,7 @@ class StockRoomListAdapter internal constructor(
 
                 assets.append(
                     "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
-                        DecimalFormat(DecimalFormat2To4Digits).format(
-                            asset / quantity
-                        )
+                        to2To8Digits(asset / quantity)
                     }"
                 )
 
@@ -315,9 +313,7 @@ class StockRoomListAdapter internal constructor(
 
                 assets.append(
                     "${context.getString(R.string.alert_above_in_list)} ${
-                        DecimalFormat(
-                            DecimalFormat2To4Digits
-                        ).format(current.stockDBdata.alertAbove)
+                        to2To8Digits(current.stockDBdata.alertAbove)
                     }"
                 )
             }
@@ -328,9 +324,7 @@ class StockRoomListAdapter internal constructor(
 
                 assets.append(
                     "${context.getString(R.string.alert_below_in_list)} ${
-                        DecimalFormat(
-                            DecimalFormat2To4Digits
-                        ).format(current.stockDBdata.alertBelow)
+                        to2To8Digits(current.stockDBdata.alertBelow)
                     }"
                 )
             }

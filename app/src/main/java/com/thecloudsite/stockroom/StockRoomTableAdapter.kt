@@ -357,9 +357,7 @@ class StockRoomTableAdapter internal constructor(
                 val tableDataQuantity = SpannableStringBuilder()
                 tableDataQuantity.append(
                     "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
-                        DecimalFormat(DecimalFormat2To4Digits).format(
-                            asset / quantity
-                        )
+                        to2To8Digits(asset / quantity)
                     }"
                 )
                 if (commission > 0.0) {
@@ -550,7 +548,7 @@ class StockRoomTableAdapter internal constructor(
                     val assetEntry = SpannableStringBuilder()
                         .scale(textScale) {
                             append(DecimalFormat(DecimalFormatQuantityDigits).format(assetItem.quantity))
-                                .append("@${DecimalFormat(DecimalFormat2To4Digits).format(assetItem.price)}")
+                                .append("@${to2To8Digits(assetItem.price)}")
                                 .append(
                                     if (assetItem.price > 0.0) {
                                         "=${
@@ -616,9 +614,7 @@ class StockRoomTableAdapter internal constructor(
                         "\n${
                             DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity)
                         }@${
-                            DecimalFormat(DecimalFormat2To4Digits).format(
-                                totalPrice / totalQuantity
-                            )
+                            to2To8Digits(totalPrice / totalQuantity)
                         }"
                     totalAssetStr += " = ${DecimalFormat(DecimalFormat2Digits).format(totalPrice)}"
 
