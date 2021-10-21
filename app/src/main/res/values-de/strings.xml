@@ -81,8 +81,8 @@ limitations under the License. -->
 
   <string-array name="dataprovider_items">
     <item>Yahoo Finanzdaten</item>
-    <item>Coingecko (Kryptowährung)</item>
-    <item>Coinpaprika (Kryptowährung)</item>
+    <item>Coingecko (Kryptowährung, max 50 Aufrufe/min)</item>
+    <item>Coinpaprika (Kryptowährung, aktualisiert alle 2min)</item>
   </string-array>
 
   <!-- Preference Titles -->

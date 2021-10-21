@@ -26,6 +26,7 @@ import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
 import java.util.*
 import kotlin.math.max
+import kotlin.math.min
 
 // Data from the DB and online data fields.
 data class StockItem
@@ -331,14 +332,14 @@ class StockMarketDataRepository(
             coingeckoMarketData.postValue(onlineMarketDataResultList)
 
             // Crypto is 24h.
-            // Coingecko allows 100 access per minute
+            // Coingecko free API has a rate limit of 50 calls/minute
             // Query not faster than every 10s
-            val delayInSeconds = max(5, 60 * onlineMarketDataResultList.size / 100)
+            // max delay = 60s as every minute quota is reset
+            val delayInSeconds = min(60, max(10, 60 * onlineMarketDataResultList.size / 50))
 
-            // add 100% to not exceed quota too often
             return MarketDataResult(
                 marketState = MarketState.REGULAR,
-                delayInMs = 2 * delayInSeconds * 1000L,
+                delayInMs = delayInSeconds * 1000L,
                 msg = ""
             )
         }
