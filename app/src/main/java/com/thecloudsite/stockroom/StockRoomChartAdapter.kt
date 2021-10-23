@@ -419,13 +419,12 @@ class StockRoomChartAdapter internal constructor(
         val candleData = CandleData(seriesList)
         candleStickChart.data = candleData
 
-        val digits = if (candleData.yMax < 1.0) {
-            4
-        } else {
-            2
-        }
-
-        //candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+//        val digits = if (candleData.yMax < 1.0) {
+//            4
+//        } else {
+//            2
+//        }
+//        candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
         candleStickChart.axisRight.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float) =
                 to2To8Digits(value)
@@ -595,13 +594,12 @@ class StockRoomChartAdapter internal constructor(
         val lineData = LineData(seriesList)
         lineChart.data = lineData
 
-        val digits = if (lineData.yMax < 1.0) {
-            4
-        } else {
-            2
-        }
-
-        //lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+//        val digits = if (lineData.yMax < 1.0) {
+//            4
+//        } else {
+//            2
+//        }
+//        lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
         lineChart.axisRight.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float) =
                 to2To8Digits(value)

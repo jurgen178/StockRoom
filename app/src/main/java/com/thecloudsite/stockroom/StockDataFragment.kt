@@ -3153,13 +3153,13 @@ class StockDataFragment : Fragment() {
             val candleData = CandleData(seriesList)
             candleStickChart.data = candleData
             candleStickChart.xAxis.valueFormatter = xAxisFormatter
-            val digits = if (candleData.yMax < 1.0) {
-                4
-            } else {
-                2
-            }
 
-            //candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+//            val digits = if (candleData.yMax < 1.0) {
+//                4
+//            } else {
+//                2
+//            }
+//            candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
             candleStickChart.axisRight.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float) =
                     to2To8Digits(value)
@@ -3435,13 +3435,13 @@ class StockDataFragment : Fragment() {
 
             lineChart.data = lineData
             lineChart.xAxis.valueFormatter = xAxisFormatter
-            val digits = if (lineData.yMax < 1.0) {
-                4
-            } else {
-                2
-            }
 
-            //lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+//            val digits = if (lineData.yMax < 1.0) {
+//                4
+//            } else {
+//                2
+//            }
+//            lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
             lineChart.axisRight.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float) =
                     to2To8Digits(value)
