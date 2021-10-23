@@ -879,7 +879,7 @@ data class DataProviderSymbolEntry(
   var symbol: String,
   var name: String,
 
-  // only present in Coinpaprika
+  // only present in Coinpaprika, allow null value (Boolean?) to make it optional
   var is_active: Boolean?,
 )
 /*

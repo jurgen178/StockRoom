@@ -97,12 +97,7 @@ class AddActivity : AppCompatActivity() {
 
         dataProviderSymbolsViewModelCoingecko.symbols.observe(this, Observer { symbols ->
             this.dataProviderSymbolsCoingecko = symbols
-
-            // maxL is 50 for coingecko ids
-            // see isValidSymbol
-//      val maxL = cryptoSymbols.maxOf { symbol ->
-//        symbol.id.length
-//      }
+                .sortedBy { symbol -> symbol.name }
 
             binding.symbolsSpinnerCoingecko.adapter =
                 ArrayAdapter(
@@ -137,12 +132,6 @@ class AddActivity : AppCompatActivity() {
             this.dataProviderSymbolsCoinpaprika = symbols
                 .filter { symbol -> symbol.is_active == true }  // is_active != null
                 .sortedBy { symbol -> symbol.name }
-
-            // maxL is 50 for coingecko ids
-            // see isValidSymbol
-//      val maxL = cryptoSymbols.maxOf { symbol ->
-//        symbol.id.length
-//      }
 
             binding.symbolsSpinnerCoinpaprika.adapter =
                 ArrayAdapter(

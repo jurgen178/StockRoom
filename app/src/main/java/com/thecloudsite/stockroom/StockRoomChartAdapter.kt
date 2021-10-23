@@ -42,7 +42,7 @@ import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.DefaultValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.thecloudsite.stockroom.R.color
@@ -424,7 +424,12 @@ class StockRoomChartAdapter internal constructor(
         } else {
             2
         }
-        candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+
+        //candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+        candleStickChart.axisRight.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float) =
+                to2To8Digits(value)
+        }
 
         candleStickChart.invalidate()
     }
@@ -595,7 +600,12 @@ class StockRoomChartAdapter internal constructor(
         } else {
             2
         }
-        lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+
+        //lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
+        lineChart.axisRight.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float) =
+                to2To8Digits(value)
+        }
 
         lineChart.invalidate()
     }
