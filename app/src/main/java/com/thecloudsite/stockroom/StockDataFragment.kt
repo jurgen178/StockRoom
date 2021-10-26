@@ -3321,8 +3321,8 @@ class StockDataFragment : Fragment() {
                                     DataPointRef(
                                         x = stockDataEntry.candleEntry.x,
                                         y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
-                                                * scale                                  // scale ref to match stock data range
-                                                + minY,                                  // shift up to min stock data
+                                                * scale                              // scale ref to match stock data range
+                                                + minY,                              // shift up to min stock data
                                         refY = stockDataEntry.candleEntry.y          // original y for the marker display
                                     )
                                 }
