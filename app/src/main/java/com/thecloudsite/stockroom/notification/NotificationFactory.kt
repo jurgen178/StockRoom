@@ -52,7 +52,7 @@ class NotificationFactory(
         // Add the intent, which inflates the back stack
         addNextIntentWithParentStack(intent)
         // Get the PendingIntent containing the entire back stack
-        getPendingIntent(notificationId, PendingIntent.FLAG_UPDATE_CURRENT)
+        getPendingIntent(notificationId, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
       }
 
   private val notificationBuilder: Builder =
