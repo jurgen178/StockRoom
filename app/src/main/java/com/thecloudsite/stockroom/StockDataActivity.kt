@@ -23,9 +23,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -34,8 +31,6 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.ActivityStockBinding
 import com.thecloudsite.stockroom.news.NewsFragment
-import com.thecloudsite.stockroom.utils.updateFilterList
-import java.util.HashSet
 import java.util.Locale
 
 data class AccountLiveData(

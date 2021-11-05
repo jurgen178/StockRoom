@@ -47,7 +47,7 @@ open class DividendBaseTimelineFragment : Fragment() {
   private val binding get() = _binding!!
 
   lateinit var stockRoomViewModel: StockRoomViewModel
-  lateinit var dividendTimelineAdapter: DividendTimelineAdapter
+  private lateinit var dividendTimelineAdapter: DividendTimelineAdapter
   lateinit var recyclerView: TimeLineRecyclerView
 
   override fun onCreateView(

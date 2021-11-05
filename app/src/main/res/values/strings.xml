@@ -93,18 +93,10 @@ limitations under the License. -->
   <string name="alerts">Alerts</string>
   <string name="alert_above">Stock price above</string>
   <string name="alert_below">Stock price below</string>
-  <string name="alert_gain_above">Gain above</string>
-  <string name="alert_gain_below">Gain below</string>
-  <string name="alert_loss_above">Loss above</string>
-  <string name="alert_loss_below">Loss below</string>
   <string name="alert_note">Note</string>
   <string name="note_in_list">Note:</string>
   <string name="alert_above_in_list">Alert if over</string>
   <string name="alert_below_in_list">Alert if under</string>
-  <string name="alert_gain_above_in_list">Alert if gain above</string>
-  <string name="alert_gain_below_in_list">Alert if gain below</string>
-  <string name="alert_loss_above_in_list">Alert if loss above</string>
-  <string name="alert_loss_below_in_list">Alert if loss below</string>
   <string name="alert_above_error">Alert Below must be less than Alert Above.</string>
   <string name="alert_below_error">Alert Above must be more than Alert Below.</string>
   <string name="alert_above_notification_title">%1$s is now above %2$s at %3$s</string>
@@ -127,7 +119,6 @@ limitations under the License. -->
   <string name="assetlistdate">Date</string>
   <string name="assetlistnote">Note</string>
   <string name="no_total_quantity">Buy some shares first.</string>
-  <string name="remove_quantity_exceeds_total_quantity">Quantity must be smaller than the total quantity of shares.</string>
   <string name="dividend_in_list">Dividend:</string>
   <string name="standard_group">Not assigned</string>
   <string name="import_section_header">Import</string>
@@ -141,7 +132,6 @@ limitations under the License. -->
   <string name="export_list">Export portfolio</string>
   <string name="export_list_desc">Export portfolio to a .json file.</string>
   <string name="export_error">An error occurred while exporting the data:\n%1$s</string>
-  <string name="export_select_file">Select a file</string>
   <string name="import_select_file">Select a file</string>
   <string name="delete_stock">Are you sure to delete the stock \'%1$s\' ?</string>
   <string name="delete">Delete</string>
@@ -230,7 +220,6 @@ limitations under the License. -->
   <string name="group_header">Group</string>
   <string name="group_all_header">Group list</string>
   <string name="group_color_in_use">This group color is already in use. Choose another color.</string>
-  <string name="group_name_in_use">The group name \'%1$s\' is already in use. Choose another name.</string>
   <string name="group_name_not_empty">Enter a group name.</string>
   <string name="event_datetime_format">" • %1$s at %2$s"</string>
   <string name="add_predef_groups_title">Example groups</string>
@@ -313,7 +302,6 @@ limitations under the License. -->
   <string name="totaldividend_paid">Dividend paid</string>
   <string name="rename_symbol_title">Rename symbol</string>
   <string name="rename_symbol_desc">Rename a symbol to a different name when the security changed.</string>
-  <string name="rename_symbol_confirm">Are you sure to rename the symbol?</string>
   <string name="reset_portfolios_title">Reset Portfolios</string>
   <string name="reset_portfolios_desc">Reset all Portfolios back to the Standard Portfolio.</string>
   <string name="reset_portfolios_confirm">Are you sure to reset all Portfolios back to the Standard Portfolio?</string>
@@ -612,7 +600,7 @@ limitations under the License. -->
     <string name="symbol_image">Symbol image</string>
     <string name="marker_header">Marker</string>
     <string name="no_marker">No Marker</string>
-    <string name="button_set_alert_default">Set ±5%</string>
+    <string name="button_set_alert_default">Set ±5%%</string>
 
     <string-array name="predefined_groups">
     <item>Buy</item>

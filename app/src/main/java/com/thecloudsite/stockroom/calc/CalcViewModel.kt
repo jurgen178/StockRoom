@@ -1049,7 +1049,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
 // $$tsla.marketprice
 // $$tsla.purchaseprice
 // $$tsla.quantity
-  fun evaluate(calcData: CalcData, expression: String) {
+  private fun evaluate(calcData: CalcData, expression: String) {
 
     // word[.property]
     val match = getRegexTwoGroups(expression, "(.+?)([.].+?)?$".toRegex())
@@ -1745,7 +1745,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
     calcRepository.updateData(calcData)
   }
 
-  fun submitEditline(calcData: CalcData, desc: String = ""): CalcData {
+  private fun submitEditline(calcData: CalcData, desc: String = ""): CalcData {
     if (calcData.editMode) {
 
       try {

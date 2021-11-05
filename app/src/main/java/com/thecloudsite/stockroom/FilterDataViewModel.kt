@@ -141,7 +141,7 @@ class Filters(
         list.add(name)
       }
       return list.sortedBy { filterName ->
-        filterName.toLowerCase(Locale.ROOT)
+        filterName.lowercase(Locale.ROOT)
       }
     }
 }
@@ -377,9 +377,6 @@ class FilterDataViewModel(application: Application) : AndroidViewModel(applicati
   fun deleteAllData() {
     filterDataRepository.deleteAllData()
   }
-
-  val filterList: List<IFilterType>
-    get() = filterDataRepository.filterList
 
   val filterNameList: List<String>
     get() = filterDataRepository.filterNameList

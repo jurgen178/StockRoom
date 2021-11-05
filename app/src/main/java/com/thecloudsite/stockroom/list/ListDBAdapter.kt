@@ -42,7 +42,6 @@ import com.thecloudsite.stockroom.databinding.DbStockdbdataTypeItemBinding
 import com.thecloudsite.stockroom.databinding.DbStoredataTypeItemBinding
 import com.thecloudsite.stockroom.list.ListDBAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.utils.*
-import com.thecloudsite.stockroom.utils.getMarkerSymbol
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
 import java.time.Instant

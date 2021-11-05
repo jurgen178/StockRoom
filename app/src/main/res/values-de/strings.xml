@@ -122,18 +122,10 @@ limitations under the License. -->
   <string name="alerts">Benachrichtigungen</string>
   <string name="alert_above">Wenn Wertpapierwert überschritten</string>
   <string name="alert_below">Wenn Wertpapierwert unterschritten</string>
-  <string name="alert_gain_above">Wenn Gewinn überschritten</string>
-  <string name="alert_gain_below">Wenn Gewinn unterschritten</string>
-  <string name="alert_loss_above">Wenn Verlust überschritten</string>
-  <string name="alert_loss_below">Wenn Verlust unterschritten</string>
   <string name="alert_note">Anmerkung</string>
   <string name="note_in_list">Anmerkung:</string>
   <string name="alert_above_in_list">Benachr. Wertpapierwert über</string>
   <string name="alert_below_in_list">Benachr. Wertpapierwert unter</string>
-  <string name="alert_gain_above_in_list">Benachr. Gewinn über</string>
-  <string name="alert_gain_below_in_list">Benachr. Gewinn unter</string>
-  <string name="alert_loss_above_in_list">Benachr. Verlust über</string>
-  <string name="alert_loss_below_in_list">Benachr. Verlust unter</string>
   <string name="alert_above_error">Unterschrittener Wert muss kleiner als überschrittener Wert sein.</string>
   <string name="alert_below_error">Überschrittener Wert muss größer als unterschrittener Wert sein.</string>
   <string name="alert_above_notification_title">%1$s ist jetzt über %2$s bei %3$s</string>
@@ -156,7 +148,6 @@ limitations under the License. -->
   <string name="assetlistdate">Datum</string>
   <string name="assetlistnote">Anmerkung</string>
   <string name="no_total_quantity">Kaufen Sie zuerst einige Wertpapiere.</string>
-  <string name="remove_quantity_exceeds_total_quantity">Die Anzahl muss kleiner als die Gesamtanzahl sein.</string>
   <string name="dividend_in_list">Dividende:</string>
   <string name="standard_group">Nicht zugeordnet</string>
   <string name="import_section_header">Laden</string>
@@ -170,7 +161,6 @@ limitations under the License. -->
   <string name="export_list">Wertpapierliste speichern</string>
   <string name="export_list_desc">Wertpapierliste ihres Portfolios in eine .JSON-Datei speichern.</string>
   <string name="export_error">Ein Fehler beim Speichern ist aufgetreten:\n%1$s</string>
-  <string name="export_select_file">Wählen Sie eine Datei aus</string>
   <string name="import_select_file">Wählen Sie eine Datei aus</string>
   <string name="delete_stock">Sind Sie sicher dass sie das Wertpapier \'%1$s\' entfernen möchten?</string>
   <string name="delete">Entfernen</string>
@@ -259,7 +249,6 @@ limitations under the License. -->
   <string name="group_header">Gruppe</string>
   <string name="group_all_header">Gruppenliste</string>
   <string name="group_color_in_use">Die Gruppenfarbe wird bereits verwendet. Wählen Sie eine andere Farbe aus.</string>
-  <string name="group_name_in_use">Der Gruppenname \'%1$s\' wird bereits verwendet. Wählen Sie einen anderen Namen aus.</string>
   <string name="group_name_not_empty">Geben Sie einen Gruppenname ein.</string>
   <string name="event_datetime_format">" • %1$s am %2$s"</string>
   <string name="add_predef_groups_title">Beispielgruppen</string>
@@ -342,7 +331,6 @@ limitations under the License. -->
   <string name="totaldividend_paid">Ausgezahlte Dividende</string>
   <string name="rename_symbol_title">Wertpapier umbenennen</string>
   <string name="rename_symbol_desc">Benennt das Wertpapier in einem anderen Namen um.</string>
-  <string name="rename_symbol_confirm">Sind sie sicher, dass Sie das Wertpapier umbenennen wollen?</string>
   <string name="reset_portfolios_title">Portfolios zurücksetzen</string>
   <string name="reset_portfolios_desc">Setzt alle Portfolios zum Standard-Portfolio zurück.</string>
   <string name="reset_portfolios_confirm">Sind Sie sich sicher, dass Sie alle Portfolios zum Standard-Portfolio zurücksetzen wollen?</string>
@@ -641,5 +629,5 @@ limitations under the License. -->
     <string name="symbol_image">Symbolbild</string>
     <string name="marker_header">Markierung</string>
     <string name="no_marker">Keine Markierung</string>
-    <string name="button_set_alert_default">±5% setzen</string>
+    <string name="button_set_alert_default">±5%% setzen</string>
 </resources>

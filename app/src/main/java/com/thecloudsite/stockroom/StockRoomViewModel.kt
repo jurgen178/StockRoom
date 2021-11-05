@@ -2473,7 +2473,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             withContext(Dispatchers.IO) {
                 groups = repository.getGroups()
                     .sortedBy { group ->
-                        group.name.toLowerCase(Locale.ROOT)
+                        group.name.lowercase(Locale.ROOT)
                     }
             }
         }

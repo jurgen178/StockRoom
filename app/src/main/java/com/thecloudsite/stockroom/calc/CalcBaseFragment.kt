@@ -60,7 +60,7 @@ open class CalcBaseFragment(val stockSymbol: String) : Fragment() {
 
   var radian = 1.0
   var separatorChar = ','
-  var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+  private var numberFormat: NumberFormat = NumberFormat.getNumberInstance()
 
   fun touchHelper(
     view: View,

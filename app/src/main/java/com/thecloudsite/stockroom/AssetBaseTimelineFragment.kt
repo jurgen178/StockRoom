@@ -46,7 +46,7 @@ open class AssetBaseTimelineFragment : Fragment() {
   private val binding get() = _binding!!
 
   lateinit var stockRoomViewModel: StockRoomViewModel
-  lateinit var assetTimelineAdapter: AssetTimelineAdapter
+  private lateinit var assetTimelineAdapter: AssetTimelineAdapter
   lateinit var recyclerView: TimeLineRecyclerView
 
   override fun onCreateView(

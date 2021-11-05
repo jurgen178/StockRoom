@@ -354,10 +354,6 @@ class OnlineDataAdapter internal constructor(
     }
   }
 
-  private fun formatDouble2(
-    value: Double
-  ): SpannableStringBuilder = formatDouble(DecimalFormat2Digits, value)
-
   private fun formatDouble2To4(
     value: Double
   ): SpannableStringBuilder = formatDouble(getFormatStr(value), value)

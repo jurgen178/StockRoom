@@ -584,8 +584,8 @@ class StockMarketDataRepository(
 
             // TODO
             // 1 second delay for the next query.
-            if (remainingSymbolsToQuery.isNotEmpty()) {
-            }
+//            if (remainingSymbolsToQuery.isNotEmpty()) {
+//            }
 
         } while (remainingSymbolsToQuery.isNotEmpty())
 

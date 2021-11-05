@@ -46,7 +46,7 @@ open class EventBaseTimelineFragment : Fragment() {
   private val binding get() = _binding!!
 
   lateinit var stockRoomViewModel: StockRoomViewModel
-  lateinit var eventTimelineAdapter: EventTimelineAdapter
+  private lateinit var eventTimelineAdapter: EventTimelineAdapter
   lateinit var recyclerView: TimeLineRecyclerView
 
   override fun onCreateView(
