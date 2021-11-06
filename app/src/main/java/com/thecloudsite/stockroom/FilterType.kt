@@ -875,9 +875,9 @@ class FilterAssetAccountType(
             return false
         }
 
-        val accounts = stockItem.assets.filter { asset ->
-            asset.account == filterAccountValue
-        }
+//        val accounts = stockItem.assets.filter { asset ->
+//            asset.account == filterAccountValue
+//        }
         return when (subType) {
             FilterSubTypeEnum.ContainsTextType -> {
                 stockItem.assets.filter { asset ->
@@ -1726,7 +1726,7 @@ class FilterLongTermType(
                 asset.date
             }
             // 365 plus one day
-            val secondsPerYear: Long = 366 * 24 * 60 * 60
+            val secondsPerYear: Long = 366L * 24 * 60 * 60
             secondsNow > lastAssetDate + secondsPerYear
         } else {
             false
