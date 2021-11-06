@@ -629,5 +629,5 @@ limitations under the License. -->
     <string name="symbol_image">Symbolbild</string>
     <string name="marker_header">Markierung</string>
     <string name="no_marker">Keine Markierung</string>
-    <string name="button_set_alert_default">±5%% setzen</string>
+    <string name="button_set_alert_default">±5\u0025 setzen</string>
 </resources>
