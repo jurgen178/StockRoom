@@ -62,6 +62,7 @@ var useWhiteOnRedGreen: Boolean = false
 // https://developer.android.com/reference/java/text/DecimalFormat
 // #,## add thousand separator: 1.234,56
 const val DecimalFormat1Digit = "#,##0.0"
+const val DecimalFormat0To1Digit = "#,##0.#"
 const val DecimalFormat2Digits = "#,##0.00"
 const val DecimalFormat4Digits = "#,##0.0000"
 const val DecimalFormat0To2Digits = "#,##0.##"

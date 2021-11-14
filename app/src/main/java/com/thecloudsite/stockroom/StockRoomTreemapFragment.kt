@@ -29,145 +29,160 @@ import androidx.lifecycle.ViewModelProvider
 import com.thecloudsite.stockroom.databinding.FragmentTreemapBinding
 import com.thecloudsite.stockroom.treemap.AndroidMapItem
 import com.thecloudsite.stockroom.treemap.TreeModel
-import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
-import com.thecloudsite.stockroom.utils.getAssetChange
-import com.thecloudsite.stockroom.utils.getAssets
+import com.thecloudsite.stockroom.utils.*
 import okhttp3.internal.toHexString
 import java.text.DecimalFormat
 
 class StockRoomTreemapFragment : Fragment() {
 
-  private var _binding: FragmentTreemapBinding? = null
+    private var _binding: FragmentTreemapBinding? = null
 
-  // This property is only valid between onCreateView and
-  // onDestroyView.
-  private val binding get() = _binding!!
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
-  private lateinit var stockRoomViewModel: StockRoomViewModel
+    private lateinit var stockRoomViewModel: StockRoomViewModel
 
-  companion object {
-    fun newInstance() = StockRoomTreemapFragment()
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setHasOptionsMenu(true)
-  }
-
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
-
-    // Inflate the layout for this fragment
-    _binding = FragmentTreemapBinding.inflate(inflater, container, false)
-    return binding.root
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
-  }
-
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-
-    // use requireActivity() instead of this to have only one shared viewmodel
-    stockRoomViewModel = ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
-
-    //val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
-    //val adapter = StockRoomTreemapListAdapter(requireContext(), clickListenerSummary)
-
-    stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
-      items?.let { stockItems ->
-        updateTreemap(view, stockItems)
-      }
-    })
-
-    // Rotating device keeps sending alerts.
-    // State changes of the lifecycle trigger the notification.
-    stockRoomViewModel.resetAlerts()
-  }
-
-  override fun onResume() {
-    super.onResume()
-    stockRoomViewModel.runOnlineTaskNow()
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-      R.id.menu_sync -> {
-        stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
-        true
-      }
-      else -> super.onOptionsItemSelected(item)
+    companion object {
+        fun newInstance() = StockRoomTreemapFragment()
     }
-  }
 
-  private fun getColorStr(color: Int): String {
-    val hexStr = "0x${color.toHexString()}"
-    return hexStr.replace("0xff", "#")
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
-  private fun updateTreemap(
-    view: View,
-    stockItems: List<StockItem>
-  ) {
-    val treemapView = binding.treemapView
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-    // Gets displayed if no items are added to the root item.
-    val noAssetsStr = context?.getString(R.string.no_assets)
-    val rootItem = AndroidMapItem(1.0, noAssetsStr, "", "", 0)
-    val treeModel = TreeModel(rootItem)
+        // Inflate the layout for this fragment
+        _binding = FragmentTreemapBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    stockItems.forEach { stockItem ->
-      val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-      if (totalQuantity > 0.0) {
-        val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
-        val color = if (stockItem.stockDBdata.groupColor != 0) {
-          stockItem.stockDBdata.groupColor
-        } else {
-          context?.getColor(R.color.backgroundListColor)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // use requireActivity() instead of this to have only one shared viewmodel
+        stockRoomViewModel =
+            ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+
+        //val clickListenerSummary = { stockItem: StockItem -> clickListenerSummary(stockItem) }
+        //val adapter = StockRoomTreemapListAdapter(requireContext(), clickListenerSummary)
+
+        stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
+            items?.let { stockItems ->
+                updateTreemap(view, stockItems)
+            }
+        })
+
+        // Rotating device keeps sending alerts.
+        // State changes of the lifecycle trigger the notification.
+        stockRoomViewModel.resetAlerts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        stockRoomViewModel.runOnlineTaskNow()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_sync -> {
+                stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun getColorStr(color: Int): String {
+        val hexStr = "0x${color.toHexString()}"
+        return hexStr.replace("0xff", "#")
+    }
+
+    private fun updateTreemap(
+        view: View,
+        stockItems: List<StockItem>
+    ) {
+        val treemapView = binding.treemapView
+
+        // Gets displayed if no items are added to the root item.
+        val noAssetsStr = context?.getString(R.string.no_assets)
+        val rootItem = AndroidMapItem(1.0, noAssetsStr, "", "", 0)
+        val treeModel = TreeModel(rootItem)
+
+        val totalAssets = stockItems.sumOf { stockItem ->
+            val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+            if (totalQuantity > 0.0) {
+                totalQuantity * stockItem.onlineMarketData.marketPrice
+            } else {
+                0.0
+            }
         }
 
-        val assetChange = getAssetChange(
-            totalQuantity,
-            totalPrice,
-            stockItem.onlineMarketData.marketPrice,
-            stockItem.onlineMarketData.postMarketData,
-            Color.DKGRAY,
-            requireContext()
-        ).first
+        stockItems.forEach { stockItem ->
+            val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
-        treeModel.addChild(
-            TreeModel(
-                AndroidMapItem(
-                    assets,
-                    stockItem.stockDBdata.symbol,
-                    DecimalFormat(DecimalFormat2Digits).format(assets)
-                    // add currency?
-                    // + getCurrency(stockItem.onlineMarketData)
-                    ,
-                    assetChange,
-                    color
+            if (totalQuantity > 0.0) {
+                val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
+                val color = if (stockItem.stockDBdata.groupColor != 0) {
+                    stockItem.stockDBdata.groupColor
+                } else {
+                    context?.getColor(R.color.backgroundListColor)
+                }
+
+                val assetChange = getAssetChange(
+                    totalQuantity,
+                    totalPrice,
+                    stockItem.onlineMarketData.marketPrice,
+                    stockItem.onlineMarketData.postMarketData,
+                    Color.DKGRAY,
+                    requireContext()
+                ).first
+
+                val percentStr = if (totalAssets > 0.0) {
+                    " (${DecimalFormat(DecimalFormat0To1Digit).format(100 * assets / totalAssets)}%)"
+                } else {
+                    ""
+                }
+
+                treeModel.addChild(
+                    TreeModel(
+                        AndroidMapItem(
+                            assets,
+                            stockItem.stockDBdata.symbol,
+                            DecimalFormat(DecimalFormat2Digits).format(assets)
+                                    + percentStr
+                            // add currency?
+                            // + getCurrency(stockItem.onlineMarketData)
+                            ,
+                            assetChange,
+                            color
+                        )
+                    )
                 )
-            )
-        )
-      }
-    }
+            }
+        }
 
-    treemapView.setTreeModel(treeModel)
-    treemapView.setOnClickCallback { symbol ->
-      val intent = Intent(context, StockDataActivity::class.java)
-      intent.putExtra(EXTRA_SYMBOL, symbol)
-      startActivity(intent)
-    }
+        treemapView.setTreeModel(treeModel)
+        treemapView.setOnClickCallback { symbol ->
+            val intent = Intent(context, StockDataActivity::class.java)
+            intent.putExtra(EXTRA_SYMBOL, symbol)
+            startActivity(intent)
+        }
 
-    treemapView.invalidate()
-  }
+        treemapView.invalidate()
+    }
 }
