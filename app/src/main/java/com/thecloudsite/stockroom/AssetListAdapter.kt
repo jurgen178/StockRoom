@@ -30,14 +30,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.AssetListAdapter.BaseViewHolder
 import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.databinding.AssetviewItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
-import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
-import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
-import com.thecloudsite.stockroom.utils.getAssetChange
-import com.thecloudsite.stockroom.utils.getAssets
-import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
-import com.thecloudsite.stockroom.utils.getCapitalGainLossText
-import com.thecloudsite.stockroom.utils.obsoleteAssetType
+import com.thecloudsite.stockroom.utils.*
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneOffset
@@ -246,7 +239,7 @@ class AssetListAdapter internal constructor(
 
         val itemViewQuantityText =
           DecimalFormat(DecimalFormatQuantityDigits).format(current.asset.quantity)
-        val itemViewPriceText = DecimalFormat(DecimalFormat2To4Digits).format(current.asset.price)
+        val itemViewPriceText = to2To8Digits(current.asset.price)
         val itemViewTotalText = DecimalFormat(DecimalFormat2Digits).format(
           current.asset.quantity.absoluteValue * current.asset.price
         )
@@ -346,7 +339,7 @@ class AssetListAdapter internal constructor(
           .color(Color.BLACK) {
             append(
               if (current.asset.quantity > 0.0) {
-                DecimalFormat(DecimalFormat2To4Digits).format(
+                to2To8Digits(
                   current.asset.price / current.asset.quantity
                 )
               } else {
