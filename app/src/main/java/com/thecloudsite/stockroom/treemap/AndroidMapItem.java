@@ -26,13 +26,17 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
   private final String label;
   private final String text;
   private final String change;
-  private Integer color;
+  private Integer backgroundColor;
+  private Integer textColor;
+  private boolean groupColorsUsed;
 
-  public AndroidMapItem(double weight, String label, String text, String change, Integer color) {
+  public AndroidMapItem(double weight, String label, String text, String change, Integer backgroundColor, Integer textColor, boolean groupColorsUsed) {
     this.label = label;
     this.text = text;
     this.change = change;
-    this.color = color;
+    this.backgroundColor = backgroundColor;
+    this.textColor = textColor;
+    this.groupColorsUsed = groupColorsUsed;
     setSize(weight);
   }
 
@@ -48,12 +52,20 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
     return change;
   }
 
-  public Integer getColor() {
-    return color;
+  public Integer getBackgroundColor() {
+    return backgroundColor;
   }
 
-  public void setColor(Integer color) {
-    this.color = color;
+  public Integer getTextColor() {
+    return textColor;
+  }
+
+  public boolean getGroupColorsUsed() {
+    return groupColorsUsed;
+  }
+
+  public void setBackgroundColor(Integer backgroundColor) {
+    this.backgroundColor = backgroundColor;
   }
 
   /* Return an Android RectF that is the size of the bounds rectangle */

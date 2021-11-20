@@ -98,9 +98,9 @@ class StockRoomSmallListAdapter internal constructor(
                     false
                 )
 
-            val changeText = assetChange.second
+            val changeText = assetChange.colorChangeStr
             val dividendStr = getDividendStr(current, context)
-            if (assetChange.first.isNotEmpty() && dividendStr.isNotEmpty()) {
+            if (assetChange.changeStr.isNotEmpty() && dividendStr.isNotEmpty()) {
                 changeText.append("\n")
             }
             holder.binding.smalllistTextViewChange.text =

@@ -120,7 +120,7 @@ class StockRoomTreemapFragment : Fragment() {
 
         // Gets displayed if no items are added to the root item.
         val noAssetsStr = context?.getString(R.string.no_assets)
-        val rootItem = AndroidMapItem(1.0, noAssetsStr, "", "", 0)
+        val rootItem = AndroidMapItem(1.0, noAssetsStr, "", "", 0, 0, false)
         val treeModel = TreeModel(rootItem)
 
         val totalAssets = stockItems.sumOf { stockItem ->
@@ -132,17 +132,20 @@ class StockRoomTreemapFragment : Fragment() {
             }
         }
 
+        val groupColorsUsed = stockItems.any { stockItem ->
+            stockItem.stockDBdata.groupColor != 0
+        }
+
+        val textColor = if (useWhiteOnRedGreen) {
+            Color.WHITE
+        } else {
+            Color.BLACK
+        }
+
         stockItems.forEach { stockItem ->
             val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
 
             if (totalQuantity > 0.0) {
-                val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
-                val color = if (stockItem.stockDBdata.groupColor != 0) {
-                    stockItem.stockDBdata.groupColor
-                } else {
-                    context?.getColor(R.color.backgroundListColor)
-                }
-
                 val assetChange = getAssetChange(
                     totalQuantity,
                     totalPrice,
@@ -150,7 +153,25 @@ class StockRoomTreemapFragment : Fragment() {
                     stockItem.onlineMarketData.postMarketData,
                     Color.DKGRAY,
                     requireContext()
-                ).first
+                )
+
+                val assetChangeStr = assetChange.changeStr
+
+                val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
+                val backGroundColor = if (stockItem.stockDBdata.groupColor != 0) {
+                    stockItem.stockDBdata.groupColor
+                } else {
+                    // Color the treemap with red/green if no group colors are used.
+                    if (groupColorsUsed) {
+                        context?.getColor(R.color.backgroundListColor)
+                    } else {
+                        if (assetChange.change>= 0.0) {
+                            context?.getColor(R.color.green)
+                        } else {
+                            context?.getColor(R.color.red)
+                        }
+                    }
+                }
 
                 val percentStr = if (totalAssets > 0.0) {
                     " (${DecimalFormat(DecimalFormat0To1Digit).format(100 * assets / totalAssets)}%)"
@@ -168,8 +189,10 @@ class StockRoomTreemapFragment : Fragment() {
                             // add currency?
                             // + getCurrency(stockItem.onlineMarketData)
                             ,
-                            assetChange,
-                            color
+                            assetChangeStr,
+                            backGroundColor,
+                            textColor,
+                            groupColorsUsed
                         )
                     )
                 )

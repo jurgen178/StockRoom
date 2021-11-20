@@ -106,6 +106,13 @@ enum class DividendCycleStrIndex(val value: Int) {
     Annual(3)
 }
 
+data class AssetChange(
+    var changeStr: String,
+    var colorChangeStr: SpannableStringBuilder,
+    var color: Int,
+    var change: Double,
+)
+
 // > 5:       2 digits
 // < 0.0001:  4..8 digits
 // 0.0001..5: 2..4 digits
@@ -337,7 +344,7 @@ fun getAssetChange(
     neutralColor: Int,
     context: Context,
     bold: Boolean = true
-): Triple<String, SpannableStringBuilder, Int> {
+): AssetChange {
 
     val (quantity, asset, commission) = getAssets(assets)
 
@@ -361,7 +368,7 @@ fun getAssetChange(
     neutralColor: Int,
     context: Context,
     bold: Boolean = true
-): Triple<String, SpannableStringBuilder, Int> {
+): AssetChange {
 
     if (marketPrice > 0.0) {
         var changeStr: String = ""
@@ -401,11 +408,11 @@ fun getAssetChange(
                 assetChange.append(assetText)
             }
 
-            return Triple(changeStr, assetChange, assetChangeColor)
+            return AssetChange(changeStr, assetChange, assetChangeColor, change)
         }
     }
 
-    return Triple("", SpannableStringBuilder(), neutralColor)
+    return AssetChange("", SpannableStringBuilder(), neutralColor, 0.0)
 }
 
 fun getDividendStr(
