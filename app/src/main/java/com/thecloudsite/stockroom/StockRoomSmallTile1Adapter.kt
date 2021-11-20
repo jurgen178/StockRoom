@@ -86,7 +86,7 @@ class StockRoomSmallTile1Adapter internal constructor(
                 )
 
             val symbolChangeText = SpannableStringBuilder()
-            val changeText = assetChange.changeStr
+            val changeText = assetChange.displayStr
             symbolChangeText
                 .bold { append(current.onlineMarketData.symbol) }
 

@@ -120,7 +120,7 @@ class StockRoomTile1Adapter internal constructor(
             current.onlineMarketData.postMarketData,
             Color.DKGRAY,
             context
-        ).colorChangeStr
+        ).displayColorStr
     } else {
       // offline
       holder.binding.stockRoomTileItemMarketPrice.text = ""

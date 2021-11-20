@@ -155,17 +155,15 @@ class StockRoomTreemapFragment : Fragment() {
                     requireContext()
                 )
 
-                val assetChangeStr = assetChange.changeStr
-
                 val assets = totalQuantity * stockItem.onlineMarketData.marketPrice
-                val backGroundColor = if (stockItem.stockDBdata.groupColor != 0) {
+                val backgroundColor = if (stockItem.stockDBdata.groupColor != 0) {
                     stockItem.stockDBdata.groupColor
                 } else {
-                    // Color the treemap with red/green if no group colors are used.
                     if (groupColorsUsed) {
                         context?.getColor(R.color.backgroundListColor)
                     } else {
-                        if (assetChange.change>= 0.0) {
+                        // Color the treemap with red/green if no group colors are used.
+                        if (assetChange.value >= 0.0) {
                             context?.getColor(R.color.green)
                         } else {
                             context?.getColor(R.color.red)
@@ -189,8 +187,8 @@ class StockRoomTreemapFragment : Fragment() {
                             // add currency?
                             // + getCurrency(stockItem.onlineMarketData)
                             ,
-                            assetChangeStr,
-                            backGroundColor,
+                            assetChange.displayStr,
+                            backgroundColor,
                             textColor,
                             groupColorsUsed
                         )

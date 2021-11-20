@@ -394,7 +394,7 @@ class StockRoomTableAdapter internal constructor(
                     context,
                     false
                 )
-            holder.binding.tableDataAssetChange.text = assetChange.colorChangeStr
+            holder.binding.tableDataAssetChange.text = assetChange.displayColorStr
             holder.binding.tableDataAssetCommission.text =
                 if (commission > 0.0) {
                     DecimalFormat(

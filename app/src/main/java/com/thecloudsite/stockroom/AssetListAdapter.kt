@@ -252,7 +252,7 @@ class AssetListAdapter internal constructor(
               current.onlineMarketData!!.postMarketData,
               Color.DKGRAY,
               context
-            ).colorChangeStr
+            ).displayColorStr
           } else {
             ""
           }
@@ -440,7 +440,7 @@ class AssetListAdapter internal constructor(
           assetData.onlineMarketData!!.postMarketData,
           Color.DKGRAY,
           context
-        ).colorChangeStr
+        ).displayColorStr
       } else {
         SpannableStringBuilder()
       }
@@ -520,7 +520,7 @@ class AssetListAdapter internal constructor(
               assetData.onlineMarketData!!.postMarketData,
               Color.DKGRAY,
               context
-            ).colorChangeStr
+            ).displayColorStr
           } else {
             SpannableStringBuilder()
           }

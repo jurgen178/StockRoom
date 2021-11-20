@@ -2637,7 +2637,7 @@ class StockDataFragment : Fragment() {
                     data.onlineMarketData?.postMarketData!!,
                     Color.DKGRAY,
                     requireActivity()
-                ).colorChangeStr
+                ).displayColorStr
 
                 val asset = SpannableStringBuilder()
                     .append(assetChange)
@@ -2687,7 +2687,7 @@ class StockDataFragment : Fragment() {
                     )
 
                     val asset = SpannableStringBuilder()
-                        .append(assetChange.colorChangeStr)
+                        .append(assetChange.displayColorStr)
                         .append("\n")
                         .bold {
                             append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * value))

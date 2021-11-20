@@ -107,10 +107,10 @@ enum class DividendCycleStrIndex(val value: Int) {
 }
 
 data class AssetChange(
-    var changeStr: String,
-    var colorChangeStr: SpannableStringBuilder,
+    var displayStr: String,
+    var displayColorStr: SpannableStringBuilder,
     var color: Int,
-    var change: Double,
+    var value: Double,
 )
 
 // > 5:       2 digits
