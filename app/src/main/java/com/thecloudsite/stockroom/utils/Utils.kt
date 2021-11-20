@@ -371,19 +371,19 @@ fun getAssetChange(
 ): AssetChange {
 
     if (marketPrice > 0.0) {
-        var changeStr: String = ""
+        var displayStr: String = ""
 
         if (quantity > 0.0) {
             val capital = quantity * marketPrice
 
-            val change = capital - asset
-            changeStr += DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
-                change
+            val changeValue = capital - asset
+            displayStr += DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
+                changeValue
             )
 
-            val changePercent = change * 100.0 / asset
+            val changePercent = changeValue * 100.0 / asset
             if (changePercent < 10000.0) {
-                changeStr += " (${
+                displayStr += " (${
                     DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
                         changePercent
                     )
@@ -394,21 +394,21 @@ fun getAssetChange(
                 getChangeColor(capital - asset, isPostMarket, neutralColor, context)
 
             val assetText = if (bold) {
-                SpannableStringBuilder().bold { append(changeStr) }
+                SpannableStringBuilder().bold { append(displayStr) }
             } else {
-                SpannableStringBuilder().append(changeStr)
+                SpannableStringBuilder().append(displayStr)
             }
 
-            val assetChange = SpannableStringBuilder()
+            val displayColorStr = SpannableStringBuilder()
 
             // Omit the neutral color to use the default text color.
             if (assetChangeColor != neutralColor) {
-                assetChange.color(assetChangeColor) { assetChange.append(assetText) }
+                displayColorStr.color(assetChangeColor) { displayColorStr.append(assetText) }
             } else {
-                assetChange.append(assetText)
+                displayColorStr.append(assetText)
             }
 
-            return AssetChange(changeStr, assetChange, assetChangeColor, change)
+            return AssetChange(displayStr, displayColorStr, assetChangeColor, changeValue)
         }
     }
 

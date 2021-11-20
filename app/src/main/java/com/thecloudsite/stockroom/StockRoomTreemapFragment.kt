@@ -160,13 +160,13 @@ class StockRoomTreemapFragment : Fragment() {
                     stockItem.stockDBdata.groupColor
                 } else {
                     if (groupColorsUsed) {
-                        context?.getColor(R.color.backgroundListColor)
+                        requireContext().getColor(R.color.backgroundListColor)
                     } else {
                         // Color the treemap with red/green if no group colors are used.
                         if (assetChange.value >= 0.0) {
-                            context?.getColor(R.color.green)
+                            requireContext().getColor(R.color.green)
                         } else {
-                            context?.getColor(R.color.red)
+                            requireContext().getColor(R.color.red)
                         }
                     }
                 }
