@@ -391,7 +391,7 @@ fun getAssetChange(
             }
 
             val assetChangeColor =
-                getChangeColor(capital - asset, isPostMarket, neutralColor, context)
+                getChangeColor(changeValue, isPostMarket, neutralColor, context)
 
             val assetText = if (bold) {
                 SpannableStringBuilder().bold { append(displayStr) }
@@ -401,7 +401,7 @@ fun getAssetChange(
 
             val displayColorStr = SpannableStringBuilder()
 
-            // Omit the neutral color to use the default text color.
+            // Use the default text color if the assetChangeColor is the neutralcolor.
             if (assetChangeColor != neutralColor) {
                 displayColorStr.color(assetChangeColor) { displayColorStr.append(assetText) }
             } else {
