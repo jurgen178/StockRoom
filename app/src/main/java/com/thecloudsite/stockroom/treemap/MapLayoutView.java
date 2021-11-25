@@ -237,6 +237,22 @@ public class MapLayoutView extends View {
                     labelX = xm;
                     labelY = ym;
                     ym += tym / 4;
+                } else {
+                    // rect still to small, shorten the label text and set the text size to match width
+                    if (label.length() > 8) {
+                        label = label.substring(0, 7) + "…";
+                        mTextPaint.setTextSize((int) (0.18 * (rectF.width() - 8)));
+                        mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
+                        tym = labelRect.height();
+                        txm = labelRect.width();
+                        xm = rectF.left + rectF.width() / 2 - txm / 2;
+                        ym = rectF.top + tym + 8; // Border=8
+                        if (txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+                            labelX = xm;
+                            labelY = ym;
+                            ym += tym / 4;
+                        }
+                    }
                 }
             }
 
