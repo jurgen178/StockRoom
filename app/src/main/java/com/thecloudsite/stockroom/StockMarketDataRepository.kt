@@ -185,7 +185,7 @@ class StockMarketDataRepository(
         if (api != null) {
             // for reference, all data in one go
 //      val quoteResponse: YahooResponse? = try {
-//        safeApiCall(
+//        apiCall(
 //            call = {
 //              updateCounter()
 //              api.getStockDataAsync(symbols.joinToString(","))
@@ -394,7 +394,7 @@ class StockMarketDataRepository(
         val api: YahooApiMarketData = yahooApi() ?: return emptyList()
 
 //    val quoteResponse: YahooResponse? = try {
-//      safeApiCall(
+//      apiCall(
 //        call = {
 //          updateCounter()
 //          api.getStockDataAsync(symbols.joinToString(","))
@@ -455,7 +455,7 @@ class StockMarketDataRepository(
                 }
 
             val quoteResponse: YahooResponse? = try {
-                safeApiCall(
+                apiCall(
                     call = {
                         updateCounter()
                         api.getStockDataAsync(symbolsToQuery.joinToString(","))
@@ -495,7 +495,7 @@ class StockMarketDataRepository(
         symbols.forEach { stockSymbol ->
 
             val response: CoingeckoResponse? = try {
-                safeApiCall(
+                apiCall(
                     call = {
                         updateCounter()
                         api.getStockDataAsync(stockSymbol.symbol.lowercase(Locale.ROOT))
@@ -550,7 +550,7 @@ class StockMarketDataRepository(
                 }.forEach { stockSymbol ->
 
                     val response: CoinpaprikaResponse? = try {
-                        safeApiCall(
+                        apiCall(
                             call = {
                                 updateCounter()
                                 api.getStockDataAsync(stockSymbol.lowercase(Locale.ROOT))
@@ -602,7 +602,7 @@ class StockMarketDataRepository(
             if (symbol.isNotEmpty() && api != null) {
 
                 val quoteResponse: String? = try {
-                    safeApiCall(
+                    apiCall(
                         call = {
                             updateCounter()
                             api.getStockDataAsync(symbol)

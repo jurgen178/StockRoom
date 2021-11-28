@@ -20,30 +20,43 @@ import android.util.Log
 import retrofit2.Response
 import java.io.IOException
 
-open class BaseRepository{
+open class Result<out T : Any> {
+    data class Success<out T : Any>(val data: T) : Result<T>()
+    data class Error(val exception: Exception) : Result<Nothing>()
+}
 
-  suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>, errorMessage: String): T? {
+open class BaseRepository {
 
-    val result : Result<T> = safeApiResult(call,errorMessage)
-    var data : T? = null
+    suspend fun <T : Any> apiCall(call: suspend () -> Response<T>, errorMessage: String): T? {
 
-    when(result) {
-      is Result.Success ->
-        data = result.data
-      is Result.Error -> {
-        Log.d("BaseRepository safeApiCall failed", "$errorMessage & Exception - ${result.exception}")
-      }
+        val result: Result<T> = apiResult(call, errorMessage)
+        var data: T? = null
+
+        when (result) {
+            is Result.Success ->
+                data = result.data
+            is Result.Error -> {
+                Log.d(
+                    "BaseRepository apiCall failed",
+                    "$errorMessage , Exception: ${result.exception}"
+                )
+            }
+        }
+
+        return data
     }
 
-    return data
-  }
+    private suspend fun <T : Any> apiResult(
+        call: suspend () -> Response<T>,
+        errorMessage: String
+    ): Result<T> {
+        val response = call.invoke()
+        if (response.isSuccessful) {
+            return Result.Success(response.body()!!)
+        }
 
-  private suspend fun <T: Any> safeApiResult(call: suspend ()-> Response<T>, errorMessage: String) : Result<T>{
-    val response = call.invoke()
-    if(response.isSuccessful) return Result.Success(response.body()!!)
-
-    return Result.Error(
-        IOException("Error Occurred during getting safe Api result, Custom ERROR - $errorMessage")
-    )
-  }
+        return Result.Error(
+            IOException("Error in apiResult: $errorMessage")
+        )
+    }
 }

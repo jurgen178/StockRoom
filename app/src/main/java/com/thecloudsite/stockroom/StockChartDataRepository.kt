@@ -52,7 +52,7 @@ class StockChartDataRepository(
     val api: YahooApiChartData = yahooApi() ?: return emptyList()
 
     val quoteResponse: YahooChartData? = try {
-      safeApiCall(
+      apiCall(
         call = {
           updateCounter()
           api.getYahooChartDataAsync(stockSymbol.symbol, interval, range)
@@ -125,7 +125,7 @@ class StockChartDataRepository(
     val api: CoingeckoApiChartData = coingeckoApi() ?: return emptyList()
 
     val response: CoingeckoChartData? = try {
-      safeApiCall(
+      apiCall(
         call = {
           updateCounter()
           val daysStr: String = if (days == 0) {

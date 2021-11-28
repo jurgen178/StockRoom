@@ -37,7 +37,7 @@ class DataProviderSymbolsRepository() : BaseRepository() {
         }
 
         val dataProviderSymbols: List<DataProviderSymbolEntry>? = try {
-            safeApiCall(
+            apiCall(
                 call = {
                     updateCounter()
                     api()!!.getDataProviderSymbolsDataAsync()
