@@ -79,10 +79,13 @@ abstract class StockRoomDatabase : RoomDatabase() {
             }
         }
 
+        // Add type and marker to stock table.
+        // Add account to Asset table.
+        // Add account to Dividend table.
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
 
-                // Add type and marker to stock table
+                // Add type and marker to stock table.
                 val STOCK_TABLE_NAME = "stock_table"
                 val STOCK_TABLE_NAME_TEMP = "stock_table_temp"
 
@@ -114,7 +117,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE `${STOCK_TABLE_NAME}`")
                 database.execSQL("ALTER TABLE `${STOCK_TABLE_NAME_TEMP}` RENAME TO `${STOCK_TABLE_NAME}`")
 
-                // Add account to Asset table
+                // Add account to Asset table.
                 val ASSET_TABLE_NAME = "asset_table"
                 val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
 
@@ -145,7 +148,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE `${ASSET_TABLE_NAME}`")
                 database.execSQL("ALTER TABLE `${ASSET_TABLE_NAME_TEMP}` RENAME TO `${ASSET_TABLE_NAME}`")
 
-                // Add account to Dividend table
+                // Add account to Dividend table.
                 val DIVIDEND_TABLE_NAME = "dividend_table"
                 val DIVIDEND_TABLE_NAME_TEMP = "dividend_table_temp"
 
@@ -175,7 +178,7 @@ abstract class StockRoomDatabase : RoomDatabase() {
             }
         }
 
-        // rename commission to fee
+        // Rename commission to fee.
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
 

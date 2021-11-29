@@ -58,8 +58,10 @@ class MigrationTest {
                 stockValues.put("alert_below", 3.3)
                 stockValues.put("alert_below_note", "alert_below_note")
 
+                // Use insert to add the data.
                 this.insert("stock_table", SQLiteDatabase.CONFLICT_REPLACE, stockValues)
 
+                // Use execSQL to add the data.
                 this.execSQL(
                     "INSERT INTO stock_table (symbol, portfolio, data, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note) VALUES ('ktln00' , 'testportfolio' , 'data0', 1230, 'note0', 'dividend_note0', 1.0, 2.0, 'above_note0', 3.0, 'below_note0');"
                 )
@@ -77,8 +79,10 @@ class MigrationTest {
                 assetValues.put("premium", 1.2)
                 assetValues.put("commission", 2.3)
 
+                // Use insert to add the data.
                 this.insert("asset_table", SQLiteDatabase.CONFLICT_REPLACE, assetValues)
 
+                // Use execSQL to add the data.
                 this.execSQL(
                     "INSERT INTO asset_table (id, symbol, quantity, price, type, note, date, sharesPerQuantity, expirationDate, premium, commission) VALUES (42, 'ktln11' , 1.02 , 42.02 , 02 , 'note2' , 1232 , 22 , 32 , 1.22 , 2.32);"
                 )
@@ -93,8 +97,10 @@ class MigrationTest {
                 dividendValues.put("exdate", 3L)
                 dividendValues.put("note", "note")
 
+                // Use insert to add the data.
                 this.insert("dividend_table", SQLiteDatabase.CONFLICT_REPLACE, dividendValues)
 
+                // Use execSQL to add the data.
                 this.execSQL(
                     "INSERT INTO dividend_table (id, symbol, amount, cycle, paydate, type, exdate, note) VALUES (43, 'ktln22' , 1.03 , 3 , 033 , 0, 123, 'note3');"
                 )
@@ -115,7 +121,7 @@ class MigrationTest {
         // Expect 13 columns
         assertEquals(13, cursor0.columnCount)
 
-        // Expect 2 entries
+        // Expect 2 entries (one from insert, and one from execSQL)
         assertEquals(2, cursor0.count)
 
         // Expect first entry
@@ -130,7 +136,7 @@ class MigrationTest {
         // Expect 12 columns
         assertEquals(12, cursor1.columnCount)
 
-        // Expect 2 entries
+        // Expect 2 entries (one from insert, and one from execSQL)
         assertEquals(2, cursor1.count)
 
         // Expect first entry
@@ -150,14 +156,17 @@ class MigrationTest {
         // Expect default value
         assertEquals("", cursor2.getString(cursor2.getColumnIndex("account")))
 
-        // Expect 2 entries
+        // Expect 2 entries (one from insert, and one from execSQL)
         assertEquals(2, cursor2.count)
     }
 
+    // Add type and marker to stock table.
+    // Add account to Asset table.
+    // Add account to Dividend table.
     private val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
 
-            // Add type and marker to stock table
+            // Add type and marker to stock table.
             val STOCK_TABLE_NAME = "stock_table"
             val STOCK_TABLE_NAME_TEMP = "stock_table_temp"
 
@@ -189,7 +198,7 @@ class MigrationTest {
             database.execSQL("DROP TABLE `${STOCK_TABLE_NAME}`")
             database.execSQL("ALTER TABLE `${STOCK_TABLE_NAME_TEMP}` RENAME TO `${STOCK_TABLE_NAME}`")
 
-            // Add account to Asset table
+            // Add account to Asset table.
             val ASSET_TABLE_NAME = "asset_table"
             val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
 
@@ -220,7 +229,7 @@ class MigrationTest {
             database.execSQL("DROP TABLE `${ASSET_TABLE_NAME}`")
             database.execSQL("ALTER TABLE `${ASSET_TABLE_NAME_TEMP}` RENAME TO `${ASSET_TABLE_NAME}`")
 
-            // Add account to Dividend table
+            // Add account to Dividend table.
             val DIVIDEND_TABLE_NAME = "dividend_table"
             val DIVIDEND_TABLE_NAME_TEMP = "dividend_table_temp"
 
@@ -255,26 +264,6 @@ class MigrationTest {
     fun migrate2To3_Test() {
         helper.createDatabase(TEST_DB, 2)
             .apply {
-                val stockValues = ContentValues()
-                stockValues.put("symbol", "ktln0")
-                stockValues.put("portfolio", "test portfolio")
-                stockValues.put("type", 1)
-                stockValues.put("data", "data")
-                stockValues.put("group_color", 123L)
-                stockValues.put("marker", 1)
-                stockValues.put("note", "note")
-                stockValues.put("dividend_note", "dividend_note")
-                stockValues.put("annual_dividend_rate", 1.1)
-                stockValues.put("alert_above", 2.2)
-                stockValues.put("alert_above_note", "alert_above_note")
-                stockValues.put("alert_below", 3.3)
-                stockValues.put("alert_below_note", "alert_below_note")
-
-                this.insert("stock_table", SQLiteDatabase.CONFLICT_REPLACE, stockValues)
-
-                this.execSQL(
-                    "INSERT INTO stock_table (symbol, portfolio, type, data, group_color, marker, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note) VALUES ('ktln00' , 'testportfolio' , 1, 'data0', 1230, 1, 'note0', 'dividend_note0', 1.0, 2.0, 'above_note0', 3.0, 'below_note0');"
-                )
 
                 val assetValues = ContentValues()
                 assetValues.put("id", 4)
@@ -290,8 +279,10 @@ class MigrationTest {
                 assetValues.put("premium", 1.2)
                 assetValues.put("commission", 2.3)
 
+                // Use insert to add the data.
                 this.insert("asset_table", SQLiteDatabase.CONFLICT_REPLACE, assetValues)
 
+                // Use execSQL to add the data.
                 this.execSQL(
                     "INSERT INTO asset_table (id, symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission) VALUES (42, 'ktln11' , 1.02 , 42.02 , 02 , 'acct2', 'note2' , 1232 , 22 , 32 , 1.22 , 2.32);"
                 )
@@ -306,18 +297,6 @@ class MigrationTest {
 
         // MigrationTestHelper automatically verifies the schema changes,
         // but you need to validate that the data was migrated properly.
-        val cursor0 = db.query("SELECT * FROM stock_table")
-        cursor0.moveToFirst()
-
-        // Expect 13 columns
-        assertEquals(13, cursor0.columnCount)
-
-        // Expect 2 entries
-        assertEquals(2, cursor0.count)
-
-        // Expect first entry
-        assertEquals("ktln0", cursor0.getString(cursor0.getColumnIndex("symbol")))
-
         // asset test
         val cursor1 = db.query("SELECT * FROM asset_table")
         cursor1.moveToFirst()
@@ -325,7 +304,7 @@ class MigrationTest {
         // Expect 12 columns
         assertEquals(12, cursor1.columnCount)
 
-        // Expect 2 entries
+        // Expect 2 entries (one from insert, and one from execSQL)
         assertEquals(2, cursor1.count)
 
         // Expect first entry
@@ -334,7 +313,7 @@ class MigrationTest {
         assertEquals("2.3", cursor1.getString(cursor1.getColumnIndex("fee")))
     }
 
-    // rename commission to fee
+    // Rename commission to fee.
     private val MIGRATION_2_3 = object : Migration(2, 3) {
         override fun migrate(database: SupportSQLiteDatabase) {
 
