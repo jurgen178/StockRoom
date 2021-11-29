@@ -87,7 +87,7 @@ data class DBData(
     val sharesPerQuantity: Int = 1,
     val expirationDate: Long = 0L,
     val premium: Double = 0.0,
-    val commission: Double = 0.0,
+    val fee: Double = 0.0,
     val title: String = "",
     val datetime: Long = 0L,
     val amount: Double = 0.0,
@@ -305,7 +305,7 @@ class ListDBAdapter(
                     holder.binding.dbAssetSharesPerQuantity.text = getHeaderStr("sharesPerQuantity")
                     holder.binding.dbAssetExpirationDate.text = getHeaderStr("expirationDate")
                     holder.binding.dbAssetPremium.text = getHeaderStr("premium")
-                    holder.binding.dbAssetCommission.text = getHeaderStr("commission")
+                    holder.binding.dbAssetFee.text = getHeaderStr("fee")
                 } else {
                     holder.binding.dbAssetLayout.setBackgroundColor(Color.rgb(255, 106, 0))
                     holder.binding.dbAssetId.text = data.id?.toString() ?: ""
@@ -324,9 +324,9 @@ class ListDBAdapter(
                         if (data.premium > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
                             data.premium
                         ) else ""
-                    holder.binding.dbAssetCommission.text =
-                        if (data.commission > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
-                            data.commission
+                    holder.binding.dbAssetFee.text =
+                        if (data.fee > 0.0) DecimalFormat(DecimalFormat0To4Digits).format(
+                            data.fee
                         ) else ""
                 }
 //      assetTableRowsCount = items.size
@@ -346,7 +346,7 @@ class ListDBAdapter(
 //            "<td>${if (assetItem.premium != 0.0) assetItem.premium else ""}</td>"
 //        )
 //        assetTableRows.append(
-//            "<td>${if (assetItem.commission != 0.0) assetItem.commission else ""}</td>"
+//            "<td>${if (assetItem.fee != 0.0) assetItem.fee else ""}</td>"
 //        )
 //        assetTableRows.append("</tr>")
 //      }
@@ -649,7 +649,7 @@ class ListDBAdapter(
                         sharesPerQuantity = asset.sharesPerQuantity,
                         expirationDate = asset.expirationDate,
                         premium = asset.premium,
-                        commission = asset.commission
+                        fee = asset.fee
                     )
                 })
 

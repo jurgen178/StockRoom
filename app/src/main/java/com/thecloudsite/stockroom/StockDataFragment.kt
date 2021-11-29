@@ -321,8 +321,8 @@ class StockDataFragment : Fragment() {
 //    }
 
         dialogBinding.addPrice.setText(DecimalFormat(DecimalFormat2To8Digits).format(asset.price))
-        if (asset.commission > 0.0) {
-            dialogBinding.addCommission.setText(DecimalFormat(DecimalFormat2To8Digits).format(asset.commission))
+        if (asset.fee > 0.0) {
+            dialogBinding.addFee.setText(DecimalFormat(DecimalFormat2To8Digits).format(asset.fee))
         }
 
         val standardAccount = getString(R.string.standard_account)
@@ -473,18 +473,18 @@ class StockDataFragment : Fragment() {
                     return@setPositiveButton
                 }
 
-                val commissionText = (dialogBinding.addCommission.text).toString()
+                val feeText = (dialogBinding.addFee.text).toString()
                     .trim()
-                var commission = 0.0
-                if (commissionText.isNotEmpty()) {
+                var fee = 0.0
+                if (feeText.isNotEmpty()) {
                     try {
                         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                        commission = numberFormat.parse(commissionText)!!
+                        fee = numberFormat.parse(feeText)!!
                             .toDouble()
                     } catch (e: Exception) {
                         Toast.makeText(
                             requireContext(),
-                            getString(R.string.asset_commission_not_valid),
+                            getString(R.string.asset_fee_not_valid),
                             Toast.LENGTH_LONG
                         )
                             .show()
@@ -520,14 +520,14 @@ class StockDataFragment : Fragment() {
                         quantity = quantity,
                         price = price,
                         account = accountText,
-                        commission = commission,
+                        fee = fee,
                         date = date,
                         note = noteText
                     )
 
                 if (asset.quantity != assetNew.quantity
                     || asset.price != assetNew.price
-                    || asset.commission != assetNew.commission
+                    || asset.fee != assetNew.fee
                     || asset.account != assetNew.account
                     || asset.date != assetNew.date
                     || asset.note != assetNew.note
@@ -1852,18 +1852,18 @@ class StockDataFragment : Fragment() {
                         return@setPositiveButton
                     }
 
-                    val commissionText = (dialogBinding.addCommission.text).toString()
+                    val feeText = (dialogBinding.addFee.text).toString()
                         .trim()
-                    var commission = 0.0
-                    if (commissionText.isNotEmpty()) {
+                    var fee = 0.0
+                    if (feeText.isNotEmpty()) {
                         try {
                             val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                            commission = numberFormat.parse(commissionText)!!
+                            fee = numberFormat.parse(feeText)!!
                                 .toDouble()
                         } catch (e: Exception) {
                             Toast.makeText(
                                 requireContext(),
-                                getString(R.string.asset_commission_not_valid),
+                                getString(R.string.asset_fee_not_valid),
                                 Toast.LENGTH_LONG
                             )
                                 .show()
@@ -1901,7 +1901,7 @@ class StockDataFragment : Fragment() {
                             quantity = quantity,
                             price = price,
                             account = accountText,
-                            commission = commission,
+                            fee = fee,
                             date = date,
                             note = noteText
                         )
@@ -1937,7 +1937,7 @@ class StockDataFragment : Fragment() {
 
         binding.removeAssetButton.setOnClickListener {
             val assets = stockRoomViewModel.getAssetsSync(symbol)
-            val (totalQuantity, totalPrice, totalCommission) = getAssets(assets?.assets)
+            val (totalQuantity, totalPrice, totalFee) = getAssets(assets?.assets)
 
 //      val totalQuantity = assets?.assets?.sumOf {
 //        it.shares
@@ -2102,18 +2102,18 @@ class StockDataFragment : Fragment() {
                             quantity = totalQuantity
                         }
 
-                        val commissionText = (dialogBinding.addCommission.text).toString()
+                        val feeText = (dialogBinding.addFee.text).toString()
                             .trim()
-                        var commission = 0.0
-                        if (commissionText.isNotEmpty()) {
+                        var fee = 0.0
+                        if (feeText.isNotEmpty()) {
                             try {
                                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                                commission = numberFormat.parse(commissionText)!!
+                                fee = numberFormat.parse(feeText)!!
                                     .toDouble()
                             } catch (e: Exception) {
                                 Toast.makeText(
                                     requireContext(),
-                                    getString(R.string.asset_commission_not_valid),
+                                    getString(R.string.asset_fee_not_valid),
                                     Toast.LENGTH_LONG
                                 )
                                     .show()
@@ -2152,7 +2152,7 @@ class StockDataFragment : Fragment() {
                                 quantity = -quantity,
                                 price = price,
                                 account = accountText,
-                                commission = commission,
+                                fee = fee,
                                 date = date,
                                 note = noteText
                             )
@@ -2625,7 +2625,7 @@ class StockDataFragment : Fragment() {
         if (data.assets != null) {
 
             val assets: List<Asset> = data.assets?.assets!!
-            val (totalQuantity, totalPrice, totalCommission) = getAssets(assets)
+            val (totalQuantity, totalPrice, totalFee) = getAssets(assets)
 
             val marketPrice = data.onlineMarketData?.marketPrice ?: 0.0
 
@@ -2652,7 +2652,7 @@ class StockDataFragment : Fragment() {
                 binding.textViewAssetChange.visibility = View.GONE
             }
 
-            if (totalQuantity > 0.0 && totalPrice + totalCommission > 0.0) {
+            if (totalQuantity > 0.0 && totalPrice + totalFee > 0.0) {
 
                 binding.pricePreviewDivider.visibility = View.VISIBLE
                 binding.pricePreviewTextview.visibility = View.VISIBLE
@@ -2719,14 +2719,14 @@ class StockDataFragment : Fragment() {
                     // Display 'bought price' rounded.
                     purchasePrice.append(DecimalFormat(DecimalFormat2To4Digits).format(price))
                     // %3$s
-                    if (totalCommission > 0.0) {
-                        purchasePrice.scale(commissionScale) {
-                            append("+${DecimalFormat(DecimalFormat2To4Digits).format(totalCommission)}")
+                    if (totalFee > 0.0) {
+                        purchasePrice.scale(feeScale) {
+                            append("+${DecimalFormat(DecimalFormat2To4Digits).format(totalFee)}")
                         }
                     }
                     // %4$s
                     purchasePrice.append(" = ")
-                    purchasePrice.append(DecimalFormat(DecimalFormat2Digits).format(totalPrice + totalCommission))
+                    purchasePrice.append(DecimalFormat(DecimalFormat2Digits).format(totalPrice + totalFee))
                 }
 
                 binding.textViewPurchasePrice.text = purchasePrice

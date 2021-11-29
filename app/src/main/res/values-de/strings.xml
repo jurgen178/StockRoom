@@ -144,7 +144,7 @@ limitations under the License. -->
   <string name="assetlisttotal">Wert</string>
   <string name="assetlistchange">Bestandsänderung</string>
   <string name="assetlistvalue">Bestand</string>
-  <string name="assetlistcommission">Gebühr</string>
+  <string name="assetlistfee">Gebühr</string>
   <string name="assetlistdate">Datum</string>
   <string name="assetlistnote">Anmerkung</string>
   <string name="no_total_quantity">Kaufen Sie zuerst einige Wertpapiere.</string>
@@ -190,8 +190,8 @@ limitations under the License. -->
   <string name="asset_price_not_empty">Geben Sie einen Preis ein.</string>
   <string name="asset_summary_text">Gesamtwertpapierbestand:</string>
   <string name="asset_summary_account_text">Gesamtwertpapierbestand für Konto \'%1$s\':</string>
-  <string name="commission">Gebühr</string>
-  <string name="asset_commission_not_valid">Geben Sie eine Gebühr ein.</string>
+  <string name="fee">Gebühr</string>
+  <string name="asset_fee_not_valid">Geben Sie eine Gebühr ein.</string>
   <string name="title_activity_add">Wertpapiere hinzufügen</string>
   <string name="title_activity_filter">Filter</string>
   <string name="title_activity_stockdata">Wertpapierdetails</string>
@@ -424,8 +424,8 @@ limitations under the License. -->
   <string name="filter_asset_desc"></string>
   <string name="filter_assetnote_name">Bestandsanmerkung</string>
   <string name="filter_assetnote_desc"></string>
-  <string name="filter_commission_name">Gebühr</string>
-  <string name="filter_commission_desc"></string>
+  <string name="filter_fee_name">Gebühr</string>
+  <string name="filter_fee_desc"></string>
   <string name="filter_dividendpercentage_name">Dividende %</string>
   <string name="filter_dividendpercentage_desc"></string>
   <string name="filter_dividendpaid_name">Ausgezahlte Dividende</string>
@@ -505,8 +505,8 @@ limitations under the License. -->
   <string name="table_column_Purchaseprice">Kaufpreis</string>
   <string name="table_column_Asset">Bestand</string>
   <string name="table_column_AssetChange">Bestandsänderung</string>
-  <string name="table_column_AssetCommission">Gebühr</string>
-  <string name="table_column_AssetTotalCommissions">Gesamt- Gebühren</string>
+  <string name="table_column_AssetFee">Gebühr</string>
+  <string name="table_column_AssetTotalFees">Gesamt- Gebühren</string>
   <string name="table_column_Dividend">Dividende</string>
   <string name="table_column_AlertAbove">Benachrichtigung über</string>
   <string name="table_column_AlertBelow">Benachrichtigung unter</string>
@@ -529,7 +529,7 @@ limitations under the License. -->
   <string name="remove_selection">Von der Auswahl entfernen</string>
   <string name="app_theme">Farbdesign</string>
   <string name="app_theme_textcolor_redgreen">Textfarbe für rote und grüne Felder</string>
-  <string name="summary_total_commissions">Gesamtgebühren</string>
+  <string name="summary_total_fees">Gesamtgebühren</string>
   <string name="calc_title">AI</string>
   <string name="calc_copy">Kopieren</string>
   <string name="calc_paste">Einfügen</string>

@@ -43,57 +43,58 @@ import kotlin.math.roundToInt
  * The fact that this has very few comments emphasizes its coolness.
  */
 @Database(
-  entities = [StoreData::class, StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class],
-  version = 2,
-  exportSchema = true
+    entities = [StoreData::class, StockDBdata::class, Group::class, Asset::class, Event::class, Dividend::class],
+    version = 3,
+    exportSchema = true
 )
 
 abstract class StockRoomDatabase : RoomDatabase() {
 
-  abstract fun stockRoomDao(): StockRoomDao
+    abstract fun stockRoomDao(): StockRoomDao
 
-  companion object {
-    @Volatile
-    private var INSTANCE: StockRoomDatabase? = null
+    companion object {
+        @Volatile
+        private var INSTANCE: StockRoomDatabase? = null
 
-    fun getDatabase(
-      context: Context,
-      scope: CoroutineScope
-    ): StockRoomDatabase {
-      // if the INSTANCE is not null, then return it,
-      // if it is, then create the database
-      return INSTANCE ?: synchronized(this) {
-        val instance = Room.databaseBuilder(
-          context.applicationContext,
-          StockRoomDatabase::class.java,
-          "stockroom_database"
-        )
-          .addCallback(StockRoomDatabaseCallback(scope, context))
-          .addMigrations(MIGRATION_1_2)
-          .build()
+        fun getDatabase(
+            context: Context,
+            scope: CoroutineScope
+        ): StockRoomDatabase {
+            // if the INSTANCE is not null, then return it,
+            // if it is, then create the database
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    StockRoomDatabase::class.java,
+                    "stockroom_database"
+                )
+                    .addCallback(StockRoomDatabaseCallback(scope, context))
+                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
+                    .build()
 
-        INSTANCE = instance
-        // return instance
-        instance
-      }
-    }
+                INSTANCE = instance
+                // return instance
+                instance
+            }
+        }
 
-    private val MIGRATION_1_2 = object : Migration(1, 2) {
-      override fun migrate(database: SupportSQLiteDatabase) {
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
 
-        // Add type to stock table
-        val STOCK_TABLE_NAME = "stock_table"
-        val STOCK_TABLE_NAME_TEMP = "stock_table_temp"
+                // Add type and marker to stock table
+                val STOCK_TABLE_NAME = "stock_table"
+                val STOCK_TABLE_NAME_TEMP = "stock_table_temp"
 
-        database.execSQL(
-          """
+                database.execSQL(
+                    """
           CREATE TABLE `${STOCK_TABLE_NAME_TEMP}` (
             symbol TEXT PRIMARY KEY NOT NULL,
             portfolio TEXT NOT NULL, 
             type INTEGER NOT NULL, 
             data TEXT NOT NULL, 
-            group_color INTEGER NOT NULL, 
             marker INTEGER NOT NULL, 
+            group_color INTEGER NOT NULL, 
             note TEXT NOT NULL,
             dividend_note TEXT NOT NULL, 
             annual_dividend_rate REAL NOT NULL,
@@ -103,22 +104,22 @@ abstract class StockRoomDatabase : RoomDatabase() {
             alert_below_note TEXT NOT NULL
           )
           """.trimIndent()
-        )
-        database.execSQL(
-          """
-          INSERT INTO `${STOCK_TABLE_NAME_TEMP}` (symbol, portfolio, type, data, group_color, marker, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note)
-          SELECT symbol, portfolio, 0, data, group_color, 0, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note FROM `${STOCK_TABLE_NAME}`  
+                )
+                database.execSQL(
+                    """
+          INSERT INTO `${STOCK_TABLE_NAME_TEMP}` (symbol, portfolio, type, data, marker, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note)
+          SELECT symbol, portfolio, 0, data, 0, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note FROM `${STOCK_TABLE_NAME}`  
           """.trimIndent()
-        )
-        database.execSQL("DROP TABLE `${STOCK_TABLE_NAME}`")
-        database.execSQL("ALTER TABLE `${STOCK_TABLE_NAME_TEMP}` RENAME TO `${STOCK_TABLE_NAME}`")
+                )
+                database.execSQL("DROP TABLE `${STOCK_TABLE_NAME}`")
+                database.execSQL("ALTER TABLE `${STOCK_TABLE_NAME_TEMP}` RENAME TO `${STOCK_TABLE_NAME}`")
 
-        // Add account to Asset table
-        val ASSET_TABLE_NAME = "asset_table"
-        val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
+                // Add account to Asset table
+                val ASSET_TABLE_NAME = "asset_table"
+                val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
 
-        database.execSQL(
-          """
+                database.execSQL(
+                    """
           CREATE TABLE `${ASSET_TABLE_NAME_TEMP}` (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             symbol TEXT NOT NULL,
@@ -134,22 +135,22 @@ abstract class StockRoomDatabase : RoomDatabase() {
             commission REAL NOT NULL
           )
           """.trimIndent()
-        )
-        database.execSQL(
-          """
+                )
+                database.execSQL(
+                    """
           INSERT INTO `${ASSET_TABLE_NAME_TEMP}` (symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission)
           SELECT symbol, quantity, price, type, '', note, date, sharesPerQuantity, expirationDate, premium, commission FROM `${ASSET_TABLE_NAME}`  
           """.trimIndent()
-        )
-        database.execSQL("DROP TABLE `${ASSET_TABLE_NAME}`")
-        database.execSQL("ALTER TABLE `${ASSET_TABLE_NAME_TEMP}` RENAME TO `${ASSET_TABLE_NAME}`")
+                )
+                database.execSQL("DROP TABLE `${ASSET_TABLE_NAME}`")
+                database.execSQL("ALTER TABLE `${ASSET_TABLE_NAME_TEMP}` RENAME TO `${ASSET_TABLE_NAME}`")
 
-        // Add account to Dividend table
-        val DIVIDEND_TABLE_NAME = "dividend_table"
-        val DIVIDEND_TABLE_NAME_TEMP = "dividend_table_temp"
+                // Add account to Dividend table
+                val DIVIDEND_TABLE_NAME = "dividend_table"
+                val DIVIDEND_TABLE_NAME_TEMP = "dividend_table_temp"
 
-        database.execSQL(
-          """
+                database.execSQL(
+                    """
           CREATE TABLE `${DIVIDEND_TABLE_NAME_TEMP}` (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             symbol TEXT NOT NULL,
@@ -162,159 +163,209 @@ abstract class StockRoomDatabase : RoomDatabase() {
             note TEXT NOT NULL
           )
           """.trimIndent()
-        )
-        database.execSQL(
-          """
+                )
+                database.execSQL(
+                    """
           INSERT INTO `${DIVIDEND_TABLE_NAME_TEMP}` (symbol, amount, cycle, paydate, type, account, exdate, note)
           SELECT symbol, amount, cycle, paydate, type, '', exdate, note FROM `${DIVIDEND_TABLE_NAME}`  
           """.trimIndent()
-        )
-        database.execSQL("DROP TABLE `${DIVIDEND_TABLE_NAME}`")
-        database.execSQL("ALTER TABLE `${DIVIDEND_TABLE_NAME_TEMP}` RENAME TO `${DIVIDEND_TABLE_NAME}`")
-      }
-    }
-
-    private class StockRoomDatabaseCallback(
-      private val scope: CoroutineScope,
-      val context: Context
-    ) : RoomDatabase.Callback() {
-      override fun onCreate(db: SupportSQLiteDatabase) {
-        super.onCreate(db)
-        INSTANCE?.let { database ->
-          scope.launch(Dispatchers.IO) {
-            populateDatabase(database.stockRoomDao(), context)
-          }
+                )
+                database.execSQL("DROP TABLE `${DIVIDEND_TABLE_NAME}`")
+                database.execSQL("ALTER TABLE `${DIVIDEND_TABLE_NAME_TEMP}` RENAME TO `${DIVIDEND_TABLE_NAME}`")
+            }
         }
-      }
-    }
 
-    private fun importExampleJSON(
-      stockRoomDao: StockRoomDao,
-      json: String
-    ) {
-      val sType = object : TypeToken<List<StockItemJson>>() {}.type
-      val gson = Gson()
-      val stockItemJsonList = gson.fromJson<List<StockItemJson>>(json, sType)
+        // rename commission to fee
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
 
-      stockItemJsonList.forEach { stockItemJson ->
-        val symbol = stockItemJson.symbol.uppercase(Locale.ROOT)
-        stockRoomDao.insert(
-          StockDBdata(
-            symbol = symbol,
-            // can be null if it is not in the json
-            groupColor = stockItemJson.groupColor ?: 0,
-            note = stockItemJson.note ?: "",
-            alertBelow = stockItemJson.alertBelow ?: 0.0,
-            alertAbove = stockItemJson.alertAbove ?: 0.0
+                val ASSET_TABLE_NAME = "asset_table"
+                val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
+
+                database.execSQL(
+                    """
+          CREATE TABLE `${ASSET_TABLE_NAME_TEMP}` (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            symbol TEXT NOT NULL,
+            quantity REAL NOT NULL,
+            price REAL NOT NULL,
+            type INTEGER NOT NULL, 
+            account TEXT NOT NULL, 
+            note TEXT NOT NULL, 
+            date INTEGER NOT NULL, 
+            sharesPerQuantity INTEGER NOT NULL, 
+            expirationDate INTEGER NOT NULL, 
+            premium REAL NOT NULL,
+            fee REAL NOT NULL
           )
-        )
+          """.trimIndent()
+                )
+                database.execSQL(
+                    """
+          INSERT INTO `${ASSET_TABLE_NAME_TEMP}` (symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, fee)
+          SELECT symbol, quantity, price, type, account, note, date, sharesPerQuantity, expirationDate, premium, commission FROM `${ASSET_TABLE_NAME}`  
+          """.trimIndent()
+                )
+                database.execSQL("DROP TABLE `${ASSET_TABLE_NAME}`")
+                database.execSQL("ALTER TABLE `${ASSET_TABLE_NAME_TEMP}` RENAME TO `${ASSET_TABLE_NAME}`")
+            }
+        }
 
-        if (stockItemJson.assets != null) {
-          stockRoomDao.updateAssets(symbol = symbol, assets = stockItemJson.assets!!.map { asset ->
-            Asset(
-              symbol = symbol,
-              quantity = asset.quantity ?: 0.0,
-              price = asset.price ?: 0.0,
-              date = asset.date ?: 0L
+        private class StockRoomDatabaseCallback(
+            private val scope: CoroutineScope,
+            val context: Context
+        ) : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                INSTANCE?.let { database ->
+                    scope.launch(Dispatchers.IO) {
+                        populateDatabase(database.stockRoomDao(), context)
+                    }
+                }
+            }
+        }
+
+        private fun importExampleJSON(
+            stockRoomDao: StockRoomDao,
+            json: String
+        ) {
+            val sType = object : TypeToken<List<StockItemJson>>() {}.type
+            val gson = Gson()
+            val stockItemJsonList = gson.fromJson<List<StockItemJson>>(json, sType)
+
+            stockItemJsonList.forEach { stockItemJson ->
+                val symbol = stockItemJson.symbol.uppercase(Locale.ROOT)
+                stockRoomDao.insert(
+                    StockDBdata(
+                        symbol = symbol,
+                        // can be null if it is not in the json
+                        groupColor = stockItemJson.groupColor ?: 0,
+                        note = stockItemJson.note ?: "",
+                        alertBelow = stockItemJson.alertBelow ?: 0.0,
+                        alertAbove = stockItemJson.alertAbove ?: 0.0
+                    )
+                )
+
+                if (stockItemJson.assets != null) {
+                    stockRoomDao.updateAssets(
+                        symbol = symbol,
+                        assets = stockItemJson.assets!!.map { asset ->
+                            Asset(
+                                symbol = symbol,
+                                quantity = asset.quantity ?: 0.0,
+                                price = asset.price ?: 0.0,
+                                date = asset.date ?: 0L
+                            )
+                        })
+                }
+
+                if (stockItemJson.events != null) {
+                    stockRoomDao.updateEvents(
+                        symbol = symbol,
+                        events = stockItemJson.events!!.map { event ->
+                            Event(
+                                symbol = symbol,
+                                type = event.type ?: 0,
+                                title = event.title ?: "",
+                                note = event.note ?: "",
+                                datetime = event.datetime ?: 0L
+                            )
+                        })
+                }
+            }
+        }
+
+        fun populateDatabase(
+            stockRoomDao: StockRoomDao,
+            context: Context
+        ) {
+            // Add predefined values to the DB.
+            stockRoomDao.setPredefinedGroups(context)
+
+            if (isOnline(context)) {
+                val stockMarketDataRepository: StockMarketDataRepository =
+                    StockMarketDataRepository(
+                        { StockMarketDataApiFactory.yahooApi },
+                        { StockMarketDataCoingeckoApiFactory.coingeckoApi },
+                        { StockMarketDataCoinpaprikaApiFactory.coinpaprikaApi }
+                    )
+
+                data class AssetPreset(
+                    val symbol: String,
+                    val asset: Double,
+                    val gain: Double,
+                    val date: Long,
+                    val color: Int
+                )
+
+                val assets: List<AssetPreset> = listOf(
+                    AssetPreset("AAPL", 6500.0, 5240.0, 1601683200, Color.BLUE),
+                    AssetPreset("AMZN", 6500.0, 280.0, 1601683200, Color.MAGENTA),
+                    AssetPreset("GE", 3700.0, 2470.0, 1601683200, Color.BLACK),
+                    AssetPreset("BA", 5500.0, -640.0, 1601683200, Color.GREEN),
+                    AssetPreset("CVX", 4500.0, -508.0, 1601683200, Color.rgb(0, 191, 255)),
+                    AssetPreset("ANY", 8000.0, 6490.0, 1601683200, Color.YELLOW),
+                    AssetPreset("MSFT", 5200.0, 1450.0, 1601683200, Color.rgb(173, 216, 230)),
+                    AssetPreset("QCOM", 4200.0, 240.0, 1601683200, Color.rgb(0, 191, 255)),
+                    AssetPreset("RM", 3600.0, 1110.0, 1601683200, Color.RED),
+                    AssetPreset("TSLA", 7000.0, 2060.0, 1601683200, Color.rgb(72, 209, 204)),
+                )
+
+                val symbols = assets.map { asset ->
+                    StockSymbol(symbol = asset.symbol, type = DataProvider.Standard)
+                }
+
+                var onlinedata: List<OnlineMarketData>
+                runBlocking {
+                    withContext(Dispatchers.IO) {
+                        onlinedata = stockMarketDataRepository.getStockData2(symbols)
+                    }
+                }
+
+                assets.forEach { asset ->
+                    stockRoomDao.insert(
+                        StockDBdata(
+                            symbol = asset.symbol,
+                            groupColor = asset.color
+                        )
+                    )
+
+                    val data = onlinedata.find {
+                        it.symbol == asset.symbol
+                    }
+
+                    if (data != null) {
+                        val assetvalue = asset.asset + ((0..1000).random() - 500).toDouble() / 100
+                        val gainvalue = asset.gain + ((0..1000).random() - 500).toDouble() / 100
+
+                        val price = data.marketPrice * (1 - gainvalue / assetvalue)
+                        val quantity = ((assetvalue - gainvalue) / price).roundToInt()
+                            .toDouble()
+                        val price2 = assetvalue / quantity
+
+                        stockRoomDao.addAsset(
+                            Asset(
+                                symbol = asset.symbol,
+                                quantity = quantity,
+                                price = price2,
+                                date = asset.date
+                            )
+                        )
+                    }
+                }
+            } else {
+                // if offline, preset with json
+                val jsonText = context.resources.getRawTextFile(raw.example_stocks)
+                importExampleJSON(stockRoomDao, jsonText)
+            }
+
+            // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
+            stockRoomDao.updateNote(
+                symbol = "AAPL", note = context.getString(string.example_List_delete_all)
             )
-          })
-        }
-
-        if (stockItemJson.events != null) {
-          stockRoomDao.updateEvents(symbol = symbol, events = stockItemJson.events!!.map { event ->
-            Event(
-              symbol = symbol,
-              type = event.type ?: 0,
-              title = event.title ?: "",
-              note = event.note ?: "",
-              datetime = event.datetime ?: 0L
+            stockRoomDao.updateNote(
+                symbol = "AMZN", note = context.getString(string.example_List_note)
             )
-          })
-        }
-      }
-    }
-
-    fun populateDatabase(
-      stockRoomDao: StockRoomDao,
-      context: Context
-    ) {
-      // Add predefined values to the DB.
-      stockRoomDao.setPredefinedGroups(context)
-
-      if (isOnline(context)) {
-        val stockMarketDataRepository: StockMarketDataRepository =
-          StockMarketDataRepository(
-            { StockMarketDataApiFactory.yahooApi },
-            { StockMarketDataCoingeckoApiFactory.coingeckoApi },
-            { StockMarketDataCoinpaprikaApiFactory.coinpaprikaApi }
-          )
-
-        data class AssetPreset(
-          val symbol: String,
-          val asset: Double,
-          val gain: Double,
-          val date: Long,
-          val color: Int
-        )
-
-        val assets: List<AssetPreset> = listOf(
-          AssetPreset("AAPL", 6500.0, 5240.0, 1601683200, Color.BLUE),
-          AssetPreset("AMZN", 6500.0, 280.0, 1601683200, Color.MAGENTA),
-          AssetPreset("GE", 3700.0, 2470.0, 1601683200, Color.BLACK),
-          AssetPreset("BA", 5500.0, -640.0, 1601683200, Color.GREEN),
-          AssetPreset("CVX", 4500.0, -508.0, 1601683200, Color.rgb(0, 191, 255)),
-          AssetPreset("ANY", 8000.0, 6490.0, 1601683200, Color.YELLOW),
-          AssetPreset("MSFT", 5200.0, 1450.0, 1601683200, Color.rgb(173, 216, 230)),
-          AssetPreset("QCOM", 4200.0, 240.0, 1601683200, Color.rgb(0, 191, 255)),
-          AssetPreset("RM", 3600.0, 1110.0, 1601683200, Color.RED),
-          AssetPreset("TSLA", 7000.0, 2060.0, 1601683200, Color.rgb(72, 209, 204)),
-        )
-
-        val symbols = assets.map { asset ->
-          StockSymbol(symbol = asset.symbol, type = DataProvider.Standard)
-        }
-
-        var onlinedata: List<OnlineMarketData>
-        runBlocking {
-          withContext(Dispatchers.IO) {
-            onlinedata = stockMarketDataRepository.getStockData2(symbols)
-          }
-        }
-
-        assets.forEach { asset ->
-          stockRoomDao.insert(StockDBdata(symbol = asset.symbol, groupColor = asset.color))
-
-          val data = onlinedata.find {
-            it.symbol == asset.symbol
-          }
-
-          if (data != null) {
-            val assetvalue = asset.asset + ((0..1000).random() - 500).toDouble() / 100
-            val gainvalue = asset.gain + ((0..1000).random() - 500).toDouble() / 100
-
-            val price = data.marketPrice * (1 - gainvalue / assetvalue)
-            val quantity = ((assetvalue - gainvalue) / price).roundToInt()
-              .toDouble()
-            val price2 = assetvalue / quantity
-
-            stockRoomDao.addAsset(
-              Asset(symbol = asset.symbol, quantity = quantity, price = price2, date = asset.date)
-            )
-          }
-        }
-      } else {
-        // if offline, preset with json
-        val jsonText = context.resources.getRawTextFile(raw.example_stocks)
-        importExampleJSON(stockRoomDao, jsonText)
-      }
-
-      // List is sorted alphabetically. Add comment about deleting the example list in the first entry.
-      stockRoomDao.updateNote(
-        symbol = "AAPL", note = context.getString(string.example_List_delete_all)
-      )
-      stockRoomDao.updateNote(
-        symbol = "AMZN", note = context.getString(string.example_List_note)
-      )
 
 /*
 stockRoomDao.insert(StockDBdata(symbol = "AAPL", groupColor = Color.BLUE))
@@ -349,6 +400,6 @@ stockRoomDao.insert(StockDBdata(symbol = "TSLA", groupColor = Color.rgb(72, 209,
 stockRoomDao.addAsset(Asset(symbol = "TSLA", shares = 5.0, price = 1000.0))
 stockRoomDao.insert(StockDBdata(symbol = "^GSPC", groupColor = 0))
  */
+        }
     }
-  }
 }

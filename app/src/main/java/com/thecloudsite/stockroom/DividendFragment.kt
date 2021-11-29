@@ -1142,7 +1142,7 @@ class DividendFragment : Fragment() {
     val dividendStr = SpannableStringBuilder()
 
     if (data.assets != null) {
-      val (totalQuantity, totalPrice, totalCommission) = getAssets(data.assets?.assets)
+      val (totalQuantity, totalPrice, totalFee) = getAssets(data.assets?.assets)
 
 //      val totalQuantity = data.assets?.assets?.sumOf {
 //        it.totalQuantity

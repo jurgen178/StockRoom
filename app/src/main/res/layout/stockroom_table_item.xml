@@ -213,7 +213,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataAssetCommission"
+      android:id="@+id/table_data_asset_fee"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline10"
@@ -229,7 +229,7 @@
       />
 
   <TextView
-      android:id="@+id/tableDataAssetTotalCommission"
+      android:id="@+id/table_data_asset_total_fee"
       style="@style/table_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline11"

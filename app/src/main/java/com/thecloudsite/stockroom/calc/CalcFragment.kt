@@ -126,7 +126,7 @@ class CalcFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol) {
             if (position >= 0 && position < stockitemListCopy.size) {
               var marketPrice = stockitemListCopy[position].onlineMarketData.marketPrice
               if (marketPrice == 0.0) {
-                val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+                val (quantity, price, fee) = com.thecloudsite.stockroom.utils.getAssets(
                   stockitemListCopy[position].assets
                 )
                 if (quantity != 0.0 && price != 0.0) {

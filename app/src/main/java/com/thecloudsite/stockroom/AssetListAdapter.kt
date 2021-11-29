@@ -177,8 +177,8 @@ class AssetListAdapter internal constructor(
         holder.binding.textViewAssetTotal.text = context.getString(R.string.assetlisttotal)
         holder.binding.textViewAssetChange.text = context.getString(R.string.assetlistchange)
         holder.binding.textViewAssetValue.text = context.getString(R.string.assetlistvalue)
-        holder.binding.textViewAssetCommission.text =
-          context.getString(R.string.assetlistcommission)
+        holder.binding.textViewAssetFee.text =
+          context.getString(R.string.assetlistfee)
         holder.binding.textViewAssetDate.text = context.getString(R.string.assetlistdate)
         holder.binding.textViewAssetAccount.text = context.getString(R.string.assetlistaccount)
         holder.binding.textViewAssetNote.text = context.getString(R.string.assetlistnote)
@@ -212,7 +212,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetQuantity.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetPrice.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetTotal.setTextColor(colorNegativeAsset)
-            holder.binding.textViewAssetCommission.setTextColor(colorNegativeAsset)
+            holder.binding.textViewAssetFee.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetDate.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetAccount.setTextColor(colorNegativeAsset)
             holder.binding.textViewAssetNote.setTextColor(colorNegativeAsset)
@@ -221,7 +221,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetQuantity.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetPrice.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetTotal.setTextColor(colorObsoleteAsset)
-            holder.binding.textViewAssetCommission.setTextColor(colorObsoleteAsset)
+            holder.binding.textViewAssetFee.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetDate.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetAccount.setTextColor(colorObsoleteAsset)
             holder.binding.textViewAssetNote.setTextColor(colorObsoleteAsset)
@@ -230,7 +230,7 @@ class AssetListAdapter internal constructor(
             holder.binding.textViewAssetQuantity.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetPrice.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetTotal.setTextColor(defaultTextColor!!)
-            holder.binding.textViewAssetCommission.setTextColor(defaultTextColor!!)
+            holder.binding.textViewAssetFee.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetDate.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetAccount.setTextColor(defaultTextColor!!)
             holder.binding.textViewAssetNote.setTextColor(defaultTextColor!!)
@@ -270,9 +270,9 @@ class AssetListAdapter internal constructor(
           } else {
             ""
           }
-        val itemViewCommissionText =
-          if (current.asset.commission > 0.0) {
-            DecimalFormat(DecimalFormat2Digits).format(current.asset.commission)
+        val itemViewFeeText =
+          if (current.asset.fee > 0.0) {
+            DecimalFormat(DecimalFormat2Digits).format(current.asset.fee)
           } else {
             ""
           }
@@ -298,8 +298,8 @@ class AssetListAdapter internal constructor(
             SpannableStringBuilder().italic { append(itemViewPriceText) }
           holder.binding.textViewAssetValue.text =
             SpannableStringBuilder().italic { append(itemViewValueText) }
-          holder.binding.textViewAssetCommission.text =
-            SpannableStringBuilder().italic { append(itemViewCommissionText) }
+          holder.binding.textViewAssetFee.text =
+            SpannableStringBuilder().italic { append(itemViewFeeText) }
           holder.binding.textViewAssetDate.text =
             SpannableStringBuilder().italic { append(itemViewDateText) }
           holder.binding.textViewAssetAccount.text =
@@ -312,7 +312,7 @@ class AssetListAdapter internal constructor(
           holder.binding.textViewAssetTotal.text = itemViewTotalText
           holder.binding.textViewAssetChange.text = itemViewChangeText
           holder.binding.textViewAssetValue.text = itemViewValueText
-          holder.binding.textViewAssetCommission.text = itemViewCommissionText
+          holder.binding.textViewAssetFee.text = itemViewFeeText
           holder.binding.textViewAssetDate.text = itemViewDateText
           holder.binding.textViewAssetAccount.text = itemViewAccountText
           holder.binding.textViewAssetNote.text = itemViewNoteText
@@ -348,12 +348,12 @@ class AssetListAdapter internal constructor(
             )
           }
 
-        holder.binding.textViewAssetCommission.text = if (current.asset.commission > 0.0) {
+        holder.binding.textViewAssetFee.text = if (current.asset.fee > 0.0) {
           SpannableStringBuilder()
             .color(Color.BLACK) {
               append(
                 DecimalFormat(DecimalFormat2To4Digits).format(
-                  current.asset.commission
+                  current.asset.fee
                 )
               )
             }
@@ -419,7 +419,7 @@ class AssetListAdapter internal constructor(
         asset.date
       }
 
-      val (totalQuantity, totalPrice, totalCommission) = getAssets(sortedList, obsoleteAssetType)
+      val (totalQuantity, totalPrice, totalFee) = getAssets(sortedList, obsoleteAssetType)
 
       val sortedDataList = sortedList.map {
         AssetListData(
@@ -477,7 +477,7 @@ class AssetListAdapter internal constructor(
             symbol = symbol,
             quantity = totalQuantity,
             price = totalPrice,
-            commission = totalCommission,
+            fee = totalFee,
           ),
           assetChangeText = assetChange,
           assetText = asset,
@@ -508,7 +508,7 @@ class AssetListAdapter internal constructor(
             asset.account == account
           }
 
-          val (totalQuantity2, totalPrice2, totalCommission2) = getAssets(
+          val (totalQuantity2, totalPrice2, totalFee2) = getAssets(
             assetsListCopy,
             obsoleteAssetType
           )
@@ -568,7 +568,7 @@ class AssetListAdapter internal constructor(
                 quantity = totalQuantity2,
                 price = totalPrice2,
                 account = account,
-                commission = totalCommission2,
+                fee = totalFee2,
               ),
               assetChangeText = assetChangeAccount,
               assetText = assetAccount,

@@ -37,7 +37,7 @@ import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssets
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
-import com.thecloudsite.stockroom.utils.getTotalCommission
+import com.thecloudsite.stockroom.utils.getTotalFee
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneOffset
@@ -305,7 +305,7 @@ class SummaryGroupAdapter internal constructor(
   ): Pair<SpannableStringBuilder, SpannableStringBuilder> {
 
     var totalPurchasePrice = 0.0
-    var totalCommission = 0.0
+    var totalFee = 0.0
     var totalAssets = 0.0
     var totalGain = 0.0
     var totalLoss = 0.0
@@ -336,11 +336,11 @@ class SummaryGroupAdapter internal constructor(
     val totalDividendPaidMap: MutableMap<Int, Double> = mutableMapOf()
 
     stockItemsSelected.forEach { stockItem ->
-      val (quantity, price, commission) = getAssets(stockItem.assets)
+      val (quantity, price, fee) = getAssets(stockItem.assets)
 
-      totalPurchasePrice += price + commission
+      totalPurchasePrice += price + fee
       totalQuantity += quantity
-      totalCommission += getTotalCommission(stockItem.assets)
+      totalFee += getTotalFee(stockItem.assets)
 
       val (gain, loss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
       // Merge gain and loss of the individual stock to one gain/loss to prevent
@@ -414,7 +414,7 @@ class SummaryGroupAdapter internal constructor(
 
       if (stockItem.onlineMarketData.marketPrice > 0.0) {
         val assetsPrice = quantity * stockItem.onlineMarketData.marketPrice
-        val gainLoss = assetsPrice - (price + commission)
+        val gainLoss = assetsPrice - (price + fee)
 
 //        val localDateTime = LocalDateTime.ofEpochSecond(asset.date, 0, ZoneOffset.UTC)
 //        val year = localDateTime.year
@@ -581,12 +581,12 @@ class SummaryGroupAdapter internal constructor(
 
     val summaryGroup1 = SpannableStringBuilder()
       .append(gainLossText)
-      .append("\n${context.getString(R.string.summary_total_commissions)} ")
+      .append("\n${context.getString(R.string.summary_total_fees)} ")
       .bold {
         append(
           "${
             DecimalFormat(DecimalFormat2Digits)
-              .format(totalCommission)
+              .format(totalFee)
           }\n"
         )
       }

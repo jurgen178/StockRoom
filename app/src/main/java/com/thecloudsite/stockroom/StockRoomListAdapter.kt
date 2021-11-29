@@ -191,7 +191,7 @@ class StockRoomListAdapter internal constructor(
                 holder.binding.textViewAssets.text = ""
             }
 
-            val (quantity, asset, commission) = getAssets(current.assets)
+            val (quantity, asset, fee) = getAssets(current.assets)
 //      val quantity = current.assets.sumOf {
 //        it.quantity
 //      }
@@ -211,12 +211,12 @@ class StockRoomListAdapter internal constructor(
                     }"
                 )
 
-                if (commission > 0.0) {
-                    assets.scale(commissionScale) {
+                if (fee > 0.0) {
+                    assets.scale(feeScale) {
                         append(
                             "+${
                                 DecimalFormat(DecimalFormat2To4Digits).format(
-                                    commission
+                                    fee
                                 )
                             }"
                         )

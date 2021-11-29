@@ -87,7 +87,7 @@ val chartOverlayColors: List<Int> =
 const val epsilon = 0.00000001
 
 // SpannableStrings scale
-const val commissionScale = 0.8f
+const val feeScale = 0.8f
 
 // asset.type
 const val obsoleteAssetType: Int = 0x0001
@@ -346,11 +346,11 @@ fun getAssetChange(
     bold: Boolean = true
 ): AssetChange {
 
-    val (quantity, asset, commission) = getAssets(assets)
+    val (quantity, asset, fee) = getAssets(assets)
 
     return getAssetChange(
         quantity,
-        asset + commission,
+        asset + fee,
         marketPrice,
         isPostMarket,
         neutralColor,
@@ -476,14 +476,14 @@ fun getAssetUseLastAverage(
 
     var totalQuantity: Double = 0.0
     var totalPrice: Double = 0.0
-    var totalCommission: Double = 0.0
+    var totalFee: Double = 0.0
 
     assetList?.sortedBy { item ->
         item.date
     }
         ?.forEach { asset ->
 
-            totalCommission += asset.commission
+            totalFee += asset.fee
 
             // added shares
             if (asset.quantity > 0.0) {
@@ -497,7 +497,7 @@ fun getAssetUseLastAverage(
                         // reset if more removed than owned
                         totalQuantity = 0.0
                         totalPrice = 0.0
-                        totalCommission = 0.0
+                        totalFee = 0.0
                     } else {
                         // adjust the total price for the removed shares
                         if (totalQuantity > epsilon) {
@@ -509,7 +509,7 @@ fun getAssetUseLastAverage(
                 }
         }
 
-    return Pair(totalQuantity, totalPrice + totalCommission)
+    return Pair(totalQuantity, totalPrice + totalFee)
 }
 
 // Adds a marker for assets that are obsolete (bought and then sold)
@@ -528,7 +528,7 @@ fun getAssetUseLastAverage(
 
     var totalQuantity: Double = 0.0
     var totalPrice: Double = 0.0
-    var totalCommission: Double = 0.0
+    var totalFee: Double = 0.0
 
     if (assetList != null) {
         val assetListSorted = assetList.sortedBy { asset ->
@@ -545,7 +545,7 @@ fun getAssetUseLastAverage(
         for (i in assetListSorted.indices) {
 
             val asset = assetListSorted[i]
-            totalCommission += asset.commission
+            totalFee += asset.fee
 
             // added shares
             if (asset.quantity > 0.0) {
@@ -559,7 +559,7 @@ fun getAssetUseLastAverage(
                         // reset if more removed than owned
                         totalQuantity = 0.0
                         totalPrice = 0.0
-                        totalCommission = 0.0
+                        totalFee = 0.0
 
                         // Mark all assets down to the beginning as obsolete because they are bought and all sold.
                         if (tagObsoleteAssetType != 0) {
@@ -580,7 +580,7 @@ fun getAssetUseLastAverage(
         }
     }
 
-    return Pair(totalQuantity, totalPrice + totalCommission)
+    return Pair(totalQuantity, totalPrice + totalFee)
 }
 
 fun getAssetsRemoveOldestFirst(
@@ -590,7 +590,7 @@ fun getAssetsRemoveOldestFirst(
 
     var totalQuantity: Double = 0.0
     var totalPrice: Double = 0.0
-    var totalCommission: Double = 0.0
+    var totalFee: Double = 0.0
 
     if (assetList != null) {
         val assetListSorted = assetList.sortedBy { asset ->
@@ -605,7 +605,7 @@ fun getAssetsRemoveOldestFirst(
                 price = asset.price,
                 account = asset.account,
                 quantity = asset.quantity,
-                commission = asset.commission,
+                fee = asset.fee,
                 type = asset.type and tagObsoleteAssetType.inv()
             )
         }
@@ -624,7 +624,7 @@ fun getAssetsRemoveOldestFirst(
                         if (quantityToRemove > assetListSortedCopy[j].quantity) {
                             quantityToRemove -= assetListSortedCopy[j].quantity
                             assetListSortedCopy[j].quantity = 0.0
-                            assetListSortedCopy[j].commission = 0.0
+                            assetListSortedCopy[j].fee = 0.0
                         } else {
                             assetListSortedCopy[j].quantity -= quantityToRemove
                             // (Does not work with different accounts anymore)
@@ -638,8 +638,8 @@ fun getAssetsRemoveOldestFirst(
                 // Sold entry is subtracted already. Set to 0.
                 assetListSortedCopy[i].quantity = 0.0
 
-                // Commissions are not counted when stock is sold.
-                assetListSortedCopy[i].commission = 0.0
+                // Fees are not counted when stock is sold.
+                assetListSortedCopy[i].fee = 0.0
             }
         }
 
@@ -654,7 +654,7 @@ fun getAssetsRemoveOldestFirst(
         assetListSortedCopy.forEach { asset ->
             totalQuantity += asset.quantity
             totalPrice += asset.quantity * asset.price
-            totalCommission += asset.commission
+            totalFee += asset.fee
         }
     }
 
@@ -663,18 +663,18 @@ fun getAssetsRemoveOldestFirst(
         totalPrice = 0.0
     }
 
-    return Triple(totalQuantity, totalPrice, totalCommission)
+    return Triple(totalQuantity, totalPrice, totalFee)
 }
 
-fun getTotalCommission(
+fun getTotalFee(
     assetList: List<Asset>
 ): Double {
 
-    val totalCommission: Double = assetList.sumOf { asset ->
-        asset.commission
+    val totalFee: Double = assetList.sumOf { asset ->
+        asset.fee
     }
 
-    return totalCommission
+    return totalFee
 }
 
 // Only gets the assets that are added.
@@ -684,17 +684,17 @@ fun getAddedAssets(
 
     var totalQuantity: Double = 0.0
     var totalPrice: Double = 0.0
-    var totalCommission: Double = 0.0
+    var totalFee: Double = 0.0
 
     assetList?.forEach { asset ->
         if (asset.quantity > 0.0) {
             totalQuantity += asset.quantity
             totalPrice += asset.quantity * asset.price
-            totalCommission += asset.commission
+            totalFee += asset.fee
         }
     }
 
-    return Pair(totalQuantity, totalPrice + totalCommission)
+    return Pair(totalQuantity, totalPrice + totalFee)
 }
 
 fun getAddedDeletedAssets(
@@ -856,15 +856,15 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
 
             sold = -asset.quantity * asset.price
             lastTransactionDate = asset.date
-            bought = asset.commission
+            bought = asset.fee
             var quantityToRemove = -asset.quantity
 
             for (j in k until i) {
 
                 if (asset.account == assetListCopy[j].account) {
 
-                    bought += assetListCopy[j].commission
-                    assetListCopy[j].commission = 0.0
+                    bought += assetListCopy[j].fee
+                    assetListCopy[j].fee = 0.0
 
                     if (assetListCopy[j].quantity > 0.0) {
 

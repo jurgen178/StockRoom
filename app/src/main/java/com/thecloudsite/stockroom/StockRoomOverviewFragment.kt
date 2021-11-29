@@ -332,9 +332,9 @@ class StockRoomOverviewFragment : Fragment() {
     var capitalLoss = 0.0
 
     stockitemList.forEach { stockItem ->
-      val (quantity, price, commission) = getAssets(stockItem.assets)
+      val (quantity, price, fee) = getAssets(stockItem.assets)
 
-      totalPurchasePrice += price + commission
+      totalPurchasePrice += price + fee
       totalQuantity += quantity
 
       val (gain, loss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
@@ -354,7 +354,7 @@ class StockRoomOverviewFragment : Fragment() {
 
       if (stockItem.onlineMarketData.marketPrice > 0.0) {
         val assetsPrice = quantity * stockItem.onlineMarketData.marketPrice
-        val gainLoss = assetsPrice - (price + commission)
+        val gainLoss = assetsPrice - (price + fee)
 
         if (gainLoss > 0.0) {
           totalGain += gainLoss

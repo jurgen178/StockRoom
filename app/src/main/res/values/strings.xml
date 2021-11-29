@@ -115,7 +115,7 @@ limitations under the License. -->
   <string name="assetlisttotal">Value</string>
   <string name="assetlistchange">Asset change</string>
   <string name="assetlistvalue">Asset value</string>
-  <string name="assetlistcommission">Commission</string>
+  <string name="assetlistfee">Fee</string>
   <string name="assetlistdate">Date</string>
   <string name="assetlistnote">Note</string>
   <string name="no_total_quantity">Buy some shares first.</string>
@@ -161,8 +161,8 @@ limitations under the License. -->
   <string name="asset_price_not_empty">Enter a price for the stock.</string>
   <string name="asset_summary_text">Total assets:</string>
   <string name="asset_summary_account_text">Total assets for Account \'%1$s\':</string>
-  <string name="commission">Commission</string>
-  <string name="asset_commission_not_valid">Enter a commission for the stock.</string>
+  <string name="fee">Fee</string>
+  <string name="asset_fee_not_valid">Enter a fee for the stock.</string>
   <string name="title_activity_add">Add stocks</string>
   <string name="title_activity_filter">Filter</string>
   <string name="title_activity_stockdata">Stock details</string>
@@ -395,8 +395,8 @@ limitations under the License. -->
   <string name="filter_asset_desc"></string>
   <string name="filter_assetnote_name">Asset note</string>
   <string name="filter_assetnote_desc"></string>
-  <string name="filter_commission_name">Commission</string>
-  <string name="filter_commission_desc"></string>
+  <string name="filter_fee_name">Fee</string>
+  <string name="filter_fee_desc"></string>
   <string name="filter_dividendpercentage_name">Dividend %</string>
   <string name="filter_dividendpercentage_desc"></string>
   <string name="filter_dividendpaid_name">Dividend paid</string>
@@ -476,8 +476,8 @@ limitations under the License. -->
   <string name="table_column_Purchaseprice">Purchase price</string>
   <string name="table_column_Asset">Asset</string>
   <string name="table_column_AssetChange">Asset change</string>
-  <string name="table_column_AssetCommission">Commission</string>
-  <string name="table_column_AssetTotalCommissions">Total Commissions</string>
+  <string name="table_column_AssetFee">Fee</string>
+  <string name="table_column_AssetTotalFees">Total fees</string>
   <string name="table_column_Dividend">Dividend</string>
   <string name="table_column_AlertAbove">Alert Above</string>
   <string name="table_column_AlertBelow">Alert Below</string>
@@ -500,7 +500,7 @@ limitations under the License. -->
   <string name="remove_selection">Remove from the selection</string>
   <string name="app_theme">App Theme</string>
   <string name="app_theme_textcolor_redgreen">Textcolor on Red and Green</string>
-  <string name="summary_total_commissions">Total Commissions</string>
+  <string name="summary_total_fees">Total fees</string>
   <string name="calc_title">AI</string>
   <string name="calc_copy">Copy</string>
   <string name="calc_paste">Paste</string>

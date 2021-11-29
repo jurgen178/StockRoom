@@ -81,7 +81,7 @@ data class AssetJson(
     var sharesPerQuantity: Int?,
     var expirationDate: Long?,
     var premium: Double?,
-    var commission: Double?
+    var fee: Double?
 )
 
 data class EventJson(
@@ -1257,14 +1257,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             }
             SortMode.ByAssets -> {
                 stockItems.sortedByDescending { item ->
-                    val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
+                    val (totalQuantity, totalPrice, totalFee) = getAssets(item.assets)
                     if (item.onlineMarketData.marketPrice > 0.0) {
                         totalQuantity * item.onlineMarketData.marketPrice
 //              item.assets.sumOf {
 //                it.shares * item.onlineMarketData.marketPrice
 //              }
                     } else {
-                        totalPrice + totalCommission
+                        totalPrice + totalFee
 //              item.assets.sumOf {
 //                it.shares * it.price
 //              }
@@ -1273,9 +1273,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             }
             SortMode.ByProfit -> {
                 stockItems.sortedByDescending { item ->
-                    val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
+                    val (totalQuantity, totalPrice, totalFee) = getAssets(item.assets)
                     if (item.onlineMarketData.marketPrice > 0.0) {
-                        totalQuantity * item.onlineMarketData.marketPrice - totalPrice - totalCommission
+                        totalQuantity * item.onlineMarketData.marketPrice - totalPrice - totalFee
 //              item.assets.sumOf {
 //                it.shares * (item.onlineMarketData.marketPrice - it.price)
 //              }
@@ -1289,8 +1289,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             }
             SortMode.ByProfitPercentage -> {
                 stockItems.sortedByDescending { item ->
-                    val (totalQuantity, totalPrice, totalCommission) = getAssets(item.assets)
-                    val total = totalPrice + totalCommission
+                    val (totalQuantity, totalPrice, totalFee) = getAssets(item.assets)
+                    val total = totalPrice + totalFee
                     if (item.onlineMarketData.marketPrice > 0.0 && total > 0.0) {
                         (totalQuantity * item.onlineMarketData.marketPrice - total) / total
                     } else {
@@ -1567,10 +1567,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                                         } else {
                                             0.0
                                         },
-                                        commission = if (assetsObj.has("commission")) {
-                                            assetsObj.getDouble("commission")
-                                        } else {
-                                            0.0
+                                        fee = when {
+                                            assetsObj.has("fee") -> {
+                                                assetsObj.getDouble("fee")
+                                            }
+                                            assetsObj.has("commission") -> {
+                                                assetsObj.getDouble("commission")
+                                            }
+                                            else -> {
+                                                0.0
+                                            }
                                         }
                                     )
                                 )
@@ -2199,8 +2205,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                             sharesPerQuantity = if (asset.sharesPerQuantity != 1) asset.sharesPerQuantity else null,
                             expirationDate = if (asset.expirationDate != 0L) asset.expirationDate else null,
                             premium = if (asset.premium > 0.0) validateDouble(asset.premium) else null,
-                            commission = if (asset.commission > 0.0) validateDouble(
-                                asset.commission
+                            fee = if (asset.fee > 0.0) validateDouble(
+                                asset.fee
                             ) else null,
                         )
                     }
@@ -2635,7 +2641,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //              sharesPerQuantity = stockOptionData.sharesPerOption,
 //              expirationDate = stockOptionData.expirationDate,
 //              premium = asset.premium,
-//              commission = asset.commission,
+//              fee = asset.fee,
 //              )
 //      )
 //    }

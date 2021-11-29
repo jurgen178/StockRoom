@@ -249,7 +249,7 @@ class SummaryGroupFragment : Fragment() {
         val assetList: MutableList<AssetSummary> = mutableListOf()
         var totalAssets = 0.0
         stockItems.forEach { stockItem ->
-            val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+            val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
 
 //      val totalShares: Double = stockItem.assets.sumOf { asset ->
 //        asset.shares
@@ -417,7 +417,7 @@ class SummaryGroupFragment : Fragment() {
                     stockItem.stockDBdata.groupColor == group.color
                 }
                     .sumOf { stockItem ->
-                        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+                        val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
 
                         totalQuantity * stockItem.onlineMarketData.marketPrice
                     }

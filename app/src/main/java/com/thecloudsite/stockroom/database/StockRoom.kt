@@ -88,7 +88,7 @@ data class Asset(
   var sharesPerQuantity: Int = 1,
   var expirationDate: Long = 0L,
   var premium: Double = 0.0,
-  var commission: Double = 0.0
+  var fee: Double = 0.0
 )
 
 data class Assets(

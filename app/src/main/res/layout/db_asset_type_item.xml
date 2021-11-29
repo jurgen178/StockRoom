@@ -185,7 +185,7 @@
       />
 
   <TextView
-      android:id="@+id/db_asset_commission"
+      android:id="@+id/db_asset_fee"
       style="@style/db_item_style"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toEndOf="@+id/guideline11"

@@ -56,7 +56,7 @@ enum class FilterTypeEnum {
     FilterAssetType,
     FilterAssetNoteType,
     FilterAssetAccountType,
-    FilterCommissionType,
+    FilterFeeType,
     FilterDividendPercentageType,
     FilterDividendPaidType,
     FilterDividendPaidYTDType,
@@ -150,7 +150,7 @@ object FilterFactory {
             FilterTypeEnum.FilterProfitPercentageType -> FilterProfitPercentageType(context)
             FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
             FilterTypeEnum.FilterAssetNoteType -> FilterAssetNoteType(context)
-            FilterTypeEnum.FilterCommissionType -> FilterCommissionType(context)
+            FilterTypeEnum.FilterFeeType -> FilterFeeType(context)
             FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
             FilterTypeEnum.FilterDividendPaidType -> FilterDividendPaidType(context)
             FilterTypeEnum.FilterDividendPaidYTDType -> FilterDividendPaidYTDType(context)
@@ -1212,7 +1212,7 @@ class FilterPurchasePriceType(
     context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
-        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+        val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
 
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {
@@ -1235,7 +1235,7 @@ class FilterProfitType(
     context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
-        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+        val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
         val profit = if (stockItem.onlineMarketData.marketPrice > 0.0) {
             totalQuantity * stockItem.onlineMarketData.marketPrice - totalPrice
         } else {
@@ -1263,8 +1263,8 @@ class FilterProfitPercentageType(
     context: Context
 ) : FilterDoublePercentageBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
-        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
-        val total = totalPrice + totalCommission
+        val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
+        val total = totalPrice + totalFee
         val profitPercentage =
             if (stockItem.onlineMarketData.marketPrice > 0.0 && total > 0.0) {
                 (totalQuantity * stockItem.onlineMarketData.marketPrice - total) / total
@@ -1293,7 +1293,7 @@ class FilterAssetType(
     val context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
-        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+        val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
         val asset = if (stockItem.onlineMarketData.marketPrice > 0.0) {
             totalQuantity * stockItem.onlineMarketData.marketPrice
         } else {
@@ -1348,30 +1348,30 @@ class FilterAssetType(
         }
 }
 
-// Commission
-class FilterCommissionType(
+// Fee
+class FilterFeeType(
     val context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
-//    var commission = 0.0
+//    var fee = 0.0
 //    stockItem.assets.forEach { item ->
-//      commission += item.commission
+//      fee += item.fee
 //    }
 
-        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+        val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
 
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {
-                totalCommission > filterValue
+                totalFee > filterValue
             }
             FilterSubTypeEnum.LessThanType -> {
-                totalCommission > 0.0 && totalCommission < filterValue
+                totalFee > 0.0 && totalFee < filterValue
             }
             FilterSubTypeEnum.IsPresentType -> {
-                totalCommission > 0.0
+                totalFee > 0.0
             }
             FilterSubTypeEnum.IsNotPresentType -> {
-                totalCommission == 0.0
+                totalFee == 0.0
             }
             else -> false
         }
@@ -1385,7 +1385,7 @@ class FilterCommissionType(
             FilterSubTypeEnum.IsNotPresentType,
         )
 
-    override val typeId = FilterTypeEnum.FilterCommissionType
+    override val typeId = FilterTypeEnum.FilterFeeType
     override var data: String = ""
         get() = when (subType) {
             FilterSubTypeEnum.GreaterThanType,
@@ -1398,8 +1398,8 @@ class FilterCommissionType(
             field = value
             filterValue = strToDouble(value)
         }
-    override val displayName = context.getString(R.string.filter_commission_name)
-    override val desc = context.getString(R.string.filter_commission_desc)
+    override val displayName = context.getString(R.string.filter_fee_name)
+    override val desc = context.getString(R.string.filter_fee_desc)
     override val displayData: SpannableStringBuilder
         get() = when (subType) {
             FilterSubTypeEnum.GreaterThanType,
@@ -1502,7 +1502,7 @@ class FilterQuantityType(
     context: Context
 ) : FilterIntBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
-        val (totalQuantity, totalPrice, totalCommission) = getAssets(stockItem.assets)
+        val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
 
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {

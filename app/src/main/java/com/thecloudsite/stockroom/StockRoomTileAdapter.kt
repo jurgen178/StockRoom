@@ -79,7 +79,7 @@ class StockRoomTile1Adapter internal constructor(
       holder.binding.stockRoomTileItemGroupMarker
     )
 
-    val (quantity, asset, commission) = getAssets(current.assets)
+    val (quantity, asset, fee) = getAssets(current.assets)
 
     if (current.onlineMarketData.marketPrice > 0.0) {
       val marketValues = getMarketValues(current.onlineMarketData)

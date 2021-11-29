@@ -611,7 +611,7 @@ var events: List<Event>
     var sharesPerQuantity: Int?,
     var expirationDate: Long?,
     var premium: Double?,
-    var commission: Double?
+    var fee: Double?
   )
 
   data class EventJson(
@@ -693,7 +693,7 @@ var events: List<Event>
             sharesPerQuantity = asset.sharesPerQuantity,
             expirationDate = asset.expirationDate,
             premium = asset.premium,
-            commission = asset.commission
+            fee = asset.fee
           )
         },
         events = stockItem.events.map { event ->

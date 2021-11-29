@@ -98,27 +98,27 @@ class AssetTimelineAdapter(
 
         stockTransactions += if (asset.quantity > 0.0) {
           var price = DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
-          if (asset.commission > 0.0) {
-            price += "+${DecimalFormat(DecimalFormat2To4Digits).format(asset.commission)}"
+          if (asset.fee > 0.0) {
+            price += "+${DecimalFormat(DecimalFormat2To4Digits).format(asset.fee)}"
           }
           context.getString(
             R.string.timeline_asset_bought,
             date,
             DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
             price,
-            DecimalFormat(DecimalFormat2Digits).format(asset.quantity * asset.price + asset.commission)
+            DecimalFormat(DecimalFormat2Digits).format(asset.quantity * asset.price + asset.fee)
           )
         } else {
           var price = DecimalFormat(DecimalFormat2To4Digits).format(asset.price)
-          if (asset.commission > 0.0) {
-            price += "-${DecimalFormat(DecimalFormat2To4Digits).format(asset.commission)}"
+          if (asset.fee > 0.0) {
+            price += "-${DecimalFormat(DecimalFormat2To4Digits).format(asset.fee)}"
           }
           context.getString(
             R.string.timeline_asset_sold,
             date,
             DecimalFormat(DecimalFormatQuantityDigits).format(-asset.quantity),
             price,
-            DecimalFormat(DecimalFormat2Digits).format(-asset.quantity * asset.price - asset.commission)
+            DecimalFormat(DecimalFormat2Digits).format(-asset.quantity * asset.price - asset.fee)
           )
         }
       }

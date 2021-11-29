@@ -31,7 +31,7 @@ import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.databinding.FragmentTransactionsBinding
 import com.thecloudsite.stockroom.utils.DecimalFormatQuantityDigits
 import com.thecloudsite.stockroom.utils.DecimalFormat2To4Digits
-import com.thecloudsite.stockroom.utils.commissionScale
+import com.thecloudsite.stockroom.utils.feeScale
 import com.thecloudsite.stockroom.utils.to2To8Digits
 import java.text.DecimalFormat
 
@@ -115,7 +115,7 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
   private fun getAssetData(
     quantity: Double,
     price: Double,
-    commission: Double
+    fee: Double
   ): SpannableStringBuilder {
     val assetStr = SpannableStringBuilder().append(
       "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
@@ -123,9 +123,9 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
       }=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}"
     )
 
-    if (commission > 0.0) {
-      assetStr.scale(commissionScale) {
-        append("+${DecimalFormat(DecimalFormat2To4Digits).format(commission)}")
+    if (fee > 0.0) {
+      assetStr.scale(feeScale) {
+        append("+${DecimalFormat(DecimalFormat2To4Digits).format(fee)}")
       }
     }
 
@@ -153,8 +153,8 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
           symbol = asset.symbol,
           type = TransactionType.AssetBoughtType,
           account = asset.account,
-          value = asset.quantity * asset.price + asset.commission,
-          amountStr = getAssetData(asset.quantity, asset.price, asset.commission),
+          value = asset.quantity * asset.price + asset.fee,
+          amountStr = getAssetData(asset.quantity, asset.price, asset.fee),
         )
       )
 
@@ -174,8 +174,8 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
           symbol = asset.symbol,
           type = TransactionType.AssetSoldType,
           account = asset.account,
-          value = -asset.quantity * asset.price + asset.commission,
-          amountStr = getAssetData(-asset.quantity, asset.price, asset.commission),
+          value = -asset.quantity * asset.price + asset.fee,
+          amountStr = getAssetData(-asset.quantity, asset.price, asset.fee),
         )
       )
 

@@ -1077,13 +1077,13 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           value = stockItem.onlineMarketData.marketPrice
         }
         property == ".purchaseprice" -> {
-          val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+          val (quantity, price, fee) = com.thecloudsite.stockroom.utils.getAssets(
             stockItem.assets
           )
           value = price / quantity
         }
         property == ".quantity" -> {
-          val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+          val (quantity, price, fee) = com.thecloudsite.stockroom.utils.getAssets(
             stockItem.assets
           )
           value = quantity
@@ -1113,7 +1113,7 @@ class CalcViewModel(application: Application) : AndroidViewModel(application) {
           value = stockItem.onlineMarketData.marketPrice
           if (value == 0.0) {
             // Offline: use purchase price
-            val (quantity, price, commission) = com.thecloudsite.stockroom.utils.getAssets(
+            val (quantity, price, fee) = com.thecloudsite.stockroom.utils.getAssets(
               stockItem.assets
             )
             if (quantity != 0.0) {
