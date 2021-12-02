@@ -69,21 +69,16 @@ limitations under the License. -->
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textViewAssetQuantity"
+        android:id="@+id/textViewAssetMarkerColor"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:gravity="end"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewAssetPrice"
+        android:id="@+id/textViewAssetQuantity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -94,7 +89,7 @@ limitations under the License. -->
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewAssetTotal"
+        android:id="@+id/textViewAssetPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -105,28 +100,28 @@ limitations under the License. -->
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewAssetChange"
+        android:id="@+id/textViewAssetTotal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewAssetValue"
+        android:id="@+id/textViewAssetChange"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/text_view_asset_fee"
+        android:id="@+id/textViewAssetValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -137,17 +132,18 @@ limitations under the License. -->
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewAssetDate"
+        android:id="@+id/text_view_asset_fee"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/textViewAssetAccount"
+        android:id="@+id/textViewAssetDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -156,9 +152,8 @@ limitations under the License. -->
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="parent"
         />
-
     <TextView
-        android:id="@+id/textViewAssetNote"
+        android:id="@+id/textViewAssetAccount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -169,11 +164,22 @@ limitations under the License. -->
         />
 
     <TextView
+        android:id="@+id/textViewAssetNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
         android:id="@+id/textViewAssetDelete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toTopOf="parent"
         app:drawableStartCompat="@drawable/ic_action_delete2"
         app:drawableTint="@color/colorPrimaryDark"
@@ -183,66 +189,73 @@ limitations under the License. -->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="130dp"
+        app:layout_constraintGuide_begin="4dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="240dp"
+        app:layout_constraintGuide_begin="130dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="360dp"
+        app:layout_constraintGuide_begin="240dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="570dp"
+        app:layout_constraintGuide_begin="360dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="670dp"
+        app:layout_constraintGuide_begin="570dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="770dp"
+        app:layout_constraintGuide_begin="670dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="920dp"
+        app:layout_constraintGuide_begin="770dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="1070dp"
+        app:layout_constraintGuide_begin="920dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="1220dp"
+        app:layout_constraintGuide_begin="1070dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="1220dp"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
