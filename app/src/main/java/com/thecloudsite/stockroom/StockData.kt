@@ -887,27 +887,25 @@ data class CoingeckoChartData(
   var prices: List<MutableList<Double>>? = null
 )
 
-interface DataProviderSymbolsData {
-  fun getDataProviderSymbolsDataAsync(
-  ): Deferred<Response<List<DataProviderSymbolEntry>>>
-}
 
-interface DataProviderSymbolsDataCoingecko : DataProviderSymbolsData {
+data class DataProviderSymbolEntry(
+  var id: String,
+  var name: String,
+)
+
+interface DataProviderSymbolsDataCoingecko {
   // https://api.coingecko.com/api/v3/coins/list
   @GET("list")
-  override fun getDataProviderSymbolsDataAsync(
-  ): Deferred<Response<List<DataProviderSymbolEntry>>>
+  fun getDataProviderSymbolsDataAsync(
+  ): Deferred<Response<List<DataProviderCoingeckoSymbolEntry>>>
 }
 // [{"id":"01coin","symbol":"zoc","name":"01coin"},{"id":"0-5x-long-algorand-token","symbol":"algohalf","name":"0.5X Long Algorand Token"},{"id":
 
 @JsonClass(generateAdapter = true)
-data class DataProviderSymbolEntry(
+data class DataProviderCoingeckoSymbolEntry(
   var id: String,
   var symbol: String,
   var name: String,
-
-  // only present in Coinpaprika, allow null value (Boolean?) to make it optional
-  var is_active: Boolean?,
 )
 /*
 [
@@ -919,24 +917,41 @@ data class DataProviderSymbolEntry(
 {"id":"0-5x-long-bitcoin-sv-token","symbol":"bsvhalf","name":"0.5X Long Bitcoin SV Token"},
  */
 
-interface DataProviderSymbolsDataCoinpaprika : DataProviderSymbolsData {
+interface DataProviderSymbolsDataCoinpaprika {
   // https://api.coinpaprika.com/v1/coins
 
   @GET("coins")
-  override fun getDataProviderSymbolsDataAsync(
-  ): Deferred<Response<List<DataProviderSymbolEntry>>>
+  fun getDataProviderSymbolsDataAsync(
+  ): Deferred<Response<List<DataProviderCoinpaprikaSymbolEntry>>>
 }
 // [{"id":"btc-bitcoin","name":"Bitcoin","symbol":"BTC","rank":1,"is_new":false,"is_active":true,"type":"coin"},{"id":
+@JsonClass(generateAdapter = true)
+data class DataProviderCoinpaprikaSymbolEntry(
+  var id: String,
+  var symbol: String,
+  var name: String,
+  var is_active: Boolean,
+)
 
 
-interface DataProviderSymbolsDataGemini : DataProviderSymbolsData {
+interface DataProviderSymbolsDataGemini {
   // https://api.gemini.com/v1/symbols
 
   @GET("symbols")
-  override fun getDataProviderSymbolsDataAsync(
-  ): Deferred<Response<List<DataProviderSymbolEntry>>>
+  fun getDataProviderSymbolsDataAsync(
+  ): Deferred<Response<List<String>>>
 }
 // ["btcusd","btcgusd","btcdai","btcgbp","btceur","btcsgd","ethbtc","ethusd",
+@JsonClass(generateAdapter = true)
+data class DataProviderGeminiSymbolEntry(
+  var id: String,
+  var symbol: String,
+  var name: String,
+
+  // only present in Coinpaprika, allow null value (Boolean?) to make it optional
+  var is_active: Boolean?,
+)
+
 
 data class StockChartData(
   var symbol: String,

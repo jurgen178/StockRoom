@@ -25,8 +25,7 @@ import kotlinx.coroutines.launch
 // Get all the available symbols from the provider.
 class DataProviderSymbolsViewModelCoingecko(application: Application) : AndroidViewModel(application) {
 
-  private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
-
+  private val dataProviderSymbolsRepository: DataProviderCoingeckoSymbolsRepository = DataProviderCoingeckoSymbolsRepository()
   val symbols: LiveData<List<DataProviderSymbolEntry>> = dataProviderSymbolsRepository.symbols
 
 //  fun getData(api: () -> DataProviderSymbolsData?) {
@@ -37,33 +36,31 @@ class DataProviderSymbolsViewModelCoingecko(application: Application) : AndroidV
 
   fun getData() {
     viewModelScope.launch {
-      dataProviderSymbolsRepository.getData { CoingeckoSymbolsApiFactory.coingeckoApi }
+      dataProviderSymbolsRepository.getData()
     }
   }
 }
 
 class DataProviderSymbolsViewModelCoinpaprika(application: Application) : AndroidViewModel(application) {
 
-  private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
-
+  private val dataProviderSymbolsRepository: DataProviderCoinpaprikaSymbolsRepository = DataProviderCoinpaprikaSymbolsRepository()
   val symbols: LiveData<List<DataProviderSymbolEntry>> = dataProviderSymbolsRepository.symbols
 
   fun getData() {
     viewModelScope.launch {
-      dataProviderSymbolsRepository.getData { CoinpaprikaSymbolsApiFactory.coinpaprikaApi }
+      dataProviderSymbolsRepository.getData()
     }
   }
 }
 
 class DataProviderSymbolsViewModelGemini(application: Application) : AndroidViewModel(application) {
 
-  private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
-
+  private val dataProviderSymbolsRepository: DataProviderGeminiSymbolsRepository = DataProviderGeminiSymbolsRepository()
   val symbols: LiveData<List<DataProviderSymbolEntry>> = dataProviderSymbolsRepository.symbols
 
   fun getData() {
     viewModelScope.launch {
-      dataProviderSymbolsRepository.getData { GeminiSymbolsApiFactory.geminiApi }
+      dataProviderSymbolsRepository.getData()
     }
   }
 }

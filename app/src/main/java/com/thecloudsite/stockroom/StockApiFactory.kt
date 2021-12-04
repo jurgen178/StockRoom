@@ -123,10 +123,10 @@ object StockMarketDataApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        yahooApi = null
+        marketDataApi = null
       } else {
         url = checkUrl(_url)
-        yahooApi = try {
+        marketDataApi = try {
           retrofit().create(YahooApiMarketData::class.java)
         } catch (e: Exception) {
           null
@@ -139,7 +139,7 @@ object StockMarketDataApiFactory {
     update(defaultUrl)
   }
 
-  var yahooApi: YahooApiMarketData? = null
+  var marketDataApi: YahooApiMarketData? = null
 }
 
 //StockApiFactory to create the Coingecko Api
@@ -163,10 +163,10 @@ object StockMarketDataCoingeckoApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        coingeckoApi = null
+        marketDataApi = null
       } else {
         url = checkUrl(_url)
-        coingeckoApi = try {
+        marketDataApi = try {
           retrofit().create(CoingeckoApiMarketData::class.java)
         } catch (e: Exception) {
           null
@@ -179,7 +179,7 @@ object StockMarketDataCoingeckoApiFactory {
     update(defaultUrl)
   }
 
-  var coingeckoApi: CoingeckoApiMarketData? = null
+  var marketDataApi: CoingeckoApiMarketData? = null
 }
 
 object StockMarketDataCoinpaprikaApiFactory {
@@ -202,10 +202,10 @@ object StockMarketDataCoinpaprikaApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        coinpaprikaApi = null
+        marketDataApi = null
       } else {
         url = checkUrl(_url)
-        coinpaprikaApi = try {
+        marketDataApi = try {
           retrofit().create(CoinpaprikaApiMarketData::class.java)
         } catch (e: Exception) {
           null
@@ -218,7 +218,7 @@ object StockMarketDataCoinpaprikaApiFactory {
     update(defaultUrl)
   }
 
-  var coinpaprikaApi: CoinpaprikaApiMarketData? = null
+  var marketDataApi: CoinpaprikaApiMarketData? = null
 }
 
 object StockMarketDataGeminiApiFactory {
@@ -241,10 +241,10 @@ object StockMarketDataGeminiApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        geminiApi = null
+        marketDataApi = null
       } else {
         url = checkUrl(_url)
-        geminiApi = try {
+        marketDataApi = try {
           retrofit().create(GeminiApiMarketData::class.java)
         } catch (e: Exception) {
           null
@@ -257,7 +257,7 @@ object StockMarketDataGeminiApiFactory {
     update(defaultUrl)
   }
 
-  var geminiApi: GeminiApiMarketData? = null
+  var marketDataApi: GeminiApiMarketData? = null
 }
 
 object StockRawMarketDataApiFactory {
@@ -324,10 +324,10 @@ object CoingeckoSymbolsApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        coingeckoApi = null
+        dataProviderApi = null
       } else {
         url = checkUrl(_url)
-        coingeckoApi = try {
+        dataProviderApi = try {
           retrofit().create(DataProviderSymbolsDataCoingecko::class.java)
         } catch (e: Exception) {
           null
@@ -340,7 +340,7 @@ object CoingeckoSymbolsApiFactory {
     update(defaultUrl)
   }
 
-  var coingeckoApi: DataProviderSymbolsDataCoingecko? = null
+  var dataProviderApi: DataProviderSymbolsDataCoingecko? = null
 }
 
 object CoinpaprikaSymbolsApiFactory {
@@ -365,10 +365,10 @@ object CoinpaprikaSymbolsApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        coinpaprikaApi = null
+        dataProviderApi = null
       } else {
         url = checkUrl(_url)
-        coinpaprikaApi = try {
+        dataProviderApi = try {
           retrofit().create(DataProviderSymbolsDataCoinpaprika::class.java)
         } catch (e: Exception) {
           null
@@ -381,7 +381,7 @@ object CoinpaprikaSymbolsApiFactory {
     update(defaultUrl)
   }
 
-  var coinpaprikaApi: DataProviderSymbolsDataCoinpaprika? = null
+  var dataProviderApi: DataProviderSymbolsDataCoinpaprika? = null
 }
 
 object GeminiSymbolsApiFactory {
@@ -406,10 +406,10 @@ object GeminiSymbolsApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        geminiApi = null
+        dataProviderApi = null
       } else {
         url = checkUrl(_url)
-        geminiApi = try {
+        dataProviderApi = try {
           retrofit().create(DataProviderSymbolsDataGemini::class.java)
         } catch (e: Exception) {
           null
@@ -422,7 +422,7 @@ object GeminiSymbolsApiFactory {
     update(defaultUrl)
   }
 
-  var geminiApi: DataProviderSymbolsDataGemini? = null
+  var dataProviderApi: DataProviderSymbolsDataGemini? = null
 }
 
 object StockYahooChartDataApiFactory {

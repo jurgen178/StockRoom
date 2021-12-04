@@ -101,7 +101,6 @@ class AddActivity : AppCompatActivity() {
 
         dataProviderSymbolsViewModelCoingecko.symbols.observe(this, Observer { symbols ->
             this.dataProviderSymbolsCoingecko = symbols
-                .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
 
             binding.symbolsSpinnerCoingecko.adapter =
                 ArrayAdapter(
@@ -134,8 +133,6 @@ class AddActivity : AppCompatActivity() {
 
         dataProviderSymbolsViewModelCoinpaprika.symbols.observe(this, Observer { symbols ->
             this.dataProviderSymbolsCoinpaprika = symbols
-                .filter { symbol -> symbol.is_active == true }  // is_active != null
-                .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
 
             binding.symbolsSpinnerCoinpaprika.adapter =
                 ArrayAdapter(
@@ -167,8 +164,6 @@ class AddActivity : AppCompatActivity() {
 
         dataProviderSymbolsViewModelGemini.symbols.observe(this, Observer { symbols ->
             this.dataProviderSymbolsGemini = symbols
-                .filter { symbol -> symbol.is_active == true }  // is_active != null
-                .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
 
             binding.symbolsSpinnerGemini.adapter =
                 ArrayAdapter(

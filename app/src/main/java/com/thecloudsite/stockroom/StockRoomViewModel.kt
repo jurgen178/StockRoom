@@ -215,10 +215,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     private val repository: StockRoomRepository
     private val stockMarketDataRepository: StockMarketDataRepository =
         StockMarketDataRepository(
-            { StockMarketDataApiFactory.yahooApi },
-            { StockMarketDataCoingeckoApiFactory.coingeckoApi },
-            { StockMarketDataCoinpaprikaApiFactory.coinpaprikaApi },
-            { StockMarketDataGeminiApiFactory.geminiApi }
+            { StockMarketDataApiFactory.marketDataApi },
+            { StockMarketDataCoingeckoApiFactory.marketDataApi },
+            { StockMarketDataCoinpaprikaApiFactory.marketDataApi },
+            { StockMarketDataGeminiApiFactory.marketDataApi }
         )
 
     // Using LiveData and caching returns has several benefits:

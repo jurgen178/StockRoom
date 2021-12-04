@@ -288,10 +288,10 @@ abstract class StockRoomDatabase : RoomDatabase() {
             if (isOnline(context)) {
                 val stockMarketDataRepository: StockMarketDataRepository =
                     StockMarketDataRepository(
-                        { StockMarketDataApiFactory.yahooApi },
-                        { StockMarketDataCoingeckoApiFactory.coingeckoApi },
-                        { StockMarketDataCoinpaprikaApiFactory.coinpaprikaApi },
-                        { StockMarketDataGeminiApiFactory.geminiApi }
+                        { StockMarketDataApiFactory.marketDataApi },
+                        { StockMarketDataCoingeckoApiFactory.marketDataApi },
+                        { StockMarketDataCoinpaprikaApiFactory.marketDataApi },
+                        { StockMarketDataGeminiApiFactory.marketDataApi }
                     )
 
                 data class AssetPreset(
