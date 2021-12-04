@@ -815,7 +815,8 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
                 stockRoomViewModel.updateAlertAboveSync(
                     alert.symbol,
                     alert.marketPrice * 1.05,
-                    alert.alertAboveNote
+                    //alert.alertAboveNote
+                    ""
                 )
 
                 stockRoomViewModel.logDebug("Alert '$title'")
@@ -846,10 +847,10 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
                         stockRoomViewModel.updateAlertBelowSync(
                             alert.symbol,
                             alert.marketPrice * 0.95,
-                            alert.alertBelowNote
+                            //alert.alertBelowNote
+                            ""
                         )
-                    }else
-                    {
+                    } else {
                         stockRoomViewModel.updateAlertBelowSync(
                             alert.symbol,
                             0.0,

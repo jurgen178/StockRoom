@@ -55,7 +55,8 @@ data class MarketDataResult
 class StockMarketDataRepository(
     private val yahooApi: () -> YahooApiMarketData?,
     private val coingeckoApi: () -> CoingeckoApiMarketData?,
-    private val coinpaprikaApi: () -> CoinpaprikaApiMarketData?
+    private val coinpaprikaApi: () -> CoinpaprikaApiMarketData?,
+    private val geminiApi: () -> GeminiApiMarketData?,
 ) : BaseRepository() {
 
     private val yahooMarketData = MutableLiveData<List<OnlineMarketData>>()
@@ -70,9 +71,14 @@ class StockMarketDataRepository(
     private val coinpaprikaMarketDataList: LiveData<List<OnlineMarketData>>
         get() = coinpaprikaMarketData
 
+    private val geminiMarketData = MutableLiveData<List<OnlineMarketData>>()
+    private val geminiMarketDataList: LiveData<List<OnlineMarketData>>
+        get() = geminiMarketData
+
     private var yahooMarketSourceDataList: List<OnlineMarketData> = emptyList()
     private var coingeckoMarketSourceDataList: List<OnlineMarketData> = emptyList()
     private var coinpaprikaMarketSourceDataList: List<OnlineMarketData> = emptyList()
+    private var geminiMarketSourceDataList: List<OnlineMarketData> = emptyList()
     val onlineMarketDataList = MediatorLiveData<List<OnlineMarketData>>()
 
     init {
@@ -84,7 +90,8 @@ class StockMarketDataRepository(
                     combineData(
                         yahooMarketSourceDataList,
                         coingeckoMarketSourceDataList,
-                        coinpaprikaMarketSourceDataList
+                        coinpaprikaMarketSourceDataList,
+                        geminiMarketSourceDataList
                     )
                 )
             }
@@ -97,7 +104,8 @@ class StockMarketDataRepository(
                     combineData(
                         yahooMarketSourceDataList,
                         coingeckoMarketSourceDataList,
-                        coinpaprikaMarketSourceDataList
+                        coinpaprikaMarketSourceDataList,
+                        geminiMarketSourceDataList
                     )
                 )
             }
@@ -110,7 +118,22 @@ class StockMarketDataRepository(
                     combineData(
                         yahooMarketSourceDataList,
                         coingeckoMarketSourceDataList,
-                        coinpaprikaMarketSourceDataList
+                        coinpaprikaMarketSourceDataList,
+                        geminiMarketSourceDataList
+                    )
+                )
+            }
+        }
+
+        onlineMarketDataList.addSource(geminiMarketDataList) { marketLiveData ->
+            if (marketLiveData != null) {
+                geminiMarketSourceDataList = marketLiveData
+                onlineMarketDataList.postValue(
+                    combineData(
+                        yahooMarketSourceDataList,
+                        coingeckoMarketSourceDataList,
+                        coinpaprikaMarketSourceDataList,
+                        geminiMarketSourceDataList
                     )
                 )
             }
@@ -120,13 +143,15 @@ class StockMarketDataRepository(
     private fun combineData(
         list1: List<OnlineMarketData>,
         list2: List<OnlineMarketData>,
-        list3: List<OnlineMarketData>
+        list3: List<OnlineMarketData>,
+        list4: List<OnlineMarketData>,
     ): List<OnlineMarketData> {
 
         val combinedList: MutableList<OnlineMarketData> = mutableListOf()
         combinedList.addAll(list1)
         combinedList.addAll(list2)
         combinedList.addAll(list3)
+        combinedList.addAll(list4)
 
         return combinedList
     }
@@ -173,6 +198,16 @@ class StockMarketDataRepository(
             marketDataResult.marketState = coinpaprikaResult.marketState
             marketDataResult.delayInMs = coinpaprikaResult.delayInMs
             marketDataResult.msg += coinpaprikaResult.msg
+        }
+
+        val cryptoListGemini = symbols.filter { stock ->
+            stock.type == DataProvider.Gemini
+        }
+        if (cryptoListGemini.isNotEmpty()) {
+            val geminiResult = getGeminiStockData(cryptoListGemini)
+            marketDataResult.marketState = geminiResult.marketState
+            marketDataResult.delayInMs = geminiResult.delayInMs
+            marketDataResult.msg += geminiResult.msg
         }
 
         return marketDataResult
@@ -388,6 +423,45 @@ class StockMarketDataRepository(
         return MarketDataResult(marketState = MarketState.UNKNOWN, delayInMs = -1, msg = "")
     }
 
+    private suspend fun getGeminiStockData(symbols: List<StockSymbol>): MarketDataResult {
+
+        val api: GeminiApiMarketData? = geminiApi()
+
+        if (api != null) {
+
+            val result = queryGeminiStockData(api, symbols)
+
+            // Get all results.
+            val onlineMarketDataResultList = result.first
+            val errorMsg = result.second
+
+            if (onlineMarketDataResultList.isEmpty()) {
+                // no _data.value because this is a background thread
+                geminiMarketData.postValue(onlineMarketDataResultList)
+                return MarketDataResult(
+                    marketState = MarketState.QUOTA_EXCEEDED,
+                    delayInMs = -1,
+                    msg = errorMsg
+                )
+            }
+
+            geminiMarketData.postValue(onlineMarketDataResultList)
+
+            // Crypto is 24h.
+            // Single IP address can send 120 requests per minute.
+            val delayInSeconds = 1
+
+            return MarketDataResult(
+                marketState = MarketState.REGULAR,
+                delayInMs = delayInSeconds * 1000L,
+                msg = ""
+            )
+        }
+
+        geminiMarketData.postValue(emptyList())
+        return MarketDataResult(marketState = MarketState.UNKNOWN, delayInMs = -1, msg = "")
+    }
+
     // used by populateDatabase()
     suspend fun getStockData2(symbols: List<StockSymbol>): List<OnlineMarketData> {
 
@@ -588,6 +662,48 @@ class StockMarketDataRepository(
 //            }
 
         } while (remainingSymbolsToQuery.isNotEmpty())
+
+        return Pair(onlineMarketDataResultList, errorMsg)
+    }
+
+    private suspend fun queryGeminiStockData(
+        api: GeminiApiMarketData,
+        symbols: List<StockSymbol>
+    ): Pair<List<OnlineMarketData>, String> {
+
+        var errorMsg = ""
+
+        // Get online data.
+        val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
+
+        val response: GeminiResponse? = try {
+            apiCall(
+                call = {
+                    updateCounter()
+                    // Get all symbols in one call using https://api.gemini.com/v1/pricefeed.
+                    api.getStockDataAsync("")
+                        .await()
+                }, errorMessage = "Error getting finance data."
+            )
+        } catch (e: Exception) {
+            errorMsg += "StockMarketDataRepository.queryCoingeckoStockData failed, Exception=$e\n"
+            Log.d("StockMarketDataRepository.queryCoingeckoStockData failed", "Exception=$e")
+            null
+        }
+
+        // Add the result.
+        response?.result?.forEach { result ->
+            onlineMarketDataResultList.add(
+                OnlineMarketData(
+                    symbol = result.pair,
+                    name1 = result.pair,
+                    marketPrice = result.price,
+                    marketChange = result.percentChange24h,
+                    marketChangePercent = result.price * result.percentChange24h / 100,
+                    quoteType = "CRYPTOCURRENCY",
+                )
+            )
+        }
 
         return Pair(onlineMarketDataResultList, errorMsg)
     }

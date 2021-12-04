@@ -41,6 +41,7 @@ class DataProviderSymbolsViewModelCoingecko(application: Application) : AndroidV
     }
   }
 }
+
 class DataProviderSymbolsViewModelCoinpaprika(application: Application) : AndroidViewModel(application) {
 
   private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
@@ -50,6 +51,19 @@ class DataProviderSymbolsViewModelCoinpaprika(application: Application) : Androi
   fun getData() {
     viewModelScope.launch {
       dataProviderSymbolsRepository.getData { CoinpaprikaSymbolsApiFactory.coinpaprikaApi }
+    }
+  }
+}
+
+class DataProviderSymbolsViewModelGemini(application: Application) : AndroidViewModel(application) {
+
+  private val dataProviderSymbolsRepository: DataProviderSymbolsRepository = DataProviderSymbolsRepository()
+
+  val symbols: LiveData<List<DataProviderSymbolEntry>> = dataProviderSymbolsRepository.symbols
+
+  fun getData() {
+    viewModelScope.launch {
+      dataProviderSymbolsRepository.getData { GeminiSymbolsApiFactory.geminiApi }
     }
   }
 }

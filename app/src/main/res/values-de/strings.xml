@@ -83,6 +83,7 @@ limitations under the License. -->
     <item>Yahoo Finanzdaten</item>
     <item>Coingecko (Kryptowährung, max 50 Aufrufe/min)</item>
     <item>Coinpaprika (Kryptowährung, aktualisiert alle 2min)</item>
+    <item>Gemini (Kryptowährung, max 120 Aufrufe/min)</item>
   </string-array>
 
   <!-- Preference Titles -->

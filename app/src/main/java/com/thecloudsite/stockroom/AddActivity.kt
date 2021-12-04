@@ -71,11 +71,15 @@ class AddActivity : AppCompatActivity() {
     private lateinit var importRequest: ActivityResultLauncher<String>
 
     private lateinit var stockRoomViewModel: StockRoomViewModel
+
     private lateinit var dataProviderSymbolsViewModelCoingecko: DataProviderSymbolsViewModelCoingecko
     private var dataProviderSymbolsCoingecko: List<DataProviderSymbolEntry> = emptyList()
 
     private lateinit var dataProviderSymbolsViewModelCoinpaprika: DataProviderSymbolsViewModelCoinpaprika
     private var dataProviderSymbolsCoinpaprika: List<DataProviderSymbolEntry> = emptyList()
+
+    private lateinit var dataProviderSymbolsViewModelGemini: DataProviderSymbolsViewModelGemini
+    private var dataProviderSymbolsGemini: List<DataProviderSymbolEntry> = emptyList()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -158,6 +162,39 @@ class AddActivity : AppCompatActivity() {
             }
         }
 
+        dataProviderSymbolsViewModelGemini =
+            ViewModelProvider(this).get(DataProviderSymbolsViewModelGemini::class.java)
+
+        dataProviderSymbolsViewModelGemini.symbols.observe(this, Observer { symbols ->
+            this.dataProviderSymbolsGemini = symbols
+                .filter { symbol -> symbol.is_active == true }  // is_active != null
+                .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
+
+            binding.symbolsSpinnerGemini.adapter =
+                ArrayAdapter(
+                    this,
+                    layout.simple_list_item_1,
+                    this.dataProviderSymbolsGemini.map { symbolEntry ->
+                        symbolEntry.name
+                    })
+        })
+
+        dataProviderSymbolsViewModelGemini.getData()
+
+        binding.symbolsSpinnerGemini.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                binding.editAdd.setText(dataProviderSymbolsGemini[position].id)
+            }
+        }
+
 
         binding.dataproviderSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -175,6 +212,11 @@ class AddActivity : AppCompatActivity() {
                     View.GONE
                 }
                 binding.symbolsSpinnerCoinpaprika.visibility = if (position == 2) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+                binding.symbolsSpinnerGemini.visibility = if (position == 3) {
                     View.VISIBLE
                 } else {
                     View.GONE

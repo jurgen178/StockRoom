@@ -754,6 +754,34 @@ interface CoinpaprikaApiMarketData {
   "percent_from_price_ath":-29.18}}}
 */
 
+
+
+@JsonClass(generateAdapter = true)
+data class GeminiMarketData(
+  val pair: String,
+  var price: Double,
+  var percentChange24h: Double,
+)
+
+@JsonClass(generateAdapter = true)
+data class GeminiResponse(
+  var result: List<GeminiMarketData> = emptyList()
+)
+
+interface GeminiApiMarketData {
+  // https://api.gemini.com/v1/pricefeed
+  @GET("")
+  fun getStockDataAsync(
+    @Path(
+      value = "symbol"
+    ) symbol: String
+  ): Deferred<Response<GeminiResponse>>
+}
+/*
+https://api.gemini.com/v1/pricefeed
+[{"pair":"ENJUSD","price":"3.1012","percentChange24h":"-0.0920"},{"pair":"PAXGUSD","price":"1786.18","percentChange24h":"0.0105"},{"pair":"DOGEBTC","price":"0.00000373","percentChange24h":"0.0000"},{"pair":"COMPUSD","price":"256.1","percentChange24h":"-0.0563"},{"pair":"NMRUSD","price":"40.954","percentChange24h":"0.0075"},{"pair":"SNXUSD","price":"6.9281","percentChange24h":"-0.0503"},{"pair":"MANAUSD","price":"3.93955","percentChange24h":"-0.1048"},{"pair":"LINKBTC","price":"0.00043418","percentChange24h":"-0.0043"},
+*/
+
 interface YahooApiRawMarketData {
   @GET("quote?format=json")
   fun getStockDataAsync(
@@ -866,7 +894,6 @@ interface DataProviderSymbolsData {
 
 interface DataProviderSymbolsDataCoingecko : DataProviderSymbolsData {
   // https://api.coingecko.com/api/v3/coins/list
-
   @GET("list")
   override fun getDataProviderSymbolsDataAsync(
   ): Deferred<Response<List<DataProviderSymbolEntry>>>
@@ -901,6 +928,15 @@ interface DataProviderSymbolsDataCoinpaprika : DataProviderSymbolsData {
 }
 // [{"id":"btc-bitcoin","name":"Bitcoin","symbol":"BTC","rank":1,"is_new":false,"is_active":true,"type":"coin"},{"id":
 
+
+interface DataProviderSymbolsDataGemini : DataProviderSymbolsData {
+  // https://api.gemini.com/v1/symbols
+
+  @GET("symbols")
+  override fun getDataProviderSymbolsDataAsync(
+  ): Deferred<Response<List<DataProviderSymbolEntry>>>
+}
+// ["btcusd","btcgusd","btcdai","btcgbp","btceur","btcsgd","ethbtc","ethusd",
 
 data class StockChartData(
   var symbol: String,

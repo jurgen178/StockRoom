@@ -618,6 +618,7 @@ fun getAssetsRemoveOldestFirst(
             // remove shares from the beginning
             if (asset.quantity < 0.0) {
                 var quantityToRemove = -asset.quantity
+                // (Does not work with different accounts anymore)
                 // for (j in k until i) {
                 for (j in 0 until i) {
                     if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {

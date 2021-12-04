@@ -221,6 +221,45 @@ object StockMarketDataCoinpaprikaApiFactory {
   var coinpaprikaApi: CoinpaprikaApiMarketData? = null
 }
 
+object StockMarketDataGeminiApiFactory {
+  // hhttps://api.gemini.com/v1/pricefeed
+  private var defaultUrl = "https://api.gemini.com/v1/pricefeed"
+  private var url = ""
+
+  // building http request url
+  private fun retrofit(): Retrofit = Retrofit.Builder()
+    .client(
+      OkHttpClient().newBuilder()
+        .build()
+    )
+    .baseUrl(url)
+    .addConverterFactory(MoshiConverterFactory.create())
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .build()
+
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
+        geminiApi = null
+      } else {
+        url = checkUrl(_url)
+        geminiApi = try {
+          retrofit().create(GeminiApiMarketData::class.java)
+        } catch (e: Exception) {
+          null
+        }
+      }
+    }
+  }
+
+  init {
+    update(defaultUrl)
+  }
+
+  var geminiApi: GeminiApiMarketData? = null
+}
+
 object StockRawMarketDataApiFactory {
   // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
   // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
@@ -343,6 +382,47 @@ object CoinpaprikaSymbolsApiFactory {
   }
 
   var coinpaprikaApi: DataProviderSymbolsDataCoinpaprika? = null
+}
+
+object GeminiSymbolsApiFactory {
+
+  // https://api.gemini.com/v1/symbols
+
+  private var defaultUrl = "https://api.gemini.com/v1/"
+  private var url = ""
+
+  // building http request url
+  private fun retrofit(): Retrofit = Retrofit.Builder()
+    .client(
+      OkHttpClient().newBuilder()
+        .build()
+    )
+    .baseUrl(url)
+    .addConverterFactory(MoshiConverterFactory.create())
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .build()
+
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
+        geminiApi = null
+      } else {
+        url = checkUrl(_url)
+        geminiApi = try {
+          retrofit().create(DataProviderSymbolsDataGemini::class.java)
+        } catch (e: Exception) {
+          null
+        }
+      }
+    }
+  }
+
+  init {
+    update(defaultUrl)
+  }
+
+  var geminiApi: DataProviderSymbolsDataGemini? = null
 }
 
 object StockYahooChartDataApiFactory {
