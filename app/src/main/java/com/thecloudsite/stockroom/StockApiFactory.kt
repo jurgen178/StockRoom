@@ -53,6 +53,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 // https://api.coinpaprika.com/v1/tickers/ada-cardano
 // {"id":"ada-cardano","name":"Cardano","symbol":"ADA","rank":4,"circulating_supply":31112484646,"total_supply":45000000000,"max_supply":45000000000,"beta_value":0.994793,"first_data_at":"2017-10-01T00:00:00Z","last_updated":"2021-05-17T04:48:39Z","quotes":{"USD":{"price":2.12002421,"volume_24h":8503083622.9605,"volume_24h_change_24h":-16.85,"market_cap":65959220682,"market_cap_change_24h":-8.4,"percent_change_15m":-0.27,"percent_change_30m":0.45,"percent_change_1h":0.39,"percent_change_6h":-4.21,"percent_change_12h":-5.03,"percent_change_24h":-8.4,"percent_change_7d":20.16,"percent_change_30d":43.97,"percent_change_1y":4064.5,"ath_price":2.46475647,"ath_date":"2021-05-16T07:31:20Z","percent_from_price_ath":-13.99}}}
 
+// https://api.coinpaprika.com/v1/coins/btc-bitcoin/ohlcv/historical?start=2019-01-01&end=2019-01-20
+// [{"time_open":"2019-01-01T00:00:00Z","time_close":"2019-01-01T23:59:59Z","open":3743.13383814,"high":3848.768792,"low":3695.32467935,"close":3846.6792974,"volume":3062073034,"market_cap":65338972677},{"time_open":"2019-01-02T00:00:00Z","time_close":"2019-01-02T23:59:59Z","open":3852.19783968,"high":3951.20469616,"low":3811.88806393,"close":3941.99122065,"volume":3627095860,"market_cap":67250129005},
 
 // No percentage change.
 // https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproducts
@@ -84,13 +86,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 //StockApiFactory to create the Yahoo Api
 object StockMarketDataApiFactory {
-  // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
-  // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
-  private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
-  private var url = ""
+    private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
+    private var url = ""
 
-  //Creating Auth Interceptor to add api_key query in front of all the requests.
+    //Creating Auth Interceptor to add api_key query in front of all the requests.
 /*
   private val authInterceptor = Interceptor { chain ->
     val newUrl = chain.request()
@@ -107,333 +109,333 @@ object StockMarketDataApiFactory {
   }
 */
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
 //      .addInterceptor(authInterceptor)
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        marketDataApi = null
-      } else {
-        url = checkUrl(_url)
-        marketDataApi = try {
-          retrofit().create(YahooApiMarketData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                marketDataApi = null
+            } else {
+                url = checkUrl(_url)
+                marketDataApi = try {
+                    retrofit().create(YahooApiMarketData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var marketDataApi: YahooApiMarketData? = null
+    var marketDataApi: YahooApiMarketData? = null
 }
 
 //StockApiFactory to create the Coingecko Api
 object StockMarketDataCoingeckoApiFactory {
-  // https://api.coingecko.com/api/v3/coins/cartesi/tickers
-  private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
-  private var url = ""
+    // https://api.coingecko.com/api/v3/coins/cartesi/tickers
+    private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        marketDataApi = null
-      } else {
-        url = checkUrl(_url)
-        marketDataApi = try {
-          retrofit().create(CoingeckoApiMarketData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                marketDataApi = null
+            } else {
+                url = checkUrl(_url)
+                marketDataApi = try {
+                    retrofit().create(CoingeckoApiMarketData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var marketDataApi: CoingeckoApiMarketData? = null
+    var marketDataApi: CoingeckoApiMarketData? = null
 }
 
 object StockMarketDataCoinpaprikaApiFactory {
-  // https://api.coinpaprika.com/v1/tickers/
-  private var defaultUrl = "https://api.coinpaprika.com/v1/tickers/"
-  private var url = ""
+    // https://api.coinpaprika.com/v1/tickers/
+    private var defaultUrl = "https://api.coinpaprika.com/v1/tickers/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        marketDataApi = null
-      } else {
-        url = checkUrl(_url)
-        marketDataApi = try {
-          retrofit().create(CoinpaprikaApiMarketData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                marketDataApi = null
+            } else {
+                url = checkUrl(_url)
+                marketDataApi = try {
+                    retrofit().create(CoinpaprikaApiMarketData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var marketDataApi: CoinpaprikaApiMarketData? = null
+    var marketDataApi: CoinpaprikaApiMarketData? = null
 }
 
 object StockMarketDataGeminiApiFactory {
-  // hhttps://api.gemini.com/v1/pricefeed
-  private var defaultUrl = "https://api.gemini.com/v1/"
-  private var url = ""
+    // hhttps://api.gemini.com/v1/pricefeed
+    private var defaultUrl = "https://api.gemini.com/v1/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        marketDataApi = null
-      } else {
-        url = checkUrl(_url)
-        marketDataApi = try {
-          retrofit().create(GeminiApiMarketData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                marketDataApi = null
+            } else {
+                url = checkUrl(_url)
+                marketDataApi = try {
+                    retrofit().create(GeminiApiMarketData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var marketDataApi: GeminiApiMarketData? = null
+    var marketDataApi: GeminiApiMarketData? = null
 }
 
 object StockRawMarketDataApiFactory {
-  // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
-  // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
-  private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
-  private var url = ""
+    private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-      .client(
-          OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
 //      .addInterceptor(authInterceptor)
-              .build()
-      )
-      .baseUrl(url)
-      .addConverterFactory(ScalarsConverterFactory.create())
-      .addCallAdapterFactory(CoroutineCallAdapterFactory())
-      .build()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        yahooApi = null
-      } else {
-        url = checkUrl(_url)
-        yahooApi = try {
-          retrofit().create(YahooApiRawMarketData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                yahooApi = null
+            } else {
+                url = checkUrl(_url)
+                yahooApi = try {
+                    retrofit().create(YahooApiRawMarketData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var yahooApi: YahooApiRawMarketData? = null
+    var yahooApi: YahooApiRawMarketData? = null
 }
 
 object CoingeckoSymbolsApiFactory {
 
-  // https://api.coingecko.com/api/v3/coins/
+    // https://api.coingecko.com/api/v3/coins/
 
-  private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
-  private var url = ""
+    private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        dataProviderApi = null
-      } else {
-        url = checkUrl(_url)
-        dataProviderApi = try {
-          retrofit().create(DataProviderSymbolsDataCoingecko::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                dataProviderApi = null
+            } else {
+                url = checkUrl(_url)
+                dataProviderApi = try {
+                    retrofit().create(DataProviderSymbolsDataCoingecko::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var dataProviderApi: DataProviderSymbolsDataCoingecko? = null
+    var dataProviderApi: DataProviderSymbolsDataCoingecko? = null
 }
 
 object CoinpaprikaSymbolsApiFactory {
 
-  // https://api.coinpaprika.com/v1/coins/
+    // https://api.coinpaprika.com/v1/coins/
 
-  private var defaultUrl = "https://api.coinpaprika.com/v1/"
-  private var url = ""
+    private var defaultUrl = "https://api.coinpaprika.com/v1/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        dataProviderApi = null
-      } else {
-        url = checkUrl(_url)
-        dataProviderApi = try {
-          retrofit().create(DataProviderSymbolsDataCoinpaprika::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                dataProviderApi = null
+            } else {
+                url = checkUrl(_url)
+                dataProviderApi = try {
+                    retrofit().create(DataProviderSymbolsDataCoinpaprika::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var dataProviderApi: DataProviderSymbolsDataCoinpaprika? = null
+    var dataProviderApi: DataProviderSymbolsDataCoinpaprika? = null
 }
 
 object GeminiSymbolsApiFactory {
 
-  // https://api.gemini.com/v1/symbols
+    // https://api.gemini.com/v1/symbols
 
-  private var defaultUrl = "https://api.gemini.com/v1/"
-  private var url = ""
+    private var defaultUrl = "https://api.gemini.com/v1/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        dataProviderApi = null
-      } else {
-        url = checkUrl(_url)
-        dataProviderApi = try {
-          retrofit().create(DataProviderSymbolsDataGemini::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                dataProviderApi = null
+            } else {
+                url = checkUrl(_url)
+                dataProviderApi = try {
+                    retrofit().create(DataProviderSymbolsDataGemini::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var dataProviderApi: DataProviderSymbolsDataGemini? = null
+    var dataProviderApi: DataProviderSymbolsDataGemini? = null
 }
 
 object StockYahooChartDataApiFactory {
 
-  // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
-  // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
+    // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
+    // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
 
-  private var defaultUrl = "https://query2.finance.yahoo.com/v8/finance/"
-  private var url = ""
+    private var defaultUrl = "https://query2.finance.yahoo.com/v8/finance/"
+    private var url = ""
 
-  //Creating Auth Interceptor to add api_key query in front of all the requests.
+    //Creating Auth Interceptor to add api_key query in front of all the requests.
 /*
   private val authInterceptor = Interceptor { chain ->
     val newUrl = chain.request()
@@ -450,124 +452,165 @@ object StockYahooChartDataApiFactory {
   }
 */
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
 //      .addInterceptor(authInterceptor)
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        chartDataApi = null
-      } else {
-        url = checkUrl(_url)
-        chartDataApi = try {
-          retrofit().create(YahooApiChartData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                chartDataApi = null
+            } else {
+                url = checkUrl(_url)
+                chartDataApi = try {
+                    retrofit().create(YahooApiChartData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var chartDataApi: YahooApiChartData? = null
+    var chartDataApi: YahooApiChartData? = null
 }
 
 object StockCoingeckoChartDataApiFactory {
 
-  // https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=1
+    // https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=1
 
-  private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
-  private var url = ""
+    private var defaultUrl = "https://api.coingecko.com/api/v3/coins/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        chartDataApi = null
-      } else {
-        url = checkUrl(_url)
-        chartDataApi = try {
-          retrofit().create(CoingeckoApiChartData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                chartDataApi = null
+            } else {
+                url = checkUrl(_url)
+                chartDataApi = try {
+                    retrofit().create(CoingeckoApiChartData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var chartDataApi: CoingeckoApiChartData? = null
+    var chartDataApi: CoingeckoApiChartData? = null
+}
+
+object StockCoinpaprikaChartDataApiFactory {
+
+    // https://api.coinpaprika.com/v1/coins/btc-bitcoin/ohlcv/historical?start=2019-01-01&end=2019-01-20
+
+    private var defaultUrl = "https://api.coinpaprika.com/v1/coins/"
+    private var url = ""
+
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
+
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                chartDataApi = null
+            } else {
+                url = checkUrl(_url)
+                chartDataApi = try {
+                    retrofit().create(CoinpaprikaApiChartData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+    }
+
+    init {
+        update(defaultUrl)
+    }
+
+    var chartDataApi: CoinpaprikaApiChartData? = null
 }
 
 object StockGeminiChartDataApiFactory {
 
-  // https://api.gemini.com/v2/candles/btcusd/1day
-  // [[1638590400000,52055.9,52644.42,42074.62,49639.7,5200.9713649173],
-  // [1638504000000,56380.25,57673.58,51619.3,52055.9,1784.7723694009],
-  // [1638417600000,56362.19,57277.92,56000,56380.25,1142.2925018029],
+    // https://api.gemini.com/v2/candles/btcusd/1day
+    // [[1638590400000,52055.9,52644.42,42074.62,49639.7,5200.9713649173],
+    // [1638504000000,56380.25,57673.58,51619.3,52055.9,1784.7723694009],
+    // [1638417600000,56362.19,57277.92,56000,56380.25,1142.2925018029],
 
-  private var defaultUrl = "https://api.gemini.com/v2/candles/"
-  private var url = ""
+    private var defaultUrl = "https://api.gemini.com/v2/candles/"
+    private var url = ""
 
-  // building http request url
-  private fun retrofit(): Retrofit = Retrofit.Builder()
-    .client(
-      OkHttpClient().newBuilder()
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    )
-    .baseUrl(url)
-    .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .build()
 
-  fun update(_url: String) {
-    if (url != _url) {
-      if (_url.isBlank()) {
-        url = ""
-        chartDataApi = null
-      } else {
-        url = checkUrl(_url)
-        chartDataApi = try {
-          retrofit().create(GeminiApiChartData::class.java)
-        } catch (e: Exception) {
-          null
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                chartDataApi = null
+            } else {
+                url = checkUrl(_url)
+                chartDataApi = try {
+                    retrofit().create(GeminiApiChartData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-      }
     }
-  }
 
-  init {
-    update(defaultUrl)
-  }
+    init {
+        update(defaultUrl)
+    }
 
-  var chartDataApi: GeminiApiChartData? = null
+    var chartDataApi: GeminiApiChartData? = null
 }
 
 /*

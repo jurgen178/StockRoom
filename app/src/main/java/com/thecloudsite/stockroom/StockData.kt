@@ -885,6 +885,35 @@ data class CoingeckoChartData(
     var prices: List<MutableList<Double>>? = null
 )
 
+
+interface CoinpaprikaApiChartData {
+// https://api.coinpaprika.com/v1/coins/btc-bitcoin/ohlcv/historical?start=2019-01-01&end=2019-01-20
+
+    @GET("{symbol}/ohlcv/historical")
+    fun getCoinpaprikaChartDataAsync(
+        @Path(
+            value = "symbol"
+        ) symbol: String,
+        @Query(
+            value = "start"
+        ) start: String,
+        @Query(
+            value = "end"
+        ) end: String
+    ): Deferred<Response<List<CoinpaprikaChartData>>>
+}
+// [{"time_open":"2019-01-01T00:00:00Z","time_close":"2019-01-01T23:59:59Z","open":3743.13383814,"high":3848.768792,"low":3695.32467935,"close":3846.6792974,"volume":3062073034,"market_cap":65338972677},{"time_open":"2019-01-02T00:00:00Z","time_close":"2019-01-02T23:59:59Z","open":3852.19783968,"high":3951.20469616,"low":3811.88806393,"close":3941.99122065,"volume":3627095860,"market_cap":67250129005},
+
+@JsonClass(generateAdapter = true)
+data class CoinpaprikaChartData(
+    var time_open: Double,
+    var open: Double,
+    var high: Double,
+    var low: Double,
+    var close: Double
+)
+
+
 interface GeminiApiChartData {
     // https://api.gemini.com/v2/candles/btcusd/1day
     // [[1638590400000,52055.9,52644.42,42074.62,49639.7,5200.9713649173],

@@ -24,6 +24,7 @@ import java.util.Locale
 class StockChartDataRepository(
     private val yahooApi: () -> YahooApiChartData?,
     private val coingeckoApi: () -> CoingeckoApiChartData?,
+    private val coinpaprikaApi: () -> CoinpaprikaApiChartData?,
     private val geminiApi: () -> GeminiApiChartData?
 ) : BaseRepository() {
 
@@ -161,6 +162,62 @@ class StockChartDataRepository(
                     low = y,
                     open = y,
                     close = y
+                )
+            }
+        }
+
+        return emptyList()
+    }
+
+    suspend fun getCoinpaprikaChartData(
+        stockSymbol: StockSymbol,
+        start: Long,
+        end: Long
+    ) {
+        _data.value =
+            StockChartData(
+                symbol = stockSymbol.symbol,
+                stockDataEntries = getCoinpaprikaChartDataEntries(stockSymbol, start, end)
+            )
+    }
+
+    private suspend fun getCoinpaprikaChartDataEntries(
+        stockSymbol: StockSymbol,
+        start: Long,
+        end: Long
+    ): List<StockDataEntry> {
+
+        val api: CoinpaprikaApiChartData = coinpaprikaApi() ?: return emptyList()
+
+        val response: List<CoinpaprikaChartData>? = try {
+            apiCall(
+                call = {
+                    updateCounter()
+                    api.getCoinpaprikaChartDataAsync(
+                        stockSymbol.symbol.lowercase(Locale.ROOT),
+                        "{start}",
+                        "{end}"
+                    )
+                        .await()
+                },
+                errorMessage = "Error getting finance data."
+            )
+        } catch (e: Exception) {
+            Log.d("StockChartDataRepository.getCoinpaprikaChartDataAsync() failed", "Exception=$e")
+            null
+        }
+
+        if (response != null) {
+            var index = 0.0
+            return response.map { price ->
+                val y = price.time_open
+                StockDataEntry(
+                    dateTimePoint = (price.time_open / 1000.0).toLong(),
+                    x = index++,
+                    high = price.high,
+                    low = price.low,
+                    open = price.open,
+                    close = price.close
                 )
             }
         }
