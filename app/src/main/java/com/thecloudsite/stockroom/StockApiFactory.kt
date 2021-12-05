@@ -466,10 +466,10 @@ object StockYahooChartDataApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        yahooApi = null
+        chartDataApi = null
       } else {
         url = checkUrl(_url)
-        yahooApi = try {
+        chartDataApi = try {
           retrofit().create(YahooApiChartData::class.java)
         } catch (e: Exception) {
           null
@@ -482,7 +482,7 @@ object StockYahooChartDataApiFactory {
     update(defaultUrl)
   }
 
-  var yahooApi: YahooApiChartData? = null
+  var chartDataApi: YahooApiChartData? = null
 }
 
 object StockCoingeckoChartDataApiFactory {
@@ -507,10 +507,10 @@ object StockCoingeckoChartDataApiFactory {
     if (url != _url) {
       if (_url.isBlank()) {
         url = ""
-        coingeckoApi = null
+        chartDataApi = null
       } else {
         url = checkUrl(_url)
-        coingeckoApi = try {
+        chartDataApi = try {
           retrofit().create(CoingeckoApiChartData::class.java)
         } catch (e: Exception) {
           null
@@ -523,7 +523,51 @@ object StockCoingeckoChartDataApiFactory {
     update(defaultUrl)
   }
 
-  var coingeckoApi: CoingeckoApiChartData? = null
+  var chartDataApi: CoingeckoApiChartData? = null
+}
+
+object StockGeminiChartDataApiFactory {
+
+  // https://api.gemini.com/v2/candles/btcusd/1day
+  // [[1638590400000,52055.9,52644.42,42074.62,49639.7,5200.9713649173],
+  // [1638504000000,56380.25,57673.58,51619.3,52055.9,1784.7723694009],
+  // [1638417600000,56362.19,57277.92,56000,56380.25,1142.2925018029],
+
+  private var defaultUrl = "https://api.gemini.com/v2/candles/"
+  private var url = ""
+
+  // building http request url
+  private fun retrofit(): Retrofit = Retrofit.Builder()
+    .client(
+      OkHttpClient().newBuilder()
+        .build()
+    )
+    .baseUrl(url)
+    .addConverterFactory(MoshiConverterFactory.create())
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .build()
+
+  fun update(_url: String) {
+    if (url != _url) {
+      if (_url.isBlank()) {
+        url = ""
+        chartDataApi = null
+      } else {
+        url = checkUrl(_url)
+        chartDataApi = try {
+          retrofit().create(GeminiApiChartData::class.java)
+        } catch (e: Exception) {
+          null
+        }
+      }
+    }
+  }
+
+  init {
+    update(defaultUrl)
+  }
+
+  var chartDataApi: GeminiApiChartData? = null
 }
 
 /*

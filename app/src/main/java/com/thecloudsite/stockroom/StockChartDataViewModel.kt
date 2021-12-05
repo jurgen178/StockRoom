@@ -26,97 +26,160 @@ import java.time.ZonedDateTime
 
 class StockChartDataViewModel(application: Application) : AndroidViewModel(application) {
 
-  private val stockChartDataRepository: StockChartDataRepository =
-    StockChartDataRepository({ StockYahooChartDataApiFactory.yahooApi },
-      { StockCoingeckoChartDataApiFactory.coingeckoApi })
+    private val stockChartDataRepository: StockChartDataRepository =
+        StockChartDataRepository({ StockYahooChartDataApiFactory.chartDataApi },
+            { StockCoingeckoChartDataApiFactory.chartDataApi },
+            { StockGeminiChartDataApiFactory.chartDataApi })
 
-  val chartData: LiveData<StockChartData> = stockChartDataRepository.chartData
+    val chartData: LiveData<StockChartData> = stockChartDataRepository.chartData
 
-  private fun getYahooChartData(
-    stockSymbol: StockSymbol,
-    interval: String,
-    range: String
-  ) {
-    viewModelScope.launch {
-      stockChartDataRepository.getYahooChartData(stockSymbol, interval, range)
+    private fun getYahooChartData(
+        stockSymbol: StockSymbol,
+        interval: String,
+        range: String
+    ) {
+        viewModelScope.launch {
+            stockChartDataRepository.getYahooChartData(stockSymbol, interval, range)
+        }
     }
-  }
 
-  private fun getCoingeckoChartData(
-    stockSymbol: StockSymbol,
-    days: Int
-  ) {
-    viewModelScope.launch {
-      stockChartDataRepository.getCoingeckoChartData(stockSymbol, "usd", days)
+    private fun getCoingeckoChartData(
+        stockSymbol: StockSymbol,
+        days: Int
+    ) {
+        viewModelScope.launch {
+            stockChartDataRepository.getCoingeckoChartData(stockSymbol, "usd", days)
+        }
     }
-  }
 
-  fun getChartData(
-    stockSymbol: StockSymbol,
-    stockViewRange: StockViewRange
-  ) {
-    if (stockSymbol.type == DataProvider.Coingecko) {
-      when (stockViewRange) {
-        StockViewRange.OneDay -> {
-          getCoingeckoChartData(stockSymbol, 1)
+    private fun getGeminiChartData(
+        stockSymbol: StockSymbol,
+        timeframe: String
+    ) {
+        viewModelScope.launch {
+            stockChartDataRepository.getGeminiChartData(stockSymbol, timeframe)
         }
-        StockViewRange.FiveDays -> {
-          getCoingeckoChartData(stockSymbol, 5)
-        }
-        StockViewRange.OneMonth -> {
-          getCoingeckoChartData(stockSymbol, 30)
-        }
-        StockViewRange.ThreeMonth -> {
-          getCoingeckoChartData(stockSymbol, 90)
-        }
-        StockViewRange.YTD -> {
-          val datetimeYTD =
-            ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZoneOffset.systemDefault())
-          val datetime = ZonedDateTime.now()
-          val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
-          val seconds = datetime.toEpochSecond() // in GMT
-          val daysYTD = (seconds - secondsYTD) / 60 / 60 / 24 + 1
-          getCoingeckoChartData(stockSymbol, daysYTD.toInt())
-        }
-        StockViewRange.OneYear -> {
-          getCoingeckoChartData(stockSymbol, 365)
-        }
-        StockViewRange.FiveYears -> {
-          getCoingeckoChartData(stockSymbol, 5 * 365)
-        }
-        StockViewRange.Max -> {
-          getCoingeckoChartData(stockSymbol, 0)
-        }
-      }
-    } else {
-      // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
-      // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
-      when (stockViewRange) {
-        StockViewRange.OneDay -> {
-          getYahooChartData(stockSymbol, "5m", "1d")
-        }
-        StockViewRange.FiveDays -> {
-          getYahooChartData(stockSymbol, "15m", "5d")
-        }
-        StockViewRange.OneMonth -> {
-          getYahooChartData(stockSymbol, "90m", "1mo")
-        }
-        StockViewRange.ThreeMonth -> {
-          getYahooChartData(stockSymbol, "1d", "3mo")
-        }
-        StockViewRange.YTD -> {
-          getYahooChartData(stockSymbol, "1d", "ytd")
-        }
-        StockViewRange.OneYear -> {
-          getYahooChartData(stockSymbol, "1d", "1y")
-        }
-        StockViewRange.FiveYears -> {
-          getYahooChartData(stockSymbol, "1d", "5y")
-        }
-        StockViewRange.Max -> {
-          getYahooChartData(stockSymbol, "1d", "max")
-        }
-      }
     }
-  }
+
+    fun getChartData(
+        stockSymbol: StockSymbol,
+        stockViewRange: StockViewRange
+    ) {
+        if (stockSymbol.type == DataProvider.Coingecko) {
+            when (stockViewRange) {
+                StockViewRange.OneDay -> {
+                    getCoingeckoChartData(stockSymbol, 1)
+                }
+                StockViewRange.FiveDays -> {
+                    getCoingeckoChartData(stockSymbol, 5)
+                }
+                StockViewRange.OneMonth -> {
+                    getCoingeckoChartData(stockSymbol, 30)
+                }
+                StockViewRange.ThreeMonth -> {
+                    getCoingeckoChartData(stockSymbol, 90)
+                }
+                StockViewRange.YTD -> {
+                    val datetimeYTD =
+                        ZonedDateTime.of(
+                            ZonedDateTime.now().year,
+                            1,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0,
+                            ZoneOffset.systemDefault()
+                        )
+                    val datetime = ZonedDateTime.now()
+                    val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
+                    val seconds = datetime.toEpochSecond() // in GMT
+                    val daysYTD = (seconds - secondsYTD) / 60 / 60 / 24 + 1
+                    getCoingeckoChartData(stockSymbol, daysYTD.toInt())
+                }
+                StockViewRange.OneYear -> {
+                    getCoingeckoChartData(stockSymbol, 365)
+                }
+                StockViewRange.FiveYears -> {
+                    getCoingeckoChartData(stockSymbol, 5 * 365)
+                }
+                StockViewRange.Max -> {
+                    getCoingeckoChartData(stockSymbol, 0)
+                }
+            }
+        } else
+            if (stockSymbol.type == DataProvider.Gemini) {
+                when (stockViewRange) {
+                    StockViewRange.OneDay -> {
+                        getGeminiChartData(stockSymbol, "1m")
+                    }
+                    StockViewRange.FiveDays -> {
+                        getGeminiChartData(stockSymbol, "5m")
+                    }
+                    StockViewRange.OneMonth -> {
+                        getGeminiChartData(stockSymbol, "30m")
+                    }
+                    StockViewRange.ThreeMonth -> {
+                        getGeminiChartData(stockSymbol, "1hr")
+                    }
+                    StockViewRange.YTD -> {
+                        // TODO set the correct timeframe
+                        val datetimeYTD =
+                            ZonedDateTime.of(
+                                ZonedDateTime.now().year,
+                                1,
+                                1,
+                                0,
+                                0,
+                                0,
+                                0,
+                                ZoneOffset.systemDefault()
+                            )
+                        val datetime = ZonedDateTime.now()
+                        val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
+                        val seconds = datetime.toEpochSecond() // in GMT
+                        val daysYTD = (seconds - secondsYTD) / 60 / 60 / 24 + 1
+                        getGeminiChartData(stockSymbol, "6hr")
+                    }
+                    StockViewRange.OneYear -> {
+                        getGeminiChartData(stockSymbol, "1day")
+                    }
+                    StockViewRange.FiveYears -> {
+                        getGeminiChartData(stockSymbol, "1day")
+                    }
+                    StockViewRange.Max -> {
+                        getGeminiChartData(stockSymbol, "1day")
+                    }
+                }
+            } else {
+                // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
+                // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
+                when (stockViewRange) {
+                    StockViewRange.OneDay -> {
+                        getYahooChartData(stockSymbol, "5m", "1d")
+                    }
+                    StockViewRange.FiveDays -> {
+                        getYahooChartData(stockSymbol, "15m", "5d")
+                    }
+                    StockViewRange.OneMonth -> {
+                        getYahooChartData(stockSymbol, "90m", "1mo")
+                    }
+                    StockViewRange.ThreeMonth -> {
+                        getYahooChartData(stockSymbol, "1d", "3mo")
+                    }
+                    StockViewRange.YTD -> {
+                        getYahooChartData(stockSymbol, "1d", "ytd")
+                    }
+                    StockViewRange.OneYear -> {
+                        getYahooChartData(stockSymbol, "1d", "1y")
+                    }
+                    StockViewRange.FiveYears -> {
+                        getYahooChartData(stockSymbol, "1d", "5y")
+                    }
+                    StockViewRange.Max -> {
+                        getYahooChartData(stockSymbol, "1d", "max")
+                    }
+                }
+            }
+    }
 }

@@ -372,180 +372,180 @@ Now, as @Yago notes, you can append chart/ and you can also append options/
  */
 
 fun getName(onlineMarketData: OnlineMarketData): String {
-  return (if (onlineMarketData.name1.isNotEmpty()) {
-    onlineMarketData.name1
-  } else {
-    onlineMarketData.name2
-  })
-    .replace("&amp;", "&")
-    .replace("&quot;", "'")
-    .replace("&lt;", "<")
-    .replace("&gt;", ">")
+    return (if (onlineMarketData.name1.isNotEmpty()) {
+        onlineMarketData.name1
+    } else {
+        onlineMarketData.name2
+    })
+        .replace("&amp;", "&")
+        .replace("&quot;", "'")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
 }
 
 const val currencyScale = 0.8f
 fun getCurrency(onlineMarketData: OnlineMarketData): String {
 
-  if (onlineMarketData.quoteType == "EQUITY"
-    || onlineMarketData.quoteType == "ETF"
-    || onlineMarketData.quoteType == "OPTION"
-    || onlineMarketData.quoteType == "MUTUALFUND"
-    || onlineMarketData.quoteType == "CURRENCY"
-    || onlineMarketData.quoteType == "CRYPTOCURRENCY"
-  ) {
-    val currency = onlineMarketData.currency
-    if (currency.isNotEmpty()) {
-      return " $currency"
+    if (onlineMarketData.quoteType == "EQUITY"
+        || onlineMarketData.quoteType == "ETF"
+        || onlineMarketData.quoteType == "OPTION"
+        || onlineMarketData.quoteType == "MUTUALFUND"
+        || onlineMarketData.quoteType == "CURRENCY"
+        || onlineMarketData.quoteType == "CRYPTOCURRENCY"
+    ) {
+        val currency = onlineMarketData.currency
+        if (currency.isNotEmpty()) {
+            return " $currency"
+        }
     }
-  }
 
-  return ""
+    return ""
 }
 
 // Data Model
 @JsonClass(generateAdapter = true)
 data class OnlineMarketData(
-  val symbol: String,
-  @field:Json(
-    name = "longName"
-  ) val name1: String = "",  // displayName is not available for "GlaxoSmithKline plc", but longName
+    val symbol: String,
+    @field:Json(
+        name = "longName"
+    ) val name1: String = "",  // displayName is not available for "GlaxoSmithKline plc", but longName
 
-  @field:Json(
-    name = "shortName"
-  ) val name2: String = "",  // ^GSPC only has shortName
+    @field:Json(
+        name = "shortName"
+    ) val name2: String = "",  // ^GSPC only has shortName
 
-  // Market values will be set with the post market values when the aftermarket option is set.
-  @field:Json(
-    name = "regularMarketPrice"
-  ) var marketPrice: Double = 0.0,
-  @field:Json(
-    name = "regularMarketChange"
-  ) var marketChange: Double = 0.0,
-  @field:Json(
-    name = "regularMarketChangePercent"
-  ) var marketChangePercent: Double = 0.0,
+    // Market values will be set with the post market values when the aftermarket option is set.
+    @field:Json(
+        name = "regularMarketPrice"
+    ) var marketPrice: Double = 0.0,
+    @field:Json(
+        name = "regularMarketChange"
+    ) var marketChange: Double = 0.0,
+    @field:Json(
+        name = "regularMarketChangePercent"
+    ) var marketChangePercent: Double = 0.0,
 
-  // Ignore
-  @Transient
-  var postMarketData: Boolean = false,
+    // Ignore
+    @Transient
+    var postMarketData: Boolean = false,
 
-  var dividendDate: Long = 0,
-  @field:Json(
-    name = "trailingAnnualDividendRate"
-  ) var annualDividendRate: Double = 0.0,
-  @field:Json(
-    name = "trailingAnnualDividendYield"
-  ) var annualDividendYield: Double = 0.0,
+    var dividendDate: Long = 0,
+    @field:Json(
+        name = "trailingAnnualDividendRate"
+    ) var annualDividendRate: Double = 0.0,
+    @field:Json(
+        name = "trailingAnnualDividendYield"
+    ) var annualDividendYield: Double = 0.0,
 
-  var marketState: String = "", // "marketState":"PREPRE" or "marketState":"PRE" or "marketState": "REGULAR" or "marketState":"POST" or "marketState":"POSTPOST" or "marketState":"CLOSED"
-  var preMarketChangePercent: Double = 0.0,
-  var preMarketPrice: Double = 0.0,
-  var preMarketChange: Double = 0.0,
+    var marketState: String = "", // "marketState":"PREPRE" or "marketState":"PRE" or "marketState": "REGULAR" or "marketState":"POST" or "marketState":"POSTPOST" or "marketState":"CLOSED"
+    var preMarketChangePercent: Double = 0.0,
+    var preMarketPrice: Double = 0.0,
+    var preMarketChange: Double = 0.0,
 
-  var postMarketChangePercent: Double = 0.0,
-  var postMarketPrice: Double = 0.0,
-  var postMarketChange: Double = 0.0,
+    var postMarketChangePercent: Double = 0.0,
+    var postMarketPrice: Double = 0.0,
+    var postMarketChange: Double = 0.0,
 
-  var market: String = "",
-  var fullExchangeName: String = "",
-  var currency: String = "",
-  var financialCurrency: String = "",
-  var coinImageUrl: String = "",
+    var market: String = "",
+    var fullExchangeName: String = "",
+    var currency: String = "",
+    var financialCurrency: String = "",
+    var coinImageUrl: String = "",
 
-  var quoteType: String = "",
-  var quoteSourceName: String = "",
-  var sharesOutstanding: Long = Long.MIN_VALUE,
-  var fiftyDayAverage: Double = Double.NaN,
-  var twoHundredDayAverage: Double = Double.NaN,
-  var fiftyTwoWeekRange: String = "",
-  var marketCap: Long = Long.MIN_VALUE,
-  var regularMarketDayRange: String = "",
-  var regularMarketVolume: Long = Long.MIN_VALUE,
-  var regularMarketPreviousClose: Double = Double.NaN,
-  var regularMarketOpen: Double = Double.NaN,
+    var quoteType: String = "",
+    var quoteSourceName: String = "",
+    var sharesOutstanding: Long = Long.MIN_VALUE,
+    var fiftyDayAverage: Double = Double.NaN,
+    var twoHundredDayAverage: Double = Double.NaN,
+    var fiftyTwoWeekRange: String = "",
+    var marketCap: Long = Long.MIN_VALUE,
+    var regularMarketDayRange: String = "",
+    var regularMarketVolume: Long = Long.MIN_VALUE,
+    var regularMarketPreviousClose: Double = Double.NaN,
+    var regularMarketOpen: Double = Double.NaN,
 
-  var epsTrailingTwelveMonths: Double = Double.NaN,
-  var epsCurrentYear: Double = Double.NaN,
-  var epsForward: Double = Double.NaN,
+    var epsTrailingTwelveMonths: Double = Double.NaN,
+    var epsCurrentYear: Double = Double.NaN,
+    var epsForward: Double = Double.NaN,
 
-  var trailingPE: Double = Double.NaN,
-  var priceEpsCurrentYear: Double = Double.NaN,
-  var forwardPE: Double = Double.NaN,
+    var trailingPE: Double = Double.NaN,
+    var priceEpsCurrentYear: Double = Double.NaN,
+    var forwardPE: Double = Double.NaN,
 
-  var bookValue: Double = Double.NaN,
-  var priceToBook: Double = Double.NaN
+    var bookValue: Double = Double.NaN,
+    var priceToBook: Double = Double.NaN
 )
 
 enum class MarketState(val value: String) {
-  PRE("PRE"),
-  PREPRE("PREPRE"),
-  REGULAR("REGULAR"),
-  POST("POST"),
-  POSTPOST("POSTPOST"),
-  CLOSED("CLOSED"),
-  NO_NETWORK("NO_NETWORK"),
-  NO_SYMBOL("NO_SYMBOL"),
-  QUOTA_EXCEEDED("QUOTA_EXCEEDED"),
-  UNKNOWN("")
+    PRE("PRE"),
+    PREPRE("PREPRE"),
+    REGULAR("REGULAR"),
+    POST("POST"),
+    POSTPOST("POSTPOST"),
+    CLOSED("CLOSED"),
+    NO_NETWORK("NO_NETWORK"),
+    NO_SYMBOL("NO_SYMBOL"),
+    QUOTA_EXCEEDED("QUOTA_EXCEEDED"),
+    UNKNOWN("")
 }
 
 fun getMarketText(
-  context: Context,
-  marketStateStr: String
+    context: Context,
+    marketStateStr: String
 ): String {
-  return when (marketStateStr) {
-    MarketState.PRE.value -> {
-      context.getString(R.string.marketStatePRE)
+    return when (marketStateStr) {
+        MarketState.PRE.value -> {
+            context.getString(R.string.marketStatePRE)
+        }
+        MarketState.PREPRE.value -> {
+            context.getString(R.string.marketStatePREPRE)
+        }
+        MarketState.REGULAR.value -> {
+            context.getString(R.string.marketStateREGULAR)
+        }
+        MarketState.POST.value -> {
+            context.getString(R.string.marketStatePOST)
+        }
+        MarketState.POSTPOST.value -> {
+            context.getString(R.string.marketStatePOSTPOST)
+        }
+        MarketState.CLOSED.value -> {
+            context.getString(R.string.marketStateCLOSED)
+        }
+        else -> {
+            marketStateStr
+        }
     }
-    MarketState.PREPRE.value -> {
-      context.getString(R.string.marketStatePREPRE)
-    }
-    MarketState.REGULAR.value -> {
-      context.getString(R.string.marketStateREGULAR)
-    }
-    MarketState.POST.value -> {
-      context.getString(R.string.marketStatePOST)
-    }
-    MarketState.POSTPOST.value -> {
-      context.getString(R.string.marketStatePOSTPOST)
-    }
-    MarketState.CLOSED.value -> {
-      context.getString(R.string.marketStateCLOSED)
-    }
-    else -> {
-      marketStateStr
-    }
-  }
 }
 
 fun <K> Enum.Companion.toString(marketState: K): String {
-  return when (marketState) {
-    MarketState.REGULAR -> {
-      "regular market"
+    return when (marketState) {
+        MarketState.REGULAR -> {
+            "regular market"
+        }
+        MarketState.PRE, MarketState.PREPRE -> {
+            "pre market"
+        }
+        MarketState.POST, MarketState.POSTPOST -> {
+            "post market"
+        }
+        MarketState.CLOSED -> {
+            "market closed"
+        }
+        MarketState.NO_NETWORK -> {
+            "network not available"
+        }
+        MarketState.UNKNOWN -> {
+            "unknown"
+        }
+        MarketState.QUOTA_EXCEEDED -> {
+            "Quota exceeded"
+        }
+        MarketState.NO_SYMBOL -> {
+            "no symbol"
+        }
+        else -> ""
     }
-    MarketState.PRE, MarketState.PREPRE -> {
-      "pre market"
-    }
-    MarketState.POST, MarketState.POSTPOST -> {
-      "post market"
-    }
-    MarketState.CLOSED -> {
-      "market closed"
-    }
-    MarketState.NO_NETWORK -> {
-      "network not available"
-    }
-    MarketState.UNKNOWN -> {
-      "unknown"
-    }
-    MarketState.QUOTA_EXCEEDED -> {
-      "Quota exceeded"
-    }
-    MarketState.NO_SYMBOL -> {
-      "no symbol"
-    }
-    else -> ""
-  }
 }
 
 //Enum.toString(DEF_TYPE("default"))
@@ -561,56 +561,56 @@ fun <K> Enum.Companion.toString(marketState: K): String {
 // Data Model for the Response returned
 @JsonClass(generateAdapter = true)
 data class QuoteResponse(
-  val result: List<OnlineMarketData>
+    val result: List<OnlineMarketData>
 )
 
 @JsonClass(generateAdapter = true)
 data class YahooResponse(
-  var quoteResponse: QuoteResponse? = null
+    var quoteResponse: QuoteResponse? = null
 )
 
 // https://api.iextrading.com/1.0/ref-data/symbols
 
 //A retrofit Network Interface for the Api
 interface YahooApiMarketData {
-  // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
-  // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
-  @GET("quote?format=json")
-  fun getStockDataAsync(
-    @Query(
-      value = "symbols"
-    ) symbols: String
-  ): Deferred<Response<YahooResponse>>
+    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    @GET("quote?format=json")
+    fun getStockDataAsync(
+        @Query(
+            value = "symbols"
+        ) symbols: String
+    ): Deferred<Response<YahooResponse>>
 }
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoImage(
-  var small: String,
+    var small: String,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoDescription(
-  var en: String,
+    var en: String,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoCurrentPrice(
-  var usd: Double,
+    var usd: Double,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoMarketData(
-  var current_price: CoingeckoCurrentPrice,
-  var price_change_24h: Double,
-  var price_change_percentage_24h: Double,
+    var current_price: CoingeckoCurrentPrice,
+    var price_change_24h: Double,
+    var price_change_percentage_24h: Double,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoResponse(
-  val name: String,
-  val description: CoingeckoDescription,
-  val image: CoingeckoImage,
-  val market_data: CoingeckoMarketData,
+    val name: String,
+    val description: CoingeckoDescription,
+    val image: CoingeckoImage,
+    val market_data: CoingeckoMarketData,
 )
 /*
 {
@@ -703,41 +703,41 @@ data class CoingeckoResponse(
  */
 
 interface CoingeckoApiMarketData {
-  // https://api.coingecko.com/api/v3/coins/cartesi?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false
-  @GET("{symbol}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false")
-  fun getStockDataAsync(
-    @Path(
-      value = "symbol"
-    ) symbol: String
-  ): Deferred<Response<CoingeckoResponse>>
+    // https://api.coingecko.com/api/v3/coins/cartesi?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false
+    @GET("{symbol}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false")
+    fun getStockDataAsync(
+        @Path(
+            value = "symbol"
+        ) symbol: String
+    ): Deferred<Response<CoingeckoResponse>>
 }
 
 
 @JsonClass(generateAdapter = true)
 data class CoinpaprikaMarketData(
-  var price: Double,
-  var percent_change_24h: Double,
+    var price: Double,
+    var percent_change_24h: Double,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoinpaprikaMarket(
-  var USD: CoinpaprikaMarketData,
+    var USD: CoinpaprikaMarketData,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoinpaprikaResponse(
-  val name: String,
-  val quotes: CoinpaprikaMarket,
+    val name: String,
+    val quotes: CoinpaprikaMarket,
 )
 
 interface CoinpaprikaApiMarketData {
-  // https://api.coinpaprika.com/v1/tickers/ada-cardano
-  @GET("{symbol}")
-  fun getStockDataAsync(
-    @Path(
-      value = "symbol"
-    ) symbol: String
-  ): Deferred<Response<CoinpaprikaResponse>>
+    // https://api.coinpaprika.com/v1/tickers/ada-cardano
+    @GET("{symbol}")
+    fun getStockDataAsync(
+        @Path(
+            value = "symbol"
+        ) symbol: String
+    ): Deferred<Response<CoinpaprikaResponse>>
 }
 /*
 {"id":"ada-cardano","name":"Cardano","symbol":"ADA","rank":5,"circulating_supply":31946328269,
@@ -758,20 +758,20 @@ interface CoinpaprikaApiMarketData {
 
 @JsonClass(generateAdapter = true)
 data class GeminiMarketData(
-  val pair: String,
-  var price: Double,
-  var percentChange24h: Double,
+    val pair: String,
+    var price: Double,
+    var percentChange24h: Double,
 )
 
 @JsonClass(generateAdapter = true)
 data class GeminiResponse(
-  var result: List<GeminiMarketData> = emptyList()
+    var result: List<GeminiMarketData> = emptyList()
 )
 
 interface GeminiApiMarketData {
-  // https://api.gemini.com/v1/pricefeed
-  @GET("pricefeed")
-  fun getStockDataAsync(): Deferred<Response<List<GeminiMarketData>>>
+    // https://api.gemini.com/v1/pricefeed
+    @GET("pricefeed")
+    fun getStockDataAsync(): Deferred<Response<List<GeminiMarketData>>>
 }
 /*
 https://api.gemini.com/v1/pricefeed
@@ -779,87 +779,88 @@ https://api.gemini.com/v1/pricefeed
 */
 
 interface YahooApiRawMarketData {
-  @GET("quote?format=json")
-  fun getStockDataAsync(
-    @Query(
-      value = "symbols"
-    ) symbols: String
-  ): Deferred<Response<String>>
+    @GET("quote?format=json")
+    fun getStockDataAsync(
+        @Query(
+            value = "symbols"
+        ) symbols: String
+    ): Deferred<Response<String>>
 }
 // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
 interface YahooApiChartData {
-  // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
-  // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
-  // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
-  // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
-  @GET("chart/")
-  fun getYahooChartDataAsync(
-    @Query(
-      value = "symbol"
-    ) symbol: String,
-    @Query(
-      value = "interval"
-    ) interval: String,
-    @Query(
-      value = "range"
-    ) range: String
-  ): Deferred<Response<YahooChartData>>
+    // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
+    // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
+    // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
+    // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
+    @GET("chart/")
+    fun getYahooChartDataAsync(
+        @Query(
+            value = "symbol"
+        ) symbol: String,
+        @Query(
+            value = "interval"
+        ) interval: String,
+        @Query(
+            value = "range"
+        ) range: String
+    ): Deferred<Response<YahooChartData>>
 }
 
 @JsonClass(generateAdapter = true)
 data class YahooChartData(
-  var chart: YahooChartResult? = null
+    var chart: YahooChartResult? = null
 )
 
 @JsonClass(generateAdapter = true)
 data class YahooChartResult(
-  var result: List<YahooChartDataEntry> = emptyList()
+    var result: List<YahooChartDataEntry> = emptyList()
 )
 
 @JsonClass(generateAdapter = true)
 data class YahooChartDataEntry(
-  var meta: YahooChartMeta? = null,
-  var timestamp: List<Int> = listOf(),
-  var indicators: YahooChartIndicators? = null
+    var meta: YahooChartMeta? = null,
+    var timestamp: List<Int> = listOf(),
+    var indicators: YahooChartIndicators? = null
 )
 
 @JsonClass(generateAdapter = true)
 data class YahooChartMeta(
-  var gmtoffset: Int = 0
+    var gmtoffset: Int = 0
 )
 
 @JsonClass(generateAdapter = true)
 data class YahooChartIndicators(
-  var quote: List<YahooChartQuoteEntries> = emptyList()
+    var quote: List<YahooChartQuoteEntries> = emptyList()
 )
 
 @JsonClass(generateAdapter = true)
 data class YahooChartQuoteEntries(
-  var high: MutableList<Double> = mutableListOf(),
-  var low: MutableList<Double> = mutableListOf(),
-  var open: MutableList<Double> = mutableListOf(),
-  var close: MutableList<Double> = mutableListOf()
+    var high: MutableList<Double> = mutableListOf(),
+    var low: MutableList<Double> = mutableListOf(),
+    var open: MutableList<Double> = mutableListOf(),
+    var close: MutableList<Double> = mutableListOf()
 //  var volume: MutableList<Double> = mutableListOf()
 )
+
 /*
 [{"low":[103.72000122070312,103.31999969482422,103.1500015258789,104.0199966430664,104.1500015258789,105.20999908447266,104.91000366210938,104.2300033569336,105.95999908447266,105.5999984741211,107.06999969482422,105.36000061035156,108.06999969482422,107.80999755859375,105.45999908447266,104.94999694824219,104.06999969482422,105.80000305175781,106.440002
  */
 interface CoingeckoApiChartData {
-  // https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=1
+    // https://api.coingecko.com/api/v3/coins/cartesi/market_chart?vs_currency=usd&days=1
 
-  @GET("{symbol}/market_chart")
-  fun getCoingeckoChartDataAsync(
-    @Path(
-      value = "symbol"
-    ) symbol: String,
-    @Query(
-      value = "vs_currency"
-    ) vs_currency: String,
-    @Query(
-      value = "days"
-      ) days: String
-  ): Deferred<Response<CoingeckoChartData>>
+    @GET("{symbol}/market_chart")
+    fun getCoingeckoChartDataAsync(
+        @Path(
+            value = "symbol"
+        ) symbol: String,
+        @Query(
+            value = "vs_currency"
+        ) vs_currency: String,
+        @Query(
+            value = "days"
+        ) days: String
+    ): Deferred<Response<CoingeckoChartData>>
 }
 /*
 {
@@ -881,28 +882,44 @@ interface CoingeckoApiChartData {
 
 @JsonClass(generateAdapter = true)
 data class CoingeckoChartData(
-  var prices: List<MutableList<Double>>? = null
+    var prices: List<MutableList<Double>>? = null
 )
 
+interface GeminiApiChartData {
+    // https://api.gemini.com/v2/candles/btcusd/1day
+    // [[1638590400000,52055.9,52644.42,42074.62,49639.7,5200.9713649173],
+    // [1638504000000,56380.25,57673.58,51619.3,52055.9,1784.7723694009],
+    // [1638417600000,56362.19,57277.92,56000,56380.25,1142.2925018029],
+
+    @GET("{symbol}/{timeframe}")
+    fun getGeminiChartDataAsync(
+        @Path(
+            value = "symbol"
+        ) symbol: String,
+        @Path(
+            value = "timeframe"
+        ) timeframe: String
+    ): Deferred<Response<List<MutableList<Double>>>>
+}
 
 data class DataProviderSymbolEntry(
-  var id: String,
-  var name: String,
+    var id: String,
+    var name: String,
 )
 
 interface DataProviderSymbolsDataCoingecko {
-  // https://api.coingecko.com/api/v3/coins/list
-  @GET("list")
-  fun getDataProviderSymbolsDataAsync(
-  ): Deferred<Response<List<DataProviderCoingeckoSymbolEntry>>>
+    // https://api.coingecko.com/api/v3/coins/list
+    @GET("list")
+    fun getDataProviderSymbolsDataAsync(
+    ): Deferred<Response<List<DataProviderCoingeckoSymbolEntry>>>
 }
 // [{"id":"01coin","symbol":"zoc","name":"01coin"},{"id":"0-5x-long-algorand-token","symbol":"algohalf","name":"0.5X Long Algorand Token"},{"id":
 
 @JsonClass(generateAdapter = true)
 data class DataProviderCoingeckoSymbolEntry(
-  var id: String,
-  var symbol: String,
-  var name: String,
+    var id: String,
+    var symbol: String,
+    var name: String,
 )
 /*
 [
@@ -915,73 +932,74 @@ data class DataProviderCoingeckoSymbolEntry(
  */
 
 interface DataProviderSymbolsDataCoinpaprika {
-  // https://api.coinpaprika.com/v1/coins
+    // https://api.coinpaprika.com/v1/coins
 
-  @GET("coins")
-  fun getDataProviderSymbolsDataAsync(
-  ): Deferred<Response<List<DataProviderCoinpaprikaSymbolEntry>>>
+    @GET("coins")
+    fun getDataProviderSymbolsDataAsync(
+    ): Deferred<Response<List<DataProviderCoinpaprikaSymbolEntry>>>
 }
+
 // [{"id":"btc-bitcoin","name":"Bitcoin","symbol":"BTC","rank":1,"is_new":false,"is_active":true,"type":"coin"},{"id":
 @JsonClass(generateAdapter = true)
 data class DataProviderCoinpaprikaSymbolEntry(
-  var id: String,
-  var symbol: String,
-  var name: String,
-  var is_active: Boolean,
+    var id: String,
+    var symbol: String,
+    var name: String,
+    var is_active: Boolean,
 )
 
 
 interface DataProviderSymbolsDataGemini {
-  // https://api.gemini.com/v1/symbols
+    // https://api.gemini.com/v1/symbols
 
-  @GET("symbols")
-  fun getDataProviderSymbolsDataAsync(
-  ): Deferred<Response<List<String>>>
+    @GET("symbols")
+    fun getDataProviderSymbolsDataAsync(
+    ): Deferred<Response<List<String>>>
 }
 // ["btcusd","btcgusd","btcdai","btcgbp","btceur","btcsgd","ethbtc","ethusd",
 
 
 data class StockChartData(
-  var symbol: String,
-  var stockDataEntries: List<StockDataEntry>?
+    var symbol: String,
+    var stockDataEntries: List<StockDataEntry>?
 )
 
 class StockDataEntry(
-  var dateTimePoint: Long,
-  x: Double,
-  high: Double,
-  low: Double,
-  open: Double,
-  close: Double
+    var dateTimePoint: Long,
+    x: Double,
+    high: Double,
+    low: Double,
+    open: Double,
+    close: Double
 ) {
-  var candleEntry: CandleEntry =
-    CandleEntry(x.toFloat(), high.toFloat(), low.toFloat(), open.toFloat(), close.toFloat())
+    var candleEntry: CandleEntry =
+        CandleEntry(x.toFloat(), high.toFloat(), low.toFloat(), open.toFloat(), close.toFloat())
 }
 
 class CandleEntryRef(
-  x: Float,
-  shadowH: Float,
-  shadowL: Float,
-  open: Float,
-  close: Float,
-  var refCandleEntry: CandleEntry,
+    x: Float,
+    shadowH: Float,
+    shadowL: Float,
+    open: Float,
+    close: Float,
+    var refCandleEntry: CandleEntry,
 ) : CandleEntry(x, shadowH, shadowL, open, close), Comparable<CandleEntryRef> {
-  override fun compareTo(other: CandleEntryRef): Int = x.compareTo(other.x)
+    override fun compareTo(other: CandleEntryRef): Int = x.compareTo(other.x)
 }
 
 class DataPointRef(
-  x: Float,
-  y: Float,
-  var refY: Float,
+    x: Float,
+    y: Float,
+    var refY: Float,
 ) : Entry(x, y), Comparable<DataPointRef> {
 
-  override fun compareTo(other: DataPointRef): Int = x.compareTo(other.x)
+    override fun compareTo(other: DataPointRef): Int = x.compareTo(other.x)
 }
 
 class DataPoint(
-  x: Float,
-  y: Float
+    x: Float,
+    y: Float
 ) : Entry(x, y), Comparable<DataPoint> {
 
-  override fun compareTo(other: DataPoint): Int = x.compareTo(other.x)
+    override fun compareTo(other: DataPoint): Int = x.compareTo(other.x)
 }
