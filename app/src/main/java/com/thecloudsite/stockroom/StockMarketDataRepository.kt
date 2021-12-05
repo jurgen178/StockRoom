@@ -24,6 +24,7 @@ import com.thecloudsite.stockroom.database.Asset
 import com.thecloudsite.stockroom.database.Dividend
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.StockDBdata
+import com.thecloudsite.stockroom.utils.idToName
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -676,12 +677,12 @@ class StockMarketDataRepository(
         // Get online data.
         val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
 
-        val response: GeminiResponse? = try {
+        val response: List<GeminiMarketData>? = try {
             apiCall(
                 call = {
                     updateCounter()
                     // Get all symbols in one call using https://api.gemini.com/v1/pricefeed.
-                    api.getStockDataAsync("")
+                    api.getStockDataAsync()
                         .await()
                 }, errorMessage = "Error getting finance data."
             )
@@ -692,14 +693,14 @@ class StockMarketDataRepository(
         }
 
         // Add the result.
-        response?.result?.forEach { result ->
+        response?.forEach { result ->
             onlineMarketDataResultList.add(
                 OnlineMarketData(
                     symbol = result.pair,
-                    name1 = result.pair,
+                    name1 = idToName(result.pair),
                     marketPrice = result.price,
-                    marketChange = result.percentChange24h,
-                    marketChangePercent = result.price * result.percentChange24h / 100,
+                    marketChange = result.price * result.percentChange24h,
+                    marketChangePercent = 100 * result.percentChange24h,
                     quoteType = "CRYPTOCURRENCY",
                 )
             )

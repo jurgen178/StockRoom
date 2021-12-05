@@ -770,12 +770,8 @@ data class GeminiResponse(
 
 interface GeminiApiMarketData {
   // https://api.gemini.com/v1/pricefeed
-  @GET("")
-  fun getStockDataAsync(
-    @Path(
-      value = "symbol"
-    ) symbol: String
-  ): Deferred<Response<GeminiResponse>>
+  @GET("pricefeed")
+  fun getStockDataAsync(): Deferred<Response<List<GeminiMarketData>>>
 }
 /*
 https://api.gemini.com/v1/pricefeed
@@ -790,6 +786,7 @@ interface YahooApiRawMarketData {
     ) symbols: String
   ): Deferred<Response<String>>
 }
+// https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
 interface YahooApiChartData {
   // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
@@ -942,15 +939,6 @@ interface DataProviderSymbolsDataGemini {
   ): Deferred<Response<List<String>>>
 }
 // ["btcusd","btcgusd","btcdai","btcgbp","btceur","btcsgd","ethbtc","ethusd",
-@JsonClass(generateAdapter = true)
-data class DataProviderGeminiSymbolEntry(
-  var id: String,
-  var symbol: String,
-  var name: String,
-
-  // only present in Coinpaprika, allow null value (Boolean?) to make it optional
-  var is_active: Boolean?,
-)
 
 
 data class StockChartData(

@@ -1331,3 +1331,9 @@ fun setGroupBackground(
         setBackgroundColor(textViewGroupMarker, markerColor)
     }
 }
+
+// Separate the name from the currency in the trading pair.
+// btcusd to btc-usd
+fun idToName(symbol: String): String {
+    return symbol.replace(Regex("(\\w+)(\\w{3})"), "$1-$2")
+}

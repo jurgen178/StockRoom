@@ -19,6 +19,7 @@ package com.thecloudsite.stockroom
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.thecloudsite.stockroom.utils.idToName
 import java.util.*
 
 open class DataProviderSymbolsBaseRepository() : BaseRepository() {
@@ -97,10 +98,6 @@ class DataProviderCoinpaprikaSymbolsRepository() : DataProviderSymbolsBaseReposi
 
 class DataProviderGeminiSymbolsRepository() : DataProviderSymbolsBaseRepository() {
 
-    fun IdToName(symbol: String): String {
-        return symbol.replace(Regex("(\\w+)(\\w{3})"), "$1-$2")
-    }
-
     override suspend fun getDataProviderSymbols(): List<DataProviderSymbolEntry> {
 
         val api = GeminiSymbolsApiFactory.dataProviderApi ?: return emptyList()
@@ -124,7 +121,7 @@ class DataProviderGeminiSymbolsRepository() : DataProviderSymbolsBaseRepository(
 
         return (dataProviderSymbols ?: emptyList())
             .sortedBy { symbol -> symbol.lowercase(Locale.ROOT) }
-            .map { symbol -> DataProviderSymbolEntry(id = symbol, name = IdToName(symbol)) }
+            .map { symbol -> DataProviderSymbolEntry(id = symbol, name = idToName(symbol)) }
     }
 }
 
