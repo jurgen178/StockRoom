@@ -2363,18 +2363,25 @@ class StockDataFragment : Fragment() {
                     R.string.add
                 ) { _, _ ->
                     // Add () to avoid cast exception.
-                    val newName = (dialogBinding.newName.text).toString()
+                    var newName = (dialogBinding.newName.text).toString()
 
                     if (newName != name) {
 
                         stockRoomViewModel.setName(symbol, newName)
 
-                        Toast.makeText(
-                            requireContext(), getString(
-                                R.string.name_added, name, newName
-                            ), Toast.LENGTH_LONG
-                        )
-                            .show()
+                        // Empty name resets to symbol name.
+                        if (newName.isEmpty()) {
+                            newName = symbol
+                        }
+
+                        if (newName != name) {
+                            Toast.makeText(
+                                requireContext(), getString(
+                                    R.string.name_added, name, newName
+                                ), Toast.LENGTH_LONG
+                            )
+                                .show()
+                        }
                     }
                 }
                 .setNegativeButton(

@@ -71,7 +71,9 @@ class StockRoomSmallListAdapter internal constructor(
             holder.bindOnClickListener(current, clickListenerSymbolLambda)
 
             holder.binding.smalllistItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
-            holder.binding.smalllistTextViewSymbol.text = current.onlineMarketData.symbol
+            val displayName =
+                if (current.stockDBdata.name.isEmpty()) current.stockDBdata.symbol else current.stockDBdata.name
+            holder.binding.smalllistTextViewSymbol.text = displayName
 
             if (current.onlineMarketData.marketPrice > 0.0) {
                 val marketValues = getMarketValues(current.onlineMarketData)

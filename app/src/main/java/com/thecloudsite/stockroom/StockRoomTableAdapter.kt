@@ -345,7 +345,11 @@ class StockRoomTableAdapter internal constructor(
                 holder.binding.tableDataGroupMarker
             )
 
-            holder.binding.tableDataSymbol.text = current.stockDBdata.symbol
+            var displayName = current.stockDBdata.symbol
+            if (current.stockDBdata.name.isNotEmpty()) {
+                displayName += "\n(${current.stockDBdata.name})"
+            }
+            holder.binding.tableDataSymbol.text = displayName
             holder.binding.tableDataName.text = getName(current.onlineMarketData)
 
             val (quantity, asset, fee) = getAssets(current.assets)

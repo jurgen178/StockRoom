@@ -86,9 +86,11 @@ class StockRoomSmallTile1Adapter internal constructor(
                 )
 
             val symbolChangeText = SpannableStringBuilder()
+            val displayName =
+                if (current.stockDBdata.name.isEmpty()) current.stockDBdata.symbol else current.stockDBdata.name
             val changeText = assetChange.displayStr
             symbolChangeText
-                .bold { append(current.onlineMarketData.symbol) }
+                .bold { append(displayName) }
 
             if (changeText.isNotEmpty()) {
                 symbolChangeText.scale(0.7f) {

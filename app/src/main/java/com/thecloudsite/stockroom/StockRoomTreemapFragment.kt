@@ -177,11 +177,14 @@ class StockRoomTreemapFragment : Fragment() {
                     ""
                 }
 
+                val displayName =
+                    if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name
+
                 treeModel.addChild(
                     TreeModel(
                         AndroidMapItem(
                             assets,
-                            stockItem.stockDBdata.symbol,
+                            displayName,
                             DecimalFormat(DecimalFormat2Digits).format(assets)
                                     + percentStr
                             // add currency?

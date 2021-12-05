@@ -159,7 +159,9 @@ class StockRoomChartAdapter internal constructor(
 
             holder.binding.itemSummary.setBackgroundColor(context.getColor(R.color.backgroundListColor))
 
-            holder.binding.textViewSymbol.text = current.onlineMarketData.symbol
+            val displayName =
+                if (current.stockDBdata.name.isEmpty()) current.stockDBdata.symbol else current.stockDBdata.name
+            holder.binding.textViewSymbol.text = displayName
 
             holder.binding.imageViewSymbol.visibility = View.GONE
             // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"

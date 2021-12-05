@@ -217,6 +217,7 @@ class ListDBAdapter(
                 if (data.isHeader) {
                     holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(139, 0, 0))
                     holder.binding.dbStockdbdataSymbol.text = getHeaderStr("symbol")
+                    holder.binding.dbStockdbdataName.text = getHeaderStr("name")
                     holder.binding.dbStockdbdataPortfolio.text = getHeaderStr("portfolio")
                     holder.binding.dbStockdbdataType.text = getHeaderStr("type")
                     holder.binding.dbStockdbdataData.text = getHeaderStr("data")
@@ -233,6 +234,7 @@ class ListDBAdapter(
                 } else {
                     holder.binding.dbStockdbdataLayout.setBackgroundColor(Color.rgb(0, 148, 255))
                     holder.binding.dbStockdbdataSymbol.text = data.symbol
+                    holder.binding.dbStockdbdataName.text = data.name
                     holder.binding.dbStockdbdataPortfolio.text = data.portfolio
                     holder.binding.dbStockdbdataType.text =
                         dataProviderFromInt(data.type).toString()
