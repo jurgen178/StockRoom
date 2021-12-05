@@ -19,6 +19,10 @@ package com.thecloudsite.stockroom
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class StockChartDataRepository(
@@ -194,9 +198,9 @@ class StockChartDataRepository(
                 call = {
                     updateCounter()
                     api.getCoinpaprikaChartDataAsync(
-                        stockSymbol.symbol.lowercase(Locale.ROOT),
-                        "{start}",
-                        "{end}"
+                        stockSymbol.symbol,
+                        "$start",
+                        "$end"
                     )
                         .await()
                 },
@@ -210,9 +214,21 @@ class StockChartDataRepository(
         if (response != null) {
             var index = 0.0
             return response.map { price ->
-                val y = price.time_open
+
+                var date: Long = 0
+                // Convert time_open field "2021-12-05T00:00:00Z" to unix time
+                // RFC3999 (ISO-8601)
+                try {
+                    val localDateTime = LocalDateTime.parse(
+                        price.time_open,
+                        DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                    )
+                    date = localDateTime.toEpochSecond(ZoneOffset.UTC) // in GMT
+                } catch (e: java.lang.Exception) {
+                }
+
                 StockDataEntry(
-                    dateTimePoint = (price.time_open / 1000.0).toLong(),
+                    dateTimePoint = date,
                     x = index++,
                     high = price.high,
                     low = price.low,

@@ -104,6 +104,7 @@ data class DividendJson(
 data class StockItemJson
     (
     var symbol: String,
+    val name: String?,
     val portfolio: String,
     val type: Int?,
     val data: String?,
@@ -1506,6 +1507,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 insert(symbol = symbol, portfolio = portfolio.trim(), type = type)
                 imported++
 
+                if (jsonObj.has("name")) {
+                    val name = jsonObj.getString("name")
+                    if (name.isNotEmpty()) {
+                        setName(symbol, name)
+                    }
+                }
+
                 // get assets
                 if (jsonObj.has("assets")) {
                     val assetsObjArray = jsonObj.getJSONArray("assets")
@@ -2126,12 +2134,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             }?.name ?: ""
 
             // Convert empty or 0 values to null to exclude them from serialized to JSON.
+            val nameValue = if (stockItem.stockDBdata.name.isNotEmpty()) {
+                stockItem.stockDBdata.name
+            } else {
+                null
+            }
             val typeValue = if (stockItem.stockDBdata.type != 0) {
                 stockItem.stockDBdata.type
             } else {
                 null
             }
-
             val dataValue = if (stockItem.stockDBdata.data.isNotEmpty()) {
                 stockItem.stockDBdata.data
             } else {
@@ -2251,6 +2263,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
             StockItemJson(
                 symbol = stockItem.stockDBdata.symbol,
+                name = nameValue,
                 // Empty portfolio is the default portfolio, don't exclude from the export with a null value.
                 // Otherwise importing would set the current portfolio to missing portfolio json entries.
                 portfolio = stockItem.stockDBdata.portfolio,
@@ -2542,6 +2555,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //   Log.d("Handlers", "Call stockMarketDataRepository.getStockData()")
 //   logDebugAsync("update online data getStockData")
         return stockMarketDataRepository.getStockData(symbols)
+    }
+
+    fun setName(
+        symbol: String,
+        name: String
+    ) = scope.launch {
+        repository.setName(symbol, name)
     }
 
     fun setGroup(

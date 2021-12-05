@@ -133,6 +133,15 @@ class StockRoomRepository(private val stockRoomDao: StockRoomDao) {
 
   @Suppress("RedundantSuspendModifier")
   @WorkerThread
+  suspend fun setName(
+    symbol: String,
+    name: String
+  ) {
+    stockRoomDao.setName(symbol, name)
+  }
+
+  @Suppress("RedundantSuspendModifier")
+  @WorkerThread
   suspend fun updateAccount(
     accountOld: String,
     accountNew: String

@@ -125,13 +125,13 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
             DataProvider.Coinpaprika -> {
                 val datetimeNow = ZonedDateTime.now().toEpochSecond()
                 val dayInSeconds = 24 * 60 * 60
-                
+
                 when (stockViewRange) {
                     StockViewRange.OneDay -> {
                         getCoinpaprikaChartData(
                             stockSymbol,
-                            datetimeNow,
-                            datetimeNow + dayInSeconds
+                            datetimeNow - dayInSeconds,
+                            datetimeNow
                         )
                     }
                     StockViewRange.FiveDays -> {

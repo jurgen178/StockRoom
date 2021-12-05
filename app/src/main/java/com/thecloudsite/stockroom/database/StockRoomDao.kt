@@ -295,6 +295,12 @@ interface StockRoomDao {
     portfolioNew: String
   )
 
+  @Query("UPDATE stock_table SET name = :name WHERE symbol = :symbol")
+  fun setName(
+    symbol: String,
+    name: String
+  )
+
   @Query("UPDATE asset_table SET account = :accountNew WHERE account = :accountOld")
   fun updateAssetAccount(
     accountOld: String,

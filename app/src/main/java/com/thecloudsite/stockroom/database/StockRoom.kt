@@ -46,6 +46,7 @@ data class StoreData(
 @Entity(tableName = "stock_table")
 data class StockDBdata(
   @PrimaryKey val symbol: String,
+  var name: String = "",  // display name
   var portfolio: String = "",
   var type: Int = 0,  // data provider type
   var data: String = "",

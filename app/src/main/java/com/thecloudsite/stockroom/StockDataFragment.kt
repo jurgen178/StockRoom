@@ -78,14 +78,7 @@ import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.database.Events
 import com.thecloudsite.stockroom.database.Group
 import com.thecloudsite.stockroom.database.StockDBdata
-import com.thecloudsite.stockroom.databinding.DialogAddAccountBinding
-import com.thecloudsite.stockroom.databinding.DialogAddAssetBinding
-import com.thecloudsite.stockroom.databinding.DialogAddEventBinding
-import com.thecloudsite.stockroom.databinding.DialogAddNoteBinding
-import com.thecloudsite.stockroom.databinding.DialogAddPortfolioBinding
-import com.thecloudsite.stockroom.databinding.DialogRemoveAssetBinding
-import com.thecloudsite.stockroom.databinding.DialogSplitAssetBinding
-import com.thecloudsite.stockroom.databinding.FragmentStockdataBinding
+import com.thecloudsite.stockroom.databinding.*
 import com.thecloudsite.stockroom.utils.*
 import okhttp3.internal.toHexString
 import java.lang.Double.min
@@ -921,9 +914,6 @@ class StockDataFragment : Fragment() {
             }
         })
 
-        binding.textViewSymbol.text =
-            SpannableStringBuilder().underline { color(Color.BLUE) { append(symbol) } }
-
         val textViewStockLegends: List<TextView> = listOf(
             binding.textViewStockLegend1,
             binding.textViewStockLegend2,
@@ -1168,6 +1158,14 @@ class StockDataFragment : Fragment() {
         stockDBLiveData.observe(viewLifecycleOwner, Observer { data ->
             if (data != null) {
                 stockDBdata = data
+
+                val displayName =
+                    if (stockDBdata.name.isEmpty()) stockDBdata.symbol else stockDBdata.name
+
+                binding.textViewSymbol.text =
+                    SpannableStringBuilder().underline { color(Color.BLUE) { append(displayName) } }
+                binding.buttonSetName.text = displayName
+
                 binding.noteTextView.text = stockDBdata.note
 
                 // Portfolio
@@ -2344,6 +2342,48 @@ class StockDataFragment : Fragment() {
         }
         binding.noteTextView.setOnClickListener {
             updateNote()
+        }
+
+        binding.buttonSetName.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val inflater = LayoutInflater.from(requireContext())
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            val dialogBinding = DialogAddNameBinding.inflate(inflater)
+
+            val name = if (stockDBdata.name.isEmpty()) stockDBdata.symbol else stockDBdata.name
+            dialogBinding.nameTextView.text = name
+
+            builder.setView(dialogBinding.root)
+                .setTitle(R.string.display_name)
+                // Add action buttons
+                .setPositiveButton(
+                    R.string.add
+                ) { _, _ ->
+                    // Add () to avoid cast exception.
+                    val newName = (dialogBinding.newName.text).toString()
+
+                    if (newName != name) {
+
+                        stockRoomViewModel.setName(symbol, newName)
+
+                        Toast.makeText(
+                            requireContext(), getString(
+                                R.string.name_added, name, newName
+                            ), Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { _, _ ->
+                }
+            builder
+                .create()
+                .show()
         }
 
         binding.alertAboveInputEditText.addTextChangedListener(

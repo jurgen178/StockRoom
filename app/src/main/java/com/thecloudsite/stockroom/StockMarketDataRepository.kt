@@ -207,6 +207,8 @@ class StockMarketDataRepository(
         if (cryptoListGemini.isNotEmpty()) {
             val geminiResult = getGeminiStockData(cryptoListGemini)
             marketDataResult.marketState = geminiResult.marketState
+
+            // TODO last one wins to set delay?
             marketDataResult.delayInMs = geminiResult.delayInMs
             marketDataResult.msg += geminiResult.msg
         }

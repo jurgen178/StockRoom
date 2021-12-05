@@ -178,10 +178,45 @@ abstract class StockRoomDatabase : RoomDatabase() {
             }
         }
 
-        // Rename commission to fee.
+        // Add name to stock table
+        // Rename commission to fee in asset table.
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
 
+                // Add name to stock table
+                val STOCK_TABLE_NAME = "stock_table"
+                val STOCK_TABLE_NAME_TEMP = "stock_table_temp"
+
+                database.execSQL(
+                    """
+          CREATE TABLE `${STOCK_TABLE_NAME_TEMP}` (
+            symbol TEXT PRIMARY KEY NOT NULL,
+            name TEXT NOT NULL, 
+            portfolio TEXT NOT NULL, 
+            type INTEGER NOT NULL, 
+            data TEXT NOT NULL, 
+            marker INTEGER NOT NULL, 
+            group_color INTEGER NOT NULL, 
+            note TEXT NOT NULL,
+            dividend_note TEXT NOT NULL, 
+            annual_dividend_rate REAL NOT NULL,
+            alert_above REAL NOT NULL, 
+            alert_above_note TEXT NOT NULL,
+            alert_below REAL NOT NULL, 
+            alert_below_note TEXT NOT NULL
+          )
+          """.trimIndent()
+                )
+                database.execSQL(
+                    """
+          INSERT INTO `${STOCK_TABLE_NAME_TEMP}` (symbol, name, portfolio, type, data, marker, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note)
+          SELECT symbol, '', portfolio, type, data, marker, group_color, note, dividend_note, annual_dividend_rate, alert_above, alert_above_note, alert_below, alert_below_note FROM `${STOCK_TABLE_NAME}`  
+          """.trimIndent()
+                )
+                database.execSQL("DROP TABLE `${STOCK_TABLE_NAME}`")
+                database.execSQL("ALTER TABLE `${STOCK_TABLE_NAME_TEMP}` RENAME TO `${STOCK_TABLE_NAME}`")
+
+                // Rename commission to fee in asset table.
                 val ASSET_TABLE_NAME = "asset_table"
                 val ASSET_TABLE_NAME_TEMP = "asset_table_temp"
 

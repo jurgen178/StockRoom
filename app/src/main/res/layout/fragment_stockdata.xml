@@ -1074,6 +1074,7 @@
               android:tooltipText="@string/update_note"
               android:contentDescription="@string/update_note"
               />
+
         </LinearLayout>
 
         <TextView
@@ -1083,6 +1084,26 @@
             android:layout_margin="16dp"
             android:padding="4dp"
             android:background="@drawable/note_bg"
+            />
+
+        <View style="@style/Divider"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/display_name"
+            style="@style/section_header"
+            />
+
+        <Button
+            android:id="@+id/buttonSetName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_margin="@dimen/big_padding"
+            android:textColor="@color/buttonLabel"
+            android:textAllCaps="false"
             />
 
       </LinearLayout>

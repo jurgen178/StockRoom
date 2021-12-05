@@ -763,11 +763,6 @@ data class GeminiMarketData(
     var percentChange24h: Double,
 )
 
-@JsonClass(generateAdapter = true)
-data class GeminiResponse(
-    var result: List<GeminiMarketData> = emptyList()
-)
-
 interface GeminiApiMarketData {
     // https://api.gemini.com/v1/pricefeed
     @GET("pricefeed")
@@ -888,6 +883,7 @@ data class CoingeckoChartData(
 
 interface CoinpaprikaApiChartData {
 // https://api.coinpaprika.com/v1/coins/btc-bitcoin/ohlcv/historical?start=2019-01-01&end=2019-01-20
+// https://api.coinpaprika.com/v1/coins/btc-bitcoin/ohlcv/historical?start=1610514967&end=1620524967
 
     @GET("{symbol}/ohlcv/historical")
     fun getCoinpaprikaChartDataAsync(
@@ -906,7 +902,7 @@ interface CoinpaprikaApiChartData {
 
 @JsonClass(generateAdapter = true)
 data class CoinpaprikaChartData(
-    var time_open: Double,
+    var time_open: String,
     var open: Double,
     var high: Double,
     var low: Double,
