@@ -2354,39 +2354,64 @@ class StockDataFragment : Fragment() {
             val dialogBinding = DialogAddNameBinding.inflate(inflater)
 
             val name = if (stockDBdata.name.isEmpty()) stockDBdata.symbol else stockDBdata.name
-            dialogBinding.nameTextView.text = name
+            dialogBinding.newName.setText(name)
 
             builder.setView(dialogBinding.root)
                 .setTitle(R.string.display_name)
                 // Add action buttons
-                .setPositiveButton(
-                    R.string.add
-                ) { _, _ ->
+                .setPositiveButton(R.string.change)
+                { _, _ ->
                     // Add () to avoid cast exception.
-                    var newName = (dialogBinding.newName.text).toString()
+                    val newName = (dialogBinding.newName.text).toString()
 
-                    if (newName != name) {
-
-                        stockRoomViewModel.setName(symbol, newName)
+                    // Name changed, but not an empty name if name was the symbol name.
+                    if (newName != name && !(stockDBdata.symbol == name && newName.isEmpty())) {
 
                         // Empty name resets to symbol name.
-                        if (newName.isEmpty()) {
-                            newName = symbol
-                        }
+                        if (stockDBdata.symbol == newName || newName.isEmpty()) {
 
-                        if (newName != name) {
+                            stockRoomViewModel.setName(stockDBdata.symbol, "")
+
                             Toast.makeText(
                                 requireContext(), getString(
-                                    R.string.name_added, name, newName
+                                    R.string.name_reset, symbol
                                 ), Toast.LENGTH_LONG
                             )
                                 .show()
+
+                        } else {
+
+                            stockRoomViewModel.setName(stockDBdata.symbol, newName)
+
+                            if (newName != name) {
+                                Toast.makeText(
+                                    requireContext(), getString(
+                                        R.string.name_added, name, newName
+                                    ), Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
                         }
                     }
                 }
-                .setNegativeButton(
-                    R.string.cancel
-                ) { _, _ ->
+                .setNeutralButton(R.string.reset)
+                { _, _ ->
+
+                    if (stockDBdata.name.isNotEmpty()) {
+
+                        // Reset display name.
+                        stockRoomViewModel.setName(stockDBdata.symbol, "")
+
+                        Toast.makeText(
+                            requireContext(), getString(
+                                R.string.name_reset, stockDBdata.symbol
+                            ), Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
+                }
+                .setNegativeButton(R.string.cancel)
+                { _, _ ->
                 }
             builder
                 .create()

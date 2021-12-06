@@ -484,6 +484,7 @@ limitations under the License. -->
     <string name="table_column_Assets">Assets</string>
     <string name="table_column_Events">Events</string>
     <string name="table_column_Note">Note</string>
+    <string name="table_column_Provider">Data provider</string>
     <string name="marketStatePRE">Pre-Market</string>
     <string name="marketStatePREPRE">Before Pre-Market</string>
     <string name="marketStateREGULAR">Regular</string>
@@ -603,6 +604,8 @@ limitations under the License. -->
     <string name="button_set_alert_default">Set ±5\u0025</string>
     <string name="display_name">Display name</string>
     <string name="name_added">The display name was changed from \'%1$s\' to \'%2$s\'.</string>
+    <string name="name_reset">The display name was reset to \'%1$s\'.</string>
+    <string name="change">Change</string>
 
     <string-array name="predefined_groups">
         <item>Buy</item>

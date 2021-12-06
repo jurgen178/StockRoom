@@ -177,7 +177,7 @@ class StockMarketDataRepository(
         if (standardList.isNotEmpty()) {
             val yahooResult = getYahooStockData(standardList)
             marketDataResult.marketState = yahooResult.marketState
-            marketDataResult.delayInMs = yahooResult.delayInMs
+            marketDataResult.delayInMs = max(marketDataResult.delayInMs, yahooResult.delayInMs)
             marketDataResult.msg += yahooResult.msg
         }
 
@@ -187,7 +187,7 @@ class StockMarketDataRepository(
         if (cryptoListCoingecko.isNotEmpty()) {
             val coingeckoResult = getCoingeckoStockData(cryptoListCoingecko)
             marketDataResult.marketState = coingeckoResult.marketState
-            marketDataResult.delayInMs = coingeckoResult.delayInMs
+            marketDataResult.delayInMs = max(marketDataResult.delayInMs, coingeckoResult.delayInMs)
             marketDataResult.msg += coingeckoResult.msg
         }
 
@@ -197,7 +197,7 @@ class StockMarketDataRepository(
         if (cryptoListCoinpaprika.isNotEmpty()) {
             val coinpaprikaResult = getCoinpaprikaStockData(cryptoListCoinpaprika)
             marketDataResult.marketState = coinpaprikaResult.marketState
-            marketDataResult.delayInMs = coinpaprikaResult.delayInMs
+            marketDataResult.delayInMs = max(marketDataResult.delayInMs, coinpaprikaResult.delayInMs)
             marketDataResult.msg += coinpaprikaResult.msg
         }
 
@@ -206,10 +206,11 @@ class StockMarketDataRepository(
         }
         if (cryptoListGemini.isNotEmpty()) {
             val geminiResult = getGeminiStockData(cryptoListGemini)
+
+            // TODO last one wins to set state?
             marketDataResult.marketState = geminiResult.marketState
 
-            // TODO last one wins to set delay?
-            marketDataResult.delayInMs = geminiResult.delayInMs
+            marketDataResult.delayInMs = max(marketDataResult.delayInMs, geminiResult.delayInMs)
             marketDataResult.msg += geminiResult.msg
         }
 

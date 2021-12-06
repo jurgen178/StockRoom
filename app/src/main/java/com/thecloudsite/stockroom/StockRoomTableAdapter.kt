@@ -78,6 +78,8 @@ enum class TableSortMode {
     ByEventsDown,
     ByNoteUp,
     ByNoteDown,
+    ByProviderUp,
+    ByProviderDown,
 }
 
 class StockRoomTableAdapter internal constructor(
@@ -155,6 +157,7 @@ class StockRoomTableAdapter internal constructor(
         holder.binding.tableDataMarketCurrency.gravity = alignmentText
         holder.binding.tableDataEvents.gravity = alignmentText
         holder.binding.tableDataNote.gravity = alignmentText
+        holder.binding.tableDataProvider.gravity = alignmentText
 
         if (isHeader) {
 
@@ -271,6 +274,12 @@ class StockRoomTableAdapter internal constructor(
             holder.binding.tableDataNote.text =
                 getHeaderStr(context.getString(R.string.table_column_Note))
 
+            holder.binding.tableDataProvider.setOnClickListener {
+                update(TableSortMode.ByProviderUp, TableSortMode.ByProviderDown)
+            }
+            holder.binding.tableDataProvider.text =
+                getHeaderStr(context.getString(R.string.table_column_Provider))
+
             when (tableSortmode) {
                 TableSortMode.BySymbolUp -> updateTextviewUp(holder.binding.tableDataSymbol)
                 TableSortMode.BySymbolDown -> updateTextviewDown(holder.binding.tableDataSymbol)
@@ -322,6 +331,9 @@ class StockRoomTableAdapter internal constructor(
 
                 TableSortMode.ByNoteUp -> updateTextviewUp(holder.binding.tableDataNote)
                 TableSortMode.ByNoteDown -> updateTextviewDown(holder.binding.tableDataNote)
+
+                TableSortMode.ByProviderUp -> updateTextviewUp(holder.binding.tableDataProvider)
+                TableSortMode.ByProviderDown -> updateTextviewDown(holder.binding.tableDataProvider)
 
                 // case: unsorted
                 else -> {
@@ -667,6 +679,10 @@ class StockRoomTableAdapter internal constructor(
             }
 
             holder.binding.tableDataNote.text = current.stockDBdata.note
+
+//            val providers = context.resources.getStringArray(array.dataprovider_items)
+//            holder.binding.tableDataProvider.text = providers[current.stockDBdata.type]
+            holder.binding.tableDataProvider.text = dataProviderFromInt(current.stockDBdata.type).toString()
         }
     }
 
@@ -843,6 +859,13 @@ class StockRoomTableAdapter internal constructor(
             }
             TableSortMode.ByNoteDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
                 stockItem.stockDBdata.note
+            }
+
+            TableSortMode.ByProviderUp -> this.stockItemsCopy.sortedBy { stockItem ->
+                stockItem.stockDBdata.type
+            }
+            TableSortMode.ByProviderDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+                stockItem.stockDBdata.type
             }
 
             else -> this.stockItemsCopy

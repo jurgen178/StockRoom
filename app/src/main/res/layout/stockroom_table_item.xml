@@ -333,6 +333,22 @@
       app:layout_constraintBottom_toBottomOf="parent"
       />
 
+  <View
+      style="@style/table_item_vertical_line"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/guideline18"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/tableDataProvider"
+      style="@style/table_item_style"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/guideline18"
+      app:layout_constraintEnd_toStartOf="@id/guideline19"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline1"
       android:layout_width="wrap_content"
@@ -475,6 +491,14 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       app:layout_constraintGuide_begin="2520dp"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline19"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="2720dp"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

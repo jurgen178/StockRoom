@@ -241,7 +241,12 @@ class ListDBAdapter(
                     holder.binding.dbStockdbdataData.text = data.data
                     holder.binding.dbStockdbdataGroupColor.text = getColorStr(data.groupColor)
                     holder.binding.dbStockdbdataMarker.text = if (data.marker > 0) {
-                        holder.binding.dbStockdbdataMarker.setBackgroundColor(getMarkerColor(context, data.marker))
+                        holder.binding.dbStockdbdataMarker.setBackgroundColor(
+                            getMarkerColor(
+                                context,
+                                data.marker
+                            )
+                        )
                         "${getMarkerText(context, data.marker)}"
                     } else {
                         ""
@@ -579,6 +584,7 @@ class ListDBAdapter(
                     DBData(
                         viewType = db_stockdbdata_type,
                         symbol = stockDBdata.symbol,
+                        name = stockDBdata.name,
                         portfolio = stockDBdata.portfolio,
                         type = stockDBdata.type,
                         data = stockDBdata.data,
