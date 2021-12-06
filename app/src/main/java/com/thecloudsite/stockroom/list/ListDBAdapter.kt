@@ -249,6 +249,9 @@ class ListDBAdapter(
                         )
                         "${getMarkerText(context, data.marker)}"
                     } else {
+                        holder.binding.dbStockdbdataMarker.setBackgroundColor(
+                            Color.rgb(0, 148, 255)
+                        )
                         ""
                     }
                     holder.binding.dbStockdbdataNote.text = data.note
