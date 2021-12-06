@@ -89,11 +89,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
     implementation 'com.google.firebase:firebase-analytics-ktx:20.0.0'
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.4'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.5'
     // Add the dependency for the Performance Monitoring library
-    implementation 'com.google.firebase:firebase-perf:20.0.3'
+    implementation 'com.google.firebase:firebase-perf:20.0.4'
     // Add the Realtime Database SDKci
-    implementation 'com.google.firebase:firebase-database-ktx:20.0.2'
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.3'
     implementation 'androidx.cardview:cardview:1.0.0'
     // Add the dependencies for FirebaseUI
     //implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
