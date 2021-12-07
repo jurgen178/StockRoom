@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class AndroidMapItem extends MapItem implements AndroidMappable, Comparable<AndroidMapItem> {
   private double weight;
+  private final String symbol;
   private final String label;
   private final String text;
   private final String change;
@@ -30,14 +31,20 @@ public class AndroidMapItem extends MapItem implements AndroidMappable, Comparab
   private Integer textColor;
   private boolean groupColorsUsed;
 
-  public AndroidMapItem(double weight, String label, String text, String change, Integer backgroundColor, Integer textColor, boolean groupColorsUsed) {
+  public AndroidMapItem(double weight, String symbol, String label, String text, String change, Integer backgroundColor, Integer textColor, boolean groupColorsUsed) {
+    setSize(weight);
+    this.weight = weight;
+    this.symbol = symbol;
     this.label = label;
     this.text = text;
     this.change = change;
     this.backgroundColor = backgroundColor;
     this.textColor = textColor;
     this.groupColorsUsed = groupColorsUsed;
-    setSize(weight);
+  }
+
+  public String getSymbol() {
+    return symbol;
   }
 
   public String getLabel() {

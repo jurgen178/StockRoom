@@ -71,7 +71,7 @@ public class MapLayoutView extends View {
                                     item.setBackgroundColor(Color.GRAY);
                                     v.invalidate();
 
-                                    String symbol = item.getLabel();
+                                    String symbol = item.getSymbol();
                                     onClickCallback.run(symbol);
                                 }
                             }
@@ -221,7 +221,7 @@ public class MapLayoutView extends View {
             float txm = labelRect.width();
             float xm = rectF.left + rectF.width() / 2 - txm / 2;
             float ym = rectF.top + tym + 8; // Border=8
-            if (txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+            if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
                 labelX = xm;
                 labelY = ym;
                 ym += tym / 4;
@@ -233,7 +233,7 @@ public class MapLayoutView extends View {
                 txm = labelRect.width();
                 xm = rectF.left + rectF.width() / 2 - txm / 2;
                 ym = rectF.top + tym + 8; // Border=8
-                if (txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+                if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
                     labelX = xm;
                     labelY = ym;
                     ym += tym / 4;
@@ -247,7 +247,7 @@ public class MapLayoutView extends View {
                         txm = labelRect.width();
                         xm = rectF.left + rectF.width() / 2 - txm / 2;
                         ym = rectF.top + tym + 8; // Border=8
-                        if (txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+                        if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
                             labelX = xm;
                             labelY = ym;
                             ym += tym / 4;
@@ -265,7 +265,7 @@ public class MapLayoutView extends View {
             txm = textRect.width();
             xm = rectF.left + rectF.width() / 2 - txm / 2;
             ym += tym;
-            if (labelY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+            if (txm > 0 && labelY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
                 textX = xm;
                 textY = ym;
                 ym += tym / 4;
@@ -280,7 +280,7 @@ public class MapLayoutView extends View {
             txm = changeRect.width();
             xm = rectF.left + rectF.width() / 2 - txm / 2;
             ym += tym;
-            if (textY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+            if (txm > 0 && textY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
                 changeX = xm;
                 changeY = ym;
             }

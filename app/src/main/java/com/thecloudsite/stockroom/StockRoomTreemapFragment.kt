@@ -120,7 +120,7 @@ class StockRoomTreemapFragment : Fragment() {
 
         // Gets displayed if no items are added to the root item.
         val noAssetsStr = context?.getString(R.string.no_assets)
-        val rootItem = AndroidMapItem(1.0, noAssetsStr, "", "", 0, 0, false)
+        val rootItem = AndroidMapItem(1.0, "", noAssetsStr, "", "", 0, requireContext().getColor(R.color.black), false)
         val treeModel = TreeModel(rootItem)
 
         val totalAssets = stockItems.sumOf { stockItem ->
@@ -184,6 +184,7 @@ class StockRoomTreemapFragment : Fragment() {
                     TreeModel(
                         AndroidMapItem(
                             assets,
+                            stockItem.stockDBdata.symbol,
                             displayName,
                             DecimalFormat(DecimalFormat2Digits).format(assets)
                                     + percentStr
