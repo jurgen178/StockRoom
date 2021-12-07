@@ -38,6 +38,11 @@ import java.time.format.DateTimeFormatter
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
 
+data class TimelineHeader(
+    val symbol: String,
+    val name: String,
+)
+
 open class AssetBaseTimelineFragment : Fragment() {
 
     private var _binding: FragmentTimelineBinding? = null
@@ -97,7 +102,7 @@ open class AssetBaseTimelineFragment : Fragment() {
     }
 
     fun updateAssets(assets: List<Asset>) {
-        val hashMap: HashMap<String, HashMap<String, MutableList<Asset>>> =
+        val hashMap: HashMap<String, HashMap<TimelineHeader, MutableList<Asset>>> =
             hashMapOf()
         val unknownDate = getString(R.string.timeline_unknown_date)
 
@@ -118,12 +123,15 @@ open class AssetBaseTimelineFragment : Fragment() {
                 hashMap[date] = hashMapOf()
             }
 
-            val name = asset.symbol
-            if (hashMap[date]?.get(name) == null) {
-                hashMap[date]?.set(name, mutableListOf())
+            val header = TimelineHeader(
+                symbol = asset.symbol,
+                name = getSymbolDisplayName(asset.symbol)
+            )
+            if (hashMap[date]?.get(header) == null) {
+                hashMap[date]?.set(header, mutableListOf())
             }
 
-            hashMap[date]?.get(name)
+            hashMap[date]?.get(header)
                 ?.add(asset)
         }
 
@@ -144,11 +152,12 @@ open class AssetBaseTimelineFragment : Fragment() {
                             0
                         }
                     }
-                    .forEach { (symbol, list) ->
+                    .forEach { (header, list) ->
                         assetList.add(
                             AssetTimelineElement(
                                 date,
-                                symbol,
+                                header.symbol,
+                                header.name,
                                 list
                             )
                         )

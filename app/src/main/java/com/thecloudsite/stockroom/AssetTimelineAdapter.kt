@@ -34,6 +34,7 @@ import java.time.format.DateTimeFormatter
 data class AssetTimelineElement(
   val date: String,
   val symbol: String,
+  val name: String,
   val assets: List<Asset>,
 )
 
@@ -73,7 +74,7 @@ class AssetTimelineAdapter(
     val timelineElement = timelineElementList[position]
 
     holder.bind(timelineElement, clickListenerCardItemLambda)
-    holder.binding.timelineHeader.text = timelineElement.symbol
+    holder.binding.timelineHeader.text = timelineElement.name
 
     var stockTransactions = ""
     var skipFirstline = true
