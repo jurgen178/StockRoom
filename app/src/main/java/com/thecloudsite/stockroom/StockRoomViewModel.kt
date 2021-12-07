@@ -1113,6 +1113,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     data class AlertData(
         var symbol: String,
+        var symbolDisplayName: String,
         var name: String,
 
         var alertAbove: Double = 0.0,
@@ -1147,6 +1148,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     if (stockItem.stockDBdata.alertAbove > 0.0 && stockItem.stockDBdata.alertAbove < marketPrice) {
                         val alertDataAbove = AlertData(
                             symbol = stockItem.stockDBdata.symbol,
+                            symbolDisplayName = if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
                             name = getName(stockItem.onlineMarketData),
 
                             alertAbove = stockItem.stockDBdata.alertAbove,
@@ -1158,6 +1160,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         if (stockItem.stockDBdata.alertBelow > 0.0 && stockItem.stockDBdata.alertBelow > marketPrice) {
                             val alertDataBelow = AlertData(
                                 symbol = stockItem.stockDBdata.symbol,
+                                symbolDisplayName = if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
                                 name = getName(stockItem.onlineMarketData),
 
                                 alertBelow = stockItem.stockDBdata.alertBelow,

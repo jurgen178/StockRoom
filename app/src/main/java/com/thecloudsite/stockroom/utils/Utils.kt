@@ -40,6 +40,7 @@ import androidx.core.text.color
 import androidx.preference.PreferenceManager
 import com.thecloudsite.stockroom.*
 import com.thecloudsite.stockroom.DividendCycle.*
+import com.thecloudsite.stockroom.MainActivity.Companion.symbolDisplayNameMap
 import com.thecloudsite.stockroom.R.array
 import com.thecloudsite.stockroom.R.color
 import com.thecloudsite.stockroom.database.Asset
@@ -1336,4 +1337,9 @@ fun setGroupBackground(
 // btcusd to btc-usd
 fun idToName(symbol: String): String {
     return symbol.replace(Regex("(\\w+)(\\w{3})"), "$1-$2")
+}
+
+// Get the display name for the symbol if used outside of the stockdata class (asset, events)
+fun getSymbolDisplayName(symbol: String): String {
+    return if (symbolDisplayNameMap.containsKey(symbol)) symbolDisplayNameMap[symbol]!! else symbol
 }

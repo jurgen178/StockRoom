@@ -45,6 +45,7 @@ data class TransactionData
   val viewType: Int,
   var date: Long,
   var symbol: String,
+  var name: String,
   var type: TransactionType,
   var account: String = "",
   var value: Double = 0.0,
@@ -87,6 +88,7 @@ class StockRoomTransactionsAdapter internal constructor(
     viewType = -1,
     date = -1,
     symbol = "",
+    name = "",
     type = TransactionType.StatsType
   )
   private var transactionDataList: MutableList<TransactionData> = mutableListOf()
@@ -282,7 +284,7 @@ class StockRoomTransactionsAdapter internal constructor(
           datetime.format(DateTimeFormatter.ofLocalizedTime(MEDIUM))
         }"
 
-        holder.binding.transactionSymbol.text = current.symbol
+        holder.binding.transactionSymbol.text = current.name
         holder.binding.transactionType.text = when (current.type) {
           TransactionType.AssetBoughtType -> {
             context.getString(R.string.transaction_bought)
@@ -375,6 +377,7 @@ class StockRoomTransactionsAdapter internal constructor(
         viewType = transaction_headline_type,
         date = 0L,
         symbol = "",
+        name = "",
         type = TransactionType.StatsType
       )
     )

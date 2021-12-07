@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.thecloudsite.stockroom.database.Event
 import com.thecloudsite.stockroom.databinding.TimelineEventItemBinding
+import com.thecloudsite.stockroom.utils.getSymbolDisplayName
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -83,7 +84,7 @@ class EventTimelineAdapter(
               R.string.timeline_event,
               timeStr,
               event.title,
-              event.symbol
+              getSymbolDisplayName(event.symbol)
           )
         }
 

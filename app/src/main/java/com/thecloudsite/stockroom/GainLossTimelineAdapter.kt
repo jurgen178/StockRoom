@@ -76,7 +76,7 @@ class GainLossTimelineAdapter(
       gainloss.date
     }.forEach { gainloss ->
 
-      gainlossStr.bold { append(gainloss.symbol) }
+      gainlossStr.bold { append(gainloss.name) }
       gainlossStr.append(" ")
 
       if (gainloss.date > 0L) {

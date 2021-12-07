@@ -109,6 +109,8 @@ class MainActivity : AppCompatActivity() {
         const val onlineDataTimerDelay: Long = 2000L
         var debugList: Boolean = false
         var realtimeOverride: Boolean = false
+
+        val symbolDisplayNameMap = HashMap<String, String>()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,6 +178,17 @@ class MainActivity : AppCompatActivity() {
 
         SharedRepository.alerts.observe(this, Observer { alerts ->
             showAlerts(alerts)
+        })
+
+        // Update name map for the symbol display names.
+        stockRoomViewModel.allStockDBdata.observe(this, Observer { stockItems ->
+            if (stockItems != null) {
+                symbolDisplayNameMap.clear()
+                stockItems.forEach { stockItem ->
+                    symbolDisplayNameMap[stockItem.symbol] =
+                        if (stockItem.name.isEmpty()) stockItem.symbol else stockItem.name
+                }
+            }
         })
 
         stockRoomViewModel.allEvents.observe(this, Observer { events ->
@@ -793,13 +806,14 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         alerts.forEach { alert ->
             if (alert.alertAbove > 0.0) {
                 val title = getString(
-                    R.string.alert_above_notification_title, alert.symbol,
+                    R.string.alert_above_notification_title, alert.symbolDisplayName,
                     to2To8Digits(alert.alertAbove),
                     to2To8Digits(alert.marketPrice)
                 )
 
                 var text = getString(
-                    R.string.alert_above_notification, alert.symbol, alert.name,
+                    R.string.alert_above_notification, alert.symbolDisplayName,
+                    alert.name,
                     to2To8Digits(alert.alertAbove),
                     to2To8Digits(alert.marketPrice)
                 )
@@ -824,13 +838,14 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
             } else
                 if (alert.alertBelow > 0.0) {
                     val title = getString(
-                        R.string.alert_below_notification_title, alert.symbol,
+                        R.string.alert_below_notification_title, alert.symbolDisplayName,
                         to2To8Digits(alert.alertBelow),
                         to2To8Digits(alert.marketPrice)
                     )
 
                     var text = getString(
-                        R.string.alert_below_notification, alert.symbol, alert.name,
+                        R.string.alert_below_notification, alert.symbolDisplayName,
+                        alert.name,
                         to2To8Digits(alert.alertBelow),
                         to2To8Digits(alert.marketPrice)
                     )
@@ -874,16 +889,19 @@ override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
                 // Each event item per stock
                 events.events.forEach { event ->
                     if (datetimeNow >= event.datetime) {
+                        val symbol =
+                            if (symbolDisplayNameMap.containsKey(event.symbol)) symbolDisplayNameMap[event.symbol] else event.symbol
+
                         val title =
                             getString(
                                 R.string.alert_event_notification_title,
                                 event.title,
-                                event.symbol
+                                symbol
                             )
                         val text =
                             getString(
                                 R.string.alert_event_notification,
-                                event.symbol,
+                                symbol,
                                 event.title,
                                 event.note
                             )

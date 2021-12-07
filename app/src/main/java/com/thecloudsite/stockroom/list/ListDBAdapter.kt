@@ -650,7 +650,7 @@ class ListDBAdapter(
                     DBData(
                         viewType = db_asset_type,
                         id = asset.id,
-                        symbol = asset.symbol,
+                        symbol = getSymbolDisplayName(asset.symbol),
                         quantity = asset.quantity,
                         price = asset.price,
                         type = asset.type,
@@ -687,7 +687,7 @@ class ListDBAdapter(
                     DBData(
                         viewType = db_event_type,
                         id = event.id,
-                        symbol = event.symbol,
+                        symbol = getSymbolDisplayName(event.symbol),
                         title = event.title,
                         datetime = event.datetime,
                         type = event.type,
@@ -718,7 +718,7 @@ class ListDBAdapter(
                     DBData(
                         viewType = db_dividend_type,
                         id = dividend.id,
-                        symbol = dividend.symbol,
+                        symbol = getSymbolDisplayName(dividend.symbol),
                         amount = dividend.amount,
                         cycle = dividend.cycle,
                         paydate = dividend.paydate,

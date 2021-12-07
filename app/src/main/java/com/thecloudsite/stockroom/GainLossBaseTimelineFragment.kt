@@ -42,6 +42,7 @@ data class GainLoss2(
 data class GainLossStockItem(
     var date: Long = 0L,
     var symbol: String = "",
+    var name: String = "",
     var text: SpannableStringBuilder = SpannableStringBuilder()
 )
 
@@ -284,7 +285,8 @@ open class GainLossBaseTimelineFragment : Fragment() {
                 capitalGainLossMap[year]?.get(headline)?.stockList?.add(
                     GainLossStockItem(
                         date = map.lastTransactionDate,
-                        symbol = if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
+                        symbol = stockItem.stockDBdata.symbol,
+                        name = if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
                         text = capitalGainLossText
                     )
                 )

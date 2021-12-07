@@ -662,6 +662,7 @@ class StockRoomTest {
 
         val stockItemsJson = stockItems.map { stockItem ->
             StockItemJson(symbol = stockItem.stockDBdata.symbol,
+                name = stockItem.stockDBdata.name,
                 groupColor = stockItem.stockDBdata.groupColor,
                 groupName = "a",
                 portfolio = stockItem.stockDBdata.portfolio,
