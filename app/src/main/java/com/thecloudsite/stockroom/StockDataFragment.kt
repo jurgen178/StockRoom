@@ -97,6 +97,7 @@ import kotlin.math.roundToInt
 
 const val EXTRA_SYMBOL = "com.thecloudsite.stockroom.STOCKSYMBOL"
 const val EXTRA_TYPE = "com.thecloudsite.stockroom.STOCKTYPE"
+const val EXTRA_SETSTARTFRAGMENT = "com.thecloudsite.stockroom.SETSTARTFRAGMENT"
 
 // Enabled/Disabled overlay symbols not per instance
 var chartOverlaySymbolsEnableList: MutableList<Boolean> =

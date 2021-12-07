@@ -38,11 +38,6 @@ import java.time.format.DateTimeFormatter
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
 
-data class TimelineHeader(
-    val symbol: String,
-    val name: String,
-)
-
 open class AssetBaseTimelineFragment : Fragment() {
 
     private var _binding: FragmentTimelineBinding? = null
@@ -127,6 +122,7 @@ open class AssetBaseTimelineFragment : Fragment() {
                 symbol = asset.symbol,
                 name = getSymbolDisplayName(asset.symbol)
             )
+
             if (hashMap[date]?.get(header) == null) {
                 hashMap[date]?.set(header, mutableListOf())
             }
@@ -156,8 +152,7 @@ open class AssetBaseTimelineFragment : Fragment() {
                         assetList.add(
                             AssetTimelineElement(
                                 date,
-                                header.symbol,
-                                header.name,
+                                header,
                                 list
                             )
                         )
@@ -195,7 +190,7 @@ open class AssetBaseTimelineFragment : Fragment() {
 
     private fun clickListenerCardItem(timelineElement: AssetTimelineElement) {
         val intent = Intent(context, StockDataActivity::class.java)
-        intent.putExtra(EXTRA_SYMBOL, timelineElement.symbol)
+        intent.putExtra(EXTRA_SYMBOL, timelineElement.header.symbol)
         //stockRoomViewModel.runOnlineTaskNow()
         startActivity(intent)
     }

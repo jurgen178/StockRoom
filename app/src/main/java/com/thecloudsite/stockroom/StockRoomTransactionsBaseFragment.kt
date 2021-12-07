@@ -56,6 +56,12 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
         if (transactionData.symbol.isNotEmpty()) {
             val intent = Intent(context, StockDataActivity::class.java)
             intent.putExtra(EXTRA_SYMBOL, transactionData.symbol)
+            if (transactionData.type == TransactionType.DividendReceivedType) {
+                // 0: Dividend
+                // 1: Standard
+                // 2: News
+                intent.putExtra(EXTRA_SETSTARTFRAGMENT, 0)
+            }
             //stockRoomViewModel.runOnlineTaskNow()
             startActivity(intent)
         }

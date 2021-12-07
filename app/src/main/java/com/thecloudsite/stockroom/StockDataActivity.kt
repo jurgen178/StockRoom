@@ -155,7 +155,8 @@ class StockDataActivity : AppCompatActivity() {
       }
     }
 
-    binding.stockViewpager.setCurrentItem(1, false)
+    val startFragment = intent.getIntExtra(EXTRA_SETSTARTFRAGMENT, 1)
+    binding.stockViewpager.setCurrentItem(startFragment, false)
 
     TabLayoutMediator(binding.tabLayout, binding.stockViewpager) { tab, position ->
       tab.text = when (position) {

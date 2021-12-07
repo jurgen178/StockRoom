@@ -31,10 +31,14 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-data class AssetTimelineElement(
-  val date: String,
+data class TimelineHeader(
   val symbol: String,
   val name: String,
+)
+
+data class AssetTimelineElement(
+  val date: String,
+  val header: TimelineHeader,
   val assets: List<Asset>,
 )
 
@@ -74,7 +78,7 @@ class AssetTimelineAdapter(
     val timelineElement = timelineElementList[position]
 
     holder.bind(timelineElement, clickListenerCardItemLambda)
-    holder.binding.timelineHeader.text = timelineElement.name
+    holder.binding.timelineHeader.text = timelineElement.header.name
 
     var stockTransactions = ""
     var skipFirstline = true
