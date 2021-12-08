@@ -77,7 +77,7 @@ class StockDataActivity : AppCompatActivity() {
 
     SharedRepository.selectedSymbol = stockSymbol
 
-    // Moved to MainActivity, baecuase otherwise a stock need to be selected to
+    // Moved to MainActivity, because otherwise a stock need to be selected to
     // update the SharedAccountList.accounts
 
 //    // Use MediatorLiveView to combine the assets and dividend data changes.
