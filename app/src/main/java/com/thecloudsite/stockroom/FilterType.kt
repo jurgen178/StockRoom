@@ -41,6 +41,7 @@ enum class FilterTypeEnum {
     FilterDisplayNameType,
     FilterQuoteType,
     FilterStockExchangeNameType,
+    FilterDataProviderType,
     FilterMarketCapType,
     FilterGroupType,
     FilterMarkerType,
@@ -136,9 +137,10 @@ object FilterFactory {
             FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
             FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
             FilterTypeEnum.FilterMarketCapType -> FilterMarketCapType(context)
-            FilterTypeEnum.FilterQuoteType -> FilterQuoteType(context)
+            FilterTypeEnum.FilterQuoteType -> FilterStringQuoteType(context)
             FilterTypeEnum.FilterAssetAccountType -> FilterAssetAccountType(context)
             FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
+            FilterTypeEnum.FilterDataProviderType -> FilterStringDataProviderType(context)
             FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
             FilterTypeEnum.FilterMarkerType -> FilterMarkerType(context)
             FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
@@ -373,29 +375,32 @@ open class FilterSelectionBaseType(open val context: Context) : FilterBaseType()
         )
 }
 
-open class FilterQuoteTypeBaseType(override val context: Context) : FilterSelectionBaseType(
-    context
-) {
+open class FilterStringArrayListTypeBaseType(override val context: Context) :
+    FilterSelectionBaseType(
+        context
+    ) {
 
-    var filterQuoteValue: String = ""
+    var filterArrayStringValue: String = ""
+    open val arrayId = 0
 
     override val selectionList: List<SpannableStringBuilder>
         get() {
-            val quoteTypeNames = context.resources.getStringArray(array.quoteTypes)
-            return quoteTypeNames.map { quoteTypeName ->
-                SpannableStringBuilder().append(quoteTypeName)
+            val typeNames = context.resources.getStringArray(arrayId)
+            return typeNames.map { typeName ->
+                SpannableStringBuilder().append(typeName)
             }
         }
+
     override var data: String = ""
         get() = filterSelectionIndex.toString()
         set(value) {
             field = value
             filterSelectionIndex = strToInt(value)
 
-            val quoteTypeNames = context.resources.getStringArray(array.quoteTypeNames)
-            filterQuoteValue =
-                if (filterSelectionIndex >= 0 && filterSelectionIndex < quoteTypeNames.size) {
-                    quoteTypeNames[filterSelectionIndex]
+            val typeNames = context.resources.getStringArray(arrayId)
+            filterArrayStringValue =
+                if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
+                    typeNames[filterSelectionIndex]
                 } else {
                     ""
                 }
@@ -403,10 +408,52 @@ open class FilterQuoteTypeBaseType(override val context: Context) : FilterSelect
 
     override val displayData: SpannableStringBuilder
         get() {
-            val quoteTypes = context.resources.getStringArray(array.quoteTypes)
+            val typeNames = context.resources.getStringArray(arrayId)
 
-            return if (filterSelectionIndex >= 0 && filterSelectionIndex < quoteTypes.size) {
-                SpannableStringBuilder().append(quoteTypes[filterSelectionIndex])
+            return if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
+                SpannableStringBuilder().append(typeNames[filterSelectionIndex])
+            } else {
+                SpannableStringBuilder()
+            }
+        }
+}
+
+open class FilterDataProviderEnumTypeBaseType(override val context: Context) :
+    FilterSelectionBaseType(
+        context
+    ) {
+
+    var filterDataProvider: DataProvider = DataProvider.Standard
+
+    override val selectionList: List<SpannableStringBuilder>
+        get() {
+            val typeNames = DataProvider.values()
+            return typeNames.map { typeName ->
+                SpannableStringBuilder().append(typeName.toString())
+            }
+        }
+
+    override var data: String = ""
+        get() = filterSelectionIndex.toString()
+        set(value) {
+            field = value
+            filterSelectionIndex = strToInt(value)
+
+            val typeNames = DataProvider.values()
+            filterDataProvider =
+                if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
+                    typeNames[filterSelectionIndex]
+                } else {
+                    DataProvider.Standard
+                }
+        }
+
+    override val displayData: SpannableStringBuilder
+        get() {
+            val typeNames = DataProvider.values()
+
+            return if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
+                SpannableStringBuilder().append(typeNames[filterSelectionIndex].toString())
             } else {
                 SpannableStringBuilder()
             }
@@ -436,6 +483,7 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
                 }
             }
         }
+
     override var data: String = ""
         get() = filterSelectionIndex.toString()
         set(value) {
@@ -846,24 +894,47 @@ class FilterMarketCapType(
         }
 }
 
-class FilterQuoteType(
+class FilterStringQuoteType(
     context: Context
-) : FilterQuoteTypeBaseType(context) {
+) : FilterStringArrayListTypeBaseType(context) {
+
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.IsType -> {
-                stockItem.onlineMarketData.quoteType == filterQuoteValue
+                stockItem.onlineMarketData.quoteType == filterArrayStringValue
             }
             FilterSubTypeEnum.IsNotType -> {
-                stockItem.onlineMarketData.quoteType != filterQuoteValue
+                stockItem.onlineMarketData.quoteType != filterArrayStringValue
             }
             else -> false
         }
     }
 
+    override val arrayId = array.quoteTypeNames
     override val typeId = FilterTypeEnum.FilterQuoteType
     override val displayName = context.getString(R.string.filter_quotetype_name)
     override val desc = context.getString(R.string.filter_quotetype_desc)
+}
+
+class FilterStringDataProviderType(
+    context: Context
+) : FilterDataProviderEnumTypeBaseType(context) {
+
+    override fun filter(stockItem: StockItem): Boolean {
+        return when (subType) {
+            FilterSubTypeEnum.IsType -> {
+                stockItem.stockDBdata.type == filterDataProvider.value
+            }
+            FilterSubTypeEnum.IsNotType -> {
+                stockItem.stockDBdata.type != filterDataProvider.value
+            }
+            else -> false
+        }
+    }
+
+    override val typeId = FilterTypeEnum.FilterDataProviderType
+    override val displayName = context.getString(R.string.filter_dataprovidertype_name)
+    override val desc = context.getString(R.string.filter_dataprovidertype_desc)
 }
 
 class FilterAssetAccountType(
