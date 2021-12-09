@@ -120,7 +120,15 @@ class StockRoomTreemapFragment : Fragment() {
 
         // Gets displayed if no items are added to the root item.
         val noAssetsStr = context?.getString(R.string.no_assets)
-        val rootItem = AndroidMapItem(1.0, "", noAssetsStr, "", "", 0, requireContext().getColor(R.color.black), false)
+        val rootItem = AndroidMapItem(
+            1.0,
+            "",
+            noAssetsStr,
+            "",
+            "",
+            0,
+            requireContext().getColor(R.color.black)
+        )
         val treeModel = TreeModel(rootItem)
 
         val totalAssets = stockItems.sumOf { stockItem ->
@@ -130,10 +138,6 @@ class StockRoomTreemapFragment : Fragment() {
             } else {
                 0.0
             }
-        }
-
-        val groupColorsUsed = stockItems.any { stockItem ->
-            stockItem.stockDBdata.groupColor != 0
         }
 
         val textColor = if (useWhiteOnRedGreen) {
@@ -159,15 +163,11 @@ class StockRoomTreemapFragment : Fragment() {
                 val backgroundColor = if (stockItem.stockDBdata.groupColor != 0) {
                     stockItem.stockDBdata.groupColor
                 } else {
-                    if (groupColorsUsed) {
-                        requireContext().getColor(R.color.backgroundListColor)
+                    // Color the treemap with red/green.
+                    if (assetChange.value >= 0.0) {
+                        requireContext().getColor(R.color.green)
                     } else {
-                        // Color the treemap with red/green if no group colors are used.
-                        if (assetChange.value >= 0.0) {
-                            requireContext().getColor(R.color.green)
-                        } else {
-                            requireContext().getColor(R.color.red)
-                        }
+                        requireContext().getColor(R.color.red)
                     }
                 }
 
@@ -193,8 +193,7 @@ class StockRoomTreemapFragment : Fragment() {
                             ,
                             assetChange.displayStr,
                             backgroundColor,
-                            textColor,
-                            groupColorsUsed
+                            if (stockItem.stockDBdata.groupColor != 0) 0 else textColor
                         )
                     )
                 )

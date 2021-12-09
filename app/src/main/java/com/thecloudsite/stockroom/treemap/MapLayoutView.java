@@ -133,9 +133,8 @@ public class MapLayoutView extends View {
             RectF rectF = item.getBoundsRectF();
             Integer backgroundColor = item.getBackgroundColor();
             Integer textColor = item.getTextColor();
-            boolean groupColorsUsed = item.getGroupColorsUsed();
             drawRectangle(canvas, rectF, backgroundColor);
-            drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF, backgroundColor, textColor, groupColorsUsed);
+            drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF, backgroundColor, textColor);
         }
     }
 
@@ -188,19 +187,18 @@ public class MapLayoutView extends View {
             String change,
             RectF rectF,
             Integer backgroundColor,
-            Integer textColor,
-            boolean groupColorsUsed) {
+            Integer textColor) {
         // Don't draw text for small rectangles
         if (rectF.width() > 40) {
 
-            if (groupColorsUsed) {
+            if (textColor != 0) {
+                mTextPaint.setColor(textColor);
+            } else {
                 if (backgroundColor != 0 && isDarkColor(backgroundColor)) {
                     mTextPaint.setColor(Color.WHITE);
                 } else {
                     mTextPaint.setColor(Color.BLACK);
                 }
-            } else {
-                mTextPaint.setColor(textColor);
             }
 
             // Print label-only items in smaller font, for example the root item when no assets are present.

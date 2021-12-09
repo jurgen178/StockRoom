@@ -24,9 +24,8 @@ public class AndroidMapItem extends MapItem implements AndroidMappable {
     private final String change;
     private Integer backgroundColor;
     private final Integer textColor;
-    private final boolean groupColorsUsed;
 
-    public AndroidMapItem(double weight, String symbol, String label, String text, String change, Integer backgroundColor, Integer textColor, boolean groupColorsUsed) {
+    public AndroidMapItem(double weight, String symbol, String label, String text, String change, Integer backgroundColor, Integer textColor) {
         setSize(weight);
         this.symbol = symbol;
         this.label = label;
@@ -34,7 +33,6 @@ public class AndroidMapItem extends MapItem implements AndroidMappable {
         this.change = change;
         this.backgroundColor = backgroundColor;
         this.textColor = textColor;
-        this.groupColorsUsed = groupColorsUsed;
     }
 
     public String getSymbol() {
@@ -59,10 +57,6 @@ public class AndroidMapItem extends MapItem implements AndroidMappable {
 
     public Integer getTextColor() {
         return textColor;
-    }
-
-    public boolean getGroupColorsUsed() {
-        return groupColorsUsed;
     }
 
     public void setBackgroundColor(Integer backgroundColor) {
