@@ -140,7 +140,7 @@ class StockRoomTreemapFragment : Fragment() {
             }
         }
 
-        val textColor = if (useWhiteOnRedGreen) {
+        val redGreenTextColor = if (useWhiteOnRedGreen) {
             Color.WHITE
         } else {
             Color.BLACK
@@ -193,7 +193,7 @@ class StockRoomTreemapFragment : Fragment() {
                             ,
                             assetChange.displayStr,
                             backgroundColor,
-                            if (stockItem.stockDBdata.groupColor != 0) 0 else textColor
+                            if (stockItem.stockDBdata.groupColor != 0) 0 else redGreenTextColor
                         )
                     )
                 )

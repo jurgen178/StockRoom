@@ -659,6 +659,10 @@ class MainActivity : AppCompatActivity() {
                 stockRoomViewModel.updateSortMode(SortMode.ByName)
                 true
             }
+            R.id.menu_sort_purchaseprice -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByPurchaseprice)
+                true
+            }
             R.id.menu_sort_assets -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByAssets)
                 true
@@ -721,6 +725,7 @@ class MainActivity : AppCompatActivity() {
         menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked =
             sortMode == SortMode.ByChangePercentage
         menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
+        menu?.findItem(R.id.menu_sort_purchaseprice)?.isChecked = sortMode == SortMode.ByPurchaseprice
         menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
         menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
         menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =

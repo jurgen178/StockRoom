@@ -29,6 +29,10 @@
             android:checkable="true"
             android:title="@string/sort_name" />
         <item
+            android:id="@+id/menu_sort_purchaseprice"
+            android:checkable="true"
+            android:title="@string/sort_purchaseprice" />
+        <item
             android:id="@+id/menu_sort_assets"
             android:checkable="true"
             android:title="@string/sort_assets" />

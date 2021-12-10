@@ -34,14 +34,15 @@ import com.thecloudsite.stockroom.utils.getMarkerText
 enum class SortMode(val value: Int) {
     ByChangePercentage(0),
     ByName(1),
-    ByAssets(2),
-    ByProfit(3),
-    ByProfitPercentage(4),
-    ByDividendPercentage(5),
-    ByGroup(6),
-    ByMarker(7),
-    ByActivity(8)
-    //ByUnsorted(7),
+    ByPurchaseprice(2),
+    ByAssets(3),
+    ByProfit(4),
+    ByProfitPercentage(5),
+    ByDividendPercentage(6),
+    ByGroup(7),
+    ByMarker(8),
+    ByActivity(9)
+    //ByUnsorted(10),
 }
 
 open class StockRoomBaseFragment : Fragment() {
