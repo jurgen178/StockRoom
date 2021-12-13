@@ -224,7 +224,7 @@ object StockMarketDataCoinpaprikaApiFactory {
 }
 
 object StockMarketDataGeminiApiFactory {
-    // hhttps://api.gemini.com/v1/pricefeed
+    // https://api.gemini.com/v1/pricefeed
     private var defaultUrl = "https://api.gemini.com/v1/"
     private var url = ""
 

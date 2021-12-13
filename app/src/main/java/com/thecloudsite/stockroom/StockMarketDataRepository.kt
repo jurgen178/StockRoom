@@ -76,83 +76,55 @@ class StockMarketDataRepository(
     private val geminiMarketDataList: LiveData<List<OnlineMarketData>>
         get() = geminiMarketData
 
-    private var yahooMarketSourceDataList: List<OnlineMarketData> = emptyList()
-    private var coingeckoMarketSourceDataList: List<OnlineMarketData> = emptyList()
-    private var coinpaprikaMarketSourceDataList: List<OnlineMarketData> = emptyList()
-    private var geminiMarketSourceDataList: List<OnlineMarketData> = emptyList()
+    private var marketSourceDataList: MutableList<List<OnlineMarketData>> =
+        mutableListOf(
+            emptyList(), // DataProvider.Standard
+            emptyList(), // DataProvider.Coingecko
+            emptyList(), // DataProvider.Coinpaprika
+            emptyList(), // DataProvider.Gemini
+        )
     val onlineMarketDataList = MediatorLiveData<List<OnlineMarketData>>()
 
     init {
 
         onlineMarketDataList.addSource(yahooMarketDataList) { marketLiveData ->
             if (marketLiveData != null) {
-                yahooMarketSourceDataList = marketLiveData
-                onlineMarketDataList.postValue(
-                    combineData(
-                        yahooMarketSourceDataList,
-                        coingeckoMarketSourceDataList,
-                        coinpaprikaMarketSourceDataList,
-                        geminiMarketSourceDataList
-                    )
-                )
+                marketSourceDataList[DataProvider.Standard.value] = marketLiveData
+                onlineMarketDataList.postValue(combineData(marketSourceDataList))
             }
         }
 
         onlineMarketDataList.addSource(coingeckoMarketDataList) { marketLiveData ->
             if (marketLiveData != null) {
-                coingeckoMarketSourceDataList = marketLiveData
-                onlineMarketDataList.postValue(
-                    combineData(
-                        yahooMarketSourceDataList,
-                        coingeckoMarketSourceDataList,
-                        coinpaprikaMarketSourceDataList,
-                        geminiMarketSourceDataList
-                    )
-                )
+                marketSourceDataList[DataProvider.Coingecko.value] = marketLiveData
+                onlineMarketDataList.postValue(combineData(marketSourceDataList))
             }
         }
 
         onlineMarketDataList.addSource(coinpaprikaMarketDataList) { marketLiveData ->
             if (marketLiveData != null) {
-                coinpaprikaMarketSourceDataList = marketLiveData
-                onlineMarketDataList.postValue(
-                    combineData(
-                        yahooMarketSourceDataList,
-                        coingeckoMarketSourceDataList,
-                        coinpaprikaMarketSourceDataList,
-                        geminiMarketSourceDataList
-                    )
-                )
+                marketSourceDataList[DataProvider.Coinpaprika.value] = marketLiveData
+                onlineMarketDataList.postValue(combineData(marketSourceDataList))
             }
         }
 
         onlineMarketDataList.addSource(geminiMarketDataList) { marketLiveData ->
             if (marketLiveData != null) {
-                geminiMarketSourceDataList = marketLiveData
-                onlineMarketDataList.postValue(
-                    combineData(
-                        yahooMarketSourceDataList,
-                        coingeckoMarketSourceDataList,
-                        coinpaprikaMarketSourceDataList,
-                        geminiMarketSourceDataList
-                    )
-                )
+                marketSourceDataList[DataProvider.Gemini.value] = marketLiveData
+                onlineMarketDataList.postValue(combineData(marketSourceDataList))
             }
         }
     }
 
     private fun combineData(
-        list1: List<OnlineMarketData>,
-        list2: List<OnlineMarketData>,
-        list3: List<OnlineMarketData>,
-        list4: List<OnlineMarketData>,
+        list: List<List<OnlineMarketData>>,
     ): List<OnlineMarketData> {
 
         val combinedList: MutableList<OnlineMarketData> = mutableListOf()
-        combinedList.addAll(list1)
-        combinedList.addAll(list2)
-        combinedList.addAll(list3)
-        combinedList.addAll(list4)
+
+        list.forEach { marketDataList ->
+            combinedList.addAll(marketDataList)
+        }
 
         return combinedList
     }
@@ -165,6 +137,8 @@ class StockMarketDataRepository(
             yahooMarketData.postValue(emptyList())
             coingeckoMarketData.postValue(emptyList())
             coinpaprikaMarketData.postValue(emptyList())
+            geminiMarketData.postValue(emptyList())
+
             return MarketDataResult(marketState = MarketState.NO_SYMBOL, delayInMs = -1, msg = "")
         }
 
@@ -197,7 +171,8 @@ class StockMarketDataRepository(
         if (cryptoListCoinpaprika.isNotEmpty()) {
             val coinpaprikaResult = getCoinpaprikaStockData(cryptoListCoinpaprika)
             marketDataResult.marketState = coinpaprikaResult.marketState
-            marketDataResult.delayInMs = max(marketDataResult.delayInMs, coinpaprikaResult.delayInMs)
+            marketDataResult.delayInMs =
+                max(marketDataResult.delayInMs, coinpaprikaResult.delayInMs)
             marketDataResult.msg += coinpaprikaResult.msg
         }
 
