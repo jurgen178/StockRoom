@@ -639,4 +639,5 @@ limitations under the License. -->
     <string name="name_added">Der Anzeigename wurde von \'%1$s\' nach \'%2$s\' geändert.</string>
     <string name="name_reset">Der Anzeigename wurde zu \'%1$s\' zurückgesetzt.</string>
     <string name="change">Ändern</string>
+    <string name="display_name_desc">(Ursprünglicher Anzeigename: \'%1$s\')</string>
 </resources>

@@ -1258,7 +1258,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             }
             SortMode.ByName -> {
                 stockItems.sortedBy { item ->
-                    item.stockDBdata.symbol
+                    if (item.stockDBdata.name.isEmpty()) item.stockDBdata.symbol else item.stockDBdata.name
                 }
             }
             SortMode.ByPurchaseprice -> {
@@ -1329,7 +1329,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             SortMode.ByGroup -> {
                 // Sort the group items alphabetically.
                 stockItems.sortedBy { item ->
-                    item.stockDBdata.symbol
+                    if (item.stockDBdata.name.isEmpty()) item.stockDBdata.symbol else item.stockDBdata.name
                 }
                     // Sort by HUE color. Put items with no color to the end.
                     // Items with groupColor = 0 would be at the beginning.
@@ -1353,7 +1353,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             SortMode.ByMarker -> {
                 // Sort the group items alphabetically.
                 stockItems.sortedBy { item ->
-                    item.stockDBdata.symbol
+                    if (item.stockDBdata.name.isEmpty()) item.stockDBdata.symbol else item.stockDBdata.name
                 }
                     .sortedByDescending { item ->
                         // Sort with smallest marker number first, then all not marked items (marker=0)

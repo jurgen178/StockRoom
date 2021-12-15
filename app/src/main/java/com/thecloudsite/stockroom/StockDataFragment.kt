@@ -2359,6 +2359,13 @@ class StockDataFragment : Fragment() {
 
             builder.setView(dialogBinding.root)
                 .setTitle(R.string.display_name)
+                .setMessage(
+                    if (stockDBdata.name.isNotEmpty()) getString(
+                        R.string.display_name_desc,
+                        stockDBdata.symbol
+                    ) else
+                        ""
+                )
                 // Add action buttons
                 .setPositiveButton(R.string.change)
                 { _, _ ->

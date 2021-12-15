@@ -87,9 +87,9 @@ dependencies {
 
     // Add the Firebase SDK for Google Analytics.
     implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.1'
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.5'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.6'
     // Add the dependency for the Performance Monitoring library.
     implementation 'com.google.firebase:firebase-perf:20.0.4'
     // Add the Realtime Database SDK.

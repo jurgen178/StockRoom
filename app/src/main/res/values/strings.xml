@@ -608,6 +608,7 @@ limitations under the License. -->
     <string name="name_added">The display name was changed from \'%1$s\' to \'%2$s\'.</string>
     <string name="name_reset">The display name was reset to \'%1$s\'.</string>
     <string name="change">Change</string>
+   <string name="display_name_desc">(Original display name: \'%1$s\')</string>
 
     <string-array name="predefined_groups">
         <item>Buy</item>
