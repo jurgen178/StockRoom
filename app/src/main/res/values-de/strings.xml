@@ -173,6 +173,7 @@ limitations under the License. -->
     <string name="removed_quantity_exceed_existing">Sie entfernen mehr Wertpapiere als sie besitzen. Die Anzahl wird von %1$s auf %2$s korrigiert.</string>
     <string name="price_not_negative">Der Preis darf nicht negativ sein.</string>
     <string name="add_asset">Zum Wertpapierbestand hinzufügen</string>
+    <string name="move_asset">Wertpapierbestand in anderes Konto verschieben</string>
     <string name="remove_asset">Vom Wertpapierbestand entfernen</string>
     <string name="current_assets">Wertpapierbestände</string>
     <string name="current_portfolio_graph">Aktuelle Wertpapierbestände, 10 größten Wertpapiere</string>
@@ -640,4 +641,9 @@ limitations under the License. -->
     <string name="name_reset">Der Anzeigename wurde zu \'%1$s\' zurückgesetzt.</string>
     <string name="change">Ändern</string>
     <string name="display_name_desc">(Ursprünglicher Anzeigename: \'%1$s\')</string>
+    <string name="from_asset_account">Von Konto</string>
+    <string name="to_asset_account">Nach Konto</string>
+    <string name="asset_moved">Der Eintrag wurde in das Konto \'%1$s\' verschoben.</string>
+    <string name="asset_same_account">Die Konten müssen verschieden sein.</string>
+    <string name="move">Verschieben</string>
 </resources>

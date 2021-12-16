@@ -2678,6 +2678,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //    }
     }
 
+    fun moveAsset(fromAsset: Asset, toAsset: Asset) = scope.launch {
+        repository.moveAsset(fromAsset, toAsset)
+    }
+
     fun addEvent(event: Event) = scope.launch {
         repository.addEvent(event)
     }

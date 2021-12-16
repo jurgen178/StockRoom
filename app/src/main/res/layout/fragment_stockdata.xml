@@ -474,11 +474,24 @@
             android:gravity="end"
             >
 
+            <org.apmem.tools.layouts.FlowLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                >
+
           <ImageButton
               android:id="@+id/splitAssetsButton"
               android:src="@drawable/ic_action_split"
               style="@style/asset_item_imagebutton"
               android:contentDescription="@string/split_asset"
+              />
+
+          <ImageButton
+              android:id="@+id/moveAssetsButton"
+              android:src="@drawable/ic_action_move_asset"
+              style="@style/asset_item_imagebutton"
+              android:contentDescription="@string/move_asset"
               />
 
           <ImageButton
@@ -494,6 +507,8 @@
               style="@style/asset_item_imagebutton"
               android:contentDescription="@string/remove_asset"
               />
+
+            </org.apmem.tools.layouts.FlowLayout>
 
         </LinearLayout>
 

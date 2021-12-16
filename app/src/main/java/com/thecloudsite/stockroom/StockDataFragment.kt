@@ -221,6 +221,9 @@ class StockDataFragment : Fragment() {
     private var symbol: String = ""
     private var type: DataProvider = DataProvider.Standard
 
+    private var purchasePriceValue = 0.0
+    private var purchaseQuantity = 0.0
+
     private var isOnline: Boolean = false
 
     private var alertAbove: Double = 0.0
@@ -1798,13 +1801,13 @@ class StockDataFragment : Fragment() {
                     R.string.add
                 ) { _, _ ->
                     // Add () to avoid cast exception.
-                    val quantitytText = (dialogBinding.addQuantity.text).toString()
+                    val quantityText = (dialogBinding.addQuantity.text).toString()
                         .trim()
                     var quantity = 0.0
 
                     try {
                         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                        quantity = numberFormat.parse(quantitytText)!!
+                        quantity = numberFormat.parse(quantityText)!!
                             .toDouble()
                     } catch (e: Exception) {
                         Toast.makeText(
@@ -1924,6 +1927,286 @@ class StockDataFragment : Fragment() {
                     )
                     Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
                         .show()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { _, _ ->
+                }
+            builder
+                .create()
+                .show()
+        }
+
+        binding.moveAssetsButton.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            // Get the layout inflater
+            val inflater = LayoutInflater.from(requireContext())
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            val dialogBinding = DialogMoveAssetBinding.inflate(inflater)
+
+            dialogBinding.addQuantity.setText(DecimalFormat(DecimalFormat2To8Digits).format(purchaseQuantity))
+
+            val standardAccount = getString(R.string.standard_account)
+            dialogBinding.textViewAssetAccount.text = standardAccount
+            dialogBinding.textViewToAssetAccount.text = standardAccount
+
+            dialogBinding.textViewAssetAccount.setOnClickListener { view ->
+                val popupMenu = PopupMenu(requireContext(), view)
+
+                var menuIndex: Int = Menu.FIRST
+
+                SharedAccountList.accounts.sortedBy {
+                    it.lowercase(Locale.ROOT)
+                }
+                    .forEach { account ->
+                        val name = if (account.isEmpty()) {
+                            // first entry in bold
+                            SpannableStringBuilder()
+                                .bold { append(standardAccount) }
+                        } else {
+                            account
+                        }
+                        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+                    }
+
+                // Last item is to add a new account
+                val addAccountItem = SpannableStringBuilder()
+                    .color(context?.getColor(R.color.colorAccent)!!) {
+                        bold { append(getString(R.string.add_account)) }
+                    }
+                popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
+
+                popupMenu.show()
+
+                popupMenu.setOnMenuItemClickListener { menuitem ->
+                    val addSelected = menuIndex - 1 == menuitem.itemId
+
+                    if (addSelected) {
+                        // Add/Rename account
+                        val builderAdd = android.app.AlertDialog.Builder(requireContext())
+                        // Get the layout account
+                        val inflaterAdd = LayoutInflater.from(requireContext())
+
+                        // Inflate and set the layout for the dialog
+                        // Pass null as the parent view because its going in the dialog layout
+                        val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
+
+                        builderAdd.setView(addDialogBinding.root)
+                            .setTitle(getString(R.string.add_account))
+                            // Add action buttons
+                            .setPositiveButton(R.string.add) { _, _ ->
+                                // Add () to avoid cast exception.
+                                val accountText = (addDialogBinding.addAccount.text).toString()
+                                    .trim()
+
+                                dialogBinding.textViewAssetAccount.text = accountText
+                                SharedAccountList.accounts =
+                                    SharedAccountList.accounts + accountText
+                            }
+                            .setNegativeButton(
+                                R.string.cancel
+                            ) { _, _ ->
+                            }
+                        builderAdd
+                            .create()
+                            .show()
+                    } else {
+                        val account = menuitem.title.trim()
+                            .toString()
+                        dialogBinding.textViewAssetAccount.text = account
+                    }
+                    true
+                }
+            }
+
+            dialogBinding.textViewToAssetAccount.setOnClickListener { view ->
+                val popupMenu = PopupMenu(requireContext(), view)
+
+                var menuIndex: Int = Menu.FIRST
+
+                SharedAccountList.accounts.sortedBy {
+                    it.lowercase(Locale.ROOT)
+                }
+                    .forEach { account ->
+                        val name = if (account.isEmpty()) {
+                            // first entry in bold
+                            SpannableStringBuilder()
+                                .bold { append(standardAccount) }
+                        } else {
+                            account
+                        }
+                        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
+                    }
+
+                // Last item is to add a new account
+                val addAccountItem = SpannableStringBuilder()
+                    .color(context?.getColor(R.color.colorAccent)!!) {
+                        bold { append(getString(R.string.add_account)) }
+                    }
+                popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
+
+                popupMenu.show()
+
+                popupMenu.setOnMenuItemClickListener { menuitem ->
+                    val addSelected = menuIndex - 1 == menuitem.itemId
+
+                    if (addSelected) {
+                        val builderAdd = android.app.AlertDialog.Builder(requireContext())
+                        // Get the layout account
+                        val inflaterAdd = LayoutInflater.from(requireContext())
+
+                        // Inflate and set the layout for the dialog
+                        // Pass null as the parent view because its going in the dialog layout
+                        val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
+
+                        builderAdd.setView(addDialogBinding.root)
+                            .setTitle(getString(R.string.add_account))
+                            // Add action buttons
+                            .setPositiveButton(R.string.add) { _, _ ->
+                                // Add () to avoid cast exception.
+                                val accountText = (addDialogBinding.addAccount.text).toString()
+                                    .trim()
+
+                                dialogBinding.textViewToAssetAccount.text = accountText
+                                SharedAccountList.accounts =
+                                    SharedAccountList.accounts + accountText
+                            }
+                            .setNegativeButton(
+                                R.string.cancel
+                            ) { _, _ ->
+                            }
+                        builderAdd
+                            .create()
+                            .show()
+                    } else {
+                        val account = menuitem.title.trim()
+                            .toString()
+                        dialogBinding.textViewToAssetAccount.text = account
+                    }
+                    true
+                }
+            }
+
+            builder.setView(dialogBinding.root)
+                .setTitle(R.string.move_asset)
+                // Add action buttons
+                .setPositiveButton(
+                    R.string.move
+                ) { _, _ ->
+                    // Add () to avoid cast exception.
+                    val quantityText = (dialogBinding.addQuantity.text).toString()
+                        .trim()
+                    var quantity = 0.0
+
+                    try {
+                        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                        quantity = numberFormat.parse(quantityText)!!
+                            .toDouble()
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.asset_share_not_empty),
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                        return@setPositiveButton
+                    }
+                    if (quantity <= 0.0) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.quantity_not_zero),
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                        return@setPositiveButton
+                    }
+
+                    val feeText = (dialogBinding.addFee.text).toString()
+                        .trim()
+                    var fee = 0.0
+                    if (feeText.isNotEmpty()) {
+                        try {
+                            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                            fee = numberFormat.parse(feeText)!!
+                                .toDouble()
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.asset_fee_not_valid),
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                            return@setPositiveButton
+                        }
+                    }
+
+                    val localDateTime: ZonedDateTime = ZonedDateTime.of(
+                        dialogBinding.datePickerAssetDate.year,
+                        dialogBinding.datePickerAssetDate.month + 1,
+                        dialogBinding.datePickerAssetDate.dayOfMonth,
+                        dialogBinding.datePickerAssetTime.hour,
+                        dialogBinding.datePickerAssetTime.minute,
+                        0,
+                        0,
+                        ZoneOffset.systemDefault()
+                    )
+                    val date = localDateTime.toEpochSecond() // in GMT
+
+                    var fromAccountText = (dialogBinding.textViewAssetAccount.text).toString()
+                        .trim()
+                    if (fromAccountText == standardAccount) {
+                        fromAccountText = ""
+                    }
+
+                    var toAccountText = (dialogBinding.textViewToAssetAccount.text).toString()
+                        .trim()
+                    if (toAccountText == standardAccount) {
+                        toAccountText = ""
+                    }
+
+                    val noteText = (dialogBinding.addNote.text).toString()
+                        .trim()
+
+                    if (fromAccountText != toAccountText) {
+                        stockRoomViewModel.moveAsset(
+                            // From
+                            Asset(
+                                symbol = symbol,
+                                quantity = -quantity,
+                                price = purchasePriceValue,
+                                account = fromAccountText,
+                                fee = fee,
+                                date = date,
+                                note = noteText
+                            ),
+                            // To
+                            Asset(
+                                symbol = symbol,
+                                quantity = quantity,
+                                price = purchasePriceValue,
+                                account = toAccountText,
+                                fee = 0.0,
+                                date = date + 1,
+                                note = noteText
+                            )
+                        )
+
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.asset_moved, toAccountText),
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.asset_same_account),
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
                 }
                 .setNegativeButton(
                     R.string.cancel
@@ -2708,6 +2991,8 @@ class StockDataFragment : Fragment() {
             val (totalQuantity, totalPrice, totalFee) = getAssets(assets)
 
             val marketPrice = data.onlineMarketData?.marketPrice ?: 0.0
+            purchasePriceValue = 0.0
+            purchaseQuantity = 0.0
 
             // Display the asset even if the purchase price is 0.0
             if (data.onlineMarketData != null && totalQuantity > 0.0 && marketPrice > 0.0) {
@@ -2740,16 +3025,17 @@ class StockDataFragment : Fragment() {
 
                 binding.textViewPurchasePrice.visibility = View.VISIBLE
 
-                val price = totalPrice / totalQuantity
+                purchasePriceValue = totalPrice / totalQuantity
+                purchaseQuantity = totalQuantity
 
                 // Update the new price and asset.
                 binding.pickerKnob.onValueChangeListener { value ->
                     binding.newStockPrice.text =
                         when {
-                            marketPrice > 5.0 || price > 5.0 -> {
+                            marketPrice > 5.0 || purchasePriceValue > 5.0 -> {
                                 DecimalFormat(DecimalFormat2Digits).format(value)
                             }
-                            marketPrice < 0.0001 || price < 0.0001 -> {
+                            marketPrice < 0.0001 || purchasePriceValue < 0.0001 -> {
                                 DecimalFormat(DecimalFormat2To8Digits).format(value)
                             }
                             else -> {
@@ -2787,7 +3073,11 @@ class StockDataFragment : Fragment() {
                     // %1$s
                     purchasePrice.append(" ")
                     // Display 'bought price' exact as possible. Do not use to2To8Digits()
-                    purchasePrice.append(DecimalFormat(DecimalFormat2To8Digits).format(price))
+                    purchasePrice.append(
+                        DecimalFormat(DecimalFormat2To8Digits).format(
+                            purchasePriceValue
+                        )
+                    )
                     purchasePrice.append("\n")
                     // %2$s
                     purchasePrice.append(
@@ -2797,7 +3087,11 @@ class StockDataFragment : Fragment() {
                     )
                     purchasePrice.append("@")
                     // Display 'bought price' rounded.
-                    purchasePrice.append(DecimalFormat(DecimalFormat2To4Digits).format(price))
+                    purchasePrice.append(
+                        DecimalFormat(DecimalFormat2To4Digits).format(
+                            purchasePriceValue
+                        )
+                    )
                     // %3$s
                     if (totalFee > 0.0) {
                         purchasePrice.scale(feeScale) {
@@ -2819,7 +3113,7 @@ class StockDataFragment : Fragment() {
                     }
                     marketPrice
                 } else {
-                    price
+                    purchasePriceValue
                 }
 
                 // min, max, start

@@ -52,7 +52,7 @@ limitations under the License. -->
         <item quantity="one">Are you sure you want to delete the %1$s share at the purchase price of %2$s from your portfolio?</item>
         <item quantity="other">Are you sure you want to delete the %1$s shares at the purchase price of %2$s from your portfolio?</item>
     </plurals>
-    <string name="app_name" translatable="false">Stock Room</string>
+ <string name="app_name" translatable="false">Stock Room</string>
 
     <!-- string-array -->
     <string name="title_activity_settings">Settings</string>
@@ -142,6 +142,7 @@ limitations under the License. -->
     <string name="removed_quantity_exceed_existing">You remove more stocks than you own. The amount will be adjusted from %1$s to %2$s.</string>
     <string name="price_not_negative">The price of the stock must not be negative.</string>
     <string name="add_asset">Add asset</string>
+   <string name="move_asset">Move asset to another account</string>
     <string name="remove_asset">Remove asset</string>
     <string name="current_assets">Assets</string>
     <string name="current_portfolio_graph">Current portfolio, top 10 stocks</string>
@@ -608,7 +609,12 @@ limitations under the License. -->
     <string name="name_added">The display name was changed from \'%1$s\' to \'%2$s\'.</string>
     <string name="name_reset">The display name was reset to \'%1$s\'.</string>
     <string name="change">Change</string>
-   <string name="display_name_desc">(Original display name: \'%1$s\')</string>
+    <string name="display_name_desc">(Original display name: \'%1$s\')</string>
+    <string name="from_asset_account">From Account</string>
+    <string name="to_asset_account">To Account</string>
+    <string name="asset_moved">The asset was moved to the account \'%1$s\'.</string>
+    <string name="asset_same_account">Accounts must be different.</string>
+    <string name="move">Move</string>
 
     <string-array name="predefined_groups">
         <item>Buy</item>

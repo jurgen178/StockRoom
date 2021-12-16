@@ -118,6 +118,7 @@ limitations under the License. -->
     <item name="android:padding">4dp</item>
     <item name="android:layout_marginStart">16dp</item>
     <item name="android:layout_marginEnd">16dp</item>
+    <item name="android:layout_marginBottom">16dp</item>
     <item name="android:background">@drawable/roundcorner</item>
     <item name="android:tint">@color/buttonLabel</item>
     <item name="android:scaleType">fitCenter</item>

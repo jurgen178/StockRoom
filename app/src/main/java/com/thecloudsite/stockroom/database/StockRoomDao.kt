@@ -374,6 +374,15 @@ interface StockRoomDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun addAsset(asset: Asset)
 
+  @Transaction
+  fun moveAsset(
+    fromAsset: Asset,
+    toAsset: Asset
+  ) {
+    addAsset(fromAsset)
+    addAsset(toAsset)
+  }
+
   // id must match to delete the entry
   @Delete
   fun deleteAsset(asset: Asset)
