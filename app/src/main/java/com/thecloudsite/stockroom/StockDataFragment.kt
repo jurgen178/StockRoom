@@ -1946,13 +1946,27 @@ class StockDataFragment : Fragment() {
             // Pass null as the parent view because its going in the dialog layout
             val dialogBinding = DialogMoveAssetBinding.inflate(inflater)
 
-            dialogBinding.addQuantity.setText(DecimalFormat(DecimalFormat2To8Digits).format(purchaseQuantity))
+            if (purchaseQuantity > 0.0) {
+                dialogBinding.addQuantity.setText(
+                    DecimalFormat(DecimalFormat2To8Digits).format(
+                        purchaseQuantity
+                    )
+                )
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.add_assets_first),
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                return@setOnClickListener
+            }
 
             val standardAccount = getString(R.string.standard_account)
-            dialogBinding.textViewAssetAccount.text = standardAccount
+            dialogBinding.textViewFromAssetAccount.text = standardAccount
             dialogBinding.textViewToAssetAccount.text = standardAccount
 
-            dialogBinding.textViewAssetAccount.setOnClickListener { view ->
+            dialogBinding.textViewFromAssetAccount.setOnClickListener { view ->
                 val popupMenu = PopupMenu(requireContext(), view)
 
                 var menuIndex: Int = Menu.FIRST
@@ -2001,7 +2015,7 @@ class StockDataFragment : Fragment() {
                                 val accountText = (addDialogBinding.addAccount.text).toString()
                                     .trim()
 
-                                dialogBinding.textViewAssetAccount.text = accountText
+                                dialogBinding.textViewFromAssetAccount.text = accountText
                                 SharedAccountList.accounts =
                                     SharedAccountList.accounts + accountText
                             }
@@ -2015,7 +2029,7 @@ class StockDataFragment : Fragment() {
                     } else {
                         val account = menuitem.title.trim()
                             .toString()
-                        dialogBinding.textViewAssetAccount.text = account
+                        dialogBinding.textViewFromAssetAccount.text = account
                     }
                     true
                 }
@@ -2154,7 +2168,7 @@ class StockDataFragment : Fragment() {
                     )
                     val date = localDateTime.toEpochSecond() // in GMT
 
-                    var fromAccountText = (dialogBinding.textViewAssetAccount.text).toString()
+                    var fromAccountText = (dialogBinding.textViewFromAssetAccount.text).toString()
                         .trim()
                     if (fromAccountText == standardAccount) {
                         fromAccountText = ""

@@ -252,20 +252,28 @@ class AssetListAdapter internal constructor(
 
                 // Set color marker for the item.
                 holder.binding.textViewAssetMarkerColor.setBackgroundColor(
-                    when {
-                        current.asset.price == 0.0 -> {
+                    if (current.asset.quantity > 0.0) {
+
+                        if (current.asset.price == 0.0) {
                             0xffC23FFF.toInt()  // for free, asset.price = 0.0, C23FF=Violet
-                        }
-                        current.asset.quantity > 0.0 -> {
+                        } else {
                             Color.BLUE  // bought
                         }
-                        current.asset.quantity < 0.0 -> {
-                            0xffFF6A00.toInt()  // sold, FF6A00=Orange
-                        }
-                        else -> {
+
+                    } else
+                        if (current.asset.quantity < 0.0) {
+
+                            if (current.asset.price == 0.0) {
+                                Color.YELLOW        // miner fee, asset.price = 0.0
+                            } else {
+                                0xffFF6A00.toInt()  // sold, FF6A00=Orange
+                            }
+
+                        } else {
+
                             context.getColor(R.color.backgroundListColor)
+
                         }
-                    }
                 )
 
                 val itemViewQuantityText =

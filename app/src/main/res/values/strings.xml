@@ -615,8 +615,9 @@ limitations under the License. -->
     <string name="asset_moved">The asset was moved to the account \'%1$s\'.</string>
     <string name="asset_same_account">Accounts must be different.</string>
     <string name="move">Move</string>
+    <string name="add_assets_first">Add an asset first.</string>
 
-    <string-array name="predefined_groups">
+ <string-array name="predefined_groups">
         <item>Buy</item>
         <item>Sell</item>
         <item>Watch</item>

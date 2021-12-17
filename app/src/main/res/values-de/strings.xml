@@ -646,4 +646,5 @@ limitations under the License. -->
     <string name="asset_moved">Der Eintrag wurde in das Konto \'%1$s\' verschoben.</string>
     <string name="asset_same_account">Die Konten müssen verschieden sein.</string>
     <string name="move">Verschieben</string>
+    <string name="add_assets_first">Fügen Sie zuerst einen Bestand hinzu.</string>
 </resources>
