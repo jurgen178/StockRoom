@@ -323,12 +323,14 @@ class StockDataFragment : Fragment() {
         }
 
         val standardAccount = getString(R.string.standard_account)
+
         dialogBinding.textViewAssetAccount.text =
             if (asset.account.isEmpty()) {
                 standardAccount
             } else {
                 asset.account
             }
+
         dialogBinding.textViewAssetAccount.setOnClickListener { view ->
             val popupMenu = PopupMenu(requireContext(), view)
 
