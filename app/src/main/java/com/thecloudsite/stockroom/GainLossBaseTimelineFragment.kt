@@ -28,8 +28,10 @@ import com.thecloudsite.stockroom.databinding.FragmentTimelineBinding
 import com.thecloudsite.stockroom.timeline.TimeLineRecyclerView
 import com.thecloudsite.stockroom.timeline.callback.SectionCallback
 import com.thecloudsite.stockroom.timeline.model.SectionInfo
+import com.thecloudsite.stockroom.utils.epsilon
 import com.thecloudsite.stockroom.utils.getAssetsCapitalGain
 import com.thecloudsite.stockroom.utils.getCapitalGainLossText
+import kotlin.math.absoluteValue
 
 // https://androidexample365.com/stickytimeline-is-timeline-view-for-android/
 
@@ -241,76 +243,73 @@ open class GainLossBaseTimelineFragment : Fragment() {
             // having individual loss/gain reported in the summary.
             val capitalGainLoss = gain - loss
 
-            when {
-                capitalGainLoss > 0.0 -> {
+            if (capitalGainLoss.absoluteValue >= epsilon) {
+                if (capitalGainLoss > 0.0) {
                     capitalGain += capitalGainLoss
-                }
-                capitalGainLoss < 0.0 -> {
+                } else {
                     capitalLoss += -capitalGainLoss
                 }
-                else -> {
-                }
-            }
 
-            gainLossMap.forEach { (year, map) ->
+                gainLossMap.forEach { (year, map) ->
 
-                if (!capitalGainLossMap.containsKey(year)) {
-                    capitalGainLossMap[year] = mutableMapOf()
-                }
+                    if (!capitalGainLossMap.containsKey(year)) {
+                        capitalGainLossMap[year] = mutableMapOf()
+                    }
 
-                if (capitalGainLossMap[year]?.containsKey(headline) == false) {
-                    capitalGainLossMap[year]?.put(headline, GainLoss2())
-                }
+                    if (capitalGainLossMap[year]?.containsKey(headline) == false) {
+                        capitalGainLossMap[year]?.put(headline, GainLoss2())
+                    }
 
-                val gainloss = map.gain - map.loss
+                    val gainloss = map.gain - map.loss
 
-                if (gainloss >= 0.0) {
-                    capitalGainLossMap[year]?.get(headline)?.gain =
-                        capitalGainLossMap[year]?.get(headline)?.gain!! + gainloss
-                } else {
-                    capitalGainLossMap[year]?.get(headline)?.loss =
-                        capitalGainLossMap[year]?.get(headline)?.loss!! - gainloss
-                }
+                    if (gainloss >= 0.0) {
+                        capitalGainLossMap[year]?.get(headline)?.gain =
+                            capitalGainLossMap[year]?.get(headline)?.gain!! + gainloss
+                    } else {
+                        capitalGainLossMap[year]?.get(headline)?.loss =
+                            capitalGainLossMap[year]?.get(headline)?.loss!! - gainloss
+                    }
 
-                // Add the gain/loss of the stock per year
-                val capitalGainLossText = getCapitalGainLossText(
-                    requireContext(),
-                    map.gain,
-                    map.loss,
-                    0.0,
-                    "-",
-                    "\n"
-                )
-
-                capitalGainLossMap[year]?.get(headline)?.stockList?.add(
-                    GainLossStockItem(
-                        date = map.lastTransactionDate,
-                        symbol = stockItem.stockDBdata.symbol,
-                        name = if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
-                        text = capitalGainLossText
+                    // Add the gain/loss of the stock per year
+                    val capitalGainLossText = getCapitalGainLossText(
+                        requireContext(),
+                        map.gain,
+                        map.loss,
+                        0.0,
+                        "-",
+                        "\n"
                     )
-                )
+
+                    capitalGainLossMap[year]?.get(headline)?.stockList?.add(
+                        GainLossStockItem(
+                            date = map.lastTransactionDate,
+                            symbol = stockItem.stockDBdata.symbol,
+                            name = if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
+                            text = capitalGainLossText
+                        )
+                    )
+                }
             }
         }
     }
+}
 
-    private fun getSectionCallback(timelineElementList: List<GainLossTimelineElement>): SectionCallback {
-        return object : SectionCallback {
-            // In your data, implement a method to determine if this is a section.
-            override fun isSection(position: Int): Boolean =
-                if (position > 0 && position < timelineElementList.size) {
-                    timelineElementList[position].date != timelineElementList[position - 1].date
-                } else {
-                    false
-                }
+private fun getSectionCallback(timelineElementList: List<GainLossTimelineElement>): SectionCallback {
+    return object : SectionCallback {
+        // In your data, implement a method to determine if this is a section.
+        override fun isSection(position: Int): Boolean =
+            if (position > 0 && position < timelineElementList.size) {
+                timelineElementList[position].date != timelineElementList[position - 1].date
+            } else {
+                false
+            }
 
-            // Implement a method that returns a SectionHeader.
-            override fun getSectionHeader(position: Int): SectionInfo? =
-                if (position >= 0 && position < timelineElementList.size) {
-                    SectionInfo(timelineElementList[position].date, "")
-                } else {
-                    null
-                }
-        }
+        // Implement a method that returns a SectionHeader.
+        override fun getSectionHeader(position: Int): SectionInfo? =
+            if (position >= 0 && position < timelineElementList.size) {
+                SectionInfo(timelineElementList[position].date, "")
+            } else {
+                null
+            }
     }
 }
