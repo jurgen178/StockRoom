@@ -499,14 +499,14 @@
               android:id="@+id/addAssetsButton"
               android:src="@drawable/ic_action_add_circle_outline"
               style="@style/asset_item_imagebutton"
-              android:contentDescription="@string/add_asset"
+              android:contentDescription="@string/bought_asset"
               />
 
           <ImageButton
               android:id="@+id/removeAssetButton"
               android:src="@drawable/ic_action_remove_circle_outline"
               style="@style/asset_item_imagebutton"
-              android:contentDescription="@string/remove_asset"
+              android:contentDescription="@string/sold_asset"
               />
 
             </org.apmem.tools.layouts.FlowLayout>

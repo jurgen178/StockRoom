@@ -39,6 +39,8 @@ limitations under the License. -->
   <color name="transactionBackgroundBought">#FFC19E</color>
   <color name="transactionBackgroundSold">#7FFFC5</color>
   <color name="transactionBackgroundDividend">#A0D7FF</color>
+  <color name="transactionBackgroundFee">#FFD800</color>
+  <color name="transactionBackgroundForFree">#C23FFF</color>
 
   <color name="settingsblue">#33B5E5</color>
   <color name="calcShift">#0094FF</color>

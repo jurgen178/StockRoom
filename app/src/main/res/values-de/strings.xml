@@ -97,6 +97,8 @@ limitations under the License. -->
 
     <string name="hint_add_stock">Wertpapierkürzel</string>
     <string name="button_add">Hinzufügen</string>
+    <string name="bought">Gekauft</string>
+    <string name="sold">Verkauft</string>
     <string name="sort_change_percentage">Nach Änderung \u0025 sortieren</string>
     <string name="sort_name">Nach Namen sortieren</string>
     <string name="sort_purchaseprice">Nach Kaufpreis sortieren</string>
@@ -169,16 +171,16 @@ limitations under the License. -->
     <string name="delete_all_title">Alle Daten entfernen</string>
     <string name="delete_all_confirm">Sind Sie sich sicher?</string>
     <string name="delete_all_desc">Entfernt alle Wertpapiere und die dazugehörigen Daten.</string>
-    <string name="quantity_not_zero">Die Anzahl darf nicht 0 sein.</string>
+    <string name="quantity_not_zero">Die Anzahl darf nicht 0 oder negativ sein.</string>
     <string name="removed_quantity_exceed_existing">Sie entfernen mehr Wertpapiere als sie besitzen. Die Anzahl wird von %1$s auf %2$s korrigiert.</string>
     <string name="price_not_negative">Der Preis darf nicht negativ sein.</string>
-    <string name="add_asset">Zum Wertpapierbestand hinzufügen</string>
+    <string name="fee_not_negative">Die Gebühr darf nicht negativ sein.</string>
+    <string name="bought_asset">Wertpapier gekauft</string>
     <string name="move_asset">Wertpapierbestand in anderes Konto verschieben</string>
-    <string name="remove_asset">Vom Wertpapierbestand entfernen</string>
     <string name="current_assets">Wertpapierbestände</string>
     <string name="current_portfolio_graph">Aktuelle Wertpapierbestände, 10 größten Wertpapiere</string>
     <string name="update_asset">Wertpapierbestand aktualisieren</string>
-    <string name="delete_asset">Vom Wertpapierbestand entfernen</string>
+    <string name="sold_asset">Wertpapier verkauft</string>
     <string name="delete_all_assets">Alle Wertpapiere entfernen</string>
     <string name="delete_all_assets_msg">Alle Wertpapiere wurden aus Ihrem Wertpapierbestand entfernt.</string>
     <string name="delete_all_assets_confirm">Sind Sie sicher, dass Sie alle Wertpapiere von \'%1$s\' aus Ihrem Wertpapierbestand entfernen möchten?</string>
@@ -647,4 +649,6 @@ limitations under the License. -->
     <string name="asset_same_account">Die Konten müssen verschieden sein.</string>
     <string name="move">Verschieben</string>
     <string name="add_assets_first">Fügen Sie zuerst einen Bestand hinzu.</string>
+    <string name="transaction_fee">Gebühr</string>
+    <string name="transaction_forfree">Umsonst</string>
 </resources>

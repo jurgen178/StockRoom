@@ -19,6 +19,8 @@
 
   <color name="transactionBackgroundBought">#B75828</color>
   <color name="transactionBackgroundSold">#0C7F49</color>
+  <color name="transactionBackgroundFee">#FFD800</color>
+  <color name="transactionBackgroundForFree">#C23FFF</color>
   <color name="transactionBackgroundDividend">#0062A8</color>
 
 </resources>

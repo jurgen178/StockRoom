@@ -49,6 +49,10 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
     private var assetBought = 0
     private val assetSoldMap = HashMap<String, Int>()
     private var assetSold = 0
+    private var assetFeeMap = HashMap<String, Int>()
+    private var assetFee = 0
+    private var assetForFreeMap = HashMap<String, Int>()
+    private var assetForFree = 0
     private val dividendReceivedMap = HashMap<String, Int>()
     private var dividendReceived = 0
 
@@ -119,13 +123,26 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
     private fun getAssetData(
         quantity: Double,
         price: Double,
-        fee: Double
+        fee: Double,
+        symbol: String
     ): SpannableStringBuilder {
         val assetStr = SpannableStringBuilder().append(
-            "${DecimalFormat(DecimalFormatQuantityDigits).format(quantity)}@${
-                to2To8Digits(price)
-            }=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}"
+            DecimalFormat(DecimalFormatQuantityDigits).format(quantity)
         )
+
+        if (price != 0.0) {
+            assetStr.append(
+                "@${
+                    to2To8Digits(price)
+                }"
+            )
+
+            if (quantity != 0.0) {
+                assetStr.append("=${DecimalFormat(DecimalFormat2To4Digits).format(quantity * price)}")
+            }
+        } else {
+            assetStr.append(" $symbol")
+        }
 
         if (fee > 0.0) {
             assetStr.scale(feeScale) {
@@ -142,6 +159,10 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
         assetBought = 0
         assetSoldMap.clear()
         assetSold = 0
+        assetFeeMap.clear()
+        assetFee = 0
+        assetForFreeMap.clear()
+        assetForFree = 0
         dividendReceivedMap.clear()
         dividendReceived = 0
     }
@@ -156,15 +177,24 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
                     date = getDate(asset.date),
                     symbol = asset.symbol,
                     name = getSymbolDisplayName(asset.symbol),
-                    type = TransactionType.AssetBoughtType,
+                    type = if (asset.price == 0.0) {
+                        TransactionType.AssetForFreeType // for free
+                    } else {
+                        TransactionType.AssetBoughtType  // bought
+                    },
                     account = asset.account,
                     value = asset.quantity * asset.price + asset.fee,
-                    amountStr = getAssetData(asset.quantity, asset.price, asset.fee),
+                    amountStr = getAssetData(asset.quantity, asset.price, asset.fee, asset.symbol),
                 )
             )
 
-            updateMap(assetBoughtMap, asset.account)
-            assetBought++
+            if (asset.price == 0.0) {
+                updateMap(assetForFreeMap, asset.account)
+                assetForFree++
+            } else {
+                updateMap(assetBoughtMap, asset.account)
+                assetBought++
+            }
         }
     }
 
@@ -178,15 +208,24 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
                     date = getDate(asset.date),
                     symbol = asset.symbol,
                     name = getSymbolDisplayName(asset.symbol),
-                    type = TransactionType.AssetSoldType,
+                    type = if (asset.price == 0.0) {
+                        TransactionType.AssetFeeType   // miner fee
+                    } else {
+                        TransactionType.AssetSoldType  // sold
+                    },
                     account = asset.account,
                     value = -asset.quantity * asset.price + asset.fee,
-                    amountStr = getAssetData(-asset.quantity, asset.price, asset.fee),
+                    amountStr = getAssetData(-asset.quantity, asset.price, asset.fee, asset.symbol),
                 )
             )
 
-            updateMap(assetSoldMap, asset.account)
-            assetSold++
+            if (asset.price == 0.0) {
+                updateMap(assetFeeMap, asset.account)
+                assetFee++
+            } else {
+                updateMap(assetSoldMap, asset.account)
+                assetSold++
+            }
         }
     }
 
@@ -230,6 +269,10 @@ open class StockRoomTransactionsBaseFragment : Fragment() {
                 assetBought = assetBought,
                 assetSoldMap = assetSoldMap,
                 assetSold = assetSold,
+                assetFeeMap = assetFeeMap,
+                assetFee = assetFee,
+                assetForFreeMap = assetForFreeMap,
+                assetForFree = assetForFree,
                 dividendReceivedMap = dividendReceivedMap,
                 dividendReceived = dividendReceived,
             )

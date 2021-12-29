@@ -440,6 +440,7 @@ class StockDataFragment : Fragment() {
                         .show()
                     return@setPositiveButton
                 }
+
                 if (quantity == 0.0) {
                     Toast.makeText(
                         requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
@@ -464,6 +465,7 @@ class StockDataFragment : Fragment() {
                         .show()
                     return@setPositiveButton
                 }
+
                 if (price < 0.0) {
                     Toast.makeText(
                         requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
@@ -485,6 +487,14 @@ class StockDataFragment : Fragment() {
                             requireContext(),
                             getString(R.string.asset_fee_not_valid),
                             Toast.LENGTH_LONG
+                        )
+                            .show()
+                        return@setPositiveButton
+                    }
+
+                    if (fee < 0.0) {
+                        Toast.makeText(
+                            requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
                         )
                             .show()
                         return@setPositiveButton
@@ -612,7 +622,7 @@ class StockDataFragment : Fragment() {
             }
 
             android.app.AlertDialog.Builder(requireContext())
-                .setTitle(R.string.delete_asset)
+                .setTitle(R.string.sold_asset)
                 .setMessage(
                     if (asset.quantity > 0) {
                         resources.getQuantityString(
@@ -1797,10 +1807,10 @@ class StockDataFragment : Fragment() {
             }
 
             builder.setView(dialogBinding.root)
-                .setTitle(R.string.add_asset)
+                .setTitle(R.string.bought_asset)
                 // Add action buttons
                 .setPositiveButton(
-                    R.string.add
+                    R.string.bought
                 ) { _, _ ->
                     // Add () to avoid cast exception.
                     val quantityText = (dialogBinding.addQuantity.text).toString()
@@ -1820,6 +1830,7 @@ class StockDataFragment : Fragment() {
                             .show()
                         return@setPositiveButton
                     }
+
                     if (quantity <= 0.0) {
                         Toast.makeText(
                             requireContext(),
@@ -1846,6 +1857,7 @@ class StockDataFragment : Fragment() {
                             .show()
                         return@setPositiveButton
                     }
+
                     if (price < 0.0) {
                         Toast.makeText(
                             requireContext(),
@@ -1869,6 +1881,14 @@ class StockDataFragment : Fragment() {
                                 requireContext(),
                                 getString(R.string.asset_fee_not_valid),
                                 Toast.LENGTH_LONG
+                            )
+                                .show()
+                            return@setPositiveButton
+                        }
+
+                        if (fee < 0.0) {
+                            Toast.makeText(
+                                requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
                             )
                                 .show()
                             return@setPositiveButton
@@ -2129,6 +2149,7 @@ class StockDataFragment : Fragment() {
                             .show()
                         return@setPositiveButton
                     }
+
                     if (quantity <= 0.0) {
                         Toast.makeText(
                             requireContext(),
@@ -2152,6 +2173,14 @@ class StockDataFragment : Fragment() {
                                 requireContext(),
                                 getString(R.string.asset_fee_not_valid),
                                 Toast.LENGTH_LONG
+                            )
+                                .show()
+                            return@setPositiveButton
+                        }
+
+                        if (fee < 0.0) {
+                            Toast.makeText(
+                                requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
                             )
                                 .show()
                             return@setPositiveButton
@@ -2329,10 +2358,10 @@ class StockDataFragment : Fragment() {
                 }
 
                 builder.setView(dialogBinding.root)
-                    .setTitle(R.string.delete_asset)
+                    .setTitle(R.string.sold_asset)
                     // Add action buttons
                     .setPositiveButton(
-                        R.string.delete
+                        R.string.sold
                     ) { _, _ ->
                         val quantityText = (dialogBinding.removeQuantity.text).toString()
                             .trim()
@@ -2413,6 +2442,14 @@ class StockDataFragment : Fragment() {
                                     requireContext(),
                                     getString(R.string.asset_fee_not_valid),
                                     Toast.LENGTH_LONG
+                                )
+                                    .show()
+                                return@setPositiveButton
+                            }
+
+                            if (fee < 0.0) {
+                                Toast.makeText(
+                                    requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
                                 )
                                     .show()
                                 return@setPositiveButton
