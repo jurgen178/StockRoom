@@ -357,11 +357,11 @@ class StockRoomTransactionsAdapter internal constructor(
             }
 
     private fun updateTextviewUp(textView: TextView) {
-        textView.text = textView.text.toString() + " ▲"
+        textView.text = "${textView.text} ▲"
     }
 
     private fun updateTextviewDown(textView: TextView) {
-        textView.text = textView.text.toString() + " ▼"
+        textView.text = "${textView.text} ▼"
     }
 
     private fun getAccounts(assetMap: HashMap<String, Int>): String {

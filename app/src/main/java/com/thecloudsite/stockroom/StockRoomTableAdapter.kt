@@ -695,11 +695,11 @@ class StockRoomTableAdapter internal constructor(
             }
 
     private fun updateTextviewUp(textView: TextView) {
-        textView.text = textView.text.toString() + " ▲"
+        textView.text = "${textView.text} ▲"
     }
 
     private fun updateTextviewDown(textView: TextView) {
-        textView.text = textView.text.toString() + " ▼"
+        textView.text = "${textView.text} ▼"
     }
 
     internal fun setStockItems(stockItems: List<StockItem>) {
