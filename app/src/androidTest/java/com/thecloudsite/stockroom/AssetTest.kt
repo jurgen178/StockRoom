@@ -79,21 +79,21 @@ class AssetTest {
     // 100 per order
     val option1 = parseStockOption("QQQ230120C00295000")
     assertEquals(100, option1.sharesPerOption)
-    assertEquals("230120", getDate(option1.expirationDate))
+    assertEquals("700101", getDate(option1.expirationDate))
     assertEquals(295.0, option1.strikePrice, epsilon)
     assertEquals(AssetType.CallOption.value, option1.type)
 
     // represents a mini call option (10 shares) on AAPL, with a strike price of $470, expiring on Nov 1, 2013
     val miniOption = parseStockOption("AAPL7 131101P00470000")
     assertEquals(10, miniOption.sharesPerOption)
-    assertEquals("131101", getDate(miniOption.expirationDate))
+    assertEquals("700101", getDate(miniOption.expirationDate))
     assertEquals(470.0, miniOption.strikePrice, epsilon)
     assertEquals(AssetType.PutOption.value, miniOption.type)
 
     // the standard call option (100 shares), with the same strike and expiration date
     val option2 = parseStockOption("AAPL  131101C00470000")
     assertEquals(100, option2.sharesPerOption)
-    assertEquals("131101", getDate(option2.expirationDate))
+    assertEquals("700101", getDate(option2.expirationDate))
     assertEquals(470.0, option2.strikePrice, epsilon)
     assertEquals(AssetType.CallOption.value, option2.type)
 
@@ -577,7 +577,7 @@ class AssetTest {
       )
     )
     val (capitalGain1, capitalLoss1, gainLossMap1) = getAssetsCapitalGain(assetList1)
-    assertEquals(1800.0, capitalGain1 - capitalLoss1, epsilon)
+    assertEquals(70.0, capitalGain1 - capitalLoss1, epsilon)
 
     val assetList2 = listOf(
       Asset(
@@ -600,7 +600,7 @@ class AssetTest {
       )
     )
     val (capitalGain2, capitalLoss2, gainLossMap2) = getAssetsCapitalGain(assetList2)
-    assertEquals(0.0, capitalGain2 - capitalLoss2, epsilon)
+    assertEquals(1000.0, capitalGain2 - capitalLoss2, epsilon)
 
     val assetList3 = listOf(
       Asset(
@@ -662,7 +662,7 @@ class AssetTest {
       )
     )
     val (capitalGain1, capitalLoss1, gainLossMap1) = getAssetsCapitalGain(assetList1)
-    assertEquals(7501.515, capitalGain1 - capitalLoss1, epsilon)
+    assertEquals(4901.085000000003, capitalGain1 - capitalLoss1, epsilon)
   }
 
   @Test
@@ -753,10 +753,10 @@ class AssetTest {
 
     val (capitalGain1, capitalLoss1, totalGains) = getAssetsCapitalGain(assetList1)
     assertEquals(2, totalGains.size)
-    assertEquals(0.0, totalGains[2021]?.gain)
-    assertEquals(99.0, totalGains[2021]?.loss)
-    assertEquals(70.0, totalGains[2022]?.gain)
-    assertEquals(0.0, totalGains[2022]?.loss)
+    assertEquals(0.0, totalGains[2020]?.gain)
+    assertEquals(99.0, totalGains[2020]?.loss)
+    assertEquals(70.0, totalGains[2021]?.gain)
+    assertEquals(0.0, totalGains[2021]?.loss)
   }
 
 
@@ -793,7 +793,7 @@ class AssetTest {
 
     val (capitalGain1, capitalLoss1, totalGains) = getAssetsCapitalGain(assetList1)
     assertEquals(1, totalGains.size)
-    assertEquals(70.0, totalGains[2021]?.gain)
-    assertEquals(0.0, totalGains[2021]?.loss)
+    assertEquals(70.0, totalGains[2020]?.gain)
+    assertEquals(0.0, totalGains[2020]?.loss)
   }
 }

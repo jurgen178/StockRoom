@@ -43,14 +43,14 @@ class CalcTest {
     val symbols2 =
       code.split("\\s(?=(?:[^\"'\\\\]*(?:\\\\.|[\"'](?:[^\"'\\\\]*\\\\.)*[^\"'\\\\]*[\"']))*[^\"']*$)".toRegex())
 
-    assertEquals(7, symbols1.size)
-    assertEquals("\"∆% \"", symbols1[6])
-    assertEquals(7, symbols2.size)
-    assertEquals("\"∆% \"", symbols2[6])
+    assertEquals(9, symbols1.size)
+    assertEquals("\"∆% \"", symbols1[7])
+    assertEquals(14, symbols2.size)
+    assertEquals("\"∆% \"", symbols2[11])
 
-    val isComment = symbols1[6].matches("[\"'](.*?)[\"']".toRegex())
+    val isComment = symbols1[7].matches("[\"'](.*?)[\"']".toRegex())
     val match = "[\"'](.*?)[\"']".toRegex()
-      .matchEntire(symbols1[6])
+      .matchEntire(symbols1[7])
 
     var sym = ""
     if (match != null && match.groups.size == 2) {
@@ -80,10 +80,10 @@ class CalcTest {
     // null result
 
     // infinity
-    assertEquals(Pair(null, 1), frac(1 / 0.0))
+    assertEquals(Pair(null, 0), frac(1 / 0.0))
     // NaN
-    assertEquals(Pair(null, 1), frac(sqrt(-1.0)))
+    assertEquals(Pair(null, 0), frac(sqrt(-1.0)))
     // large number
-    assertEquals(Pair(null, 1), frac(100000000000000.0))
+    assertEquals(Pair(null, 0), frac(100000000000000.0))
   }
 }

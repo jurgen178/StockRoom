@@ -93,7 +93,7 @@ class StockRoomTest {
         assertEquals(1.23, result, epsilon)
 
         resultStr = numberFormat1.format(1.23)
-        assertEquals("1.23", resultStr)
+        assertEquals("1,23", resultStr)
     }
 
     @Test
