@@ -26,6 +26,11 @@ import android.view.View;
 
 import com.thecloudsite.stockroom.R;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class MapLayoutView extends View {
 
     private final AbstractMapLayout mapLayout;
@@ -127,11 +132,48 @@ public class MapLayoutView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // Check if all displayable items have the same background color,
+        // and use Reg/Green instead.
+        boolean sameBackgroundColor = false;
+
+        // Don't use small rectangles.
+        List<Mappable> items = Arrays.stream(mappableItems).filter(mappableItem -> ((AndroidMapItem) mappableItem).getBoundsRectF().width() > 40).collect(Collectors.toList());
+
+        if (items.size() > 1) {
+            Integer firstBackgroundColor = ((AndroidMapItem) items.get(0)).getBackgroundColor();
+            // Color must be different than the -1 value for Red/green colors.
+            if (firstBackgroundColor != -1) {
+                sameBackgroundColor = true;
+                for (Mappable displayableMappableItem : items) {
+
+                    AndroidMapItem item = (AndroidMapItem) displayableMappableItem;
+
+                    Integer color = item.getBackgroundColor();
+                    if (!color.equals(firstBackgroundColor)) {
+                        sameBackgroundColor = false;
+                        break;
+                    }
+                }
+            }
+        }
+
         // Draw all the rectangles and their labels
-        for (Mappable mappableItem : mappableItems) {
+        for (Mappable mappableItem : items) {
+
             AndroidMapItem item = (AndroidMapItem) mappableItem;
             RectF rectF = item.getBoundsRectF();
+
             Integer backgroundColor = item.getBackgroundColor();
+
+            // Color in Red/Green when all background colors are the same or backgroundColor is -1
+            if (sameBackgroundColor || backgroundColor == -1) {
+                if (item.getValue() >= 0.0) {
+                    backgroundColor = item.getColorGreen();
+                } else {
+                    backgroundColor = item.getColorRed();
+                }
+            }
+
             Integer textColor = item.getTextColor();
             drawRectangle(canvas, rectF, backgroundColor);
             drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF, backgroundColor, textColor);
@@ -188,116 +230,112 @@ public class MapLayoutView extends View {
             RectF rectF,
             Integer backgroundColor,
             Integer textColor) {
-        // Don't draw text for small rectangles
-        if (rectF.width() > 40) {
-
-            if (textColor != 0) {
-                mTextPaint.setColor(textColor);
+        if (textColor != 0) {
+            mTextPaint.setColor(textColor);
+        } else {
+            if (backgroundColor != 0 && isDarkColor(backgroundColor)) {
+                mTextPaint.setColor(Color.WHITE);
             } else {
-                if (backgroundColor != 0 && isDarkColor(backgroundColor)) {
-                    mTextPaint.setColor(Color.WHITE);
-                } else {
-                    mTextPaint.setColor(Color.BLACK);
-                }
+                mTextPaint.setColor(Color.BLACK);
             }
+        }
 
-            // Print label-only items in smaller font, for example the root item when no assets are present.
-            boolean labelOnly = text.isEmpty() && change.isEmpty();
-            float labelSize = Math.min(Math.max(rectF.width() / 6, 20), labelOnly ? 48 : 100);
-            mTextPaint.setTextSize((int) labelSize);
+        // Print label-only items in smaller font, for example the root item when no assets are present.
+        boolean labelOnly = text.isEmpty() && change.isEmpty();
+        float labelSize = Math.min(Math.max(rectF.width() / 6, 20), labelOnly ? 48 : 100);
+        mTextPaint.setTextSize((int) labelSize);
 
-            float labelX = -1;
-            float labelY = -1;
-            float textX = -1;
-            float textY = -1;
-            float changeX = -1;
-            float changeY = -1;
+        float labelX = -1;
+        float labelY = -1;
+        float textX = -1;
+        float textY = -1;
+        float changeX = -1;
+        float changeY = -1;
 
-            android.graphics.Rect labelRect = new android.graphics.Rect(0, 0, 0, 0);
+        android.graphics.Rect labelRect = new android.graphics.Rect(0, 0, 0, 0);
+        mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
+        float tym = labelRect.height();
+        float txm = labelRect.width();
+        float xm = rectF.left + rectF.width() / 2 - txm / 2;
+        float ym = rectF.top + tym + 8; // Border=8
+        if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+            labelX = xm;
+            labelY = ym;
+            ym += tym / 4;
+        } else {
+            // rect to small for initial text, resize text
+            mTextPaint.setTextSize((int) (0.6 * (rectF.height() - 8)));
             mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
-            float tym = labelRect.height();
-            float txm = labelRect.width();
-            float xm = rectF.left + rectF.width() / 2 - txm / 2;
-            float ym = rectF.top + tym + 8; // Border=8
+            tym = labelRect.height();
+            txm = labelRect.width();
+            xm = rectF.left + rectF.width() / 2 - txm / 2;
+            ym = rectF.top + tym + 8; // Border=8
             if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
                 labelX = xm;
                 labelY = ym;
                 ym += tym / 4;
             } else {
-                // rect to small for initial text, resize text
-                mTextPaint.setTextSize((int) (0.6 * (rectF.height() - 8)));
-                mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
-                tym = labelRect.height();
-                txm = labelRect.width();
-                xm = rectF.left + rectF.width() / 2 - txm / 2;
-                ym = rectF.top + tym + 8; // Border=8
-                if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
-                    labelX = xm;
-                    labelY = ym;
-                    ym += tym / 4;
-                } else {
-                    // rect still to small, shorten the label text and set the text size to match width
-                    if (label.length() > 8) {
-                        label = label.substring(0, 7) + "…";
-                        mTextPaint.setTextSize((int) (0.18 * (rectF.width() - 8)));
-                        mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
-                        tym = labelRect.height();
-                        txm = labelRect.width();
-                        xm = rectF.left + rectF.width() / 2 - txm / 2;
-                        ym = rectF.top + tym + 8; // Border=8
-                        if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
-                            labelX = xm;
-                            labelY = ym;
-                            ym += tym / 4;
-                        }
+                // rect still to small, shorten the label text and set the text size to match width
+                if (label.length() > 8) {
+                    label = label.substring(0, 7) + "…";
+                    mTextPaint.setTextSize((int) (0.18 * (rectF.width() - 8)));
+                    mTextPaint.getTextBounds(label, 0, label.length(), labelRect);
+                    tym = labelRect.height();
+                    txm = labelRect.width();
+                    xm = rectF.left + rectF.width() / 2 - txm / 2;
+                    ym = rectF.top + tym + 8; // Border=8
+                    if (txm > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+                        labelX = xm;
+                        labelY = ym;
+                        ym += tym / 4;
                     }
                 }
             }
+        }
 
-            Paint textPaint = new Paint(mTextPaint);
-            float textSize = 0.5f * labelSize;
-            textPaint.setTextSize((int) textSize);
-            android.graphics.Rect textRect = new android.graphics.Rect(0, 0, 0, 0);
-            textPaint.getTextBounds(text, 0, text.length(), textRect);
-            tym = textRect.height();
-            txm = textRect.width();
-            xm = rectF.left + rectF.width() / 2 - txm / 2;
-            ym += tym;
-            if (txm > 0 && labelY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
-                textX = xm;
-                textY = ym;
-                ym += tym / 4;
-            }
+        Paint textPaint = new Paint(mTextPaint);
+        float textSize = 0.5f * labelSize;
+        textPaint.setTextSize((int) textSize);
+        android.graphics.Rect textRect = new android.graphics.Rect(0, 0, 0, 0);
+        textPaint.getTextBounds(text, 0, text.length(), textRect);
+        tym = textRect.height();
+        txm = textRect.width();
+        xm = rectF.left + rectF.width() / 2 - txm / 2;
+        ym += tym;
+        if (txm > 0 && labelY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+            textX = xm;
+            textY = ym;
+            ym += tym / 4;
+        }
 
-            float changeSize = 0.5f * labelSize;
-            Paint changePaint = new Paint(mTextPaint);
-            changePaint.setTextSize((int) changeSize);
-            android.graphics.Rect changeRect = new android.graphics.Rect(0, 0, 0, 0);
-            changePaint.getTextBounds(change, 0, change.length(), changeRect);
-            tym = changeRect.height();
-            txm = changeRect.width();
-            xm = rectF.left + rectF.width() / 2 - txm / 2;
-            ym += tym;
-            if (txm > 0 && textY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
-                changeX = xm;
-                changeY = ym;
-            }
+        float changeSize = 0.5f * labelSize;
+        Paint changePaint = new Paint(mTextPaint);
+        changePaint.setTextSize((int) changeSize);
+        android.graphics.Rect changeRect = new android.graphics.Rect(0, 0, 0, 0);
+        changePaint.getTextBounds(change, 0, change.length(), changeRect);
+        tym = changeRect.height();
+        txm = changeRect.width();
+        xm = rectF.left + rectF.width() / 2 - txm / 2;
+        ym += tym;
+        if (txm > 0 && textY > 0 && txm + 8 < rectF.width() && ym + tym < rectF.bottom) {
+            changeX = xm;
+            changeY = ym;
+        }
 
-            // Center the text vertically.
-            float Y = Math.max(labelY, Math.max(textY, changeY));
-            float offsetY = 0;
-            if (Y < rectF.bottom) {
-                offsetY = (rectF.bottom - Y) / 2;
-            }
-            if (labelY > 0) {
-                canvas.drawText(label, labelX, labelY + offsetY, mTextPaint);
-            }
-            if (textY > 0) {
-                canvas.drawText(text, textX, textY + offsetY, textPaint);
-            }
-            if (changeY > 0) {
-                canvas.drawText(change, changeX, changeY + offsetY, changePaint);
-            }
+        // Center the text vertically.
+        float Y = Math.max(labelY, Math.max(textY, changeY));
+        float offsetY = 0;
+        if (Y < rectF.bottom) {
+            offsetY = (rectF.bottom - Y) / 2;
+        }
+        if (labelY > 0) {
+            canvas.drawText(label, labelX, labelY + offsetY, mTextPaint);
+        }
+        if (textY > 0) {
+            canvas.drawText(text, textX, textY + offsetY, textPaint);
+        }
+        if (changeY > 0) {
+            canvas.drawText(change, changeX, changeY + offsetY, changePaint);
         }
     }
 }

@@ -126,8 +126,11 @@ class StockRoomTreemapFragment : Fragment() {
             noAssetsStr,
             "",
             "",
+            0.0,
             0,
-            requireContext().getColor(R.color.black)
+            requireContext().getColor(R.color.black),
+            0,
+            0
         )
         val treeModel = TreeModel(rootItem)
 
@@ -145,6 +148,9 @@ class StockRoomTreemapFragment : Fragment() {
         } else {
             Color.BLACK
         }
+
+        val colorGreen = requireContext().getColor(R.color.green)
+        val colorRed = requireContext().getColor(R.color.red)
 
         stockItems.forEach { stockItem ->
             val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
@@ -164,11 +170,7 @@ class StockRoomTreemapFragment : Fragment() {
                     stockItem.stockDBdata.groupColor
                 } else {
                     // Color the treemap with red/green.
-                    if (assetChange.value >= 0.0) {
-                        requireContext().getColor(R.color.green)
-                    } else {
-                        requireContext().getColor(R.color.red)
-                    }
+                    -1
                 }
 
                 val percentStr = if (totalAssets > 0.0) {
@@ -192,8 +194,11 @@ class StockRoomTreemapFragment : Fragment() {
                             // + getCurrency(stockItem.onlineMarketData)
                             ,
                             assetChange.displayStr,
+                            assetChange.value,
                             backgroundColor,
-                            if (stockItem.stockDBdata.groupColor != 0) 0 else redGreenTextColor
+                            if (stockItem.stockDBdata.groupColor != 0) 0 else redGreenTextColor,
+                            colorGreen,
+                            colorRed
                         )
                     )
                 )

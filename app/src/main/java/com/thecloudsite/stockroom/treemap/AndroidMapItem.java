@@ -22,17 +22,23 @@ public class AndroidMapItem extends MapItem implements AndroidMappable {
     private final String label;
     private final String text;
     private final String change;
+    private final double value;
     private Integer backgroundColor;
     private final Integer textColor;
+    private final Integer colorGreen;
+    private final Integer colorRed;
 
-    public AndroidMapItem(double weight, String symbol, String label, String text, String change, Integer backgroundColor, Integer textColor) {
+    public AndroidMapItem(double weight, String symbol, String label, String text, String change, double value, Integer backgroundColor, Integer textColor, Integer colorGreen, Integer colorRed) {
         setSize(weight);
         this.symbol = symbol;
         this.label = label;
         this.text = text;
         this.change = change;
+        this.value = value;
         this.backgroundColor = backgroundColor;
         this.textColor = textColor;
+        this.colorGreen = colorGreen;
+        this.colorRed = colorRed;
     }
 
     public String getSymbol() {
@@ -51,12 +57,24 @@ public class AndroidMapItem extends MapItem implements AndroidMappable {
         return change;
     }
 
+    public double getValue() {
+        return value;
+    }
+
     public Integer getBackgroundColor() {
         return backgroundColor;
     }
 
     public Integer getTextColor() {
         return textColor;
+    }
+
+    public Integer getColorGreen() {
+        return colorGreen;
+    }
+
+    public Integer getColorRed() {
+        return colorRed;
     }
 
     public void setBackgroundColor(Integer backgroundColor) {
