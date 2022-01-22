@@ -217,7 +217,7 @@ class StockDataFragment : Fragment() {
 
     private var stockDBdata = StockDBdata(symbol = "")
     private var stockDataEntries: List<StockDataEntry>? = null
-    private var assetTimeEntries: List<AssetsTimeData> = emptyList()
+    private var assetTimeEntries: MutableList<AssetsTimeData> = mutableListOf()
     private var symbol: String = ""
     private var type: DataProvider = DataProvider.Standard
 
@@ -1294,7 +1294,24 @@ class StockDataFragment : Fragment() {
                                 price = asset.price,
                                 quantity = asset.quantity,
                             )
+                        }.toMutableList()
+
+                // Remove item pairs for moved content.
+                var j: Int = 0
+                while (j < assetTimeEntries.size) {
+
+                    if (j < assetTimeEntries.size - 1) {
+                        if ((assetTimeEntries[j].date - assetTimeEntries[j + 1].date).absoluteValue <= 1
+                            && (assetTimeEntries[j].price - assetTimeEntries[j + 1].price).absoluteValue < epsilon
+                        ) {
+                            assetTimeEntries.removeAt(j)
+                            assetTimeEntries.removeAt(j)
+                            continue
                         }
+                    }
+
+                    j++
+                }
 
                 // Reload view with updated asset time data.
                 loadStockView(stockViewRange, stockViewMode)
@@ -3814,19 +3831,7 @@ class StockDataFragment : Fragment() {
                         break
                     }
 
-                    //for (j in assetTimeEntriesCopy.indices) {
-                    var j: Int = 0
-                    while (j < assetTimeEntriesCopy.size) {
-
-                        // Skip item pairs for moved content.
-                        if (j < assetTimeEntriesCopy.size - 1) {
-                            if ((assetTimeEntriesCopy[j].date - assetTimeEntriesCopy[j + 1].date).absoluteValue <= 1
-                                && (assetTimeEntriesCopy[j].price - assetTimeEntriesCopy[j + 1].price).absoluteValue < epsilon
-                            ) {
-                                j += 2
-                                continue
-                            }
-                        }
+                    for (j in assetTimeEntriesCopy.indices) {
 
                         val t: Long = assetTimeEntriesCopy[j].date
                         val a = stockDataEntries[i].dateTimePoint
@@ -3880,11 +3885,10 @@ class StockDataFragment : Fragment() {
 
                             seriesList.add(transactionSeries)
 
+                            // Item is painted and can be removed. No need to keep this item for the remainder of the loop.
                             assetTimeEntriesCopy.removeAt(j)
                             break
                         }
-
-                        j++
                     }
 
                     i++
