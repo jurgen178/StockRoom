@@ -494,7 +494,9 @@ class StockDataFragment : Fragment() {
 
                     if (fee < 0.0) {
                         Toast.makeText(
-                            requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
+                            requireContext(),
+                            getString(R.string.fee_not_negative),
+                            Toast.LENGTH_LONG
                         )
                             .show()
                         return@setPositiveButton
@@ -1888,7 +1890,9 @@ class StockDataFragment : Fragment() {
 
                         if (fee < 0.0) {
                             Toast.makeText(
-                                requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
+                                requireContext(),
+                                getString(R.string.fee_not_negative),
+                                Toast.LENGTH_LONG
                             )
                                 .show()
                             return@setPositiveButton
@@ -2180,7 +2184,9 @@ class StockDataFragment : Fragment() {
 
                         if (fee < 0.0) {
                             Toast.makeText(
-                                requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
+                                requireContext(),
+                                getString(R.string.fee_not_negative),
+                                Toast.LENGTH_LONG
                             )
                                 .show()
                             return@setPositiveButton
@@ -2449,7 +2455,9 @@ class StockDataFragment : Fragment() {
 
                             if (fee < 0.0) {
                                 Toast.makeText(
-                                    requireContext(), getString(R.string.fee_not_negative), Toast.LENGTH_LONG
+                                    requireContext(),
+                                    getString(R.string.fee_not_negative),
+                                    Toast.LENGTH_LONG
                                 )
                                     .show()
                                 return@setPositiveButton
@@ -3802,7 +3810,19 @@ class StockDataFragment : Fragment() {
                         break
                     }
 
-                    for (j in assetTimeEntriesCopy.indices) {
+                    //for (j in assetTimeEntriesCopy.indices) {
+                    var j: Int = 0
+                    while (j < assetTimeEntriesCopy.size) {
+
+                        // Skip item pairs for moved content.
+                        if (j < assetTimeEntriesCopy.size - 1) {
+                            if (assetTimeEntriesCopy[j + 1].date - assetTimeEntriesCopy[j].date <= 1
+                                && assetTimeEntriesCopy[j].value == assetTimeEntriesCopy[j + 1].value
+                            ) {
+                                j += 2
+                                continue
+                            }
+                        }
 
                         val t: Long = assetTimeEntriesCopy[j].date
                         val a = stockDataEntries[i].dateTimePoint
@@ -3852,6 +3872,8 @@ class StockDataFragment : Fragment() {
                             assetTimeEntriesCopy.removeAt(j)
                             break
                         }
+
+                        j++
                     }
 
                     i++
