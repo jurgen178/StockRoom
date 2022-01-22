@@ -1284,13 +1284,17 @@ class StockDataFragment : Fragment() {
                 // assetAdapter.updateAssets(data.assets)
 
                 // Get the time stamps for the assets.
-                assetTimeEntries = data.assets.map { asset ->
-                    AssetsTimeData(
-                        date = asset.date,
-                        price = asset.price,
-                        quantity = asset.quantity,
-                    )
-                }
+                assetTimeEntries =
+                    data.assets.filter { assetItem ->
+                        assetItem.price != 0.0 && assetItem.quantity != 0.0
+                    }
+                        .map { asset ->
+                            AssetsTimeData(
+                                date = asset.date,
+                                price = asset.price,
+                                quantity = asset.quantity,
+                            )
+                        }
 
                 // Reload view with updated asset time data.
                 loadStockView(stockViewRange, stockViewMode)
@@ -3854,16 +3858,13 @@ class StockDataFragment : Fragment() {
                             val transactionSeries =
                                 LineDataSet(transactionPoints as List<DataPoint>, symbol)
 
-                            if (assetTimeEntriesCopy[j].price != 0.0) {
-
+                            transactionSeries.setCircleColor(
                                 if (assetTimeEntriesCopy[j].quantity > 0.0) {
-                                    transactionSeries.setCircleColor(Color.BLUE)  // bought
-                                } else
-                                    if (assetTimeEntriesCopy[j].quantity < 0.0) {
-                                        transactionSeries.setCircleColor(0xffFF6A00.toInt()) // sold, FF6A00=Orange
-                                    }
-                                
-                            }
+                                    Color.BLUE  // bought
+                                } else {
+                                    0xffFF6A00.toInt() // sold, FF6A00=Orange
+                                }
+                            )
 
 //                            val color = if (assetTimeEntriesCopy[j].bought) {
 //                                if (isDataPoint) {
