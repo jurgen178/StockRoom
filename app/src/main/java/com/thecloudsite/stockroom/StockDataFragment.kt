@@ -135,8 +135,8 @@ data class StockAssetsLiveData(
 
 data class AssetsTimeData(
     var date: Long = 0L,
-    var value: Double = 0.0,
-    var bought: Boolean = true,
+    var price: Double = 0.0,
+    var quantity: Double = 0.0
 )
 
 // Enable scrolling by disable parent scrolling
@@ -1287,8 +1287,8 @@ class StockDataFragment : Fragment() {
                 assetTimeEntries = data.assets.map { asset ->
                     AssetsTimeData(
                         date = asset.date,
-                        value = asset.price,
-                        bought = asset.quantity > 0.0,
+                        price = asset.price,
+                        quantity = asset.quantity,
                     )
                 }
 
@@ -3816,8 +3816,8 @@ class StockDataFragment : Fragment() {
 
                         // Skip item pairs for moved content.
                         if (j < assetTimeEntriesCopy.size - 1) {
-                            if (assetTimeEntriesCopy[j + 1].date - assetTimeEntriesCopy[j].date <= 1
-                                && assetTimeEntriesCopy[j].value == assetTimeEntriesCopy[j + 1].value
+                            if ((assetTimeEntriesCopy[j].date - assetTimeEntriesCopy[j + 1].date).absoluteValue <= 1
+                                && (assetTimeEntriesCopy[j].price - assetTimeEntriesCopy[j + 1].price).absoluteValue < epsilon
                             ) {
                                 j += 2
                                 continue
@@ -3837,9 +3837,9 @@ class StockDataFragment : Fragment() {
 
                             // Data points > 0.0 are blue, and Data points = 0.0 are yellow using the current value.
                             // For example rewarded stocks have bought=0.0, but would distort the diagram.
-                            val isDataPoint = assetTimeEntriesCopy[j].value > 0.0
+                            val isDataPoint = assetTimeEntriesCopy[j].price > 0.0
                             val value = if (isDataPoint) {
-                                assetTimeEntriesCopy[j].value.toFloat()
+                                assetTimeEntriesCopy[j].price.toFloat()
                             } else {
                                 stockDataEntries[i].candleEntry.y
                             }
@@ -3854,17 +3854,27 @@ class StockDataFragment : Fragment() {
                             val transactionSeries =
                                 LineDataSet(transactionPoints as List<DataPoint>, symbol)
 
-                            val color = if (assetTimeEntriesCopy[j].bought) {
-                                if (isDataPoint) {
-                                    Color.BLUE  // data point > 0.0
-                                } else {
-                                    0xffC23FFF.toInt()  // data point = 0.0, C23FF=Violet
-                                }
-                            } else {
-                                0xffFF6A00.toInt()  // FF6A00=Orange
+                            if (assetTimeEntriesCopy[j].price != 0.0) {
+
+                                if (assetTimeEntriesCopy[j].quantity > 0.0) {
+                                    transactionSeries.setCircleColor(Color.BLUE)  // bought
+                                } else
+                                    if (assetTimeEntriesCopy[j].quantity < 0.0) {
+                                        transactionSeries.setCircleColor(0xffFF6A00.toInt()) // sold, FF6A00=Orange
+                                    }
+                                
                             }
 
-                            transactionSeries.setCircleColor(color)
+//                            val color = if (assetTimeEntriesCopy[j].bought) {
+//                                if (isDataPoint) {
+//                                    Color.BLUE  // data point > 0.0
+//                                } else {
+//                                    0xffC23FFF.toInt()  // data point = 0.0, C23FF=Violet
+//                                }
+//                            } else {
+//                                0xffFF6A00.toInt()  // FF6A00=Orange
+//                            }
+
                             //transactionSeries.setDrawCircleHole(false)
 
                             seriesList.add(transactionSeries)
