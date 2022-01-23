@@ -238,57 +238,43 @@ fun formatInt(
     value: Long,
     context: Context
 ): FormatIntResult {
-    return when {
-        value >= 1000000000000L -> {
-            val formattedStr =
+    val formattedStr =
+        when {
+            value >= 900000000000L -> {
                 "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
                     context.getString(
                         R.string.trillion_abbr
                     )
                 }"
-
-            FormatIntResult(SpannableStringBuilder().bold {
-                append(formattedStr)
-            }, " ($formattedStr)", " $formattedStr")
-        }
-        value >= 1000000000L -> {
-            val formattedStr =
+            }
+            value >= 900000000L -> {
                 "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
                     context.getString(
                         R.string.billion_abbr
                     )
                 }"
-
-            FormatIntResult(SpannableStringBuilder().bold {
-                append(formattedStr)
-            }, " ($formattedStr)", " $formattedStr")
-        }
-        value >= 1000000L -> {
-            val formattedStr =
+            }
+            value >= 900000L -> {
                 "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
                     context.getString(
                         R.string.million_abbr
                     )
                 }"
+            }
+            value == Long.MIN_VALUE -> {
+                // requested value is not in the JSON data
+                context.getString(R.string.onlinedata_not_applicable)
+            }
+            else -> {
+                DecimalFormat(DecimalFormat0To2Digits).format(value)
+            }
+        }
 
-            FormatIntResult(SpannableStringBuilder().bold {
-                append(formattedStr)
-            }, " ($formattedStr)", " $formattedStr")
-        }
-        value == Long.MIN_VALUE -> {
-            // requested value is not in the JSON data
-            FormatIntResult(
-                SpannableStringBuilder().append(
-                    context.getString(R.string.onlinedata_not_applicable)
-                ), "", ""
-            )
-        }
-        else -> {
-            FormatIntResult(SpannableStringBuilder().bold {
-                append(DecimalFormat(DecimalFormat0To2Digits).format(value))
-            }, "", "")
-        }
-    }
+    return FormatIntResult(
+        SpannableStringBuilder().bold {
+            append(formattedStr)
+        }, " ($formattedStr)", formattedStr
+    )
 }
 
 fun Resources.getRawTextFile(@RawRes id: Int) =

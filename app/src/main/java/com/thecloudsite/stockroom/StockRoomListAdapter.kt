@@ -297,9 +297,13 @@ class StockRoomListAdapter internal constructor(
                 holder.binding.textViewChangePercent.setTextColor(defaultTextColor!!)
             }
 
-            if (current.onlineMarketData.marketCap > 0) {
+            if (current.onlineMarketData.marketCap > 0L) {
+                if (assets.isNotEmpty()) {
+                    assets.append("\n")
+                }
+
                 assets.append(
-                    "\n${context.getString(R.string.onlinedata_marketCap)}: ${
+                    "${context.getString(R.string.onlinedata_marketCap)}: ${
                         formatInt(
                             current.onlineMarketData.marketCap,
                             context

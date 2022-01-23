@@ -840,7 +840,7 @@ class FilterMarketCapType(
                 stockItem.onlineMarketData.marketCap > filterValueM
             }
             FilterSubTypeEnum.LessThanType -> {
-                stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < filterValueM
+                stockItem.onlineMarketData.marketCap > 0L && stockItem.onlineMarketData.marketCap < filterValueM
             }
             // Large-cap is more than 10B
             FilterSubTypeEnum.IsMarketLargeCapType -> {
@@ -860,7 +860,7 @@ class FilterMarketCapType(
             }
             // Nano-cap is below 50M
             FilterSubTypeEnum.IsMarketNanoCapType -> {
-                stockItem.onlineMarketData.marketCap > 0.0 && stockItem.onlineMarketData.marketCap < 50_000_000L
+                stockItem.onlineMarketData.marketCap > 0L && stockItem.onlineMarketData.marketCap < 50_000_000L
             }
             else -> false
         }
