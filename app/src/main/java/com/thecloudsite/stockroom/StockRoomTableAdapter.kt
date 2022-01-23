@@ -66,6 +66,8 @@ enum class TableSortMode {
     ByAssetFeeDown,
     ByAssetTotalFeeUp,
     ByAssetTotalFeeDown,
+    ByMarketCapUp,
+    ByMarketCapDown,
     ByDividendUp,
     ByDividendDown,
     ByAlertBelowUp,
@@ -142,6 +144,7 @@ class StockRoomTableAdapter internal constructor(
         holder.binding.tableDataAssetChange.gravity = alignmentNumbers
         holder.binding.tableDataAssetFee.gravity = alignmentNumbers
         holder.binding.tableDataAssetTotalFee.gravity = alignmentNumbers
+        holder.binding.tableDataMarketCap.gravity = alignmentNumbers
         holder.binding.tableDataDividend.gravity = alignmentNumbers
         holder.binding.tableDataAlertBelow.gravity = alignmentNumbers
         holder.binding.tableDataAlertAbove.gravity = alignmentNumbers
@@ -238,6 +241,12 @@ class StockRoomTableAdapter internal constructor(
             holder.binding.tableDataAssetTotalFee.text =
                 getHeaderStr(context.getString(R.string.table_column_AssetTotalFees))
 
+            holder.binding.tableDataMarketCap.setOnClickListener {
+                update(TableSortMode.ByMarketCapUp, TableSortMode.ByMarketCapDown)
+            }
+            holder.binding.tableDataMarketCap.text =
+                getHeaderStr(context.getString(R.string.table_column_Marketcap))
+
             holder.binding.tableDataDividend.setOnClickListener {
                 update(TableSortMode.ByDividendUp, TableSortMode.ByDividendDown)
             }
@@ -313,6 +322,9 @@ class StockRoomTableAdapter internal constructor(
 
                 TableSortMode.ByAssetTotalFeeUp -> updateTextviewUp(holder.binding.tableDataAssetTotalFee)
                 TableSortMode.ByAssetTotalFeeDown -> updateTextviewDown(holder.binding.tableDataAssetTotalFee)
+
+                TableSortMode.ByMarketCapUp -> updateTextviewUp(holder.binding.tableDataMarketCap)
+                TableSortMode.ByMarketCapDown -> updateTextviewDown(holder.binding.tableDataMarketCap)
 
                 TableSortMode.ByDividendUp -> updateTextviewUp(holder.binding.tableDataDividend)
                 TableSortMode.ByDividendDown -> updateTextviewDown(holder.binding.tableDataDividend)
@@ -471,6 +483,12 @@ class StockRoomTableAdapter internal constructor(
 //        )
 //        holder.binding.tableDataMarketPrice.setBackgroundColor(marketColor)
 //        holder.binding.tableDataMarketChange.setBackgroundColor(marketColor)
+
+            holder.binding.tableDataMarketCap.text = if (current.onlineMarketData.marketCap > 0L) {
+                formatInt(current.onlineMarketData.marketCap, context).third
+            } else {
+                ""
+            }
 
             val dividendStr = SpannableStringBuilder().append(getDividendStr(current))
 
@@ -682,7 +700,8 @@ class StockRoomTableAdapter internal constructor(
 
 //            val providers = context.resources.getStringArray(array.dataprovider_items)
 //            holder.binding.tableDataProvider.text = providers[current.stockDBdata.type]
-            holder.binding.tableDataProvider.text = dataProviderFromInt(current.stockDBdata.type).toString()
+            holder.binding.tableDataProvider.text =
+                dataProviderFromInt(current.stockDBdata.type).toString()
         }
     }
 
@@ -812,6 +831,13 @@ class StockRoomTableAdapter internal constructor(
             }
             TableSortMode.ByAssetTotalFeeDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
                 getTotalFee(stockItem.assets)
+            }
+
+            TableSortMode.ByMarketCapUp -> this.stockItemsCopy.sortedBy { stockItem ->
+                stockItem.onlineMarketData.marketCap
+            }
+            TableSortMode.ByMarketCapDown -> this.stockItemsCopy.sortedByDescending { stockItem ->
+                stockItem.onlineMarketData.marketCap
             }
 
             TableSortMode.ByDividendUp -> this.stockItemsCopy.sortedBy { stockItem ->

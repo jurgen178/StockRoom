@@ -233,7 +233,7 @@ fun enNumberStrToDouble(str: String): Double {
 fun formatInt(
     value: Long,
     context: Context
-): Pair<SpannableStringBuilder, String> {
+): Triple<SpannableStringBuilder, String, String> {
     return when {
         value >= 1000000000000L -> {
             val formattedStr =
@@ -243,9 +243,9 @@ fun formatInt(
                     )
                 }"
 
-            Pair(SpannableStringBuilder().bold {
+            Triple(SpannableStringBuilder().bold {
                 append(formattedStr)
-            }, " ($formattedStr)")
+            }, " ($formattedStr)", " $formattedStr")
         }
         value >= 1000000000L -> {
             val formattedStr =
@@ -255,9 +255,9 @@ fun formatInt(
                     )
                 }"
 
-            Pair(SpannableStringBuilder().bold {
+            Triple(SpannableStringBuilder().bold {
                 append(formattedStr)
-            }, " ($formattedStr)")
+            }, " ($formattedStr)", " $formattedStr")
         }
         value >= 1000000L -> {
             val formattedStr =
@@ -267,22 +267,22 @@ fun formatInt(
                     )
                 }"
 
-            Pair(SpannableStringBuilder().bold {
+            Triple(SpannableStringBuilder().bold {
                 append(formattedStr)
-            }, " ($formattedStr)")
+            }, " ($formattedStr)", " $formattedStr")
         }
         value == Long.MIN_VALUE -> {
             // requested value is not in the JSON data
-            Pair(
+            Triple(
                 SpannableStringBuilder().append(
                     context.getString(R.string.onlinedata_not_applicable)
-                ), ""
+                ), "", ""
             )
         }
         else -> {
-            Pair(SpannableStringBuilder().bold {
+            Triple(SpannableStringBuilder().bold {
                 append(DecimalFormat(DecimalFormat0To2Digits).format(value))
-            }, "")
+            }, "", "")
         }
     }
 }
