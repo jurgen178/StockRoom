@@ -100,6 +100,12 @@ data class StockOptionData(
     var type: Int = AssetType.UnknownOption.value
 )
 
+data class FormatIntResult(
+    var boldText: SpannableStringBuilder,
+    var withBrackets: String,
+    var text: String,
+)
+
 enum class DividendCycleStrIndex(val value: Int) {
     Monthly(0),
     Quarterly(1),
@@ -228,12 +234,10 @@ fun enNumberStrToDouble(str: String): Double {
     return minValueCheck(value)
 }
 
-// first: abbr
-// second: add optional (abbr)
 fun formatInt(
     value: Long,
     context: Context
-): Triple<SpannableStringBuilder, String, String> {
+): FormatIntResult {
     return when {
         value >= 1000000000000L -> {
             val formattedStr =
@@ -243,7 +247,7 @@ fun formatInt(
                     )
                 }"
 
-            Triple(SpannableStringBuilder().bold {
+            FormatIntResult(SpannableStringBuilder().bold {
                 append(formattedStr)
             }, " ($formattedStr)", " $formattedStr")
         }
@@ -255,7 +259,7 @@ fun formatInt(
                     )
                 }"
 
-            Triple(SpannableStringBuilder().bold {
+            FormatIntResult(SpannableStringBuilder().bold {
                 append(formattedStr)
             }, " ($formattedStr)", " $formattedStr")
         }
@@ -267,20 +271,20 @@ fun formatInt(
                     )
                 }"
 
-            Triple(SpannableStringBuilder().bold {
+            FormatIntResult(SpannableStringBuilder().bold {
                 append(formattedStr)
             }, " ($formattedStr)", " $formattedStr")
         }
         value == Long.MIN_VALUE -> {
             // requested value is not in the JSON data
-            Triple(
+            FormatIntResult(
                 SpannableStringBuilder().append(
                     context.getString(R.string.onlinedata_not_applicable)
                 ), "", ""
             )
         }
         else -> {
-            Triple(SpannableStringBuilder().bold {
+            FormatIntResult(SpannableStringBuilder().bold {
                 append(DecimalFormat(DecimalFormat0To2Digits).format(value))
             }, "", "")
         }

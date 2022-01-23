@@ -37,12 +37,7 @@ import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
 import com.thecloudsite.stockroom.StockMarketDataRepository.StockRawMarketDataRepository
 import com.thecloudsite.stockroom.databinding.OnlinedataviewItemBinding
-import com.thecloudsite.stockroom.utils.DecimalFormat2Digits
-import com.thecloudsite.stockroom.utils.enNumberStrToDouble
-import com.thecloudsite.stockroom.utils.formatInt
-import com.thecloudsite.stockroom.utils.getFormatStr
-import com.thecloudsite.stockroom.utils.isOnline
-import com.thecloudsite.stockroom.utils.minValueCheck
+import com.thecloudsite.stockroom.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -183,7 +178,7 @@ class OnlineDataAdapter internal constructor(
                     || key.contains("volume", true)
                 ) {
                     val formattedLong = formatInt(valueString.toLong())
-                    element.setValue(JsonPrimitive("#$valueString<i>${formattedLong.second}</i>#"))
+                    element.setValue(JsonPrimitive("#$valueString<i>${formattedLong.withBrackets}</i>#"))
                 }
 
                 // Recursion for json array.
@@ -317,10 +312,7 @@ class OnlineDataAdapter internal constructor(
         holder.binding.textViewOnlineDataDesc.text = current.desc
     }
 
-    // first: "abbr" (formatted)
-    // second: "(abbr)"
-    // third: "abbr"
-    private fun formatInt(value: Long): Triple<SpannableStringBuilder, String, String> {
+    private fun formatInt(value: Long): FormatIntResult {
         return formatInt(value, context)
     }
 
@@ -448,19 +440,19 @@ class OnlineDataAdapter internal constructor(
             data.add(
                 OnlineData(
                     desc = context.getString(R.string.onlinedata_regularMarketVolume),
-                    text = formatInt(onlineMarketData.regularMarketVolume).first
+                    text = formatInt(onlineMarketData.regularMarketVolume).boldText
                 )
             )
             data.add(
                 OnlineData(
                     desc = context.getString(R.string.onlinedata_sharesOutstanding),
-                    text = formatInt(onlineMarketData.sharesOutstanding).first
+                    text = formatInt(onlineMarketData.sharesOutstanding).boldText
                 )
             )
             data.add(
                 OnlineData(
                     desc = context.getString(R.string.onlinedata_marketCap),
-                    text = formatInt(onlineMarketData.marketCap).first
+                    text = formatInt(onlineMarketData.marketCap).boldText
                 )
             )
 

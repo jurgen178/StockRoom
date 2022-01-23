@@ -303,7 +303,7 @@ class StockRoomListAdapter internal constructor(
                         formatInt(
                             current.onlineMarketData.marketCap,
                             context
-                        ).first
+                        ).text
                     }"
                 )
             }

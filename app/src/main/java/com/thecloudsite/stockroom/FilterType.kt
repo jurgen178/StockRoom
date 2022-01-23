@@ -887,7 +887,7 @@ class FilterMarketCapType(
             ) {
                 return SpannableStringBuilder()
                     .append(data)
-                    .append(formatInt(filterValue * 1_000_000L, context).second)
+                    .append(formatInt(filterValue * 1_000_000L, context).withBrackets)
             }
 
             return SpannableStringBuilder()
