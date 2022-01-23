@@ -74,6 +74,7 @@ limitations under the License. -->
     <string name="sort_assets">Sort by Assets</string>
     <string name="sort_profit">Sort by Gain</string>
     <string name="sort_profit_percentage">Sort by Gain \u0025</string>
+    <string name="sort_marketcap">Sort by Market Capitalization</string>
     <string name="sort_dividend_percentage">Sort by Dividend \u0025</string>
     <string name="sort_group">Sort by Group</string>
     <string name="sort_marker">Sort by Marker</string>

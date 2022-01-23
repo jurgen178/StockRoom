@@ -572,6 +572,7 @@ class StockMarketDataRepository(
                         marketChangePercent = response.market_data.price_change_percentage_24h,
                         coinImageUrl = response.image.small,
                         quoteType = "CRYPTOCURRENCY",
+                        marketCap = response.market_data.market_cap.usd
                     )
                 )
             }
@@ -627,6 +628,7 @@ class StockMarketDataRepository(
                                 marketChangePercent = response.quotes.USD.percent_change_24h,
                                 //coinImageUrl = ,
                                 quoteType = "CRYPTOCURRENCY",
+                                marketCap = response.quotes.USD.market_cap
                             )
                         )
                     }

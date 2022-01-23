@@ -594,6 +594,11 @@ data class CoingeckoDescription(
 )
 
 @JsonClass(generateAdapter = true)
+data class CoingeckoMarketCap(
+    var usd: Long,
+)
+
+@JsonClass(generateAdapter = true)
 data class CoingeckoCurrentPrice(
     var usd: Double,
 )
@@ -603,6 +608,7 @@ data class CoingeckoMarketData(
     var current_price: CoingeckoCurrentPrice,
     var price_change_24h: Double,
     var price_change_percentage_24h: Double,
+    var market_cap: CoingeckoMarketCap,
 )
 
 @JsonClass(generateAdapter = true)
@@ -717,6 +723,7 @@ interface CoingeckoApiMarketData {
 data class CoinpaprikaMarketData(
     var price: Double,
     var percent_change_24h: Double,
+    var market_cap: Long,
 )
 
 @JsonClass(generateAdapter = true)

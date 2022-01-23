@@ -675,6 +675,10 @@ class MainActivity : AppCompatActivity() {
                 stockRoomViewModel.updateSortMode(SortMode.ByProfitPercentage)
                 true
             }
+            R.id.menu_sort_marketcap -> {
+                stockRoomViewModel.updateSortMode(SortMode.ByMarketCap)
+                true
+            }
             R.id.menu_sort_dividend_percentage -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByDividendPercentage)
                 true
@@ -730,6 +734,8 @@ class MainActivity : AppCompatActivity() {
         menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
         menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
             sortMode == SortMode.ByProfitPercentage
+        menu?.findItem(R.id.menu_sort_marketcap)?.isChecked =
+            sortMode == SortMode.ByMarketCap
         menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
             sortMode == SortMode.ByDividendPercentage
         menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup

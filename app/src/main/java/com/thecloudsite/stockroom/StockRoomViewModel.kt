@@ -1310,6 +1310,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     }
                 }
             }
+            SortMode.ByMarketCap -> {
+                stockItems.sortedByDescending { item ->
+                    item.onlineMarketData.marketCap
+                }
+            }
             SortMode.ByDividendPercentage -> {
                 stockItems.sortedByDescending { item ->
 

@@ -297,6 +297,17 @@ class StockRoomListAdapter internal constructor(
                 holder.binding.textViewChangePercent.setTextColor(defaultTextColor!!)
             }
 
+            if (current.onlineMarketData.marketCap > 0) {
+                assets.append(
+                    "\n${context.getString(R.string.onlinedata_marketCap)}: ${
+                        formatInt(
+                            current.onlineMarketData.marketCap,
+                            context
+                        ).first
+                    }"
+                )
+            }
+
             val dividendStr = getDividendStr(current, context)
             if (dividendStr.isNotEmpty()) {
                 if (assets.isNotEmpty()) {
