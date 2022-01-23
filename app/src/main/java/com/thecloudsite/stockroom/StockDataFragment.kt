@@ -1301,8 +1301,11 @@ class StockDataFragment : Fragment() {
                 while (j < assetTimeEntries.size) {
 
                     if (j < assetTimeEntries.size - 1) {
+
+                        // same date and price, but quantity have different sign
                         if ((assetTimeEntries[j].date - assetTimeEntries[j + 1].date).absoluteValue <= 1
                             && (assetTimeEntries[j].price - assetTimeEntries[j + 1].price).absoluteValue < epsilon
+                            && (assetTimeEntries[j].quantity + assetTimeEntries[j + 1].quantity).absoluteValue < epsilon
                         ) {
                             assetTimeEntries.removeAt(j)
                             assetTimeEntries.removeAt(j)
