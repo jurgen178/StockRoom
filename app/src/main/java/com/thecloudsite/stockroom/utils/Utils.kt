@@ -234,47 +234,40 @@ fun enNumberStrToDouble(str: String): Double {
     return minValueCheck(value)
 }
 
-fun formatInt(
+fun formatLong(
     value: Long,
     context: Context
-): FormatIntResult {
-    val formattedStr =
-        when {
-            value >= 900000000000L -> {
-                "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
-                    context.getString(
-                        R.string.trillion_abbr
-                    )
-                }"
-            }
-            value >= 900000000L -> {
-                "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
-                    context.getString(
-                        R.string.billion_abbr
-                    )
-                }"
-            }
-            value >= 900000L -> {
-                "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
-                    context.getString(
-                        R.string.million_abbr
-                    )
-                }"
-            }
-            value == Long.MIN_VALUE -> {
-                // requested value is not in the JSON data
-                context.getString(R.string.onlinedata_not_applicable)
-            }
-            else -> {
-                DecimalFormat(DecimalFormat0To2Digits).format(value)
-            }
+): String {
+    return when {
+        value >= 900000000000L -> {
+            "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
+                context.getString(
+                    R.string.trillion_abbr
+                )
+            }"
         }
-
-    return FormatIntResult(
-        SpannableStringBuilder().bold {
-            append(formattedStr)
-        }, " ($formattedStr)", formattedStr
-    )
+        value >= 900000000L -> {
+            "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
+                context.getString(
+                    R.string.billion_abbr
+                )
+            }"
+        }
+        value >= 900000L -> {
+            "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
+                context.getString(
+                    R.string.million_abbr
+                )
+            }"
+        }
+        value == Long.MIN_VALUE -> {
+            // requested value is not in the JSON data
+            context.getString(R.string.onlinedata_not_applicable)
+        }
+        else -> {
+            DecimalFormat(DecimalFormat0To2Digits).format(value)
+        }
+    }
 }
 
 fun Resources.getRawTextFile(@RawRes id: Int) =

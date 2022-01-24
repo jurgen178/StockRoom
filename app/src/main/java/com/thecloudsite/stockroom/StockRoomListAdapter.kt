@@ -304,10 +304,10 @@ class StockRoomListAdapter internal constructor(
 
                 assets.append(
                     "${context.getString(R.string.onlinedata_marketCap)}: ${
-                        formatInt(
+                        formatLong(
                             current.onlineMarketData.marketCap,
                             context
-                        ).text
+                        )
                     }"
                 )
             }

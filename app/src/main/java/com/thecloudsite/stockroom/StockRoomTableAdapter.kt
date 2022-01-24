@@ -485,7 +485,7 @@ class StockRoomTableAdapter internal constructor(
 //        holder.binding.tableDataMarketChange.setBackgroundColor(marketColor)
 
             holder.binding.tableDataMarketCap.text = if (current.onlineMarketData.marketCap > 0L) {
-                formatInt(current.onlineMarketData.marketCap, context).text
+                formatLong(current.onlineMarketData.marketCap, context)
             } else {
                 ""
             }

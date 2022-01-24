@@ -177,8 +177,8 @@ class OnlineDataAdapter internal constructor(
                     || key == "openInterest"
                     || key.contains("volume", true)
                 ) {
-                    val formattedLong = formatInt(valueString.toLong())
-                    element.setValue(JsonPrimitive("#$valueString<i>${formattedLong.withBrackets}</i>#"))
+                    val formattedLong = formatLong(valueString.toLong())
+                    element.setValue(JsonPrimitive("#$valueString<i> (${formattedLong})</i>#"))
                 }
 
                 // Recursion for json array.
@@ -312,8 +312,8 @@ class OnlineDataAdapter internal constructor(
         holder.binding.textViewOnlineDataDesc.text = current.desc
     }
 
-    private fun formatInt(value: Long): FormatIntResult {
-        return formatInt(value, context)
+    private fun formatLong(value: Long): String {
+        return formatLong(value, context)
     }
 
     private fun formatDoubleNegInRed(
@@ -440,19 +440,25 @@ class OnlineDataAdapter internal constructor(
             data.add(
                 OnlineData(
                     desc = context.getString(R.string.onlinedata_regularMarketVolume),
-                    text = formatInt(onlineMarketData.regularMarketVolume).boldText
+                    text = SpannableStringBuilder().bold {
+                        append(formatLong(onlineMarketData.regularMarketVolume))
+                    }
                 )
             )
             data.add(
                 OnlineData(
                     desc = context.getString(R.string.onlinedata_sharesOutstanding),
-                    text = formatInt(onlineMarketData.sharesOutstanding).boldText
+                    text = SpannableStringBuilder().bold {
+                        append(formatLong(onlineMarketData.sharesOutstanding))
+                    }
                 )
             )
             data.add(
                 OnlineData(
                     desc = context.getString(R.string.onlinedata_marketCap),
-                    text = formatInt(onlineMarketData.marketCap).boldText
+                    text = SpannableStringBuilder().bold {
+                        append(formatLong(onlineMarketData.marketCap))
+                    }
                 )
             )
 
