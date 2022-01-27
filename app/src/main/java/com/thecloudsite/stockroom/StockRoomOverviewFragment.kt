@@ -125,7 +125,7 @@ class StockRoomOverviewFragment : Fragment() {
     )
 
     val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+      PreferenceManager.getDefaultSharedPreferences(requireContext() /* Activity context */)
 
     stockRoomViewModel.allStockItems.observe(viewLifecycleOwner, Observer { items ->
       items?.let { stockitemList ->

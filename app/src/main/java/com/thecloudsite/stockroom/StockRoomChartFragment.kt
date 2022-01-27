@@ -46,7 +46,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
   private var stockViewRange: StockViewRange
     get() {
       val sharedPref =
-        PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewRange.OneDay
+        PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return StockViewRange.OneDay
       val index = sharedPref.getInt(settingStockViewRange, StockViewRange.OneDay.value)
       return if (index >= 0 && index < StockViewRange.values().size) {
         StockViewRange.values()[index]
@@ -61,7 +61,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
   private var stockViewMode: StockViewMode
     get() {
       val sharedPref =
-        PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewMode.Line
+        PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return StockViewMode.Line
       val index = sharedPref.getInt(settingStockViewMode, StockViewMode.Line.value)
       return if (index >= 0 && index < StockViewMode.values().size) {
         StockViewMode.values()[index]
@@ -76,7 +76,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
   private var chartOverlaySymbols: String
     get() {
       val sharedPref =
-        PreferenceManager.getDefaultSharedPreferences(activity)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
           ?: return settingChartOverlaySymbolsDefault
       return sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
         ?: return settingChartOverlaySymbolsDefault
@@ -88,7 +88,7 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
   private var useChartOverlaySymbols: Boolean
     get() {
       val sharedPref =
-        PreferenceManager.getDefaultSharedPreferences(activity)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
           ?: return false
       return sharedPref.getBoolean(settingUseChartOverlaySymbols, false)
     }

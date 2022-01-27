@@ -336,7 +336,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     super.onPause()
 
     val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
+      PreferenceManager.getDefaultSharedPreferences(requireContext() /* Activity context */)
 
     val codeMapStr = getSerializedStr()
     sharedPreferences
@@ -360,7 +360,7 @@ class CalcProgFragment(stockSymbol: String = "") : CalcBaseFragment(stockSymbol)
     stockRoomViewModel.runOnlineTaskNow()
 
     val sharedPreferences =
-      PreferenceManager.getDefaultSharedPreferences(activity /* Activity context */)
+      PreferenceManager.getDefaultSharedPreferences(requireContext() /* Activity context */)
 
     val codeMapStr = sharedPreferences.getString("calcCodeMap", "").toString()
 

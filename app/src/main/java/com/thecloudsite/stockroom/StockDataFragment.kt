@@ -239,7 +239,7 @@ class StockDataFragment : Fragment() {
     private var stockViewRange: StockViewRange
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(activity)
+                PreferenceManager.getDefaultSharedPreferences(requireContext())
                     ?: return StockViewRange.OneDay
             val index = sharedPref.getInt(settingStockViewRange, StockViewRange.OneDay.value)
             return if (index >= 0 && index < StockViewRange.values().size) {
@@ -249,7 +249,7 @@ class StockDataFragment : Fragment() {
             }
         }
         set(value) {
-            val sharedPref = PreferenceManager.getDefaultSharedPreferences(activity) ?: return
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
             with(sharedPref.edit()) {
                 putInt(settingStockViewRange, value.value)
                 commit()
@@ -260,7 +260,7 @@ class StockDataFragment : Fragment() {
     private var stockViewMode: StockViewMode
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(activity) ?: return StockViewMode.Line
+                PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return StockViewMode.Line
             val index = sharedPref.getInt(settingStockViewMode, StockViewMode.Line.value)
             return if (index >= 0 && index < StockViewMode.values().size) {
                 StockViewMode.values()[index]
@@ -269,7 +269,7 @@ class StockDataFragment : Fragment() {
             }
         }
         set(value) {
-            val sharedPref = PreferenceManager.getDefaultSharedPreferences(activity) ?: return
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
             with(sharedPref.edit()) {
                 putInt(settingStockViewMode, value.value)
                 commit()
@@ -280,7 +280,7 @@ class StockDataFragment : Fragment() {
     private var chartOverlaySymbols: String
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(activity)
+                PreferenceManager.getDefaultSharedPreferences(requireContext())
                     ?: return settingChartOverlaySymbolsDefault
             return sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
                 ?: return settingChartOverlaySymbolsDefault
@@ -292,7 +292,7 @@ class StockDataFragment : Fragment() {
     private var useChartOverlaySymbols: Boolean
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(activity)
+                PreferenceManager.getDefaultSharedPreferences(requireContext())
                     ?: return false
             return sharedPref.getBoolean(settingUseChartOverlaySymbols, false)
         }
