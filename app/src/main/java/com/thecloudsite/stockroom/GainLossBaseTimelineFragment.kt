@@ -284,7 +284,7 @@ open class GainLossBaseTimelineFragment : Fragment() {
                         GainLossStockItem(
                             date = map.lastTransactionDate,
                             symbol = stockItem.stockDBdata.symbol,
-                            name = if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
+                            name = stockItem.stockDBdata.name.ifEmpty { stockItem.stockDBdata.symbol },
                             text = capitalGainLossText
                         )
                     )

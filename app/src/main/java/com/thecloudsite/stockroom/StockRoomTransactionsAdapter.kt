@@ -368,10 +368,8 @@ class StockRoomTransactionsAdapter internal constructor(
         if (assetMap.size > 0) {
             val accounts: MutableList<String> = mutableListOf()
             assetMap.toSortedMap().forEach { (account, n) ->
-                val accountName = if (account.isEmpty()) {
+                val accountName = account.ifEmpty {
                     context.getString(R.string.standard_account)
-                } else {
-                    account
                 }
 
                 accounts.add("$accountName (${n})")

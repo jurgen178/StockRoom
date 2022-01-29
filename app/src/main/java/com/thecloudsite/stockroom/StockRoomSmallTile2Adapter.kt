@@ -75,7 +75,7 @@ class StockRoomSmallTile2Adapter internal constructor(
 
             holder.binding.smalltileItemLayout.setBackgroundColor(context.getColor(R.color.backgroundListColor))
             val displayName =
-                if (current.stockDBdata.name.isEmpty()) current.stockDBdata.symbol else current.stockDBdata.name
+                current.stockDBdata.name.ifEmpty { current.stockDBdata.symbol }
             holder.binding.smalltileTextViewSymbol.text = displayName
 
             if (current.onlineMarketData.marketPrice > 0.0) {

@@ -325,10 +325,8 @@ class StockDataFragment : Fragment() {
         val standardAccount = getString(R.string.standard_account)
 
         dialogBinding.textViewAssetAccount.text =
-            if (asset.account.isEmpty()) {
+            asset.account.ifEmpty {
                 standardAccount
-            } else {
-                asset.account
             }
 
         dialogBinding.textViewAssetAccount.setOnClickListener { view ->
@@ -340,12 +338,10 @@ class StockDataFragment : Fragment() {
                 it.lowercase(Locale.ROOT)
             }
                 .forEach { account ->
-                    val name = if (account.isEmpty()) {
+                    val name = account.ifEmpty {
                         // first entry in bold
                         SpannableStringBuilder()
                             .bold { append(standardAccount) }
-                    } else {
-                        account
                     }
                     popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                 }
@@ -1178,7 +1174,7 @@ class StockDataFragment : Fragment() {
                 stockDBdata = data
 
                 val displayName =
-                    if (stockDBdata.name.isEmpty()) stockDBdata.symbol else stockDBdata.name
+                    stockDBdata.name.ifEmpty { stockDBdata.symbol }
 
                 binding.textViewSymbol.text =
                     SpannableStringBuilder().underline { color(Color.BLUE) { append(displayName) } }
@@ -1187,10 +1183,8 @@ class StockDataFragment : Fragment() {
                 binding.noteTextView.text = stockDBdata.note
 
                 // Portfolio
-                binding.textViewPortfolio.text = if (stockDBdata.portfolio.isEmpty()) {
+                binding.textViewPortfolio.text = stockDBdata.portfolio.ifEmpty {
                     standardPortfolio
-                } else {
-                    stockDBdata.portfolio
                 }
             }
 
@@ -1211,10 +1205,8 @@ class StockDataFragment : Fragment() {
                 getString(R.string.standard_group)
             } else {
                 val group = stockRoomViewModel.getGroupSync(stockDBdata.groupColor)
-                if (group.name.isEmpty()) {
+                group.name.ifEmpty {
                     "Color code=0x${color.toHexString()}"
-                } else {
-                    group.name
                 }
             }
 
@@ -1391,12 +1383,10 @@ class StockDataFragment : Fragment() {
                 it.lowercase(Locale.ROOT)
             }
                 ?.forEach { portfolio ->
-                    val name = if (portfolio.isEmpty()) {
+                    val name = portfolio.ifEmpty {
                         // first entry in bold
                         SpannableStringBuilder()
                             .bold { append(standardPortfolio) }
-                    } else {
-                        portfolio
                     }
                     popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                 }
@@ -1443,10 +1433,8 @@ class StockDataFragment : Fragment() {
 
                     val selectedPortfolio =
                         SharedRepository.selectedPortfolio.value
-                            ?: if (stockDBdata.portfolio.isEmpty()) {
+                            ?: stockDBdata.portfolio.ifEmpty {
                                 standardPortfolio
-                            } else {
-                                stockDBdata.portfolio
                             }
 
                     if (addSelected) {
@@ -1772,12 +1760,10 @@ class StockDataFragment : Fragment() {
                     it.lowercase(Locale.ROOT)
                 }
                     .forEach { account ->
-                        val name = if (account.isEmpty()) {
+                        val name = account.ifEmpty {
                             // first entry in bold
                             SpannableStringBuilder()
                                 .bold { append(standardAccount) }
-                        } else {
-                            account
                         }
                         popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                     }
@@ -2025,12 +2011,10 @@ class StockDataFragment : Fragment() {
                     it.lowercase(Locale.ROOT)
                 }
                     .forEach { account ->
-                        val name = if (account.isEmpty()) {
+                        val name = account.ifEmpty {
                             // first entry in bold
                             SpannableStringBuilder()
                                 .bold { append(standardAccount) }
-                        } else {
-                            account
                         }
                         popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                     }
@@ -2094,12 +2078,10 @@ class StockDataFragment : Fragment() {
                     it.lowercase(Locale.ROOT)
                 }
                     .forEach { account ->
-                        val name = if (account.isEmpty()) {
+                        val name = account.ifEmpty {
                             // first entry in bold
                             SpannableStringBuilder()
                                 .bold { append(standardAccount) }
-                        } else {
-                            account
                         }
                         popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                     }
@@ -2327,12 +2309,10 @@ class StockDataFragment : Fragment() {
                         it.lowercase(Locale.ROOT)
                     }
                         .forEach { account ->
-                            val name = if (account.isEmpty()) {
+                            val name = account.ifEmpty {
                                 // first entry in bold
                                 SpannableStringBuilder()
                                     .bold { append(standardAccount) }
-                            } else {
-                                account
                             }
                             popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                         }
@@ -2722,7 +2702,7 @@ class StockDataFragment : Fragment() {
             // Pass null as the parent view because its going in the dialog layout
             val dialogBinding = DialogAddNameBinding.inflate(inflater)
 
-            val name = if (stockDBdata.name.isEmpty()) stockDBdata.symbol else stockDBdata.name
+            val name = stockDBdata.name.ifEmpty { stockDBdata.symbol }
             dialogBinding.newName.setText(name)
 
             builder.setView(dialogBinding.root)

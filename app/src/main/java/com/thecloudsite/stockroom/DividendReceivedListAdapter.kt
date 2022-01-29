@@ -387,10 +387,8 @@ class DividendReceivedListAdapter internal constructor(
               dividend.amount
             }
 
-            val accountStr = if (account.isEmpty()) {
+            val accountStr = account.ifEmpty {
               context.getString(R.string.standard_account)
-            } else {
-              account
             }
 
             dividendList.add(

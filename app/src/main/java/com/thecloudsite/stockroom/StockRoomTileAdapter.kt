@@ -65,7 +65,7 @@ class StockRoomTile1Adapter internal constructor(
 
     holder.bind(current, clickListenerListItemLambda)
     val displayName =
-      if (current.stockDBdata.name.isEmpty()) current.stockDBdata.symbol else current.stockDBdata.name
+      current.stockDBdata.name.ifEmpty { current.stockDBdata.symbol }
     holder.binding.stockRoomTileItemSymbol.text = displayName
 
     var color = current.stockDBdata.groupColor

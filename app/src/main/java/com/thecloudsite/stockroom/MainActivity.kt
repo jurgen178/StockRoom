@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity() {
                 symbolDisplayNameMap.clear()
                 stockItems.forEach { stockItem ->
                     symbolDisplayNameMap[stockItem.symbol] =
-                        if (stockItem.name.isEmpty()) stockItem.symbol else stockItem.name
+                        stockItem.name.ifEmpty { stockItem.symbol }
                 }
             }
         })
@@ -760,11 +760,9 @@ class MainActivity : AppCompatActivity() {
                 }
                     .forEach { portfolio ->
                         val standardPortfolio = getString(R.string.standard_portfolio)
-                        val portfolioName = if (portfolio.isEmpty()) {
+                        val portfolioName = portfolio.ifEmpty {
                             // standard portfolio is first entry and displayed in bold
                             SpannableStringBuilder().bold { append(standardPortfolio) }
-                        } else {
-                            portfolio
                         }
                         val subMenuItem = submenu?.add(portfolioName)
 

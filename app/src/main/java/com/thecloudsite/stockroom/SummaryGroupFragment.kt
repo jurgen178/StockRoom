@@ -264,7 +264,7 @@ class SummaryGroupFragment : Fragment() {
 
             assetList.add(
                 AssetSummary(
-                    if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name,
+                    stockItem.stockDBdata.name.ifEmpty { stockItem.stockDBdata.symbol },
                     assets,
                     color!!
                 )

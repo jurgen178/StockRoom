@@ -195,16 +195,14 @@ class SummaryGroupAdapter internal constructor(
 
                 val (allText1Account, allText2Account) = getTotal(0, true, stockItemsListCopy)
                 val accountName = context.getString(
-                    R.string.account_overview_headline, if (account.isEmpty()) {
+                    R.string.account_overview_headline, account.ifEmpty {
                         context.getString(R.string.standard_account)
-                    } else {
-                        account
                     }
                 )
 
                 // Get all symbols in that group as a comma separated string.
                 val symbolsList = stockItemsListCopy.map { stockItem ->
-                    if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name
+                    stockItem.stockDBdata.name.ifEmpty { stockItem.stockDBdata.symbol }
                 }
                     .sorted()
                     .joinToString(
@@ -257,7 +255,7 @@ class SummaryGroupAdapter internal constructor(
                         stockItem.stockDBdata.groupColor == group.color
                     }
                         .map { stockItem ->
-                            if (stockItem.stockDBdata.name.isEmpty()) stockItem.stockDBdata.symbol else stockItem.stockDBdata.name
+                            stockItem.stockDBdata.name.ifEmpty { stockItem.stockDBdata.symbol }
                         }
                         .sorted()
                         .joinToString(

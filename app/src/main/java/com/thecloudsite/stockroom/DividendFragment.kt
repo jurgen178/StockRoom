@@ -134,10 +134,8 @@ class DividendFragment : Fragment() {
 
     val standardAccount = getString(R.string.standard_account)
     dialogBinding.textViewAssetAccount.text =
-      if (dividend.account.isEmpty()) {
+      dividend.account.ifEmpty {
         standardAccount
-      } else {
-        dividend.account
       }
     dialogBinding.textViewAssetAccount.setOnClickListener { view ->
       val popupMenu = PopupMenu(requireContext(), view)

@@ -52,10 +52,8 @@ class Filters(
 
   var selectedFilter: String = defaultFilterName
     get() {
-      return if (field.isEmpty()) {
+      return field.ifEmpty {
         defaultFilterName
-      } else {
-        field
       }
     }
     set(value) {

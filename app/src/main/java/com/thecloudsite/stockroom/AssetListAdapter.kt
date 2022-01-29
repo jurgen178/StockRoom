@@ -588,10 +588,8 @@ class AssetListAdapter internal constructor(
                         SpannableStringBuilder()
                     }
 
-                    val accountStr = if (account.isEmpty()) {
+                    val accountStr = account.ifEmpty {
                         context.getString(R.string.standard_account)
-                    } else {
-                        account
                     }
 
                     val capitalGainLossTextAccount = if (assetsListCopy.isNotEmpty()) {
