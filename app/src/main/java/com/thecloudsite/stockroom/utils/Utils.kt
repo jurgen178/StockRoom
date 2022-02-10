@@ -606,6 +606,7 @@ fun getAssetsRemoveOldestFirst(
                 // for (j in k until i) {
                 for (j in 0 until i) {
                     if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {
+                    //if (assetListSortedCopy[j].quantity > 0.0) {
                         if (quantityToRemove > assetListSortedCopy[j].quantity) {
                             quantityToRemove -= assetListSortedCopy[j].quantity
                             assetListSortedCopy[j].quantity = 0.0
@@ -846,31 +847,31 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
 
             for (j in k until i) {
 
-                if (asset.account == assetListCopy[j].account) {
+                //if (asset.account == assetListCopy[j].account) {
 
-                    bought += assetListCopy[j].fee
-                    assetListCopy[j].fee = 0.0
+                bought += assetListCopy[j].fee
+                assetListCopy[j].fee = 0.0
 
-                    if (assetListCopy[j].quantity > 0.0) {
+                if (assetListCopy[j].quantity > 0.0) {
 
-                        // Start removing the quantity from the beginning.
-                        if (quantityToRemove > assetListCopy[j].quantity) {
-                            // more quantities left than bought with this transaction
-                            // add the (quantity) * (price) to the bought value
-                            bought += assetListCopy[j].quantity * assetListCopy[j].price
-                            quantityToRemove -= assetListCopy[j].quantity
-                            assetListCopy[j].quantity = 0.0
-                        } else {
-                            // less quantities left than bought with this transaction,
-                            // add the (remaining quantity) * (price) to the bought value
-                            assetListCopy[j].quantity -= quantityToRemove
-                            bought += quantityToRemove * assetListCopy[j].price
-                            // Start with the index in the next iteration where it left off.
-                            k = j
-                            break
-                        }
+                    // Start removing the quantity from the beginning.
+                    if (quantityToRemove > assetListCopy[j].quantity) {
+                        // more quantities left than bought with this transaction
+                        // add the (quantity) * (price) to the bought value
+                        bought += assetListCopy[j].quantity * assetListCopy[j].price
+                        quantityToRemove -= assetListCopy[j].quantity
+                        assetListCopy[j].quantity = 0.0
+                    } else {
+                        // less quantities left than bought with this transaction,
+                        // add the (remaining quantity) * (price) to the bought value
+                        assetListCopy[j].quantity -= quantityToRemove
+                        bought += quantityToRemove * assetListCopy[j].price
+                        // Start with the index in the next iteration where it left off.
+                        k = j
+                        break
                     }
                 }
+                //}
             }
 
             val localDateTime =
