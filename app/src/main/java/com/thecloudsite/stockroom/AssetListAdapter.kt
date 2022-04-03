@@ -551,7 +551,7 @@ class AssetListAdapter internal constructor(
                 assetsAccounts.sorted().forEach { account ->
 
                     // Deep copy of the list because content gets removed.
-                    var assetsListCopy = sortedList.map { it.copy() }
+                    var assetsListCopy = removeTransferAssets(sortedList.map { it.copy() }).toList()
 
                     // Filter for stockitems matching the account.
                     assetsListCopy = assetsListCopy.filter { asset ->

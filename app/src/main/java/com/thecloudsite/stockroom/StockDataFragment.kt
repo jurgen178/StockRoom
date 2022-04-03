@@ -136,7 +136,8 @@ data class StockAssetsLiveData(
 data class AssetsTimeData(
     var date: Long = 0L,
     var price: Double = 0.0,
-    var quantity: Double = 0.0
+    var quantity: Double = 0.0,
+    var account: String = ""
 )
 
 // Enable scrolling by disable parent scrolling
@@ -249,7 +250,8 @@ class StockDataFragment : Fragment() {
             }
         }
         set(value) {
-            val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
+            val sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
             with(sharedPref.edit()) {
                 putInt(settingStockViewRange, value.value)
                 commit()
@@ -260,7 +262,8 @@ class StockDataFragment : Fragment() {
     private var stockViewMode: StockViewMode
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return StockViewMode.Line
+                PreferenceManager.getDefaultSharedPreferences(requireContext())
+                    ?: return StockViewMode.Line
             val index = sharedPref.getInt(settingStockViewMode, StockViewMode.Line.value)
             return if (index >= 0 && index < StockViewMode.values().size) {
                 StockViewMode.values()[index]
@@ -269,7 +272,8 @@ class StockDataFragment : Fragment() {
             }
         }
         set(value) {
-            val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
+            val sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
             with(sharedPref.edit()) {
                 putInt(settingStockViewMode, value.value)
                 commit()
@@ -512,7 +516,7 @@ class StockDataFragment : Fragment() {
                     dialogBinding.datePickerAssetDate.dayOfMonth,
                     dialogBinding.datePickerAssetTime.hour,
                     dialogBinding.datePickerAssetTime.minute,
-                    0,
+                    localDateTime.second,   // preserve the seconds to not change the entry position
                     0,
                     ZoneOffset.systemDefault()
                 )
@@ -707,7 +711,7 @@ class StockDataFragment : Fragment() {
                         dialogBinding.datePickerEventDate.dayOfMonth,
                         dialogBinding.datePickerEventTime.hour,
                         dialogBinding.datePickerEventTime.minute,
-                        0,
+                        localDateTime.second,   // preserve the seconds to not change the entry position
                         0,
                         ZoneOffset.systemDefault()
                     )
@@ -1285,6 +1289,7 @@ class StockDataFragment : Fragment() {
                                 date = asset.date,
                                 price = asset.price,
                                 quantity = asset.quantity,
+                                account = asset.account,
                             )
                         }.toMutableList()
 
@@ -1298,6 +1303,8 @@ class StockDataFragment : Fragment() {
                         if ((assetTimeEntries[j].date - assetTimeEntries[j + 1].date).absoluteValue <= 1
                             && (assetTimeEntries[j].price - assetTimeEntries[j + 1].price).absoluteValue < epsilon
                             && (assetTimeEntries[j].quantity + assetTimeEntries[j + 1].quantity).absoluteValue < epsilon
+                            && (assetTimeEntries[j].account != assetTimeEntries[j + 1].account ||
+                                    assetTimeEntries[j + 1].account != assetTimeEntries[j].account)
                         ) {
                             assetTimeEntries.removeAt(j)
                             assetTimeEntries.removeAt(j)
