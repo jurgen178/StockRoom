@@ -580,6 +580,13 @@ fun tagTransferItemsInAssetList(assetList: MutableList<AssetListData>) {
         ) {
             assetList[i].transferItem = true
             assetList[i + 1].transferItem = true
+
+            // Set negative quantity first for transfer items.
+            if (assetList[i].asset.quantity > 0.0) {
+                val temp = assetList[i]
+                assetList[i] = assetList[i + 1]
+                assetList[i + 1] = temp
+            }
         }
 
         i++

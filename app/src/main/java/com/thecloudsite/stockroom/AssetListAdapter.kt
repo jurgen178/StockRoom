@@ -290,12 +290,16 @@ class AssetListAdapter internal constructor(
                     to2To8Digits(current.asset.price)
                 }
 
-                val itemViewTotalText = DecimalFormat(DecimalFormat2Digits).format(
-                    current.asset.quantity.absoluteValue * current.asset.price
-                )
+                val itemViewTotalText = if (current.transferItem) {
+                    ""
+                } else {
+                    DecimalFormat(DecimalFormat2Digits).format(
+                        current.asset.quantity.absoluteValue * current.asset.price
+                    )
+                }
 
                 val itemViewChangeText =
-                    if (current.onlineMarketData != null) {
+                    if (!current.transferItem && current.onlineMarketData != null) {
                         getAssetChange(
                             current.asset.quantity.absoluteValue,
                             current.asset.quantity.absoluteValue * current.asset.price,
@@ -307,6 +311,7 @@ class AssetListAdapter internal constructor(
                     } else {
                         ""
                     }
+
                 val itemViewValueText =
                     if (current.onlineMarketData != null) {
                         val marketPrice = current.onlineMarketData!!.marketPrice
