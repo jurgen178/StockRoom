@@ -47,12 +47,13 @@ const val asset_summary_type: Int = 2
 
 data class AssetListData(
     val viewType: Int,
+    var transferItem: Boolean = false,
     val deleteAll: Boolean = false,
     var asset: Asset,
     var onlineMarketData: OnlineMarketData? = null,
     var assetChangeText: SpannableStringBuilder = SpannableStringBuilder(),
     var assetText: SpannableStringBuilder = SpannableStringBuilder(),
-    var capitalGainLossText: SpannableStringBuilder = SpannableStringBuilder()
+    var capitalGainLossText: SpannableStringBuilder = SpannableStringBuilder(),
 )
 
 class AssetListAdapter internal constructor(
@@ -252,36 +253,47 @@ class AssetListAdapter internal constructor(
 
                 // Set color marker for the item.
                 holder.binding.textViewAssetMarkerColor.setBackgroundColor(
-                    if (current.asset.quantity > 0.0) {
-
-                        if (current.asset.price == 0.0) {
-                            0xffC23FFF.toInt()  // for free, asset.price = 0.0, C23FF=Violet
-                        } else {
-                            Color.BLUE  // bought
-                        }
-
+                    if (current.transferItem) {
+                        Color.CYAN     // transfer item
                     } else
-                        if (current.asset.quantity < 0.0) {
+                        if (current.asset.quantity > 0.0) {
 
                             if (current.asset.price == 0.0) {
-                                Color.YELLOW        // miner fee, asset.price = 0.0
+                                0xffC23FFF.toInt()  // for free, asset.price = 0.0, C23FF=Violet
                             } else {
-                                0xffFF6A00.toInt()  // sold, FF6A00=Orange
+                                Color.BLUE  // bought
                             }
 
-                        } else {
+                        } else
+                            if (current.asset.quantity < 0.0) {
 
-                            context.getColor(R.color.backgroundListColor)
+                                if (current.asset.price == 0.0) {
+                                    Color.YELLOW        // miner fee, asset.price = 0.0
+                                } else {
+                                    0xffFF6A00.toInt()  // sold, FF6A00=Orange
+                                }
 
-                        }
+                            } else {
+
+                                context.getColor(R.color.backgroundListColor)
+
+                            }
                 )
 
                 val itemViewQuantityText =
                     DecimalFormat(DecimalFormatQuantityDigits).format(current.asset.quantity)
-                val itemViewPriceText = to2To8Digits(current.asset.price)
+
+                // No price for display items.
+                val itemViewPriceText = if (current.transferItem) {
+                    ""
+                } else {
+                    to2To8Digits(current.asset.price)
+                }
+
                 val itemViewTotalText = DecimalFormat(DecimalFormat2Digits).format(
                     current.asset.quantity.absoluteValue * current.asset.price
                 )
+
                 val itemViewChangeText =
                     if (current.onlineMarketData != null) {
                         getAssetChange(
@@ -477,7 +489,10 @@ class AssetListAdapter internal constructor(
                     asset = it,
                     onlineMarketData = assetData.onlineMarketData
                 )
-            }
+            }.toMutableList()
+
+            // Set the transferItem
+            tagTransferItemsInAssetList(sortedDataList)
 
             assetList.addAll(sortedDataList)
 

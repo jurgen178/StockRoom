@@ -567,6 +567,25 @@ fun getAssetUseLastAverage(
     return Pair(totalQuantity, totalPrice + totalFee)
 }
 
+fun tagTransferItemsInAssetList(assetList: MutableList<AssetListData>) {
+
+    var i: Int = 0
+    while (i < assetList.size) {
+        // Transfer: same date and price, but quantity have different sign
+        if (i < assetList.size - 1 &&
+            (assetList[i].asset.date - assetList[i + 1].asset.date).absoluteValue <= 1
+            && (assetList[i].asset.price - assetList[i + 1].asset.price).absoluteValue < epsilon
+            && (assetList[i].asset.quantity + assetList[i + 1].asset.quantity).absoluteValue < epsilon
+            && (assetList[i].asset.account != assetList[i + 1].asset.account)
+        ) {
+            assetList[i].transferItem = true
+            assetList[i + 1].transferItem = true
+        }
+
+        i++
+    }
+}
+
 fun removeTransferAssets(assetList: List<Asset>): MutableList<Asset> {
 
     return assetList.toMutableList()
@@ -580,8 +599,7 @@ fun removeTransferAssets(assetList: List<Asset>): MutableList<Asset> {
             (assetList[i].date - assetList[i + 1].date).absoluteValue <= 1
             && (assetList[i].price - assetList[i + 1].price).absoluteValue < epsilon
             && (assetList[i].quantity + assetList[i + 1].quantity).absoluteValue < epsilon
-            && (assetList[i].account != assetList[i + 1].account ||
-                    assetList[i + 1].account != assetList[i].account)
+            && (assetList[i].account != assetList[i + 1].account)
         ) {
             i++
         } else {
