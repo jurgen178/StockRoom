@@ -567,14 +567,13 @@ class AssetListAdapter internal constructor(
                     account
                 }
 
+            val assetsListCopy1 = updateTransferAssets(sortedList.map { it.copy() })
+
             if (assetsAccounts.size > 1) {
                 assetsAccounts.sorted().forEach { account ->
 
-                    // Deep copy of the list because content gets removed.
-                    var assetsListCopy = removeTransferAssets(sortedList.map { it.copy() }).toList()
-
                     // Filter for stockitems matching the account.
-                    assetsListCopy = assetsListCopy.filter { asset ->
+                    val assetsListCopy = assetsListCopy1.filter { asset ->
                         asset.account == account
                     }
 

@@ -92,6 +92,7 @@ const val feeScale = 0.8f
 
 // asset.type
 const val obsoleteAssetType: Int = 0x0001
+const val transferAssetType: Int = 0x0002
 
 data class StockOptionData(
     var sharesPerOption: Int = 0,
@@ -593,11 +594,14 @@ fun tagTransferItemsInAssetList(assetList: MutableList<AssetListData>) {
     }
 }
 
-fun removeTransferAssets(assetList: List<Asset>): MutableList<Asset> {
+fun alignTransferAssets(
+    assetList: List<Asset>,
+    removeTransferItems: Boolean = false
+): MutableList<Asset> {
 
-    return assetList.toMutableList()
+//    return assetList.toMutableList()
 
-    // Remove transfer items.
+    // Swap transfer items.
     val assetListCopy: MutableList<Asset> = mutableListOf()
     var i: Int = 0
     while (i < assetList.size) {
@@ -608,6 +612,25 @@ fun removeTransferAssets(assetList: List<Asset>): MutableList<Asset> {
             && (assetList[i].quantity + assetList[i + 1].quantity).absoluteValue < epsilon
             && (assetList[i].account != assetList[i + 1].account)
         ) {
+            // Transfer item.
+            if (removeTransferItems) {
+            } else {
+                assetListCopy.add(assetList[i])
+                assetListCopy.add(assetList[i + 1])
+
+                val k = assetListCopy.size
+
+                assetListCopy[k - 1].type = transferAssetType
+                assetListCopy[k - 2].type = transferAssetType
+
+                // Set negative quantity first for transfer items.
+                if (assetListCopy[k - 2].quantity > 0.0) {
+                    val temp = assetListCopy[k - 1]
+                    assetListCopy[k - 1] = assetListCopy[k - 2]
+                    assetListCopy[k - 2] = temp
+                }
+            }
+
             i++
         } else {
             assetListCopy.add(assetList[i])
@@ -617,6 +640,109 @@ fun removeTransferAssets(assetList: List<Asset>): MutableList<Asset> {
     }
 
     return assetListCopy
+}
+
+// Sets the current value for the transfer items.
+fun updateTransferAssets(
+    assetList: List<Asset>
+): MutableList<Asset> {
+
+    var totalQuantity: Double = 0.0
+    var bought: Double = 0.0
+    var sold: Double = 0.0
+
+    // Deep copy of the list because content gets removed.
+    val assetListCopy2 = assetList.map { it.copy() }.toMutableList()
+    val assetListCopy: MutableList<Asset> = alignTransferAssets(assetList)
+
+    // Each neg quantity triggers a gain/loss
+    var k = 0
+    var i: Int = 0
+    while (i < assetListCopy.size) {
+
+        val asset = assetListCopy[i]
+
+        if (asset.type == transferAssetType) {
+
+            var quantityToRemove = -asset.quantity
+
+            for (j in k until i) {
+
+                bought += assetListCopy[j].fee
+                assetListCopy[j].fee = 0.0
+
+                if (assetListCopy[j].quantity > 0.0) {
+
+                    // Start removing the quantity from the beginning.
+                    if (quantityToRemove > assetListCopy[j].quantity) {
+                        // more quantities left than bought with this transaction
+                        // add the (quantity) * (price) to the bought value
+                        bought += assetListCopy[j].quantity * assetListCopy[j].price
+                        quantityToRemove -= assetListCopy[j].quantity
+                        assetListCopy[j].quantity = 0.0
+                    } else {
+                        // less quantities left than bought with this transaction,
+                        // add the (remaining quantity) * (price) to the bought value
+                        assetListCopy[j].quantity -= quantityToRemove
+                        bought += quantityToRemove * assetListCopy[j].price
+                        // Start with the index in the next iteration where it left off.
+                        k = j
+                        break
+                    }
+                }
+            }
+
+            val v = totalQuantity / (bought - sold)
+            assetListCopy2[i].price = v
+            if (i + 1 < assetListCopy2.size) {
+                assetListCopy2[i + 1].price = v
+            }
+
+            i++
+            continue
+        }
+
+        if (asset.quantity < 0.0) {
+
+            sold = -asset.quantity * asset.price
+            bought = asset.fee
+            var quantityToRemove = -asset.quantity
+
+            for (j in k until i) {
+
+                //if (asset.account == assetListCopy[j].account) {
+
+                bought += assetListCopy[j].fee
+                assetListCopy[j].fee = 0.0
+
+                if (assetListCopy[j].quantity > 0.0) {
+
+                    // Start removing the quantity from the beginning.
+                    if (quantityToRemove > assetListCopy[j].quantity) {
+                        // more quantities left than bought with this transaction
+                        // add the (quantity) * (price) to the bought value
+                        bought += assetListCopy[j].quantity * assetListCopy[j].price
+                        quantityToRemove -= assetListCopy[j].quantity
+                        assetListCopy[j].quantity = 0.0
+                    } else {
+                        // less quantities left than bought with this transaction,
+                        // add the (remaining quantity) * (price) to the bought value
+                        assetListCopy[j].quantity -= quantityToRemove
+                        bought += quantityToRemove * assetListCopy[j].price
+                        // Start with the index in the next iteration where it left off.
+                        k = j
+                        break
+                    }
+                }
+                //}
+            }
+        }
+
+        totalQuantity += asset.quantity
+        i++
+    }
+
+    return assetListCopy2
 }
 
 fun getAssetsRemoveOldestFirst(
@@ -635,7 +761,7 @@ fun getAssetsRemoveOldestFirst(
 
         // Deep copy list.
         // Sold values (negative quantities) will be subtracted from the quantities from the beginning.
-        var j: Long = 0
+        var id: Long = 0
         val assetListSortedCopy1 = assetListSorted.map { asset ->
             Asset(
                 symbol = "",
@@ -644,12 +770,12 @@ fun getAssetsRemoveOldestFirst(
                 quantity = asset.quantity,
                 fee = asset.fee,
                 type = asset.type and tagObsoleteAssetType.inv(),
-                id = j++
+                id = id++
             )
         }
 
-        // Remove transfer items.
-        val assetListSortedCopy = removeTransferAssets(assetListSortedCopy1)
+        // Align transfer items.
+        val assetListSortedCopy = alignTransferAssets(assetListSortedCopy1, true)
 
         //var k = 0
         for (i in assetListSortedCopy.indices) {
@@ -662,7 +788,8 @@ fun getAssetsRemoveOldestFirst(
                 // (Does not work with different accounts anymore)
                 // for (j in k until i) {
                 for (j in 0 until i) {
-                    if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {
+                    //if (asset.account == assetListSortedCopy[j].account && assetListSortedCopy[j].quantity > 0.0) {
+                    if (assetListSortedCopy[j].quantity > 0.0) {
                         //if (assetListSortedCopy[j].quantity > 0.0) {
                         if (quantityToRemove > assetListSortedCopy[j].quantity) {
                             quantityToRemove -= assetListSortedCopy[j].quantity
@@ -762,50 +889,6 @@ fun getAddedDeletedAssets(
     return Pair(gain, loss)
 }
 
-//fun getAssetsCapitalGain(assetList: List<Asset>?): Pair<Double, Double> {
-//
-//  var totalQuantity: Double = 0.0
-//  var totalGain: Double = 0.0
-//  var totalLoss: Double = 0.0
-//  var bought: Double = 0.0
-//  var sold: Double = 0.0
-//
-//  val epsilon = 0.0001
-//
-//  assetList?.sortedBy { asset ->
-//    asset.date
-//  }
-//      ?.forEach { asset ->
-//        if (asset.quantity > 0.0) {
-//          bought += asset.quantity * asset.price
-//        }
-//        if (asset.quantity < 0.0) {
-//          sold += -asset.quantity * asset.price
-//        }
-//        totalQuantity += asset.quantity
-//
-//        if ((totalQuantity <= -epsilon)) {
-//          // Error, more shares sold than owned
-//          return Pair(0.0, 0.0)
-//        }
-//        if (totalQuantity < epsilon) {
-//          // totalQuantity is 0: -epsilon < totalQuantity < epsilon
-//          // reset if all shares are sold
-//          val gain = sold - bought
-//          if (gain > 0.0) {
-//            totalGain += gain
-//          } else
-//            if (gain < 0.0) {
-//              totalLoss -= gain
-//            }
-//          sold = 0.0
-//          bought = 0.0
-//        }
-//      }
-//
-//  return Pair(totalGain, totalLoss)
-//}
-
 data class GainLoss(
     var gain: Double = 0.0,
     var loss: Double = 0.0,
@@ -886,10 +969,11 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
     val totalGainLossMap: MutableMap<Int, GainLoss> = mutableMapOf()
 
     // Deep copy of the list.
-    val assetListCopy: List<Asset> = removeTransferAssets(
+    val assetListCopy: List<Asset> = updateTransferAssets(
         assetList.sortedBy { asset ->
             asset.date
-        }.map { it.copy() })
+        }.map { it.copy() }
+    )
 
     // Each neg quantity triggers a gain/loss
     var k = 0
@@ -905,31 +989,31 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
 
             for (j in k until i) {
 
-                if (asset.account == assetListCopy[j].account) {
+                //if (asset.account == assetListCopy[j].account) {
 
-                    bought += assetListCopy[j].fee
-                    assetListCopy[j].fee = 0.0
+                bought += assetListCopy[j].fee
+                assetListCopy[j].fee = 0.0
 
-                    if (assetListCopy[j].quantity > 0.0) {
+                if (assetListCopy[j].quantity > 0.0) {
 
-                        // Start removing the quantity from the beginning.
-                        if (quantityToRemove > assetListCopy[j].quantity) {
-                            // more quantities left than bought with this transaction
-                            // add the (quantity) * (price) to the bought value
-                            bought += assetListCopy[j].quantity * assetListCopy[j].price
-                            quantityToRemove -= assetListCopy[j].quantity
-                            assetListCopy[j].quantity = 0.0
-                        } else {
-                            // less quantities left than bought with this transaction,
-                            // add the (remaining quantity) * (price) to the bought value
-                            assetListCopy[j].quantity -= quantityToRemove
-                            bought += quantityToRemove * assetListCopy[j].price
-                            // Start with the index in the next iteration where it left off.
-                            k = j
-                            break
-                        }
+                    // Start removing the quantity from the beginning.
+                    if (quantityToRemove > assetListCopy[j].quantity) {
+                        // more quantities left than bought with this transaction
+                        // add the (quantity) * (price) to the bought value
+                        bought += assetListCopy[j].quantity * assetListCopy[j].price
+                        quantityToRemove -= assetListCopy[j].quantity
+                        assetListCopy[j].quantity = 0.0
+                    } else {
+                        // less quantities left than bought with this transaction,
+                        // add the (remaining quantity) * (price) to the bought value
+                        assetListCopy[j].quantity -= quantityToRemove
+                        bought += quantityToRemove * assetListCopy[j].price
+                        // Start with the index in the next iteration where it left off.
+                        k = j
+                        break
                     }
                 }
+                //}
             }
 
             val localDateTime =
