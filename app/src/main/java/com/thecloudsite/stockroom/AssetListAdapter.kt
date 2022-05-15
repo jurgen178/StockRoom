@@ -220,7 +220,7 @@ class AssetListAdapter internal constructor(
                 val colorNegativeAsset = context.getColor(R.color.negativeAsset)
                 val colorObsoleteAsset = context.getColor(R.color.obsoleteAsset)
 
-                // Removed and obsolete entries are colored gray.
+                // Removed, Transfer items and obsolete entries are colored gray.
                 when {
                     current.asset.quantity < 0.0 -> {
                         holder.binding.textViewAssetQuantity.setTextColor(colorNegativeAsset)
@@ -231,7 +231,7 @@ class AssetListAdapter internal constructor(
                         holder.binding.textViewAssetAccount.setTextColor(colorNegativeAsset)
                         holder.binding.textViewAssetNote.setTextColor(colorNegativeAsset)
                     }
-                    current.asset.type and obsoleteAssetType != 0 -> {
+                    current.asset.type and (obsoleteAssetType or transferAssetType) != 0 || current.transferItem -> {
                         holder.binding.textViewAssetQuantity.setTextColor(colorObsoleteAsset)
                         holder.binding.textViewAssetPrice.setTextColor(colorObsoleteAsset)
                         holder.binding.textViewAssetTotal.setTextColor(colorObsoleteAsset)

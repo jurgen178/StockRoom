@@ -648,8 +648,7 @@ fun updateTransferAssets(
 ): MutableList<Asset> {
 
     var totalQuantity: Double = 0.0
-    var bought: Double = 0.0
-    var sold: Double = 0.0
+    var totalAsset: Double = 0.0
 
     // Deep copy of the list because content gets removed.
     val assetListCopy2 = assetList.map { it.copy() }.toMutableList()
@@ -662,86 +661,34 @@ fun updateTransferAssets(
 
         val asset = assetListCopy[i]
 
-        if (asset.type == transferAssetType) {
+        // Get the average price for the transferred item.
+        if (asset.type == transferAssetType && asset.quantity < 0.0) {
 
-            var quantityToRemove = -asset.quantity
+            val value = totalAsset / -asset.quantity
 
-            for (j in k until i) {
-
-                bought += assetListCopy[j].fee
-                assetListCopy[j].fee = 0.0
-
-                if (assetListCopy[j].quantity > 0.0) {
-
-                    // Start removing the quantity from the beginning.
-                    if (quantityToRemove > assetListCopy[j].quantity) {
-                        // more quantities left than bought with this transaction
-                        // add the (quantity) * (price) to the bought value
-                        bought += assetListCopy[j].quantity * assetListCopy[j].price
-                        quantityToRemove -= assetListCopy[j].quantity
-                        assetListCopy[j].quantity = 0.0
-                    } else {
-                        // less quantities left than bought with this transaction,
-                        // add the (remaining quantity) * (price) to the bought value
-                        assetListCopy[j].quantity -= quantityToRemove
-                        bought += quantityToRemove * assetListCopy[j].price
-                        // Start with the index in the next iteration where it left off.
-                        k = j
-                        break
-                    }
-                }
-            }
-
-            val v = totalQuantity / (bought - sold)
-            assetListCopy2[i].price = v
+            assetListCopy2[i].price = value
             if (i + 1 < assetListCopy2.size) {
-                assetListCopy2[i + 1].price = v
+                assetListCopy2[i + 1].price = value
             }
 
-            i++
+            i += 2
             continue
         }
 
         if (asset.quantity < 0.0) {
-
-            sold = -asset.quantity * asset.price
-            bought = asset.fee
-            var quantityToRemove = -asset.quantity
-
-            for (j in k until i) {
-
-                //if (asset.account == assetListCopy[j].account) {
-
-                bought += assetListCopy[j].fee
-                assetListCopy[j].fee = 0.0
-
-                if (assetListCopy[j].quantity > 0.0) {
-
-                    // Start removing the quantity from the beginning.
-                    if (quantityToRemove > assetListCopy[j].quantity) {
-                        // more quantities left than bought with this transaction
-                        // add the (quantity) * (price) to the bought value
-                        bought += assetListCopy[j].quantity * assetListCopy[j].price
-                        quantityToRemove -= assetListCopy[j].quantity
-                        assetListCopy[j].quantity = 0.0
-                    } else {
-                        // less quantities left than bought with this transaction,
-                        // add the (remaining quantity) * (price) to the bought value
-                        assetListCopy[j].quantity -= quantityToRemove
-                        bought += quantityToRemove * assetListCopy[j].price
-                        // Start with the index in the next iteration where it left off.
-                        k = j
-                        break
-                    }
-                }
-                //}
-            }
+            val averageSharePrice = totalAsset / totalQuantity
+            totalQuantity += asset.quantity
+            totalAsset += asset.quantity * averageSharePrice
+        } else {
+            totalQuantity += asset.quantity
+            totalAsset += asset.price * asset.quantity
         }
 
-        totalQuantity += asset.quantity
         i++
     }
 
+    // TODO
+    // return assetListCopy
     return assetListCopy2
 }
 
@@ -816,7 +763,7 @@ fun getAssetsRemoveOldestFirst(
         // Mark all removed entry with the obsolete flag.
         for (i in assetListSortedCopy.indices) {
             if (tagObsoleteAssetType != 0 && assetListSortedCopy[i].quantity < epsilon) {
-                // Set the type in the original list (not in assetListSorted2).
+                // Set the type in the original list (not in assetListSortedCopy).
                 assetListSorted[assetListSortedCopy[i].id!!.toInt()].type =
                     assetListSortedCopy[i].type or tagObsoleteAssetType
             }
