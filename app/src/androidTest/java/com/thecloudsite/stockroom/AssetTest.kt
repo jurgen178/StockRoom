@@ -526,7 +526,66 @@ class AssetTest {
 
     @Test
     @Throws(Exception::class)
-    fun updateTransferAssetsTest() {
+    fun updateTransferAssetsTest1() {
+        val assetList1 = listOf(
+            Asset(
+                symbol = "s1",
+                quantity = 1000.0,
+                price = 1.0,
+                account = "a",
+                date = 1
+            ),
+            Asset(
+                symbol = "s1",
+                quantity = -200.0,
+                price = 15.0,
+                account = "a",
+                date = 100
+            ),
+            Asset(
+                symbol = "s1",
+                quantity = 200.0,
+                price = 15.0,
+                account = "b",
+                date = 101
+            ),
+            Asset(
+                symbol = "s1",
+                quantity = -200.0,
+                price = 15.0,
+                account = "b",
+                date = 200
+            ),
+            Asset(
+                symbol = "s1",
+                quantity = 200.0,
+                price = 15.0,
+                account = "a",
+                date = 201
+            ),
+            Asset(
+                symbol = "s1",
+                quantity = -200.0,
+                price = 0.2,
+                account = "a",
+                date = 400
+            ),
+        )
+        assertEquals(6, assetList1.size)
+
+        val updatedAssetList = updateTransferAssets(assetList1)
+        assertEquals(6, updatedAssetList.size)
+        assertEquals(5.0, updatedAssetList[1].price, epsilon)
+        assertEquals(5.0, updatedAssetList[2].price, epsilon)
+
+        val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetList1)
+        assertEquals(0.0, capitalGain, epsilon)
+        assertEquals(160.0, capitalLoss, epsilon)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun updateTransferAssetsTest2() {
         val assetList1 = listOf(
             Asset(
                 symbol = "s1",
@@ -606,8 +665,8 @@ class AssetTest {
         assertEquals(1.0, updatedAssetList[1].price, epsilon)
         assertEquals(1.0, updatedAssetList[2].price, epsilon)
 
-        val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(updatedAssetList)
-        assertEquals(200.0, capitalGain, epsilon)
+        val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(assetList1)
+        assertEquals(0.0, capitalGain, epsilon)
         assertEquals(570.0, capitalLoss, epsilon)
     }
 

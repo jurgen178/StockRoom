@@ -651,8 +651,7 @@ fun updateTransferAssets(
     var totalAsset: Double = 0.0
 
     // Deep copy of the list because content gets removed.
-    val assetListCopy2 = assetList.map { it.copy() }.toMutableList()
-    val assetListCopy: MutableList<Asset> = alignTransferAssets(assetList)
+    val assetListCopy: MutableList<Asset> = alignTransferAssets(assetList.map { it.copy() })
 
     // Each neg quantity triggers a gain/loss
     var k = 0
@@ -666,9 +665,9 @@ fun updateTransferAssets(
 
             val value = totalAsset / -asset.quantity
 
-            assetListCopy2[i].price = value
-            if (i + 1 < assetListCopy2.size) {
-                assetListCopy2[i + 1].price = value
+            assetListCopy[i].price = value
+            if (i + 1 < assetListCopy.size) {
+                assetListCopy[i + 1].price = value
             }
 
             i += 2
@@ -687,9 +686,7 @@ fun updateTransferAssets(
         i++
     }
 
-    // TODO
-    // return assetListCopy
-    return assetListCopy2
+    return assetListCopy
 }
 
 fun getAssetsRemoveOldestFirst(
@@ -927,6 +924,11 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
     for (i in assetListCopy.indices) {
 
         val asset = assetListCopy[i]
+
+        if (asset.type and transferAssetType != 0) {
+            continue
+        }
+
         if (asset.quantity < 0.0) {
 
             sold = -asset.quantity * asset.price
