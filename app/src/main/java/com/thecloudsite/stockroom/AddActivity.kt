@@ -252,7 +252,9 @@ class AddActivity : AppCompatActivity() {
         importRequest =
             registerForActivityResult(GetImportContent())
             { uri ->
-                stockRoomViewModel.importList(applicationContext, uri)
+                if (uri != null) {
+                    stockRoomViewModel.importList(applicationContext, uri)
+                }
                 finish()
             }
     }

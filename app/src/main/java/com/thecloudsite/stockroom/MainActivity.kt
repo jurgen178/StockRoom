@@ -721,29 +721,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        val portfolioMenuItem = menu?.findItem(R.id.menu_portfolio)
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val portfolioMenuItem = menu.findItem(R.id.menu_portfolio)
         portfolioMenuItem?.isVisible = false
 
         val sortMode = stockRoomViewModel.sortMode()
-        menu?.findItem(R.id.menu_sort_change_percentage)?.isChecked =
+        menu.findItem(R.id.menu_sort_change_percentage)?.isChecked =
             sortMode == SortMode.ByChangePercentage
-        menu?.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
-        menu?.findItem(R.id.menu_sort_purchaseprice)?.isChecked = sortMode == SortMode.ByPurchaseprice
-        menu?.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
-        menu?.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
-        menu?.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
+        menu.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
+        menu.findItem(R.id.menu_sort_purchaseprice)?.isChecked = sortMode == SortMode.ByPurchaseprice
+        menu.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
+        menu.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
+        menu.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
             sortMode == SortMode.ByProfitPercentage
-        menu?.findItem(R.id.menu_sort_marketcap)?.isChecked =
+        menu.findItem(R.id.menu_sort_marketcap)?.isChecked =
             sortMode == SortMode.ByMarketCap
-        menu?.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
+        menu.findItem(R.id.menu_sort_dividend_percentage)?.isChecked =
             sortMode == SortMode.ByDividendPercentage
-        menu?.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
-        menu?.findItem(R.id.menu_sort_marker)?.isChecked = sortMode == SortMode.ByMarker
-        menu?.findItem(R.id.menu_sort_activity)?.isChecked = sortMode == SortMode.ByActivity
+        menu.findItem(R.id.menu_sort_group)?.isChecked = sortMode == SortMode.ByGroup
+        menu.findItem(R.id.menu_sort_marker)?.isChecked = sortMode == SortMode.ByMarker
+        menu.findItem(R.id.menu_sort_activity)?.isChecked = sortMode == SortMode.ByActivity
         //menu?.findItem(R.id.menu_sort_unsorted)?.isChecked = sortMode == SortMode.ByUnsorted
 
-        menu?.findItem(R.id.menu_filter)?.isChecked =
+        menu.findItem(R.id.menu_filter)?.isChecked =
             filterDataViewModel.filterActive == true
 
         if (SharedRepository.portfolios.value != null) {

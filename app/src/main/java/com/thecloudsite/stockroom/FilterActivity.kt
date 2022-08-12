@@ -305,7 +305,9 @@ class FilterActivity : AppCompatActivity() {
       registerForActivityResult(GetJsonContent())
       { uri ->
         // Perform operations on the document using its URI.
-        loadFilter(this, uri)
+        if (uri != null) {
+          loadFilter(this, uri)
+        }
         finish()
       }
 
@@ -313,7 +315,9 @@ class FilterActivity : AppCompatActivity() {
       registerForActivityResult(CreateJsonDocument())
       { uri ->
         // Perform operations on the document using its URI.
-        saveFilter(this, uri)
+        if (uri != null) {
+          saveFilter(this, uri)
+        }
         finish()
       }
   }

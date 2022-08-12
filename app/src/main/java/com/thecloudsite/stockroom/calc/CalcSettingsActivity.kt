@@ -93,14 +93,18 @@ class CalcSettingsActivity : AppCompatActivity(),
     loadRequest =
       registerForActivityResult(GetJsonContent())
       { uri ->
-        loadCode(this, uri)
+        if (uri != null) {
+          loadCode(this, uri)
+        }
         finish()
       }
 
     saveRequest =
       registerForActivityResult(CreateJsonDocument())
       { uri ->
-        saveCode(this, uri)
+        if (uri != null) {
+          saveCode(this, uri)
+        }
         finish()
       }
   }

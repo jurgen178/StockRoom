@@ -663,6 +663,8 @@ fun updateTransferAssets(
         // Get the average price for the transferred item.
         if (asset.type == transferAssetType && asset.quantity < 0.0) {
 
+            // TODO
+            // Fehler für die BTC Daten
             val value = totalAsset / -asset.quantity
 
             assetListCopy[i].price = value
