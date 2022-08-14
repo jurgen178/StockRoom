@@ -10,7 +10,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
-        // Moshi lib not compatible with Kotlin 1.6
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         classpath 'com.google.gms:google-services:4.3.13'
