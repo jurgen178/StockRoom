@@ -1716,6 +1716,34 @@ class StockDataFragment : Fragment() {
                                     stockRoomViewModel.updateAssets(
                                         symbol = symbol, assets = assets.assets
                                     )
+
+                                    // Update below/above alerts.
+                                    val stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
+
+                                    if (stockDBdata.alertBelow > 0.0) {
+//                                        stockRoomViewModel.updateAlertBelowSync(
+//                                            symbol,
+//                                            stockDBdata.alertBelow / splitRatio,
+//                                            stockDBdata.alertBelowNote
+//                                        )
+
+                                        binding.alertBelowInputEditText.setText(
+                                            to2To8Digits(stockDBdata.alertBelow / splitRatio)
+                                        )
+                                    }
+
+                                    if (stockDBdata.alertAbove > 0.0) {
+//                                        stockRoomViewModel.updateAlertAboveSync(
+//                                            symbol,
+//                                            stockDBdata.alertAbove / splitRatio,
+//                                            stockDBdata.alertAboveNote
+//                                        )
+
+                                        binding.alertAboveInputEditText.setText(
+                                            to2To8Digits(stockDBdata.alertAbove / splitRatio)
+                                        )
+                                    }
+
                                 } else {
                                     Toast.makeText(
                                         requireContext(), if (minQuantity >= 0.1) {

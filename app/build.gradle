@@ -23,8 +23,8 @@ android {
         applicationId 'com.thecloudsite.stockroom'
         minSdkVersion 31
         targetSdkVersion 32
-        versionCode 12
-        versionName "12"
+        versionCode 13
+        versionName "13"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
