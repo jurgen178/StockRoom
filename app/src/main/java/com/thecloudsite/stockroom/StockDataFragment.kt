@@ -391,7 +391,7 @@ class StockDataFragment : Fragment() {
                         .create()
                         .show()
                 } else {
-                    val account = menuitem.title.trim()
+                    val account = menuitem.title?.trim()
                         .toString()
                     dialogBinding.textViewAssetAccount.text = account
                 }
@@ -1517,7 +1517,7 @@ class StockDataFragment : Fragment() {
                         .create()
                         .show()
                 } else {
-                    var portfolio = menuitem.title.trim()
+                    var portfolio = menuitem.title?.trim()
                         .toString()
                     binding.textViewPortfolio.text = portfolio
 
@@ -1845,7 +1845,7 @@ class StockDataFragment : Fragment() {
                             .create()
                             .show()
                     } else {
-                        val account = menuitem.title.trim()
+                        val account = menuitem.title?.trim()
                             .toString()
                         dialogBinding.textViewAssetAccount.text = account
                     }
@@ -2096,7 +2096,7 @@ class StockDataFragment : Fragment() {
                             .create()
                             .show()
                     } else {
-                        val account = menuitem.title.trim()
+                        val account = menuitem.title?.trim()
                             .toString()
                         dialogBinding.textViewFromAssetAccount.text = account
                     }
@@ -2162,7 +2162,7 @@ class StockDataFragment : Fragment() {
                             .create()
                             .show()
                     } else {
-                        val account = menuitem.title.trim()
+                        val account = menuitem.title?.trim()
                             .toString()
                         dialogBinding.textViewToAssetAccount.text = account
                     }
@@ -2394,7 +2394,7 @@ class StockDataFragment : Fragment() {
                                 .create()
                                 .show()
                         } else {
-                            val account = menuitem.title.trim()
+                            val account = menuitem.title?.trim()
                                 .toString()
                             dialogBinding.textViewAssetAccount.text = account
                         }

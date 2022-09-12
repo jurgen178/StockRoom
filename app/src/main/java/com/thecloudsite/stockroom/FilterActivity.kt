@@ -262,7 +262,7 @@ class FilterActivity : AppCompatActivity() {
             saveFilterRequest.launch(jsonFileName)
           }
           else -> {
-            val filterName = menuitem.title.trim()
+            val filterName = menuitem.title?.trim()
               .toString()
             binding.textViewFilterSelection.text = getString(R.string.filter_set, filterName)
 

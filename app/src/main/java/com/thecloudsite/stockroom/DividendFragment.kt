@@ -197,7 +197,7 @@ class DividendFragment : Fragment() {
             .create()
             .show()
         } else {
-          val account = menuitem.title.trim()
+          val account = menuitem.title?.trim()
             .toString()
           dialogBinding.textViewAssetAccount.text = account
         }
@@ -742,7 +742,7 @@ class DividendFragment : Fragment() {
               .create()
               .show()
           } else {
-            val account = menuitem.title.trim()
+            val account = menuitem.title?.trim()
               .toString()
             dialogBinding.textViewAssetAccount.text = account
           }

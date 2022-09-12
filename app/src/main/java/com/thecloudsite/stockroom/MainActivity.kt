@@ -636,10 +636,12 @@ class MainActivity : AppCompatActivity() {
 
             // Add the menu item to the group R.id.filter
             val newMenuFilterItem =
-                menuItem.subMenu.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
+                menuItem.subMenu?.add(R.id.filter, id, Menu.NONE, filterSetMenuName)
             if (filterActive) {
-                newMenuFilterItem.isCheckable = true
-                newMenuFilterItem.isChecked = selectedFilter == filterSet
+                if (newMenuFilterItem != null) {
+                    newMenuFilterItem.isCheckable = true
+                    newMenuFilterItem.isChecked = selectedFilter == filterSet
+                }
             }
 
             filterMenuIdMap[id] = filterSet
