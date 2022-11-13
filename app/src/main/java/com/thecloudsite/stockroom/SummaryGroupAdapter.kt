@@ -191,6 +191,10 @@ class SummaryGroupAdapter internal constructor(
 
                 stockItemsListCopy = stockItemsListCopy.filter { stockItem ->
                     stockItem.assets.isNotEmpty()
+                }.filter { stockItem ->
+                    // Include only active assets.
+                    val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
+                    totalQuantity > epsilon
                 }
 
                 val (allText1Account, allText2Account) = getTotal(0, true, stockItemsListCopy)
@@ -226,6 +230,8 @@ class SummaryGroupAdapter internal constructor(
 
         // Get all groups.
         val groupSet = HashSet<Int>()
+        // Autoformat sets { } to next line
+        // Must be this:         stockItemsList.forEach { stockItem ->
         stockItemsList.forEach { stockItem ->
             groupSet.add(stockItem.stockDBdata.groupColor)
         }
@@ -288,7 +294,7 @@ class SummaryGroupAdapter internal constructor(
     override fun getItemCount() = data.size
 
     // groups is the second data source and gets called after updateData(stockItems: List<StockItem>),
-    // run updateData for the color assignment
+// run updateData for the color assignment
     fun addGroups(groups: List<Group>) {
         groupList = groups
 
