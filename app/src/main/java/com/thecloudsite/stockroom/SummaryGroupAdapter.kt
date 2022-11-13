@@ -192,7 +192,7 @@ class SummaryGroupAdapter internal constructor(
                 stockItemsListCopy = stockItemsListCopy.filter { stockItem ->
                     stockItem.assets.isNotEmpty()
                 }.filter { stockItem ->
-                    // Include only active assets.
+                    // Include only active assets with totalQuantity > 0.
                     val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
                     totalQuantity > epsilon
                 }
