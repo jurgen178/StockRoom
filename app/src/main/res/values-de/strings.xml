@@ -366,7 +366,11 @@ limitations under the License. -->
     <string name="set_annual_dividend_label">Neuer jährlicher Dividendensatz</string>
     <string name="onlineAnnualDividendData">Onlinedaten</string>
     <string name="no_dividend_data">Keine Online-Dividendendaten vorhanden.</string>
-    <string name="community_search_links">Community und Such-Links</string>
+    <string name="community_links">Gemeinschaftslinks</string>
+    <string name="search_links">Suchlinks</string>
+    <string name="crypto_links">Cryptolinks</string>
+    <string name="stock_links">Wertpapierlinks</string>
+    <string name="general_links">Allgemeine Links</string>
     <string name="price_preview_header">Gewinnvorschau</string>
     <string name="no_assets">Keine Wertpapierbestände</string>
     <string name="tab_headlines">Auswahlüberschriften</string>

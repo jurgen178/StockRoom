@@ -335,7 +335,11 @@ limitations under the License. -->
     <string name="set_annual_dividend_label">New annual dividend rate</string>
     <string name="onlineAnnualDividendData">Online data</string>
     <string name="no_dividend_data">No online dividend data.</string>
-    <string name="community_search_links">Community and Search links</string>
+    <string name="community_links">Community links</string>
+    <string name="search_links">Search links</string>
+    <string name="crypto_links">Crypto links</string>
+    <string name="stock_links">Stock links</string>
+    <string name="general_links">General links</string>
     <string name="price_preview_header">Price preview</string>
     <string name="no_assets">No assets</string>
     <string name="tab_headlines">Tab Headlines</string>

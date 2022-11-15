@@ -123,8 +123,9 @@ enum class LinkType(val value: Int) {
     HeadlineType(0),
     CommunityType(1),
     SearchType(2),
-    WebsiteType(3),
-    WebsiteGeneralType(4),
+    WebsiteTypeCrypto(3),
+    WebsiteTypeStock(4),
+    WebsiteGeneralType(5),
 }
 
 data class StockAssetsLiveData(
@@ -997,6 +998,10 @@ class StockDataFragment : Fragment() {
             )
 
             val linkList: Map<String, LinkListEntry> = mapOf(
+                getString(R.string.community_links) to LinkListEntry(
+                    linkType = LinkType.HeadlineType,
+                    link = ""
+                ),
                 "Yahoo community" to LinkListEntry(
                     linkType = LinkType.CommunityType,
                     link = "https://finance.yahoo.com/quote/$symbol/community"
@@ -1004,6 +1009,11 @@ class StockDataFragment : Fragment() {
                 "Stocktwits" to LinkListEntry(
                     linkType = LinkType.CommunityType,
                     link = "https://stocktwits.com/symbol/$symbol"
+                ),
+                //--------------------------------
+                getString(R.string.search_links) to LinkListEntry(
+                    linkType = LinkType.HeadlineType,
+                    link = ""
                 ),
                 "Bing" to LinkListEntry(
                     linkType = LinkType.SearchType,
@@ -1017,57 +1027,108 @@ class StockDataFragment : Fragment() {
                     linkType = LinkType.SearchType,
                     link = "https://finance.yahoo.com/quote/$symbol"
                 ),
+                //--------------------------------
+                getString(R.string.crypto_links) to LinkListEntry(
+                    linkType = LinkType.HeadlineType,
+                    link = ""
+                ),
+                "CoinMarketCap" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://coinmarketcap.com/currencies/$symbol"
+                ),
+                "TradingView" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://www.tradingview.com/symbols/$symbol"
+                ),
+                "CoinBase" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://www.coinbase.com/de/price/$symbol"
+                ),
+                "CoinGecko" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://www.coingecko.com/en/coins/$symbol"
+                ),
+                "Gemini" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://www.gemini.com/prices/$symbol"
+                ),
+                "crypto.com" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://crypto.com/price/$symbol"
+                ),
+                "CoinCodex" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://coincodex.com/crypto/$symbol"
+                ),
+                "WorldCoinIndex" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://www.worldcoinindex.com/coin/$symbol"
+                ),
+                "MarketWatch Crypto" to LinkListEntry(
+                    linkType = LinkType.WebsiteTypeCrypto,
+                    link = "https://www.marketwatch.com/investing/cryptocurrency/$symbol"
+                ),
+                //--------------------------------
+                getString(R.string.stock_links) to LinkListEntry(
+                    linkType = LinkType.HeadlineType,
+                    link = ""
+                ),
                 "CNBC" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.cnbc.com/quotes/?symbol=$symbol"
                 ),
                 "CNN Money" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "http://money.cnn.com/quote/quote.html?symb=$symbol"
                 ),
                 "ETF.COM" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.etf.com/stock/$symbol"
                 ),
                 "ETF.COM (ETF)" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.etf.com/$symbol"
                 ),
                 "Fidelity" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://quotes.fidelity.com/webxpress/get_quote?QUOTE_TYPE=D&SID_VALUE_ID=$symbol"
                 ),
                 "FinViz" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://finviz.com/quote.ashx?t=$symbol"
                 ),
                 "MarketBeat" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.marketbeat.com/stocks/$symbol/"
                 ),
                 "MarketWatch" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.marketwatch.com/investing/stock/$symbol/"
                 ),
                 "Nasdaq" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.nasdaq.com/market-activity/stocks/$symbol"
                 ),
                 "OTC Markets" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.otcmarkets.com/stock/$symbol/overview"
                 ),
                 "TD Ameritrade" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://research.tdameritrade.com/grid/public/research/stocks/summary?symbol=$symbol"
                 ),
                 "TheStreet" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://www.thestreet.com/quote/$symbol"
                 ),
                 "Real Money (TheStreet)" to LinkListEntry(
-                    linkType = LinkType.WebsiteType,
+                    linkType = LinkType.WebsiteTypeStock,
                     link = "https://realmoney.thestreet.com/quote/$symbol"
+                ),
+                //--------------------------------
+                getString(R.string.general_links) to LinkListEntry(
+                    linkType = LinkType.HeadlineType,
+                    link = ""
                 ),
                 "Yahoo Daily Gainers" to LinkListEntry(
                     linkType = LinkType.WebsiteGeneralType,
@@ -1081,28 +1142,35 @@ class StockDataFragment : Fragment() {
 
             var menuIndex: Int = Menu.FIRST
 
-            val menuHeadlineItem = SpannableStringBuilder()
-                .color(context?.getColor(R.color.colorPrimary)!!) {
-                    bold { append(getString(R.string.community_search_links)) }
-                }
-
-            popupMenu.menu.add(
-                LinkType.HeadlineType.value,
-                menuIndex++,
-                Menu.NONE,
-                menuHeadlineItem
-            )
-
             // One group for each link type.
             linkList.forEach { (name, entry) ->
-                popupMenu.menu.add(entry.linkType.value, menuIndex++, Menu.NONE, name)
+                val displayName = if (entry.linkType == LinkType.HeadlineType) {
+                    SpannableStringBuilder()
+                        .color(context?.getColor(R.color.colorPrimary)!!) {
+                            bold { append(name) }
+                        }
+                } else {
+                    // Intend by two spaces.
+                    "  $name"
+                }
+                popupMenu.menu.add(entry.linkType.value, menuIndex++, Menu.NONE, displayName)
             }
 
             MenuCompat.setGroupDividerEnabled(popupMenu.menu, true)
             popupMenu.show()
 
             popupMenu.setOnMenuItemClickListener { menuitem ->
-                linkList[menuitem.toString()]?.let { openNewTabWindow(it.link, requireContext()) }
+                val menuText = menuitem.toString()
+
+                // menuitem is intended by two spaces
+                if (menuText.startsWith("  ")) {
+                    linkList[menuText.substring(2)]?.let {
+                        openNewTabWindow(
+                            it.link,
+                            requireContext()
+                        )
+                    }
+                }
 
                 true
             }
