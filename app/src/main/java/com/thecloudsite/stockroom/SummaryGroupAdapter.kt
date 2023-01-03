@@ -194,7 +194,7 @@ class SummaryGroupAdapter internal constructor(
                 }.filter { stockItem ->
                     // Include only active assets with totalQuantity > 0.
                     val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
-                    totalQuantity > epsilon
+                    totalQuantity > 0.0
                 }
 
                 val (allText1Account, allText2Account) = getTotal(0, true, stockItemsListCopy)
@@ -480,6 +480,12 @@ class SummaryGroupAdapter internal constructor(
         val stockAssets = stockItemsSelected.filter {
             it.assets.isNotEmpty()
         }
+
+        val activeStockAssets = stockItemsSelected.filter {
+            val (quantity, price, fee) = getAssets(it.assets)
+            quantity > 0.0
+        }
+
         val stockEvents = stockItemsSelected.filter {
             it.events.isNotEmpty()
         }
@@ -512,6 +518,8 @@ class SummaryGroupAdapter internal constructor(
             .bold { append("${stockItemsSelected.size}\n") }
             .append("${context.getString(R.string.summary_stocks_with_assets)} ")
             .bold { append("${stockAssets.size}\n") }
+            .append("${context.getString(R.string.summary_stocks_with_active_assets)} ")
+            .bold { append("${activeStockAssets.size}\n") }
             .append("${context.getString(R.string.summary_alerts)} ")
             .bold { append("$totalAlerts\n") }
             .append("${context.getString(R.string.summary_bought_sold)} ")

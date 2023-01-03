@@ -222,6 +222,7 @@ limitations under the License. -->
     <string name="alert_event_notification">Ereignismeldung für Wertpapier \'%1$s\'\nEreignis \'%2$s\'\n%3$s</string>
     <string name="summary_stocks">Wertpapiere</string>
     <string name="summary_stocks_with_assets">Wertpapiere mit Bestand</string>
+    <string name="summary_stocks_with_active_assets">Wertpapiere mit aktivem Bestand</string>
     <string name="summary_bought_sold">Gekauft/Verkauft</string>
     <string name="summary_alerts">Benachrichtigungen</string>
     <string name="summary_events">Ereignisse</string>

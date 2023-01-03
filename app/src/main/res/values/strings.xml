@@ -191,6 +191,7 @@ limitations under the License. -->
     <string name="alert_event_notification">Event notification for stock \'%1$s\'\nEvent \'%2$s\'\n%3$s</string>
     <string name="summary_stocks">Stocks</string>
     <string name="summary_stocks_with_assets">Stocks with assets</string>
+    <string name="summary_stocks_with_active_assets">Stocks with active assets</string>
     <string name="summary_bought_sold">Bought/Sold</string>
     <string name="summary_alerts">Alerts</string>
     <string name="summary_events">Events</string>
