@@ -79,7 +79,7 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0-beta01'
@@ -88,12 +88,12 @@ dependencies {
     implementation "androidx.core:core-ktx:1.9.0"
 
     // Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-config-ktx:21.2.0'
+    implementation 'com.google.firebase:firebase-config-ktx:21.2.1'
     implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.2'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.3'
     // Add the dependency for the Performance Monitoring library.
-    implementation 'com.google.firebase:firebase-perf:20.3.0'
+    implementation 'com.google.firebase:firebase-perf:20.3.1'
     // Add the Realtime Database SDK.
     implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -168,7 +168,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
 
     // JSON
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     // Color picker
     implementation 'com.larswerkman:HoloColorPicker:1.5'
