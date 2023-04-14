@@ -21,6 +21,7 @@
         >
 
       <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/marketValueLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_margin="16dp"
@@ -162,6 +163,7 @@
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/textViewStockLegendAll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -200,6 +202,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout
+            android:id="@+id/chartLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
@@ -223,6 +226,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/chartButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -605,9 +609,13 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View style="@style/Divider"/>
+        <View
+            android:id="@+id/alertSectionDivider"
+            style="@style/Divider"
+            />
 
         <TextView
+            android:id="@+id/alertSectionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alerts"

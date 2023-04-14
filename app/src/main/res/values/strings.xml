@@ -660,6 +660,7 @@ limitations under the License. -->
         <item>Coingecko (Cryptocurrency, max 50 calls/min)</item>
         <item>Coinpaprika (Cryptocurrency, updated every 2min)</item>
         <item>Gemini (Cryptocurrency, max 120 calls/min)</item>
+        <item>Offline</item>
     </string-array>
 
 </resources>

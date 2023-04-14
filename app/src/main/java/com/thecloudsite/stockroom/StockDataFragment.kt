@@ -1610,7 +1610,7 @@ class StockDataFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                //stockRoomViewModel.setType(symbol, position)
+                updateUI()
             }
         }
 
@@ -3095,7 +3095,6 @@ class StockDataFragment : Fragment() {
                 marketCurrency.append(marketCurrencyValue)
             }
 
-            //binding.imageViewSymbol.visibility = View.GONE
             // val imgUrl = "https://s.yimg.com/uc/fin/img/reports-thumbnails/1.png"
             val imgUrl = onlineMarketData.coinImageUrl
             if (imgUrl.isNotEmpty()) {
@@ -3162,6 +3161,9 @@ class StockDataFragment : Fragment() {
             purchasePriceValue = 0.0
             purchaseQuantity = 0.0
 
+            val selectedType = binding.dataproviderSpinner.selectedItemPosition
+            val offlineVisible =  if(selectedType == DataProvider.Offline.value) View.GONE else View.VISIBLE
+
             // Display the asset even if the purchase price is 0.0
             if (data.onlineMarketData != null && totalQuantity > 0.0 && marketPrice > 0.0) {
                 val assetChange = getAssetChange(
@@ -3179,7 +3181,7 @@ class StockDataFragment : Fragment() {
                         append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
                     }
 
-                binding.textViewAssetChange.visibility = View.VISIBLE
+                binding.textViewAssetChange.visibility = offlineVisible
                 binding.textViewAssetChange.text = asset
             } else {
                 binding.textViewAssetChange.visibility = View.GONE
@@ -3187,11 +3189,11 @@ class StockDataFragment : Fragment() {
 
             if (totalQuantity > 0.0 && totalPrice + totalFee > 0.0) {
 
-                binding.pricePreviewDivider.visibility = View.VISIBLE
-                binding.pricePreviewTextview.visibility = View.VISIBLE
-                binding.pricePreviewLayout.visibility = View.VISIBLE
+                binding.pricePreviewDivider.visibility = offlineVisible
+                binding.pricePreviewTextview.visibility = offlineVisible
+                binding.pricePreviewLayout.visibility = offlineVisible
 
-                binding.textViewPurchasePrice.visibility = View.VISIBLE
+                binding.textViewPurchasePrice.visibility = offlineVisible
 
                 purchasePriceValue = totalPrice / totalQuantity
                 purchaseQuantity = totalQuantity
@@ -3324,6 +3326,33 @@ class StockDataFragment : Fragment() {
         if (type.value != selectedType) {
             stockRoomViewModel.setType(symbol, selectedType)
         }
+    }
+
+    private fun updateUI() {
+        val selectedType = binding.dataproviderSpinner.selectedItemPosition
+
+        // Remove UI items for Offline mode.
+        val enabled =  if(selectedType == DataProvider.Offline.value) View.GONE else View.VISIBLE
+
+        binding.marketValueLayout.visibility = enabled
+
+        binding.textViewRange.visibility = enabled
+        binding.textViewStockLegendAll.visibility = enabled
+        binding.chartButtons.visibility = enabled
+        binding.chartLayout.visibility = enabled
+
+        binding.onlineDataView.visibility = enabled
+
+        binding.splitAssetsButton.visibility = enabled
+        binding.moveAssetsButton.visibility = enabled
+
+        binding.pricePreviewDivider.visibility = enabled
+        binding.pricePreviewTextview.visibility = enabled
+        binding.pricePreviewLayout.visibility = enabled
+
+        binding.alertSectionDivider.visibility = enabled
+        binding.alertSectionText.visibility = enabled
+        binding.alertLayout.visibility = enabled
     }
 
     private fun updateStockViewRange(_stockViewRange: StockViewRange) {
