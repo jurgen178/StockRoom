@@ -420,11 +420,15 @@ fun getDividendStr(
     }
 
     return if (annualDividendRate > 0.0) {
-        "${
-            DecimalFormat(DecimalFormat2To4Digits).format(annualDividendRate)
-        } (${
-            DecimalFormat(DecimalFormat1Digit).format(annualDividendYield * 100.0)
-        }%)"
+        var div = DecimalFormat(DecimalFormat2To4Digits).format(annualDividendRate)
+
+        if (annualDividendYield > 0.0)
+            div += " (${
+                DecimalFormat(DecimalFormat1Digit).format(annualDividendYield * 100.0)
+            }%)"
+
+        div
+
     } else {
         ""
     }
