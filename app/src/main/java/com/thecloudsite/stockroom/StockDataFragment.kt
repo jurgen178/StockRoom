@@ -2018,7 +2018,7 @@ class StockDataFragment : Fragment() {
                         dialogBinding.datePickerAssetDate.dayOfMonth,
                         dialogBinding.datePickerAssetTime.hour,
                         dialogBinding.datePickerAssetTime.minute,
-                        0,
+                        ZonedDateTime.now().second,
                         0,
                         ZoneOffset.systemDefault()
                     )
@@ -2308,7 +2308,7 @@ class StockDataFragment : Fragment() {
                         dialogBinding.datePickerAssetDate.dayOfMonth,
                         dialogBinding.datePickerAssetTime.hour,
                         dialogBinding.datePickerAssetTime.minute,
-                        0,
+                        ZonedDateTime.now().second,
                         0,
                         ZoneOffset.systemDefault()
                     )
@@ -2577,7 +2577,7 @@ class StockDataFragment : Fragment() {
                             dialogBinding.datePickerAssetDate.dayOfMonth,
                             dialogBinding.datePickerAssetTime.hour,
                             dialogBinding.datePickerAssetTime.minute,
-                            0,
+                            ZonedDateTime.now().second,
                             0,
                             ZoneOffset.systemDefault()
                         )
@@ -2754,7 +2754,7 @@ class StockDataFragment : Fragment() {
                             dialogBinding.datePickerEventDate.dayOfMonth,
                             dialogBinding.datePickerEventTime.hour,
                             dialogBinding.datePickerEventTime.minute,
-                            0,
+                            ZonedDateTime.now().second,
                             0,
                             ZoneOffset.systemDefault()
                         )
