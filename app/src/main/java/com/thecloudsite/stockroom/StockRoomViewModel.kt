@@ -128,10 +128,11 @@ enum class DataProvider(val value: Int) {
     Coingecko(1),
     Coinpaprika(2),
     Gemini(3),
-    Offline(4),
+    None(4),
 }
 
-fun dataProviderFromInt(value: Int) = DataProvider.values().first { it.value == value }
+fun dataProviderFromInt(
+    value: Int) = DataProvider.values().first { it.value == value }
 
 data class StockSymbol
     (

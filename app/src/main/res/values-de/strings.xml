@@ -84,7 +84,7 @@ limitations under the License. -->
         <item>Coingecko (Kryptowährung, max 50 Aufrufe/min)</item>
         <item>Coinpaprika (Kryptowährung, aktualisiert alle 2min)</item>
         <item>Gemini (Kryptowährung, max 120 Aufrufe/min)</item>
-        <item>Offline</item>
+        <item>Kein Datenanbieter</item>
     </string-array>
 
     <!-- Preference Titles -->

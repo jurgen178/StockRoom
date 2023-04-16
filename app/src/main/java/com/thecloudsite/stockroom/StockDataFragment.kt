@@ -3162,7 +3162,7 @@ class StockDataFragment : Fragment() {
             purchaseQuantity = 0.0
 
             val selectedType = binding.dataproviderSpinner.selectedItemPosition
-            val offlineVisible =  if(selectedType == DataProvider.Offline.value) View.GONE else View.VISIBLE
+            val noDataProviderVisible =  if(selectedType == DataProvider.None.value) View.GONE else View.VISIBLE
 
             // Display the asset even if the purchase price is 0.0
             if (data.onlineMarketData != null && totalQuantity > 0.0 && marketPrice > 0.0) {
@@ -3181,7 +3181,7 @@ class StockDataFragment : Fragment() {
                         append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
                     }
 
-                binding.textViewAssetChange.visibility = offlineVisible
+                binding.textViewAssetChange.visibility = noDataProviderVisible
                 binding.textViewAssetChange.text = asset
             } else {
                 binding.textViewAssetChange.visibility = View.GONE
@@ -3189,11 +3189,11 @@ class StockDataFragment : Fragment() {
 
             if (totalQuantity > 0.0 && totalPrice + totalFee > 0.0) {
 
-                binding.pricePreviewDivider.visibility = offlineVisible
-                binding.pricePreviewTextview.visibility = offlineVisible
-                binding.pricePreviewLayout.visibility = offlineVisible
+                binding.pricePreviewDivider.visibility = noDataProviderVisible
+                binding.pricePreviewTextview.visibility = noDataProviderVisible
+                binding.pricePreviewLayout.visibility = noDataProviderVisible
 
-                binding.textViewPurchasePrice.visibility = offlineVisible
+                binding.textViewPurchasePrice.visibility = noDataProviderVisible
 
                 purchasePriceValue = totalPrice / totalQuantity
                 purchaseQuantity = totalQuantity
@@ -3331,8 +3331,8 @@ class StockDataFragment : Fragment() {
     private fun updateUI() {
         val selectedType = binding.dataproviderSpinner.selectedItemPosition
 
-        // Remove UI items for Offline mode.
-        val enabled =  if(selectedType == DataProvider.Offline.value) View.GONE else View.VISIBLE
+        // Remove UI items for no data provider mode.
+        val enabled =  if(selectedType == DataProvider.None.value) View.GONE else View.VISIBLE
 
         binding.marketValueLayout.visibility = enabled
 
