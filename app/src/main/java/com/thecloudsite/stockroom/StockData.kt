@@ -573,6 +573,7 @@ data class YahooResponse(
 
 //A retrofit Network Interface for the Api
 interface YahooApiMarketData {
+    // https://query1.finance.yahoo.com/v1/test/getcrumb
     // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     @GET("quote?format=json")
