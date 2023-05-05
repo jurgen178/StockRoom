@@ -497,21 +497,27 @@ fun getMarketText(
         MarketState.PRE.value -> {
             context.getString(R.string.marketStatePRE)
         }
+
         MarketState.PREPRE.value -> {
             context.getString(R.string.marketStatePREPRE)
         }
+
         MarketState.REGULAR.value -> {
             context.getString(R.string.marketStateREGULAR)
         }
+
         MarketState.POST.value -> {
             context.getString(R.string.marketStatePOST)
         }
+
         MarketState.POSTPOST.value -> {
             context.getString(R.string.marketStatePOSTPOST)
         }
+
         MarketState.CLOSED.value -> {
             context.getString(R.string.marketStateCLOSED)
         }
+
         else -> {
             marketStateStr
         }
@@ -523,27 +529,35 @@ fun <K> Enum.Companion.toString(marketState: K): String {
         MarketState.REGULAR -> {
             "regular market"
         }
+
         MarketState.PRE, MarketState.PREPRE -> {
             "pre market"
         }
+
         MarketState.POST, MarketState.POSTPOST -> {
             "post market"
         }
+
         MarketState.CLOSED -> {
             "market closed"
         }
+
         MarketState.NO_NETWORK -> {
             "network not available"
         }
+
         MarketState.UNKNOWN -> {
             "unknown"
         }
+
         MarketState.QUOTA_EXCEEDED -> {
             "Quota exceeded"
         }
+
         MarketState.NO_SYMBOL -> {
             "no symbol"
         }
+
         else -> ""
     }
 }
@@ -597,8 +611,9 @@ interface YahooApiCrumbData {
     // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
-    @GET("getcrumb")
-    fun getCrumbDataAsync() : Deferred<Response<String>>
+
+    @GET("test/getcrumb")
+    fun getCrumbDataAsync(): Deferred<Response<String>>
 }
 
 @JsonClass(generateAdapter = true)

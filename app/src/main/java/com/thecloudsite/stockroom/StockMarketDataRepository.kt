@@ -55,7 +55,6 @@ data class MarketDataResult
 
 class StockMarketDataRepository(
     private val yahooApi: () -> YahooApiMarketData?,
-    private val yahooCrumbApi: () -> YahooApiCrumbData?,
     private val coingeckoApi: () -> CoingeckoApiMarketData?,
     private val coinpaprikaApi: () -> CoinpaprikaApiMarketData?,
     private val geminiApi: () -> GeminiApiMarketData?,
@@ -473,10 +472,16 @@ class StockMarketDataRepository(
     }
 
     suspend fun getYahooCrumb() {
+        // Get Raw data from the server.
+        val yahooCrumbDataRepository: YahooCrumbDataRepository =
+            YahooCrumbDataRepository { YahooCrumbDataApiFactory.yahooCrumbDataApi }
 
-        val api: YahooApiCrumbData = yahooCrumbApi() ?: return Unit
+        val crumbData: String = yahooCrumbDataRepository.getCrumbData()
 
-        queryYahooCrumbData(api)
+        // Add the result.
+        SharedRepository.yahooCrumb.postValue(
+            crumbData
+        )
     }
 
     suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
@@ -548,30 +553,6 @@ class StockMarketDataRepository(
         } while (remainingSymbolsToQuery.isNotEmpty())
 
         return Pair(onlineMarketDataResultList, errorMsg)
-    }
-
-    private suspend fun queryYahooCrumbData(
-        api: YahooApiCrumbData
-    ) {
-        var errorMsg = ""
-        val dataResponse: String? = try {
-            apiCall(
-                call = {
-                    api.getCrumbDataAsync()
-                        .await()
-                }, errorMessage = "Error getting crumb data."
-            )
-        } catch (e: Exception) {
-            errorMsg += "StockMarketDataRepository.queryYahooCrumbData failed, Exception=$e\n"
-            Log.d("StockMarketDataRepository.queryYahooCrumbData failed", "Exception=$e")
-            null
-        }
-
-        // Add the result.
-        SharedRepository.yahooCrumb.postValue(
-            dataResponse
-                ?: ""
-        )
     }
 
     private suspend fun queryCoingeckoStockData(
@@ -750,6 +731,38 @@ class StockMarketDataRepository(
                 } catch (e: Exception) {
                     Log.d(
                         "StockRawMarketDataRepository.getStockRawData($symbol) failed",
+                        "Exception=$e"
+                    )
+                    null
+                }
+
+                return quoteResponse ?: ""
+            }
+
+            return ""
+        }
+    }
+
+    class YahooCrumbDataRepository(private val api: () -> YahooApiCrumbData?) :
+        BaseRepository() {
+
+        suspend fun getCrumbData(): String {
+
+            val api: YahooApiCrumbData? = api()
+
+            if (api != null) {
+
+                val quoteResponse: String? = try {
+                    apiCall(
+                        call = {
+                            api.getCrumbDataAsync()
+                                .await()
+                        },
+                        errorMessage = "Error getting crumb data."
+                    )
+                } catch (e: Exception) {
+                    Log.d(
+                        "YahooCrumbDataRepository.getCrumbData() failed",
                         "Exception=$e"
                     )
                     null

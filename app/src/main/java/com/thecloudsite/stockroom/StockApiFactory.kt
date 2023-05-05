@@ -157,7 +157,7 @@ object YahooCrumbDataApiFactory {
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
-    private var defaultUrl = "https://query1.finance.yahoo.com/v1/test/"
+    private var defaultUrl = "https://query1.finance.yahoo.com/v1/"
     private var url = ""
 
     // building http request url

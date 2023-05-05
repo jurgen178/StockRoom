@@ -324,7 +324,6 @@ abstract class StockRoomDatabase : RoomDatabase() {
                 val stockMarketDataRepository: StockMarketDataRepository =
                     StockMarketDataRepository(
                         { StockMarketDataApiFactory.marketDataApi },
-                        { YahooCrumbDataApiFactory.yahooCrumbDataApi },
                         { StockMarketDataCoingeckoApiFactory.marketDataApi },
                         { StockMarketDataCoinpaprikaApiFactory.marketDataApi },
                         { StockMarketDataGeminiApiFactory.marketDataApi }
