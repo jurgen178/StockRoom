@@ -474,7 +474,7 @@ class StockMarketDataRepository(
 
     suspend fun getYahooCrumb() {
 
-        val api: YahooApiCrumbData = yahooCrumbApi() ?: return ""
+        val api: YahooApiCrumbData = yahooCrumbApi() ?: return Unit
 
         queryYahooCrumbData(api)
     }
@@ -553,15 +553,13 @@ class StockMarketDataRepository(
     private suspend fun queryYahooCrumbData(
         api: YahooApiCrumbData
     ) {
-
         var errorMsg = ""
-        val dataResponse: YahooCrumbDataResponse? = try {
+        val dataResponse: String? = try {
             apiCall(
                 call = {
-                    updateCounter()
                     api.getCrumbDataAsync()
                         .await()
-                }, errorMessage = "Error getting finance data."
+                }, errorMessage = "Error getting crumb data."
             )
         } catch (e: Exception) {
             errorMsg += "StockMarketDataRepository.queryYahooCrumbData failed, Exception=$e\n"
@@ -571,7 +569,7 @@ class StockMarketDataRepository(
 
         // Add the result.
         SharedRepository.yahooCrumb.postValue(
-            dataResponse?.crumbDataResponse?.result
+            dataResponse
                 ?: ""
         )
     }

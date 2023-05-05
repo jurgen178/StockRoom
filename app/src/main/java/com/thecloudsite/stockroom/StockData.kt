@@ -590,16 +590,6 @@ interface YahooApiMarketData {
     ): Deferred<Response<YahooResponse>>
 }
 
-@JsonClass(generateAdapter = true)
-data class QuoteCrumbDataResponse(
-    val result: String
-)
-
-@JsonClass(generateAdapter = true)
-data class YahooCrumbDataResponse(
-    var crumbDataResponse: QuoteCrumbDataResponse? = null
-)
-
 interface YahooApiCrumbData {
     // https://query1.finance.yahoo.com/v1/test/getcrumb
     // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
@@ -608,7 +598,7 @@ interface YahooApiCrumbData {
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
     @GET("getcrumb")
-    fun getCrumbDataAsync() : Deferred<Response<YahooCrumbDataResponse>>
+    fun getCrumbDataAsync() : Deferred<Response<String>>
 }
 
 @JsonClass(generateAdapter = true)

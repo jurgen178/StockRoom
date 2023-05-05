@@ -167,7 +167,7 @@ object YahooCrumbDataApiFactory {
                 .build()
         )
         .baseUrl(url)
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(ScalarsConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 
@@ -179,7 +179,7 @@ object YahooCrumbDataApiFactory {
             } else {
                 url = checkUrl(_url)
                 yahooCrumbDataApi = try {
-                    retrofit().create(YahooCrumbDataApiFactory::class.java)
+                    retrofit().create(YahooApiCrumbData::class.java)
                 } catch (e: Exception) {
                     null
                 }
@@ -191,7 +191,7 @@ object YahooCrumbDataApiFactory {
         update(defaultUrl)
     }
 
-    var yahooCrumbDataApi: YahooCrumbDataApiFactory? = null
+    var yahooCrumbDataApi: YahooApiCrumbData? = null
 }
 
 //StockApiFactory to create the Coingecko Api

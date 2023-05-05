@@ -224,6 +224,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     private val stockMarketDataRepository: StockMarketDataRepository =
         StockMarketDataRepository(
             { StockMarketDataApiFactory.marketDataApi },
+            { YahooCrumbDataApiFactory.yahooCrumbDataApi },
             { StockMarketDataCoingeckoApiFactory.marketDataApi },
             { StockMarketDataCoinpaprikaApiFactory.marketDataApi },
             { StockMarketDataGeminiApiFactory.marketDataApi }
@@ -454,7 +455,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         return Pair(onlineDataDelay, marketState)
     }
 
-    fun setCrumb() = scope.launch {
+    fun getCrumb() = scope.launch {
         var onlinedata: List<OnlineMarketData>
         withContext(Dispatchers.IO) {
             stockMarketDataRepository.getYahooCrumb()

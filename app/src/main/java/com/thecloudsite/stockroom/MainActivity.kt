@@ -414,7 +414,7 @@ class MainActivity : AppCompatActivity() {
             invalidateOptionsMenu()
         })
 
-        stockRoomViewModel.setCrumb()
+        stockRoomViewModel.getCrumb()
 
         // Update the crumb value.
         SharedRepository.yahooCrumbLiveData.observe(this, Observer {
