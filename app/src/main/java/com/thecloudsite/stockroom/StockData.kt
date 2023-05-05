@@ -822,9 +822,13 @@ interface YahooApiCrumbData {
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
-    //@GET("test/getcrumb")
-    @GET("quote?format=json")
+    @GET("test/getcrumb")
     fun getCrumbDataAsync(): Deferred<Response<String>>
+}
+
+interface MarsApiService {
+    @GET("getcrumb")
+    suspend fun getPhotos(): String
 }
 
 interface YahooApiChartData {

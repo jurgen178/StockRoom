@@ -743,19 +743,19 @@ class StockMarketDataRepository(
         }
     }
 
-    class YahooCrumbDataRepository(private val api: () -> YahooApiRawMarketData?) :
+    class YahooCrumbDataRepository(private val api: () -> YahooApiCrumbData?) :
         BaseRepository() {
 
         suspend fun getCrumbData(): String {
 
-            val api: YahooApiRawMarketData? = api()
+            val api: YahooApiCrumbData? = api()
 
             if (api != null) {
 
                 val quoteResponse: String? = try {
                     apiCall(
                         call = {
-                            api.getStockDataAsync("a", "c")
+                            api.getCrumbDataAsync()
                                 .await()
                         },
                         errorMessage = "Error getting crumb data."

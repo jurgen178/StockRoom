@@ -460,6 +460,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    // https://developer.android.com/codelabs/basic-android-kotlin-training-getting-data-internet#5
+    fun getMarsPhotos() {
+        viewModelScope.launch {
+            try {
+                val listResult = MarsApi.retrofitService.getPhotos()
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
     private fun onlineTask() {
         onlineBefore = onlineNow
         onlineNow = isOnline(getApplication())

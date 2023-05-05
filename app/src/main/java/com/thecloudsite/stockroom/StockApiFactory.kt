@@ -309,6 +309,17 @@ object StockRawMarketDataApiFactory {
     var yahooApi: YahooApiRawMarketData? = null
 }
 
+
+private val retrofit = Retrofit.Builder()
+    .addConverterFactory(ScalarsConverterFactory.create())
+    .baseUrl("https://query1.finance.yahoo.com/v1/test/")
+    .build()
+
+object MarsApi {
+    val retrofitService : MarsApiService by lazy {
+        retrofit.create(MarsApiService::class.java) }
+}
+
 object YahooCrumbDataApiFactory {
     // https://query1.finance.yahoo.com/v1/test/getcrumb
     // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
@@ -317,8 +328,7 @@ object YahooCrumbDataApiFactory {
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
-    //private var defaultUrl = "https://query1.finance.yahoo.com/v1/"
-    private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
+    private var defaultUrl = "https://query1.finance.yahoo.com/v1/"
     private var url = ""
 
     // building http request url
@@ -340,8 +350,7 @@ object YahooCrumbDataApiFactory {
             } else {
                 url = checkUrl(_url)
                 yahooCrumbDataApi = try {
-                   // retrofit().create(YahooApiCrumbData::class.java)
-                    retrofit().create(YahooApiRawMarketData::class.java)
+                    retrofit().create(YahooApiCrumbData::class.java)
                 } catch (e: Exception) {
                     null
                 }
@@ -353,7 +362,7 @@ object YahooCrumbDataApiFactory {
         update(defaultUrl)
     }
 
-    var yahooCrumbDataApi: YahooApiRawMarketData? = null
+    var yahooCrumbDataApi: YahooApiCrumbData? = null
 }
 
 object CoingeckoSymbolsApiFactory {
