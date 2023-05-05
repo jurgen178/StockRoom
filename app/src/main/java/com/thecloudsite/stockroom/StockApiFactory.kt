@@ -94,7 +94,7 @@ object StockMarketDataApiFactory {
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
     // v7 erfordert crumb
-    private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
+    private var defaultUrl = "https://query2.finance.yahoo.com/v6/finance/"
     private var url = ""
 
     //Creating Auth Interceptor to add api_key query in front of all the requests.
@@ -147,51 +147,6 @@ object StockMarketDataApiFactory {
     }
 
     var marketDataApi: YahooApiMarketData? = null
-}
-
-object YahooCrumbDataApiFactory {
-    // https://query1.finance.yahoo.com/v1/test/getcrumb
-    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
-
-    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
-    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
-    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
-
-    private var defaultUrl = "https://query1.finance.yahoo.com/v1/"
-    private var url = ""
-
-    // building http request url
-    private fun retrofit(): Retrofit = Retrofit.Builder()
-        .client(
-            OkHttpClient().newBuilder()
-                .build()
-        )
-        .baseUrl(url)
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .build()
-
-    fun update(_url: String) {
-        if (url != _url) {
-            if (_url.isBlank()) {
-                url = ""
-                yahooCrumbDataApi = null
-            } else {
-                url = checkUrl(_url)
-                yahooCrumbDataApi = try {
-                    retrofit().create(YahooApiCrumbData::class.java)
-                } catch (e: Exception) {
-                    null
-                }
-            }
-        }
-    }
-
-    init {
-        update(defaultUrl)
-    }
-
-    var yahooCrumbDataApi: YahooApiCrumbData? = null
 }
 
 //StockApiFactory to create the Coingecko Api
@@ -352,6 +307,53 @@ object StockRawMarketDataApiFactory {
     }
 
     var yahooApi: YahooApiRawMarketData? = null
+}
+
+object YahooCrumbDataApiFactory {
+    // https://query1.finance.yahoo.com/v1/test/getcrumb
+    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
+
+    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
+
+    //private var defaultUrl = "https://query1.finance.yahoo.com/v1/"
+    private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
+    private var url = ""
+
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
+
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                yahooCrumbDataApi = null
+            } else {
+                url = checkUrl(_url)
+                yahooCrumbDataApi = try {
+                   // retrofit().create(YahooApiCrumbData::class.java)
+                    retrofit().create(YahooApiRawMarketData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+    }
+
+    init {
+        update(defaultUrl)
+    }
+
+    var yahooCrumbDataApi: YahooApiRawMarketData? = null
 }
 
 object CoingeckoSymbolsApiFactory {

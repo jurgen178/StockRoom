@@ -604,18 +604,6 @@ interface YahooApiMarketData {
     ): Deferred<Response<YahooResponse>>
 }
 
-interface YahooApiCrumbData {
-    // https://query1.finance.yahoo.com/v1/test/getcrumb
-    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
-
-    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
-    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
-    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
-
-    @GET("test/getcrumb")
-    fun getCrumbDataAsync(): Deferred<Response<String>>
-}
-
 @JsonClass(generateAdapter = true)
 data class CoingeckoImage(
     var small: String,
@@ -825,6 +813,19 @@ interface YahooApiRawMarketData {
     ): Deferred<Response<String>>
 }
 // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+
+interface YahooApiCrumbData {
+    // https://query1.finance.yahoo.com/v1/test/getcrumb
+    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
+
+    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
+
+    //@GET("test/getcrumb")
+    @GET("quote?format=json")
+    fun getCrumbDataAsync(): Deferred<Response<String>>
+}
 
 interface YahooApiChartData {
     // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
