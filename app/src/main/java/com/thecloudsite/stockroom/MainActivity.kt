@@ -144,35 +144,35 @@ class MainActivity : AppCompatActivity() {
 
         filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
-/*
-    // When you enable disk persistence, your app writes the data locally
-    // to the device so your app can maintain state while offline, even
-    // if the user or operating system restarts the app.
-    //Firebase.database.setPersistenceEnabled(true)
+        /*
+            // When you enable disk persistence, your app writes the data locally
+            // to the device so your app can maintain state while offline, even
+            // if the user or operating system restarts the app.
+            //Firebase.database.setPersistenceEnabled(true)
 
-    // Write a message to the database
-    val database = Firebase.database
-    val myRef = database.getReference("message")
+            // Write a message to the database
+            val database = Firebase.database
+            val myRef = database.getReference("message")
 
-    myRef.setValue("Hello, World!A")
+            myRef.setValue("Hello, World!A")
 
 
-    // Read from the database
-    myRef.addListenerForSingleValueEvent(object : ValueEventListener {
-      override fun onDataChange(dataSnapshot: DataSnapshot) {
-        // This method is called once with the initial value and again
-        // whenever data at this location is updated.
-        val value = dataSnapshot.getValue<String>()
-        val a = value
-        //Log.d(TAG, "Value is: $value")
-      }
+            // Read from the database
+            myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+              override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.getValue<String>()
+                val a = value
+                //Log.d(TAG, "Value is: $value")
+              }
 
-      override fun onCancelled(error: DatabaseError) {
-        // Failed to read value
-        //Log.w(TAG, "Failed to read value.", error.toException())
-      }
-    })
-*/
+              override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException())
+              }
+            })
+        */
 
         updateRemoteConfig()
 
@@ -282,66 +282,87 @@ class MainActivity : AppCompatActivity() {
                     "00_StockRoomChartFragment" -> {
                         StockRoomChartFragment.newInstance()
                     }
+
                     "01_StockRoomOverviewFragment" -> {
                         StockRoomOverviewFragment.newInstance()
                     }
+
                     "02_StockRoomListFragment" -> {
                         StockRoomListFragment.newInstance()
                     }
+
                     "03_StockRoomTileFragment" -> {
                         StockRoomTileFragment.newInstance()
                     }
+
                     "04_StockRoomSmallListFragment" -> {
                         StockRoomSmallListFragment.newInstance()
                     }
+
                     "05_StockRoomSmallTile1Fragment" -> {
                         StockRoomSmallTile1Fragment.newInstance()
                     }
+
                     "06_StockRoomSmallTile2Fragment" -> {
                         StockRoomSmallTile2Fragment.newInstance()
                     }
+
                     "07_StockRoomTableFragment" -> {
                         StockRoomTableFragment.newInstance()
                     }
+
                     "08_StockRoomTreemapFragment" -> {
                         StockRoomTreemapFragment.newInstance()
                     }
+
                     "09_SummaryGroupFragment" -> {
                         SummaryGroupFragment.newInstance()
                     }
+
                     "10_AllNewsFragment" -> {
                         AllNewsFragment.newInstance()
                     }
+
                     "11_TransactionsFragment" -> {
                         StockRoomTransactionsFragment.newInstance()
                     }
+
                     "12_AllTransactionsFragment" -> {
                         StockRoomTransactionsAllFragment.newInstance()
                     }
+
                     "13_GainLossTimelineFragment" -> {
                         GainLossTimelineFragment.newInstance()
                     }
+
                     "14_AllGainLossTimelineFragment" -> {
                         GainLossAllTimelineFragment.newInstance()
                     }
+
                     "15_AssetTimelineFragment" -> {
                         AssetTimelineFragment.newInstance()
                     }
+
                     "16_AllAssetTimelineFragment" -> {
                         AssetAllTimelineFragment.newInstance()
                     }
+
                     "17_EventTimelineFragment" -> {
                         EventTimelineFragment.newInstance()
                     }
+
                     "18_AllEventTimelineFragment" -> {
                         EventAllTimelineFragment.newInstance()
                     }
+
                     "19_DividendTimelineFragment" -> {
                         DividendTimelineFragment.newInstance()
                     }
+
                     "20_AllDividendTimelineFragment" -> {
                         DividendAllTimelineFragment.newInstance()
                     }
+
                     else -> {
                         StockRoomListFragment.newInstance()
                     }
@@ -393,19 +414,26 @@ class MainActivity : AppCompatActivity() {
             invalidateOptionsMenu()
         })
 
-        /*
-        val connectivityManager =
-          application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-          override fun onAvailable(network: Network) {
-            //take action when network connection is gained
-          }
+        stockRoomViewModel.setCrumb()
 
-          override fun onLost(network: Network) {
-            //take action when network connection is lost
-          }
+        // Update the crumb value.
+        SharedRepository.yahooCrumbLiveData.observe(this, Observer {
+            val a = it
         })
-        */
+
+        /*
+         val connectivityManager =
+           application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+           override fun onAvailable(network: Network) {
+             //take action when network connection is gained
+           }
+
+           override fun onLost(network: Network) {
+             //take action when network connection is lost
+           }
+         })
+         */
 
         // Setup online data every 2s for regular hours.
         onlineDataHandler = Handler(Looper.getMainLooper())
@@ -657,42 +685,52 @@ class MainActivity : AppCompatActivity() {
                 stockRoomViewModel.updateSortMode(SortMode.ByChangePercentage)
                 true
             }
+
             R.id.menu_sort_name -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByName)
                 true
             }
+
             R.id.menu_sort_purchaseprice -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByPurchaseprice)
                 true
             }
+
             R.id.menu_sort_assets -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByAssets)
                 true
             }
+
             R.id.menu_sort_profit -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByProfit)
                 true
             }
+
             R.id.menu_sort_profit_percentage -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByProfitPercentage)
                 true
             }
+
             R.id.menu_sort_marketcap -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByMarketCap)
                 true
             }
+
             R.id.menu_sort_dividend_percentage -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByDividendPercentage)
                 true
             }
+
             R.id.menu_sort_group -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByGroup)
                 true
             }
+
             R.id.menu_sort_marker -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByMarker)
                 true
             }
+
             R.id.menu_sort_activity -> {
                 stockRoomViewModel.updateSortMode(SortMode.ByActivity)
                 true
@@ -705,11 +743,13 @@ class MainActivity : AppCompatActivity() {
                 stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
                 true
             }
+
             R.id.menu_filter -> {
                 val intent = Intent(this, FilterActivity::class.java)
                 startActivity(intent)
                 true
             }
+
             else -> {
                 if (filterMenuIdMap.contains(item.itemId)) {
                     filterDataViewModel.filterActive = true
@@ -731,7 +771,8 @@ class MainActivity : AppCompatActivity() {
         menu.findItem(R.id.menu_sort_change_percentage)?.isChecked =
             sortMode == SortMode.ByChangePercentage
         menu.findItem(R.id.menu_sort_name)?.isChecked = sortMode == SortMode.ByName
-        menu.findItem(R.id.menu_sort_purchaseprice)?.isChecked = sortMode == SortMode.ByPurchaseprice
+        menu.findItem(R.id.menu_sort_purchaseprice)?.isChecked =
+            sortMode == SortMode.ByPurchaseprice
         menu.findItem(R.id.menu_sort_assets)?.isChecked = sortMode == SortMode.ByAssets
         menu.findItem(R.id.menu_sort_profit)?.isChecked = sortMode == SortMode.ByProfit
         menu.findItem(R.id.menu_sort_profit_percentage)?.isChecked =
@@ -790,18 +831,18 @@ class MainActivity : AppCompatActivity() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-/*
-override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-  val item = menu!!.add("Clear Array")
-  item.setOnMenuItemClickListener(object : OnMenuItemClickListener {
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-      //clearArray()
-      return true
+    /*
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+      val item = menu!!.add("Clear Array")
+      item.setOnMenuItemClickListener(object : OnMenuItemClickListener {
+        override fun onMenuItemClick(item: MenuItem?): Boolean {
+          //clearArray()
+          return true
+        }
+      })
+      return super.onPrepareOptionsMenu(menu)
     }
-  })
-  return super.onPrepareOptionsMenu(menu)
-}
- */
+     */
 
     fun onSettings(item: MenuItem) {
         val intent = Intent(this@MainActivity, SettingsActivity::class.java)

@@ -574,14 +574,41 @@ data class YahooResponse(
 //A retrofit Network Interface for the Api
 interface YahooApiMarketData {
     // https://query1.finance.yahoo.com/v1/test/getcrumb
+    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
+
     // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
     @GET("quote?format=json")
     fun getStockDataAsync(
         @Query(
             value = "symbols"
-        ) symbols: String
+        ) symbols: String,
+        @Query(
+            value = "crumb"
+        ) crumb: String
     ): Deferred<Response<YahooResponse>>
+}
+
+@JsonClass(generateAdapter = true)
+data class QuoteCrumbDataResponse(
+    val result: String
+)
+
+@JsonClass(generateAdapter = true)
+data class YahooCrumbDataResponse(
+    var crumbDataResponse: QuoteCrumbDataResponse? = null
+)
+
+interface YahooApiCrumbData {
+    // https://query1.finance.yahoo.com/v1/test/getcrumb
+    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
+
+    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
+    @GET("getcrumb")
+    fun getCrumbDataAsync() : Deferred<Response<YahooCrumbDataResponse>>
 }
 
 @JsonClass(generateAdapter = true)
@@ -786,7 +813,10 @@ interface YahooApiRawMarketData {
     fun getStockDataAsync(
         @Query(
             value = "symbols"
-        ) symbols: String
+        ) symbols: String,
+        @Query(
+            value = "crumb"
+        ) crumb: String
     ): Deferred<Response<String>>
 }
 // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl

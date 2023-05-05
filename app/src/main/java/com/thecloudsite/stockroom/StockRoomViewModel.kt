@@ -132,7 +132,8 @@ enum class DataProvider(val value: Int) {
 }
 
 fun dataProviderFromInt(
-    value: Int) = DataProvider.values().first { it.value == value }
+    value: Int
+) = DataProvider.values().first { it.value == value }
 
 data class StockSymbol
     (
@@ -206,6 +207,10 @@ object SharedRepository {
     var portfolios = MutableLiveData<HashSet<String>>()
     val portfoliosLiveData: LiveData<HashSet<String>>
         get() = portfolios
+
+    var yahooCrumb = MutableLiveData<String>()
+    val yahooCrumbLiveData: LiveData<String>
+        get() = yahooCrumb
 
     var statsCounter = 0
     var statsCounterMax = 0
@@ -379,34 +384,43 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             stockdataResult.delayInMs > 0 -> {
                 stockdataResult.delayInMs
             }
+
             MainActivity.realtimeOverride -> {
                 2 * 1000L
             }
+
             else -> {
                 when (marketState) {
                     MarketState.REGULAR -> {
                         2 * 1000L
                     }
+
                     MarketState.PRE, MarketState.POST -> {
                         60 * 1000L
                     }
+
                     MarketState.PREPRE, MarketState.POSTPOST -> {
                         15 * 60 * 1000L
                     }
+
                     MarketState.CLOSED -> {
                         60 * 60 * 1000L
                     }
+
                     MarketState.NO_NETWORK -> {
                         // increase delay: 2s, 4s, 8s, 16s, 32s, 1m, 2m, 2m, 2m, ....
                         maxOf(2 * 60 * 1000L, prevOnlineDataDelay * 2)
                         // 10 * 1000L
                     }
+
                     MarketState.NO_SYMBOL -> {
                         60 * 1000L
                     }
+
                     MarketState.QUOTA_EXCEEDED -> {
                         60 * 1000L
                     }
+
                     MarketState.UNKNOWN -> {
                         60 * 1000L
                     }
@@ -422,9 +436,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 onlineDataDelay >= 60 * 60 * 1000L -> {
                     "${onlineDataDelay / (60 * 60 * 1000L)}h"
                 }
+
                 onlineDataDelay >= 60 * 1000L -> {
                     "${onlineDataDelay / (60 * 1000L)}m"
                 }
+
                 else -> {
                     "${onlineDataDelay / 1000L}s"
                 }
@@ -436,6 +452,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
         return Pair(onlineDataDelay, marketState)
+    }
+
+    fun setCrumb() = scope.launch {
+        var onlinedata: List<OnlineMarketData>
+        withContext(Dispatchers.IO) {
+            stockMarketDataRepository.getYahooCrumb()
+        }
     }
 
     private fun onlineTask() {
@@ -538,28 +561,28 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-/*
-  fun updateOnlineDataManually(msg: String = "") {
-    if (isOnline(getApplication())) {
-      if (msg.isNotEmpty()) {
-        logDebug(msg)
-      }
+    /*
+      fun updateOnlineDataManually(msg: String = "") {
+        if (isOnline(getApplication())) {
+          if (msg.isNotEmpty()) {
+            logDebug(msg)
+          }
 
-      scope.launch {
-        val stockDataResult = getStockData()
-        if (stockDataResult.second.isEmpty()) {
-          val marketState = stockDataResult.first
-          val marketStateStr = Enum.toString(marketState)
-          logDebugAsync("Received online data ($marketStateStr)")
+          scope.launch {
+            val stockDataResult = getStockData()
+            if (stockDataResult.second.isEmpty()) {
+              val marketState = stockDataResult.first
+              val marketStateStr = Enum.toString(marketState)
+              logDebugAsync("Received online data ($marketStateStr)")
+            } else {
+              logDebugAsync("Error getting online data: ${stockDataResult.second}")
+            }
+          }
         } else {
-          logDebugAsync("Error getting online data: ${stockDataResult.second}")
+          logDebug("Network is offline. No online data.")
         }
       }
-    } else {
-      logDebug("Network is offline. No online data.")
-    }
-  }
- */
+     */
 
     fun updateAll() {
         allMediatorData.value = allData.value?.let { process(it, true) }
@@ -698,23 +721,23 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         return allMediatorData
     }
 
-/*
-  private fun dataValidate() {
-    synchronized(dataStore)
-    {
-      if (!dataStore.allDataReady) {
-        // don't wait for valid online data if offline
-        if (!onlineDataValid && !isOnline(getApplication())) {
-          onlineDataValid = true
-        }
+    /*
+      private fun dataValidate() {
+        synchronized(dataStore)
+        {
+          if (!dataStore.allDataReady) {
+            // don't wait for valid online data if offline
+            if (!onlineDataValid && !isOnline(getApplication())) {
+              onlineDataValid = true
+            }
 
-        if (dbDataValid && assetDataValid && eventDataValid && onlineDataValid) {
-          dataStore.allDataReady = true
+            if (dbDataValid && assetDataValid && eventDataValid && onlineDataValid) {
+              dataStore.allDataReady = true
+            }
+          }
         }
       }
-    }
-  }
-*/
+    */
 
     private fun updateStockDataFromDB(stockDBdata: List<StockDBdata>) {
         synchronized(dataStore)
@@ -783,11 +806,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 stockDBdataPortfolios.add(data.portfolio)
 
                 // Test
-/*
-        stockDBdataPortfolios.add("data.portfolio1")
-        stockDBdataPortfolios.add("data.portfolio2")
-        stockDBdataPortfolios.add("data.portfolio3")
-*/
+                /*
+                        stockDBdataPortfolios.add("data.portfolio1")
+                        stockDBdataPortfolios.add("data.portfolio2")
+                        stockDBdataPortfolios.add("data.portfolio3")
+                */
             }
 
             // get all used portfolios
@@ -1079,33 +1102,33 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     if (dataStoreItem != null) {
                         dataStoreItem.onlineMarketData = onlineMarketDataItem
 
-/*
-              if (postMarket) {
-                if ((onlineMarketDataItem.marketState == MarketState.POST.value
-                        || onlineMarketDataItem.marketState == MarketState.POSTPOST.value
-                        || onlineMarketDataItem.marketState == MarketState.PREPRE.value
-                        || onlineMarketDataItem.marketState == MarketState.CLOSED.value)
-                    && onlineMarketDataItem.postMarketPrice > 0.0
-                ) {
-                  dataStoreItem.onlineMarketData.marketPrice =
-                    onlineMarketDataItem.postMarketPrice
-                  dataStoreItem.onlineMarketData.marketChange =
-                    onlineMarketDataItem.postMarketChange
-                  dataStoreItem.onlineMarketData.marketChangePercent =
-                    onlineMarketDataItem.postMarketChangePercent
-                } else
-                  if ((onlineMarketDataItem.marketState == MarketState.PRE.value)
-                      && onlineMarketDataItem.preMarketPrice > 0.0
-                  ) {
-                    dataStoreItem.onlineMarketData.marketPrice =
-                      onlineMarketDataItem.preMarketPrice
-                    dataStoreItem.onlineMarketData.marketChange =
-                      onlineMarketDataItem.preMarketChange
-                    dataStoreItem.onlineMarketData.marketChangePercent =
-                      onlineMarketDataItem.preMarketChangePercent
-                  }
-              }
-*/
+                        /*
+                                      if (postMarket) {
+                                        if ((onlineMarketDataItem.marketState == MarketState.POST.value
+                                                || onlineMarketDataItem.marketState == MarketState.POSTPOST.value
+                                                || onlineMarketDataItem.marketState == MarketState.PREPRE.value
+                                                || onlineMarketDataItem.marketState == MarketState.CLOSED.value)
+                                            && onlineMarketDataItem.postMarketPrice > 0.0
+                                        ) {
+                                          dataStoreItem.onlineMarketData.marketPrice =
+                                            onlineMarketDataItem.postMarketPrice
+                                          dataStoreItem.onlineMarketData.marketChange =
+                                            onlineMarketDataItem.postMarketChange
+                                          dataStoreItem.onlineMarketData.marketChangePercent =
+                                            onlineMarketDataItem.postMarketChangePercent
+                                        } else
+                                          if ((onlineMarketDataItem.marketState == MarketState.PRE.value)
+                                              && onlineMarketDataItem.preMarketPrice > 0.0
+                                          ) {
+                                            dataStoreItem.onlineMarketData.marketPrice =
+                                              onlineMarketDataItem.preMarketPrice
+                                            dataStoreItem.onlineMarketData.marketChange =
+                                              onlineMarketDataItem.preMarketChange
+                                            dataStoreItem.onlineMarketData.marketChangePercent =
+                                              onlineMarketDataItem.preMarketChangePercent
+                                          }
+                                      }
+                        */
                     }
                 }
 
@@ -1258,17 +1281,20 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     item.onlineMarketData.marketChangePercent
                 }
             }
+
             SortMode.ByName -> {
                 stockItems.sortedBy { item ->
                     item.stockDBdata.name.ifEmpty { item.stockDBdata.symbol }
                 }
             }
+
             SortMode.ByPurchaseprice -> {
                 stockItems.sortedByDescending { item ->
                     val (totalQuantity, totalPrice, totalFee) = getAssets(item.assets)
                     totalPrice + totalFee
                 }
             }
+
             SortMode.ByAssets -> {
                 stockItems.sortedByDescending { item ->
                     val (totalQuantity, totalPrice, totalFee) = getAssets(item.assets)
@@ -1285,6 +1311,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     }
                 }
             }
+
             SortMode.ByProfit -> {
                 stockItems.sortedByDescending { item ->
                     val (totalQuantity, totalPrice, totalFee) = getAssets(item.assets)
@@ -1301,6 +1328,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     }
                 }
             }
+
             SortMode.ByProfitPercentage -> {
                 stockItems.sortedByDescending { item ->
                     val (totalQuantity, totalPrice, totalFee) = getAssets(item.assets)
@@ -1312,11 +1340,13 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     }
                 }
             }
+
             SortMode.ByMarketCap -> {
                 stockItems.sortedByDescending { item ->
                     item.onlineMarketData.marketCap
                 }
             }
+
             SortMode.ByDividendPercentage -> {
                 stockItems.sortedByDescending { item ->
 
@@ -1333,6 +1363,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     }
                 }
             }
+
             SortMode.ByGroup -> {
                 // Sort the group items alphabetically.
                 stockItems.sortedBy { item ->
@@ -1357,6 +1388,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         }
                     }
             }
+
             SortMode.ByMarker -> {
                 // Sort the group items alphabetically.
                 stockItems.sortedBy { item ->
@@ -1372,6 +1404,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                         }
                     }
             }
+
             SortMode.ByActivity -> {
                 stockItems.sortedByDescending { item ->
 
@@ -1403,90 +1436,90 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
 
-/*
-[{
- "annualDividendRate": 4.5,
- "annualDividendYield": 0.04550971,
- "change": 0.060005188,
- "changeInPercent": 0.06068486,
- "currency": "USD",
- "isPostMarket": false,
- "lastTradePrice": 98.94,
- "name": "AbbVie Inc.",
- "position": {
-     "holdings": [{
-         "id": 5,
-         "price": 82.09,
-         "shares": 350.0,
+    /*
+    [{
+     "annualDividendRate": 4.5,
+     "annualDividendYield": 0.04550971,
+     "change": 0.060005188,
+     "changeInPercent": 0.06068486,
+     "currency": "USD",
+     "isPostMarket": false,
+     "lastTradePrice": 98.94,
+     "name": "AbbVie Inc.",
+     "position": {
+         "holdings": [{
+             "id": 5,
+             "price": 82.09,
+             "shares": 350.0,
+             "symbol": "ABBV"
+         }],
          "symbol": "ABBV"
-     }],
+     },
+     "properties": {
+         "alertAbove": 100.0,
+         "alertBelow": 0.0,
+         "notes": "",
+         "symbol": "ABBV"
+     },
+     "stockExchange": "NYQ",
      "symbol": "ABBV"
- },
- "properties": {
-     "alertAbove": 100.0,
-     "alertBelow": 0.0,
-     "notes": "",
-     "symbol": "ABBV"
- },
- "stockExchange": "NYQ",
- "symbol": "ABBV"
-}, {
- "annualDividendRate": 0.0,
- "annualDividendYield": 0.0,
- "change": -0.19000053,
-*/
+    }, {
+     "annualDividendRate": 0.0,
+     "annualDividendYield": 0.0,
+     "change": -0.19000053,
+    */
 
-/*
-{
-  "annualDividendRate": 0.0,
-  "annualDividendYield": 0.0,
-  "change": -0.010099411,
-  "changeInPercent": -0.107899696,
-  "currency": "USD",
-  "isPostMarket": true,
-  "lastTradePrice": 9.3499,
-  "name": "Dynavax Technologies Corporatio",
-  "position": {
-    "holdings": [
-      {
-        "id": 209,
-        "price": 5.17,
-        "shares": 3600.0002,
+    /*
+    {
+      "annualDividendRate": 0.0,
+      "annualDividendYield": 0.0,
+      "change": -0.010099411,
+      "changeInPercent": -0.107899696,
+      "currency": "USD",
+      "isPostMarket": true,
+      "lastTradePrice": 9.3499,
+      "name": "Dynavax Technologies Corporatio",
+      "position": {
+        "holdings": [
+          {
+            "id": 209,
+            "price": 5.17,
+            "shares": 3600.0002,
+            "symbol": "DVAX"
+          }
+        ],
         "symbol": "DVAX"
-      }
-    ],
-    "symbol": "DVAX"
-  },
-  "properties": {
-    "alertAbove": 0.0,
-    "alertBelow": 8.0,
-    "notes": "Verkauft 3000@9,24 am 26.6.2020",
-    "symbol": "DVAX"
-  },
-  "stockExchange": "NMS",
-  "symbol": "DVAX"
-},
-{
+      },
+      "properties": {
+        "alertAbove": 0.0,
+        "alertBelow": 8.0,
+        "notes": "Verkauft 3000@9,24 am 26.6.2020",
+        "symbol": "DVAX"
+      },
+      "stockExchange": "NMS",
+      "symbol": "DVAX"
+    },
+    {
 
-[{
-  "alertAbove": 11.0,
-  "alertBelow": 12.0,
-  "assets": [{
-      "price": 2.0,
-      "shares": 1.0
-  }],
-  "events": [{
-      "datetime": 1,
-      "note": "n1"
-      "title": "t1"
-      "type": 0
-  }],
-  "groupColor": 123,
-  "groupName": "a",
-  "notes": "notes1",
-  "symbol": "s1"
-}, {
-*/
+    [{
+      "alertAbove": 11.0,
+      "alertBelow": 12.0,
+      "assets": [{
+          "price": 2.0,
+          "shares": 1.0
+      }],
+      "events": [{
+          "datetime": 1,
+          "note": "n1"
+          "title": "t1"
+          "type": 0
+      }],
+      "groupColor": 123,
+      "groupName": "a",
+      "notes": "notes1",
+      "symbol": "s1"
+    }, {
+    */
 
     private fun importJSON(
         context: Context,
@@ -1542,9 +1575,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                             assetsObj.has("quantity") -> {
                                 assetsObj.getDouble("quantity")
                             }
+
                             assetsObj.has("shares") -> {
                                 assetsObj.getDouble("shares")
                             }
+
                             else -> {
                                 null
                             }
@@ -1597,9 +1632,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                                             assetsObj.has("fee") -> {
                                                 assetsObj.getDouble("fee")
                                             }
+
                                             assetsObj.has("commission") -> {
                                                 assetsObj.getDouble("commission")
                                             }
+
                                             else -> {
                                                 0.0
                                             }
@@ -2068,14 +2105,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                             "application/json", "text/x-json" -> {
                                 importJSON(context, text)
                             }
+
                             "text/csv",
                             "text/comma-separated-values",
                             "application/octet-stream" -> {
                                 importCSV(context, text)
                             }
+
                             "text/plain" -> {
                                 importText(context, text)
                             }
+
                             else -> {
                                 val msg = getApplication<Application>().getString(
                                     R.string.import_mimetype_error, type
@@ -2557,12 +2597,15 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             symbols.size > 5 -> {
                 logDebugAsync("Query ${symbols.size} stocks: ${symbollistStr},...")
             }
+
             symbols.size == 1 -> {
                 logDebugAsync("Query 1 stock: $symbollistStr")
             }
+
             symbols.isEmpty() -> {
                 logDebugAsync("No stocks to query.")
             }
+
             else -> {
                 logDebugAsync("Query ${symbols.size} stocks: $symbollistStr")
             }

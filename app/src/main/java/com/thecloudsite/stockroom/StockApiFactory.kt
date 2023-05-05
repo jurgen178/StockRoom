@@ -86,28 +86,33 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 //StockApiFactory to create the Yahoo Api
 object StockMarketDataApiFactory {
+    // https://query1.finance.yahoo.com/v1/test/getcrumb
+    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
+
     // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
+    // v7 erfordert crumb
     private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
     private var url = ""
 
     //Creating Auth Interceptor to add api_key query in front of all the requests.
-/*
-  private val authInterceptor = Interceptor { chain ->
-    val newUrl = chain.request()
-        .url()
-        .newBuilder()
-        .build()
+    /*
+      private val authInterceptor = Interceptor { chain ->
+        val newUrl = chain.request()
+            .url()
+            .newBuilder()
+            .build()
 
-    val newRequest = chain.request()
-        .newBuilder()
-        .url(newUrl)
-        .build()
+        val newRequest = chain.request()
+            .newBuilder()
+            .url(newUrl)
+            .build()
 
-    chain.proceed(newRequest)
-  }
-*/
+        chain.proceed(newRequest)
+      }
+    */
 
     // building http request url
     private fun retrofit(): Retrofit = Retrofit.Builder()
@@ -142,6 +147,51 @@ object StockMarketDataApiFactory {
     }
 
     var marketDataApi: YahooApiMarketData? = null
+}
+
+object YahooCrumbDataApiFactory {
+    // https://query1.finance.yahoo.com/v1/test/getcrumb
+    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
+
+    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
+    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
+    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
+
+    private var defaultUrl = "https://query1.finance.yahoo.com/v1/test/"
+    private var url = ""
+
+    // building http request url
+    private fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(
+            OkHttpClient().newBuilder()
+                .build()
+        )
+        .baseUrl(url)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
+
+    fun update(_url: String) {
+        if (url != _url) {
+            if (_url.isBlank()) {
+                url = ""
+                yahooCrumbDataApi = null
+            } else {
+                url = checkUrl(_url)
+                yahooCrumbDataApi = try {
+                    retrofit().create(YahooCrumbDataApiFactory::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+    }
+
+    init {
+        update(defaultUrl)
+    }
+
+    var yahooCrumbDataApi: YahooCrumbDataApiFactory? = null
 }
 
 //StockApiFactory to create the Coingecko Api

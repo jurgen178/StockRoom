@@ -55,6 +55,7 @@ data class MarketDataResult
 
 class StockMarketDataRepository(
     private val yahooApi: () -> YahooApiMarketData?,
+    private val yahooCrumbApi: () -> YahooApiCrumbData?,
     private val coingeckoApi: () -> CoingeckoApiMarketData?,
     private val coinpaprikaApi: () -> CoinpaprikaApiMarketData?,
     private val geminiApi: () -> GeminiApiMarketData?,
@@ -284,31 +285,37 @@ class StockMarketDataRepository(
                 } != null -> {
                     MarketState.REGULAR
                 }
+
                 onlineMarketDataResultList.find { data ->
                     data.marketState == MarketState.POST.value
                 } != null -> {
                     MarketState.POST
                 }
+
                 onlineMarketDataResultList.find { data ->
                     data.marketState == MarketState.POSTPOST.value
                 } != null -> {
                     MarketState.POSTPOST
                 }
+
                 onlineMarketDataResultList.find { data ->
                     data.marketState == MarketState.CLOSED.value
                 } != null -> {
                     MarketState.CLOSED
                 }
+
                 onlineMarketDataResultList.find { data ->
                     data.marketState == MarketState.PRE.value
                 } != null -> {
                     MarketState.PRE
                 }
+
                 onlineMarketDataResultList.find { data ->
                     data.marketState == MarketState.PREPRE.value
                 } != null -> {
                     MarketState.PREPRE
                 }
+
                 else -> {
                     MarketState.UNKNOWN
                 }
@@ -465,6 +472,13 @@ class StockMarketDataRepository(
         return result.first
     }
 
+    suspend fun getYahooCrumb() {
+
+        val api: YahooApiCrumbData = yahooCrumbApi() ?: return ""
+
+        queryYahooCrumbData(api)
+    }
+
     suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
 
         if (symbol.symbol.isNotEmpty()) {
@@ -511,7 +525,8 @@ class StockMarketDataRepository(
                 apiCall(
                     call = {
                         updateCounter()
-                        api.getStockDataAsync(symbolsToQuery.joinToString(","))
+                        val crumb: String = SharedRepository.yahooCrumb.value ?: "test1"
+                        api.getStockDataAsync(symbolsToQuery.joinToString(","), crumb)
                             .await()
                     }, errorMessage = "Error getting finance data."
                 )
@@ -533,6 +548,32 @@ class StockMarketDataRepository(
         } while (remainingSymbolsToQuery.isNotEmpty())
 
         return Pair(onlineMarketDataResultList, errorMsg)
+    }
+
+    private suspend fun queryYahooCrumbData(
+        api: YahooApiCrumbData
+    ) {
+
+        var errorMsg = ""
+        val dataResponse: YahooCrumbDataResponse? = try {
+            apiCall(
+                call = {
+                    updateCounter()
+                    api.getCrumbDataAsync()
+                        .await()
+                }, errorMessage = "Error getting finance data."
+            )
+        } catch (e: Exception) {
+            errorMsg += "StockMarketDataRepository.queryYahooCrumbData failed, Exception=$e\n"
+            Log.d("StockMarketDataRepository.queryYahooCrumbData failed", "Exception=$e")
+            null
+        }
+
+        // Add the result.
+        SharedRepository.yahooCrumb.postValue(
+            dataResponse?.crumbDataResponse?.result
+                ?: ""
+        )
     }
 
     private suspend fun queryCoingeckoStockData(
@@ -702,7 +743,8 @@ class StockMarketDataRepository(
                     apiCall(
                         call = {
                             updateCounter()
-                            api.getStockDataAsync(symbol)
+                            val crumb: String = SharedRepository.yahooCrumb.value ?: "test2"
+                            api.getStockDataAsync(symbol, crumb)
                                 .await()
                         },
                         errorMessage = "Error getting finance data."
