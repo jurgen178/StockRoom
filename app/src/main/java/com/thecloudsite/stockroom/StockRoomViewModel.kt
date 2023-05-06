@@ -209,8 +209,7 @@ object SharedRepository {
         get() = portfolios
 
     var yahooCrumb = MutableLiveData<String>()
-    val yahooCrumbLiveData: LiveData<String>
-        get() = yahooCrumb
+    val yahooCrumbLiveData: LiveData<String> = yahooCrumb
 
     var statsCounter = 0
     var statsCounterMax = 0
@@ -455,7 +454,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun getCrumb() = scope.launch {
-        withContext(Dispatchers.IO) {
+        //withContext(Dispatchers.IO) {
+        viewModelScope.launch {
             stockMarketDataRepository.getYahooCrumb()
         }
     }
@@ -465,8 +465,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch {
             try {
                 val listResult = MarsApi.retrofitService.getPhotos()
+                val a = listResult
             } catch (e: Exception) {
-
+                val a = e
             }
         }
     }

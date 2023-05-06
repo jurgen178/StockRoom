@@ -312,9 +312,10 @@ object StockRawMarketDataApiFactory {
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
-    .baseUrl("https://query1.finance.yahoo.com/v1/test/")
+    .baseUrl("https://android-kotlin-fun-mars-server.appspot.com")
     .build()
-
+// https://android-kotlin-fun-mars-server.appspot.com
+// https://query1.finance.yahoo.com/v1/test/
 object MarsApi {
     val retrofitService : MarsApiService by lazy {
         retrofit.create(MarsApiService::class.java) }
@@ -328,13 +329,21 @@ object YahooCrumbDataApiFactory {
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
-    private var defaultUrl = "https://query1.finance.yahoo.com/v1/"
+    private var defaultUrl = "https://query1.finance.yahoo.com/v1/test/"
     private var url = ""
 
     // building http request url
     private fun retrofit(): Retrofit = Retrofit.Builder()
         .client(
             OkHttpClient().newBuilder()
+                .addInterceptor { chain ->
+                    val original = chain.request()
+                    val newRequest = original
+                        .newBuilder()
+                        .addHeader("Accept", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+                        .build()
+                    chain.proceed(newRequest)
+                }
                 .build()
         )
         .baseUrl(url)

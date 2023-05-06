@@ -24,6 +24,7 @@ import com.squareup.moshi.JsonClass
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -822,12 +823,15 @@ interface YahooApiCrumbData {
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
-    @GET("test/getcrumb")
+    //@Headers("Content-Type:application/json; charset=UTF-8")
+    //@Headers("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+    @GET("getcrumb")
     fun getCrumbDataAsync(): Deferred<Response<String>>
 }
 
 interface MarsApiService {
-    @GET("getcrumb")
+    // https://android-kotlin-fun-mars-server.appspot.com/photos
+    @GET("photos")
     suspend fun getPhotos(): String
 }
 
