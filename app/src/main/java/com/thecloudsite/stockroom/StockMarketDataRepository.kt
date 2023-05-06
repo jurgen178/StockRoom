@@ -484,6 +484,19 @@ class StockMarketDataRepository(
         )
     }
 
+    suspend fun getYahooCookie() {
+        // Get Raw data from the server.
+        val yahooFinancePageDataRepository: YahooFinancePageDataRepository =
+            YahooFinancePageDataRepository { YahooFinancePageApiFactory.yahooFinancePageDataApi }
+
+        val crumbData: String = yahooFinancePageDataRepository.getCookieData()
+
+        // Add the result.
+        SharedRepository.yahooCrumb.postValue(
+            crumbData
+        )
+    }
+
     suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
 
         if (symbol.symbol.isNotEmpty()) {
@@ -763,6 +776,38 @@ class StockMarketDataRepository(
                 } catch (e: Exception) {
                     Log.d(
                         "YahooCrumbDataRepository.getCrumbData() failed",
+                        "Exception=$e"
+                    )
+                    null
+                }
+
+                return quoteResponse ?: ""
+            }
+
+            return ""
+        }
+    }
+
+    class YahooFinancePageDataRepository(private val api: () -> YahooApiFinancePageData?) :
+        BaseRepository() {
+
+        suspend fun getCookieData(): String {
+
+            val api: YahooApiFinancePageData? = api()
+
+            if (api != null) {
+
+                val quoteResponse: String? = try {
+                    apiCall(
+                        call = {
+                            api.getWebDataAsync()
+                                .await()
+                        },
+                        errorMessage = "Error getting finance web data."
+                    )
+                } catch (e: Exception) {
+                    Log.d(
+                        "YahooFinancePageDataRepository.getWebDataAsync() failed",
                         "Exception=$e"
                     )
                     null

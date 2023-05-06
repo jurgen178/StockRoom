@@ -454,7 +454,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun getCrumb() = scope.launch {
-        //withContext(Dispatchers.IO) {
+        viewModelScope.launch {
+            stockMarketDataRepository.getYahooCookie()
+        }
         viewModelScope.launch {
             stockMarketDataRepository.getYahooCrumb()
         }
@@ -465,6 +467,17 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch {
             try {
                 val listResult = MarsApi.retrofitService.getPhotos()
+                val a = listResult
+            } catch (e: Exception) {
+                val a = e
+            }
+        }
+    }
+
+    fun getYahooCookies() {
+        viewModelScope.launch {
+            try {
+                val listResult = YahooCookieApi.retrofitYahooCookieService.getCookie()
                 val a = listResult
             } catch (e: Exception) {
                 val a = e

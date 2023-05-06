@@ -829,6 +829,45 @@ interface YahooApiCrumbData {
     fun getCrumbDataAsync(): Deferred<Response<String>>
 }
 
+interface YahooApiFinancePageData {
+    // https://finance.yahoo.com
+
+    //@Headers("Content-Type:application/json; charset=UTF-8")
+    //@Headers("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+    @GET(" ")
+    fun getWebDataAsync(): Deferred<Response<String>>
+}
+
+interface YahooCookieApiService {
+    // https://android-kotlin-fun-mars-server.appspot.com/photos
+    @GET(" ")
+    suspend fun getCookie(): String
+}
+
+
+/*
+preflight () {
+    curl --silent --output /dev/null --cookie-jar "$COOKIE_FILE" "https://finance.yahoo.com" \
+    -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,* /*;q=0.8"
+    curl --silent -b "$COOKIE_FILE" "https://query1.finance.yahoo.com/v1/test/getcrumb" \
+    > "$CRUMB_FILE"
+}
+
+-b name=data
+--cookie name=data	Send the data to the HTTP server as a cookie. It is
+supposedly the data previously received from the server in a "Set-Cookie:" line.
+The data should be in the format "NAME1=VALUE1; NAME2=VALUE2".
+
+-c filename
+--cookie-jar file name	Save cookies to file after a completed operation.
+Curl writes all cookies previously read from a specified file as well
+as all cookies received from remote server(s). If no cookies are known,
+no file will be written. To write to stdout, set the file name to a single dash, "-".
+ */
+
+*/
+
+
 interface MarsApiService {
     // https://android-kotlin-fun-mars-server.appspot.com/photos
     @GET("photos")
