@@ -863,6 +863,9 @@ The data should be in the format "NAME1=VALUE1; NAME2=VALUE2".
 Curl writes all cookies previously read from a specified file as well
 as all cookies received from remote server(s). If no cookies are known,
 no file will be written. To write to stdout, set the file name to a single dash, "-".
+
+.addHeader("Cookie", "cookie-name=cookie-value")
+
  */
 
 */

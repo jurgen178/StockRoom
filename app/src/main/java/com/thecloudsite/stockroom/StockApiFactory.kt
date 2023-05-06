@@ -344,7 +344,7 @@ class CookiesInterceptor: Interceptor {
         val response = chain.proceed(requestBuilder.build())
         response.headers
             .toMultimap()[SET_COOKIE_KEY]
-            ?.filter { !it.contains("HttpOnly") }
+            //?.filter { !it.contains("HttpOnly") }
             ?.getOrNull(0)
             ?.also {
                 cookie = it
