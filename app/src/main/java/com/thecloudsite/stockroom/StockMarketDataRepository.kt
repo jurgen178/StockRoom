@@ -471,31 +471,31 @@ class StockMarketDataRepository(
         return result.first
     }
 
-    suspend fun getYahooCrumb() {
-        // Get Raw data from the server.
-        val yahooCrumbDataRepository: YahooCrumbDataRepository =
-            YahooCrumbDataRepository { YahooCrumbDataApiFactory.yahooCrumbDataApi }
+//    suspend fun getYahooCrumb() {
+//        // Get Raw data from the server.
+//        val yahooCrumbDataRepository: YahooCrumbDataRepository =
+//            YahooCrumbDataRepository { YahooCrumbDataApiFactory.yahooCrumbDataApi }
+//
+//        val crumbData: String = yahooCrumbDataRepository.getCrumbData()
+//
+//        // Add the result.
+//        SharedRepository.yahooCrumb.postValue(
+//            crumbData
+//        )
+//    }
 
-        val crumbData: String = yahooCrumbDataRepository.getCrumbData()
-
-        // Add the result.
-        SharedRepository.yahooCrumb.postValue(
-            crumbData
-        )
-    }
-
-    suspend fun getYahooCookie() {
-        // Get Raw data from the server.
-        val yahooFinancePageDataRepository: YahooFinancePageDataRepository =
-            YahooFinancePageDataRepository { YahooFinancePageApiFactory.yahooFinancePageDataApi }
-
-        val crumbData: String = yahooFinancePageDataRepository.getCookieData()
-
-        // Add the result.
-        SharedRepository.yahooCrumb.postValue(
-            crumbData
-        )
-    }
+//    suspend fun getYahooCookie() {
+//        // Get Raw data from the server.
+//        val yahooFinancePageDataRepository: YahooFinancePageDataRepository =
+//            YahooFinancePageDataRepository { YahooFinancePageApiFactory.yahooFinancePageDataApi }
+//
+//        val crumbData: String = yahooFinancePageDataRepository.getCookieData()
+//
+//        // Add the result.
+//        SharedRepository.yahooCrumb.postValue(
+//            crumbData
+//        )
+//    }
 
     suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
 
@@ -526,44 +526,52 @@ class StockMarketDataRepository(
         // Get blockSize symbol data at a time.
         val blockSize = 32
         var errorMsg = ""
-
-        // Get online data in blocks.
         val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
-        var remainingSymbolsToQuery = symbols
 
-        do {
-            // Get the first number of blockSize symbols.
-            val symbolsToQuery: List<String> = remainingSymbolsToQuery
-                .take(blockSize)
-                .map { symbol ->
-                    symbol.symbol
+        val crumb: String = SharedRepository.yahooCrumb.value ?: ""
+
+        if (crumb.isNotEmpty()) {
+
+            // Get online data in blocks.
+            var remainingSymbolsToQuery = symbols
+
+            do {
+                // Get the first number of blockSize symbols.
+                val symbolsToQuery: List<String> = remainingSymbolsToQuery
+                    .take(blockSize)
+                    .map { symbol ->
+                        symbol.symbol
+                    }
+
+                val quoteResponse: YahooResponse? = try {
+                    apiCall(
+                        call = {
+                            updateCounter()
+                            api.getStockDataAsync(symbolsToQuery.joinToString(","), crumb)
+                                .await()
+                        }, errorMessage = "Error getting finance data."
+                    )
+                } catch (e: Exception) {
+                    errorMsg += "StockMarketDataRepository.queryStockData failed, Exception=$e\n"
+                    Log.d("StockMarketDataRepository.queryStockData failed", "Exception=$e")
+                    null
                 }
 
-            val quoteResponse: YahooResponse? = try {
-                apiCall(
-                    call = {
-                        updateCounter()
-                        val crumb: String = SharedRepository.yahooCrumb.value ?: "test1"
-                        api.getStockDataAsync(symbolsToQuery.joinToString(","), crumb)
-                            .await()
-                    }, errorMessage = "Error getting finance data."
+                // Add the result.
+                onlineMarketDataResultList.addAll(
+                    quoteResponse?.quoteResponse?.result
+                        ?: emptyList()
                 )
-            } catch (e: Exception) {
-                errorMsg += "StockMarketDataRepository.queryStockData failed, Exception=$e\n"
-                Log.d("StockMarketDataRepository.queryStockData failed", "Exception=$e")
-                null
-            }
 
-            // Add the result.
-            onlineMarketDataResultList.addAll(
-                quoteResponse?.quoteResponse?.result
-                    ?: emptyList()
-            )
+                // Remove the queried symbols.
+                remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
 
-            // Remove the queried symbols.
-            remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
-
-        } while (remainingSymbolsToQuery.isNotEmpty())
+            } while (remainingSymbolsToQuery.isNotEmpty())
+        }
+        else
+        {
+            errorMsg = "Empty crumb value."
+        }
 
         return Pair(onlineMarketDataResultList, errorMsg)
     }
@@ -728,14 +736,14 @@ class StockMarketDataRepository(
         suspend fun getStockRawData(symbol: String): String {
 
             val api: YahooApiRawMarketData? = api()
+            val crumb: String = SharedRepository.yahooCrumb.value ?: ""
 
-            if (symbol.isNotEmpty() && api != null) {
+            if (symbol.isNotEmpty() && crumb.isNotEmpty() && api != null) {
 
                 val quoteResponse: String? = try {
                     apiCall(
                         call = {
                             updateCounter()
-                            val crumb: String = SharedRepository.yahooCrumb.value ?: "test2"
                             api.getStockDataAsync(symbol, crumb)
                                 .await()
                         },

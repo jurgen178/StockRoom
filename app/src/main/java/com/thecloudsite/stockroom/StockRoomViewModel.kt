@@ -482,6 +482,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             try {
                 val listResult = YahooCookieApi.retrofitYahooCookieService.getCookie()
                 val a = listResult
+
+                SharedRepository.yahooCookie.postValue(
+                    "test"
+                )
+
             } catch (e: Exception) {
                 val a = e
             }
@@ -491,8 +496,10 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     fun getYahooCrumb() {
         viewModelScope.launch {
             try {
-                val listResult = YahooCrumbApi.retrofitYahooCrumbService.getCrumb()
-                val a = listResult
+                val crumb = YahooCrumbApi.retrofitYahooCrumbService.getCrumb()
+
+                SharedRepository.yahooCrumb.postValue(crumb)
+
             } catch (e: Exception) {
                 val a = e
             }

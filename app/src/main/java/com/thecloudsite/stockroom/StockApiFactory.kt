@@ -18,6 +18,9 @@ package com.thecloudsite.stockroom
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.thecloudsite.stockroom.utils.checkUrl
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -85,6 +88,26 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 // https://api.binance.com/api/v3/ticker/price
 
+//
+private val yahooCookieJar: YahooCookieJar by lazy {
+    YahooCookieJar()
+}
+
+// Cookie from https://finance.yahoo.com
+// Get crumb with the cookie https://query1.finance.yahoo.com/v1/test/getcrumb
+// With cookie and crumb, get market data https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
+class YahooCookieJar : CookieJar {
+
+    private var cookieJar : List<Cookie> = listOf()
+
+    override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+        cookieJar = cookies
+    }
+
+    override fun loadForRequest(url: HttpUrl): List<Cookie> {
+        return cookieJar
+    }
+}
 
 //StockApiFactory to create the Yahoo Api
 object StockMarketDataApiFactory {
@@ -96,7 +119,7 @@ object StockMarketDataApiFactory {
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 
     // v7 erfordert crumb
-    private var defaultUrl = "https://query2.finance.yahoo.com/v6/finance/"
+    private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
     private var url = ""
 
     //Creating Auth Interceptor to add api_key query in front of all the requests.
@@ -120,6 +143,7 @@ object StockMarketDataApiFactory {
     private fun retrofit(): Retrofit = Retrofit.Builder()
         .client(
             OkHttpClient().newBuilder()
+                .cookieJar(yahooCookieJar)
 //      .addInterceptor(authInterceptor)
                 .build()
         )
@@ -280,6 +304,7 @@ object StockRawMarketDataApiFactory {
     private fun retrofit(): Retrofit = Retrofit.Builder()
         .client(
             OkHttpClient().newBuilder()
+                .cookieJar(yahooCookieJar)
 //      .addInterceptor(authInterceptor)
                 .build()
         )
@@ -323,41 +348,6 @@ object MarsApi {
         retrofit.create(MarsApiService::class.java) }
 }
 
-class CookiesInterceptor: Interceptor {
-
-    companion object {
-        const val COOKIE_KEY = "Cookie"
-        const val SET_COOKIE_KEY = "Set-Cookie"
-    }
-
-    fun clearCookie() {
-        cookie = null
-    }
-
-    private var cookie: String? = null
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        val requestBuilder = request.newBuilder()
-        cookie?.let { requestBuilder.addHeader(COOKIE_KEY, it) }
-
-        val response = chain.proceed(requestBuilder.build())
-        response.headers
-            .toMultimap()[SET_COOKIE_KEY]
-            //?.filter { !it.contains("HttpOnly") }
-            ?.getOrNull(0)
-            ?.also {
-                cookie = it
-            }
-
-        return response
-    }
-}
-
-private val cookiesInterceptor: CookiesInterceptor by lazy {
-    CookiesInterceptor()
-}
-
 private val retrofitYahooCookie = Retrofit.Builder()
     .client(
         OkHttpClient().newBuilder()
@@ -376,6 +366,7 @@ private val retrofitYahooCookie = Retrofit.Builder()
                     .build()
                 chain.proceed(newRequest)
             }
+            .cookieJar(yahooCookieJar)
             .build()
     )
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -389,58 +380,11 @@ object YahooCookieApi {
         retrofitYahooCookie.create(YahooCookieApiService::class.java) }
 }
 
-class CrumbInterceptor: Interceptor {
-
-    companion object {
-        const val COOKIE_KEY = "Cookie"
-        const val SET_COOKIE_KEY = "Set-Cookie"
-    }
-
-    fun clearCookie() {
-        cookie = null
-    }
-
-    private var cookie: String? = null
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        val requestBuilder = request.newBuilder()
-        cookie?.let { requestBuilder.addHeader(COOKIE_KEY, it) }
-
-        val response = chain.proceed(requestBuilder.build())
-        response.headers
-            .toMultimap()[SET_COOKIE_KEY]
-            //?.filter { !it.contains("HttpOnly") }
-            ?.getOrNull(0)
-            ?.also {
-                cookie = it
-            }
-
-        return response
-    }
-}
-/*
-override fun intercept(chain: Chain): Response {
-    val crumb = appPreferences.getCrumb()
-    val builder = chain.request().newBuilder()
-    builder
-        .removeHeader("Accept")
-        .removeHeader("Accept-Encoding")
-        .addHeader(
-            "Accept",
-            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,* / *;q=0.8,application/signed-exchange;v=b3;q=0.7"
-        )
-        .addHeader("Accept-Encoding", "gzip, deflate, br")
-*/
-
-private val crumbInterceptor: CookiesInterceptor by lazy {
-    CookiesInterceptor()
-}
-
 private val retrofitYahooCrumb = Retrofit.Builder()
     .client(
         OkHttpClient().newBuilder()
-            .addInterceptor(crumbInterceptor)
+            //.addInterceptor(crumbInterceptor)
+            .cookieJar(yahooCookieJar)
             .build()
     )
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -452,117 +396,6 @@ private val retrofitYahooCrumb = Retrofit.Builder()
 object YahooCrumbApi {
     val retrofitYahooCrumbService : YahooCrumbApiService by lazy {
         retrofitYahooCrumb.create(YahooCrumbApiService::class.java) }
-}
-
-object YahooCrumbDataApiFactory {
-    // https://query1.finance.yahoo.com/v1/test/getcrumb
-    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
-
-    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
-    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
-    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
-
-    private var defaultUrl = "https://query1.finance.yahoo.com/v1/test/"
-    private var url = ""
-
-    // building http request url
-    private fun retrofit(): Retrofit = Retrofit.Builder()
-        .client(
-            OkHttpClient().newBuilder()
-                .addInterceptor(cookiesInterceptor)
-                .addInterceptor { chain ->
-                    val original = chain.request()
-                    val newRequest = original
-                        .newBuilder()
-                        //.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-//                        .addHeader("Host", "finance.yahoo.com")
-//                        .addHeader("User-Agent", "Android/10")
-//                        .addHeader("Accept", "text/html")
-//                        .addHeader("Accept-Language", "en")
-                        .build()
-                    chain.proceed(newRequest)
-                }
-                .build()
-        )
-        .baseUrl(url)
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .build()
-
-    fun update(_url: String) {
-        if (url != _url) {
-            if (_url.isBlank()) {
-                url = ""
-                yahooCrumbDataApi = null
-            } else {
-                url = checkUrl(_url)
-                yahooCrumbDataApi = try {
-                    retrofit().create(YahooApiCrumbData::class.java)
-                } catch (e: Exception) {
-                    null
-                }
-            }
-        }
-    }
-
-    init {
-        update(defaultUrl)
-    }
-
-    var yahooCrumbDataApi: YahooApiCrumbData? = null
-}
-
-object YahooFinancePageApiFactory {
-    // https://finance.yahoo.com
-
-    private var defaultUrl = "https://finance.yahoo.com"
-    var url = ""
-
-    // building http request url
-    private fun retrofit(): Retrofit = Retrofit.Builder()
-        .client(
-            OkHttpClient().newBuilder()
-                .addInterceptor(cookiesInterceptor)
-                .addInterceptor { chain ->
-                    val original = chain.request()
-                    val newRequest = original
-                        .newBuilder()
-                        //.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-//                        .addHeader("Host", "finance.yahoo.com")
-//                        .addHeader("User-Agent", "Android/10")
-//                        .addHeader("Accept", "text/html")
-//                        .addHeader("Accept-Language", "en")
-                        .build()
-                    chain.proceed(newRequest)
-                }
-                .build()
-        )
-        .baseUrl(url)
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .build()
-
-    fun update(_url: String) {
-        if (url != _url) {
-            if (_url.isBlank()) {
-                url = ""
-                yahooFinancePageDataApi = null
-            } else {
-                url = checkUrl(_url)
-                yahooFinancePageDataApi = try {
-                    retrofit().create(YahooApiFinancePageData::class.java)
-                } catch (e: Exception) {
-                    null
-                }
-            }
-        }
-    }
-
-    init {
-        update(defaultUrl)
-    }
-
-    var yahooFinancePageDataApi: YahooApiFinancePageData? = null
 }
 
 object CoingeckoSymbolsApiFactory {
@@ -717,6 +550,7 @@ object StockYahooChartDataApiFactory {
     private fun retrofit(): Retrofit = Retrofit.Builder()
         .client(
             OkHttpClient().newBuilder()
+                .cookieJar(yahooCookieJar)
 //      .addInterceptor(authInterceptor)
                 .build()
         )

@@ -414,18 +414,18 @@ class MainActivity : AppCompatActivity() {
             invalidateOptionsMenu()
         })
 
+        // Start getting the cookies and the crumb.
         stockRoomViewModel.getYahooCookie()
-        stockRoomViewModel.getMarsPhotos()
+        //stockRoomViewModel.getMarsPhotos()
 
         // Get the crumb value with the acquired cookie.
         SharedRepository.yahooCookieLiveData.observe(this, Observer {
-            val a = it
             stockRoomViewModel.getYahooCrumb()
         })
 
         // Crumb is ready for use.
         SharedRepository.yahooCrumbLiveData.observe(this, Observer {
-            val a = it
+            stockRoomViewModel.runOnlineTask()
         })
 
         /*
