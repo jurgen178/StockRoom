@@ -839,9 +839,15 @@ interface YahooApiFinancePageData {
 }
 
 interface YahooCookieApiService {
-    // https://android-kotlin-fun-mars-server.appspot.com/photos
+    // https://finance.yahoo.com
     @GET(" ")
     suspend fun getCookie(): String
+}
+
+interface YahooCrumbApiService {
+    // https://query1.finance.yahoo.com/v1/test/getcrumb
+    @GET("getcrumb")
+    suspend fun getCrumb(): String
 }
 
 

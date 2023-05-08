@@ -361,7 +361,21 @@ private val cookiesInterceptor: CookiesInterceptor by lazy {
 private val retrofitYahooCookie = Retrofit.Builder()
     .client(
         OkHttpClient().newBuilder()
-            .addInterceptor(cookiesInterceptor)
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val newRequest = original
+                    .newBuilder()
+                    .removeHeader("Accept")
+                    .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+                    .removeHeader("Accept-Encoding")
+                    .addHeader("Accept-Encoding", "gzip, deflate, br")
+//                        .addHeader("Host", "finance.yahoo.com")
+//                        .addHeader("User-Agent", "Android/10")
+//                        .addHeader("Accept", "text/html")
+//                        .addHeader("Accept-Language", "en")
+                    .build()
+                chain.proceed(newRequest)
+            }
             .build()
     )
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -373,6 +387,71 @@ private val retrofitYahooCookie = Retrofit.Builder()
 object YahooCookieApi {
     val retrofitYahooCookieService : YahooCookieApiService by lazy {
         retrofitYahooCookie.create(YahooCookieApiService::class.java) }
+}
+
+class CrumbInterceptor: Interceptor {
+
+    companion object {
+        const val COOKIE_KEY = "Cookie"
+        const val SET_COOKIE_KEY = "Set-Cookie"
+    }
+
+    fun clearCookie() {
+        cookie = null
+    }
+
+    private var cookie: String? = null
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        val requestBuilder = request.newBuilder()
+        cookie?.let { requestBuilder.addHeader(COOKIE_KEY, it) }
+
+        val response = chain.proceed(requestBuilder.build())
+        response.headers
+            .toMultimap()[SET_COOKIE_KEY]
+            //?.filter { !it.contains("HttpOnly") }
+            ?.getOrNull(0)
+            ?.also {
+                cookie = it
+            }
+
+        return response
+    }
+}
+/*
+override fun intercept(chain: Chain): Response {
+    val crumb = appPreferences.getCrumb()
+    val builder = chain.request().newBuilder()
+    builder
+        .removeHeader("Accept")
+        .removeHeader("Accept-Encoding")
+        .addHeader(
+            "Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,* / *;q=0.8,application/signed-exchange;v=b3;q=0.7"
+        )
+        .addHeader("Accept-Encoding", "gzip, deflate, br")
+*/
+
+private val crumbInterceptor: CookiesInterceptor by lazy {
+    CookiesInterceptor()
+}
+
+private val retrofitYahooCrumb = Retrofit.Builder()
+    .client(
+        OkHttpClient().newBuilder()
+            .addInterceptor(crumbInterceptor)
+            .build()
+    )
+    .addConverterFactory(ScalarsConverterFactory.create())
+    .baseUrl("https://query1.finance.yahoo.com/v1/test/")
+    .build()
+
+// https://android-kotlin-fun-mars-server.appspot.com
+// https://query1.finance.yahoo.com/v1/test/
+object YahooCrumbApi {
+    val retrofitYahooCrumbService : YahooCrumbApiService by lazy {
+        retrofitYahooCrumb.create(YahooCrumbApiService::class.java) }
 }
 
 object YahooCrumbDataApiFactory {

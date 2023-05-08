@@ -208,6 +208,9 @@ object SharedRepository {
     val portfoliosLiveData: LiveData<HashSet<String>>
         get() = portfolios
 
+    var yahooCookie = MutableLiveData<String>()
+    val yahooCookieLiveData: LiveData<String> = yahooCookie
+
     var yahooCrumb = MutableLiveData<String>()
     val yahooCrumbLiveData: LiveData<String> = yahooCrumb
 
@@ -453,15 +456,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         return Pair(onlineDataDelay, marketState)
     }
 
-    fun getCrumb() = scope.launch {
-        viewModelScope.launch {
-            stockMarketDataRepository.getYahooCookie()
-        }
-        viewModelScope.launch {
-            stockMarketDataRepository.getYahooCrumb()
-        }
-    }
-
     // https://developer.android.com/codelabs/basic-android-kotlin-training-getting-data-internet#5
     fun getMarsPhotos() {
         viewModelScope.launch {
@@ -474,10 +468,30 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun getYahooCookies() {
+//    fun getYahooCrumb() = scope.launch {
+//        viewModelScope.launch {
+//            stockMarketDataRepository.getYahooCookie()
+//        }
+//        viewModelScope.launch {
+//            stockMarketDataRepository.getYahooCrumb()
+//        }
+//    }
+
+    fun getYahooCookie() {
         viewModelScope.launch {
             try {
                 val listResult = YahooCookieApi.retrofitYahooCookieService.getCookie()
+                val a = listResult
+            } catch (e: Exception) {
+                val a = e
+            }
+        }
+    }
+
+    fun getYahooCrumb() {
+        viewModelScope.launch {
+            try {
+                val listResult = YahooCrumbApi.retrofitYahooCrumbService.getCrumb()
                 val a = listResult
             } catch (e: Exception) {
                 val a = e
