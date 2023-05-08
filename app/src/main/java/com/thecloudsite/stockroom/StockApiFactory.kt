@@ -96,10 +96,13 @@ class YahooCookieJar : CookieJar {
 
     private var cookieJar : List<Cookie> = listOf()
 
+    // https://finance.yahoo.com has cookies and calls saveFromResponse.
+    // https://query... do not have cookies, so saveFromResponse is not called.
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         cookieJar = cookies
     }
 
+    // Add cookies from cookieJar to each request.
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
         return cookieJar
     }
