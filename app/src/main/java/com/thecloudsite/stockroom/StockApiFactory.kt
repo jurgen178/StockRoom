@@ -88,10 +88,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 // https://api.binance.com/api/v3/ticker/price
 
-//
-private val yahooCookieJar: YahooCookieJar by lazy {
-    YahooCookieJar()
-}
 
 // Cookie from https://finance.yahoo.com
 // Get crumb with the cookie https://query1.finance.yahoo.com/v1/test/getcrumb
@@ -108,6 +104,11 @@ class YahooCookieJar : CookieJar {
         return cookieJar
     }
 }
+
+private val yahooCookieJar: YahooCookieJar by lazy {
+    YahooCookieJar()
+}
+
 
 //StockApiFactory to create the Yahoo Api
 object StockMarketDataApiFactory {
