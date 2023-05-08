@@ -841,7 +841,7 @@ interface YahooApiFinancePageData {
 interface YahooCookieApiService {
     // https://finance.yahoo.com
     @GET(" ")
-    suspend fun getCookie(): String
+    suspend fun getCookie()
 }
 
 interface YahooCrumbApiService {

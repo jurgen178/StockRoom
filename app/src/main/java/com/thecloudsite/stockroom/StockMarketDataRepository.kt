@@ -471,32 +471,6 @@ class StockMarketDataRepository(
         return result.first
     }
 
-//    suspend fun getYahooCrumb() {
-//        // Get Raw data from the server.
-//        val yahooCrumbDataRepository: YahooCrumbDataRepository =
-//            YahooCrumbDataRepository { YahooCrumbDataApiFactory.yahooCrumbDataApi }
-//
-//        val crumbData: String = yahooCrumbDataRepository.getCrumbData()
-//
-//        // Add the result.
-//        SharedRepository.yahooCrumb.postValue(
-//            crumbData
-//        )
-//    }
-
-//    suspend fun getYahooCookie() {
-//        // Get Raw data from the server.
-//        val yahooFinancePageDataRepository: YahooFinancePageDataRepository =
-//            YahooFinancePageDataRepository { YahooFinancePageApiFactory.yahooFinancePageDataApi }
-//
-//        val crumbData: String = yahooFinancePageDataRepository.getCookieData()
-//
-//        // Add the result.
-//        SharedRepository.yahooCrumb.postValue(
-//            crumbData
-//        )
-//    }
-
     suspend fun getStockData(symbol: StockSymbol): OnlineMarketData? {
 
         if (symbol.symbol.isNotEmpty()) {

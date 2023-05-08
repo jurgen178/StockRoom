@@ -208,8 +208,8 @@ object SharedRepository {
     val portfoliosLiveData: LiveData<HashSet<String>>
         get() = portfolios
 
-    var yahooCookie = MutableLiveData<String>()
-    val yahooCookieLiveData: LiveData<String> = yahooCookie
+    var yahooCookieReady = MutableLiveData<Boolean>()
+    val yahooCookieReadyLiveData: LiveData<Boolean> = yahooCookieReady
 
     var yahooCrumb = MutableLiveData<String>()
     val yahooCrumbLiveData: LiveData<String> = yahooCrumb
@@ -480,12 +480,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     fun getYahooCookie() {
         viewModelScope.launch {
             try {
-                val listResult = YahooCookieApi.retrofitYahooCookieService.getCookie()
-                val a = listResult
+                YahooCookieApi.retrofitYahooCookieService.getCookie()
 
-                SharedRepository.yahooCookie.postValue(
-                    "test"
-                )
+                SharedRepository.yahooCookieReady.postValue(true)
 
             } catch (e: Exception) {
                 val a = e
