@@ -142,6 +142,22 @@ class MainActivity : AppCompatActivity() {
             stockRoomViewModel.logDebug("Network is offline.")
         }
 
+        // Start getting the cookies and the crumb.
+        stockRoomViewModel.getYahooCookie()
+        //stockRoomViewModel.getMarsPhotos()
+
+        // Get the crumb value with the acquired cookie.
+        SharedRepository.yahooCookieReadyLiveData.observe(this, Observer {
+            if (it) {
+                stockRoomViewModel.getYahooCrumb()
+            }
+        })
+
+        // Crumb is ready for use.
+        SharedRepository.yahooCrumbLiveData.observe(this, Observer {
+            stockRoomViewModel.runOnlineTaskNow()
+        })
+
         filterDataViewModel = ViewModelProvider(this).get(FilterDataViewModel::class.java)
 
         /*
@@ -412,22 +428,6 @@ class MainActivity : AppCompatActivity() {
         // Update the menu check marks when sorting is changed.
         stockRoomViewModel.sortingLiveData.observe(this, Observer {
             invalidateOptionsMenu()
-        })
-
-        // Start getting the cookies and the crumb.
-        stockRoomViewModel.getYahooCookie()
-        //stockRoomViewModel.getMarsPhotos()
-
-        // Get the crumb value with the acquired cookie.
-        SharedRepository.yahooCookieReadyLiveData.observe(this, Observer {
-            if (it) {
-                stockRoomViewModel.getYahooCrumb()
-            }
-        })
-
-        // Crumb is ready for use.
-        SharedRepository.yahooCrumbLiveData.observe(this, Observer {
-            stockRoomViewModel.runOnlineTaskNow()
         })
 
         /*
