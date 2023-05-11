@@ -485,7 +485,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 SharedRepository.yahooCookieReady.postValue(true)
 
             } catch (e: Exception) {
-                val a = e
             }
         }
     }
@@ -498,7 +497,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                 SharedRepository.yahooCrumb.postValue(crumb)
 
             } catch (e: Exception) {
-                val a = e
             }
         }
     }
