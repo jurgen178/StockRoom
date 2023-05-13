@@ -69,6 +69,7 @@ android {
         // Adds exported schema location as test app assets.
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
+    namespace 'com.thecloudsite.stockroom'
 }
 
 repositories {
@@ -81,21 +82,21 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0-beta01'
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.core:core-ktx:1.9.0"
 
     // Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-config-ktx:21.3.0'
+    implementation 'com.google.firebase:firebase-config-ktx:21.4.0'
     implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.6'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.7'
     // Add the dependency for the Performance Monitoring library.
-    implementation 'com.google.firebase:firebase-perf:20.3.1'
+    implementation 'com.google.firebase:firebase-perf:20.3.2'
     // Add the Realtime Database SDK.
-    implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     // Add the dependencies for FirebaseUI.
     //implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
