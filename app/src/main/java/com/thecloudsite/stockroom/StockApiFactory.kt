@@ -21,9 +21,7 @@ import com.thecloudsite.stockroom.utils.checkUrl
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -121,6 +119,9 @@ object StockMarketDataApiFactory {
     // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
     // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
     // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
+    // https://query1.finance.yahoo.com/v7/finance/quote?fields=symbol,regularMarketPrice,regularMarketChange,regularMarketChangePercent,regularMarketVolume,shortName,longName
+
+    // https://query1.finance.yahoo.com/v11/finance/quoteSummary/AMZN?modules=financialData
 
     // v7 erfordert crumb
     private var defaultUrl = "https://query2.finance.yahoo.com/v7/finance/"
