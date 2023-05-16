@@ -484,9 +484,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         viewModelScope.launch {
             try {
-//https://github.com/premnirmal/StockTicker/commit/2d3a80c625e0d36cdca582fcec47830950170aff
-//https://github.com/premnirmal/StockTicker/commit/feb2f74bf02162f4c779e91b5ffee645337bc281
-
                 val cookieResponse = YahooCookieApi.retrofitYahooCookieService.getCookie()
 
                 val html = cookieResponse.body() ?: ""
