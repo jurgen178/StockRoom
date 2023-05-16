@@ -1742,7 +1742,7 @@ class StockDataFragment : Fragment() {
                                 splitRatioZ = numberFormat.parse(splitRatioTextZ)!!
                                     .toDouble()
 
-                                if (splitRatioZ <= 0.0 || splitRatioZ > 20.0) {
+                                if (splitRatioZ <= 0.0 || splitRatioZ > 1000.0) {
                                     valid = false
                                 }
 
@@ -1756,7 +1756,7 @@ class StockDataFragment : Fragment() {
                                 splitRatioN = numberFormat.parse(splitRatioTextN)!!
                                     .toDouble()
 
-                                if (splitRatioN <= 0.0 || splitRatioN > 20.0) {
+                                if (splitRatioN <= 0.0 || splitRatioN > 1000.0) {
                                     valid = false
                                 }
 
