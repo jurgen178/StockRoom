@@ -58,6 +58,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import okhttp3.FormBody
 import okhttp3.internal.toImmutableList
 import org.json.JSONArray
 import org.json.JSONObject
@@ -480,10 +481,48 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     fun getYahooCookie() {
         viewModelScope.launch {
             try {
-                YahooCookieApi.retrofitYahooCookieService.getCookie()
+//https://github.com/premnirmal/StockTicker/commit/2d3a80c625e0d36cdca582fcec47830950170aff
+//https://github.com/premnirmal/StockTicker/commit/feb2f74bf02162f4c779e91b5ffee645337bc281
 
-                SharedRepository.yahooCookieReady.postValue(true)
+                val cookieResponse = YahooCookieApi.retrofitYahooCookieService.getCookie()
 
+                val html = cookieResponse.body() ?: ""
+                val url = cookieResponse.raw().request.url.toString()
+
+                // csrfToken only in html for EU
+//              <div class="actions couple">
+//                <input type="hidden" name="csrfToken" value="F-yGgtE">
+//                <input type="hidden" name="sessionId" value="3_cc-session_8a0f040c-115c-492e-acb8-eccf6a1306b3">
+//                <input type="hidden" name="originalDoneUrl" value="https://finance.yahoo.com/?guccounter&#x3D;1">
+//                <input type="hidden" name="namespace" value="yahoo">
+
+                val match = Regex("csrfToken\" value=\"(.+)\">").find(html)
+
+                // EU?
+                if (!match?.groupValues.isNullOrEmpty()) {
+                    val csrfToken = match?.groupValues?.last().toString()
+                    val sessionId = url.split("=").last()
+
+                    val requestBody = FormBody.Builder()
+                        .add("csrfToken", csrfToken)
+                        .add("sessionId", sessionId)
+                        .addEncoded("originalDoneUrl", "https://finance.yahoo.com/?guccounter=1")
+                        .add("namespace", "yahoo")
+                        .add("agree", "agree")
+                        .build()
+
+                    val cookieConsent =
+                        YahooCookieApi.retrofitYahooCookieService.cookieConsent(url, requestBody)
+
+                    // Continue with the crumb only when the consent was successful.
+                    SharedRepository.yahooCookieReady.postValue(cookieConsent.isSuccessful)
+
+                } else {
+
+                    // Non-EU, no consent required. Continue to get the crumb.
+                    SharedRepository.yahooCookieReady.postValue(true)
+
+                }
             } catch (e: Exception) {
             }
         }

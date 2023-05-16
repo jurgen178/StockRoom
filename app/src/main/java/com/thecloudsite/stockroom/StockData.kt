@@ -22,10 +22,14 @@ import com.github.mikephil.charting.data.Entry
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.coroutines.Deferred
+import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 // https://www.google.com/finance?q=msft
 // http://www.google.com/finance?q=INDEXNASDAQ:.IXIC
@@ -814,34 +818,13 @@ interface YahooApiRawMarketData {
 }
 // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
 
-interface YahooApiCrumbData {
-    // https://query1.finance.yahoo.com/v1/test/getcrumb
-    // https://github.com/pstadler/ticker.sh/blob/acquire-yahoo-finance-session/ticker.sh
-
-    // https://query2.finance.yahoo.com/v6/finance/quote?symbols=msft
-    // https://query1.finance.yahoo.com/v7/finance/quote?format=json&symbols=msft,aapl
-    // https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
-
-    //@Headers("Content-Type:application/json; charset=UTF-8")
-    //@Headers("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-    @GET("getcrumb")
-    fun getCrumbDataAsync(): Deferred<Response<String>>
-}
-
-interface YahooApiFinancePageData {
-    // https://finance.yahoo.com
-
-    //@Headers("Content-Type:application/json; charset=UTF-8")
-    //@Headers("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-    @GET(" ")
-    fun getWebDataAsync(): Deferred<Response<String>>
-}
-
 interface YahooCookieApiService {
     // https://finance.yahoo.com
     @GET(" ")
-    suspend fun getCookie()
-}
+    suspend fun getCookie(): Response<String?>
+
+    @POST
+    suspend fun cookieConsent(@Url url: String?, @Body body: RequestBody): Response<String?>}
 
 interface YahooCrumbApiService {
     // https://query1.finance.yahoo.com/v1/test/getcrumb

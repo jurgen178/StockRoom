@@ -92,17 +92,19 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 // With cookie and crumb, get market data https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 class YahooCookieJar : CookieJar {
 
-    private var cookieJar : List<Cookie> = listOf()
+    private var cookieJar = HashMap<String, Cookie>()
 
     // https://finance.yahoo.com has cookies and calls saveFromResponse.
     // https://query... do not have cookies, so saveFromResponse is not called.
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        cookieJar = cookies
+        cookies.forEach { cookie ->
+            cookieJar[cookie.name] = cookie
+        }
     }
 
     // Add cookies from cookieJar to each request.
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        return cookieJar
+        return cookieJar.values.toList()
     }
 }
 
@@ -362,8 +364,8 @@ private val retrofitYahooCookie = Retrofit.Builder()
                     .newBuilder()
                     .removeHeader("Accept")
                     .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-                    .removeHeader("Accept-Encoding")
-                    .addHeader("Accept-Encoding", "gzip, deflate, br")
+//                    .removeHeader("Accept-Encoding")
+//                    .addHeader("Accept-Encoding", "gzip, deflate, br")
                     .build()
                 chain.proceed(newRequest)
             }
