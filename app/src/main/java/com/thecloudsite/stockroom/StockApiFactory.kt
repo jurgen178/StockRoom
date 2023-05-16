@@ -112,7 +112,7 @@ class YahooCookieJar : CookieJar {
     }
 }
 
-public val yahooCookieJar: YahooCookieJar by lazy {
+val yahooCookieJar: YahooCookieJar by lazy {
     YahooCookieJar()
 }
 
