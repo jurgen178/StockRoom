@@ -750,6 +750,7 @@ class MainActivity : AppCompatActivity() {
 //      }
             R.id.menu_sync -> {
                 stockRoomViewModel.runOnlineTaskNow("Request to get online data manually.")
+                stockRoomViewModel.getYahooCookie()
                 true
             }
 

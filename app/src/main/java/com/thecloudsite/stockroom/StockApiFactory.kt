@@ -94,6 +94,10 @@ class YahooCookieJar : CookieJar {
 
     private var cookieJar = HashMap<String, Cookie>()
 
+    fun reset() {
+        cookieJar.clear()
+    }
+
     // https://finance.yahoo.com has cookies and calls saveFromResponse.
     // https://query... do not have cookies, so saveFromResponse is not called.
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
@@ -108,7 +112,7 @@ class YahooCookieJar : CookieJar {
     }
 }
 
-private val yahooCookieJar: YahooCookieJar by lazy {
+public val yahooCookieJar: YahooCookieJar by lazy {
     YahooCookieJar()
 }
 
@@ -348,11 +352,13 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl("https://android-kotlin-fun-mars-server.appspot.com")
     .build()
+
 // https://android-kotlin-fun-mars-server.appspot.com
 // https://query1.finance.yahoo.com/v1/test/
 object MarsApi {
-    val retrofitService : MarsApiService by lazy {
-        retrofit.create(MarsApiService::class.java) }
+    val retrofitService: MarsApiService by lazy {
+        retrofit.create(MarsApiService::class.java)
+    }
 }
 
 private val retrofitYahooCookie = Retrofit.Builder()
@@ -363,7 +369,10 @@ private val retrofitYahooCookie = Retrofit.Builder()
                 val newRequest = original
                     .newBuilder()
                     .removeHeader("Accept")
-                    .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+                    .addHeader(
+                        "Accept",
+                        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+                    )
 //                    .removeHeader("Accept-Encoding")
 //                    .addHeader("Accept-Encoding", "gzip, deflate, br")
                     .build()
@@ -379,8 +388,9 @@ private val retrofitYahooCookie = Retrofit.Builder()
 // https://android-kotlin-fun-mars-server.appspot.com
 // https://query1.finance.yahoo.com/v1/test/
 object YahooCookieApi {
-    val retrofitYahooCookieService : YahooCookieApiService by lazy {
-        retrofitYahooCookie.create(YahooCookieApiService::class.java) }
+    val retrofitYahooCookieService: YahooCookieApiService by lazy {
+        retrofitYahooCookie.create(YahooCookieApiService::class.java)
+    }
 }
 
 private val retrofitYahooCrumb = Retrofit.Builder()
@@ -397,8 +407,9 @@ private val retrofitYahooCrumb = Retrofit.Builder()
 // https://android-kotlin-fun-mars-server.appspot.com
 // https://query1.finance.yahoo.com/v1/test/
 object YahooCrumbApi {
-    val retrofitYahooCrumbService : YahooCrumbApiService by lazy {
-        retrofitYahooCrumb.create(YahooCrumbApiService::class.java) }
+    val retrofitYahooCrumbService: YahooCrumbApiService by lazy {
+        retrofitYahooCrumb.create(YahooCrumbApiService::class.java)
+    }
 }
 
 object CoingeckoSymbolsApiFactory {
@@ -533,21 +544,21 @@ object StockYahooChartDataApiFactory {
     private var url = ""
 
     //Creating Auth Interceptor to add api_key query in front of all the requests.
-/*
-  private val authInterceptor = Interceptor { chain ->
-    val newUrl = chain.request()
-        .url()
-        .newBuilder()
-        .build()
+    /*
+      private val authInterceptor = Interceptor { chain ->
+        val newUrl = chain.request()
+            .url()
+            .newBuilder()
+            .build()
 
-    val newRequest = chain.request()
-        .newBuilder()
-        .url(newUrl)
-        .build()
+        val newRequest = chain.request()
+            .newBuilder()
+            .url(newUrl)
+            .build()
 
-    chain.proceed(newRequest)
-  }
-*/
+        chain.proceed(newRequest)
+      }
+    */
 
     // building http request url
     private fun retrofit(): Retrofit = Retrofit.Builder()

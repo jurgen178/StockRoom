@@ -479,6 +479,9 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 //    }
 
     fun getYahooCookie() {
+
+        yahooCookieJar.reset()
+
         viewModelScope.launch {
             try {
 //https://github.com/premnirmal/StockTicker/commit/2d3a80c625e0d36cdca582fcec47830950170aff
