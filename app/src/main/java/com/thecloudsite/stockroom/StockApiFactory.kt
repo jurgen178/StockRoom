@@ -25,6 +25,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.ConcurrentHashMap
 
 // https://android.jlelse.eu/android-networking-in-2019-retrofit-with-kotlins-coroutines-aefe82c4d777
 
@@ -92,7 +93,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 // With cookie and crumb, get market data https://query2.finance.yahoo.com/v7/finance/quote?symbols=msft&crumb=JoH2gz8LJk/
 class YahooCookieJar : CookieJar {
 
-    private var cookieJar = HashMap<String, Cookie>()
+    private var cookieJar = ConcurrentHashMap<String, Cookie>()
 
     fun reset() {
         cookieJar.clear()
