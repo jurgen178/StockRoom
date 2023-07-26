@@ -345,7 +345,7 @@ limitations under the License. -->
     <string name="reset">Zurücksetzen</string>
     <string name="dividend_cycle">Dividendenzyklus</string>
     <string name="dividend_updated">Dividendenwert aktualisiert.</string>
-    <string name="realtime">Immer Realtime verwenden</string>
+    <string name="realtime">Immer alle 2s aktualisieren</string>
     <string name="linegraph">Liniendiagramm</string>
     <string name="use_chart_overlay_symbols">Vergleichskurven in der Chart-Darstellung</string>
     <string name="use_chart_overlay_symbols_desc">Stellt einen zusätzlichen Verlauf andere Wertpapierwerte zum Vergleich in der Chart-Darstellung dar.\nFarbreihenfolge:\nGrau, Rot, Grün, Gelb</string>

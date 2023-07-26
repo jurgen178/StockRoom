@@ -484,6 +484,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
         viewModelScope.launch {
             try {
+                logDebugAsync("Start getting cookies.")
+
                 val cookieResponse = YahooCookieApi.retrofitYahooCookieService.getCookie()
 
                 val html = cookieResponse.body() ?: ""
@@ -500,6 +502,8 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
                 // EU?
                 if (!match?.groupValues.isNullOrEmpty()) {
+                    logDebugAsync("Cookies, get EU csrfToken.")
+
                     val csrfToken = match?.groupValues?.last().toString()
                     val sessionId = url.split("=").last()
 
@@ -518,12 +522,14 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
                     SharedRepository.yahooCookieReady.postValue(cookieConsent.isSuccessful)
 
                 } else {
+                    logDebugAsync("Cookies, Non-EU, no consent required.")
 
                     // Non-EU, no consent required. Continue to get the crumb.
                     SharedRepository.yahooCookieReady.postValue(true)
 
                 }
             } catch (e: Exception) {
+                logDebugAsync("Exception getting cookies: '$e'.")
             }
         }
     }
@@ -531,11 +537,16 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     fun getYahooCrumb() {
         viewModelScope.launch {
             try {
+                logDebugAsync("Start getting crumb.")
+
                 val crumb = YahooCrumbApi.retrofitYahooCrumbService.getCrumb()
 
                 SharedRepository.yahooCrumb.postValue(crumb)
 
+                logDebugAsync("Received crumb '$crumb'.")
+
             } catch (e: Exception) {
+                logDebugAsync("Exception getting crumb: '$e'.")
             }
         }
     }

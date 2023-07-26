@@ -544,7 +544,7 @@ class StockMarketDataRepository(
         }
         else
         {
-            errorMsg = "Empty crumb value."
+            errorMsg = "Empty crumb value, queryYahooStockData skipped."
         }
 
         return Pair(onlineMarketDataResultList, errorMsg)

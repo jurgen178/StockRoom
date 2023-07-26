@@ -313,7 +313,7 @@ limitations under the License. -->
     <string name="reset">Reset</string>
     <string name="dividend_cycle">Dividend Cycle</string>
     <string name="dividend_updated">Dividend updated.</string>
-    <string name="realtime">Always use Realtime</string>
+    <string name="realtime">Always update every 2s</string>
     <string name="linegraph">Line graph</string>
     <string name="use_chart_overlay_symbols">Additional stock charts in the chart display</string>
     <string name="use_chart_overlay_symbols_desc">Adds an additional stock charts of another symbol to the chart display.\nColor sequence:\nGray, Red, Green, Yellow</string>
