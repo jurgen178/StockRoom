@@ -34,8 +34,7 @@ open class NewsApiFactoryHttpHeader {
 //              .followRedirects(true)
 //              .followSslRedirects(true)
               .addInterceptor { chain ->
-                val original = chain.request()
-                val newRequest = original
+                val newRequest = chain.request()
                     .newBuilder()
 
 //GET /tutorials/other/top-20-mysql-best-practices/ HTTP/1.1
@@ -52,7 +51,7 @@ open class NewsApiFactoryHttpHeader {
 //Cache-Control: no-cache
 
                     .addHeader("Host", "www.nasdaq.com")
-                    .addHeader("User-Agent", "Android/10")
+                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
                     .addHeader("Accept", "*/*")
                     .addHeader("Accept-Language", "en")
 //                    .addHeader("Accept-Language", "en-us,en;q=0.5")
