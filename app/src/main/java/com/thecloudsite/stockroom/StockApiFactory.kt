@@ -366,8 +366,7 @@ private val retrofitYahooCookie = Retrofit.Builder()
     .client(
         OkHttpClient().newBuilder()
             .addInterceptor { chain ->
-                val original = chain.request()
-                val newRequest = original
+                val newRequest = chain.request()
                     .newBuilder()
                     .removeHeader("Accept")
                     .addHeader(
@@ -376,6 +375,11 @@ private val retrofitYahooCookie = Retrofit.Builder()
                     )
 //                    .removeHeader("Accept-Encoding")
 //                    .addHeader("Accept-Encoding", "gzip, deflate, br")
+//                    .removeHeader("User-Agent")
+//                    .addHeader(
+//                        "User-Agent",
+//                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+//                    )
                     .build()
                 chain.proceed(newRequest)
             }
