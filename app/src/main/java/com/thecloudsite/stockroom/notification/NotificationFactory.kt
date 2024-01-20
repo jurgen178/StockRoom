@@ -82,7 +82,6 @@ class NotificationFactory(
 
     fun sendNotification(activity: Activity) {
         with(NotificationManagerCompat.from(context)) {
-            // NotificationId is a unique int for each notification.
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS
@@ -124,6 +123,7 @@ class NotificationFactory(
                 return
             }
 
+            // NotificationId is a unique int for each notification.
             notify(notificationId, notificationBuilder.build())
         }
     }
