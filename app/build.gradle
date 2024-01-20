@@ -64,6 +64,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
     sourceSets {
         // Adds exported schema location as test app assets.
