@@ -884,7 +884,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val notification = NotificationFactory(this, title, text, alert.symbol)
-                notification.sendNotification()
+                notification.sendNotification(this@MainActivity)
 //                // Alert is shown, remove alert.
 //                stockRoomViewModel.updateAlertAboveSync(alert.symbol, 0.0, "")
                 // Alert is shown, update alert with +5%.
@@ -916,7 +916,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     val notification = NotificationFactory(this, title, text, alert.symbol)
-                    notification.sendNotification()
+                    notification.sendNotification(this@MainActivity)
 //                    // Alert is shown, remove alert.
 //                    stockRoomViewModel.updateAlertBelowSync(alert.symbol, 0.0, "")
                     // Alert is shown, update alert with -5%.
@@ -968,7 +968,7 @@ class MainActivity : AppCompatActivity() {
                                 event.note
                             )
                         val notification = NotificationFactory(this, title, text, event.symbol)
-                        notification.sendNotification()
+                        notification.sendNotification(this@MainActivity)
 
                         // Delete event from the DB. This is turn causes an update of the list
                         // and runs checkEvents() again.

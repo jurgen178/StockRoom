@@ -16,9 +16,13 @@
 
 package com.thecloudsite.stockroom.notification
 
+import android.Manifest
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
 import androidx.core.app.NotificationManagerCompat
@@ -76,9 +80,50 @@ class NotificationFactory(
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
 
-    fun sendNotification() {
+    fun sendNotification(activity: Activity) {
         with(NotificationManagerCompat.from(context)) {
             // NotificationId is a unique int for each notification.
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        activity,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
+                ) {
+                    val permission = Manifest.permission.POST_NOTIFICATIONS
+                    val requestCode = 100
+
+                    // Display dialog to get permissions.
+                    ActivityCompat.requestPermissions(activity, arrayOf(permission), requestCode)
+
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+
+//                override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+//                    when (requestCode) {
+//                        PERMISSIONS_CODE -> {
+//                            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                                // Permission granted
+//                            } else {
+//                                // Permission denied
+//                            }
+//                            return
+//                        }
+//                    }
+//                    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//                }
+                }
+                return
+            }
+
             notify(notificationId, notificationBuilder.build())
         }
     }

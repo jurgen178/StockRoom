@@ -70,24 +70,24 @@ class SettingsActivity : AppCompatActivity(),
         val view = binding.root
         setContentView(view)
 
-/*
-    settingsViewpager.adapter = object : FragmentStateAdapter(this) {
-      override fun createFragment(position: Int): Fragment {
-        return when (position) {
-          0 -> {
-            SettingsFragment.newInstance()
-          }
-          else -> {
-            DebugFragment.newInstance()
-          }
-        }
-      }
+        /*
+            settingsViewpager.adapter = object : FragmentStateAdapter(this) {
+              override fun createFragment(position: Int): Fragment {
+                return when (position) {
+                  0 -> {
+                    SettingsFragment.newInstance()
+                  }
+                  else -> {
+                    DebugFragment.newInstance()
+                  }
+                }
+              }
 
-      override fun getItemCount(): Int {
-        return 2
-      }
-    }
-*/
+              override fun getItemCount(): Int {
+                return 2
+              }
+            }
+        */
 
         supportFragmentManager
             .beginTransaction()
@@ -131,37 +131,45 @@ class SettingsActivity : AppCompatActivity(),
     }
 
     override fun onSharedPreferenceChanged(
-        sharedPreferences: SharedPreferences,
-        key: String
+        sharedPreferences: SharedPreferences?,
+        key: String?
     ) {
-        when (key) {
-            "postmarket" -> {
-                SharedRepository.postMarket = sharedPreferences.getBoolean(key, true)
-            }
-            "notifications" -> {
-                SharedRepository.notifications = sharedPreferences.getBoolean(key, true)
-            }
-            "displayed_views" -> {
-                AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.displayed_views_dialog_title))
-                    .setMessage(getString(R.string.app_needs_restart_message))
-                    .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-                    .show()
-            }
-            "app_theme" -> {
-                setAppTheme(this)
-                //delegate.applyDayNight()
-            }
-            "app_theme_textcolor_redgreen" -> {
-                getAppThemeColorRedGreen(this)
-            }
-            "chart_overlay_symbols" -> {
-                // if empty reset entry to default
-                val symbols = sharedPreferences.getString(key, settingChartOverlaySymbolsDefault)
-                if (symbols.isNullOrEmpty()) {
-                    sharedPreferences.edit()
-                        .putString(key, settingChartOverlaySymbolsDefault)
-                        .apply()
+        if (sharedPreferences != null) {
+            when (key) {
+                "postmarket" -> {
+                    SharedRepository.postMarket = sharedPreferences.getBoolean(key, true)
+                }
+
+                "notifications" -> {
+                    SharedRepository.notifications = sharedPreferences.getBoolean(key, true)
+                }
+
+                "displayed_views" -> {
+                    AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.displayed_views_dialog_title))
+                        .setMessage(getString(R.string.app_needs_restart_message))
+                        .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+                        .show()
+                }
+
+                "app_theme" -> {
+                    setAppTheme(this)
+                    //delegate.applyDayNight()
+                }
+
+                "app_theme_textcolor_redgreen" -> {
+                    getAppThemeColorRedGreen(this)
+                }
+
+                "chart_overlay_symbols" -> {
+                    // if empty reset entry to default
+                    val symbols =
+                        sharedPreferences.getString(key, settingChartOverlaySymbolsDefault)
+                    if (symbols.isNullOrEmpty()) {
+                        sharedPreferences.edit()
+                            .putString(key, settingChartOverlaySymbolsDefault)
+                            .apply()
+                    }
                 }
             }
         }
@@ -466,16 +474,16 @@ class SettingsActivity : AppCompatActivity(),
                     }
             }
 
-/*
-      val buttonExportListToCloud: Preference? = findPreference("export_cloud")
-      if (buttonExportListToCloud != null) {
-        buttonExportListToCloud.onPreferenceClickListener =
-          OnPreferenceClickListener {
-            onExportListToCloud()
-            true
-          }
-      }
-*/
+            /*
+                  val buttonExportListToCloud: Preference? = findPreference("export_cloud")
+                  if (buttonExportListToCloud != null) {
+                    buttonExportListToCloud.onPreferenceClickListener =
+                      OnPreferenceClickListener {
+                        onExportListToCloud()
+                        true
+                      }
+                  }
+            */
 
             val buttonDeleteAll: Preference? = findPreference("delete_all")
             if (buttonDeleteAll != null) {

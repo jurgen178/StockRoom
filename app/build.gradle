@@ -18,13 +18,13 @@ android {
             v2SigningEnabled true
         }
     }
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         applicationId 'com.thecloudsite.stockroom'
-        minSdkVersion 32
-        targetSdkVersion 33
-        versionCode 17
-        versionName "17"
+        minSdkVersion 34
+        targetSdkVersion 34
+        versionCode 18
+        versionName "18"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -82,21 +82,21 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.viewpager2:viewpager2:1.1.0-beta02'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.core:core-ktx:1.9.0"
+    implementation "androidx.core:core-ktx:1.12.0"
 
     // Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-config-ktx:21.4.1'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
+    implementation 'com.google.firebase:firebase-config-ktx:21.6.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.5.0'
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.6.1'
     // Add the dependency for the Performance Monitoring library.
-    implementation 'com.google.firebase:firebase-perf:20.4.0'
+    implementation 'com.google.firebase:firebase-perf:20.5.1'
     // Add the Realtime Database SDK.
-    implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
+    implementation 'com.google.firebase:firebase-database-ktx:20.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     // Add the dependencies for FirebaseUI.
     //implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
@@ -112,7 +112,7 @@ dependencies {
     // Find the latest Twitter SDK releases here: https://goo.gl/E5wZvQ
     //implementation 'com.twitter.sdk.android:twitter-core:3.x'
 
-    def moshiVersion = '1.13.0'
+    def moshiVersion = '1.15.0'
     def retrofit2_version = '2.9.0'
     def okhttp3_version = '4.8.0'
     def kotlinCoroutineVersion = "1.4.1"
