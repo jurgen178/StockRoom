@@ -403,7 +403,7 @@ class PickerKnob : View {
     }
   }
 
-  override fun onTouchEvent(@NonNull event: MotionEvent): Boolean {
+  override fun onTouchEvent(event: MotionEvent): Boolean {
 
     // Prevent from scrolling the parent
     if (event.actionMasked == MotionEvent.ACTION_DOWN) {
