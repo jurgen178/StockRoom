@@ -9,16 +9,16 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath 'com.android.tools.build:gradle:8.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
-        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.gms:google-services:4.4.1'
         
         // Add the Crashlytics Gradle plugin.
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
         // To benefit from the latest Performance Monitoring plugin features,
         // update your Android Gradle Plugin dependency to at least v3.4.0
-        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath 'com.android.tools.build:gradle:8.2.2'
         // Add the dependency for the Performance Monitoring plugin.
         classpath 'com.google.firebase:perf-plugin:1.4.2'  // Performance Monitoring plugin
     }

@@ -326,7 +326,8 @@ abstract class StockRoomDatabase : RoomDatabase() {
                         { StockMarketDataApiFactory.marketDataApi },
                         { StockMarketDataCoingeckoApiFactory.marketDataApi },
                         { StockMarketDataCoinpaprikaApiFactory.marketDataApi },
-                        { StockMarketDataGeminiApiFactory.marketDataApi }
+                        { StockMarketDataGeminiApiFactory.marketDataApi },
+                        { StockMarketDataOkxApiFactory.marketDataApi }
                     )
 
                 data class AssetPreset(

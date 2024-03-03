@@ -45,24 +45,24 @@ class DataProviderCoingeckoSymbolsRepository() : DataProviderSymbolsBaseReposito
 
         val dataProviderSymbols: List<DataProviderCoingeckoSymbolEntry>? = try {
             apiCall(
-                call = {
-                    updateCounter()
-                    api.getDataProviderSymbolsDataAsync()
-                        .await()
-                },
-                errorMessage = "Error getting list data."
+                    call = {
+                        updateCounter()
+                        api.getDataProviderSymbolsDataAsync()
+                                .await()
+                    },
+                    errorMessage = "Error getting list data."
             )
         } catch (e: Exception) {
             Log.d(
-                "DataProviderCoingeckoSymbolsRepository.getDataProviderSymbols() failed",
-                "Exception=$e"
+                    "DataProviderCoingeckoSymbolsRepository.getDataProviderSymbols() failed",
+                    "Exception=$e"
             )
             null
         }
 
         return (dataProviderSymbols ?: emptyList())
-            .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
-            .map { symbol -> DataProviderSymbolEntry(id = symbol.id, name = symbol.name) }
+                .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
+                .map { symbol -> DataProviderSymbolEntry(id = symbol.id, name = symbol.name) }
     }
 }
 
@@ -74,25 +74,25 @@ class DataProviderCoinpaprikaSymbolsRepository() : DataProviderSymbolsBaseReposi
 
         val dataProviderSymbols: List<DataProviderCoinpaprikaSymbolEntry>? = try {
             apiCall(
-                call = {
-                    updateCounter()
-                    api.getDataProviderSymbolsDataAsync()
-                        .await()
-                },
-                errorMessage = "Error getting list data."
+                    call = {
+                        updateCounter()
+                        api.getDataProviderSymbolsDataAsync()
+                                .await()
+                    },
+                    errorMessage = "Error getting list data."
             )
         } catch (e: Exception) {
             Log.d(
-                "DataProviderCoinpaprikaSymbolsRepository.getDataProviderSymbols() failed",
-                "Exception=$e"
+                    "DataProviderCoinpaprikaSymbolsRepository.getDataProviderSymbols() failed",
+                    "Exception=$e"
             )
             null
         }
 
         return (dataProviderSymbols ?: emptyList())
-            .filter { symbol -> symbol.is_active == true }
-            .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
-            .map { symbol -> DataProviderSymbolEntry(id = symbol.id, name = symbol.name) }
+                .filter { symbol -> symbol.is_active == true }
+                .sortedBy { symbol -> symbol.name.lowercase(Locale.ROOT) }
+                .map { symbol -> DataProviderSymbolEntry(id = symbol.id, name = symbol.name) }
     }
 }
 
@@ -104,24 +104,66 @@ class DataProviderGeminiSymbolsRepository() : DataProviderSymbolsBaseRepository(
 
         val dataProviderSymbols: List<String>? = try {
             apiCall(
-                call = {
-                    updateCounter()
-                    api.getDataProviderSymbolsDataAsync()
-                        .await()
-                },
-                errorMessage = "Error getting list data."
+                    call = {
+                        updateCounter()
+                        api.getDataProviderSymbolsDataAsync()
+                                .await()
+                    },
+                    errorMessage = "Error getting list data."
             )
         } catch (e: Exception) {
             Log.d(
-                "DataProviderGeminiSymbolsRepository.getDataProviderSymbols() failed",
-                "Exception=$e"
+                    "DataProviderGeminiSymbolsRepository.getDataProviderSymbols() failed",
+                    "Exception=$e"
             )
             null
         }
 
         return (dataProviderSymbols ?: emptyList())
-            .sortedBy { symbol -> symbol.lowercase(Locale.ROOT) }
-            .map { symbol -> DataProviderSymbolEntry(id = symbol, name = idToName(symbol)) }
+                .sortedBy { symbol -> symbol.lowercase(Locale.ROOT) }
+                .map { symbol -> DataProviderSymbolEntry(id = symbol, name = idToName(symbol)) }
+    }
+}
+
+class DataProviderOkxSymbolsRepository() : DataProviderSymbolsBaseRepository() {
+
+    override suspend fun getDataProviderSymbols(): List<DataProviderSymbolEntry> {
+
+        val api = OkxSymbolsApiFactory.dataProviderApi ?: return emptyList()
+
+        val dataProviderSymbolsResponse: DataProviderSymbolsDataOkxResponse? = try {
+            apiCall(
+                    call = {
+                        updateCounter()
+                        api.getDataProviderSymbolsDataAsync()
+                                .await()
+                    },
+                    errorMessage = "Error getting list data."
+            )
+        } catch (e: Exception) {
+            Log.d(
+                    "DataProviderOkxSymbolsRepository.getDataProviderSymbols() failed",
+                    "Exception=$e"
+            )
+            null
+        }
+
+        val symbolEntries : MutableList<DataProviderSymbolEntry> = mutableListOf()
+
+        dataProviderSymbolsResponse?.data?.forEach { result ->
+            if (result.last > 0.0) {
+                symbolEntries.add(
+                        DataProviderSymbolEntry(
+                                id = result.instId,
+                                name = idToName(result.instId),
+                        )
+                )
+            }
+        }
+
+        return symbolEntries
+                .sortedBy { entry -> entry.id.lowercase(Locale.ROOT) }
+                //.map { symbol -> DataProviderSymbolEntry(id = symbol, name = idToName(symbol)) }
     }
 }
 

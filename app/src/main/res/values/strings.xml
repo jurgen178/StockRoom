@@ -657,9 +657,10 @@ limitations under the License. -->
 
     <string-array name="dataprovider_items">
         <item>Yahoo Finance</item>
-        <item>Coingecko (Cryptocurrency, max 50 calls/min)</item>
+        <item>Coingecko (Cryptocurrency, max 50 requests/min)</item>
         <item>Coinpaprika (Cryptocurrency, updated every 2min)</item>
-        <item>Gemini (Cryptocurrency, max 120 calls/min)</item>
+        <item>Gemini (Cryptocurrency, max 120 requests/min)</item>
+        <item>OKX (Cryptocurrency, max 10 requests/s)</item>
         <item>&lt;None&gt;</item>
     </string-array>
 

@@ -81,6 +81,9 @@ class AddActivity : AppCompatActivity() {
     private lateinit var dataProviderSymbolsViewModelGemini: DataProviderSymbolsViewModelGemini
     private var dataProviderSymbolsGemini: List<DataProviderSymbolEntry> = emptyList()
 
+    private lateinit var dataProviderSymbolsViewModelOkx: DataProviderSymbolsViewModelOkx
+    private var dataProviderSymbolsOkx: List<DataProviderSymbolEntry> = emptyList()
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -159,19 +162,20 @@ class AddActivity : AppCompatActivity() {
             }
         }
 
+
         dataProviderSymbolsViewModelGemini =
-            ViewModelProvider(this).get(DataProviderSymbolsViewModelGemini::class.java)
+                ViewModelProvider(this).get(DataProviderSymbolsViewModelGemini::class.java)
 
         dataProviderSymbolsViewModelGemini.symbols.observe(this, Observer { symbols ->
             this.dataProviderSymbolsGemini = symbols
 
             binding.symbolsSpinnerGemini.adapter =
-                ArrayAdapter(
-                    this,
-                    layout.simple_list_item_1,
-                    this.dataProviderSymbolsGemini.map { symbolEntry ->
-                        symbolEntry.name
-                    })
+                    ArrayAdapter(
+                            this,
+                            layout.simple_list_item_1,
+                            this.dataProviderSymbolsGemini.map { symbolEntry ->
+                                symbolEntry.name
+                            })
         })
 
         dataProviderSymbolsViewModelGemini.getData()
@@ -181,12 +185,44 @@ class AddActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 binding.editAdd.setText(dataProviderSymbolsGemini[position].id)
+            }
+        }
+
+
+        dataProviderSymbolsViewModelOkx =
+                ViewModelProvider(this).get(DataProviderSymbolsViewModelOkx::class.java)
+
+        dataProviderSymbolsViewModelOkx.symbols.observe(this, Observer { symbols ->
+            this.dataProviderSymbolsOkx = symbols
+
+            binding.symbolsSpinnerOkx.adapter =
+                    ArrayAdapter(
+                            this,
+                            layout.simple_list_item_1,
+                            this.dataProviderSymbolsOkx.map { symbolEntry ->
+                                symbolEntry.name
+                            })
+        })
+
+        dataProviderSymbolsViewModelOkx.getData()
+
+        binding.symbolsSpinnerOkx.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+            ) {
+                binding.editAdd.setText(dataProviderSymbolsOkx[position].id)
             }
         }
 
@@ -212,6 +248,11 @@ class AddActivity : AppCompatActivity() {
                     View.GONE
                 }
                 binding.symbolsSpinnerGemini.visibility = if (position == 3) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+                binding.symbolsSpinnerOkx.visibility = if (position == 4) {
                     View.VISIBLE
                 } else {
                     View.GONE

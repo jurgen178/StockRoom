@@ -58,6 +58,7 @@ class StockMarketDataRepository(
     private val coingeckoApi: () -> CoingeckoApiMarketData?,
     private val coinpaprikaApi: () -> CoinpaprikaApiMarketData?,
     private val geminiApi: () -> GeminiApiMarketData?,
+    private val okxApi: () -> OkxApiMarketData?,
 ) : BaseRepository() {
 
     private val yahooMarketData = MutableLiveData<List<OnlineMarketData>>()
@@ -76,12 +77,17 @@ class StockMarketDataRepository(
     private val geminiMarketDataList: LiveData<List<OnlineMarketData>>
         get() = geminiMarketData
 
+    private val okxMarketData = MutableLiveData<List<OnlineMarketData>>()
+    private val okxMarketDataList: LiveData<List<OnlineMarketData>>
+        get() = okxMarketData
+
     private var marketSourceDataList: MutableList<List<OnlineMarketData>> =
         mutableListOf(
             emptyList(), // DataProvider.Standard
             emptyList(), // DataProvider.Coingecko
             emptyList(), // DataProvider.Coinpaprika
             emptyList(), // DataProvider.Gemini
+            emptyList(), // DataProvider.Okx
         )
     val onlineMarketDataList = MediatorLiveData<List<OnlineMarketData>>()
 
@@ -114,6 +120,13 @@ class StockMarketDataRepository(
                 onlineMarketDataList.postValue(combineData(marketSourceDataList))
             }
         }
+
+        onlineMarketDataList.addSource(okxMarketDataList) { marketLiveData ->
+            if (marketLiveData != null) {
+                marketSourceDataList[DataProvider.OKX.value] = marketLiveData
+                onlineMarketDataList.postValue(combineData(marketSourceDataList))
+            }
+        }
     }
 
     private fun combineData(
@@ -138,6 +151,7 @@ class StockMarketDataRepository(
             coingeckoMarketData.postValue(emptyList())
             coinpaprikaMarketData.postValue(emptyList())
             geminiMarketData.postValue(emptyList())
+            okxMarketData.postValue(emptyList())
 
             return MarketDataResult(marketState = MarketState.NO_SYMBOL, delayInMs = -1, msg = "")
         }
@@ -182,11 +196,23 @@ class StockMarketDataRepository(
         if (cryptoListGemini.isNotEmpty()) {
             val geminiResult = getGeminiStockData(cryptoListGemini)
 
-            // TODO last one wins to set state?
             marketDataResult.marketState = geminiResult.marketState
 
             marketDataResult.delayInMs = max(marketDataResult.delayInMs, geminiResult.delayInMs)
             marketDataResult.msg += geminiResult.msg
+        }
+
+        val cryptoListOkx = symbols.filter { stock ->
+            stock.type == DataProvider.OKX
+        }
+        if (cryptoListOkx.isNotEmpty()) {
+            val okxResult = getOkxStockData(cryptoListOkx)
+
+            // TODO last one wins to set state?
+            marketDataResult.marketState = okxResult.marketState
+
+            marketDataResult.delayInMs = max(marketDataResult.delayInMs, okxResult.delayInMs)
+            marketDataResult.msg += okxResult.msg
         }
 
         return marketDataResult
@@ -351,7 +377,7 @@ class StockMarketDataRepository(
 
             coingeckoMarketData.postValue(onlineMarketDataResultList)
 
-            // Crypto is 24h.
+            // Crypto is 24h (MarketState.REGULAR).
             // Coingecko free API has a rate limit of 50 calls/minute
             // Query not faster than every 10s
             // max delay = 60s as every minute quota is reset
@@ -392,7 +418,7 @@ class StockMarketDataRepository(
 
             coinpaprikaMarketData.postValue(onlineMarketDataResultList)
 
-            // Crypto is 24h.
+            // Crypto is 24h (MarketState.REGULAR).
             // Single IP address can send less than 10 requests per second
             val delayInSeconds = 1
 
@@ -424,26 +450,65 @@ class StockMarketDataRepository(
                 // no _data.value because this is a background thread
                 geminiMarketData.postValue(onlineMarketDataResultList)
                 return MarketDataResult(
-                    marketState = MarketState.QUOTA_EXCEEDED,
-                    delayInMs = -1,
-                    msg = errorMsg
+                        marketState = MarketState.QUOTA_EXCEEDED,
+                        delayInMs = -1,
+                        msg = errorMsg
                 )
             }
 
             geminiMarketData.postValue(onlineMarketDataResultList)
 
-            // Crypto is 24h.
+            // Crypto is 24h (MarketState.REGULAR).
             // Single IP address can send 120 requests per minute.
             val delayInSeconds = 1
 
             return MarketDataResult(
-                marketState = MarketState.REGULAR,
-                delayInMs = delayInSeconds * 1000L,
-                msg = ""
+                    marketState = MarketState.REGULAR,
+                    delayInMs = delayInSeconds * 1000L,
+                    msg = ""
             )
         }
 
         geminiMarketData.postValue(emptyList())
+        return MarketDataResult(marketState = MarketState.UNKNOWN, delayInMs = -1, msg = "")
+    }
+
+    private suspend fun getOkxStockData(symbols: List<StockSymbol>): MarketDataResult {
+
+        val api: OkxApiMarketData? = okxApi()
+
+        if (api != null) {
+
+            val result = queryOkxStockData(api, symbols)
+
+            // Get all results.
+            val onlineMarketDataResultList = result.first
+            val errorMsg = result.second
+
+            if (onlineMarketDataResultList.isEmpty()) {
+                // no _data.value because this is a background thread
+                okxMarketData.postValue(onlineMarketDataResultList)
+                return MarketDataResult(
+                        marketState = MarketState.QUOTA_EXCEEDED,
+                        delayInMs = -1,
+                        msg = errorMsg
+                )
+            }
+
+            okxMarketData.postValue(onlineMarketDataResultList)
+
+            // Crypto is 24h (MarketState.REGULAR).
+            // Single IP address can send 10 requests per second.
+            val delayInSeconds = 1
+
+            return MarketDataResult(
+                    marketState = MarketState.REGULAR,
+                    delayInMs = delayInSeconds * 1000L,
+                    msg = ""
+            )
+        }
+
+        okxMarketData.postValue(emptyList())
         return MarketDataResult(marketState = MarketState.UNKNOWN, delayInMs = -1, msg = "")
     }
 
@@ -606,6 +671,8 @@ class StockMarketDataRepository(
         val blockSize = 10
         var errorMsg = ""
 
+        // Don't get all data in one go, as result JSON is 3MB each time for https://api.coinpaprika.com/v1/tickers/
+
         // Get online data in blocks.
         val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
         var remainingSymbolsToQuery = symbols
@@ -663,8 +730,8 @@ class StockMarketDataRepository(
     }
 
     private suspend fun queryGeminiStockData(
-        api: GeminiApiMarketData,
-        symbols: List<StockSymbol>
+            api: GeminiApiMarketData,
+            symbols: List<StockSymbol>
     ): Pair<List<OnlineMarketData>, String> {
 
         var errorMsg = ""
@@ -674,31 +741,75 @@ class StockMarketDataRepository(
 
         val response: List<GeminiMarketData>? = try {
             apiCall(
-                call = {
-                    updateCounter()
-                    // Get all symbols in one call using https://api.gemini.com/v1/pricefeed.
-                    api.getStockDataAsync()
-                        .await()
-                }, errorMessage = "Error getting finance data."
+                    call = {
+                        updateCounter()
+                        // Get all data in one call using https://api.gemini.com/v1/pricefeed (symbols arg is not used)
+                        api.getStockDataAsync()
+                                .await()
+                    }, errorMessage = "Error getting finance data."
             )
         } catch (e: Exception) {
-            errorMsg += "StockMarketDataRepository.queryCoingeckoStockData failed, Exception=$e\n"
-            Log.d("StockMarketDataRepository.queryCoingeckoStockData failed", "Exception=$e")
+            errorMsg += "StockMarketDataRepository.queryGeminiStockData failed, Exception=$e\n"
+            Log.d("StockMarketDataRepository.queryGeminiStockData failed", "Exception=$e")
             null
         }
 
         // Add the result.
         response?.forEach { result ->
             onlineMarketDataResultList.add(
-                OnlineMarketData(
-                    symbol = result.pair,
-                    name1 = idToName(result.pair),
-                    marketPrice = result.price,
-                    marketChange = result.price * result.percentChange24h,
-                    marketChangePercent = 100 * result.percentChange24h,
-                    quoteType = "CRYPTOCURRENCY",
-                )
+                    OnlineMarketData(
+                            symbol = result.pair,
+                            name1 = idToName(result.pair),
+                            marketPrice = result.price,
+                            marketChange = result.price * result.percentChange24h,
+                            marketChangePercent = 100 * result.percentChange24h,
+                            quoteType = "CRYPTOCURRENCY",
+                    )
             )
+        }
+
+        return Pair(onlineMarketDataResultList, errorMsg)
+    }
+
+    private suspend fun queryOkxStockData(
+            api: OkxApiMarketData,
+            symbols: List<StockSymbol>
+    ): Pair<List<OnlineMarketData>, String> {
+
+        var errorMsg = ""
+
+        // Get online data.
+        val onlineMarketDataResultList: MutableList<OnlineMarketData> = mutableListOf()
+
+        val response: OkxResponse? = try {
+            apiCall(
+                    call = {
+                        updateCounter()
+                        // Get all data in one call using https://www.okx.com/api/v5/market/tickers?instType=SPOT (symbols arg is not used)
+                        api.getStockDataAsync()
+                                .await()
+                    }, errorMessage = "Error getting finance data."
+            )
+        } catch (e: Exception) {
+            errorMsg += "StockMarketDataRepository.queryOkxStockData failed, Exception=$e\n"
+            Log.d("StockMarketDataRepository.queryOkxStockData failed", "Exception=$e")
+            null
+        }
+
+        // Add the result.
+        response?.data?.forEach { result ->
+            if(result.last > 0.0) {
+                onlineMarketDataResultList.add(
+                        OnlineMarketData(
+                                symbol = result.instId,
+                                name1 = idToName(result.instId),
+                                marketPrice = result.last,
+                                marketChange = result.last - result.open24h,
+                                marketChangePercent = 100 * (result.last - result.open24h) / result.last,
+                                quoteType = "CRYPTOCURRENCY",
+                        )
+                )
+            }
         }
 
         return Pair(onlineMarketDataResultList, errorMsg)

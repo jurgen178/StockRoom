@@ -15,7 +15,7 @@
     <ListPreference
         android:key="app_theme_textcolor_redgreen"
         android:title="@string/app_theme_textcolor_redgreen"
-        android:defaultValue="0"
+        android:defaultValue="1"
         android:entryValues="@array/app_theme_textcolor_redgreen_values"
         android:entries="@array/app_theme_textcolor_redgreen"
         app:icon="@drawable/ic_action_app_theme_textcolor_redgreen"
@@ -48,7 +48,7 @@
         app:key="chart_overlay_symbols"
         app:title="@string/chart_overlay_symbols_title"
         app:dependency="use_chart_overlay_symbols"
-        app:defaultValue="^GSPC,^IXIC"
+        app:defaultValue="^GSPC,^IXIC,BTC-USD"
         app:useSimpleSummaryProvider="true" />
 
     <Preference

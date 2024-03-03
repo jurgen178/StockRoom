@@ -64,3 +64,15 @@ class DataProviderSymbolsViewModelGemini(application: Application) : AndroidView
     }
   }
 }
+
+class DataProviderSymbolsViewModelOkx(application: Application) : AndroidViewModel(application) {
+
+  private val dataProviderSymbolsRepository: DataProviderOkxSymbolsRepository = DataProviderOkxSymbolsRepository()
+  val symbols: LiveData<List<DataProviderSymbolEntry>> = dataProviderSymbolsRepository.symbols
+
+  fun getData() {
+    viewModelScope.launch {
+      dataProviderSymbolsRepository.getData()
+    }
+  }
+}

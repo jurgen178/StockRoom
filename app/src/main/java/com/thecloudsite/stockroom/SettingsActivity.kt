@@ -52,7 +52,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.MEDIUM
 import java.util.Locale
 
-const val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC"
+const val settingChartOverlaySymbolsDefault = "^GSPC,^IXIC,BTC-USD"
 
 private lateinit var exportRequest: ActivityResultLauncher<String>
 

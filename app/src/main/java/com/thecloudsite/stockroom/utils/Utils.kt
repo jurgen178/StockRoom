@@ -1294,7 +1294,7 @@ fun getAppThemeColorRedGreen(context: Context) {
     val sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
 
-    val appThemeColorRedGreen = sharedPreferences.getString("app_theme_textcolor_redgreen", "0")
+    val appThemeColorRedGreen = sharedPreferences.getString("app_theme_textcolor_redgreen", "1")
 
     // Use white on red/green background when this setting is set and the night mode is off.
     useWhiteOnRedGreen = appThemeColorRedGreen == "1" &&

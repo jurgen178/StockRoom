@@ -805,6 +805,56 @@ https://api.gemini.com/v1/pricefeed
 [{"pair":"ENJUSD","price":"3.1012","percentChange24h":"-0.0920"},{"pair":"PAXGUSD","price":"1786.18","percentChange24h":"0.0105"},{"pair":"DOGEBTC","price":"0.00000373","percentChange24h":"0.0000"},{"pair":"COMPUSD","price":"256.1","percentChange24h":"-0.0563"},{"pair":"NMRUSD","price":"40.954","percentChange24h":"0.0075"},{"pair":"SNXUSD","price":"6.9281","percentChange24h":"-0.0503"},{"pair":"MANAUSD","price":"3.93955","percentChange24h":"-0.1048"},{"pair":"LINKBTC","price":"0.00043418","percentChange24h":"-0.0043"},
 */
 
+@JsonClass(generateAdapter = true)
+data class OkxMarketData(
+        val instId: String,
+        var last: Double,
+        var open24h: Double,
+)
+
+@JsonClass(generateAdapter = true)
+data class OkxResponse(
+        val code: String,
+        val msg: String,
+        val data: List<OkxMarketData>
+)
+
+interface OkxApiMarketData {
+    // https://www.okx.com/api/v5/market/tickers
+    @GET("tickers")
+    fun getStockDataAsync(): Deferred<Response<OkxResponse>>
+}
+
+/*
+https://www.okx.com/api/v5/market/tickers?instType=SPOT
+{
+    "code": "0",
+    "msg": "",
+    "data": [
+        {
+            "instType": "SPOT",
+            "instId": "1INCH-EUR",
+            "last": "0.5355",
+            "lastSz": "171.711671",
+            "askPx": "0.5263",
+            "askSz": "1694.829049",
+            "bidPx": "0.5251",
+            "bidSz": "203.021855",
+            "open24h": "0.5092",
+            "high24h": "0.5355",
+            "low24h": "0.5092",
+            "volCcy24h": "91.9515998205",
+            "vol24h": "171.711671",
+            "ts": "1709429190011",
+            "sodUtc0": "0.5355",
+            "sodUtc8": "0.5355"
+        },
+        {
+            "instType": "SPOT",
+            "instId": "MDT-USDT",
+
+ */
+
 interface YahooApiRawMarketData {
     @GET("quote?format=json")
     fun getStockDataAsync(
@@ -859,11 +909,11 @@ no file will be written. To write to stdout, set the file name to a single dash,
 */
 
 
-interface MarsApiService {
-    // https://android-kotlin-fun-mars-server.appspot.com/photos
-    @GET("photos")
-    suspend fun getPhotos(): String
-}
+//interface MarsApiService {
+//    // https://android-kotlin-fun-mars-server.appspot.com/photos
+//    @GET("photos")
+//    suspend fun getPhotos(): String
+//}
 
 interface YahooApiChartData {
     // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
@@ -1064,6 +1114,28 @@ interface DataProviderSymbolsDataGemini {
     ): Deferred<Response<List<String>>>
 }
 // ["btcusd","btcgusd","btcdai","btcgbp","btceur","btcsgd","ethbtc","ethusd",
+
+
+@JsonClass(generateAdapter = true)
+data class DataProviderSymbolsDataOkxMarketData(
+        val instId: String,
+        var last: Double,
+        var open24h: Double,
+)
+
+@JsonClass(generateAdapter = true)
+data class DataProviderSymbolsDataOkxResponse(
+        val code: String,
+        val msg: String,
+        val data: List<DataProviderSymbolsDataOkxMarketData>
+)
+interface DataProviderSymbolsDataOkx {
+    // https://www.okx.com/api/v5/market/tickers
+
+    @GET("tickers")
+    fun getDataProviderSymbolsDataAsync(
+    ): Deferred<Response<DataProviderSymbolsDataOkxResponse>>
+}
 
 
 data class StockChartData(
