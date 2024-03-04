@@ -31,12 +31,12 @@ import kotlin.math.min
 
 // Data from the DB and online data fields.
 data class StockItem
-    (
-    var onlineMarketData: OnlineMarketData,
-    var stockDBdata: StockDBdata,
-    var assets: List<Asset>,
-    var events: List<Event>,
-    var dividends: List<Dividend>
+(
+        var onlineMarketData: OnlineMarketData,
+        var stockDBdata: StockDBdata,
+        var assets: List<Asset>,
+        var events: List<Event>,
+        var dividends: List<Dividend>
 )
 
 var responseCounter = 0
@@ -47,18 +47,18 @@ fun updateCounter() {
 }
 
 data class MarketDataResult
-    (
-    var marketState: MarketState,
-    var delayInMs: Long,
-    var msg: String,
+(
+        var marketState: MarketState,
+        var delayInMs: Long,
+        var msg: String,
 )
 
 class StockMarketDataRepository(
-    private val yahooApi: () -> YahooApiMarketData?,
-    private val coingeckoApi: () -> CoingeckoApiMarketData?,
-    private val coinpaprikaApi: () -> CoinpaprikaApiMarketData?,
-    private val geminiApi: () -> GeminiApiMarketData?,
-    private val okxApi: () -> OkxApiMarketData?,
+        private val yahooApi: () -> YahooApiMarketData?,
+        private val coingeckoApi: () -> CoingeckoApiMarketData?,
+        private val coinpaprikaApi: () -> CoinpaprikaApiMarketData?,
+        private val geminiApi: () -> GeminiApiMarketData?,
+        private val okxApi: () -> OkxApiMarketData?,
 ) : BaseRepository() {
 
     private val yahooMarketData = MutableLiveData<List<OnlineMarketData>>()
@@ -82,13 +82,13 @@ class StockMarketDataRepository(
         get() = okxMarketData
 
     private var marketSourceDataList: MutableList<List<OnlineMarketData>> =
-        mutableListOf(
-            emptyList(), // DataProvider.Standard
-            emptyList(), // DataProvider.Coingecko
-            emptyList(), // DataProvider.Coinpaprika
-            emptyList(), // DataProvider.Gemini
-            emptyList(), // DataProvider.Okx
-        )
+            mutableListOf(
+                    emptyList(), // DataProvider.Standard
+                    emptyList(), // DataProvider.Coingecko
+                    emptyList(), // DataProvider.Coinpaprika
+                    emptyList(), // DataProvider.Gemini
+                    emptyList(), // DataProvider.Okx
+            )
     val onlineMarketDataList = MediatorLiveData<List<OnlineMarketData>>()
 
     init {
@@ -130,7 +130,7 @@ class StockMarketDataRepository(
     }
 
     private fun combineData(
-        list: List<List<OnlineMarketData>>,
+            list: List<List<OnlineMarketData>>,
     ): List<OnlineMarketData> {
 
         val combinedList: MutableList<OnlineMarketData> = mutableListOf()
@@ -157,7 +157,7 @@ class StockMarketDataRepository(
         }
 
         val marketDataResult =
-            MarketDataResult(marketState = MarketState.NO_SYMBOL, delayInMs = -1, msg = "")
+                MarketDataResult(marketState = MarketState.NO_SYMBOL, delayInMs = -1, msg = "")
 
         val standardList = symbols.filter { stock ->
             stock.type == DataProvider.Standard
@@ -186,7 +186,7 @@ class StockMarketDataRepository(
             val coinpaprikaResult = getCoinpaprikaStockData(cryptoListCoinpaprika)
             marketDataResult.marketState = coinpaprikaResult.marketState
             marketDataResult.delayInMs =
-                max(marketDataResult.delayInMs, coinpaprikaResult.delayInMs)
+                    max(marketDataResult.delayInMs, coinpaprikaResult.delayInMs)
             marketDataResult.msg += coinpaprikaResult.msg
         }
 
@@ -250,9 +250,9 @@ class StockMarketDataRepository(
                 // no _data.value because this is a background thread
                 yahooMarketData.postValue(onlineMarketDataResultList)
                 return MarketDataResult(
-                    marketState = MarketState.NO_NETWORK,
-                    delayInMs = -1,
-                    msg = errorMsg
+                        marketState = MarketState.NO_NETWORK,
+                        delayInMs = -1,
+                        msg = errorMsg
                 )
             }
 
@@ -262,39 +262,39 @@ class StockMarketDataRepository(
                 // Transform onlinedata
                 // replace market value with postmarket value
                 val onlineMarketDataResultList2 =
-                    onlineMarketDataResultList.map { onlineMarketData ->
-                        val onlineMarketData2: OnlineMarketData = onlineMarketData
+                        onlineMarketDataResultList.map { onlineMarketData ->
+                            val onlineMarketData2: OnlineMarketData = onlineMarketData
 
-                        onlineMarketData2.postMarketData = false
+                            onlineMarketData2.postMarketData = false
 
-                        if ((onlineMarketData.marketState == MarketState.POST.value
-                                    || onlineMarketData.marketState == MarketState.POSTPOST.value
-                                    || onlineMarketData.marketState == MarketState.PREPRE.value
-                                    || onlineMarketData.marketState == MarketState.CLOSED.value)
-                            && onlineMarketData.postMarketPrice > 0.0
-                        ) {
-                            onlineMarketData2.postMarketData = true
-                            onlineMarketData2.marketPrice =
-                                onlineMarketData.postMarketPrice
-                            onlineMarketData2.marketChange =
-                                onlineMarketData.postMarketChange
-                            onlineMarketData2.marketChangePercent =
-                                onlineMarketData.postMarketChangePercent
-                        } else
-                            if ((onlineMarketData.marketState == MarketState.PRE.value)
-                                && onlineMarketData.preMarketPrice > 0.0
+                            if ((onlineMarketData.marketState == MarketState.POST.value
+                                            || onlineMarketData.marketState == MarketState.POSTPOST.value
+                                            || onlineMarketData.marketState == MarketState.PREPRE.value
+                                            || onlineMarketData.marketState == MarketState.CLOSED.value)
+                                    && onlineMarketData.postMarketPrice > 0.0
                             ) {
                                 onlineMarketData2.postMarketData = true
                                 onlineMarketData2.marketPrice =
-                                    onlineMarketData.preMarketPrice
+                                        onlineMarketData.postMarketPrice
                                 onlineMarketData2.marketChange =
-                                    onlineMarketData.preMarketChange
+                                        onlineMarketData.postMarketChange
                                 onlineMarketData2.marketChangePercent =
-                                    onlineMarketData.preMarketChangePercent
-                            }
+                                        onlineMarketData.postMarketChangePercent
+                            } else
+                                if ((onlineMarketData.marketState == MarketState.PRE.value)
+                                        && onlineMarketData.preMarketPrice > 0.0
+                                ) {
+                                    onlineMarketData2.postMarketData = true
+                                    onlineMarketData2.marketPrice =
+                                            onlineMarketData.preMarketPrice
+                                    onlineMarketData2.marketChange =
+                                            onlineMarketData.preMarketChange
+                                    onlineMarketData2.marketChangePercent =
+                                            onlineMarketData.preMarketChangePercent
+                                }
 
-                        onlineMarketData2
-                    }
+                            onlineMarketData2
+                        }
 
                 yahooMarketData.postValue(onlineMarketDataResultList2)
             } else {
@@ -369,9 +369,9 @@ class StockMarketDataRepository(
                 // no _data.value because this is a background thread
                 coingeckoMarketData.postValue(onlineMarketDataResultList)
                 return MarketDataResult(
-                    marketState = MarketState.QUOTA_EXCEEDED,
-                    delayInMs = -1,
-                    msg = errorMsg
+                        marketState = MarketState.QUOTA_EXCEEDED,
+                        delayInMs = -1,
+                        msg = errorMsg
                 )
             }
 
@@ -384,9 +384,9 @@ class StockMarketDataRepository(
             val delayInSeconds = min(60, max(10, 60 * onlineMarketDataResultList.size / 50))
 
             return MarketDataResult(
-                marketState = MarketState.REGULAR,
-                delayInMs = delayInSeconds * 1000L,
-                msg = ""
+                    marketState = MarketState.REGULAR,
+                    delayInMs = delayInSeconds * 1000L,
+                    msg = ""
             )
         }
 
@@ -410,9 +410,9 @@ class StockMarketDataRepository(
                 // no _data.value because this is a background thread
                 coinpaprikaMarketData.postValue(onlineMarketDataResultList)
                 return MarketDataResult(
-                    marketState = MarketState.QUOTA_EXCEEDED,
-                    delayInMs = -1,
-                    msg = errorMsg
+                        marketState = MarketState.QUOTA_EXCEEDED,
+                        delayInMs = -1,
+                        msg = errorMsg
                 )
             }
 
@@ -424,9 +424,9 @@ class StockMarketDataRepository(
 
             // add 100% to not exceed quota too often
             return MarketDataResult(
-                marketState = MarketState.REGULAR,
-                delayInMs = 2 * delayInSeconds * 1000L,
-                msg = ""
+                    marketState = MarketState.REGULAR,
+                    delayInMs = 2 * delayInSeconds * 1000L,
+                    msg = ""
             )
         }
 
@@ -558,8 +558,8 @@ class StockMarketDataRepository(
 
     // Query stock data by splitting symbols to blocks.
     private suspend fun queryYahooStockData(
-        api: YahooApiMarketData,
-        symbols: List<StockSymbol>
+            api: YahooApiMarketData,
+            symbols: List<StockSymbol>
     ): Pair<List<OnlineMarketData>, String> {
 
         // Get blockSize symbol data at a time.
@@ -577,18 +577,18 @@ class StockMarketDataRepository(
             do {
                 // Get the first number of blockSize symbols.
                 val symbolsToQuery: List<String> = remainingSymbolsToQuery
-                    .take(blockSize)
-                    .map { symbol ->
-                        symbol.symbol
-                    }
+                        .take(blockSize)
+                        .map { symbol ->
+                            symbol.symbol
+                        }
 
                 val quoteResponse: YahooResponse? = try {
                     apiCall(
-                        call = {
-                            updateCounter()
-                            api.getStockDataAsync(symbolsToQuery.joinToString(","), crumb)
-                                .await()
-                        }, errorMessage = "Error getting finance data."
+                            call = {
+                                updateCounter()
+                                api.getStockDataAsync(symbolsToQuery.joinToString(","), crumb)
+                                        .await()
+                            }, errorMessage = "Error getting finance data."
                     )
                 } catch (e: Exception) {
                     errorMsg += "StockMarketDataRepository.queryStockData failed, Exception=$e\n"
@@ -598,17 +598,15 @@ class StockMarketDataRepository(
 
                 // Add the result.
                 onlineMarketDataResultList.addAll(
-                    quoteResponse?.quoteResponse?.result
-                        ?: emptyList()
+                        quoteResponse?.quoteResponse?.result
+                                ?: emptyList()
                 )
 
                 // Remove the queried symbols.
                 remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
 
             } while (remainingSymbolsToQuery.isNotEmpty())
-        }
-        else
-        {
+        } else {
             errorMsg = "Empty crumb value, queryYahooStockData skipped."
         }
 
@@ -616,8 +614,8 @@ class StockMarketDataRepository(
     }
 
     private suspend fun queryCoingeckoStockData(
-        api: CoingeckoApiMarketData,
-        symbols: List<StockSymbol>
+            api: CoingeckoApiMarketData,
+            symbols: List<StockSymbol>
     ): Pair<List<OnlineMarketData>, String> {
 
         var errorMsg = ""
@@ -629,11 +627,11 @@ class StockMarketDataRepository(
 
             val response: CoingeckoResponse? = try {
                 apiCall(
-                    call = {
-                        updateCounter()
-                        api.getStockDataAsync(stockSymbol.symbol.lowercase(Locale.ROOT))
-                            .await()
-                    }, errorMessage = "Error getting finance data."
+                        call = {
+                            updateCounter()
+                            api.getStockDataAsync(stockSymbol.symbol.lowercase(Locale.ROOT))
+                                    .await()
+                        }, errorMessage = "Error getting finance data."
                 )
             } catch (e: Exception) {
                 errorMsg += "StockMarketDataRepository.queryCoingeckoStockData failed, Exception=$e\n"
@@ -644,16 +642,16 @@ class StockMarketDataRepository(
             // Add the result.
             if (response != null) {
                 onlineMarketDataResultList.add(
-                    OnlineMarketData(
-                        symbol = stockSymbol.symbol,
-                        name1 = response.name,
-                        marketPrice = response.market_data.current_price.usd,
-                        marketChange = response.market_data.price_change_24h,
-                        marketChangePercent = response.market_data.price_change_percentage_24h,
-                        coinImageUrl = response.image.small,
-                        quoteType = "CRYPTOCURRENCY",
-                        marketCap = response.market_data.market_cap.usd
-                    )
+                        OnlineMarketData(
+                                symbol = stockSymbol.symbol,
+                                name1 = response.name,
+                                marketPrice = response.market_data.current_price.usd,
+                                marketChange = response.market_data.price_change_24h,
+                                marketChangePercent = response.market_data.price_change_percentage_24h,
+                                coinImageUrl = response.image.small,
+                                quoteType = "CRYPTOCURRENCY",
+                                marketCap = response.market_data.market_cap.usd
+                        )
                 )
             }
         }
@@ -662,8 +660,8 @@ class StockMarketDataRepository(
     }
 
     private suspend fun queryCoinpaprikaStockData(
-        api: CoinpaprikaApiMarketData,
-        symbols: List<StockSymbol>
+            api: CoinpaprikaApiMarketData,
+            symbols: List<StockSymbol>
     ): Pair<List<OnlineMarketData>, String> {
 
         // Get blockSize symbol data at a time.
@@ -680,41 +678,41 @@ class StockMarketDataRepository(
         do {
             // Get the first number of blockSize symbols.
             remainingSymbolsToQuery
-                .take(blockSize)
-                .map { symbol ->
-                    symbol.symbol
-                }.forEach { stockSymbol ->
+                    .take(blockSize)
+                    .map { symbol ->
+                        symbol.symbol
+                    }.forEach { stockSymbol ->
 
-                    val response: CoinpaprikaResponse? = try {
-                        apiCall(
-                            call = {
-                                updateCounter()
-                                api.getStockDataAsync(stockSymbol.lowercase(Locale.ROOT))
-                                    .await()
-                            }, errorMessage = "Error getting finance data."
-                        )
-                    } catch (e: Exception) {
-                        errorMsg += "StockMarketDataRepository.queryStockData failed, Exception=$e\n"
-                        Log.d("StockMarketDataRepository.queryStockData failed", "Exception=$e")
-                        null
-                    }
-
-                    // Add the result.
-                    if (response != null) {
-                        onlineMarketDataResultList.add(
-                            OnlineMarketData(
-                                symbol = stockSymbol,
-                                name1 = response.name,
-                                marketPrice = response.quotes.USD.price,
-                                marketChange = response.quotes.USD.price * response.quotes.USD.percent_change_24h / 100,
-                                marketChangePercent = response.quotes.USD.percent_change_24h,
-                                //coinImageUrl = ,
-                                quoteType = "CRYPTOCURRENCY",
-                                marketCap = response.quotes.USD.market_cap
+                        val response: CoinpaprikaResponse? = try {
+                            apiCall(
+                                    call = {
+                                        updateCounter()
+                                        api.getStockDataAsync(stockSymbol.lowercase(Locale.ROOT))
+                                                .await()
+                                    }, errorMessage = "Error getting finance data."
                             )
-                        )
+                        } catch (e: Exception) {
+                            errorMsg += "StockMarketDataRepository.queryStockData failed, Exception=$e\n"
+                            Log.d("StockMarketDataRepository.queryStockData failed", "Exception=$e")
+                            null
+                        }
+
+                        // Add the result.
+                        if (response != null) {
+                            onlineMarketDataResultList.add(
+                                    OnlineMarketData(
+                                            symbol = stockSymbol,
+                                            name1 = response.name,
+                                            marketPrice = response.quotes.USD.price,
+                                            marketChange = response.quotes.USD.price * response.quotes.USD.percent_change_24h / 100,
+                                            marketChangePercent = response.quotes.USD.percent_change_24h,
+                                            //coinImageUrl = ,
+                                            quoteType = "CRYPTOCURRENCY",
+                                            marketCap = response.quotes.USD.market_cap
+                                    )
+                            )
+                        }
                     }
-                }
 
             // Remove the queried symbols.
             remainingSymbolsToQuery = remainingSymbolsToQuery.drop(blockSize)
@@ -797,12 +795,13 @@ class StockMarketDataRepository(
         }
 
         // Add the result.
-        response?.data?.forEach { result ->
-            if(result.last > 0.0) {
+        response?.data?.filter { entry -> entry.instId.endsWith("-usdc", true) }?.forEach { result ->
+            if (result.last > 0.0) {
+                val id = result.instId.replace("-usdc", "", true)
                 onlineMarketDataResultList.add(
                         OnlineMarketData(
-                                symbol = result.instId,
-                                name1 = idToName(result.instId),
+                                symbol = id,
+                                name1 = id,
                                 marketPrice = result.last,
                                 marketChange = result.last - result.open24h,
                                 marketChangePercent = 100 * (result.last - result.open24h) / result.last,
@@ -816,7 +815,7 @@ class StockMarketDataRepository(
     }
 
     class StockRawMarketDataRepository(private val api: () -> YahooApiRawMarketData?) :
-        BaseRepository() {
+            BaseRepository() {
 
         suspend fun getStockRawData(symbol: String): String {
 
@@ -827,17 +826,17 @@ class StockMarketDataRepository(
 
                 val quoteResponse: String? = try {
                     apiCall(
-                        call = {
-                            updateCounter()
-                            api.getStockDataAsync(symbol, crumb)
-                                .await()
-                        },
-                        errorMessage = "Error getting finance data."
+                            call = {
+                                updateCounter()
+                                api.getStockDataAsync(symbol, crumb)
+                                        .await()
+                            },
+                            errorMessage = "Error getting finance data."
                     )
                 } catch (e: Exception) {
                     Log.d(
-                        "StockRawMarketDataRepository.getStockRawData($symbol) failed",
-                        "Exception=$e"
+                            "StockRawMarketDataRepository.getStockRawData($symbol) failed",
+                            "Exception=$e"
                     )
                     null
                 }

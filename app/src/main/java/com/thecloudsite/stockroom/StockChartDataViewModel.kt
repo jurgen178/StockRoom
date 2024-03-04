@@ -27,19 +27,20 @@ import java.time.ZonedDateTime
 class StockChartDataViewModel(application: Application) : AndroidViewModel(application) {
 
     private val stockChartDataRepository: StockChartDataRepository =
-        StockChartDataRepository(
-            { StockYahooChartDataApiFactory.chartDataApi },
-            { StockCoingeckoChartDataApiFactory.chartDataApi },
-            { StockCoinpaprikaChartDataApiFactory.chartDataApi },
-            { StockGeminiChartDataApiFactory.chartDataApi }
-        )
+            StockChartDataRepository(
+                    { StockYahooChartDataApiFactory.chartDataApi },
+                    { StockCoingeckoChartDataApiFactory.chartDataApi },
+                    { StockCoinpaprikaChartDataApiFactory.chartDataApi },
+                    { StockGeminiChartDataApiFactory.chartDataApi },
+                    { StockOkxChartDataApiFactory.chartDataApi }
+            )
 
     val chartData: LiveData<StockChartData> = stockChartDataRepository.chartData
 
     private fun getYahooChartData(
-        stockSymbol: StockSymbol,
-        interval: String,
-        range: String
+            stockSymbol: StockSymbol,
+            interval: String,
+            range: String
     ) {
         viewModelScope.launch {
             stockChartDataRepository.getYahooChartData(stockSymbol, interval, range)
@@ -47,8 +48,8 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun getCoingeckoChartData(
-        stockSymbol: StockSymbol,
-        days: Int
+            stockSymbol: StockSymbol,
+            days: Int
     ) {
         viewModelScope.launch {
             stockChartDataRepository.getCoingeckoChartData(stockSymbol, "usd", days)
@@ -56,9 +57,9 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun getCoinpaprikaChartData(
-        stockSymbol: StockSymbol,
-        start: Long,
-        end: Long
+            stockSymbol: StockSymbol,
+            start: Long,
+            end: Long
     ) {
         viewModelScope.launch {
             stockChartDataRepository.getCoinpaprikaChartData(stockSymbol, start, end)
@@ -66,62 +67,118 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun getGeminiChartData(
-        stockSymbol: StockSymbol,
-        timeframe: String
+            stockSymbol: StockSymbol,
+            timeframe: String
     ) {
         viewModelScope.launch {
             stockChartDataRepository.getGeminiChartData(stockSymbol, timeframe)
         }
     }
 
+    private fun getOkxChartData(
+            stockSymbol: StockSymbol,
+            start: Long,
+            end: Long
+    ) {
+        viewModelScope.launch {
+            stockChartDataRepository.getOkxChartData(stockSymbol, start, end)
+        }
+    }
+
     fun getChartData(
-        stockSymbol: StockSymbol,
-        stockViewRange: StockViewRange
+            stockSymbol: StockSymbol,
+            stockViewRange: StockViewRange
     ) {
         when (stockSymbol.type) {
+            DataProvider.Standard -> {
+                // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
+                // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
+                when (stockViewRange) {
+                    StockViewRange.OneDay -> {
+                        getYahooChartData(stockSymbol, "5m", "1d")
+                    }
+
+                    StockViewRange.FiveDays -> {
+                        getYahooChartData(stockSymbol, "15m", "5d")
+                    }
+
+                    StockViewRange.OneMonth -> {
+                        getYahooChartData(stockSymbol, "90m", "1mo")
+                    }
+
+                    StockViewRange.ThreeMonth -> {
+                        getYahooChartData(stockSymbol, "1d", "3mo")
+                    }
+
+                    StockViewRange.YTD -> {
+                        getYahooChartData(stockSymbol, "1d", "ytd")
+                    }
+
+                    StockViewRange.OneYear -> {
+                        getYahooChartData(stockSymbol, "1d", "1y")
+                    }
+
+                    StockViewRange.FiveYears -> {
+                        getYahooChartData(stockSymbol, "1d", "5y")
+                    }
+
+                    StockViewRange.Max -> {
+                        getYahooChartData(stockSymbol, "1d", "max")
+                    }
+                }
+            }
+
             DataProvider.Coingecko -> {
                 when (stockViewRange) {
                     StockViewRange.OneDay -> {
                         getCoingeckoChartData(stockSymbol, 1)
                     }
+
                     StockViewRange.FiveDays -> {
                         getCoingeckoChartData(stockSymbol, 5)
                     }
+
                     StockViewRange.OneMonth -> {
                         getCoingeckoChartData(stockSymbol, 30)
                     }
+
                     StockViewRange.ThreeMonth -> {
                         getCoingeckoChartData(stockSymbol, 90)
                     }
+
                     StockViewRange.YTD -> {
                         val datetimeYTD =
-                            ZonedDateTime.of(
-                                ZonedDateTime.now().year,
-                                1,
-                                1,
-                                0,
-                                0,
-                                0,
-                                0,
-                                ZoneOffset.systemDefault()
-                            )
+                                ZonedDateTime.of(
+                                        ZonedDateTime.now().year,
+                                        1,
+                                        1,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        ZoneOffset.systemDefault()
+                                )
                         val datetime = ZonedDateTime.now()
                         val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
                         val seconds = datetime.toEpochSecond() // in GMT
                         val daysYTD = (seconds - secondsYTD) / 60 / 60 / 24 + 1
                         getCoingeckoChartData(stockSymbol, daysYTD.toInt())
                     }
+
                     StockViewRange.OneYear -> {
                         getCoingeckoChartData(stockSymbol, 365)
                     }
+
                     StockViewRange.FiveYears -> {
                         getCoingeckoChartData(stockSymbol, 5 * 365)
                     }
+
                     StockViewRange.Max -> {
                         getCoingeckoChartData(stockSymbol, 0)
                     }
                 }
             }
+
             DataProvider.Coinpaprika -> {
                 val datetimeNow = ZonedDateTime.now().toEpochSecond()
                 val dayInSeconds = 24 * 60 * 60
@@ -129,139 +186,202 @@ class StockChartDataViewModel(application: Application) : AndroidViewModel(appli
                 when (stockViewRange) {
                     StockViewRange.OneDay -> {
                         getCoinpaprikaChartData(
-                            stockSymbol,
-                            datetimeNow - dayInSeconds,
-                            datetimeNow
+                                stockSymbol,
+                                datetimeNow - dayInSeconds,
+                                datetimeNow
                         )
                     }
+
                     StockViewRange.FiveDays -> {
                         getCoinpaprikaChartData(
-                            stockSymbol,
-                            datetimeNow - 5 * dayInSeconds,
-                            datetimeNow
+                                stockSymbol,
+                                datetimeNow - 5 * dayInSeconds,
+                                datetimeNow
                         )
                     }
+
                     StockViewRange.OneMonth -> {
                         getCoinpaprikaChartData(
-                            stockSymbol,
-                            datetimeNow - 30 * dayInSeconds,
-                            datetimeNow
+                                stockSymbol,
+                                datetimeNow - 30 * dayInSeconds,
+                                datetimeNow
                         )
                     }
+
                     StockViewRange.ThreeMonth -> {
                         getCoinpaprikaChartData(
-                            stockSymbol,
-                            datetimeNow - 90 * dayInSeconds,
-                            datetimeNow
+                                stockSymbol,
+                                datetimeNow - 90 * dayInSeconds,
+                                datetimeNow
                         )
                     }
+
                     StockViewRange.YTD -> {
                         val datetimeYTD =
-                            ZonedDateTime.of(
-                                ZonedDateTime.now().year,
-                                1,
-                                1,
-                                0,
-                                0,
-                                0,
-                                0,
-                                ZoneOffset.systemDefault()
-                            )
+                                ZonedDateTime.of(
+                                        ZonedDateTime.now().year,
+                                        1,
+                                        1,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        ZoneOffset.systemDefault()
+                                )
                         val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
                         getCoinpaprikaChartData(stockSymbol, secondsYTD, datetimeNow)
                     }
+
                     StockViewRange.OneYear -> {
                         getCoinpaprikaChartData(
-                            stockSymbol,
-                            datetimeNow - 365 * dayInSeconds,
-                            datetimeNow
+                                stockSymbol,
+                                datetimeNow - 365 * dayInSeconds,
+                                datetimeNow
                         )
                     }
+
                     StockViewRange.FiveYears -> {
                         getCoinpaprikaChartData(
-                            stockSymbol,
-                            datetimeNow - 5 * 365 * dayInSeconds,
-                            datetimeNow
+                                stockSymbol,
+                                datetimeNow - 5 * 365 * dayInSeconds,
+                                datetimeNow
                         )
                     }
+
                     StockViewRange.Max -> {
                         getCoinpaprikaChartData(stockSymbol, 0, datetimeNow)
                     }
                 }
             }
+
             DataProvider.Gemini -> {
                 when (stockViewRange) {
                     StockViewRange.OneDay -> {
                         getGeminiChartData(stockSymbol, "1m")
                     }
+
                     StockViewRange.FiveDays -> {
                         getGeminiChartData(stockSymbol, "5m")
                     }
+
                     StockViewRange.OneMonth -> {
                         getGeminiChartData(stockSymbol, "30m")
                     }
+
                     StockViewRange.ThreeMonth -> {
                         getGeminiChartData(stockSymbol, "1hr")
                     }
+
                     StockViewRange.YTD -> {
                         // TODO set the correct timeframe
                         val datetimeYTD =
-                            ZonedDateTime.of(
-                                ZonedDateTime.now().year,
-                                1,
-                                1,
-                                0,
-                                0,
-                                0,
-                                0,
-                                ZoneOffset.systemDefault()
-                            )
+                                ZonedDateTime.of(
+                                        ZonedDateTime.now().year,
+                                        1,
+                                        1,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        ZoneOffset.systemDefault()
+                                )
                         val datetime = ZonedDateTime.now()
                         val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
                         val seconds = datetime.toEpochSecond() // in GMT
                         val daysYTD = (seconds - secondsYTD) / 60 / 60 / 24 + 1
                         getGeminiChartData(stockSymbol, "6hr")
                     }
+
                     StockViewRange.OneYear -> {
                         getGeminiChartData(stockSymbol, "1day")
                     }
+
                     StockViewRange.FiveYears -> {
                         getGeminiChartData(stockSymbol, "1day")
                     }
+
                     StockViewRange.Max -> {
                         getGeminiChartData(stockSymbol, "1day")
                     }
                 }
             }
-            else -> {
-                // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
-                // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
+
+            DataProvider.OKX -> {
+                val datetimeNow = ZonedDateTime.now().toEpochSecond()
+                val dayInSeconds = 24 * 60 * 60
+
                 when (stockViewRange) {
                     StockViewRange.OneDay -> {
-                        getYahooChartData(stockSymbol, "5m", "1d")
+                        getOkxChartData(
+                                stockSymbol,
+                                datetimeNow - dayInSeconds,
+                                datetimeNow
+                        )
                     }
+
                     StockViewRange.FiveDays -> {
-                        getYahooChartData(stockSymbol, "15m", "5d")
+                        getOkxChartData(
+                                stockSymbol,
+                                datetimeNow - 5 * dayInSeconds,
+                                datetimeNow
+                        )
                     }
+
                     StockViewRange.OneMonth -> {
-                        getYahooChartData(stockSymbol, "90m", "1mo")
+                        getOkxChartData(
+                                stockSymbol,
+                                datetimeNow - 30 * dayInSeconds,
+                                datetimeNow
+                        )
                     }
+
                     StockViewRange.ThreeMonth -> {
-                        getYahooChartData(stockSymbol, "1d", "3mo")
+                        getOkxChartData(
+                                stockSymbol,
+                                datetimeNow - 90 * dayInSeconds,
+                                datetimeNow
+                        )
                     }
+
                     StockViewRange.YTD -> {
-                        getYahooChartData(stockSymbol, "1d", "ytd")
+                        val datetimeYTD =
+                                ZonedDateTime.of(
+                                        ZonedDateTime.now().year,
+                                        1,
+                                        1,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        ZoneOffset.systemDefault()
+                                )
+                        val secondsYTD = datetimeYTD.toEpochSecond() // in GMT
+                        getOkxChartData(stockSymbol, secondsYTD, datetimeNow)
                     }
+
                     StockViewRange.OneYear -> {
-                        getYahooChartData(stockSymbol, "1d", "1y")
+                        getOkxChartData(
+                                stockSymbol,
+                                datetimeNow - 365 * dayInSeconds,
+                                datetimeNow
+                        )
                     }
+
                     StockViewRange.FiveYears -> {
-                        getYahooChartData(stockSymbol, "1d", "5y")
+                        getOkxChartData(
+                                stockSymbol,
+                                datetimeNow - 5 * 365 * dayInSeconds,
+                                datetimeNow
+                        )
                     }
+
                     StockViewRange.Max -> {
-                        getYahooChartData(stockSymbol, "1d", "max")
+                        getOkxChartData(stockSymbol, 0, datetimeNow)
                     }
                 }
+            }
+
+            DataProvider.None -> {
             }
         }
     }

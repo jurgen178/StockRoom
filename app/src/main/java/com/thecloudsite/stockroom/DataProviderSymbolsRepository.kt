@@ -150,12 +150,13 @@ class DataProviderOkxSymbolsRepository() : DataProviderSymbolsBaseRepository() {
 
         val symbolEntries : MutableList<DataProviderSymbolEntry> = mutableListOf()
 
-        dataProviderSymbolsResponse?.data?.forEach { result ->
+        dataProviderSymbolsResponse?.data?.filter { entry -> entry.instId.endsWith("-usdc", true) }?.forEach { result ->
             if (result.last > 0.0) {
+                val id = result.instId.replace("-usdc", "", true)
                 symbolEntries.add(
                         DataProviderSymbolEntry(
-                                id = result.instId,
-                                name = idToName(result.instId),
+                                id = id,
+                                name = id,
                         )
                 )
             }
@@ -163,7 +164,6 @@ class DataProviderOkxSymbolsRepository() : DataProviderSymbolsBaseRepository() {
 
         return symbolEntries
                 .sortedBy { entry -> entry.id.lowercase(Locale.ROOT) }
-                //.map { symbol -> DataProviderSymbolEntry(id = symbol, name = idToName(symbol)) }
     }
 }
 

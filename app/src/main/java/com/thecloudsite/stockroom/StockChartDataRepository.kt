@@ -28,7 +28,8 @@ class StockChartDataRepository(
     private val yahooApi: () -> YahooApiChartData?,
     private val coingeckoApi: () -> CoingeckoApiChartData?,
     private val coinpaprikaApi: () -> CoinpaprikaApiChartData?,
-    private val geminiApi: () -> GeminiApiChartData?
+    private val geminiApi: () -> GeminiApiChartData?,
+    private val okxApi: () -> OkxApiChartData?
 ) : BaseRepository() {
 
     private val _data = MutableLiveData<StockChartData>()
@@ -172,6 +173,7 @@ class StockChartDataRepository(
         return emptyList()
     }
 
+
     suspend fun getCoinpaprikaChartData(
         stockSymbol: StockSymbol,
         start: Long,
@@ -292,6 +294,73 @@ class StockChartDataRepository(
 
         return emptyList()
     }
+
+    // TODO
+    suspend fun getOkxChartData(
+            stockSymbol: StockSymbol,
+            start: Long,
+            end: Long
+    ) {
+        _data.value =
+                StockChartData(
+                        symbol = stockSymbol.symbol,
+                        stockDataEntries = getOkxChartDataEntries(stockSymbol, start, end)
+                )
+    }
+
+    private suspend fun getOkxChartDataEntries(
+            stockSymbol: StockSymbol,
+            start: Long,
+            end: Long
+    ): List<StockDataEntry> {
+
+        val api: OkxApiChartData = okxApi() ?: return emptyList()
+
+        val response: List<OkxChartData>? = try {
+            apiCall(
+                    call = {
+                        updateCounter()
+                        api.getOkxChartDataAsync(
+                        )
+                                .await()
+                    },
+                    errorMessage = "Error getting finance data."
+            )
+        } catch (e: Exception) {
+            Log.d("StockChartDataRepository.getCoinpaprikaChartDataAsync() failed", "Exception=$e")
+            null
+        }
+
+        if (response != null) {
+            var index = 0.0
+            return response.map { price ->
+
+                var date: Long = 0
+                // Convert time_open field "2021-12-05T00:00:00Z" to unix time
+                // RFC3999 (ISO-8601)
+                try {
+                    val localDateTime = LocalDateTime.parse(
+                            price.time_open,
+                            DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                    )
+                    date = localDateTime.toEpochSecond(ZoneOffset.UTC) // in GMT
+                } catch (e: java.lang.Exception) {
+                }
+
+                StockDataEntry(
+                        dateTimePoint = date,
+                        x = index++,
+                        high = price.high,
+                        low = price.low,
+                        open = price.open,
+                        close = price.close
+                )
+            }
+        }
+
+        return emptyList()
+    }
+
 
     // Interpolate values in case value is missing to avoid zero points.
     // For example: 3.2948999404907227,null,3.299999952316284,3.309799909591675,3.309999942779541,3.3299999237060547,...

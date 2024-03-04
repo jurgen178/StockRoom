@@ -820,8 +820,8 @@ data class OkxResponse(
 )
 
 interface OkxApiMarketData {
-    // https://www.okx.com/api/v5/market/tickers
-    @GET("tickers")
+    // https://www.okx.com/api/v5/market/tickers?instType=SPOT
+    @GET("tickers?instType=SPOT")
     fun getStockDataAsync(): Deferred<Response<OkxResponse>>
 }
 
@@ -1059,6 +1059,23 @@ interface GeminiApiChartData {
     ): Deferred<Response<List<MutableList<Double>>>>
 }
 
+
+@JsonClass(generateAdapter = true)
+data class OkxChartData(
+        var time_open: String,
+        var open: Double,
+        var high: Double,
+        var low: Double,
+        var close: Double
+)
+
+interface OkxApiChartData {
+    @GET("")
+    fun getOkxChartDataAsync(
+    ): Deferred<Response<List<OkxChartData>>>
+}
+
+
 data class DataProviderSymbolEntry(
     var id: String,
     var name: String,
@@ -1130,9 +1147,9 @@ data class DataProviderSymbolsDataOkxResponse(
         val data: List<DataProviderSymbolsDataOkxMarketData>
 )
 interface DataProviderSymbolsDataOkx {
-    // https://www.okx.com/api/v5/market/tickers
+    // https://www.okx.com/api/v5/market/tickers?instType=SPOT
 
-    @GET("tickers")
+    @GET("tickers?instType=SPOT")
     fun getDataProviderSymbolsDataAsync(
     ): Deferred<Response<DataProviderSymbolsDataOkxResponse>>
 }

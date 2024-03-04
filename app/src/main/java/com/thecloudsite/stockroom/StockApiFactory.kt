@@ -330,7 +330,7 @@ object StockMarketDataGeminiApiFactory : StockMarketDataApiFactoryBase("https://
 }
 
 object StockMarketDataOkxApiFactory : StockMarketDataApiFactoryBase("https://www.okx.com/api/v5/market/") {
-    // https://www.okx.com/api/v5/market/tickers
+    // https://www.okx.com/api/v5/market/tickers?instType=SPOT
 
     override fun assignApi() {
         marketDataApi =
@@ -493,7 +493,7 @@ object GeminiSymbolsApiFactory : StockMarketDataApiFactoryBase("https://api.gemi
 }
 
 object OkxSymbolsApiFactory : StockMarketDataApiFactoryBase("https://www.okx.com/api/v5/market/") {
-// https://www.okx.com/api/v5/market/tickers
+// https://www.okx.com/api/v5/market/tickers?instType=SPOT
 
     override fun assignApi() {
         dataProviderApi =
@@ -572,6 +572,21 @@ object StockGeminiChartDataApiFactory : StockMarketDataApiFactoryBase("https://a
     }
 
     var chartDataApi: GeminiApiChartData? = null
+}
+
+
+object StockOkxChartDataApiFactory : StockMarketDataApiFactoryBase("https://") {
+
+    override fun assignApi() {
+        chartDataApi =
+                try {
+                    retrofit().create(OkxApiChartData::class.java)
+                } catch (e: Exception) {
+                    null
+                }
+    }
+
+    var chartDataApi: OkxApiChartData? = null
 }
 
 /*
