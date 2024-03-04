@@ -1070,6 +1070,39 @@ data class OkxChartData(
 )
 
 interface OkxApiChartData {
+
+// https://www.okx.com/docs-v5/en/#public-data-rest-api-get-index-tickers
+// https://www.okx.com/api/v5/market/index-candles?instId=BTC-USD
+
+//    {
+//        "code": "0",
+//        "msg": "",
+//        "data": [
+//        [
+//            "1709514840000",
+//            "63432.9",
+//            "63451.8",
+//            "63421.3",
+//            "63451.8",
+//            "0"
+//        ],
+//        [
+//            "1709514780000",
+//            "63462.7",
+//            "63487.8",
+//            "63407.8",
+//            "63431.2",
+//            "1"
+//        ],
+//        [
+//            "1709514720000",
+//            "63416.3",
+//            "63489.1",
+//            "63401.4",
+//            "63463.4",
+//            "1"
+//        ],
+
     @GET("")
     fun getOkxChartDataAsync(
     ): Deferred<Response<List<OkxChartData>>>
