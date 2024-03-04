@@ -1630,11 +1630,12 @@ class StockDataFragment : Fragment() {
 
             val groups: List<Group> = stockRoomViewModel.getGroupsSync()
             popupMenu.setOnMenuItemClickListener { menuitem ->
-                val i: Int = menuitem.itemId - 1
+                val i: Int = menuitem.itemId - 2
                 val clrDB: Int
                 val name: String
 
-                if (i >= groups.size) {
+                // Check if first item (menuitem.itemId=1, i=-1) is selected.
+                if (i < 0) {
                     clrDB = 0
                     name = getString(R.string.standard_group)
                 } else {

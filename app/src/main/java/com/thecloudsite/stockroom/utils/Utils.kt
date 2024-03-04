@@ -1158,8 +1158,8 @@ fun getGroupsMenuList(
     val menuStrings: MutableList<SpannableString> = mutableListOf()
 
     val menuGroups: MutableList<Group> = mutableListOf()
-    menuGroups.addAll(groups)
     menuGroups.add(Group(color = backgroundListColor, name = standardGroupName))
+    menuGroups.addAll(groups)
 
     val space: String = "    "
     val spacePos = space.length
