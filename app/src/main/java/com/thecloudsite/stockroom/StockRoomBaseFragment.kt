@@ -46,40 +46,38 @@ enum class SortMode(val value: Int) {
     //ByUnsorted(11),
 }
 
-open class StockRoomBaseFragment : Fragment() {
-
-    private var _binding: FragmentListBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    val binding get() = _binding!!
+// Implements the lambda functions used by the StockDataFragment (inherits StockRoomBaseLambdaFragment)
+// and the list fragments to support clicking the group and the marker at the left hand border.
+// Otherwise the same functions need to be implemented in both places.
+open class StockRoomBaseLambdaFragment : Fragment() {
 
     lateinit var stockRoomViewModel: StockRoomViewModel
 
     fun clickListenerGroup(
-        stockItem: StockItem,
-        itemView: View
+            stockItem: StockItem,
+            itemView: View
     ) {
         val popupMenu = PopupMenu(context, itemView)
 
         var menuIndex: Int = Menu.FIRST
         stockRoomViewModel.getGroupsMenuList(
-            getString(string.standard_group),
-            context?.getColor(R.color.black) ?: 0
+                getString(string.standard_group),
+                context?.getColor(R.color.black) ?: 0
         )
-            .forEach {
-                popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
-            }
+                .forEach {
+                    popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
+                }
 
         popupMenu.show()
 
         val groups: List<Group> = stockRoomViewModel.getGroupsSync()
         popupMenu.setOnMenuItemClickListener { menuitem ->
-            val i: Int = menuitem.itemId - 1
+            val i: Int = menuitem.itemId - 2
             val clr: Int
             val name: String
 
-            if (i >= groups.size) {
+            // Check if first item (menuitem.itemId=1, i=-1) is selected.
+            if (i < 0) {
                 clr = 0
                 name = getString(string.standard_group)
             } else {
@@ -97,15 +95,14 @@ open class StockRoomBaseFragment : Fragment() {
     }
 
     fun clickListenerMarker(
-        context: Context,
-        stockItem: StockItem,
-        itemView: View
+            stockItem: StockItem,
+            itemView: View
     ) {
         val popupMenu = PopupMenu(context, itemView)
 
         var menuIndex: Int = Menu.FIRST
 
-        (0..10).map { getMarkerText(context, it) }.forEach {
+        (0..10).map { context?.let { it1 -> getMarkerText(it1, it) } }.forEach {
             popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
         }
 
@@ -127,6 +124,15 @@ open class StockRoomBaseFragment : Fragment() {
         //stockRoomViewModel.runOnlineTaskNow()
         startActivity(intent)
     }
+}
+
+open class StockRoomBaseFragment : StockRoomBaseLambdaFragment() {
+
+    private var _binding: FragmentListBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

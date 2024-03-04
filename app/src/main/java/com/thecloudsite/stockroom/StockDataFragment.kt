@@ -101,7 +101,7 @@ const val EXTRA_SETSTARTFRAGMENT = "com.thecloudsite.stockroom.SETSTARTFRAGMENT"
 
 // Enabled/Disabled overlay symbols not per instance
 var chartOverlaySymbolsEnableList: MutableList<Boolean> =
-    MutableList(MaxChartOverlays) { true }
+        MutableList(MaxChartOverlays) { true }
 
 enum class StockViewRange(val value: Int) {
     OneDay(0),
@@ -129,24 +129,24 @@ enum class LinkType(val value: Int) {
 }
 
 data class StockAssetsLiveData(
-    var assets: Assets? = null,
-    var stockDBdata: StockDBdata? = null,
-    var onlineMarketData: OnlineMarketData? = null
+        var assets: Assets? = null,
+        var stockDBdata: StockDBdata? = null,
+        var onlineMarketData: OnlineMarketData? = null
 )
 
 data class AssetsTimeData(
-    var date: Long = 0L,
-    var price: Double = 0.0,
-    var quantity: Double = 0.0,
-    var account: String = ""
+        var date: Long = 0L,
+        var price: Double = 0.0,
+        var quantity: Double = 0.0,
+        var account: String = ""
 )
 
 // Enable scrolling by disable parent scrolling
 class CustomLineChart(
-    context: Context?,
-    attrs: AttributeSet?
+        context: Context?,
+        attrs: AttributeSet?
 ) :
-    LineChart(context, attrs) {
+        LineChart(context, attrs) {
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
             parent?.requestDisallowInterceptTouchEvent(true)
@@ -164,10 +164,10 @@ class CustomLineChart(
 }
 
 class CustomCandleStickChart(
-    context: Context?,
-    attrs: AttributeSet?
+        context: Context?,
+        attrs: AttributeSet?
 ) :
-    CandleStickChart(context, attrs) {
+        CandleStickChart(context, attrs) {
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
             parent?.requestDisallowInterceptTouchEvent(true)
@@ -185,10 +185,10 @@ class CustomCandleStickChart(
 }
 
 class CustomTimePicker(
-    context: Context?,
-    attrs: AttributeSet?
+        context: Context?,
+        attrs: AttributeSet?
 ) :
-    TimePicker(context, attrs) {
+        TimePicker(context, attrs) {
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
             parent?.requestDisallowInterceptTouchEvent(true)
@@ -197,7 +197,7 @@ class CustomTimePicker(
     }
 }
 
-class StockDataFragment : Fragment() {
+class StockDataFragment : StockRoomBaseLambdaFragment() {
 
     private var _binding: FragmentStockdataBinding? = null
 
@@ -206,7 +206,6 @@ class StockDataFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var stockChartDataViewModel: StockChartDataViewModel
-    private lateinit var stockRoomViewModel: StockRoomViewModel
     private var chartDataItems: HashMap<String, List<StockDataEntry>?> = hashMapOf()
     private val symbolTypesMap = HashMap<String, DataProvider>()
 
@@ -241,8 +240,8 @@ class StockDataFragment : Fragment() {
     private var stockViewRange: StockViewRange
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(requireContext())
-                    ?: return StockViewRange.OneDay
+                    PreferenceManager.getDefaultSharedPreferences(requireContext())
+                            ?: return StockViewRange.OneDay
             val index = sharedPref.getInt(settingStockViewRange, StockViewRange.OneDay.value)
             return if (index >= 0 && index < StockViewRange.values().size) {
                 StockViewRange.values()[index]
@@ -252,7 +251,7 @@ class StockDataFragment : Fragment() {
         }
         set(value) {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
+                    PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
             with(sharedPref.edit()) {
                 putInt(settingStockViewRange, value.value)
                 commit()
@@ -263,8 +262,8 @@ class StockDataFragment : Fragment() {
     private var stockViewMode: StockViewMode
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(requireContext())
-                    ?: return StockViewMode.Line
+                    PreferenceManager.getDefaultSharedPreferences(requireContext())
+                            ?: return StockViewMode.Line
             val index = sharedPref.getInt(settingStockViewMode, StockViewMode.Line.value)
             return if (index >= 0 && index < StockViewMode.values().size) {
                 StockViewMode.values()[index]
@@ -274,7 +273,7 @@ class StockDataFragment : Fragment() {
         }
         set(value) {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
+                    PreferenceManager.getDefaultSharedPreferences(requireContext()) ?: return
             with(sharedPref.edit()) {
                 putInt(settingStockViewMode, value.value)
                 commit()
@@ -285,10 +284,10 @@ class StockDataFragment : Fragment() {
     private var chartOverlaySymbols: String
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(requireContext())
-                    ?: return settingChartOverlaySymbolsDefault
+                    PreferenceManager.getDefaultSharedPreferences(requireContext())
+                            ?: return settingChartOverlaySymbolsDefault
             return sharedPref.getString(settingOverlaySymbols, settingChartOverlaySymbolsDefault)
-                ?: return settingChartOverlaySymbolsDefault
+                    ?: return settingChartOverlaySymbolsDefault
         }
         set(value) {
         }
@@ -297,8 +296,8 @@ class StockDataFragment : Fragment() {
     private var useChartOverlaySymbols: Boolean
         get() {
             val sharedPref =
-                PreferenceManager.getDefaultSharedPreferences(requireContext())
-                    ?: return false
+                    PreferenceManager.getDefaultSharedPreferences(requireContext())
+                            ?: return false
             return sharedPref.getBoolean(settingUseChartOverlaySymbols, false)
         }
         set(value) {
@@ -314,7 +313,7 @@ class StockDataFragment : Fragment() {
         val dialogBinding = DialogAddAssetBinding.inflate(inflater)
 
         dialogBinding.addQuantity.setText(
-            DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity.absoluteValue)
+                DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity.absoluteValue)
         )
 //    if (asset.shares < 0) {
 //      addSharesView.inputType = TYPE_CLASS_NUMBER or
@@ -330,9 +329,9 @@ class StockDataFragment : Fragment() {
         val standardAccount = getString(R.string.standard_account)
 
         dialogBinding.textViewAssetAccount.text =
-            asset.account.ifEmpty {
-                standardAccount
-            }
+                asset.account.ifEmpty {
+                    standardAccount
+                }
 
         dialogBinding.textViewAssetAccount.setOnClickListener { view ->
             val popupMenu = PopupMenu(requireContext(), view)
@@ -342,20 +341,20 @@ class StockDataFragment : Fragment() {
             SharedAccountList.accounts.sortedBy {
                 it.lowercase(Locale.ROOT)
             }
-                .forEach { account ->
-                    val name = account.ifEmpty {
-                        // first entry in bold
-                        SpannableStringBuilder()
-                            .bold { append(standardAccount) }
+                    .forEach { account ->
+                        val name = account.ifEmpty {
+                            // first entry in bold
+                            SpannableStringBuilder()
+                                    .bold { append(standardAccount) }
+                        }
+                        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                     }
-                    popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
-                }
 
             // Last item is to add a new account
             val addAccountItem = SpannableStringBuilder()
-                .color(context?.getColor(R.color.colorAccent)!!) {
-                    bold { append(getString(R.string.add_account)) }
-                }
+                    .color(context?.getColor(R.color.colorAccent)!!) {
+                        bold { append(getString(R.string.add_account)) }
+                    }
             popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
 
             popupMenu.show()
@@ -374,26 +373,26 @@ class StockDataFragment : Fragment() {
                     val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
 
                     builderAdd.setView(addDialogBinding.root)
-                        .setTitle(getString(R.string.add_account))
-                        // Add action buttons
-                        .setPositiveButton(R.string.add) { _, _ ->
-                            // Add () to avoid cast exception.
-                            val accountText = (addDialogBinding.addAccount.text).toString()
-                                .trim()
+                            .setTitle(getString(R.string.add_account))
+                            // Add action buttons
+                            .setPositiveButton(R.string.add) { _, _ ->
+                                // Add () to avoid cast exception.
+                                val accountText = (addDialogBinding.addAccount.text).toString()
+                                        .trim()
 
-                            dialogBinding.textViewAssetAccount.text = accountText
-                            SharedAccountList.accounts = SharedAccountList.accounts + accountText
-                        }
-                        .setNegativeButton(
-                            R.string.cancel
-                        ) { _, _ ->
-                        }
+                                dialogBinding.textViewAssetAccount.text = accountText
+                                SharedAccountList.accounts = SharedAccountList.accounts + accountText
+                            }
+                            .setNegativeButton(
+                                    R.string.cancel
+                            ) { _, _ ->
+                            }
                     builderAdd
-                        .create()
-                        .show()
+                            .create()
+                            .show()
                 } else {
                     val account = menuitem.title?.trim()
-                        .toString()
+                            .toString()
                     dialogBinding.textViewAssetAccount.text = account
                 }
                 true
@@ -409,259 +408,263 @@ class StockDataFragment : Fragment() {
         }
         // month is starting from zero
         dialogBinding.datePickerAssetDate.updateDate(
-            localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
+                localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
         )
         dialogBinding.datePickerAssetTime.hour = localDateTime.hour
         dialogBinding.datePickerAssetTime.minute = localDateTime.minute
 
         builder.setView(dialogBinding.root)
-            .setTitle(R.string.update_asset)
-            // Add action buttons
-            .setPositiveButton(
-                R.string.update
-            )
-            { _, _ ->
-                val quantityText = (dialogBinding.addQuantity.text).toString()
-                    .trim()
-                var quantity = 0.0
+                .setTitle(R.string.update_asset)
+                // Add action buttons
+                .setPositiveButton(
+                        R.string.update
+                )
+                { _, _ ->
+                    val quantityText = (dialogBinding.addQuantity.text).toString()
+                            .trim()
+                    var quantity = 0.0
 
-                try {
-                    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                    quantity = numberFormat.parse(quantityText)!!
-                        .toDouble()
-                    if (asset.quantity < 0.0) {
-                        quantity = -quantity
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.asset_share_not_empty),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                    return@setPositiveButton
-                }
-
-                if (quantity == 0.0) {
-                    Toast.makeText(
-                        requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
-                    )
-                        .show()
-                    return@setPositiveButton
-                }
-
-                val priceText = (dialogBinding.addPrice.text).toString()
-                    .trim()
-                var price = 0.0
-                try {
-                    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                    price = numberFormat.parse(priceText)!!
-                        .toDouble()
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.asset_price_not_empty),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                    return@setPositiveButton
-                }
-
-                if (price < 0.0) {
-                    Toast.makeText(
-                        requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
-                    )
-                        .show()
-                    return@setPositiveButton
-                }
-
-                val feeText = (dialogBinding.addFee.text).toString()
-                    .trim()
-                var fee = 0.0
-                if (feeText.isNotEmpty()) {
                     try {
                         val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                        fee = numberFormat.parse(feeText)!!
-                            .toDouble()
+                        quantity = numberFormat.parse(quantityText)!!
+                                .toDouble()
+                        if (asset.quantity < 0.0) {
+                            quantity = -quantity
+                        }
                     } catch (e: Exception) {
                         Toast.makeText(
-                            requireContext(),
-                            getString(R.string.asset_fee_not_valid),
-                            Toast.LENGTH_LONG
+                                requireContext(),
+                                getString(R.string.asset_share_not_empty),
+                                Toast.LENGTH_LONG
                         )
-                            .show()
+                                .show()
                         return@setPositiveButton
                     }
 
-                    if (fee < 0.0) {
+                    if (quantity == 0.0) {
                         Toast.makeText(
-                            requireContext(),
-                            getString(R.string.fee_not_negative),
-                            Toast.LENGTH_LONG
+                                requireContext(), getString(R.string.quantity_not_zero), Toast.LENGTH_LONG
                         )
-                            .show()
+                                .show()
                         return@setPositiveButton
                     }
-                }
 
-                var accountText = (dialogBinding.textViewAssetAccount.text).toString()
-                    .trim()
-                if (accountText == standardAccount) {
-                    accountText = ""
-                }
+                    val priceText = (dialogBinding.addPrice.text).toString()
+                            .trim()
+                    var price = 0.0
+                    try {
+                        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                        price = numberFormat.parse(priceText)!!
+                                .toDouble()
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                                requireContext(),
+                                getString(R.string.asset_price_not_empty),
+                                Toast.LENGTH_LONG
+                        )
+                                .show()
+                        return@setPositiveButton
+                    }
 
-                // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-                val localDateTimeNew: ZonedDateTime = ZonedDateTime.of(
-                    dialogBinding.datePickerAssetDate.year,
-                    dialogBinding.datePickerAssetDate.month + 1,
-                    dialogBinding.datePickerAssetDate.dayOfMonth,
-                    dialogBinding.datePickerAssetTime.hour,
-                    dialogBinding.datePickerAssetTime.minute,
-                    localDateTime.second,   // preserve the seconds to not change the entry position
-                    0,
-                    ZoneOffset.systemDefault()
+                    if (price < 0.0) {
+                        Toast.makeText(
+                                requireContext(), getString(R.string.price_not_negative), Toast.LENGTH_LONG
+                        )
+                                .show()
+                        return@setPositiveButton
+                    }
+
+                    val feeText = (dialogBinding.addFee.text).toString()
+                            .trim()
+                    var fee = 0.0
+                    if (feeText.isNotEmpty()) {
+                        try {
+                            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                            fee = numberFormat.parse(feeText)!!
+                                    .toDouble()
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.asset_fee_not_valid),
+                                    Toast.LENGTH_LONG
+                            )
+                                    .show()
+                            return@setPositiveButton
+                        }
+
+                        if (fee < 0.0) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.fee_not_negative),
+                                    Toast.LENGTH_LONG
+                            )
+                                    .show()
+                            return@setPositiveButton
+                        }
+                    }
+
+                    var accountText = (dialogBinding.textViewAssetAccount.text).toString()
+                            .trim()
+                    if (accountText == standardAccount) {
+                        accountText = ""
+                    }
+
+                    // val date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                    val localDateTimeNew: ZonedDateTime = ZonedDateTime.of(
+                            dialogBinding.datePickerAssetDate.year,
+                            dialogBinding.datePickerAssetDate.month + 1,
+                            dialogBinding.datePickerAssetDate.dayOfMonth,
+                            dialogBinding.datePickerAssetTime.hour,
+                            dialogBinding.datePickerAssetTime.minute,
+                            localDateTime.second,   // preserve the seconds to not change the entry position
+                            0,
+                            ZoneOffset.systemDefault()
+                    )
+                    val date = localDateTimeNew.toEpochSecond() // in GMT
+
+                    val noteText = (dialogBinding.addNote.text).toString()
+                            .trim()
+
+                    val assetNew =
+                            Asset(
+                                    symbol = symbol,
+                                    quantity = quantity,
+                                    price = price,
+                                    account = accountText,
+                                    fee = fee,
+                                    date = date,
+                                    note = noteText
+                            )
+
+                    if (asset.quantity != assetNew.quantity
+                            || asset.price != assetNew.price
+                            || asset.fee != assetNew.fee
+                            || asset.account != assetNew.account
+                            || asset.date != assetNew.date
+                            || asset.note != assetNew.note
+                    ) {
+                        // Each asset has an id. Delete the asset with that id and then add assetNew.
+                        stockRoomViewModel.updateAsset2(asset, assetNew)
+
+                        var pluralstr: String = ""
+                        val quantityAbs = quantity.absoluteValue
+                        val count: Int = when {
+                            quantityAbs == 1.0 -> {
+                                1
+                            }
+
+                            quantityAbs > 1.0 -> {
+                                quantityAbs.toInt() + 1
+                            }
+
+                            else -> {
+                                0
+                            }
+                        }
+
+                        pluralstr = if (asset.quantity > 0.0) {
+                            resources.getQuantityString(
+                                    R.plurals.asset_updated, count,
+                                    DecimalFormat(DecimalFormatQuantityDigits).format(quantityAbs),
+                                    to2To8Digits(price)
+                            )
+                        } else {
+                            resources.getQuantityString(
+                                    R.plurals.asset_removed_updated, count,
+                                    DecimalFormat(DecimalFormat2To4Digits).format(quantityAbs)
+                            )
+                        }
+
+                        Toast.makeText(
+                                requireContext(), pluralstr, Toast.LENGTH_LONG
+                        )
+                                .show()
+                    }
+                }
+                .setNegativeButton(
+                        R.string.cancel
                 )
-                val date = localDateTimeNew.toEpochSecond() // in GMT
-
-                val noteText = (dialogBinding.addNote.text).toString()
-                    .trim()
-
-                val assetNew =
-                    Asset(
-                        symbol = symbol,
-                        quantity = quantity,
-                        price = price,
-                        account = accountText,
-                        fee = fee,
-                        date = date,
-                        note = noteText
-                    )
-
-                if (asset.quantity != assetNew.quantity
-                    || asset.price != assetNew.price
-                    || asset.fee != assetNew.fee
-                    || asset.account != assetNew.account
-                    || asset.date != assetNew.date
-                    || asset.note != assetNew.note
-                ) {
-                    // Each asset has an id. Delete the asset with that id and then add assetNew.
-                    stockRoomViewModel.updateAsset2(asset, assetNew)
-
-                    var pluralstr: String = ""
-                    val quantityAbs = quantity.absoluteValue
-                    val count: Int = when {
-                        quantityAbs == 1.0 -> {
-                            1
-                        }
-                        quantityAbs > 1.0 -> {
-                            quantityAbs.toInt() + 1
-                        }
-                        else -> {
-                            0
-                        }
-                    }
-
-                    pluralstr = if (asset.quantity > 0.0) {
-                        resources.getQuantityString(
-                            R.plurals.asset_updated, count,
-                            DecimalFormat(DecimalFormatQuantityDigits).format(quantityAbs),
-                            to2To8Digits(price)
-                        )
-                    } else {
-                        resources.getQuantityString(
-                            R.plurals.asset_removed_updated, count,
-                            DecimalFormat(DecimalFormat2To4Digits).format(quantityAbs)
-                        )
-                    }
-
-                    Toast.makeText(
-                        requireContext(), pluralstr, Toast.LENGTH_LONG
-                    )
-                        .show()
+                { _, _ ->
+                    //getDialog().cancel()
                 }
-            }
-            .setNegativeButton(
-                R.string.cancel
-            )
-            { _, _ ->
-                //getDialog().cancel()
-            }
         builder
-            .create()
-            .show()
+                .create()
+                .show()
     }
 
     private fun assetItemDeleteClicked(
-        symbol: String?,
-        asset: Asset?
+            symbol: String?,
+            asset: Asset?
     ) {
         // Summary tag?
         if (symbol != null && asset == null) {
             android.app.AlertDialog.Builder(requireContext())
-                .setTitle(R.string.delete_all_assets)
-                .setMessage(getString(R.string.delete_all_assets_confirm, symbol))
-                .setPositiveButton(R.string.delete) { _, _ ->
-                    stockRoomViewModel.deleteAssets(symbol)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.delete_all_assets_msg),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+                    .setTitle(R.string.delete_all_assets)
+                    .setMessage(getString(R.string.delete_all_assets_confirm, symbol))
+                    .setPositiveButton(R.string.delete) { _, _ ->
+                        stockRoomViewModel.deleteAssets(symbol)
+                        Toast.makeText(
+                                requireContext(),
+                                getString(R.string.delete_all_assets_msg),
+                                Toast.LENGTH_LONG
+                        )
+                                .show()
+                    }
+                    .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                    .show()
         } else if (asset != null) {
             val count: Int = when {
                 asset.quantity == 1.0 -> {
                     1
                 }
+
                 asset.quantity > 1.0 -> {
                     asset.quantity.toInt() + 1
                 }
+
                 else -> {
                     0
                 }
             }
 
             android.app.AlertDialog.Builder(requireContext())
-                .setTitle(R.string.sold_asset)
-                .setMessage(
-                    if (asset.quantity > 0) {
-                        resources.getQuantityString(
-                            R.plurals.delete_asset_confirm, count,
-                            DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
-                            to2To8Digits(asset.price)
-                        )
-                    } else {
-                        resources.getQuantityString(
-                            R.plurals.delete_removed_asset_confirm, count,
-                            DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity.absoluteValue)
-                        )
-                    }
-                )
-                .setPositiveButton(R.string.delete) { _, _ ->
-                    stockRoomViewModel.deleteAsset(asset)
-                    val pluralstr = if (asset.quantity > 0) {
-                        resources.getQuantityString(
-                            R.plurals.delete_asset_msg, count,
-                            DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
-                            to2To8Digits(asset.price)
-                        )
-                    } else {
-                        resources.getQuantityString(
-                            R.plurals.delete_removed_asset_msg, count,
-                            DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity.absoluteValue)
-                        )
-                    }
-
-                    Toast.makeText(
-                        requireContext(), pluralstr, Toast.LENGTH_LONG
+                    .setTitle(R.string.sold_asset)
+                    .setMessage(
+                            if (asset.quantity > 0) {
+                                resources.getQuantityString(
+                                        R.plurals.delete_asset_confirm, count,
+                                        DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
+                                        to2To8Digits(asset.price)
+                                )
+                            } else {
+                                resources.getQuantityString(
+                                        R.plurals.delete_removed_asset_confirm, count,
+                                        DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity.absoluteValue)
+                                )
+                            }
                     )
-                        .show()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+                    .setPositiveButton(R.string.delete) { _, _ ->
+                        stockRoomViewModel.deleteAsset(asset)
+                        val pluralstr = if (asset.quantity > 0) {
+                            resources.getQuantityString(
+                                    R.plurals.delete_asset_msg, count,
+                                    DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity),
+                                    to2To8Digits(asset.price)
+                            )
+                        } else {
+                            resources.getQuantityString(
+                                    R.plurals.delete_removed_asset_msg, count,
+                                    DecimalFormat(DecimalFormatQuantityDigits).format(asset.quantity.absoluteValue)
+                            )
+                        }
+
+                        Toast.makeText(
+                                requireContext(), pluralstr, Toast.LENGTH_LONG
+                        )
+                                .show()
+                    }
+                    .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                    .show()
         }
     }
 
@@ -676,110 +679,110 @@ class StockDataFragment : Fragment() {
         dialogBinding.textInputEditEventTitle.setText(event.title)
         dialogBinding.textInputEditEventNote.setText(event.note)
         val localDateTime =
-            ZonedDateTime.ofInstant(
-                Instant.ofEpochSecond(event.datetime),
-                ZoneOffset.systemDefault()
-            )
+                ZonedDateTime.ofInstant(
+                        Instant.ofEpochSecond(event.datetime),
+                        ZoneOffset.systemDefault()
+                )
         // month is starting from zero
         dialogBinding.datePickerEventDate.updateDate(
-            localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
+                localDateTime.year, localDateTime.month.value - 1, localDateTime.dayOfMonth
         )
         dialogBinding.datePickerEventTime.hour = localDateTime.hour
         dialogBinding.datePickerEventTime.minute = localDateTime.minute
 
         builder.setView(dialogBinding.root)
-            .setTitle(R.string.update_event)
-            // Add action buttons
-            .setPositiveButton(
-                R.string.update
-            ) { _, _ ->
-                // Add () to avoid cast exception.
-                val title = (dialogBinding.textInputEditEventTitle.text).toString()
-                    .trim()
-                if (title.isEmpty()) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.event_empty),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                } else {
-                    val note = (dialogBinding.textInputEditEventNote.text).toString()
-
-                    val datetime: ZonedDateTime = ZonedDateTime.of(
-                        dialogBinding.datePickerEventDate.year,
-                        dialogBinding.datePickerEventDate.month + 1,
-                        dialogBinding.datePickerEventDate.dayOfMonth,
-                        dialogBinding.datePickerEventTime.hour,
-                        dialogBinding.datePickerEventTime.minute,
-                        localDateTime.second,   // preserve the seconds to not change the entry position
-                        0,
-                        ZoneOffset.systemDefault()
-                    )
-                    val seconds = datetime.toEpochSecond() // in GMT
-                    val eventNew =
-                        Event(
-                            symbol = symbol,
-                            type = 0,
-                            title = title,
-                            note = note,
-                            datetime = seconds
-                        )
-                    if (event.title != eventNew.title || event.note != eventNew.note || event.datetime != eventNew.datetime) {
-                        // Each event has an id. Delete the event with that id and then add eventNew.
-                        stockRoomViewModel.updateEvent2(event, eventNew)
-
+                .setTitle(R.string.update_event)
+                // Add action buttons
+                .setPositiveButton(
+                        R.string.update
+                ) { _, _ ->
+                    // Add () to avoid cast exception.
+                    val title = (dialogBinding.textInputEditEventTitle.text).toString()
+                            .trim()
+                    if (title.isEmpty()) {
                         Toast.makeText(
-                            requireContext(), getString(
-                                R.string.event_updated, title, datetime.format(
-                                    DateTimeFormatter.ofLocalizedDateTime(
-                                        MEDIUM
-                                    )
-                                )
-                            ), Toast.LENGTH_LONG
+                                requireContext(),
+                                getString(R.string.event_empty),
+                                Toast.LENGTH_LONG
                         )
-                            .show()
+                                .show()
+                    } else {
+                        val note = (dialogBinding.textInputEditEventNote.text).toString()
+
+                        val datetime: ZonedDateTime = ZonedDateTime.of(
+                                dialogBinding.datePickerEventDate.year,
+                                dialogBinding.datePickerEventDate.month + 1,
+                                dialogBinding.datePickerEventDate.dayOfMonth,
+                                dialogBinding.datePickerEventTime.hour,
+                                dialogBinding.datePickerEventTime.minute,
+                                localDateTime.second,   // preserve the seconds to not change the entry position
+                                0,
+                                ZoneOffset.systemDefault()
+                        )
+                        val seconds = datetime.toEpochSecond() // in GMT
+                        val eventNew =
+                                Event(
+                                        symbol = symbol,
+                                        type = 0,
+                                        title = title,
+                                        note = note,
+                                        datetime = seconds
+                                )
+                        if (event.title != eventNew.title || event.note != eventNew.note || event.datetime != eventNew.datetime) {
+                            // Each event has an id. Delete the event with that id and then add eventNew.
+                            stockRoomViewModel.updateEvent2(event, eventNew)
+
+                            Toast.makeText(
+                                    requireContext(), getString(
+                                    R.string.event_updated, title, datetime.format(
+                                    DateTimeFormatter.ofLocalizedDateTime(
+                                            MEDIUM
+                                    )
+                            )
+                            ), Toast.LENGTH_LONG
+                            )
+                                    .show()
+                        }
                     }
                 }
-            }
-            .setNegativeButton(
-                R.string.cancel
-            ) { _, _ ->
-            }
+                .setNegativeButton(
+                        R.string.cancel
+                ) { _, _ ->
+                }
         builder
-            .create()
-            .show()
+                .create()
+                .show()
     }
 
     private fun eventItemDeleteClicked(event: Event) {
         val localDateTime =
-            ZonedDateTime.ofInstant(
-                Instant.ofEpochSecond(event.datetime),
-                ZoneOffset.systemDefault()
-            )
+                ZonedDateTime.ofInstant(
+                        Instant.ofEpochSecond(event.datetime),
+                        ZoneOffset.systemDefault()
+                )
         val datetime = localDateTime.format(
-            DateTimeFormatter.ofLocalizedDateTime(
-                MEDIUM
-            )
+                DateTimeFormatter.ofLocalizedDateTime(
+                        MEDIUM
+                )
         )
         android.app.AlertDialog.Builder(requireContext())
-            .setTitle(R.string.delete_event)
-            .setMessage(
-                getString(
-                    R.string.delete_event_confirm, event.title, datetime
+                .setTitle(R.string.delete_event)
+                .setMessage(
+                        getString(
+                                R.string.delete_event_confirm, event.title, datetime
+                        )
                 )
-            )
-            .setPositiveButton(R.string.delete) { _, _ ->
-                stockRoomViewModel.deleteEvent(event)
-                Toast.makeText(
-                    requireContext(), getString(
-                        R.string.delete_event_msg, event.title, datetime
+                .setPositiveButton(R.string.delete) { _, _ ->
+                    stockRoomViewModel.deleteEvent(event)
+                    Toast.makeText(
+                            requireContext(), getString(
+                            R.string.delete_event_msg, event.title, datetime
                     ), Toast.LENGTH_LONG
-                )
-                    .show()
-            }
-            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-            .show()
+                    )
+                            .show()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
     private val onlineDataTask = object : Runnable {
@@ -795,9 +798,9 @@ class StockDataFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
 
         symbol = (arguments?.getString(EXTRA_SYMBOL) ?: "").uppercase(Locale.ROOT)
@@ -818,8 +821,8 @@ class StockDataFragment : Fragment() {
     }
 
     override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
+            view: View,
+            savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -834,20 +837,20 @@ class StockDataFragment : Fragment() {
         // Set column number depending on screen width.
         val scale = 299
         val spanCount =
-            (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
+                (resources.configuration.screenWidthDp / (scale * resources.configuration.fontScale) + 0.5).roundToInt()
 
         binding.onlineDataView.layoutManager = GridLayoutManager(
-            requireContext(),
-            Integer.min(Integer.max(spanCount, 1), 10)
+                requireContext(),
+                Integer.min(Integer.max(spanCount, 1), 10)
         )
 
         var timeInSeconds5minUpdate = ZonedDateTime.now()
-            .toEpochSecond() // in GMT
+                .toEpochSecond() // in GMT
         var timeInSeconds24hUpdate = timeInSeconds5minUpdate
 
         // use requireActivity() instead of this to have only one shared viewmodel
         stockRoomViewModel =
-            ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+                ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
         stockRoomViewModel.onlineMarketDataList.observe(viewLifecycleOwner, Observer { data ->
             data?.let { onlineMarketDataList ->
@@ -857,22 +860,22 @@ class StockDataFragment : Fragment() {
                 if (onlineMarketData != null) {
                     updateHeader(onlineMarketData)
                     onlineDataAdapter.updateData(
-                        StockSymbol(
-                            symbol = symbol,
-                            type = type
-                        ),
-                        onlineMarketData
+                            StockSymbol(
+                                    symbol = symbol,
+                                    type = type
+                            ),
+                            onlineMarketData
                     )
 
                     marketPriceForDefaultAlertValue = onlineMarketData.marketPrice
 
                     // Update charts
                     val timeInSecondsNow = ZonedDateTime.now()
-                        .toEpochSecond() // in GMT
+                            .toEpochSecond() // in GMT
 
                     // Update daily and 5-day chart every 5min
                     if (stockViewRange == StockViewRange.OneDay
-                        || stockViewRange == StockViewRange.FiveDays
+                            || stockViewRange == StockViewRange.FiveDays
                     ) {
                         if (timeInSecondsNow > timeInSeconds5minUpdate + 5 * 60) {
                             timeInSeconds5minUpdate = timeInSecondsNow
@@ -934,10 +937,10 @@ class StockDataFragment : Fragment() {
         })
 
         val textViewStockLegends: List<TextView> = listOf(
-            binding.textViewStockLegend1,
-            binding.textViewStockLegend2,
-            binding.textViewStockLegend3,
-            binding.textViewStockLegend4,
+                binding.textViewStockLegend1,
+                binding.textViewStockLegend2,
+                binding.textViewStockLegend3,
+                binding.textViewStockLegend4,
         )
 
         textViewStockLegends.forEach { textView ->
@@ -967,16 +970,19 @@ class StockDataFragment : Fragment() {
                                 updateLegend(1)
                             }
                         }
+
                         2 -> {
                             binding.textViewStockLegend2.setOnClickListener {
                                 updateLegend(2)
                             }
                         }
+
                         3 -> {
                             binding.textViewStockLegend3.setOnClickListener {
                                 updateLegend(3)
                             }
                         }
+
                         4 -> {
                             binding.textViewStockLegend4.setOnClickListener {
                                 updateLegend(4)
@@ -992,152 +998,152 @@ class StockDataFragment : Fragment() {
             val popupMenu = PopupMenu(requireContext(), viewSymbol)
 
             data class LinkListEntry
-                (
-                val linkType: LinkType,
-                val link: String,
+            (
+                    val linkType: LinkType,
+                    val link: String,
             )
 
             val linkList: Map<String, LinkListEntry> = mapOf(
-                getString(R.string.community_links) to LinkListEntry(
-                    linkType = LinkType.HeadlineType,
-                    link = ""
-                ),
-                "Yahoo community" to LinkListEntry(
-                    linkType = LinkType.CommunityType,
-                    link = "https://finance.yahoo.com/quote/$symbol/community"
-                ),
-                "Stocktwits" to LinkListEntry(
-                    linkType = LinkType.CommunityType,
-                    link = "https://stocktwits.com/symbol/$symbol"
-                ),
-                //--------------------------------
-                getString(R.string.search_links) to LinkListEntry(
-                    linkType = LinkType.HeadlineType,
-                    link = ""
-                ),
-                "Bing" to LinkListEntry(
-                    linkType = LinkType.SearchType,
-                    link = "https://www.bing.com/search?q=$symbol%20stock"
-                ),
-                "Google" to LinkListEntry(
-                    linkType = LinkType.SearchType,
-                    link = "https://www.google.com/finance?q=$symbol stock"
-                ),
-                "Yahoo" to LinkListEntry(
-                    linkType = LinkType.SearchType,
-                    link = "https://finance.yahoo.com/quote/$symbol"
-                ),
-                //--------------------------------
-                getString(R.string.crypto_links) to LinkListEntry(
-                    linkType = LinkType.HeadlineType,
-                    link = ""
-                ),
-                "CoinMarketCap" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://coinmarketcap.com/currencies/$symbol"
-                ),
-                "TradingView" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://www.tradingview.com/symbols/$symbol"
-                ),
-                "CoinBase" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://www.coinbase.com/de/price/$symbol"
-                ),
-                "CoinGecko" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://www.coingecko.com/en/coins/$symbol"
-                ),
-                "Gemini" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://www.gemini.com/prices/$symbol"
-                ),
-                "crypto.com" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://crypto.com/price/$symbol"
-                ),
-                "CoinCodex" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://coincodex.com/crypto/$symbol"
-                ),
-                "WorldCoinIndex" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://www.worldcoinindex.com/coin/$symbol"
-                ),
-                "MarketWatch Crypto" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeCrypto,
-                    link = "https://www.marketwatch.com/investing/cryptocurrency/$symbol"
-                ),
-                //--------------------------------
-                getString(R.string.stock_links) to LinkListEntry(
-                    linkType = LinkType.HeadlineType,
-                    link = ""
-                ),
-                "CNBC" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.cnbc.com/quotes/?symbol=$symbol"
-                ),
-                "CNN Money" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "http://money.cnn.com/quote/quote.html?symb=$symbol"
-                ),
-                "ETF.COM" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.etf.com/stock/$symbol"
-                ),
-                "ETF.COM (ETF)" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.etf.com/$symbol"
-                ),
-                "Fidelity" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://quotes.fidelity.com/webxpress/get_quote?QUOTE_TYPE=D&SID_VALUE_ID=$symbol"
-                ),
-                "FinViz" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://finviz.com/quote.ashx?t=$symbol"
-                ),
-                "MarketBeat" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.marketbeat.com/stocks/$symbol/"
-                ),
-                "MarketWatch" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.marketwatch.com/investing/stock/$symbol/"
-                ),
-                "Nasdaq" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.nasdaq.com/market-activity/stocks/$symbol"
-                ),
-                "OTC Markets" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.otcmarkets.com/stock/$symbol/overview"
-                ),
-                "TD Ameritrade" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://research.tdameritrade.com/grid/public/research/stocks/summary?symbol=$symbol"
-                ),
-                "TheStreet" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://www.thestreet.com/quote/$symbol"
-                ),
-                "Real Money (TheStreet)" to LinkListEntry(
-                    linkType = LinkType.WebsiteTypeStock,
-                    link = "https://realmoney.thestreet.com/quote/$symbol"
-                ),
-                //--------------------------------
-                getString(R.string.general_links) to LinkListEntry(
-                    linkType = LinkType.HeadlineType,
-                    link = ""
-                ),
-                "Yahoo Daily Gainers" to LinkListEntry(
-                    linkType = LinkType.WebsiteGeneralType,
-                    link = "https://finance.yahoo.com/gainers"
-                ),
-                "Yahoo Cryptocurrencies" to LinkListEntry(
-                    linkType = LinkType.WebsiteGeneralType,
-                    link = "https://finance.yahoo.com/cryptocurrencies"
-                )
+                    getString(R.string.community_links) to LinkListEntry(
+                            linkType = LinkType.HeadlineType,
+                            link = ""
+                    ),
+                    "Yahoo community" to LinkListEntry(
+                            linkType = LinkType.CommunityType,
+                            link = "https://finance.yahoo.com/quote/$symbol/community"
+                    ),
+                    "Stocktwits" to LinkListEntry(
+                            linkType = LinkType.CommunityType,
+                            link = "https://stocktwits.com/symbol/$symbol"
+                    ),
+                    //--------------------------------
+                    getString(R.string.search_links) to LinkListEntry(
+                            linkType = LinkType.HeadlineType,
+                            link = ""
+                    ),
+                    "Bing" to LinkListEntry(
+                            linkType = LinkType.SearchType,
+                            link = "https://www.bing.com/search?q=$symbol%20stock"
+                    ),
+                    "Google" to LinkListEntry(
+                            linkType = LinkType.SearchType,
+                            link = "https://www.google.com/finance?q=$symbol stock"
+                    ),
+                    "Yahoo" to LinkListEntry(
+                            linkType = LinkType.SearchType,
+                            link = "https://finance.yahoo.com/quote/$symbol"
+                    ),
+                    //--------------------------------
+                    getString(R.string.crypto_links) to LinkListEntry(
+                            linkType = LinkType.HeadlineType,
+                            link = ""
+                    ),
+                    "CoinMarketCap" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://coinmarketcap.com/currencies/$symbol"
+                    ),
+                    "TradingView" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://www.tradingview.com/symbols/$symbol"
+                    ),
+                    "CoinBase" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://www.coinbase.com/de/price/$symbol"
+                    ),
+                    "CoinGecko" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://www.coingecko.com/en/coins/$symbol"
+                    ),
+                    "Gemini" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://www.gemini.com/prices/$symbol"
+                    ),
+                    "crypto.com" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://crypto.com/price/$symbol"
+                    ),
+                    "CoinCodex" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://coincodex.com/crypto/$symbol"
+                    ),
+                    "WorldCoinIndex" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://www.worldcoinindex.com/coin/$symbol"
+                    ),
+                    "MarketWatch Crypto" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeCrypto,
+                            link = "https://www.marketwatch.com/investing/cryptocurrency/$symbol"
+                    ),
+                    //--------------------------------
+                    getString(R.string.stock_links) to LinkListEntry(
+                            linkType = LinkType.HeadlineType,
+                            link = ""
+                    ),
+                    "CNBC" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.cnbc.com/quotes/?symbol=$symbol"
+                    ),
+                    "CNN Money" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "http://money.cnn.com/quote/quote.html?symb=$symbol"
+                    ),
+                    "ETF.COM" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.etf.com/stock/$symbol"
+                    ),
+                    "ETF.COM (ETF)" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.etf.com/$symbol"
+                    ),
+                    "Fidelity" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://quotes.fidelity.com/webxpress/get_quote?QUOTE_TYPE=D&SID_VALUE_ID=$symbol"
+                    ),
+                    "FinViz" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://finviz.com/quote.ashx?t=$symbol"
+                    ),
+                    "MarketBeat" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.marketbeat.com/stocks/$symbol/"
+                    ),
+                    "MarketWatch" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.marketwatch.com/investing/stock/$symbol/"
+                    ),
+                    "Nasdaq" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.nasdaq.com/market-activity/stocks/$symbol"
+                    ),
+                    "OTC Markets" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.otcmarkets.com/stock/$symbol/overview"
+                    ),
+                    "TD Ameritrade" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://research.tdameritrade.com/grid/public/research/stocks/summary?symbol=$symbol"
+                    ),
+                    "TheStreet" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://www.thestreet.com/quote/$symbol"
+                    ),
+                    "Real Money (TheStreet)" to LinkListEntry(
+                            linkType = LinkType.WebsiteTypeStock,
+                            link = "https://realmoney.thestreet.com/quote/$symbol"
+                    ),
+                    //--------------------------------
+                    getString(R.string.general_links) to LinkListEntry(
+                            linkType = LinkType.HeadlineType,
+                            link = ""
+                    ),
+                    "Yahoo Daily Gainers" to LinkListEntry(
+                            linkType = LinkType.WebsiteGeneralType,
+                            link = "https://finance.yahoo.com/gainers"
+                    ),
+                    "Yahoo Cryptocurrencies" to LinkListEntry(
+                            linkType = LinkType.WebsiteGeneralType,
+                            link = "https://finance.yahoo.com/cryptocurrencies"
+                    )
             )
 
             var menuIndex: Int = Menu.FIRST
@@ -1146,9 +1152,9 @@ class StockDataFragment : Fragment() {
             linkList.forEach { (name, entry) ->
                 val displayName = if (entry.linkType == LinkType.HeadlineType) {
                     SpannableStringBuilder()
-                        .color(context?.getColor(R.color.colorPrimary)!!) {
-                            bold { append(name) }
-                        }
+                            .color(context?.getColor(R.color.colorPrimary)!!) {
+                                bold { append(name) }
+                            }
                 } else {
                     // Intend by two spaces.
                     "  $name"
@@ -1166,8 +1172,8 @@ class StockDataFragment : Fragment() {
                 if (menuText.startsWith("  ")) {
                     linkList[menuText.substring(2)]?.let {
                         openNewTabWindow(
-                            it.link,
-                            requireContext()
+                                it.link,
+                                requireContext()
                         )
                     }
                 }
@@ -1176,18 +1182,18 @@ class StockDataFragment : Fragment() {
             }
         }
 
-/*
-    stockdataLinearLayout.setOnTouchListener(object : OnSwipeTouchListener(requireContext()){
-      override fun onSwipeRight() {
-        super.onSwipeRight()
+        /*
+            stockdataLinearLayout.setOnTouchListener(object : OnSwipeTouchListener(requireContext()){
+              override fun onSwipeRight() {
+                super.onSwipeRight()
 
-      }
+              }
 
-      override fun onSwipeLeft() {
-        super.onSwipeLeft()
-      }
-    })
-*/
+              override fun onSwipeLeft() {
+                super.onSwipeLeft()
+              }
+            })
+        */
         /*
 
         stockdataLinearLayout.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
@@ -1222,21 +1228,21 @@ class StockDataFragment : Fragment() {
 
         // Assets
         val assetClickListenerUpdate =
-            { asset: Asset -> assetItemUpdateClicked(asset) }
+                { asset: Asset -> assetItemUpdateClicked(asset) }
         val assetClickListenerDelete =
-            { symbol: String?, asset: Asset? -> assetItemDeleteClicked(symbol, asset) }
+                { symbol: String?, asset: Asset? -> assetItemDeleteClicked(symbol, asset) }
         val assetAdapter =
-            AssetListAdapter(requireContext(), assetClickListenerUpdate, assetClickListenerDelete)
+                AssetListAdapter(requireContext(), assetClickListenerUpdate, assetClickListenerDelete)
         binding.assetsView.adapter = assetAdapter
         binding.assetsView.layoutManager = LinearLayoutManager(requireContext())
 
         // Events
         val eventClickListenerUpdate =
-            { event: Event -> eventItemUpdateClicked(event) }
+                { event: Event -> eventItemUpdateClicked(event) }
         val eventClickListenerDelete =
-            { event: Event -> eventItemDeleteClicked(event) }
+                { event: Event -> eventItemDeleteClicked(event) }
         val eventAdapter =
-            EventListAdapter(requireContext(), eventClickListenerUpdate, eventClickListenerDelete)
+                EventListAdapter(requireContext(), eventClickListenerUpdate, eventClickListenerDelete)
         binding.eventsView.adapter = eventAdapter
         binding.eventsView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -1246,10 +1252,10 @@ class StockDataFragment : Fragment() {
                 stockDBdata = data
 
                 val displayName =
-                    stockDBdata.name.ifEmpty { stockDBdata.symbol }
+                        stockDBdata.name.ifEmpty { stockDBdata.symbol }
 
                 binding.textViewSymbol.text =
-                    SpannableStringBuilder().underline { color(Color.BLUE) { append(displayName) } }
+                        SpannableStringBuilder().underline { color(Color.BLUE) { append(displayName) } }
                 binding.buttonSetName.text = displayName
 
                 binding.noteTextView.text = stockDBdata.note
@@ -1262,7 +1268,7 @@ class StockDataFragment : Fragment() {
 
             // Setup type selection
             binding.dataproviderSpinner.setSelection(
-                stockDBdata.type
+                    stockDBdata.type
             )
 
             // Group color
@@ -1284,16 +1290,16 @@ class StockDataFragment : Fragment() {
 
             // Set Marker
             val markerColor =
-                if (stockDBdata.marker == 0) {
-                    context?.getColor(R.color.backgroundListColor)!!
-                } else {
-                    context?.let { getMarkerColor(it, stockDBdata.marker) }
-                }
+                    if (stockDBdata.marker == 0) {
+                        context?.getColor(R.color.backgroundListColor)!!
+                    } else {
+                        context?.let { getMarkerColor(it, stockDBdata.marker) }
+                    }
             if (markerColor != null) {
                 setBackgroundColor(binding.textViewMarkerColor, markerColor)
             }
             binding.textViewMarkerText.text =
-                context?.let { "${getMarkerText(it, stockDBdata.marker)}" }
+                    context?.let { "${getMarkerText(it, stockDBdata.marker)}" }
 
             alertAbove = stockDBdata.alertAbove
             alertBelow = stockDBdata.alertBelow
@@ -1304,20 +1310,20 @@ class StockDataFragment : Fragment() {
             }
 
             binding.alertAboveInputEditText.setText(
-                if (alertAbove > 0.0) {
-                    to2To8Digits(alertAbove)
-                } else {
-                    ""
-                }
+                    if (alertAbove > 0.0) {
+                        to2To8Digits(alertAbove)
+                    } else {
+                        ""
+                    }
             )
             binding.alertAboveNoteInputEditText.setText(stockDBdata.alertAboveNote)
 
             binding.alertBelowInputEditText.setText(
-                if (alertBelow > 0.0) {
-                    to2To8Digits(alertBelow)
-                } else {
-                    ""
-                }
+                    if (alertBelow > 0.0) {
+                        to2To8Digits(alertBelow)
+                    } else {
+                        ""
+                    }
             )
             binding.alertBelowNoteInputEditText.setText(stockDBdata.alertBelowNote)
         })
@@ -1325,10 +1331,10 @@ class StockDataFragment : Fragment() {
         binding.buttonSetAlertDefault.setOnClickListener {
             if (marketPriceForDefaultAlertValue > 0.000001) {
                 binding.alertAboveInputEditText.setText(
-                    to2To8Digits(marketPriceForDefaultAlertValue * 1.05)
+                        to2To8Digits(marketPriceForDefaultAlertValue * 1.05)
                 )
                 binding.alertBelowInputEditText.setText(
-                    to2To8Digits(marketPriceForDefaultAlertValue * 0.95)
+                        to2To8Digits(marketPriceForDefaultAlertValue * 0.95)
                 )
             }
         }
@@ -1349,17 +1355,17 @@ class StockDataFragment : Fragment() {
 
                 // Get the time stamps for the assets.
                 assetTimeEntries =
-                    data.assets.filter { assetItem ->
-                        assetItem.price != 0.0 && assetItem.quantity != 0.0
-                    }
-                        .map { asset ->
-                            AssetsTimeData(
-                                date = asset.date,
-                                price = asset.price,
-                                quantity = asset.quantity,
-                                account = asset.account,
-                            )
-                        }.toMutableList()
+                        data.assets.filter { assetItem ->
+                            assetItem.price != 0.0 && assetItem.quantity != 0.0
+                        }
+                                .map { asset ->
+                                    AssetsTimeData(
+                                            date = asset.date,
+                                            price = asset.price,
+                                            quantity = asset.quantity,
+                                            account = asset.account,
+                                    )
+                                }.toMutableList()
 
                 // Remove item pairs for moved content.
                 var j: Int = 0
@@ -1369,10 +1375,10 @@ class StockDataFragment : Fragment() {
 
                         // same date and price, but quantity have different sign
                         if ((assetTimeEntries[j].date - assetTimeEntries[j + 1].date).absoluteValue <= 1
-                            && (assetTimeEntries[j].price - assetTimeEntries[j + 1].price).absoluteValue < epsilon
-                            && (assetTimeEntries[j].quantity + assetTimeEntries[j + 1].quantity).absoluteValue < epsilon
-                            && (assetTimeEntries[j].account != assetTimeEntries[j + 1].account ||
-                                    assetTimeEntries[j + 1].account != assetTimeEntries[j].account)
+                                && (assetTimeEntries[j].price - assetTimeEntries[j + 1].price).absoluteValue < epsilon
+                                && (assetTimeEntries[j].quantity + assetTimeEntries[j + 1].quantity).absoluteValue < epsilon
+                                && (assetTimeEntries[j].account != assetTimeEntries[j + 1].account ||
+                                        assetTimeEntries[j + 1].account != assetTimeEntries[j].account)
                         ) {
                             assetTimeEntries.removeAt(j)
                             assetTimeEntries.removeAt(j)
@@ -1457,29 +1463,29 @@ class StockDataFragment : Fragment() {
             SharedRepository.portfolios.value?.sortedBy {
                 it.lowercase(Locale.ROOT)
             }
-                ?.forEach { portfolio ->
-                    val name = portfolio.ifEmpty {
-                        // first entry in bold
-                        SpannableStringBuilder()
-                            .bold { append(standardPortfolio) }
+                    ?.forEach { portfolio ->
+                        val name = portfolio.ifEmpty {
+                            // first entry in bold
+                            SpannableStringBuilder()
+                                    .bold { append(standardPortfolio) }
+                        }
+                        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                     }
-                    popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
-                }
 
             // Last-1 item is to add a new portfolio
             // Last item is to rename the portfolio
             val addPortfolioItem = SpannableStringBuilder()
-                .color(context?.getColor(R.color.colorAccent)!!) {
-                    bold { append(getString(R.string.add_portfolio)) }
-                }
+                    .color(context?.getColor(R.color.colorAccent)!!) {
+                        bold { append(getString(R.string.add_portfolio)) }
+                    }
             popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addPortfolioItem)
 
             // Display 'Rename portfolio' only for other than the standard portfolio.
             if (stockDBdata.portfolio.isNotEmpty()) {
                 val renamePortfolioItem = SpannableStringBuilder()
-                    .color(context?.getColor(R.color.colorAccent)!!) {
-                        bold { append(getString(R.string.rename_portfolio)) }
-                    }
+                        .color(context?.getColor(R.color.colorAccent)!!) {
+                            bold { append(getString(R.string.rename_portfolio)) }
+                        }
                 popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, renamePortfolioItem)
             }
 
@@ -1507,52 +1513,52 @@ class StockDataFragment : Fragment() {
                     //val dialogView = inflater.inflate(R.layout.dialog_add_portfolio, null)
 
                     val selectedPortfolio =
-                        SharedRepository.selectedPortfolio.value
-                            ?: stockDBdata.portfolio.ifEmpty {
-                                standardPortfolio
-                            }
+                            SharedRepository.selectedPortfolio.value
+                                    ?: stockDBdata.portfolio.ifEmpty {
+                                        standardPortfolio
+                                    }
 
                     if (addSelected) {
                         dialogBinding.portfolioTextView.text =
-                            getString(R.string.portfolio_name_text)
+                                getString(R.string.portfolio_name_text)
                     } else {
                         dialogBinding.portfolioTextView.text =
-                            getString(R.string.portfolio_rename_text)
+                                getString(R.string.portfolio_rename_text)
                         // set the current portfolio name as default
                         dialogBinding.addPortfolioName.setText(selectedPortfolio)
                     }
                     builder.setView(dialogBinding.root)
-                        .setTitle(
-                            if (addSelected) {
-                                getString(R.string.add_portfolio)
-                            } else {
-                                getString(R.string.rename_portfolio_header, selectedPortfolio)
-                            }
-                        )
-                        // Add action buttons
-                        .setPositiveButton(
-                            if (addSelected) {
-                                R.string.add
-                            } else {
-                                R.string.rename
-                            }
-                        ) { _, _ ->
-                            // Add () to avoid cast exception.
-                            val portfolioText = (dialogBinding.addPortfolioName.text).toString()
-                                .trim()
-                            if (portfolioText.isEmpty() || portfolioText.compareTo(
-                                    standardPortfolio, true
-                                ) == 0
-                            ) {
-                                Toast.makeText(
-                                    requireContext(), getString(R.string.portfolio_name_not_empty),
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
-                                return@setPositiveButton
-                            }
+                            .setTitle(
+                                    if (addSelected) {
+                                        getString(R.string.add_portfolio)
+                                    } else {
+                                        getString(R.string.rename_portfolio_header, selectedPortfolio)
+                                    }
+                            )
+                            // Add action buttons
+                            .setPositiveButton(
+                                    if (addSelected) {
+                                        R.string.add
+                                    } else {
+                                        R.string.rename
+                                    }
+                            ) { _, _ ->
+                                // Add () to avoid cast exception.
+                                val portfolioText = (dialogBinding.addPortfolioName.text).toString()
+                                        .trim()
+                                if (portfolioText.isEmpty() || portfolioText.compareTo(
+                                                standardPortfolio, true
+                                        ) == 0
+                                ) {
+                                    Toast.makeText(
+                                            requireContext(), getString(R.string.portfolio_name_not_empty),
+                                            Toast.LENGTH_LONG
+                                    )
+                                            .show()
+                                    return@setPositiveButton
+                                }
 
-                            binding.textViewPortfolio.text = portfolioText
+                                binding.textViewPortfolio.text = portfolioText
 
 //                val portfolios = SharedRepository.portfolios.value
 //                if (portfolios?.find {
@@ -1561,32 +1567,32 @@ class StockDataFragment : Fragment() {
 //                  portfolios?.add("")
 //                }
 
-                            if (addSelected) {
-                                stockRoomViewModel.setPortfolio(symbol, portfolioText)
+                                if (addSelected) {
+                                    stockRoomViewModel.setPortfolio(symbol, portfolioText)
 //                  if (portfolios != null) {
 //                    portfolios.add(portfolioText)
 //                  }
-                            } else {
-                                stockRoomViewModel.updatePortfolio(selectedPortfolio, portfolioText)
+                                } else {
+                                    stockRoomViewModel.updatePortfolio(selectedPortfolio, portfolioText)
 //                  if (portfolios != null) {
 //                    portfolios.remove(selectedPortfolio)
 //                    portfolios.add(portfolioText)
 //                  }
-                            }
+                                }
 
-                            //SharedRepository.portfolios.value = portfolios
-                            SharedRepository.selectedPortfolio.value = portfolioText
-                        }
-                        .setNegativeButton(
-                            R.string.cancel
-                        ) { _, _ ->
-                        }
+                                //SharedRepository.portfolios.value = portfolios
+                                SharedRepository.selectedPortfolio.value = portfolioText
+                            }
+                            .setNegativeButton(
+                                    R.string.cancel
+                            ) { _, _ ->
+                            }
                     builder
-                        .create()
-                        .show()
+                            .create()
+                            .show()
                 } else {
                     var portfolio = menuitem.title?.trim()
-                        .toString()
+                            .toString()
                     binding.textViewPortfolio.text = portfolio
 
                     if (portfolio == standardPortfolio) {
@@ -1605,67 +1611,89 @@ class StockDataFragment : Fragment() {
             }
 
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 updateUI()
             }
         }
 
         binding.stockgroupLayout.setOnClickListener { viewLayout ->
-            val popupMenu = PopupMenu(requireContext(), viewLayout)
 
-            var menuIndex: Int = Menu.FIRST
-            stockRoomViewModel.getGroupsMenuList(
-                getString(R.string.standard_group),
-                context?.getColor(R.color.black) ?: 0
+            val stockItem = StockItem(
+                    OnlineMarketData(""),
+                    StockDBdata(symbol),
+                    emptyList(),
+                    emptyList(),
+                    emptyList()
             )
-                .forEach {
-                    popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
-                }
+            // function is in StockRoomBaseLambdaFragment
+            clickListenerGroup(stockItem, viewLayout)
 
-            popupMenu.show()
-
-            val groups: List<Group> = stockRoomViewModel.getGroupsSync()
-            popupMenu.setOnMenuItemClickListener { menuitem ->
-                val i: Int = menuitem.itemId - 2
-                val clrDB: Int
-                val name: String
-
-                // Check if first item (menuitem.itemId=1, i=-1) is selected.
-                if (i < 0) {
-                    clrDB = 0
-                    name = getString(R.string.standard_group)
-                } else {
-                    clrDB = groups[i].color
-                    name = groups[i].name
-                }
-
-                // Store the selection.
-                stockRoomViewModel.setGroup(symbol, name, clrDB)
-                true
-            }
+//            val popupMenu = PopupMenu(requireContext(), viewLayout)
+//
+//            var menuIndex: Int = Menu.FIRST
+//            stockRoomViewModel.getGroupsMenuList(
+//                getString(R.string.standard_group),
+//                context?.getColor(R.color.black) ?: 0
+//            )
+//                .forEach {
+//                    popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
+//                }
+//
+//            popupMenu.show()
+//
+//            val groups: List<Group> = stockRoomViewModel.getGroupsSync()
+//            popupMenu.setOnMenuItemClickListener { menuitem ->
+//                val i: Int = menuitem.itemId - 2
+//                val clrDB: Int
+//                val name: String
+//
+//                // Check if first item (menuitem.itemId=1, i=-1) is selected.
+//                if (i < 0) {
+//                    clrDB = 0
+//                    name = getString(R.string.standard_group)
+//                } else {
+//                    clrDB = groups[i].color
+//                    name = groups[i].name
+//                }
+//
+//                // Store the selection.
+//                stockRoomViewModel.setGroup(symbol, name, clrDB)
+//                true
+//            }
         }
 
         binding.markerLayout.setOnClickListener { viewLayout ->
-            val popupMenu = PopupMenu(requireContext(), viewLayout)
 
-            for (index in 0..10) {
-                val text = context?.let { getMarkerText(it, index) }
-                popupMenu.menu.add(0, Menu.FIRST + index, Menu.NONE, text)
-            }
+            val stockItem = StockItem(
+                    OnlineMarketData(""),
+                    StockDBdata(symbol),
+                    emptyList(),
+                    emptyList(),
+                    emptyList()
+            )
+            // function is in StockRoomBaseLambdaFragment
+            clickListenerMarker(stockItem, viewLayout)
 
-            popupMenu.show()
-
-            popupMenu.setOnMenuItemClickListener { menuitem ->
-                val marker: Int = menuitem.itemId - 1
-
-                // Store the selected marker.
-                stockRoomViewModel.setMarker(symbol, marker)
-                true
-            }
+//            val popupMenu = PopupMenu(requireContext(), viewLayout)
+//
+//            for (index in 0..10) {
+//                val text = context?.let { getMarkerText(it, index) }
+//                popupMenu.menu.add(0, Menu.FIRST + index, Menu.NONE, text)
+//            }
+//
+//            popupMenu.show()
+//
+//            popupMenu.setOnMenuItemClickListener { menuitem ->
+//                val marker: Int = menuitem.itemId - 1
+//
+//                // Store the selected marker.
+//                stockRoomViewModel.setMarker(symbol, marker)
+//                true
+//            }
         }
 
         binding.buttonOneDay.setOnClickListener {
@@ -1712,9 +1740,9 @@ class StockDataFragment : Fragment() {
 //    if (totalQuantity == 0.0) {
             if (assets?.assets?.size == 0) {
                 Toast.makeText(
-                    requireContext(), getString(R.string.no_total_quantity), Toast.LENGTH_LONG
+                        requireContext(), getString(R.string.no_total_quantity), Toast.LENGTH_LONG
                 )
-                    .show()
+                        .show()
             } else {
                 val builder = AlertDialog.Builder(requireContext())
                 // Get the layout inflater
@@ -1725,121 +1753,121 @@ class StockDataFragment : Fragment() {
                 dialogBinding.splitRatioZ.setText("1")
 
                 builder.setView(dialogBinding.root)
-                    .setTitle(R.string.split_asset)
-                    // Add action buttons
-                    .setPositiveButton(
-                        R.string.split
-                    ) { _, _ ->
-                        // Add () to avoid cast exception.
-                        val splitRatioTextZ = (dialogBinding.splitRatioZ.text).toString()
-                            .trim()
-                        val splitRatioTextN = (dialogBinding.splitRatioN.text).toString()
-                            .trim()
-                        if (splitRatioTextZ.isNotEmpty() && splitRatioTextN.isNotEmpty()) {
-                            var valid = true
-                            var splitRatioZ = 0.0
-                            try {
-                                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                                splitRatioZ = numberFormat.parse(splitRatioTextZ)!!
-                                    .toDouble()
+                        .setTitle(R.string.split_asset)
+                        // Add action buttons
+                        .setPositiveButton(
+                                R.string.split
+                        ) { _, _ ->
+                            // Add () to avoid cast exception.
+                            val splitRatioTextZ = (dialogBinding.splitRatioZ.text).toString()
+                                    .trim()
+                            val splitRatioTextN = (dialogBinding.splitRatioN.text).toString()
+                                    .trim()
+                            if (splitRatioTextZ.isNotEmpty() && splitRatioTextN.isNotEmpty()) {
+                                var valid = true
+                                var splitRatioZ = 0.0
+                                try {
+                                    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                    splitRatioZ = numberFormat.parse(splitRatioTextZ)!!
+                                            .toDouble()
 
-                                if (splitRatioZ <= 0.0 || splitRatioZ > 1000.0) {
+                                    if (splitRatioZ <= 0.0 || splitRatioZ > 1000.0) {
+                                        valid = false
+                                    }
+
+                                } catch (e: Exception) {
                                     valid = false
                                 }
 
-                            } catch (e: Exception) {
-                                valid = false
-                            }
+                                var splitRatioN = 0.0
+                                try {
+                                    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                    splitRatioN = numberFormat.parse(splitRatioTextN)!!
+                                            .toDouble()
 
-                            var splitRatioN = 0.0
-                            try {
-                                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                                splitRatioN = numberFormat.parse(splitRatioTextN)!!
-                                    .toDouble()
+                                    if (splitRatioN <= 0.0 || splitRatioN > 1000.0) {
+                                        valid = false
+                                    }
 
-                                if (splitRatioN <= 0.0 || splitRatioN > 1000.0) {
+                                } catch (e: Exception) {
                                     valid = false
                                 }
 
-                            } catch (e: Exception) {
-                                valid = false
-                            }
-
-                            if (valid && assets?.assets != null) {
-                                var minQuantity = Double.MAX_VALUE
-                                var minPrice = Double.MAX_VALUE
-                                // split = 1/(Z/N)
-                                val splitRatio = splitRatioN / splitRatioZ
-                                assets.assets.forEach { asset ->
-                                    asset.quantity *= splitRatio
-                                    if (asset.price > 0.0) {
-                                        asset.price /= splitRatio
+                                if (valid && assets?.assets != null) {
+                                    var minQuantity = Double.MAX_VALUE
+                                    var minPrice = Double.MAX_VALUE
+                                    // split = 1/(Z/N)
+                                    val splitRatio = splitRatioN / splitRatioZ
+                                    assets.assets.forEach { asset ->
+                                        asset.quantity *= splitRatio
+                                        if (asset.price > 0.0) {
+                                            asset.price /= splitRatio
+                                        }
+                                        if (asset.quantity > 0.0) {
+                                            minQuantity = min(asset.quantity, minQuantity)
+                                            minPrice = min(asset.price, minPrice)
+                                        }
                                     }
-                                    if (asset.quantity > 0.0) {
-                                        minQuantity = min(asset.quantity, minQuantity)
-                                        minPrice = min(asset.price, minPrice)
-                                    }
-                                }
 
-                                if (minQuantity >= 0.1 && minPrice >= 0.01) {
-                                    stockRoomViewModel.updateAssets(
-                                        symbol = symbol, assets = assets.assets
-                                    )
+                                    if (minQuantity >= 0.1 && minPrice >= 0.01) {
+                                        stockRoomViewModel.updateAssets(
+                                                symbol = symbol, assets = assets.assets
+                                        )
 
-                                    // Update below/above alerts.
-                                    val stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
+                                        // Update below/above alerts.
+                                        val stockDBdata = stockRoomViewModel.getStockDBdataSync(symbol)
 
-                                    if (stockDBdata.alertBelow > 0.0) {
+                                        if (stockDBdata.alertBelow > 0.0) {
 //                                        stockRoomViewModel.updateAlertBelowSync(
 //                                            symbol,
 //                                            stockDBdata.alertBelow / splitRatio,
 //                                            stockDBdata.alertBelowNote
 //                                        )
 
-                                        binding.alertBelowInputEditText.setText(
-                                            to2To8Digits(stockDBdata.alertBelow / splitRatio)
-                                        )
-                                    }
+                                            binding.alertBelowInputEditText.setText(
+                                                    to2To8Digits(stockDBdata.alertBelow / splitRatio)
+                                            )
+                                        }
 
-                                    if (stockDBdata.alertAbove > 0.0) {
+                                        if (stockDBdata.alertAbove > 0.0) {
 //                                        stockRoomViewModel.updateAlertAboveSync(
 //                                            symbol,
 //                                            stockDBdata.alertAbove / splitRatio,
 //                                            stockDBdata.alertAboveNote
 //                                        )
 
-                                        binding.alertAboveInputEditText.setText(
-                                            to2To8Digits(stockDBdata.alertAbove / splitRatio)
-                                        )
-                                    }
+                                            binding.alertAboveInputEditText.setText(
+                                                    to2To8Digits(stockDBdata.alertAbove / splitRatio)
+                                            )
+                                        }
 
-                                } else {
-                                    Toast.makeText(
-                                        requireContext(), if (minQuantity >= 0.1) {
+                                    } else {
+                                        Toast.makeText(
+                                                requireContext(), if (minQuantity >= 0.1) {
                                             getString(R.string.split_min_price)
                                         } else {
                                             getString(R.string.split_min_quantity)
                                         }, Toast.LENGTH_LONG
+                                        )
+                                                .show()
+                                    }
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.invalid_split_entry),
+                                            Toast.LENGTH_LONG
                                     )
-                                        .show()
+                                            .show()
                                 }
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.invalid_split_entry),
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
                             }
                         }
-                    }
-                    .setNegativeButton(
-                        R.string.cancel
-                    ) { _, _ ->
-                    }
+                        .setNegativeButton(
+                                R.string.cancel
+                        ) { _, _ ->
+                        }
                 builder
-                    .create()
-                    .show()
+                        .create()
+                        .show()
             }
         }
 
@@ -1863,20 +1891,20 @@ class StockDataFragment : Fragment() {
                 SharedAccountList.accounts.sortedBy {
                     it.lowercase(Locale.ROOT)
                 }
-                    .forEach { account ->
-                        val name = account.ifEmpty {
-                            // first entry in bold
-                            SpannableStringBuilder()
-                                .bold { append(standardAccount) }
+                        .forEach { account ->
+                            val name = account.ifEmpty {
+                                // first entry in bold
+                                SpannableStringBuilder()
+                                        .bold { append(standardAccount) }
+                            }
+                            popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                         }
-                        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
-                    }
 
                 // Last item is to add a new account
                 val addAccountItem = SpannableStringBuilder()
-                    .color(context?.getColor(R.color.colorAccent)!!) {
-                        bold { append(getString(R.string.add_account)) }
-                    }
+                        .color(context?.getColor(R.color.colorAccent)!!) {
+                            bold { append(getString(R.string.add_account)) }
+                        }
                 popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
 
                 popupMenu.show()
@@ -1895,27 +1923,27 @@ class StockDataFragment : Fragment() {
                         val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
 
                         builderAdd.setView(addDialogBinding.root)
-                            .setTitle(getString(R.string.add_account))
-                            // Add action buttons
-                            .setPositiveButton(R.string.add) { _, _ ->
-                                // Add () to avoid cast exception.
-                                val accountText = (addDialogBinding.addAccount.text).toString()
-                                    .trim()
+                                .setTitle(getString(R.string.add_account))
+                                // Add action buttons
+                                .setPositiveButton(R.string.add) { _, _ ->
+                                    // Add () to avoid cast exception.
+                                    val accountText = (addDialogBinding.addAccount.text).toString()
+                                            .trim()
 
-                                dialogBinding.textViewAssetAccount.text = accountText
-                                SharedAccountList.accounts =
-                                    SharedAccountList.accounts + accountText
-                            }
-                            .setNegativeButton(
-                                R.string.cancel
-                            ) { _, _ ->
-                            }
+                                    dialogBinding.textViewAssetAccount.text = accountText
+                                    SharedAccountList.accounts =
+                                            SharedAccountList.accounts + accountText
+                                }
+                                .setNegativeButton(
+                                        R.string.cancel
+                                ) { _, _ ->
+                                }
                         builderAdd
-                            .create()
-                            .show()
+                                .create()
+                                .show()
                     } else {
                         val account = menuitem.title?.trim()
-                            .toString()
+                                .toString()
                         dialogBinding.textViewAssetAccount.text = account
                     }
                     true
@@ -1923,158 +1951,160 @@ class StockDataFragment : Fragment() {
             }
 
             builder.setView(dialogBinding.root)
-                .setTitle(R.string.bought_asset)
-                // Add action buttons
-                .setPositiveButton(
-                    R.string.bought
-                ) { _, _ ->
-                    // Add () to avoid cast exception.
-                    val quantityText = (dialogBinding.addQuantity.text).toString()
-                        .trim()
-                    var quantity = 0.0
+                    .setTitle(R.string.bought_asset)
+                    // Add action buttons
+                    .setPositiveButton(
+                            R.string.bought
+                    ) { _, _ ->
+                        // Add () to avoid cast exception.
+                        val quantityText = (dialogBinding.addQuantity.text).toString()
+                                .trim()
+                        var quantity = 0.0
 
-                    try {
-                        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                        quantity = numberFormat.parse(quantityText)!!
-                            .toDouble()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.asset_share_not_empty),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        return@setPositiveButton
-                    }
-
-                    if (quantity <= 0.0) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.quantity_not_zero),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        return@setPositiveButton
-                    }
-
-                    val priceText = (dialogBinding.addPrice.text).toString()
-                        .trim()
-                    var price = 0.0
-                    try {
-                        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                        price = numberFormat.parse(priceText)!!
-                            .toDouble()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.asset_price_not_empty),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        return@setPositiveButton
-                    }
-
-                    if (price < 0.0) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.price_not_negative),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        return@setPositiveButton
-                    }
-
-                    val feeText = (dialogBinding.addFee.text).toString()
-                        .trim()
-                    var fee = 0.0
-                    if (feeText.isNotEmpty()) {
                         try {
                             val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                            fee = numberFormat.parse(feeText)!!
-                                .toDouble()
+                            quantity = numberFormat.parse(quantityText)!!
+                                    .toDouble()
                         } catch (e: Exception) {
                             Toast.makeText(
-                                requireContext(),
-                                getString(R.string.asset_fee_not_valid),
-                                Toast.LENGTH_LONG
+                                    requireContext(),
+                                    getString(R.string.asset_share_not_empty),
+                                    Toast.LENGTH_LONG
                             )
-                                .show()
+                                    .show()
                             return@setPositiveButton
                         }
 
-                        if (fee < 0.0) {
+                        if (quantity <= 0.0) {
                             Toast.makeText(
-                                requireContext(),
-                                getString(R.string.fee_not_negative),
-                                Toast.LENGTH_LONG
+                                    requireContext(),
+                                    getString(R.string.quantity_not_zero),
+                                    Toast.LENGTH_LONG
                             )
-                                .show()
+                                    .show()
                             return@setPositiveButton
                         }
-                    }
 
-                    val localDateTime: ZonedDateTime = ZonedDateTime.of(
-                        dialogBinding.datePickerAssetDate.year,
-                        dialogBinding.datePickerAssetDate.month + 1,
-                        dialogBinding.datePickerAssetDate.dayOfMonth,
-                        dialogBinding.datePickerAssetTime.hour,
-                        dialogBinding.datePickerAssetTime.minute,
-                        ZonedDateTime.now().second,
-                        0,
-                        ZoneOffset.systemDefault()
-                    )
-                    val date = localDateTime.toEpochSecond() // in GMT
+                        val priceText = (dialogBinding.addPrice.text).toString()
+                                .trim()
+                        var price = 0.0
+                        try {
+                            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                            price = numberFormat.parse(priceText)!!
+                                    .toDouble()
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.asset_price_not_empty),
+                                    Toast.LENGTH_LONG
+                            )
+                                    .show()
+                            return@setPositiveButton
+                        }
 
-                    var accountText = (dialogBinding.textViewAssetAccount.text).toString()
-                        .trim()
-                    if (accountText == standardAccount) {
-                        accountText = ""
-                    }
+                        if (price < 0.0) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.price_not_negative),
+                                    Toast.LENGTH_LONG
+                            )
+                                    .show()
+                            return@setPositiveButton
+                        }
 
-                    val noteText = (dialogBinding.addNote.text).toString()
-                        .trim()
+                        val feeText = (dialogBinding.addFee.text).toString()
+                                .trim()
+                        var fee = 0.0
+                        if (feeText.isNotEmpty()) {
+                            try {
+                                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                fee = numberFormat.parse(feeText)!!
+                                        .toDouble()
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.asset_fee_not_valid),
+                                        Toast.LENGTH_LONG
+                                )
+                                        .show()
+                                return@setPositiveButton
+                            }
 
-                    //val date = LocalDateTime.now()
-                    //    .toEpochSecond(ZoneOffset.UTC)
+                            if (fee < 0.0) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.fee_not_negative),
+                                        Toast.LENGTH_LONG
+                                )
+                                        .show()
+                                return@setPositiveButton
+                            }
+                        }
 
-                    stockRoomViewModel.addAsset(
-                        Asset(
-                            symbol = symbol,
-                            quantity = quantity,
-                            price = price,
-                            account = accountText,
-                            fee = fee,
-                            date = date,
-                            note = noteText
+                        val localDateTime: ZonedDateTime = ZonedDateTime.of(
+                                dialogBinding.datePickerAssetDate.year,
+                                dialogBinding.datePickerAssetDate.month + 1,
+                                dialogBinding.datePickerAssetDate.dayOfMonth,
+                                dialogBinding.datePickerAssetTime.hour,
+                                dialogBinding.datePickerAssetTime.minute,
+                                ZonedDateTime.now().second,
+                                0,
+                                ZoneOffset.systemDefault()
                         )
-                    )
-                    val count: Int = when {
-                        quantity == 1.0 -> {
-                            1
-                        }
-                        quantity > 1.0 -> {
-                            quantity.toInt() + 1
-                        }
-                        else -> {
-                            0
-                        }
-                    }
+                        val date = localDateTime.toEpochSecond() // in GMT
 
-                    val pluralstr = resources.getQuantityString(
-                        R.plurals.asset_added, count,
-                        DecimalFormat(DecimalFormatQuantityDigits).format(quantity),
-                        to2To8Digits(price)
-                    )
-                    Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
-                        .show()
-                }
-                .setNegativeButton(
-                    R.string.cancel
-                ) { _, _ ->
-                }
+                        var accountText = (dialogBinding.textViewAssetAccount.text).toString()
+                                .trim()
+                        if (accountText == standardAccount) {
+                            accountText = ""
+                        }
+
+                        val noteText = (dialogBinding.addNote.text).toString()
+                                .trim()
+
+                        //val date = LocalDateTime.now()
+                        //    .toEpochSecond(ZoneOffset.UTC)
+
+                        stockRoomViewModel.addAsset(
+                                Asset(
+                                        symbol = symbol,
+                                        quantity = quantity,
+                                        price = price,
+                                        account = accountText,
+                                        fee = fee,
+                                        date = date,
+                                        note = noteText
+                                )
+                        )
+                        val count: Int = when {
+                            quantity == 1.0 -> {
+                                1
+                            }
+
+                            quantity > 1.0 -> {
+                                quantity.toInt() + 1
+                            }
+
+                            else -> {
+                                0
+                            }
+                        }
+
+                        val pluralstr = resources.getQuantityString(
+                                R.plurals.asset_added, count,
+                                DecimalFormat(DecimalFormatQuantityDigits).format(quantity),
+                                to2To8Digits(price)
+                        )
+                        Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
+                                .show()
+                    }
+                    .setNegativeButton(
+                            R.string.cancel
+                    ) { _, _ ->
+                    }
             builder
-                .create()
-                .show()
+                    .create()
+                    .show()
         }
 
         binding.moveAssetsButton.setOnClickListener {
@@ -2088,17 +2118,17 @@ class StockDataFragment : Fragment() {
 
             if (purchaseQuantity > 0.0) {
                 dialogBinding.addQuantity.setText(
-                    DecimalFormat(DecimalFormat2To8Digits).format(
-                        purchaseQuantity
-                    )
+                        DecimalFormat(DecimalFormat2To8Digits).format(
+                                purchaseQuantity
+                        )
                 )
             } else {
                 Toast.makeText(
-                    requireContext(),
-                    getString(R.string.add_assets_first),
-                    Toast.LENGTH_LONG
+                        requireContext(),
+                        getString(R.string.add_assets_first),
+                        Toast.LENGTH_LONG
                 )
-                    .show()
+                        .show()
                 return@setOnClickListener
             }
 
@@ -2114,20 +2144,20 @@ class StockDataFragment : Fragment() {
                 SharedAccountList.accounts.sortedBy {
                     it.lowercase(Locale.ROOT)
                 }
-                    .forEach { account ->
-                        val name = account.ifEmpty {
-                            // first entry in bold
-                            SpannableStringBuilder()
-                                .bold { append(standardAccount) }
+                        .forEach { account ->
+                            val name = account.ifEmpty {
+                                // first entry in bold
+                                SpannableStringBuilder()
+                                        .bold { append(standardAccount) }
+                            }
+                            popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                         }
-                        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
-                    }
 
                 // Last item is to add a new account
                 val addAccountItem = SpannableStringBuilder()
-                    .color(context?.getColor(R.color.colorAccent)!!) {
-                        bold { append(getString(R.string.add_account)) }
-                    }
+                        .color(context?.getColor(R.color.colorAccent)!!) {
+                            bold { append(getString(R.string.add_account)) }
+                        }
                 popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
 
                 popupMenu.show()
@@ -2146,27 +2176,27 @@ class StockDataFragment : Fragment() {
                         val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
 
                         builderAdd.setView(addDialogBinding.root)
-                            .setTitle(getString(R.string.add_account))
-                            // Add action buttons
-                            .setPositiveButton(R.string.add) { _, _ ->
-                                // Add () to avoid cast exception.
-                                val accountText = (addDialogBinding.addAccount.text).toString()
-                                    .trim()
+                                .setTitle(getString(R.string.add_account))
+                                // Add action buttons
+                                .setPositiveButton(R.string.add) { _, _ ->
+                                    // Add () to avoid cast exception.
+                                    val accountText = (addDialogBinding.addAccount.text).toString()
+                                            .trim()
 
-                                dialogBinding.textViewFromAssetAccount.text = accountText
-                                SharedAccountList.accounts =
-                                    SharedAccountList.accounts + accountText
-                            }
-                            .setNegativeButton(
-                                R.string.cancel
-                            ) { _, _ ->
-                            }
+                                    dialogBinding.textViewFromAssetAccount.text = accountText
+                                    SharedAccountList.accounts =
+                                            SharedAccountList.accounts + accountText
+                                }
+                                .setNegativeButton(
+                                        R.string.cancel
+                                ) { _, _ ->
+                                }
                         builderAdd
-                            .create()
-                            .show()
+                                .create()
+                                .show()
                     } else {
                         val account = menuitem.title?.trim()
-                            .toString()
+                                .toString()
                         dialogBinding.textViewFromAssetAccount.text = account
                     }
                     true
@@ -2181,20 +2211,20 @@ class StockDataFragment : Fragment() {
                 SharedAccountList.accounts.sortedBy {
                     it.lowercase(Locale.ROOT)
                 }
-                    .forEach { account ->
-                        val name = account.ifEmpty {
-                            // first entry in bold
-                            SpannableStringBuilder()
-                                .bold { append(standardAccount) }
+                        .forEach { account ->
+                            val name = account.ifEmpty {
+                                // first entry in bold
+                                SpannableStringBuilder()
+                                        .bold { append(standardAccount) }
+                            }
+                            popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                         }
-                        popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
-                    }
 
                 // Last item is to add a new account
                 val addAccountItem = SpannableStringBuilder()
-                    .color(context?.getColor(R.color.colorAccent)!!) {
-                        bold { append(getString(R.string.add_account)) }
-                    }
+                        .color(context?.getColor(R.color.colorAccent)!!) {
+                            bold { append(getString(R.string.add_account)) }
+                        }
                 popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
 
                 popupMenu.show()
@@ -2212,27 +2242,27 @@ class StockDataFragment : Fragment() {
                         val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
 
                         builderAdd.setView(addDialogBinding.root)
-                            .setTitle(getString(R.string.add_account))
-                            // Add action buttons
-                            .setPositiveButton(R.string.add) { _, _ ->
-                                // Add () to avoid cast exception.
-                                val accountText = (addDialogBinding.addAccount.text).toString()
-                                    .trim()
+                                .setTitle(getString(R.string.add_account))
+                                // Add action buttons
+                                .setPositiveButton(R.string.add) { _, _ ->
+                                    // Add () to avoid cast exception.
+                                    val accountText = (addDialogBinding.addAccount.text).toString()
+                                            .trim()
 
-                                dialogBinding.textViewToAssetAccount.text = accountText
-                                SharedAccountList.accounts =
-                                    SharedAccountList.accounts + accountText
-                            }
-                            .setNegativeButton(
-                                R.string.cancel
-                            ) { _, _ ->
-                            }
+                                    dialogBinding.textViewToAssetAccount.text = accountText
+                                    SharedAccountList.accounts =
+                                            SharedAccountList.accounts + accountText
+                                }
+                                .setNegativeButton(
+                                        R.string.cancel
+                                ) { _, _ ->
+                                }
                         builderAdd
-                            .create()
-                            .show()
+                                .create()
+                                .show()
                     } else {
                         val account = menuitem.title?.trim()
-                            .toString()
+                                .toString()
                         dialogBinding.textViewToAssetAccount.text = account
                     }
                     true
@@ -2240,142 +2270,142 @@ class StockDataFragment : Fragment() {
             }
 
             builder.setView(dialogBinding.root)
-                .setTitle(R.string.move_asset)
-                // Add action buttons
-                .setPositiveButton(
-                    R.string.move
-                ) { _, _ ->
-                    // Add () to avoid cast exception.
-                    val quantityText = (dialogBinding.addQuantity.text).toString()
-                        .trim()
-                    var quantity = 0.0
+                    .setTitle(R.string.move_asset)
+                    // Add action buttons
+                    .setPositiveButton(
+                            R.string.move
+                    ) { _, _ ->
+                        // Add () to avoid cast exception.
+                        val quantityText = (dialogBinding.addQuantity.text).toString()
+                                .trim()
+                        var quantity = 0.0
 
-                    try {
-                        val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                        quantity = numberFormat.parse(quantityText)!!
-                            .toDouble()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.asset_share_not_empty),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        return@setPositiveButton
-                    }
-
-                    if (quantity <= 0.0) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.quantity_not_zero),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        return@setPositiveButton
-                    }
-
-                    val feeText = (dialogBinding.addFee.text).toString()
-                        .trim()
-                    var fee = 0.0
-                    if (feeText.isNotEmpty()) {
                         try {
                             val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                            fee = numberFormat.parse(feeText)!!
-                                .toDouble()
+                            quantity = numberFormat.parse(quantityText)!!
+                                    .toDouble()
                         } catch (e: Exception) {
                             Toast.makeText(
-                                requireContext(),
-                                getString(R.string.asset_fee_not_valid),
-                                Toast.LENGTH_LONG
+                                    requireContext(),
+                                    getString(R.string.asset_share_not_empty),
+                                    Toast.LENGTH_LONG
                             )
-                                .show()
+                                    .show()
                             return@setPositiveButton
                         }
 
-                        if (fee < 0.0) {
+                        if (quantity <= 0.0) {
                             Toast.makeText(
-                                requireContext(),
-                                getString(R.string.fee_not_negative),
-                                Toast.LENGTH_LONG
+                                    requireContext(),
+                                    getString(R.string.quantity_not_zero),
+                                    Toast.LENGTH_LONG
                             )
-                                .show()
+                                    .show()
                             return@setPositiveButton
                         }
-                    }
 
-                    val localDateTime: ZonedDateTime = ZonedDateTime.of(
-                        dialogBinding.datePickerAssetDate.year,
-                        dialogBinding.datePickerAssetDate.month + 1,
-                        dialogBinding.datePickerAssetDate.dayOfMonth,
-                        dialogBinding.datePickerAssetTime.hour,
-                        dialogBinding.datePickerAssetTime.minute,
-                        ZonedDateTime.now().second,
-                        0,
-                        ZoneOffset.systemDefault()
-                    )
-                    val date = localDateTime.toEpochSecond() // in GMT
+                        val feeText = (dialogBinding.addFee.text).toString()
+                                .trim()
+                        var fee = 0.0
+                        if (feeText.isNotEmpty()) {
+                            try {
+                                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                fee = numberFormat.parse(feeText)!!
+                                        .toDouble()
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.asset_fee_not_valid),
+                                        Toast.LENGTH_LONG
+                                )
+                                        .show()
+                                return@setPositiveButton
+                            }
 
-                    var fromAccountText = (dialogBinding.textViewFromAssetAccount.text).toString()
-                        .trim()
-                    if (fromAccountText == standardAccount) {
-                        fromAccountText = ""
-                    }
+                            if (fee < 0.0) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.fee_not_negative),
+                                        Toast.LENGTH_LONG
+                                )
+                                        .show()
+                                return@setPositiveButton
+                            }
+                        }
 
-                    var toAccountText = (dialogBinding.textViewToAssetAccount.text).toString()
-                        .trim()
-                    if (toAccountText == standardAccount) {
-                        toAccountText = ""
-                    }
+                        val localDateTime: ZonedDateTime = ZonedDateTime.of(
+                                dialogBinding.datePickerAssetDate.year,
+                                dialogBinding.datePickerAssetDate.month + 1,
+                                dialogBinding.datePickerAssetDate.dayOfMonth,
+                                dialogBinding.datePickerAssetTime.hour,
+                                dialogBinding.datePickerAssetTime.minute,
+                                ZonedDateTime.now().second,
+                                0,
+                                ZoneOffset.systemDefault()
+                        )
+                        val date = localDateTime.toEpochSecond() // in GMT
 
-                    val noteText = (dialogBinding.addNote.text).toString()
-                        .trim()
+                        var fromAccountText = (dialogBinding.textViewFromAssetAccount.text).toString()
+                                .trim()
+                        if (fromAccountText == standardAccount) {
+                            fromAccountText = ""
+                        }
 
-                    if (fromAccountText != toAccountText) {
-                        stockRoomViewModel.moveAsset(
-                            // From
-                            Asset(
-                                symbol = symbol,
-                                quantity = -quantity,
-                                price = purchasePriceValue,
-                                account = fromAccountText,
-                                fee = fee,
-                                date = date,
-                                note = noteText
-                            ),
-                            // To
-                            Asset(
-                                symbol = symbol,
-                                quantity = quantity,
-                                price = purchasePriceValue,
-                                account = toAccountText,
-                                fee = 0.0,
-                                date = date + 1,
-                                note = noteText
+                        var toAccountText = (dialogBinding.textViewToAssetAccount.text).toString()
+                                .trim()
+                        if (toAccountText == standardAccount) {
+                            toAccountText = ""
+                        }
+
+                        val noteText = (dialogBinding.addNote.text).toString()
+                                .trim()
+
+                        if (fromAccountText != toAccountText) {
+                            stockRoomViewModel.moveAsset(
+                                    // From
+                                    Asset(
+                                            symbol = symbol,
+                                            quantity = -quantity,
+                                            price = purchasePriceValue,
+                                            account = fromAccountText,
+                                            fee = fee,
+                                            date = date,
+                                            note = noteText
+                                    ),
+                                    // To
+                                    Asset(
+                                            symbol = symbol,
+                                            quantity = quantity,
+                                            price = purchasePriceValue,
+                                            account = toAccountText,
+                                            fee = 0.0,
+                                            date = date + 1,
+                                            note = noteText
+                                    )
                             )
-                        )
 
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.asset_moved, toAccountText),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.asset_same_account),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
+                            Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.asset_moved, toAccountText),
+                                    Toast.LENGTH_LONG
+                            )
+                                    .show()
+                        } else {
+                            Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.asset_same_account),
+                                    Toast.LENGTH_LONG
+                            )
+                                    .show()
+                        }
                     }
-                }
-                .setNegativeButton(
-                    R.string.cancel
-                ) { _, _ ->
-                }
+                    .setNegativeButton(
+                            R.string.cancel
+                    ) { _, _ ->
+                    }
             builder
-                .create()
-                .show()
+                    .create()
+                    .show()
         }
 
         binding.removeAssetButton.setOnClickListener {
@@ -2389,9 +2419,9 @@ class StockDataFragment : Fragment() {
 
             if (totalQuantity == 0.0) {
                 Toast.makeText(
-                    requireContext(), getString(R.string.no_total_quantity), Toast.LENGTH_LONG
+                        requireContext(), getString(R.string.no_total_quantity), Toast.LENGTH_LONG
                 )
-                    .show()
+                        .show()
             } else {
                 val builder = AlertDialog.Builder(requireContext())
                 // Get the layout inflater
@@ -2412,20 +2442,20 @@ class StockDataFragment : Fragment() {
                     SharedAccountList.accounts.sortedBy {
                         it.lowercase(Locale.ROOT)
                     }
-                        .forEach { account ->
-                            val name = account.ifEmpty {
-                                // first entry in bold
-                                SpannableStringBuilder()
-                                    .bold { append(standardAccount) }
+                            .forEach { account ->
+                                val name = account.ifEmpty {
+                                    // first entry in bold
+                                    SpannableStringBuilder()
+                                            .bold { append(standardAccount) }
+                                }
+                                popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
                             }
-                            popupMenu.menu.add(0, menuIndex++, Menu.NONE, name)
-                        }
 
                     // Last item is to add a new account
                     val addAccountItem = SpannableStringBuilder()
-                        .color(context?.getColor(R.color.colorAccent)!!) {
-                            bold { append(getString(R.string.add_account)) }
-                        }
+                            .color(context?.getColor(R.color.colorAccent)!!) {
+                                bold { append(getString(R.string.add_account)) }
+                            }
                     popupMenu.menu.add(0, menuIndex++, Menu.CATEGORY_CONTAINER, addAccountItem)
 
                     popupMenu.show()
@@ -2444,27 +2474,27 @@ class StockDataFragment : Fragment() {
                             val addDialogBinding = DialogAddAccountBinding.inflate(inflaterAdd)
 
                             builderAdd.setView(addDialogBinding.root)
-                                .setTitle(getString(R.string.add_account))
-                                // Add action buttons
-                                .setPositiveButton(R.string.add) { _, _ ->
-                                    // Add () to avoid cast exception.
-                                    val accountText = (addDialogBinding.addAccount.text).toString()
-                                        .trim()
+                                    .setTitle(getString(R.string.add_account))
+                                    // Add action buttons
+                                    .setPositiveButton(R.string.add) { _, _ ->
+                                        // Add () to avoid cast exception.
+                                        val accountText = (addDialogBinding.addAccount.text).toString()
+                                                .trim()
 
-                                    dialogBinding.textViewAssetAccount.text = accountText
-                                    SharedAccountList.accounts =
-                                        SharedAccountList.accounts + accountText
-                                }
-                                .setNegativeButton(
-                                    R.string.cancel
-                                ) { _, _ ->
-                                }
+                                        dialogBinding.textViewAssetAccount.text = accountText
+                                        SharedAccountList.accounts =
+                                                SharedAccountList.accounts + accountText
+                                    }
+                                    .setNegativeButton(
+                                            R.string.cancel
+                                    ) { _, _ ->
+                                    }
                             builderAdd
-                                .create()
-                                .show()
+                                    .create()
+                                    .show()
                         } else {
                             val account = menuitem.title?.trim()
-                                .toString()
+                                    .toString()
                             dialogBinding.textViewAssetAccount.text = account
                         }
                         true
@@ -2472,160 +2502,246 @@ class StockDataFragment : Fragment() {
                 }
 
                 builder.setView(dialogBinding.root)
-                    .setTitle(R.string.sold_asset)
-                    // Add action buttons
-                    .setPositiveButton(
-                        R.string.sold
-                    ) { _, _ ->
-                        val quantityText = (dialogBinding.removeQuantity.text).toString()
-                            .trim()
-                        var quantity = 0.0
+                        .setTitle(R.string.sold_asset)
+                        // Add action buttons
+                        .setPositiveButton(
+                                R.string.sold
+                        ) { _, _ ->
+                            val quantityText = (dialogBinding.removeQuantity.text).toString()
+                                    .trim()
+                            var quantity = 0.0
 
-                        try {
-                            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                            quantity = numberFormat.parse(quantityText)!!
-                                .toDouble()
-                        } catch (e: Exception) {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.asset_share_not_empty),
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                            return@setPositiveButton
-                        }
-                        if (quantity <= 0.0) {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.quantity_not_zero),
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                            return@setPositiveButton
-                        }
-
-                        val priceText = (dialogBinding.removePrice.text).toString()
-                            .trim()
-                        var price = 0.0
-                        try {
-                            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                            price = numberFormat.parse(priceText)!!
-                                .toDouble()
-                        } catch (e: Exception) {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.asset_price_not_empty),
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                            return@setPositiveButton
-                        }
-                        if (price < 0.0) {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.price_not_negative),
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                            return@setPositiveButton
-                        }
-
-                        // Send msg and adjust if more shares than owned are removed.
-                        if (quantity > totalQuantity) {
-                            Toast.makeText(
-                                requireContext(), getString(
-                                    R.string.removed_quantity_exceed_existing,
-                                    DecimalFormat(DecimalFormatQuantityDigits).format(quantity),
-                                    DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity)
-                                ), Toast.LENGTH_LONG
-                            )
-                                .show()
-                            quantity = totalQuantity
-                        }
-
-                        val feeText = (dialogBinding.addFee.text).toString()
-                            .trim()
-                        var fee = 0.0
-                        if (feeText.isNotEmpty()) {
                             try {
                                 val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                                fee = numberFormat.parse(feeText)!!
-                                    .toDouble()
+                                quantity = numberFormat.parse(quantityText)!!
+                                        .toDouble()
                             } catch (e: Exception) {
                                 Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.asset_fee_not_valid),
-                                    Toast.LENGTH_LONG
+                                        requireContext(),
+                                        getString(R.string.asset_share_not_empty),
+                                        Toast.LENGTH_LONG
                                 )
-                                    .show()
+                                        .show()
                                 return@setPositiveButton
                             }
-
-                            if (fee < 0.0) {
+                            if (quantity <= 0.0) {
                                 Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.fee_not_negative),
-                                    Toast.LENGTH_LONG
+                                        requireContext(),
+                                        getString(R.string.quantity_not_zero),
+                                        Toast.LENGTH_LONG
                                 )
-                                    .show()
+                                        .show()
                                 return@setPositiveButton
                             }
-                        }
 
-                        val localDateTime: ZonedDateTime = ZonedDateTime.of(
-                            dialogBinding.datePickerAssetDate.year,
-                            dialogBinding.datePickerAssetDate.month + 1,
-                            dialogBinding.datePickerAssetDate.dayOfMonth,
-                            dialogBinding.datePickerAssetTime.hour,
-                            dialogBinding.datePickerAssetTime.minute,
-                            ZonedDateTime.now().second,
-                            0,
-                            ZoneOffset.systemDefault()
-                        )
-                        val date = localDateTime.toEpochSecond() // in GMT
+                            val priceText = (dialogBinding.removePrice.text).toString()
+                                    .trim()
+                            var price = 0.0
+                            try {
+                                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                price = numberFormat.parse(priceText)!!
+                                        .toDouble()
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.asset_price_not_empty),
+                                        Toast.LENGTH_LONG
+                                )
+                                        .show()
+                                return@setPositiveButton
+                            }
+                            if (price < 0.0) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.price_not_negative),
+                                        Toast.LENGTH_LONG
+                                )
+                                        .show()
+                                return@setPositiveButton
+                            }
 
-                        var accountText = (dialogBinding.textViewAssetAccount.text).toString()
-                            .trim()
-                        if (accountText == standardAccount) {
-                            accountText = ""
-                        }
+                            // Send msg and adjust if more shares than owned are removed.
+                            if (quantity > totalQuantity) {
+                                Toast.makeText(
+                                        requireContext(), getString(
+                                        R.string.removed_quantity_exceed_existing,
+                                        DecimalFormat(DecimalFormatQuantityDigits).format(quantity),
+                                        DecimalFormat(DecimalFormatQuantityDigits).format(totalQuantity)
+                                ), Toast.LENGTH_LONG
+                                )
+                                        .show()
+                                quantity = totalQuantity
+                            }
 
-                        val noteText = (dialogBinding.removeNote.text).toString()
-                            .trim()
+                            val feeText = (dialogBinding.addFee.text).toString()
+                                    .trim()
+                            var fee = 0.0
+                            if (feeText.isNotEmpty()) {
+                                try {
+                                    val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                    fee = numberFormat.parse(feeText)!!
+                                            .toDouble()
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.asset_fee_not_valid),
+                                            Toast.LENGTH_LONG
+                                    )
+                                            .show()
+                                    return@setPositiveButton
+                                }
 
-                        //val date = LocalDateTime.now()
-                        //    .toEpochSecond(ZoneOffset.UTC)
+                                if (fee < 0.0) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.fee_not_negative),
+                                            Toast.LENGTH_LONG
+                                    )
+                                            .show()
+                                    return@setPositiveButton
+                                }
+                            }
 
-                        // Add negative shares for removed asset.
-                        stockRoomViewModel.addAsset(
-                            Asset(
-                                symbol = symbol,
-                                quantity = -quantity,
-                                price = price,
-                                account = accountText,
-                                fee = fee,
-                                date = date,
-                                note = noteText
+                            val localDateTime: ZonedDateTime = ZonedDateTime.of(
+                                    dialogBinding.datePickerAssetDate.year,
+                                    dialogBinding.datePickerAssetDate.month + 1,
+                                    dialogBinding.datePickerAssetDate.dayOfMonth,
+                                    dialogBinding.datePickerAssetTime.hour,
+                                    dialogBinding.datePickerAssetTime.minute,
+                                    ZonedDateTime.now().second,
+                                    0,
+                                    ZoneOffset.systemDefault()
                             )
-                        )
-                        val count: Int = when {
-                            quantity == 1.0 -> {
-                                1
+                            val date = localDateTime.toEpochSecond() // in GMT
+
+                            var accountText = (dialogBinding.textViewAssetAccount.text).toString()
+                                    .trim()
+                            if (accountText == standardAccount) {
+                                accountText = ""
                             }
-                            quantity > 1.0 -> {
-                                quantity.toInt() + 1
+
+                            val noteText = (dialogBinding.removeNote.text).toString()
+                                    .trim()
+
+                            //val date = LocalDateTime.now()
+                            //    .toEpochSecond(ZoneOffset.UTC)
+
+                            // Add negative shares for removed asset.
+                            stockRoomViewModel.addAsset(
+                                    Asset(
+                                            symbol = symbol,
+                                            quantity = -quantity,
+                                            price = price,
+                                            account = accountText,
+                                            fee = fee,
+                                            date = date,
+                                            note = noteText
+                                    )
+                            )
+                            val count: Int = when {
+                                quantity == 1.0 -> {
+                                    1
+                                }
+
+                                quantity > 1.0 -> {
+                                    quantity.toInt() + 1
+                                }
+
+                                else -> {
+                                    0
+                                }
                             }
-                            else -> {
-                                0
-                            }
+
+                            val pluralstr = resources.getQuantityString(
+                                    R.plurals.asset_removed, count,
+                                    DecimalFormat(DecimalFormatQuantityDigits).format(quantity)
+                            )
+                            Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
+                                    .show()
+                        }
+                        .setNegativeButton(
+                                R.string.cancel
+                        ) { _, _ ->
+                        }
+                builder
+                        .create()
+                        .show()
+            }
+        }
+
+        /*
+            removeAssetButton.setOnClickListener {
+              val assets = stockRoomViewModel.getAssetsSync(symbol)
+              val totalShares = assets?.assets?.sumOf {
+                it.shares
+              }
+                  ?: 0.0
+
+              if (totalShares == 0.0) {
+                Toast.makeText(
+                    requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
+                )
+                    .show()
+              } else {
+                val builder = AlertDialog.Builder(requireContext())
+                // Get the layout inflater
+                val inflater = LayoutInflater.from(requireContext())
+
+                val dialogView = inflater.inflate(R.layout.dialog_remove_asset, null)
+                val removeSharesView = dialogView.findViewById<TextView>(R.id.removeShares)
+
+                builder.setView(dialogView)
+                    // Add action buttons
+                    .setPositiveButton(
+                        R.string.delete
+                    ) { _, _ ->
+                      // Add () to avoid cast exception.
+                      val removeSharesText = (removeSharesView.text).toString()
+                          .trim()
+                      if (removeSharesText.isNotEmpty()) {
+                        var shares = 0.0
+                        var valid = true
+                        try {
+                          val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                          shares = numberFormat.parse(removeSharesText)!!
+                              .toDouble()
+                        } catch (e: Exception) {
+                          valid = false
                         }
 
-                        val pluralstr = resources.getQuantityString(
-                            R.plurals.asset_removed, count,
-                            DecimalFormat(DecimalFormatQuantityDigits).format(quantity)
+                        if (valid) {
+                          // Avoid wrong data due to rounding errors.
+                          val totalPaidPrice = assets?.assets?.sumOf {
+                            it.shares * it.price
+                          } ?: 0.0
+                          val averagePrice = totalPaidPrice / totalShares
+
+                          if (shares > (totalShares + epsilon)) {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.remove_shares_exceeds_total_shares),
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                          } else {
+                            //assetSummary.removeAllViews()
+                            val newTotal: Double = totalPaidPrice - shares * averagePrice
+                            val shareAdjustment: Double = newTotal / totalPaidPrice
+
+                            assets?.assets?.forEach { asset ->
+                              asset.shares *= shareAdjustment
+                            }
+                            stockRoomViewModel.updateAssets(
+                                symbol = symbol, assets = assets?.assets!!
+                            )
+                          }
+                        }
+                      } else {
+                        Toast.makeText(
+                            requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
                         )
-                        Toast.makeText(requireContext(), pluralstr, Toast.LENGTH_LONG)
                             .show()
+                      }
                     }
                     .setNegativeButton(
                         R.string.cancel
@@ -2634,93 +2750,9 @@ class StockDataFragment : Fragment() {
                 builder
                     .create()
                     .show()
-            }
-        }
-
-/*
-    removeAssetButton.setOnClickListener {
-      val assets = stockRoomViewModel.getAssetsSync(symbol)
-      val totalShares = assets?.assets?.sumOf {
-        it.shares
-      }
-          ?: 0.0
-
-      if (totalShares == 0.0) {
-        Toast.makeText(
-            requireContext(), getString(R.string.no_total_shares), Toast.LENGTH_LONG
-        )
-            .show()
-      } else {
-        val builder = AlertDialog.Builder(requireContext())
-        // Get the layout inflater
-        val inflater = LayoutInflater.from(requireContext())
-
-        val dialogView = inflater.inflate(R.layout.dialog_remove_asset, null)
-        val removeSharesView = dialogView.findViewById<TextView>(R.id.removeShares)
-
-        builder.setView(dialogView)
-            // Add action buttons
-            .setPositiveButton(
-                R.string.delete
-            ) { _, _ ->
-              // Add () to avoid cast exception.
-              val removeSharesText = (removeSharesView.text).toString()
-                  .trim()
-              if (removeSharesText.isNotEmpty()) {
-                var shares = 0.0
-                var valid = true
-                try {
-                  val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                  shares = numberFormat.parse(removeSharesText)!!
-                      .toDouble()
-                } catch (e: Exception) {
-                  valid = false
-                }
-
-                if (valid) {
-                  // Avoid wrong data due to rounding errors.
-                  val totalPaidPrice = assets?.assets?.sumOf {
-                    it.shares * it.price
-                  } ?: 0.0
-                  val averagePrice = totalPaidPrice / totalShares
-
-                  if (shares > (totalShares + epsilon)) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.remove_shares_exceeds_total_shares),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                  } else {
-                    //assetSummary.removeAllViews()
-                    val newTotal: Double = totalPaidPrice - shares * averagePrice
-                    val shareAdjustment: Double = newTotal / totalPaidPrice
-
-                    assets?.assets?.forEach { asset ->
-                      asset.shares *= shareAdjustment
-                    }
-                    stockRoomViewModel.updateAssets(
-                        symbol = symbol, assets = assets?.assets!!
-                    )
-                  }
-                }
-              } else {
-                Toast.makeText(
-                    requireContext(), getString(R.string.invalid_entry), Toast.LENGTH_LONG
-                )
-                    .show()
               }
             }
-            .setNegativeButton(
-                R.string.cancel
-            ) { _, _ ->
-            }
-        builder
-            .create()
-            .show()
-      }
-    }
-*/
+        */
 
         binding.addEventsButton.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
@@ -2731,63 +2763,63 @@ class StockDataFragment : Fragment() {
             // Pass null as the parent view because its going in the dialog layout
             val dialogBinding = DialogAddEventBinding.inflate(inflater)
             builder.setView(dialogBinding.root)
-                .setTitle(R.string.add_event)
-                // Add action buttons
-                .setPositiveButton(
-                    R.string.add
-                ) { _, _ ->
-                    // Add () to avoid cast exception.
-                    val title = (dialogBinding.textInputEditEventTitle.text).toString()
-                        .trim()
-                    // add new event
-                    if (title.isEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.event_empty),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                    } else {
-                        val note = (dialogBinding.textInputEditEventNote.text).toString()
-                        val datetime: ZonedDateTime = ZonedDateTime.of(
-                            dialogBinding.datePickerEventDate.year,
-                            dialogBinding.datePickerEventDate.month + 1,
-                            dialogBinding.datePickerEventDate.dayOfMonth,
-                            dialogBinding.datePickerEventTime.hour,
-                            dialogBinding.datePickerEventTime.minute,
-                            ZonedDateTime.now().second,
-                            0,
-                            ZoneOffset.systemDefault()
-                        )
-                        val seconds = datetime.toEpochSecond() // in GMT
-                        stockRoomViewModel.addEvent(
-                            Event(
-                                symbol = symbol,
-                                type = 0,
-                                title = title,
-                                note = note,
-                                datetime = seconds
+                    .setTitle(R.string.add_event)
+                    // Add action buttons
+                    .setPositiveButton(
+                            R.string.add
+                    ) { _, _ ->
+                        // Add () to avoid cast exception.
+                        val title = (dialogBinding.textInputEditEventTitle.text).toString()
+                                .trim()
+                        // add new event
+                        if (title.isEmpty()) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.event_empty),
+                                    Toast.LENGTH_LONG
                             )
-                        )
-                        Toast.makeText(
-                            requireContext(), getString(
-                                R.string.event_added, title, datetime.format(
-                                    DateTimeFormatter.ofLocalizedDateTime(
-                                        MEDIUM
+                                    .show()
+                        } else {
+                            val note = (dialogBinding.textInputEditEventNote.text).toString()
+                            val datetime: ZonedDateTime = ZonedDateTime.of(
+                                    dialogBinding.datePickerEventDate.year,
+                                    dialogBinding.datePickerEventDate.month + 1,
+                                    dialogBinding.datePickerEventDate.dayOfMonth,
+                                    dialogBinding.datePickerEventTime.hour,
+                                    dialogBinding.datePickerEventTime.minute,
+                                    ZonedDateTime.now().second,
+                                    0,
+                                    ZoneOffset.systemDefault()
+                            )
+                            val seconds = datetime.toEpochSecond() // in GMT
+                            stockRoomViewModel.addEvent(
+                                    Event(
+                                            symbol = symbol,
+                                            type = 0,
+                                            title = title,
+                                            note = note,
+                                            datetime = seconds
                                     )
-                                )
+                            )
+                            Toast.makeText(
+                                    requireContext(), getString(
+                                    R.string.event_added, title, datetime.format(
+                                    DateTimeFormatter.ofLocalizedDateTime(
+                                            MEDIUM
+                                    )
+                            )
                             ), Toast.LENGTH_LONG
-                        )
-                            .show()
+                            )
+                                    .show()
+                        }
                     }
-                }
-                .setNegativeButton(
-                    R.string.cancel
-                ) { _, _ ->
-                }
+                    .setNegativeButton(
+                            R.string.cancel
+                    ) { _, _ ->
+                    }
             builder
-                .create()
-                .show()
+                    .create()
+                    .show()
         }
 
         binding.updateNoteButton.setOnClickListener {
@@ -2810,177 +2842,177 @@ class StockDataFragment : Fragment() {
             dialogBinding.newName.setText(name)
 
             builder.setView(dialogBinding.root)
-                .setTitle(R.string.display_name)
-                .setMessage(
-                    if (stockDBdata.name.isNotEmpty()) getString(
-                        R.string.display_name_desc,
-                        stockDBdata.symbol
-                    ) else
-                        ""
-                )
-                // Add action buttons
-                .setPositiveButton(R.string.change)
-                { _, _ ->
-                    // Add () to avoid cast exception.
-                    val newName = (dialogBinding.newName.text).toString()
+                    .setTitle(R.string.display_name)
+                    .setMessage(
+                            if (stockDBdata.name.isNotEmpty()) getString(
+                                    R.string.display_name_desc,
+                                    stockDBdata.symbol
+                            ) else
+                                ""
+                    )
+                    // Add action buttons
+                    .setPositiveButton(R.string.change)
+                    { _, _ ->
+                        // Add () to avoid cast exception.
+                        val newName = (dialogBinding.newName.text).toString()
 
-                    // Name changed, but not an empty name if name was the symbol name.
-                    if (newName != name && !(stockDBdata.symbol == name && newName.isEmpty())) {
+                        // Name changed, but not an empty name if name was the symbol name.
+                        if (newName != name && !(stockDBdata.symbol == name && newName.isEmpty())) {
 
-                        // Empty name resets to symbol name.
-                        if (stockDBdata.symbol == newName || newName.isEmpty()) {
+                            // Empty name resets to symbol name.
+                            if (stockDBdata.symbol == newName || newName.isEmpty()) {
 
-                            stockRoomViewModel.setName(stockDBdata.symbol, "")
+                                stockRoomViewModel.setName(stockDBdata.symbol, "")
 
-                            Toast.makeText(
-                                requireContext(), getString(
-                                    R.string.name_reset, symbol
-                                ), Toast.LENGTH_LONG
-                            )
-                                .show()
-
-                        } else {
-
-                            stockRoomViewModel.setName(stockDBdata.symbol, newName)
-
-                            if (newName != name) {
                                 Toast.makeText(
-                                    requireContext(), getString(
-                                        R.string.name_added, name, newName
-                                    ), Toast.LENGTH_LONG
+                                        requireContext(), getString(
+                                        R.string.name_reset, symbol
+                                ), Toast.LENGTH_LONG
                                 )
-                                    .show()
+                                        .show()
+
+                            } else {
+
+                                stockRoomViewModel.setName(stockDBdata.symbol, newName)
+
+                                if (newName != name) {
+                                    Toast.makeText(
+                                            requireContext(), getString(
+                                            R.string.name_added, name, newName
+                                    ), Toast.LENGTH_LONG
+                                    )
+                                            .show()
+                                }
                             }
                         }
                     }
-                }
-                .setNeutralButton(R.string.reset)
-                { _, _ ->
+                    .setNeutralButton(R.string.reset)
+                    { _, _ ->
 
-                    if (stockDBdata.name.isNotEmpty()) {
+                        if (stockDBdata.name.isNotEmpty()) {
 
-                        // Reset display name.
-                        stockRoomViewModel.setName(stockDBdata.symbol, "")
+                            // Reset display name.
+                            stockRoomViewModel.setName(stockDBdata.symbol, "")
 
-                        Toast.makeText(
-                            requireContext(), getString(
-                                R.string.name_reset, stockDBdata.symbol
+                            Toast.makeText(
+                                    requireContext(), getString(
+                                    R.string.name_reset, stockDBdata.symbol
                             ), Toast.LENGTH_LONG
-                        )
-                            .show()
+                            )
+                                    .show()
+                        }
                     }
-                }
-                .setNegativeButton(R.string.cancel)
-                { _, _ ->
-                }
+                    .setNegativeButton(R.string.cancel)
+                    { _, _ ->
+                    }
             builder
-                .create()
-                .show()
+                    .create()
+                    .show()
         }
 
         binding.alertAboveInputEditText.addTextChangedListener(
-            object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    binding.alertAboveInputLayout.error = ""
-                    var valid: Boolean = true
-                    if (s != null) {
-                        try {
-                            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                            alertAbove = numberFormat.parse(s.toString())
-                                .toDouble()
-                        } catch (e: NumberFormatException) {
-                            binding.alertAboveInputLayout.error = getString(R.string.invalid_number)
-                            valid = false
-                        } catch (e: Exception) {
-                            valid = false
+                object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        binding.alertAboveInputLayout.error = ""
+                        var valid: Boolean = true
+                        if (s != null) {
+                            try {
+                                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                alertAbove = numberFormat.parse(s.toString())
+                                        .toDouble()
+                            } catch (e: NumberFormatException) {
+                                binding.alertAboveInputLayout.error = getString(R.string.invalid_number)
+                                valid = false
+                            } catch (e: Exception) {
+                                valid = false
+                            }
+
+                            if (valid && alertAbove == 0.0) {
+                                binding.alertAboveInputLayout.error = getString(R.string.invalid_number)
+                                valid = false
+                            }
+                            if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
+                                if (valid && alertBelow >= alertAbove) {
+                                    binding.alertAboveInputLayout.error =
+                                            getString(R.string.alert_below_error)
+                                    valid = false
+                                }
+                            }
+
+                            if (!valid) {
+                                alertAbove = 0.0
+                            }
+                        }
+                    }
+
+                    override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                    ) {
+                    }
+                })
+
+        binding.alertBelowInputEditText.addTextChangedListener(
+                object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        binding.alertBelowInputLayout.error = ""
+                        var valid: Boolean = true
+                        if (s != null) {
+                            try {
+                                val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
+                                alertBelow = numberFormat.parse(s.toString())
+                                        .toDouble()
+                            } catch (e: NumberFormatException) {
+                                binding.alertBelowInputLayout.error = getString(R.string.invalid_number)
+                                valid = false
+                            } catch (e: Exception) {
+                                valid = false
+                            }
                         }
 
-                        if (valid && alertAbove == 0.0) {
-                            binding.alertAboveInputLayout.error = getString(R.string.invalid_number)
+                        if (valid && alertBelow == 0.0) {
+                            binding.alertBelowInputLayout.error = getString(R.string.invalid_number)
                             valid = false
                         }
                         if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
                             if (valid && alertBelow >= alertAbove) {
-                                binding.alertAboveInputLayout.error =
-                                    getString(R.string.alert_below_error)
+                                binding.alertBelowInputLayout.error =
+                                        getString(R.string.alert_above_error)
                                 valid = false
                             }
                         }
 
                         if (!valid) {
-                            alertAbove = 0.0
-                        }
-                    }
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int
-                ) {
-                }
-            })
-
-        binding.alertBelowInputEditText.addTextChangedListener(
-            object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    binding.alertBelowInputLayout.error = ""
-                    var valid: Boolean = true
-                    if (s != null) {
-                        try {
-                            val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
-                            alertBelow = numberFormat.parse(s.toString())
-                                .toDouble()
-                        } catch (e: NumberFormatException) {
-                            binding.alertBelowInputLayout.error = getString(R.string.invalid_number)
-                            valid = false
-                        } catch (e: Exception) {
-                            valid = false
+                            alertBelow = 0.0
                         }
                     }
 
-                    if (valid && alertBelow == 0.0) {
-                        binding.alertBelowInputLayout.error = getString(R.string.invalid_number)
-                        valid = false
-                    }
-                    if (valid && alertAbove > 0.0 && alertBelow > 0.0) {
-                        if (valid && alertBelow >= alertAbove) {
-                            binding.alertBelowInputLayout.error =
-                                getString(R.string.alert_above_error)
-                            valid = false
-                        }
+                    override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                    ) {
                     }
 
-                    if (!valid) {
-                        alertBelow = 0.0
+                    override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                    ) {
                     }
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int
-                ) {
-                }
-            })
+                })
     }
 
     override fun onPause() {
@@ -3004,6 +3036,7 @@ class StockDataFragment : Fragment() {
                 onSync()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -3026,40 +3059,40 @@ class StockDataFragment : Fragment() {
         dialogBinding.textInputEditNote.setText(note)
 
         builder.setView(dialogBinding.root)
-            .setTitle(R.string.note)
-            // Add action buttons
-            .setPositiveButton(
-                R.string.add
-            ) { _, _ ->
-                // Add () to avoid cast exception.
-                val noteText = (dialogBinding.textInputEditNote.text).toString()
+                .setTitle(R.string.note)
+                // Add action buttons
+                .setPositiveButton(
+                        R.string.add
+                ) { _, _ ->
+                    // Add () to avoid cast exception.
+                    val noteText = (dialogBinding.textInputEditNote.text).toString()
 
-                if (noteText != note) {
-                    binding.noteTextView.text = noteText
-                    stockRoomViewModel.updateNote(symbol, noteText)
+                    if (noteText != note) {
+                        binding.noteTextView.text = noteText
+                        stockRoomViewModel.updateNote(symbol, noteText)
 
-                    if (noteText.isEmpty()) {
-                        Toast.makeText(
-                            requireContext(), getString(R.string.note_deleted), Toast.LENGTH_LONG
-                        )
-                            .show()
-                    } else {
-                        Toast.makeText(
-                            requireContext(), getString(
-                                R.string.note_added, noteText
+                        if (noteText.isEmpty()) {
+                            Toast.makeText(
+                                    requireContext(), getString(R.string.note_deleted), Toast.LENGTH_LONG
+                            )
+                                    .show()
+                        } else {
+                            Toast.makeText(
+                                    requireContext(), getString(
+                                    R.string.note_added, noteText
                             ), Toast.LENGTH_LONG
-                        )
-                            .show()
+                            )
+                                    .show()
+                        }
                     }
                 }
-            }
-            .setNegativeButton(
-                R.string.cancel
-            ) { _, _ ->
-            }
+                .setNegativeButton(
+                        R.string.cancel
+                ) { _, _ ->
+                }
         builder
-            .create()
-            .show()
+                .create()
+                .show()
     }
 
     private fun updateHeader(onlineMarketData: OnlineMarketData?) {
@@ -3076,12 +3109,12 @@ class StockDataFragment : Fragment() {
             val marketValues = getMarketValues(onlineMarketData)
 
             val marketChangeStr = SpannableStringBuilder().color(
-                getChangeColor(
-                    onlineMarketData.marketChange,
-                    onlineMarketData.postMarketData,
-                    Color.DKGRAY,
-                    requireContext()
-                )
+                    getChangeColor(
+                            onlineMarketData.marketChange,
+                            onlineMarketData.postMarketData,
+                            Color.DKGRAY,
+                            requireContext()
+                    )
             ) { append("${marketValues.second} ${marketValues.third}") }
 
             val marketCurrencyValue = getCurrency(onlineMarketData)
@@ -3107,29 +3140,29 @@ class StockDataFragment : Fragment() {
                 //.build()
 
                 Glide.with(imgView.context)
-                    .load(imgUri)
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: com.bumptech.glide.request.target.Target<Drawable?>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
+                        .load(imgUri)
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                    e: GlideException?,
+                                    model: Any?,
+                                    target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                                    isFirstResource: Boolean
+                            ): Boolean {
+                                return false
+                            }
 
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: com.bumptech.glide.request.target.Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            binding.imageViewSymbol.visibility = View.VISIBLE
-                            return false
-                        }
-                    })
-                    .into(imgView)
+                            override fun onResourceReady(
+                                    resource: Drawable?,
+                                    model: Any?,
+                                    target: com.bumptech.glide.request.target.Target<Drawable>?,
+                                    dataSource: DataSource?,
+                                    isFirstResource: Boolean
+                            ): Boolean {
+                                binding.imageViewSymbol.visibility = View.VISIBLE
+                                return false
+                            }
+                        })
+                        .into(imgView)
             }
         }
 
@@ -3143,9 +3176,11 @@ class StockDataFragment : Fragment() {
             "Delayed Quote" -> {
                 getString(R.string.delayed_quote)
             }
+
             "Nasdaq Real Time Price" -> {
                 getString(R.string.nasdaq_real_time_price)
             }
+
             else -> {
                 ""
             }
@@ -3163,24 +3198,24 @@ class StockDataFragment : Fragment() {
             purchaseQuantity = 0.0
 
             val selectedType = binding.dataproviderSpinner.selectedItemPosition
-            val noDataProviderVisible =  if(selectedType == DataProvider.None.value) View.GONE else View.VISIBLE
+            val noDataProviderVisible = if (selectedType == DataProvider.None.value) View.GONE else View.VISIBLE
 
             // Display the asset even if the purchase price is 0.0
             if (data.onlineMarketData != null && totalQuantity > 0.0 && marketPrice > 0.0) {
                 val assetChange = getAssetChange(
-                    assets,
-                    data.onlineMarketData?.marketPrice!!,
-                    data.onlineMarketData?.postMarketData!!,
-                    Color.DKGRAY,
-                    requireActivity()
+                        assets,
+                        data.onlineMarketData?.marketPrice!!,
+                        data.onlineMarketData?.postMarketData!!,
+                        Color.DKGRAY,
+                        requireActivity()
                 ).displayColorStr
 
                 val asset = SpannableStringBuilder()
-                    .append(assetChange)
-                    .append("\n")
-                    .bold {
-                        append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
-                    }
+                        .append(assetChange)
+                        .append("\n")
+                        .bold {
+                            append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * marketPrice))
+                        }
 
                 binding.textViewAssetChange.visibility = noDataProviderVisible
                 binding.textViewAssetChange.text = asset
@@ -3202,33 +3237,35 @@ class StockDataFragment : Fragment() {
                 // Update the new price and asset.
                 binding.pickerKnob.onValueChangeListener { value ->
                     binding.newStockPrice.text =
-                        when {
-                            marketPrice > 5.0 || purchasePriceValue > 5.0 -> {
-                                DecimalFormat(DecimalFormat2Digits).format(value)
+                            when {
+                                marketPrice > 5.0 || purchasePriceValue > 5.0 -> {
+                                    DecimalFormat(DecimalFormat2Digits).format(value)
+                                }
+
+                                marketPrice < 0.0001 || purchasePriceValue < 0.0001 -> {
+                                    DecimalFormat(DecimalFormat2To8Digits).format(value)
+                                }
+
+                                else -> {
+                                    DecimalFormat(DecimalFormat2To4Digits).format(value)
+                                }
                             }
-                            marketPrice < 0.0001 || purchasePriceValue < 0.0001 -> {
-                                DecimalFormat(DecimalFormat2To8Digits).format(value)
-                            }
-                            else -> {
-                                DecimalFormat(DecimalFormat2To4Digits).format(value)
-                            }
-                        }
 
                     val assetChange = getAssetChange(
-                        totalQuantity,
-                        totalPrice,
-                        value,
-                        data.onlineMarketData?.postMarketData ?: false,
-                        Color.DKGRAY,
-                        requireActivity()
+                            totalQuantity,
+                            totalPrice,
+                            value,
+                            data.onlineMarketData?.postMarketData ?: false,
+                            Color.DKGRAY,
+                            requireActivity()
                     )
 
                     val asset = SpannableStringBuilder()
-                        .append(assetChange.displayColorStr)
-                        .append("\n")
-                        .bold {
-                            append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * value))
-                        }
+                            .append(assetChange.displayColorStr)
+                            .append("\n")
+                            .bold {
+                                append(DecimalFormat(DecimalFormat2Digits).format(totalQuantity * value))
+                            }
 
                     binding.newTotalAsset.text = asset
                 }
@@ -3237,31 +3274,31 @@ class StockDataFragment : Fragment() {
                 if (totalPrice >= 0.0001) {
                     // Bought for %1$s\n%2$s@%1$s%3$s = %4$s
                     purchasePrice.append(
-                        getString(
-                            R.string.bought_for
-                        )
+                            getString(
+                                    R.string.bought_for
+                            )
                     )
                     // %1$s
                     purchasePrice.append(" ")
                     // Display 'bought price' exact as possible. Do not use to2To8Digits()
                     purchasePrice.append(
-                        DecimalFormat(DecimalFormat2To8Digits).format(
-                            purchasePriceValue
-                        )
+                            DecimalFormat(DecimalFormat2To8Digits).format(
+                                    purchasePriceValue
+                            )
                     )
                     purchasePrice.append("\n")
                     // %2$s
                     purchasePrice.append(
-                        DecimalFormat(DecimalFormatQuantityDigits).format(
-                            totalQuantity
-                        )
+                            DecimalFormat(DecimalFormatQuantityDigits).format(
+                                    totalQuantity
+                            )
                     )
                     purchasePrice.append("@")
                     // Display 'bought price' rounded.
                     purchasePrice.append(
-                        DecimalFormat(DecimalFormat2To4Digits).format(
-                            purchasePriceValue
-                        )
+                            DecimalFormat(DecimalFormat2To4Digits).format(
+                                    purchasePriceValue
+                            )
                     )
                     // %3$s
                     if (totalFee > 0.0) {
@@ -3333,7 +3370,7 @@ class StockDataFragment : Fragment() {
         val selectedType = binding.dataproviderSpinner.selectedItemPosition
 
         // Remove UI items for no data provider mode.
-        val enabled =  if(selectedType == DataProvider.None.value) View.GONE else View.VISIBLE
+        val enabled = if (selectedType == DataProvider.None.value) View.GONE else View.VISIBLE
 
         binding.marketValueLayout.visibility = enabled
 
@@ -3362,14 +3399,14 @@ class StockDataFragment : Fragment() {
     }
 
     private fun updateStockViewMode(
-        _stockViewMode: StockViewMode
+            _stockViewMode: StockViewMode
     ) {
         updateStockView(stockViewRange, _stockViewMode)
     }
 
     private fun updateStockView(
-        _stockViewRange: StockViewRange,
-        _stockViewMode: StockViewMode
+            _stockViewRange: StockViewRange,
+            _stockViewMode: StockViewMode
     ) {
         stockViewMode = _stockViewMode
         //AppPreferences.INSTANCE.stockViewMode = stockViewMode
@@ -3382,8 +3419,8 @@ class StockDataFragment : Fragment() {
     }
 
     private fun loadStockView(
-        stockViewRange: StockViewRange,
-        stockViewMode: StockViewMode
+            stockViewRange: StockViewRange,
+            stockViewMode: StockViewMode
     ) {
         if (chartDataItems.isEmpty()) {
             getData(stockViewRange)
@@ -3395,8 +3432,8 @@ class StockDataFragment : Fragment() {
     private fun getData(stockViewRange: StockViewRange) {
 
         val stockSymbol = StockSymbol(
-            symbol = symbol,
-            type = type
+                symbol = symbol,
+                type = type
         )
         stockChartDataViewModel.getChartData(stockSymbol, stockViewRange)
 
@@ -3407,11 +3444,11 @@ class StockDataFragment : Fragment() {
                 // stockRoomViewModel.allStockItems.observe is not ready yet.
                 if (!symbolTypesMap.containsKey(symbolRef)) {
                     symbolTypesMap[symbolRef] =
-                        dataProviderFromInt(stockRoomViewModel.getTypeSync(symbolRef))
+                            dataProviderFromInt(stockRoomViewModel.getTypeSync(symbolRef))
                 }
                 val stockSymbolRef = StockSymbol(
-                    symbol = symbolRef,
-                    type = symbolTypesMap[symbolRef]!!
+                        symbol = symbolRef,
+                        type = symbolTypesMap[symbolRef]!!
                 )
                 stockChartDataViewModel.getChartData(stockSymbolRef, stockViewRange)
             }
@@ -3419,8 +3456,8 @@ class StockDataFragment : Fragment() {
     }
 
     private fun setupCharts(
-        stockViewRange: StockViewRange,
-        stockViewMode: StockViewMode
+            stockViewRange: StockViewRange,
+            stockViewMode: StockViewMode
     ) {
         updateButtons(stockViewRange, stockViewMode)
 
@@ -3428,6 +3465,7 @@ class StockDataFragment : Fragment() {
             StockViewMode.Line -> {
                 setupLineChart()
             }
+
             StockViewMode.Candle -> {
                 setupCandleStickChart()
             }
@@ -3435,13 +3473,14 @@ class StockDataFragment : Fragment() {
     }
 
     private fun loadCharts(
-        stockViewRange: StockViewRange,
-        stockViewMode: StockViewMode
+            stockViewRange: StockViewRange,
+            stockViewMode: StockViewMode
     ) {
         when (stockViewMode) {
             StockViewMode.Line -> {
                 loadLineChart(stockViewRange)
             }
+
             StockViewMode.Candle -> {
                 loadCandleStickChart(stockViewRange)
             }
@@ -3450,21 +3489,21 @@ class StockDataFragment : Fragment() {
 
     private val rangeButtons: List<Button> by lazy {
         listOf<Button>(
-            binding.buttonOneDay,
-            binding.buttonFiveDays,
-            binding.buttonOneMonth,
-            binding.buttonThreeMonth,
-            binding.buttonYTD,
-            binding.buttonOneYear,
-            binding.buttonFiveYears,
-            binding.buttonMax
+                binding.buttonOneDay,
+                binding.buttonFiveDays,
+                binding.buttonOneMonth,
+                binding.buttonThreeMonth,
+                binding.buttonYTD,
+                binding.buttonOneYear,
+                binding.buttonFiveYears,
+                binding.buttonMax
         )
     }
 
     // Setup formatter for X and Y Axis and data slider.
     private val axisTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(SHORT)
     private val axisDateTimeFormatter: DateTimeFormatter =
-        DateTimeFormatter.ofLocalizedDateTime(LONG, SHORT)
+            DateTimeFormatter.ofLocalizedDateTime(LONG, SHORT)
     private val xAxisDateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(SHORT)
     private val axisDateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(LONG)
 
@@ -3476,25 +3515,26 @@ class StockDataFragment : Fragment() {
                     if (stockDataEntries != null) {
                         IndexAxisValueFormatter(stockDataEntries.map { stockDataEntry ->
                             val date =
-                                ZonedDateTime.ofInstant(
-                                    Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
-                                    ZoneOffset.systemDefault()
-                                )
+                                    ZonedDateTime.ofInstant(
+                                            Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
+                                            ZoneOffset.systemDefault()
+                                    )
                             date.format(axisTimeFormatter)
                         })
                     } else {
                         IndexAxisValueFormatter()
                     }
                 }
+
                 else -> {
                     val stockDataEntries = chartDataItems[symbol]
                     if (stockDataEntries != null) {
                         IndexAxisValueFormatter(stockDataEntries.map { stockDataEntry ->
                             val date =
-                                ZonedDateTime.ofInstant(
-                                    Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
-                                    ZoneOffset.systemDefault()
-                                )
+                                    ZonedDateTime.ofInstant(
+                                            Instant.ofEpochSecond(stockDataEntry.dateTimePoint),
+                                            ZoneOffset.systemDefault()
+                                    )
                             date.format(xAxisDateFormatter)
                         })
                     } else {
@@ -3504,8 +3544,8 @@ class StockDataFragment : Fragment() {
             }
 
     private fun updateButtons(
-        stockViewRange: StockViewRange,
-        stockViewMode: StockViewMode
+            stockViewRange: StockViewRange,
+            stockViewMode: StockViewMode
     ) {
         rangeButtons.forEach { button ->
             button.isEnabled = true
@@ -3516,30 +3556,37 @@ class StockDataFragment : Fragment() {
                 binding.buttonOneDay.isEnabled = false
                 binding.textViewRange.text = getString(R.string.one_day_range)
             }
+
             StockViewRange.FiveDays -> {
                 binding.buttonFiveDays.isEnabled = false
                 binding.textViewRange.text = getString(R.string.five_days_range)
             }
+
             StockViewRange.OneMonth -> {
                 binding.buttonOneMonth.isEnabled = false
                 binding.textViewRange.text = getString(R.string.one_month_range)
             }
+
             StockViewRange.ThreeMonth -> {
                 binding.buttonThreeMonth.isEnabled = false
                 binding.textViewRange.text = getString(R.string.three_month_range)
             }
+
             StockViewRange.YTD -> {
                 binding.buttonYTD.isEnabled = false
                 binding.textViewRange.text = getString(R.string.ytd_range)
             }
+
             StockViewRange.OneYear -> {
                 binding.buttonOneYear.isEnabled = false
                 binding.textViewRange.text = getString(R.string.one_year_range)
             }
+
             StockViewRange.FiveYears -> {
                 binding.buttonFiveYears.isEnabled = false
                 binding.textViewRange.text = getString(R.string.five_year_range)
             }
+
             StockViewRange.Max -> {
                 binding.buttonMax.isEnabled = false
                 binding.textViewRange.text = getString(R.string.max_range)
@@ -3553,6 +3600,7 @@ class StockDataFragment : Fragment() {
                 binding.imageButtonIconLine.visibility = View.VISIBLE
                 binding.imageButtonIconCandle.visibility = View.GONE
             }
+
             StockViewMode.Candle -> {
                 binding.lineChart.visibility = View.GONE
                 binding.candleStickChart.visibility = View.VISIBLE
@@ -3594,7 +3642,7 @@ class StockDataFragment : Fragment() {
     }
 
     private fun loadCandleStickChart(
-        stockViewRange: StockViewRange
+            stockViewRange: StockViewRange
     ) {
         val candleStickChart: CandleStickChart = binding.candleStickChart
         candleStickChart.candleData?.clearValues()
@@ -3631,93 +3679,93 @@ class StockDataFragment : Fragment() {
             // Get the ref chart data.
             if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
                 chartOverlaySymbols.split(",").take(MaxChartOverlays)
-                    .forEachIndexed { index, symbolRef ->
-                        val stockDataEntriesRef = chartDataItems[symbolRef]
-                        if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
+                        .forEachIndexed { index, symbolRef ->
+                            val stockDataEntriesRef = chartDataItems[symbolRef]
+                            if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
 
-                            var minRefY = Float.MAX_VALUE
-                            var maxRefY = 0f
+                                var minRefY = Float.MAX_VALUE
+                                var maxRefY = 0f
 
-                            val refList = ArrayList<StockDataEntry>()
+                                val refList = ArrayList<StockDataEntry>()
 
-                            // Reference charts might not cover the same time line.
-                            // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
-                            var indexRef = 0
-                            var entriesRef1 = stockDataEntriesRef[indexRef]
-                            var entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                                // Reference charts might not cover the same time line.
+                                // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
+                                var indexRef = 0
+                                var entriesRef1 = stockDataEntriesRef[indexRef]
+                                var entriesRef2 = stockDataEntriesRef[indexRef + 1]
 
-                            // Align the date points on stockDataEntries.
-                            stockDataEntries.forEach { stockDataEntry ->
+                                // Align the date points on stockDataEntries.
+                                stockDataEntries.forEach { stockDataEntry ->
 
-                                // Match stockDataEntriesRef to the stockDataEntry point.
-                                while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
-                                ) {
-                                    // Check the next point to match.
-                                    if (indexRef < stockDataEntriesRef.size - 1) {
-                                        indexRef++
-                                        entriesRef1 = stockDataEntriesRef[indexRef]
-                                        if (indexRef < stockDataEntriesRef.size - 2) {
-                                            entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                                    // Match stockDataEntriesRef to the stockDataEntry point.
+                                    while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
+                                    ) {
+                                        // Check the next point to match.
+                                        if (indexRef < stockDataEntriesRef.size - 1) {
+                                            indexRef++
+                                            entriesRef1 = stockDataEntriesRef[indexRef]
+                                            if (indexRef < stockDataEntriesRef.size - 2) {
+                                                entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                                            } else {
+                                                break
+                                            }
                                         } else {
                                             break
                                         }
-                                    } else {
-                                        break
                                     }
-                                }
 
-                                minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
-                                maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
+                                    minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
+                                    maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
 
-                                // clone entry and update the x value to match the original stock chart
-                                val refEntry = StockDataEntry(
-                                    dateTimePoint = entriesRef1.dateTimePoint,
-                                    x = stockDataEntry.candleEntry.x.toDouble(),
-                                    high = entriesRef1.candleEntry.high.toDouble(),
-                                    low = entriesRef1.candleEntry.low.toDouble(),
-                                    open = entriesRef1.candleEntry.open.toDouble(),
-                                    close = entriesRef1.candleEntry.close.toDouble(),
-                                )
-                                refList.add(refEntry)
-                            }
-
-                            // Include the right side value of the last entry.
-                            minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
-                            maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
-
-                            // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-                            if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
-                                val scale = (maxY - minY) / (maxRefY - minRefY)
-
-                                val candleEntriesRef = refList.map { stockDataEntry ->
-                                    CandleEntryRef(
-                                        stockDataEntry.candleEntry.x,
-                                        shadowH = (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
-                                        shadowL = (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
-                                        open = (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
-                                        close = (stockDataEntry.candleEntry.close - minRefY) * scale + minY,
-                                        refCandleEntry = stockDataEntry.candleEntry // original data for the marker display
+                                    // clone entry and update the x value to match the original stock chart
+                                    val refEntry = StockDataEntry(
+                                            dateTimePoint = entriesRef1.dateTimePoint,
+                                            x = stockDataEntry.candleEntry.x.toDouble(),
+                                            high = entriesRef1.candleEntry.high.toDouble(),
+                                            low = entriesRef1.candleEntry.low.toDouble(),
+                                            open = entriesRef1.candleEntry.open.toDouble(),
+                                            close = entriesRef1.candleEntry.close.toDouble(),
                                     )
+                                    refList.add(refEntry)
                                 }
 
-                                val seriesRef: CandleDataSet =
-                                    CandleDataSet(candleEntriesRef, symbolRef)
-                                val color = chartOverlayColors[index % chartOverlayColors.size]
+                                // Include the right side value of the last entry.
+                                minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
+                                maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
 
-                                seriesRef.color = color
-                                seriesRef.shadowColor = color
-                                seriesRef.shadowWidth = 1f
-                                seriesRef.decreasingColor = Color.rgb(255, 204, 204)
-                                seriesRef.decreasingPaintStyle = Paint.Style.FILL
-                                seriesRef.increasingColor = Color.rgb(204, 255, 204)
-                                seriesRef.increasingPaintStyle = Paint.Style.FILL
-                                seriesRef.neutralColor = color
-                                seriesRef.setDrawValues(false)
+                                // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
+                                if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+                                    val scale = (maxY - minY) / (maxRefY - minRefY)
 
-                                seriesList.add(seriesRef)
+                                    val candleEntriesRef = refList.map { stockDataEntry ->
+                                        CandleEntryRef(
+                                                stockDataEntry.candleEntry.x,
+                                                shadowH = (stockDataEntry.candleEntry.high - minRefY) * scale + minY,
+                                                shadowL = (stockDataEntry.candleEntry.low - minRefY) * scale + minY,
+                                                open = (stockDataEntry.candleEntry.open - minRefY) * scale + minY,
+                                                close = (stockDataEntry.candleEntry.close - minRefY) * scale + minY,
+                                                refCandleEntry = stockDataEntry.candleEntry // original data for the marker display
+                                        )
+                                    }
+
+                                    val seriesRef: CandleDataSet =
+                                            CandleDataSet(candleEntriesRef, symbolRef)
+                                    val color = chartOverlayColors[index % chartOverlayColors.size]
+
+                                    seriesRef.color = color
+                                    seriesRef.shadowColor = color
+                                    seriesRef.shadowWidth = 1f
+                                    seriesRef.decreasingColor = Color.rgb(255, 204, 204)
+                                    seriesRef.decreasingPaintStyle = Paint.Style.FILL
+                                    seriesRef.increasingColor = Color.rgb(204, 255, 204)
+                                    seriesRef.increasingPaintStyle = Paint.Style.FILL
+                                    seriesRef.neutralColor = color
+                                    seriesRef.setDrawValues(false)
+
+                                    seriesList.add(seriesRef)
+                                }
                             }
                         }
-                    }
             }
 
             seriesList.add(series)
@@ -3734,7 +3782,7 @@ class StockDataFragment : Fragment() {
 //            candleStickChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
             candleStickChart.axisRight.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float) =
-                    to2To8Digits(value)
+                        to2To8Digits(value)
             }
 
         } else {
@@ -3746,19 +3794,21 @@ class StockDataFragment : Fragment() {
         when (stockViewRange) {
             StockViewRange.OneDay -> {
                 candleStickChart.marker =
-                    TextMarkerViewCandleChart(requireContext(), axisTimeFormatter, stockDataEntries)
+                        TextMarkerViewCandleChart(requireContext(), axisTimeFormatter, stockDataEntries)
             }
+
             StockViewRange.FiveDays, StockViewRange.OneMonth -> {
                 candleStickChart.marker =
-                    TextMarkerViewCandleChart(
-                        requireContext(),
-                        axisDateTimeFormatter,
-                        stockDataEntries
-                    )
+                        TextMarkerViewCandleChart(
+                                requireContext(),
+                                axisDateTimeFormatter,
+                                stockDataEntries
+                        )
             }
+
             else -> {
                 candleStickChart.marker =
-                    TextMarkerViewCandleChart(requireContext(), axisDateFormatter, stockDataEntries)
+                        TextMarkerViewCandleChart(requireContext(), axisDateFormatter, stockDataEntries)
             }
         }
 
@@ -3790,7 +3840,7 @@ class StockDataFragment : Fragment() {
     }
 
     private fun loadLineChart(
-        stockViewRange: StockViewRange
+            stockViewRange: StockViewRange
     ) {
         val lineChart: LineChart = binding.lineChart
         lineChart.setNoDataText("")
@@ -3807,10 +3857,10 @@ class StockDataFragment : Fragment() {
                 minY = minOf(minY, stockDataEntry.candleEntry.y)
                 maxY = maxOf(maxY, stockDataEntry.candleEntry.y)
                 dataPoints.add(
-                    DataPoint(
-                        stockDataEntry.candleEntry.x,
-                        stockDataEntry.candleEntry.y
-                    )
+                        DataPoint(
+                                stockDataEntry.candleEntry.x,
+                                stockDataEntry.candleEntry.y
+                        )
                 )
             }
 
@@ -3831,91 +3881,91 @@ class StockDataFragment : Fragment() {
             // Get the ref chart data.
             if (useChartOverlaySymbols && chartOverlaySymbols.isNotEmpty()) {
                 chartOverlaySymbols.split(",").take(MaxChartOverlays)
-                    .forEachIndexed { index, symbolRef ->
-                        val stockDataEntriesRef = chartDataItems[symbolRef]
-                        if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
+                        .forEachIndexed { index, symbolRef ->
+                            val stockDataEntriesRef = chartDataItems[symbolRef]
+                            if (chartOverlaySymbolsEnableList[index] && stockDataEntriesRef != null && stockDataEntriesRef.size > 1) {
 
-                            var minRefY = Float.MAX_VALUE
-                            var maxRefY = 0f
+                                var minRefY = Float.MAX_VALUE
+                                var maxRefY = 0f
 
-                            val refList = ArrayList<StockDataEntry>()
+                                val refList = ArrayList<StockDataEntry>()
 
-                            // Reference charts might not cover the same time line.
-                            // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
-                            var indexRef = 0
-                            var entriesRef1 = stockDataEntriesRef[indexRef]
-                            var entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                                // Reference charts might not cover the same time line.
+                                // Map the time points from the stockDataEntries to the stockDataEntriesRef points.
+                                var indexRef = 0
+                                var entriesRef1 = stockDataEntriesRef[indexRef]
+                                var entriesRef2 = stockDataEntriesRef[indexRef + 1]
 
-                            // Align the date points on stockDataEntries.
-                            stockDataEntries.forEach { stockDataEntry ->
+                                // Align the date points on stockDataEntries.
+                                stockDataEntries.forEach { stockDataEntry ->
 
-                                // Match stockDataEntriesRef to the stockDataEntry point.
-                                while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
-                                ) {
-                                    // Check the next point to match.
-                                    if (indexRef < stockDataEntriesRef.size - 1) {
-                                        indexRef++
-                                        entriesRef1 = stockDataEntriesRef[indexRef]
-                                        if (indexRef < stockDataEntriesRef.size - 2) {
-                                            entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                                    // Match stockDataEntriesRef to the stockDataEntry point.
+                                    while (stockDataEntry.dateTimePoint >= entriesRef2.dateTimePoint
+                                    ) {
+                                        // Check the next point to match.
+                                        if (indexRef < stockDataEntriesRef.size - 1) {
+                                            indexRef++
+                                            entriesRef1 = stockDataEntriesRef[indexRef]
+                                            if (indexRef < stockDataEntriesRef.size - 2) {
+                                                entriesRef2 = stockDataEntriesRef[indexRef + 1]
+                                            } else {
+                                                break
+                                            }
                                         } else {
                                             break
                                         }
-                                    } else {
-                                        break
                                     }
-                                }
 
-                                minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
-                                maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
+                                    minRefY = minOf(minRefY, entriesRef1.candleEntry.y)
+                                    maxRefY = maxOf(maxRefY, entriesRef1.candleEntry.y)
 
-                                // clone entry and update the x value to match the original stock chart
-                                val refEntry = StockDataEntry(
-                                    dateTimePoint = entriesRef1.dateTimePoint,
-                                    x = stockDataEntry.candleEntry.x.toDouble(),
-                                    high = entriesRef1.candleEntry.high.toDouble(),
-                                    low = entriesRef1.candleEntry.low.toDouble(),
-                                    open = entriesRef1.candleEntry.open.toDouble(),
-                                    close = entriesRef1.candleEntry.close.toDouble(),
-                                )
-                                refList.add(refEntry)
-                            }
-
-                            // Include the right side value of the last entry.
-                            minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
-                            maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
-
-                            // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
-                            if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
-                                val scale = (maxY - minY) / (maxRefY - minRefY)
-
-                                val dataPointsRef = refList.map { stockDataEntry ->
-                                    DataPointRef(
-                                        x = stockDataEntry.candleEntry.x,
-                                        y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
-                                                * scale                              // scale ref to match stock data range
-                                                + minY,                              // shift up to min stock data
-                                        refY = stockDataEntry.candleEntry.y          // original y for the marker display
+                                    // clone entry and update the x value to match the original stock chart
+                                    val refEntry = StockDataEntry(
+                                            dateTimePoint = entriesRef1.dateTimePoint,
+                                            x = stockDataEntry.candleEntry.x.toDouble(),
+                                            high = entriesRef1.candleEntry.high.toDouble(),
+                                            low = entriesRef1.candleEntry.low.toDouble(),
+                                            open = entriesRef1.candleEntry.open.toDouble(),
+                                            close = entriesRef1.candleEntry.close.toDouble(),
                                     )
+                                    refList.add(refEntry)
                                 }
 
-                                val seriesRef =
-                                    LineDataSet(dataPointsRef as List<DataPointRef>, symbolRef)
-                                val color = chartOverlayColors[index % chartOverlayColors.size]
+                                // Include the right side value of the last entry.
+                                minRefY = minOf(minRefY, entriesRef2.candleEntry.y)
+                                maxRefY = maxOf(maxRefY, entriesRef2.candleEntry.y)
 
-                                seriesRef.setDrawHorizontalHighlightIndicator(false)
-                                seriesRef.setDrawValues(false)
-                                seriesRef.setDrawCircles(false)
-                                seriesRef.color = color
+                                // Scale ref data to stock data so that the ref stock data will always look the same in each stock chart.
+                                if (refList.isNotEmpty() && maxRefY > minRefY && maxRefY > 0f && maxY > minY && maxY > 0f) {
+                                    val scale = (maxY - minY) / (maxRefY - minRefY)
 
-                                // No filling for overlay graphs.
-                                seriesRef.setDrawFilled(false)
-                                //seriesRef.fillColor = color
+                                    val dataPointsRef = refList.map { stockDataEntry ->
+                                        DataPointRef(
+                                                x = stockDataEntry.candleEntry.x,
+                                                y = (stockDataEntry.candleEntry.y - minRefY) // shift down ref data
+                                                        * scale                              // scale ref to match stock data range
+                                                        + minY,                              // shift up to min stock data
+                                                refY = stockDataEntry.candleEntry.y          // original y for the marker display
+                                        )
+                                    }
 
-                                seriesList.add(seriesRef)
+                                    val seriesRef =
+                                            LineDataSet(dataPointsRef as List<DataPointRef>, symbolRef)
+                                    val color = chartOverlayColors[index % chartOverlayColors.size]
+
+                                    seriesRef.setDrawHorizontalHighlightIndicator(false)
+                                    seriesRef.setDrawValues(false)
+                                    seriesRef.setDrawCircles(false)
+                                    seriesRef.color = color
+
+                                    // No filling for overlay graphs.
+                                    seriesRef.setDrawFilled(false)
+                                    //seriesRef.fillColor = color
+
+                                    seriesList.add(seriesRef)
+                                }
                             }
                         }
-                    }
             }
 
             seriesList.add(series)
@@ -3970,21 +4020,21 @@ class StockDataFragment : Fragment() {
                             }
 
                             val transactionPoints = listOf(
-                                DataPoint(
-                                    stockDataEntries[k].candleEntry.x,
-                                    value
-                                )
+                                    DataPoint(
+                                            stockDataEntries[k].candleEntry.x,
+                                            value
+                                    )
                             )
 
                             val transactionSeries =
-                                LineDataSet(transactionPoints as List<DataPoint>, symbol)
+                                    LineDataSet(transactionPoints as List<DataPoint>, symbol)
 
                             transactionSeries.setCircleColor(
-                                if (assetTimeEntriesCopy[j].quantity > 0.0) {
-                                    Color.BLUE  // bought
-                                } else {
-                                    0xffFF6A00.toInt() // sold, FF6A00=Orange
-                                }
+                                    if (assetTimeEntriesCopy[j].quantity > 0.0) {
+                                        Color.BLUE  // bought
+                                    } else {
+                                        0xffFF6A00.toInt() // sold, FF6A00=Orange
+                                    }
                             )
 
 //                            val color = if (assetTimeEntriesCopy[j].bought) {
@@ -4024,33 +4074,35 @@ class StockDataFragment : Fragment() {
 //            lineChart.axisRight.valueFormatter = DefaultValueFormatter(digits)
             lineChart.axisRight.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float) =
-                    to2To8Digits(value)
+                        to2To8Digits(value)
             }
 
             when (stockViewRange) {
                 StockViewRange.OneDay -> {
                     lineChart.marker =
-                        TextMarkerViewLineChart(
-                            requireContext(),
-                            axisTimeFormatter,
-                            stockDataEntries
-                        )
+                            TextMarkerViewLineChart(
+                                    requireContext(),
+                                    axisTimeFormatter,
+                                    stockDataEntries
+                            )
                 }
+
                 StockViewRange.FiveDays, StockViewRange.OneMonth -> {
                     lineChart.marker =
-                        TextMarkerViewLineChart(
-                            requireContext(),
-                            axisDateTimeFormatter,
-                            stockDataEntries
-                        )
+                            TextMarkerViewLineChart(
+                                    requireContext(),
+                                    axisDateTimeFormatter,
+                                    stockDataEntries
+                            )
                 }
+
                 else -> {
                     lineChart.marker =
-                        TextMarkerViewLineChart(
-                            requireContext(),
-                            axisDateFormatter,
-                            stockDataEntries
-                        )
+                            TextMarkerViewLineChart(
+                                    requireContext(),
+                                    axisDateFormatter,
+                                    stockDataEntries
+                            )
                 }
             }
         }

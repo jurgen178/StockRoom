@@ -107,7 +107,6 @@ class StockRoomChartFragment : StockRoomBaseFragment() {
     val clickListenerMarkerLambda =
       { stockItem: StockItem, itemView: View ->
         clickListenerMarker(
-          requireContext(),
           stockItem,
           itemView
         )
