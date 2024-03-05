@@ -327,8 +327,6 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
         get() = parentJob + Dispatchers.Default
     private val scope = CoroutineScope(coroutineContext)
 
-    private val backgroundListColor = application.getColor(R.color.backgroundListColor)
-
     init {
         val stockRoomDao = StockRoomDatabase.getDatabase(application, viewModelScope)
                 .stockRoomDao()
@@ -2457,11 +2455,11 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     // Get the colored menu entries for the groups.
-    fun getGroupsMenuList(standardGroupName: String, colorRef: Int): List<SpannableString> {
+    fun getGroupsMenuList(context: Context, standardGroupName: String, colorRef: Int): List<SpannableString> {
         val groups: MutableList<Group> = getGroupsSync().toMutableList()
         return getGroupsMenuList(
                 groups,
-                backgroundListColor,
+                context.getColor(R.color.backgroundListColor),
                 colorRef,
                 standardGroupName
         )

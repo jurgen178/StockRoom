@@ -61,8 +61,9 @@ open class StockRoomBaseLambdaFragment : Fragment() {
 
         var menuIndex: Int = Menu.FIRST
         stockRoomViewModel.getGroupsMenuList(
+                requireContext(),
                 getString(string.standard_group),
-                context?.getColor(R.color.black) ?: 0
+                requireContext().getColor(R.color.black) ?: 0
         )
                 .forEach {
                     popupMenu.menu.add(0, menuIndex++, Menu.NONE, it)
@@ -140,15 +141,15 @@ open class StockRoomBaseFragment : StockRoomBaseLambdaFragment() {
     }
 
     override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
+            view: View,
+            savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
 
         // Get a new or existing ViewModel from the ViewModelProvider.
         // use requireActivity() instead of this to have only one shared viewmodel
         stockRoomViewModel =
-            ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
+                ViewModelProvider(requireActivity()).get(StockRoomViewModel::class.java)
 
         // Rotating device keeps sending alerts.
         // State changes of the lifecycle trigger the notification.
@@ -156,9 +157,9 @@ open class StockRoomBaseFragment : StockRoomBaseLambdaFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
 
         // Inflate the layout for this fragment

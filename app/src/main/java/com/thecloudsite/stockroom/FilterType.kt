@@ -128,62 +128,62 @@ object SharedFilterGroupList {
 
 object FilterFactory {
     fun create(
-        type: FilterTypeEnum,
-        context: Context
+            type: FilterTypeEnum,
+            context: Context
     ): IFilterType =
-        when (type) {
-            FilterTypeEnum.FilterNullType -> FilterNullType(context)
-            FilterTypeEnum.FilterPercentageChangeType -> FilterPercentageChangeType(context)
-            FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
-            FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
-            FilterTypeEnum.FilterMarketCapType -> FilterMarketCapType(context)
-            FilterTypeEnum.FilterQuoteType -> FilterStringQuoteType(context)
-            FilterTypeEnum.FilterAssetAccountType -> FilterAssetAccountType(context)
-            FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
-            FilterTypeEnum.FilterDataProviderType -> FilterStringDataProviderType(context)
-            FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
-            FilterTypeEnum.FilterMarkerType -> FilterMarkerType(context)
-            FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
-            FilterTypeEnum.FilterDividendNoteType -> FilterDividendNoteType(context)
-            FilterTypeEnum.FilterAlertNoteType -> FilterAlertNoteType(context)
-            FilterTypeEnum.FilterEventDetailType -> FilterEventDetailType(context)
-            FilterTypeEnum.FilterPurchasePriceType -> FilterPurchasePriceType(context)
-            FilterTypeEnum.FilterProfitType -> FilterProfitType(context)
-            FilterTypeEnum.FilterProfitPercentageType -> FilterProfitPercentageType(context)
-            FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
-            FilterTypeEnum.FilterAssetNoteType -> FilterAssetNoteType(context)
-            FilterTypeEnum.FilterFeeType -> FilterFeeType(context)
-            FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
-            FilterTypeEnum.FilterDividendPaidType -> FilterDividendPaidType(context)
-            FilterTypeEnum.FilterDividendPaidYTDType -> FilterDividendPaidYTDType(context)
-            FilterTypeEnum.FilterDividendAccountType -> FilterDividendAccountType(context)
-            FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
-            FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
-            FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
-            FilterTypeEnum.FilterAlertType -> FilterAlertType(context)
-            FilterTypeEnum.FilterEventType -> FilterEventType(context)
-            FilterTypeEnum.FilterAssetSoldDateType -> FilterAssetSoldDateType(context)
-            FilterTypeEnum.FilterAssetBoughtDateType -> FilterAssetBoughtDateType(context)
-            FilterTypeEnum.FilterLongTermType -> FilterLongTermType(context)
-        }
+            when (type) {
+                FilterTypeEnum.FilterNullType -> FilterNullType(context)
+                FilterTypeEnum.FilterPercentageChangeType -> FilterPercentageChangeType(context)
+                FilterTypeEnum.FilterSymbolNameType -> FilterSymbolNameType(context)
+                FilterTypeEnum.FilterDisplayNameType -> FilterDisplayNameType(context)
+                FilterTypeEnum.FilterMarketCapType -> FilterMarketCapType(context)
+                FilterTypeEnum.FilterQuoteType -> FilterStringQuoteType(context)
+                FilterTypeEnum.FilterAssetAccountType -> FilterAssetAccountType(context)
+                FilterTypeEnum.FilterStockExchangeNameType -> FilterStockExchangeNameType(context)
+                FilterTypeEnum.FilterDataProviderType -> FilterStringDataProviderType(context)
+                FilterTypeEnum.FilterGroupType -> FilterGroupType(context)
+                FilterTypeEnum.FilterMarkerType -> FilterMarkerType(context)
+                FilterTypeEnum.FilterNoteType -> FilterNoteType(context)
+                FilterTypeEnum.FilterDividendNoteType -> FilterDividendNoteType(context)
+                FilterTypeEnum.FilterAlertNoteType -> FilterAlertNoteType(context)
+                FilterTypeEnum.FilterEventDetailType -> FilterEventDetailType(context)
+                FilterTypeEnum.FilterPurchasePriceType -> FilterPurchasePriceType(context)
+                FilterTypeEnum.FilterProfitType -> FilterProfitType(context)
+                FilterTypeEnum.FilterProfitPercentageType -> FilterProfitPercentageType(context)
+                FilterTypeEnum.FilterAssetType -> FilterAssetType(context)
+                FilterTypeEnum.FilterAssetNoteType -> FilterAssetNoteType(context)
+                FilterTypeEnum.FilterFeeType -> FilterFeeType(context)
+                FilterTypeEnum.FilterDividendPercentageType -> FilterDividendPercentageType(context)
+                FilterTypeEnum.FilterDividendPaidType -> FilterDividendPaidType(context)
+                FilterTypeEnum.FilterDividendPaidYTDType -> FilterDividendPaidYTDType(context)
+                FilterTypeEnum.FilterDividendAccountType -> FilterDividendAccountType(context)
+                FilterTypeEnum.FilterQuantityType -> FilterQuantityType(context)
+                FilterTypeEnum.FilterCapitalGainType -> FilterCapitalGainType(context)
+                FilterTypeEnum.FilterPostMarketType -> FilterPostMarketType(context)
+                FilterTypeEnum.FilterAlertType -> FilterAlertType(context)
+                FilterTypeEnum.FilterEventType -> FilterEventType(context)
+                FilterTypeEnum.FilterAssetSoldDateType -> FilterAssetSoldDateType(context)
+                FilterTypeEnum.FilterAssetBoughtDateType -> FilterAssetBoughtDateType(context)
+                FilterTypeEnum.FilterLongTermType -> FilterLongTermType(context)
+            }
 
     fun create(
-        id: String,
-        context: Context
+            id: String,
+            context: Context
     ): IFilterType {
         FilterTypeEnum.values()
-            .forEach { filter ->
-                val filterType = create(filter, context)
-                if (id == filterType.typeId.toString()) {
-                    return filterType
+                .forEach { filter ->
+                    val filterType = create(filter, context)
+                    if (id == filterType.typeId.toString()) {
+                        return filterType
+                    }
                 }
-            }
         return FilterNullType(context)
     }
 
     fun create(
-        index: Int,
-        context: Context
+            index: Int,
+            context: Context
     ): IFilterType =
 
 //    // + 1, skip NullFilter
@@ -194,12 +194,12 @@ object FilterFactory {
 //      FilterNullType()
 //    }
 
-        if (index >= 0 && index < FilterTypeEnum.values().size) {
-            val type: FilterTypeEnum = FilterTypeEnum.values()[index]
-            create(type, context)
-        } else {
-            FilterNullType(context)
-        }
+            if (index >= 0 && index < FilterTypeEnum.values().size) {
+                val type: FilterTypeEnum = FilterTypeEnum.values()[index]
+                create(type, context)
+            } else {
+                FilterNullType(context)
+            }
 }
 
 interface IFilterType {
@@ -255,6 +255,7 @@ open class FilterTextBaseType : FilterBaseType() {
                 FilterSubTypeEnum.IsEmptyTextType,
                 FilterSubTypeEnum.IsNotEmptyTextType
                 -> SpannableStringBuilder()
+
                 else -> super.displayData
             }
         }
@@ -268,7 +269,7 @@ open class FilterRegexTextType : FilterTextBaseType() {
     // from the string for each comparison.
     override fun dataReady() {
         if (subType == FilterSubTypeEnum.MatchRegexTextType
-            || subType == FilterSubTypeEnum.NotMatchRegexTextType
+                || subType == FilterSubTypeEnum.NotMatchRegexTextType
         ) {
             try {
                 regex = data.toRegex(regexOption)
@@ -284,10 +285,10 @@ open class FilterDoubleBaseType : FilterBaseType() {
 
     override val dataType = FilterDataTypeEnum.DoubleType
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.GreaterThanType,
-            FilterSubTypeEnum.LessThanType
-        )
+            listOf(
+                    FilterSubTypeEnum.GreaterThanType,
+                    FilterSubTypeEnum.LessThanType
+            )
     override var data: String = ""
         get() = DecimalFormat(DecimalFormat2Digits).format(filterValue)
         set(value) {
@@ -303,10 +304,10 @@ open class FilterDoublePercentageBaseType : FilterBaseType() {
 
     override val dataType = FilterDataTypeEnum.DoubleType
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.GreaterThanType,
-            FilterSubTypeEnum.LessThanType
-        )
+            listOf(
+                    FilterSubTypeEnum.GreaterThanType,
+                    FilterSubTypeEnum.LessThanType
+            )
     override var data: String = ""
         get() = DecimalFormat(DecimalFormat0To2Digits).format(filterValue)
         set(value) {
@@ -322,11 +323,11 @@ open class FilterIntBaseType : FilterBaseType() {
 
     override val dataType = FilterDataTypeEnum.IntType
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.GreaterThanType,
-            FilterSubTypeEnum.LessThanType,
-            FilterSubTypeEnum.EqualType
-        )
+            listOf(
+                    FilterSubTypeEnum.GreaterThanType,
+                    FilterSubTypeEnum.LessThanType,
+                    FilterSubTypeEnum.EqualType
+            )
     override var data: String = ""
         get() = filterValue.toString()
         set(value) {
@@ -341,16 +342,16 @@ open class FilterDateBaseType : FilterBaseType() {
 
     override val dataType = FilterDataTypeEnum.DateType
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.BeforeDateType,
-            FilterSubTypeEnum.AfterDateType
-        )
+            listOf(
+                    FilterSubTypeEnum.BeforeDateType,
+                    FilterSubTypeEnum.AfterDateType
+            )
     override var data: String = ""
         get() = ZonedDateTime.ofInstant(
-            Instant.ofEpochSecond(filterDateValue),
-            ZoneOffset.systemDefault()
+                Instant.ofEpochSecond(filterDateValue),
+                ZoneOffset.systemDefault()
         )
-            .format(DateTimeFormatter.ofLocalizedDate(FULL))
+                .format(DateTimeFormatter.ofLocalizedDate(FULL))
         set(value) {
             field = value
             filterDateValue = try {
@@ -369,16 +370,16 @@ open class FilterSelectionBaseType(open val context: Context) : FilterBaseType()
 
     override val dataType = FilterDataTypeEnum.SelectionType
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.IsType,
-            FilterSubTypeEnum.IsNotType
-        )
+            listOf(
+                    FilterSubTypeEnum.IsType,
+                    FilterSubTypeEnum.IsNotType
+            )
 }
 
 open class FilterStringArrayListTypeBaseType(override val context: Context) :
-    FilterSelectionBaseType(
-        context
-    ) {
+        FilterSelectionBaseType(
+                context
+        ) {
 
     var filterArrayStringValue: String = ""
     open val arrayId = 0
@@ -399,11 +400,11 @@ open class FilterStringArrayListTypeBaseType(override val context: Context) :
 
             val typeNames = context.resources.getStringArray(arrayId)
             filterArrayStringValue =
-                if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
-                    typeNames[filterSelectionIndex]
-                } else {
-                    ""
-                }
+                    if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
+                        typeNames[filterSelectionIndex]
+                    } else {
+                        ""
+                    }
         }
 
     override val displayData: SpannableStringBuilder
@@ -419,9 +420,9 @@ open class FilterStringArrayListTypeBaseType(override val context: Context) :
 }
 
 open class FilterDataProviderEnumTypeBaseType(override val context: Context) :
-    FilterSelectionBaseType(
-        context
-    ) {
+        FilterSelectionBaseType(
+                context
+        ) {
 
     var filterDataProvider: DataProvider = DataProvider.Standard
 
@@ -441,11 +442,11 @@ open class FilterDataProviderEnumTypeBaseType(override val context: Context) :
 
             val typeNames = DataProvider.values()
             filterDataProvider =
-                if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
-                    typeNames[filterSelectionIndex]
-                } else {
-                    DataProvider.Standard
-                }
+                    if (filterSelectionIndex >= 0 && filterSelectionIndex < typeNames.size) {
+                        typeNames[filterSelectionIndex]
+                    } else {
+                        DataProvider.Standard
+                    }
         }
 
     override val displayData: SpannableStringBuilder
@@ -461,16 +462,16 @@ open class FilterDataProviderEnumTypeBaseType(override val context: Context) :
 }
 
 open class FilterAccountBaseType(override val context: Context) : FilterSelectionBaseType(
-    context
+        context
 ) {
 
     var filterAccountValue: String = ""
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType
+            )
 
     override val selectionList: List<SpannableStringBuilder>
         get() {
@@ -491,16 +492,16 @@ open class FilterAccountBaseType(override val context: Context) : FilterSelectio
             filterSelectionIndex = strToInt(value)
 
             filterAccountValue =
-                if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedAccountList.accounts.size) {
-                    val account = SharedAccountList.accounts[filterSelectionIndex]
-                    if (account == context.getString(R.string.standard_account)) {
-                        ""
+                    if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedAccountList.accounts.size) {
+                        val account = SharedAccountList.accounts[filterSelectionIndex]
+                        if (account == context.getString(R.string.standard_account)) {
+                            ""
+                        } else {
+                            account
+                        }
                     } else {
-                        account
+                        ""
                     }
-                } else {
-                    ""
-                }
         }
 
     override val displayData: SpannableStringBuilder
@@ -525,10 +526,10 @@ open class FilterGroupBaseType(override val context: Context) : FilterSelectionB
     override val selectionList: List<SpannableStringBuilder>
         get() {
             return getGroupsMenuList(
-                SharedFilterGroupList.groups,
-                0,
-                context.getColor(R.color.black),
-                context.getString(string.standard_group)
+                    SharedFilterGroupList.groups,
+                    context.getColor(R.color.backgroundListColor),
+                    context.getColor(R.color.black),
+                    context.getString(string.standard_group)
             ).map {
                 SpannableStringBuilder().append(it)
             }
@@ -541,27 +542,27 @@ open class FilterGroupBaseType(override val context: Context) : FilterSelectionB
             filterSelectionIndex = strToInt(value)
 
             filterGroupColorValue =
-                if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterGroupList.groups.size) {
-                    SharedFilterGroupList.groups[filterSelectionIndex].color
-                } else {
-                    0
-                }
+                    if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterGroupList.groups.size) {
+                        SharedFilterGroupList.groups[filterSelectionIndex].color
+                    } else {
+                        0
+                    }
         }
 
     override val displayData: SpannableStringBuilder
         get() {
             val group =
-                if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterGroupList.groups.size) {
-                    SharedFilterGroupList.groups[filterSelectionIndex]
-                } else {
-                    null
-                }
+                    if (filterSelectionIndex >= 0 && filterSelectionIndex < SharedFilterGroupList.groups.size) {
+                        SharedFilterGroupList.groups[filterSelectionIndex]
+                    } else {
+                        null
+                    }
             return if (group != null) {
                 if (isSimilarColor(group.color, context.getColor(R.color.backgroundListColor))) {
                     SpannableStringBuilder().backgroundColor(context.getColor(R.color.colorPrimary)) {
                         color(group.color) {
                             append(
-                                " ${group.name} "
+                                    " ${group.name} "
                             )
                         }
                     }
@@ -572,7 +573,7 @@ open class FilterGroupBaseType(override val context: Context) : FilterSelectionB
                 }
             } else {
                 SpannableStringBuilder().append(
-                    context.getString(R.string.standard_group)
+                        context.getString(R.string.standard_group)
                 )
             }
         }
@@ -595,9 +596,9 @@ open class FilterMarkerBaseType(override val context: Context) : FilterSelection
 
     override val displayData: SpannableStringBuilder
         get() = getMarkerText(
-            context,
-            filterSelectionIndex,
-            false
+                context,
+                filterSelectionIndex,
+                false
         ) // false: FilterType uses the Application Context and gets the wrong background color.
 }
 
@@ -605,10 +606,10 @@ open class FilterBooleanBaseType(val context: Context) : FilterBaseType() {
 
     override val dataType = FilterDataTypeEnum.NoType
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.IsType,
-            FilterSubTypeEnum.IsNotType
-        )
+            listOf(
+                    FilterSubTypeEnum.IsType,
+                    FilterSubTypeEnum.IsNotType
+            )
 
     // Boolean uses the subType for the bool content.
     override var data: String = ""
@@ -625,7 +626,7 @@ open class FilterDividendBaseType() : FilterDoubleBaseType() {
 //    secondsYTD = datetimeYTD.toEpochSecond(ZoneOffset.UTC)
 
         val datetimeYTD =
-            ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZoneOffset.systemDefault())
+                ZonedDateTime.of(ZonedDateTime.now().year, 1, 1, 0, 0, 0, 0, ZoneOffset.systemDefault())
         secondsYTD = datetimeYTD.toEpochSecond() // in GMT
     }
 }
@@ -669,7 +670,7 @@ open class FilterDividendBaseType() : FilterDoubleBaseType() {
 
 // No filtering, always returns true
 class FilterNullType(
-    context: Context
+        context: Context
 ) : FilterBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         return true
@@ -682,16 +683,18 @@ class FilterNullType(
 
 // Change percentage
 class FilterPercentageChangeType(
-    context: Context
+        context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {
                 stockItem.onlineMarketData.marketChangePercent > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 stockItem.onlineMarketData.marketChangePercent < filterValue
             }
+
             else -> false
         }
     }
@@ -702,125 +705,143 @@ class FilterPercentageChangeType(
 }
 
 class FilterSymbolNameType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.ContainsTextType -> {
                 stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 !stockItem.stockDBdata.symbol.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.StartsWithTextType -> {
                 stockItem.stockDBdata.symbol.startsWith(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.EndsWithTextType -> {
                 stockItem.stockDBdata.symbol.endsWith(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.IsTextType -> {
                 stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.IsNotTextType -> {
                 !stockItem.stockDBdata.symbol.equals(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.SimilarTextType -> {
                 // 0.0: identical, 1.0: different
                 getLevenshteinDistance(stockItem.stockDBdata.symbol, data) < similarDistance
             }
+
             FilterSubTypeEnum.NotSimilarTextType -> {
                 // 0.0: identical, 1.0: different
                 getLevenshteinDistance(stockItem.stockDBdata.symbol, data) >= similarDistance
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 regex.containsMatchIn(stockItem.stockDBdata.symbol)
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 !regex.containsMatchIn(stockItem.stockDBdata.symbol)
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.StartsWithTextType,
-            FilterSubTypeEnum.EndsWithTextType,
-            FilterSubTypeEnum.IsTextType,
-            FilterSubTypeEnum.IsNotTextType,
-            FilterSubTypeEnum.SimilarTextType,
-            FilterSubTypeEnum.NotSimilarTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType,
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.StartsWithTextType,
+                    FilterSubTypeEnum.EndsWithTextType,
+                    FilterSubTypeEnum.IsTextType,
+                    FilterSubTypeEnum.IsNotTextType,
+                    FilterSubTypeEnum.SimilarTextType,
+                    FilterSubTypeEnum.NotSimilarTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType,
+            )
     override val typeId = FilterTypeEnum.FilterSymbolNameType
     override val displayName = context.getString(R.string.filter_symbolname_name)
     override val desc = context.getString(R.string.filter_symbolname_desc)
 }
 
 class FilterDisplayNameType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.ContainsTextType -> {
                 getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 !getName(stockItem.onlineMarketData).contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 regex.containsMatchIn(getName(stockItem.onlineMarketData))
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 !regex.containsMatchIn(getName(stockItem.onlineMarketData))
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType
+            )
     override val typeId = FilterTypeEnum.FilterDisplayNameType
     override val displayName = context.getString(R.string.filter_displayname_name)
     override val desc = context.getString(R.string.filter_displayname_desc)
 }
 
 class FilterStockExchangeNameType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.ContainsTextType -> {
                 stockItem.onlineMarketData.fullExchangeName.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 !stockItem.onlineMarketData.fullExchangeName.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 regex.containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 !regex.containsMatchIn(stockItem.onlineMarketData.fullExchangeName)
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType
+            )
     override val typeId = FilterTypeEnum.FilterStockExchangeNameType
     override val displayName = context.getString(R.string.filter_stockexchangename_name)
     override val desc = context.getString(R.string.filter_stockexchangename_desc)
@@ -828,7 +849,7 @@ class FilterStockExchangeNameType(
 
 // Market Cap
 class FilterMarketCapType(
-    val context: Context
+        val context: Context
 ) : FilterIntBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
 
@@ -839,6 +860,7 @@ class FilterMarketCapType(
             FilterSubTypeEnum.GreaterThanType -> {
                 stockItem.onlineMarketData.marketCap > filterValueM
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 stockItem.onlineMarketData.marketCap > 0L && stockItem.onlineMarketData.marketCap < filterValueM
             }
@@ -862,20 +884,21 @@ class FilterMarketCapType(
             FilterSubTypeEnum.IsMarketNanoCapType -> {
                 stockItem.onlineMarketData.marketCap > 0L && stockItem.onlineMarketData.marketCap < 50_000_000L
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.GreaterThanType,
-            FilterSubTypeEnum.LessThanType,
-            FilterSubTypeEnum.IsMarketLargeCapType,
-            FilterSubTypeEnum.IsMarketMidCapType,
-            FilterSubTypeEnum.IsMarketSmallCapType,
-            FilterSubTypeEnum.IsMarketMicroCapType,
-            FilterSubTypeEnum.IsMarketNanoCapType,
-        )
+            listOf(
+                    FilterSubTypeEnum.GreaterThanType,
+                    FilterSubTypeEnum.LessThanType,
+                    FilterSubTypeEnum.IsMarketLargeCapType,
+                    FilterSubTypeEnum.IsMarketMidCapType,
+                    FilterSubTypeEnum.IsMarketSmallCapType,
+                    FilterSubTypeEnum.IsMarketMicroCapType,
+                    FilterSubTypeEnum.IsMarketNanoCapType,
+            )
 
     override val typeId = FilterTypeEnum.FilterMarketCapType
     override val displayName = context.getString(R.string.filter_marketcap_name)
@@ -883,11 +906,11 @@ class FilterMarketCapType(
     override val displayData: SpannableStringBuilder
         get() {
             if (subType == FilterSubTypeEnum.GreaterThanType
-                || subType == FilterSubTypeEnum.LessThanType
+                    || subType == FilterSubTypeEnum.LessThanType
             ) {
                 return SpannableStringBuilder()
-                    .append(data)
-                    .append(" (${formatLong(filterValue * 1_000_000L, context)})")
+                        .append(data)
+                        .append(" (${formatLong(filterValue * 1_000_000L, context)})")
             }
 
             return SpannableStringBuilder()
@@ -895,7 +918,7 @@ class FilterMarketCapType(
 }
 
 class FilterStringQuoteType(
-    context: Context
+        context: Context
 ) : FilterStringArrayListTypeBaseType(context) {
 
     override fun filter(stockItem: StockItem): Boolean {
@@ -903,9 +926,11 @@ class FilterStringQuoteType(
             FilterSubTypeEnum.IsType -> {
                 stockItem.onlineMarketData.quoteType == filterArrayStringValue
             }
+
             FilterSubTypeEnum.IsNotType -> {
                 stockItem.onlineMarketData.quoteType != filterArrayStringValue
             }
+
             else -> false
         }
     }
@@ -917,7 +942,7 @@ class FilterStringQuoteType(
 }
 
 class FilterStringDataProviderType(
-    context: Context
+        context: Context
 ) : FilterDataProviderEnumTypeBaseType(context) {
 
     override fun filter(stockItem: StockItem): Boolean {
@@ -925,9 +950,11 @@ class FilterStringDataProviderType(
             FilterSubTypeEnum.IsType -> {
                 stockItem.stockDBdata.type == filterDataProvider.value
             }
+
             FilterSubTypeEnum.IsNotType -> {
                 stockItem.stockDBdata.type != filterDataProvider.value
             }
+
             else -> false
         }
     }
@@ -938,7 +965,7 @@ class FilterStringDataProviderType(
 }
 
 class FilterAssetAccountType(
-    context: Context
+        context: Context
 ) : FilterAccountBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
 
@@ -955,11 +982,13 @@ class FilterAssetAccountType(
                     asset.account == filterAccountValue
                 }
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 stockItem.assets.any { asset ->
                     asset.account != filterAccountValue
                 }
             }
+
             else -> false
         }
     }
@@ -970,7 +999,7 @@ class FilterAssetAccountType(
 }
 
 class FilterDividendAccountType(
-    context: Context
+        context: Context
 ) : FilterAccountBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
 
@@ -985,9 +1014,11 @@ class FilterDividendAccountType(
             FilterSubTypeEnum.ContainsTextType -> {
                 accounts.isNotEmpty()
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 accounts.isEmpty()
             }
+
             else -> false
         }
     }
@@ -998,16 +1029,18 @@ class FilterDividendAccountType(
 }
 
 class FilterGroupType(
-    context: Context
+        context: Context
 ) : FilterGroupBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.IsType -> {
                 stockItem.stockDBdata.groupColor == filterGroupColorValue
             }
+
             FilterSubTypeEnum.IsNotType -> {
                 stockItem.stockDBdata.groupColor != filterGroupColorValue
             }
+
             else -> false
         }
     }
@@ -1018,16 +1051,18 @@ class FilterGroupType(
 }
 
 class FilterMarkerType(
-    context: Context
+        context: Context
 ) : FilterMarkerBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.IsType -> {
                 stockItem.stockDBdata.marker == filterMarkerValue
             }
+
             FilterSubTypeEnum.IsNotType -> {
                 stockItem.stockDBdata.marker != filterMarkerValue
             }
+
             else -> false
         }
     }
@@ -1038,89 +1073,101 @@ class FilterMarkerType(
 }
 
 class FilterNoteType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.ContainsTextType -> {
                 stockItem.stockDBdata.note.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 !stockItem.stockDBdata.note.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.IsEmptyTextType -> {
                 stockItem.stockDBdata.note.isEmpty()
             }
+
             FilterSubTypeEnum.IsNotEmptyTextType -> {
                 stockItem.stockDBdata.note.isNotEmpty()
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 regex.containsMatchIn(stockItem.stockDBdata.note)
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 !regex.containsMatchIn(stockItem.stockDBdata.note)
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.IsEmptyTextType,
-            FilterSubTypeEnum.IsNotEmptyTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.IsEmptyTextType,
+                    FilterSubTypeEnum.IsNotEmptyTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType
+            )
     override val typeId = FilterTypeEnum.FilterNoteType
     override val displayName = context.getString(R.string.filter_note_name)
     override val desc = context.getString(R.string.filter_note_desc)
 }
 
 class FilterDividendNoteType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
             FilterSubTypeEnum.ContainsTextType -> {
                 stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 !stockItem.stockDBdata.dividendNote.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.IsEmptyTextType -> {
                 stockItem.stockDBdata.dividendNote.isEmpty()
             }
+
             FilterSubTypeEnum.IsNotEmptyTextType -> {
                 stockItem.stockDBdata.dividendNote.isNotEmpty()
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 regex.containsMatchIn(stockItem.stockDBdata.dividendNote)
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 !regex.containsMatchIn(stockItem.stockDBdata.dividendNote)
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.IsEmptyTextType,
-            FilterSubTypeEnum.IsNotEmptyTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.IsEmptyTextType,
+                    FilterSubTypeEnum.IsNotEmptyTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType
+            )
     override val typeId = FilterTypeEnum.FilterDividendNoteType
     override val displayName = context.getString(R.string.filter_dividendnote_name)
     override val desc = context.getString(R.string.filter_dividendnote_desc)
 }
 
 class FilterAssetNoteType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
@@ -1129,51 +1176,57 @@ class FilterAssetNoteType(
                     asset.note.contains(data, ignoreCase = true)
                 }
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 stockItem.assets.none { asset ->
                     asset.note.contains(data, ignoreCase = true)
                 }
             }
+
             FilterSubTypeEnum.IsEmptyTextType -> {
                 stockItem.assets.none { asset ->
                     asset.note.isNotEmpty()
                 }
             }
+
             FilterSubTypeEnum.IsNotEmptyTextType -> {
                 stockItem.assets.any { asset ->
                     asset.note.isNotEmpty()
                 }
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 stockItem.assets.find { asset ->
                     regex.containsMatchIn(asset.note)
                 } != null
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 stockItem.assets.find { asset ->
                     regex.containsMatchIn(asset.note)
                 } == null
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.IsEmptyTextType,
-            FilterSubTypeEnum.IsNotEmptyTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.IsEmptyTextType,
+                    FilterSubTypeEnum.IsNotEmptyTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType
+            )
     override val typeId = FilterTypeEnum.FilterAssetNoteType
     override val displayName = context.getString(R.string.filter_assetnote_name)
     override val desc = context.getString(R.string.filter_assetnote_desc)
 }
 
 class FilterAlertNoteType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
@@ -1181,46 +1234,52 @@ class FilterAlertNoteType(
                 stockItem.stockDBdata.alertAboveNote.contains(data, ignoreCase = true)
                         || stockItem.stockDBdata.alertBelowNote.contains(data, ignoreCase = true)
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 !(stockItem.stockDBdata.alertAboveNote.contains(data, ignoreCase = true)
                         || stockItem.stockDBdata.alertBelowNote.contains(data, ignoreCase = true))
             }
+
             FilterSubTypeEnum.IsEmptyTextType -> {
                 stockItem.stockDBdata.alertAboveNote.isEmpty()
                         && stockItem.stockDBdata.alertBelowNote.isEmpty()
             }
+
             FilterSubTypeEnum.IsNotEmptyTextType -> {
                 stockItem.stockDBdata.alertAboveNote.isNotEmpty()
                         || stockItem.stockDBdata.alertBelowNote.isNotEmpty()
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 regex.containsMatchIn(stockItem.stockDBdata.alertAboveNote)
                         || regex.containsMatchIn(stockItem.stockDBdata.alertBelowNote)
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 !(regex.containsMatchIn(stockItem.stockDBdata.alertAboveNote)
                         || regex.containsMatchIn(stockItem.stockDBdata.alertBelowNote))
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.IsEmptyTextType,
-            FilterSubTypeEnum.IsNotEmptyTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.IsEmptyTextType,
+                    FilterSubTypeEnum.IsNotEmptyTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType
+            )
     override val typeId = FilterTypeEnum.FilterAlertNoteType
     override val displayName = context.getString(R.string.filter_alertnote_name)
     override val desc = context.getString(R.string.filter_alertnote_desc)
 }
 
 class FilterEventDetailType(
-    context: Context
+        context: Context
 ) : FilterRegexTextType() {
     override fun filter(stockItem: StockItem): Boolean {
         return when (subType) {
@@ -1230,49 +1289,55 @@ class FilterEventDetailType(
                             event.note.contains(data, ignoreCase = true)
                 }
             }
+
             FilterSubTypeEnum.NotContainsTextType -> {
                 stockItem.events.none { event ->
                     event.title.contains(data, ignoreCase = true) ||
                             event.note.contains(data, ignoreCase = true)
                 }
             }
+
             FilterSubTypeEnum.IsEmptyTextType -> {
                 stockItem.events.none { event ->
                     event.title.isNotEmpty() ||
                             event.note.isNotEmpty()
                 }
             }
+
             FilterSubTypeEnum.IsNotEmptyTextType -> {
                 stockItem.events.any { event ->
                     event.title.isNotEmpty() ||
                             event.note.isNotEmpty()
                 }
             }
+
             FilterSubTypeEnum.MatchRegexTextType -> {
                 stockItem.events.find { event ->
                     regex.containsMatchIn(event.title) ||
                             regex.containsMatchIn(event.note)
                 } != null
             }
+
             FilterSubTypeEnum.NotMatchRegexTextType -> {
                 stockItem.events.find { event ->
                     regex.containsMatchIn(event.title) ||
                             regex.containsMatchIn(event.note)
                 } == null
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.ContainsTextType,
-            FilterSubTypeEnum.NotContainsTextType,
-            FilterSubTypeEnum.IsEmptyTextType,
-            FilterSubTypeEnum.IsNotEmptyTextType,
-            FilterSubTypeEnum.MatchRegexTextType,
-            FilterSubTypeEnum.NotMatchRegexTextType
-        )
+            listOf(
+                    FilterSubTypeEnum.ContainsTextType,
+                    FilterSubTypeEnum.NotContainsTextType,
+                    FilterSubTypeEnum.IsEmptyTextType,
+                    FilterSubTypeEnum.IsNotEmptyTextType,
+                    FilterSubTypeEnum.MatchRegexTextType,
+                    FilterSubTypeEnum.NotMatchRegexTextType
+            )
     override val typeId = FilterTypeEnum.FilterEventDetailType
     override val displayName = context.getString(R.string.filter_eventdetail_name)
     override val desc = context.getString(R.string.filter_eventdetail_desc)
@@ -1280,7 +1345,7 @@ class FilterEventDetailType(
 
 // Purchase price
 class FilterPurchasePriceType(
-    context: Context
+        context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
@@ -1289,9 +1354,11 @@ class FilterPurchasePriceType(
             FilterSubTypeEnum.GreaterThanType -> {
                 totalPrice > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 totalPrice < filterValue
             }
+
             else -> false
         }
     }
@@ -1303,7 +1370,7 @@ class FilterPurchasePriceType(
 
 // Profit
 class FilterProfitType(
-    context: Context
+        context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
@@ -1317,9 +1384,11 @@ class FilterProfitType(
             FilterSubTypeEnum.GreaterThanType -> {
                 profit > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 profit < filterValue
             }
+
             else -> false
         }
     }
@@ -1331,25 +1400,27 @@ class FilterProfitType(
 
 // Profit Percentage
 class FilterProfitPercentageType(
-    context: Context
+        context: Context
 ) : FilterDoublePercentageBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
         val total = totalPrice + totalFee
         val profitPercentage =
-            if (stockItem.onlineMarketData.marketPrice > 0.0 && total > 0.0) {
-                (totalQuantity * stockItem.onlineMarketData.marketPrice - total) / total
-            } else {
-                totalPrice
-            }
+                if (stockItem.onlineMarketData.marketPrice > 0.0 && total > 0.0) {
+                    (totalQuantity * stockItem.onlineMarketData.marketPrice - total) / total
+                } else {
+                    totalPrice
+                }
 
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {
                 profitPercentage > filterPercentageValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 profitPercentage < filterPercentageValue
             }
+
             else -> false
         }
     }
@@ -1361,7 +1432,7 @@ class FilterProfitPercentageType(
 
 // Asset
 class FilterAssetType(
-    val context: Context
+        val context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
@@ -1375,34 +1446,39 @@ class FilterAssetType(
             FilterSubTypeEnum.GreaterThanType -> {
                 asset > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 asset > 0.0 && asset < filterValue
             }
+
             FilterSubTypeEnum.IsPresentType -> {
                 stockItem.assets.isNotEmpty()
             }
+
             FilterSubTypeEnum.IsNotPresentType -> {
                 stockItem.assets.isEmpty()
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.GreaterThanType,
-            FilterSubTypeEnum.LessThanType,
-            FilterSubTypeEnum.IsPresentType,
-            FilterSubTypeEnum.IsNotPresentType,
-        )
+            listOf(
+                    FilterSubTypeEnum.GreaterThanType,
+                    FilterSubTypeEnum.LessThanType,
+                    FilterSubTypeEnum.IsPresentType,
+                    FilterSubTypeEnum.IsNotPresentType,
+            )
 
     override val typeId = FilterTypeEnum.FilterAssetType
     override var data: String = ""
         get() = when (subType) {
             FilterSubTypeEnum.GreaterThanType,
             FilterSubTypeEnum.LessThanType -> DecimalFormat(DecimalFormat0To2Digits).format(
-                filterValue
+                    filterValue
             )
+
             else -> ""
         }
         set(value) {
@@ -1415,13 +1491,14 @@ class FilterAssetType(
         get() = when (subType) {
             FilterSubTypeEnum.GreaterThanType,
             FilterSubTypeEnum.LessThanType -> SpannableStringBuilder().append(data)
+
             else -> SpannableStringBuilder().append("")
         }
 }
 
 // Fee
 class FilterFeeType(
-    val context: Context
+        val context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
 //    var fee = 0.0
@@ -1435,34 +1512,39 @@ class FilterFeeType(
             FilterSubTypeEnum.GreaterThanType -> {
                 totalFee > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 totalFee > 0.0 && totalFee < filterValue
             }
+
             FilterSubTypeEnum.IsPresentType -> {
                 totalFee > 0.0
             }
+
             FilterSubTypeEnum.IsNotPresentType -> {
                 totalFee == 0.0
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.GreaterThanType,
-            FilterSubTypeEnum.LessThanType,
-            FilterSubTypeEnum.IsPresentType,
-            FilterSubTypeEnum.IsNotPresentType,
-        )
+            listOf(
+                    FilterSubTypeEnum.GreaterThanType,
+                    FilterSubTypeEnum.LessThanType,
+                    FilterSubTypeEnum.IsPresentType,
+                    FilterSubTypeEnum.IsNotPresentType,
+            )
 
     override val typeId = FilterTypeEnum.FilterFeeType
     override var data: String = ""
         get() = when (subType) {
             FilterSubTypeEnum.GreaterThanType,
             FilterSubTypeEnum.LessThanType -> DecimalFormat(DecimalFormat0To2Digits).format(
-                filterValue
+                    filterValue
             )
+
             else -> ""
         }
         set(value) {
@@ -1475,33 +1557,36 @@ class FilterFeeType(
         get() = when (subType) {
             FilterSubTypeEnum.GreaterThanType,
             FilterSubTypeEnum.LessThanType -> SpannableStringBuilder().append(data)
+
             else -> SpannableStringBuilder().append("")
         }
 }
 
 // Dividend Percentage
 class FilterDividendPercentageType(
-    context: Context
+        context: Context
 ) : FilterDoublePercentageBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val dividendPercentage =
-            if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
-                if (stockItem.onlineMarketData.marketPrice > 0.0) {
-                    stockItem.stockDBdata.annualDividendRate / stockItem.onlineMarketData.marketPrice
+                if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
+                    if (stockItem.onlineMarketData.marketPrice > 0.0) {
+                        stockItem.stockDBdata.annualDividendRate / stockItem.onlineMarketData.marketPrice
+                    } else {
+                        0.0
+                    }
                 } else {
-                    0.0
+                    stockItem.onlineMarketData.annualDividendYield
                 }
-            } else {
-                stockItem.onlineMarketData.annualDividendYield
-            }
 
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {
                 dividendPercentage > filterPercentageValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 dividendPercentage > 0.0 && dividendPercentage < filterPercentageValue
             }
+
             else -> false
         }
     }
@@ -1513,23 +1598,25 @@ class FilterDividendPercentageType(
 
 // Dividend Paid
 class FilterDividendPaidType(
-    context: Context
+        context: Context
 ) : FilterDividendBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val totalDividendPaid: Double = stockItem.dividends.filter { dividend ->
             dividend.type == DividendType.Received.value
         }
-            .sumOf { dividend ->
-                dividend.amount
-            }
+                .sumOf { dividend ->
+                    dividend.amount
+                }
 
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {
                 totalDividendPaid > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 totalDividendPaid > 0.0 && totalDividendPaid < filterValue
             }
+
             else -> false
         }
     }
@@ -1541,24 +1628,26 @@ class FilterDividendPaidType(
 
 // Dividend Paid YTD
 class FilterDividendPaidYTDType(
-    context: Context
+        context: Context
 ) : FilterDividendBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val totalDividendPaidYTD: Double = stockItem.dividends.filter { dividend ->
             dividend.type == DividendType.Received.value
                     && dividend.paydate >= secondsYTD
         }
-            .sumOf { dividend ->
-                dividend.amount
-            }
+                .sumOf { dividend ->
+                    dividend.amount
+                }
 
         return when (subType) {
             FilterSubTypeEnum.GreaterThanType -> {
                 totalDividendPaidYTD > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 totalDividendPaidYTD > 0.0 && totalDividendPaidYTD < filterValue
             }
+
             else -> false
         }
     }
@@ -1570,7 +1659,7 @@ class FilterDividendPaidYTDType(
 
 // Quantity
 class FilterQuantityType(
-    context: Context
+        context: Context
 ) : FilterIntBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val (totalQuantity, totalPrice, totalFee) = getAssets(stockItem.assets)
@@ -1579,12 +1668,15 @@ class FilterQuantityType(
             FilterSubTypeEnum.GreaterThanType -> {
                 totalQuantity > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 totalQuantity > 0.0 && totalQuantity < filterValue
             }
+
             FilterSubTypeEnum.EqualType -> {
                 totalQuantity.toInt() == filterValue
             }
+
             else -> false
         }
     }
@@ -1596,7 +1688,7 @@ class FilterQuantityType(
 
 // CapitalGain
 class FilterCapitalGainType(
-    context: Context
+        context: Context
 ) : FilterDoubleBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val (capitalGain, capitalLoss, gainLossMap) = getAssetsCapitalGain(stockItem.assets)
@@ -1605,9 +1697,11 @@ class FilterCapitalGainType(
             FilterSubTypeEnum.GreaterThanType -> {
                 capitalGain - capitalLoss > filterValue
             }
+
             FilterSubTypeEnum.LessThanType -> {
                 capitalGain - capitalLoss < filterValue
             }
+
             else -> false
         }
     }
@@ -1619,7 +1713,7 @@ class FilterCapitalGainType(
 
 // Post market
 class FilterPostMarketType(
-    context: Context
+        context: Context
 ) : FilterBooleanBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
 
@@ -1627,18 +1721,20 @@ class FilterPostMarketType(
             FilterSubTypeEnum.IsUsedType -> {
                 stockItem.onlineMarketData.postMarketData
             }
+
             FilterSubTypeEnum.IsNotUsedType -> {
                 !stockItem.onlineMarketData.postMarketData
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.IsUsedType,
-            FilterSubTypeEnum.IsNotUsedType
-        )
+            listOf(
+                    FilterSubTypeEnum.IsUsedType,
+                    FilterSubTypeEnum.IsNotUsedType
+            )
 
     override val typeId = FilterTypeEnum.FilterPostMarketType
     override val displayName = context.getString(R.string.filter_postmarket_name)
@@ -1647,7 +1743,7 @@ class FilterPostMarketType(
 
 // Alert
 class FilterAlertType(
-    context: Context
+        context: Context
 ) : FilterBooleanBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
 
@@ -1655,26 +1751,30 @@ class FilterAlertType(
             FilterSubTypeEnum.IsPresentType -> {
                 stockItem.stockDBdata.alertAbove > 0.0 || stockItem.stockDBdata.alertBelow > 0.0
             }
+
             FilterSubTypeEnum.IsOnePresentType -> {
                 (stockItem.stockDBdata.alertAbove > 0.0).xor(stockItem.stockDBdata.alertBelow > 0.0)
             }
+
             FilterSubTypeEnum.IsAllPresentType -> {
                 stockItem.stockDBdata.alertAbove > 0.0 && stockItem.stockDBdata.alertBelow > 0.0
             }
+
             FilterSubTypeEnum.IsNotPresentType -> {
                 !(stockItem.stockDBdata.alertAbove > 0.0 || stockItem.stockDBdata.alertBelow > 0.0)
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.IsPresentType,
-            FilterSubTypeEnum.IsOnePresentType,
-            FilterSubTypeEnum.IsAllPresentType,
-            FilterSubTypeEnum.IsNotPresentType
-        )
+            listOf(
+                    FilterSubTypeEnum.IsPresentType,
+                    FilterSubTypeEnum.IsOnePresentType,
+                    FilterSubTypeEnum.IsAllPresentType,
+                    FilterSubTypeEnum.IsNotPresentType
+            )
 
     override val typeId = FilterTypeEnum.FilterAlertType
     override val displayName = context.getString(R.string.filter_alert_name)
@@ -1683,7 +1783,7 @@ class FilterAlertType(
 
 // Event
 class FilterEventType(
-    context: Context
+        context: Context
 ) : FilterBooleanBaseType(context) {
     override fun filter(stockItem: StockItem): Boolean {
 
@@ -1691,18 +1791,20 @@ class FilterEventType(
             FilterSubTypeEnum.IsPresentType -> {
                 stockItem.events.isNotEmpty()
             }
+
             FilterSubTypeEnum.IsNotPresentType -> {
                 stockItem.events.isEmpty()
             }
+
             else -> false
         }
     }
 
     override val subTypeList =
-        listOf(
-            FilterSubTypeEnum.IsPresentType,
-            FilterSubTypeEnum.IsNotPresentType
-        )
+            listOf(
+                    FilterSubTypeEnum.IsPresentType,
+                    FilterSubTypeEnum.IsNotPresentType
+            )
 
     override val typeId = FilterTypeEnum.FilterEventType
     override val displayName = context.getString(R.string.filter_event_name)
@@ -1710,7 +1812,7 @@ class FilterEventType(
 }
 
 class FilterAssetSoldDateType(
-    context: Context
+        context: Context
 ) : FilterDateBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val assetSold = stockItem.assets.filter { asset ->
@@ -1727,12 +1829,14 @@ class FilterAssetSoldDateType(
                     // firstAssetDate > 0 && firstAssetDate < filterDateValue
                     firstAssetDate in 1 until filterDateValue
                 }
+
                 FilterSubTypeEnum.AfterDateType -> {
                     val lastAssetDate = assetSold.maxOf { asset ->
                         asset.date
                     }
                     lastAssetDate > filterDateValue
                 }
+
                 else -> false
             }
         } else {
@@ -1746,7 +1850,7 @@ class FilterAssetSoldDateType(
 }
 
 class FilterAssetBoughtDateType(
-    context: Context
+        context: Context
 ) : FilterDateBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val assetBought = stockItem.assets.filter { asset ->
@@ -1763,12 +1867,14 @@ class FilterAssetBoughtDateType(
                     // firstAssetDate > 0 && firstAssetDate < filterDateValue
                     firstAssetDate in 1 until filterDateValue
                 }
+
                 FilterSubTypeEnum.AfterDateType -> {
                     val lastAssetDate = assetBought.maxOf { asset ->
                         asset.date
                     }
                     lastAssetDate > filterDateValue
                 }
+
                 else -> false
             }
         } else {
@@ -1783,7 +1889,7 @@ class FilterAssetBoughtDateType(
 
 // Stocks are at least one year old.
 class FilterLongTermType(
-    context: Context
+        context: Context
 ) : FilterBaseType() {
     override fun filter(stockItem: StockItem): Boolean {
         val assetBought = stockItem.assets.filter { asset ->
@@ -1792,7 +1898,7 @@ class FilterLongTermType(
 
         return if (assetBought.isNotEmpty()) {
             val secondsNow = ZonedDateTime.now()
-                .toEpochSecond() // in GMT
+                    .toEpochSecond() // in GMT
             val lastAssetDate = assetBought.maxOf { asset ->
                 asset.date
             }

@@ -77,12 +77,12 @@ const val MaxChartOverlays = 4
 
 // First entry match first color.
 val chartOverlayColors: List<Int> =
-    listOf(
-        0xff808080.toInt(), // Gray
-        0xffFF70AE.toInt(), // Red
-        0xffA4E500.toInt(), // Green
-        0xffFFD800.toInt()  // Yellow
-    )
+        listOf(
+                0xff808080.toInt(), // Gray
+                0xffFF70AE.toInt(), // Red
+                0xffA4E500.toInt(), // Green
+                0xffFFD800.toInt()  // Yellow
+        )
 
 // Rounding error
 const val epsilon = 0.00000001
@@ -95,16 +95,16 @@ const val obsoleteAssetType: Int = 0x0001
 const val transferAssetType: Int = 0x0002
 
 data class StockOptionData(
-    var sharesPerOption: Int = 0,
-    var expirationDate: Long = 0,
-    var strikePrice: Double = 0.0,
-    var type: Int = AssetType.UnknownOption.value
+        var sharesPerOption: Int = 0,
+        var expirationDate: Long = 0,
+        var strikePrice: Double = 0.0,
+        var type: Int = AssetType.UnknownOption.value
 )
 
 data class FormatIntResult(
-    var boldText: SpannableStringBuilder,
-    var withBrackets: String,
-    var text: String,
+        var boldText: SpannableStringBuilder,
+        var withBrackets: String,
+        var text: String,
 )
 
 enum class DividendCycleStrIndex(val value: Int) {
@@ -115,10 +115,10 @@ enum class DividendCycleStrIndex(val value: Int) {
 }
 
 data class AssetChange(
-    var displayStr: String,
-    var displayColorStr: SpannableStringBuilder,
-    var color: Int,
-    var value: Double,
+        var displayStr: String,
+        var displayColorStr: SpannableStringBuilder,
+        var color: Int,
+        var value: Double,
 )
 
 // > 5:       2 digits
@@ -128,9 +128,11 @@ private fun to2To8DigitsImpl(value: Double): String = when {
     value > 5.0 -> {
         DecimalFormat(DecimalFormat2Digits).format(value)
     }
+
     value < 0.0001 -> {
         DecimalFormat(DecimalFormat2To8Digits).format(value)
     }
+
     else -> {
         DecimalFormat(DecimalFormat2To4Digits).format(value)
     }
@@ -140,8 +142,8 @@ fun to2To8Digits(value: Double): String = to2To8DigitsImpl(value)
 fun to2To8Digits(value: Float): String = to2To8DigitsImpl(value.toDouble())
 
 fun openNewTabWindow(
-    url: String,
-    context: Context
+        url: String,
+        context: Context
 ) {
     val uri = Uri.parse(url)
     val intents = Intent(Intent.ACTION_VIEW, uri)
@@ -170,8 +172,8 @@ fun dividendCycleToSelection(cycle: Int): Int {
 }
 
 fun dividendCycleStr(
-    cycle: Int,
-    context: Context
+        cycle: Int,
+        context: Context
 ): String {
     val stringList = context.resources.getStringArray(array.dividend_cycles)
     val selection = dividendCycleToSelection(cycle)
@@ -206,18 +208,18 @@ fun validateDouble(value: Double): Double {
 
 // Lowest amount greater 0 is 0.0001
 fun minValueCheck(value: Double): Double =
-    if (value > 0.0 && value < 0.0001) {
-        0.0001
-    } else {
-        value
-    }
+        if (value > 0.0 && value < 0.0001) {
+            0.0001
+        } else {
+            value
+        }
 
 fun getFormatStr(value: Double): String =
-    if (value >= 1.0) {
-        DecimalFormat2Digits
-    } else {
-        DecimalFormat2To4Digits
-    }
+        if (value >= 1.0) {
+            DecimalFormat2Digits
+        } else {
+            DecimalFormat2To4Digits
+        }
 
 fun enNumberStrToDouble(str: String): Double {
     var value: Double
@@ -226,7 +228,7 @@ fun enNumberStrToDouble(str: String): Double {
         if (value == 0.0) {
             val numberFormat: NumberFormat = NumberFormat.getNumberInstance()
             value = numberFormat.parse(str)!!
-                .toDouble()
+                    .toDouble()
         }
     } catch (e: Exception) {
         value = 0.0
@@ -236,35 +238,39 @@ fun enNumberStrToDouble(str: String): Double {
 }
 
 fun formatLong(
-    value: Long,
-    context: Context
+        value: Long,
+        context: Context
 ): String {
     return when {
         value >= 900000000000L -> {
             "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000000.0)}${
                 context.getString(
-                    R.string.trillion_abbr
+                        R.string.trillion_abbr
                 )
             }"
         }
+
         value >= 900000000L -> {
             "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000000.0)}${
                 context.getString(
-                    R.string.billion_abbr
+                        R.string.billion_abbr
                 )
             }"
         }
+
         value >= 900000L -> {
             "${DecimalFormat(DecimalFormat0To2Digits).format(value / 1000000.0)}${
                 context.getString(
-                    R.string.million_abbr
+                        R.string.million_abbr
                 )
             }"
         }
+
         value == Long.MIN_VALUE -> {
             // requested value is not in the JSON data
             context.getString(R.string.onlinedata_not_applicable)
         }
+
         else -> {
             DecimalFormat(DecimalFormat0To2Digits).format(value)
         }
@@ -272,50 +278,54 @@ fun formatLong(
 }
 
 fun Resources.getRawTextFile(@RawRes id: Int) =
-    openRawResource(id).bufferedReader()
-        .use { it.readText() }
+        openRawResource(id).bufferedReader()
+                .use { it.readText() }
 
 fun getMarketValues(onlineMarketData: OnlineMarketData): Triple<String, String, String> {
 
     val marketPrice = to2To8Digits(onlineMarketData.marketPrice)
     val change =
-        DecimalFormat("+$DecimalFormat2To4Digits;-$DecimalFormat2To4Digits").format(onlineMarketData.marketChange)
+            DecimalFormat("+$DecimalFormat2To4Digits;-$DecimalFormat2To4Digits").format(onlineMarketData.marketChange)
     val changePercent =
-        "(${DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(onlineMarketData.marketChangePercent)}%)"
+            "(${DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(onlineMarketData.marketChangePercent)}%)"
 
     return Triple(marketPrice, change, changePercent)
 }
 
 fun getChangeColor(
-    change: Double,
-    isPostMarket: Boolean,
-    neutralColor: Int,
-    context: Context
+        change: Double,
+        isPostMarket: Boolean,
+        neutralColor: Int,
+        context: Context
 ): Int = when {
     change > 0.0 -> {
         context.getColor(if (isPostMarket) color.postGreen else color.green)
     }
+
     change < 0.0 -> {
         context.getColor(if (isPostMarket) color.postRed else color.red)
     }
+
     else -> {
         neutralColor
     }
 }
 
 fun getChangeColor(
-    capital: Double,
-    asset: Double,
-    isPostMarket: Boolean,
-    neutralColor: Int,
-    context: Context
+        capital: Double,
+        asset: Double,
+        isPostMarket: Boolean,
+        neutralColor: Int,
+        context: Context
 ): Int = when {
     capital > 0.0 && capital > asset -> {
         context.getColor(if (isPostMarket) color.postGreen else color.green)
     }
+
     capital > 0.0 && capital < asset -> {
         context.getColor(if (isPostMarket) color.postRed else color.red)
     }
+
     else -> {
         neutralColor
     }
@@ -323,36 +333,36 @@ fun getChangeColor(
 
 // Gets the colored change string "asset (%change)"
 fun getAssetChange(
-    assets: List<Asset>,
-    marketPrice: Double,
-    isPostMarket: Boolean,
-    neutralColor: Int,
-    context: Context,
-    bold: Boolean = true
+        assets: List<Asset>,
+        marketPrice: Double,
+        isPostMarket: Boolean,
+        neutralColor: Int,
+        context: Context,
+        bold: Boolean = true
 ): AssetChange {
 
     val (quantity, asset, fee) = getAssets(assets)
 
     return getAssetChange(
-        quantity,
-        asset + fee,
-        marketPrice,
-        isPostMarket,
-        neutralColor,
-        context,
-        bold
+            quantity,
+            asset + fee,
+            marketPrice,
+            isPostMarket,
+            neutralColor,
+            context,
+            bold
     )
 }
 
 // Gets the colored change string "asset (%change)"
 fun getAssetChange(
-    quantity: Double,
-    asset: Double,
-    marketPrice: Double,
-    isPostMarket: Boolean,
-    neutralColor: Int,
-    context: Context,
-    bold: Boolean = true
+        quantity: Double,
+        asset: Double,
+        marketPrice: Double,
+        isPostMarket: Boolean,
+        neutralColor: Int,
+        context: Context,
+        bold: Boolean = true
 ): AssetChange {
 
     if (marketPrice > 0.0) {
@@ -363,20 +373,20 @@ fun getAssetChange(
 
             val changeValue = capital - asset
             displayStr += DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
-                changeValue
+                    changeValue
             )
 
             val changePercent = changeValue * 100.0 / asset
             if (changePercent < 10000.0) {
                 displayStr += " (${
                     DecimalFormat("+$DecimalFormat2Digits;-$DecimalFormat2Digits").format(
-                        changePercent
+                            changePercent
                     )
                 }%)"
             }
 
             val assetChangeColor =
-                getChangeColor(changeValue, isPostMarket, neutralColor, context)
+                    getChangeColor(changeValue, isPostMarket, neutralColor, context)
 
             val assetText = if (bold) {
                 SpannableStringBuilder().bold { append(displayStr) }
@@ -401,7 +411,7 @@ fun getAssetChange(
 }
 
 fun getDividendStr(
-    stockItem: StockItem
+        stockItem: StockItem
 ): String {
     var annualDividendRate: Double = 0.0
     var annualDividendYield: Double = 0.0
@@ -435,8 +445,8 @@ fun getDividendStr(
 }
 
 fun getDividendStr(
-    stockItem: StockItem,
-    context: Context
+        stockItem: StockItem,
+        context: Context
 ): String {
 
     val annualDividendRate = if (stockItem.stockDBdata.annualDividendRate >= 0.0) {
@@ -453,14 +463,14 @@ fun getDividendStr(
 }
 
 fun getAssets(
-    assetList: List<Asset>?
+        assetList: List<Asset>?
 ): Triple<Double, Double, Double> {
     //return getAssetUseLastAverage(assetList)
     return getAssetsRemoveOldestFirst(assetList)
 }
 
 fun getAssetUseLastAverage(
-    assetList: List<Asset>?
+        assetList: List<Asset>?
 ): Pair<Double, Double> {
 
     var totalQuantity: Double = 0.0
@@ -470,49 +480,49 @@ fun getAssetUseLastAverage(
     assetList?.sortedBy { item ->
         item.date
     }
-        ?.forEach { asset ->
+            ?.forEach { asset ->
 
-            totalFee += asset.fee
+                totalFee += asset.fee
 
-            // added shares
-            if (asset.quantity > 0.0) {
-                totalQuantity += asset.quantity
-                totalPrice += asset.quantity * asset.price
-            } else
-            // removed shares
-                if (asset.quantity < 0.0) {
-                    // removed all?
-                    if (-asset.quantity >= (totalQuantity - epsilon)) {
-                        // reset if more removed than owned
-                        totalQuantity = 0.0
-                        totalPrice = 0.0
-                        totalFee = 0.0
-                    } else {
-                        // adjust the total price for the removed shares
-                        if (totalQuantity > epsilon) {
-                            val averageSharePrice = totalPrice / totalQuantity
-                            totalQuantity += asset.quantity
-                            totalPrice = totalQuantity * averageSharePrice
+                // added shares
+                if (asset.quantity > 0.0) {
+                    totalQuantity += asset.quantity
+                    totalPrice += asset.quantity * asset.price
+                } else
+                // removed shares
+                    if (asset.quantity < 0.0) {
+                        // removed all?
+                        if (-asset.quantity >= (totalQuantity - epsilon)) {
+                            // reset if more removed than owned
+                            totalQuantity = 0.0
+                            totalPrice = 0.0
+                            totalFee = 0.0
+                        } else {
+                            // adjust the total price for the removed shares
+                            if (totalQuantity > epsilon) {
+                                val averageSharePrice = totalPrice / totalQuantity
+                                totalQuantity += asset.quantity
+                                totalPrice = totalQuantity * averageSharePrice
+                            }
                         }
                     }
-                }
-        }
+            }
 
     return Pair(totalQuantity, totalPrice + totalFee)
 }
 
 // Adds a marker for assets that are obsolete (bought and then sold)
 fun getAssets(
-    assetList: List<Asset>?,
-    tagObsoleteAssetType: Int
+        assetList: List<Asset>?,
+        tagObsoleteAssetType: Int
 ): Triple<Double, Double, Double> {
     //return getAssetUseLastAverage(assetList, tagObsoleteAssetType)
     return getAssetsRemoveOldestFirst(assetList, tagObsoleteAssetType)
 }
 
 fun getAssetUseLastAverage(
-    assetList: List<Asset>?,
-    tagObsoleteAssetType: Int
+        assetList: List<Asset>?,
+        tagObsoleteAssetType: Int
 ): Pair<Double, Double> {
 
     var totalQuantity: Double = 0.0
@@ -554,7 +564,7 @@ fun getAssetUseLastAverage(
                         if (tagObsoleteAssetType != 0) {
                             for (j in i downTo 0) {
                                 assetListSorted[j].type =
-                                    assetListSorted[j].type or tagObsoleteAssetType
+                                        assetListSorted[j].type or tagObsoleteAssetType
                             }
                         }
                     } else {
@@ -578,10 +588,10 @@ fun tagTransferItemsInAssetList(assetList: MutableList<AssetListData>) {
     while (i < assetList.size) {
         // Transfer: same date and price, but quantity have different sign
         if (i < assetList.size - 1 &&
-            (assetList[i].asset.date - assetList[i + 1].asset.date).absoluteValue <= 1
-            && (assetList[i].asset.price - assetList[i + 1].asset.price).absoluteValue < epsilon
-            && (assetList[i].asset.quantity + assetList[i + 1].asset.quantity).absoluteValue < epsilon
-            && (assetList[i].asset.account != assetList[i + 1].asset.account)
+                (assetList[i].asset.date - assetList[i + 1].asset.date).absoluteValue <= 1
+                && (assetList[i].asset.price - assetList[i + 1].asset.price).absoluteValue < epsilon
+                && (assetList[i].asset.quantity + assetList[i + 1].asset.quantity).absoluteValue < epsilon
+                && (assetList[i].asset.account != assetList[i + 1].asset.account)
         ) {
             assetList[i].transferItem = true
             assetList[i + 1].transferItem = true
@@ -599,8 +609,8 @@ fun tagTransferItemsInAssetList(assetList: MutableList<AssetListData>) {
 }
 
 fun alignTransferAssets(
-    assetList: List<Asset>,
-    removeTransferItems: Boolean = false
+        assetList: List<Asset>,
+        removeTransferItems: Boolean = false
 ): MutableList<Asset> {
 
 //    return assetList.toMutableList()
@@ -611,10 +621,10 @@ fun alignTransferAssets(
     while (i < assetList.size) {
         // Transfer: same date and price, but quantity have different sign
         if (i < assetList.size - 1 &&
-            (assetList[i].date - assetList[i + 1].date).absoluteValue <= 1
-            && (assetList[i].price - assetList[i + 1].price).absoluteValue < epsilon
-            && (assetList[i].quantity + assetList[i + 1].quantity).absoluteValue < epsilon
-            && (assetList[i].account != assetList[i + 1].account)
+                (assetList[i].date - assetList[i + 1].date).absoluteValue <= 1
+                && (assetList[i].price - assetList[i + 1].price).absoluteValue < epsilon
+                && (assetList[i].quantity + assetList[i + 1].quantity).absoluteValue < epsilon
+                && (assetList[i].account != assetList[i + 1].account)
         ) {
             // Transfer item.
             if (removeTransferItems) {
@@ -648,7 +658,7 @@ fun alignTransferAssets(
 
 // Sets the current value for the transfer items.
 fun updateTransferAssets(
-    assetList: List<Asset>
+        assetList: List<Asset>
 ): MutableList<Asset> {
 
     var totalQuantity: Double = 0.0
@@ -696,8 +706,8 @@ fun updateTransferAssets(
 }
 
 fun getAssetsRemoveOldestFirst(
-    assetList: List<Asset>?,
-    tagObsoleteAssetType: Int = 0
+        assetList: List<Asset>?,
+        tagObsoleteAssetType: Int = 0
 ): Triple<Double, Double, Double> {
 
     var totalQuantity: Double = 0.0
@@ -714,13 +724,13 @@ fun getAssetsRemoveOldestFirst(
         var id: Long = 0
         val assetListSortedCopy1 = assetListSorted.map { asset ->
             Asset(
-                symbol = "",
-                price = asset.price,
-                account = asset.account,
-                quantity = asset.quantity,
-                fee = asset.fee,
-                type = asset.type and tagObsoleteAssetType.inv(),
-                id = id++
+                    symbol = "",
+                    price = asset.price,
+                    account = asset.account,
+                    quantity = asset.quantity,
+                    fee = asset.fee,
+                    type = asset.type and tagObsoleteAssetType.inv(),
+                    id = id++
             )
         }
 
@@ -768,7 +778,7 @@ fun getAssetsRemoveOldestFirst(
             if (tagObsoleteAssetType != 0 && assetListSortedCopy[i].quantity < epsilon) {
                 // Set the type in the original list (not in assetListSortedCopy).
                 assetListSorted[assetListSortedCopy[i].id!!.toInt()].type =
-                    assetListSortedCopy[i].type or tagObsoleteAssetType
+                        assetListSortedCopy[i].type or tagObsoleteAssetType
             }
         }
 
@@ -788,7 +798,7 @@ fun getAssetsRemoveOldestFirst(
 }
 
 fun getTotalFee(
-    assetList: List<Asset>
+        assetList: List<Asset>
 ): Double {
 
     val totalFee: Double = assetList.sumOf { asset ->
@@ -800,7 +810,7 @@ fun getTotalFee(
 
 // Only gets the assets that are added.
 fun getAddedAssets(
-    assetList: List<Asset>?
+        assetList: List<Asset>?
 ): Pair<Double, Double> {
 
     var totalQuantity: Double = 0.0
@@ -819,8 +829,8 @@ fun getAddedAssets(
 }
 
 fun getAddedDeletedAssets(
-    assetList: List<Asset>?,
-    onlineMarketData: OnlineMarketData
+        assetList: List<Asset>?,
+        onlineMarketData: OnlineMarketData
 ): Pair<Double, Double> {
 
     var gain: Double = 0.0
@@ -840,9 +850,9 @@ fun getAddedDeletedAssets(
 }
 
 data class GainLoss(
-    var gain: Double = 0.0,
-    var loss: Double = 0.0,
-    var lastTransactionDate: Long = 0L,
+        var gain: Double = 0.0,
+        var loss: Double = 0.0,
+        var lastTransactionDate: Long = 0L,
 )
 
 fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<Int, GainLoss>> {
@@ -859,46 +869,46 @@ fun getAssetsCapitalGainV1(assetList: List<Asset>?): Triple<Double, Double, Map<
     assetList?.sortedBy { asset ->
         asset.date
     }
-        ?.forEach { asset ->
-            if (asset.quantity > 0.0) {
-                bought += asset.quantity * asset.price
-            }
-            if (asset.quantity < 0.0) {
-                sold += -asset.quantity * asset.price
-            }
-            totalQuantity += asset.quantity
-
-            if ((totalQuantity <= -epsilon)) {
-                // Error, more shares sold than owned
-                return Triple(0.0, 0.0, hashMapOf())
-            }
-            if (totalQuantity < epsilon) {
-                // totalQuantity is 0: -epsilon < totalQuantity < epsilon
-                // reset if all shares are sold
-                val localDateTime =
-                    ZonedDateTime.ofInstant(
-                        Instant.ofEpochSecond(asset.date),
-                        ZoneOffset.systemDefault()
-                    )
-                val year = localDateTime.year
-                if (!totalGainLossMap.containsKey(year)) {
-                    totalGainLossMap[year] = GainLoss()
+            ?.forEach { asset ->
+                if (asset.quantity > 0.0) {
+                    bought += asset.quantity * asset.price
                 }
+                if (asset.quantity < 0.0) {
+                    sold += -asset.quantity * asset.price
+                }
+                totalQuantity += asset.quantity
 
-                val gain = sold - bought
-                if (gain > 0.0) {
-                    totalGain += gain
-                    totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + gain
-                } else
-                    if (gain < 0.0) {
-                        totalLoss -= gain
-                        totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! - gain
+                if ((totalQuantity <= -epsilon)) {
+                    // Error, more shares sold than owned
+                    return Triple(0.0, 0.0, hashMapOf())
+                }
+                if (totalQuantity < epsilon) {
+                    // totalQuantity is 0: -epsilon < totalQuantity < epsilon
+                    // reset if all shares are sold
+                    val localDateTime =
+                            ZonedDateTime.ofInstant(
+                                    Instant.ofEpochSecond(asset.date),
+                                    ZoneOffset.systemDefault()
+                            )
+                    val year = localDateTime.year
+                    if (!totalGainLossMap.containsKey(year)) {
+                        totalGainLossMap[year] = GainLoss()
                     }
 
-                sold = 0.0
-                bought = 0.0
+                    val gain = sold - bought
+                    if (gain > 0.0) {
+                        totalGain += gain
+                        totalGainLossMap[year]?.gain = totalGainLossMap[year]?.gain!! + gain
+                    } else
+                        if (gain < 0.0) {
+                            totalLoss -= gain
+                            totalGainLossMap[year]?.loss = totalGainLossMap[year]?.loss!! - gain
+                        }
+
+                    sold = 0.0
+                    bought = 0.0
+                }
             }
-        }
 
     return Triple(totalGain, totalLoss, totalGainLossMap)
 }
@@ -920,9 +930,9 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
 
     // Deep copy of the list.
     val assetListCopy: List<Asset> = updateTransferAssets(
-        assetList.sortedBy { asset ->
-            asset.date
-        }.map { it.copy() }
+            assetList.sortedBy { asset ->
+                asset.date
+            }.map { it.copy() }
     )
 
     // Each neg quantity triggers a gain/loss
@@ -972,10 +982,10 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
             }
 
             val localDateTime =
-                ZonedDateTime.ofInstant(
-                    Instant.ofEpochSecond(asset.date),
-                    ZoneOffset.systemDefault()
-                )
+                    ZonedDateTime.ofInstant(
+                            Instant.ofEpochSecond(asset.date),
+                            ZoneOffset.systemDefault()
+                    )
             val year = localDateTime.year
 
             if (!totalGainLossMap.containsKey(year)) {
@@ -1001,21 +1011,21 @@ fun getAssetsCapitalGain(assetList: List<Asset>?): Triple<Double, Double, Map<In
 }
 
 fun getCapitalGainLossText(
-    context: Context,
-    capitalGain: Double,
-    capitalLoss: Double,
-    capitalTotalOptional: Double = 0.0,
-    formatConcat: String = " - ",
-    formatEnd: String = ""
+        context: Context,
+        capitalGain: Double,
+        capitalLoss: Double,
+        capitalTotalOptional: Double = 0.0,
+        formatConcat: String = " - ",
+        formatEnd: String = ""
 ): SpannableStringBuilder {
 
     // optional total with no rounding errors
     val capitalTotal =
-        if (capitalTotalOptional == 0.0) {
-            capitalGain - capitalLoss
-        } else {
-            capitalTotalOptional
-        }
+            if (capitalTotalOptional == 0.0) {
+                capitalGain - capitalLoss
+            } else {
+                capitalTotalOptional
+            }
 
     return when {
         capitalLoss.absoluteValue < 0.001 && capitalGain > 0.0 -> {
@@ -1023,53 +1033,57 @@ fun getCapitalGainLossText(
                 bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
             }
         }
+
         capitalGain.absoluteValue < 0.001 && capitalLoss > 0.0 -> {
             SpannableStringBuilder().color(context.getColor(R.color.red)) {
                 bold { append("${DecimalFormat(DecimalFormat2Digits).format(-capitalLoss)}$formatEnd") }
             }
         }
+
         capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain > capitalLoss -> {
             SpannableStringBuilder()
-                .color(context.getColor(R.color.green)) {
-                    bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
-                }
-                .color(context.getColor(R.color.red)) {
-                    bold {
-                        append(
-                            "$formatConcat${
-                                DecimalFormat(DecimalFormat2Digits).format(
-                                    capitalLoss
-                                )
-                            }$formatEnd"
-                        )
+                    .color(context.getColor(R.color.green)) {
+                        bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
                     }
-                }
-                .append(" = ")
-                .color(context.getColor(R.color.green)) {
-                    bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
-                }
+                    .color(context.getColor(R.color.red)) {
+                        bold {
+                            append(
+                                    "$formatConcat${
+                                        DecimalFormat(DecimalFormat2Digits).format(
+                                                capitalLoss
+                                        )
+                                    }$formatEnd"
+                            )
+                        }
+                    }
+                    .append(" = ")
+                    .color(context.getColor(R.color.green)) {
+                        bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
+                    }
         }
+
         capitalGain > 0.0 && capitalLoss > 0.0 && capitalGain < capitalLoss -> {
             SpannableStringBuilder()
-                .color(context.getColor(R.color.green)) {
-                    bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
-                }
-                .color(context.getColor(R.color.red)) {
-                    bold {
-                        append(
-                            "$formatConcat${
-                                DecimalFormat(DecimalFormat2Digits).format(
-                                    capitalLoss
-                                )
-                            }$formatEnd"
-                        )
+                    .color(context.getColor(R.color.green)) {
+                        bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalGain)}$formatEnd") }
                     }
-                }
-                .append(" = ")
-                .color(context.getColor(R.color.red)) {
-                    bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
-                }
+                    .color(context.getColor(R.color.red)) {
+                        bold {
+                            append(
+                                    "$formatConcat${
+                                        DecimalFormat(DecimalFormat2Digits).format(
+                                                capitalLoss
+                                        )
+                                    }$formatEnd"
+                            )
+                        }
+                    }
+                    .append(" = ")
+                    .color(context.getColor(R.color.red)) {
+                        bold { append("${DecimalFormat(DecimalFormat2Digits).format(capitalTotal)}$formatEnd") }
+                    }
         }
+
         else -> {
             SpannableStringBuilder().bold {
                 append("${DecimalFormat(DecimalFormat2Digits).format(0.0)}$formatEnd")
@@ -1084,7 +1098,7 @@ fun parseStockOption(symbol: String): StockOptionData {
 
     // named groups are not yet supported
     val match = "([A-Z.]+)(7?)\\s*(\\d+)([A-Z])(\\d+)".toRegex()
-        .matchEntire(symbol.uppercase(Locale.ROOT))
+            .matchEntire(symbol.uppercase(Locale.ROOT))
 
     if (match != null && match.groups.size == 6) {
         val sym = match.groups[1]?.value
@@ -1098,8 +1112,8 @@ fun parseStockOption(symbol: String): StockOptionData {
         val dateStr = match.groups[3]?.value
         try {
             stockOption.expirationDate =
-                ZonedDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
-                    .toEpochSecond() // in GMT
+                    ZonedDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyMMdd"))
+                            .toEpochSecond() // in GMT
         } catch (e: Exception) {
         }
 
@@ -1107,13 +1121,14 @@ fun parseStockOption(symbol: String): StockOptionData {
             "C" -> {
                 stockOption.type = AssetType.CallOption.value
             }
+
             "P" -> {
                 stockOption.type = AssetType.PutOption.value
             }
         }
 
         stockOption.strikePrice = match.groups[5]?.value?.toInt()
-            ?.div(1000.0) ?: 0.0
+                ?.div(1000.0) ?: 0.0
     }
 
     return stockOption
@@ -1121,7 +1136,7 @@ fun parseStockOption(symbol: String): StockOptionData {
 
 fun isOnline(context: Context): Boolean {
     val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val networkCapabilities = connectivityManager.activeNetwork ?: return false
     val actNw = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
 
@@ -1150,10 +1165,10 @@ fun checkUrl(url: String): String {
 
 // Get the colored menu entries for the groups.
 fun getGroupsMenuList(
-    groups: List<Group>,
-    backgroundListColor: Int,
-    colorRef: Int,
-    standardGroupName: String
+        groups: List<Group>,
+        backgroundListColor: Int,
+        colorRef: Int,
+        standardGroupName: String
 ): List<SpannableString> {
     val menuStrings: MutableList<SpannableString> = mutableListOf()
 
@@ -1165,8 +1180,17 @@ fun getGroupsMenuList(
     val spacePos = space.length
     for (i in menuGroups.indices) {
         val grp: Group = menuGroups[i]
-        val s = SpannableString("$space  ${grp.name}")
-        s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
+        var s = SpannableString("$space  ${grp.name}")
+
+        // First entry with different background color.
+        if (i == 0) {
+            // And match the appearance that of the marker list header entry.
+            s = SpannableString("$space   ${grp.name} ")
+            s.setSpan(BackgroundColorSpan(backgroundListColor), 0, spacePos, 0)
+            s.setSpan(BackgroundColorSpan(backgroundListColor), spacePos + 2, s.length, 0)
+        }else{
+            s.setSpan(BackgroundColorSpan(grp.color), 0, spacePos, 0)
+        }
 
         // backgroundListColor is light color, make the group name readable
         //val textColor = if (isWhiteColor(grp.color, SharedRepository.blackColor) || grp.color == backgroundListColor) {
@@ -1217,35 +1241,35 @@ fun getMarkerSymbol(context: Context, index: Int): String {
 }
 
 fun getMarkerText(
-    context: Context,
-    index: Int,
-    setBackgroundColor: Boolean = true
+        context: Context,
+        index: Int,
+        setBackgroundColor: Boolean = true
 ): SpannableStringBuilder =
-    if (index == 0) {
-        if (setBackgroundColor) {
-            SpannableStringBuilder()
-                .backgroundColor(getMarkerColor(context, index))
-                {
-                    append(" ${getMarkerSymbol(context, index)} ")
-                }
+        if (index == 0) {
+            if (setBackgroundColor) {
+                SpannableStringBuilder()
+                        .backgroundColor(getMarkerColor(context, index))
+                        {
+                            append(" ${getMarkerSymbol(context, index)} ")
+                        }
+            } else {
+                SpannableStringBuilder()
+                        .append(" ${getMarkerSymbol(context, index)} ")
+            }
         } else {
             SpannableStringBuilder()
-                .append(" ${getMarkerSymbol(context, index)} ")
+                    .backgroundColor(getMarkerColor(context, index))
+                    {
+                        append("${getMarkerSymbol(context, index)}          ")
+                    }
+                    .backgroundColor(Color.WHITE)
+                    {
+                        color(Color.BLACK)
+                        {
+                            append(" $index ")
+                        }
+                    }
         }
-    } else {
-        SpannableStringBuilder()
-            .backgroundColor(getMarkerColor(context, index))
-            {
-                append("${getMarkerSymbol(context, index)}          ")
-            }
-            .backgroundColor(Color.WHITE)
-            {
-                color(Color.BLACK)
-                {
-                    append(" $index ")
-                }
-            }
-    }
 
 fun isWhiteColor(color: Int, colorRef: Int): Boolean {
     val r = color shr 16 and 0xff
@@ -1269,7 +1293,7 @@ fun isSimilarColor(color: Int, colorRef: Int): Boolean {
 
 fun setAppTheme(context: Context) {
     val sharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+            PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
     val appTheme = sharedPreferences.getString("app_theme", "0")
 
     if (appTheme != null) {
@@ -1277,12 +1301,15 @@ fun setAppTheme(context: Context) {
             "0" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
+
             "1" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
+
             "2" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
+
             "3" -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
             }
@@ -1292,7 +1319,7 @@ fun setAppTheme(context: Context) {
 
 fun getAppThemeColorRedGreen(context: Context) {
     val sharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+            PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
 
     val appThemeColorRedGreen = sharedPreferences.getString("app_theme_textcolor_redgreen", "1")
 
@@ -1302,29 +1329,29 @@ fun getAppThemeColorRedGreen(context: Context) {
 }
 
 fun saveTextToFile(
-    text: String,
-    msg: String,
-    context: Context,
-    exportJsonUri: Uri
+        text: String,
+        msg: String,
+        context: Context,
+        exportJsonUri: Uri
 ) {
     // Write the text string.
     try {
         context.contentResolver.openOutputStream(exportJsonUri)
-            ?.use { output ->
-                output as FileOutputStream
-                output.channel.truncate(0)
-                output.write(text.toByteArray())
-            }
+                ?.use { output ->
+                    output as FileOutputStream
+                    output.channel.truncate(0)
+                    output.write(text.toByteArray())
+                }
 
         Toast.makeText(context, msg, Toast.LENGTH_LONG)
-            .show()
+                .show()
 
     } catch (e: Exception) {
         Toast.makeText(
-            context, context.getString(R.string.export_error, e.message),
-            Toast.LENGTH_LONG
+                context, context.getString(R.string.export_error, e.message),
+                Toast.LENGTH_LONG
         )
-            .show()
+                .show()
         Log.d("Export JSON error", "Exception: $e")
     }
 }
@@ -1367,13 +1394,14 @@ fun frac(x: Double): Pair<Int?, Int> {
 }
 
 fun updateFilterList(
-    context: Context,
-    filterDataViewModel: FilterDataViewModel,
-    preferences: SharedPreferences? = null
+        context: Context,
+        filterDataViewModel: FilterDataViewModel,
+        preferences: SharedPreferences? = null
 ) {
 
     val sharedPreferences =
-        preferences ?: PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
+            preferences
+                    ?: PreferenceManager.getDefaultSharedPreferences(context /* Activity context */)
     val selectedFilter = sharedPreferences.getString("selectedFilter", "")
     val filterActive = sharedPreferences.getBoolean("filterActive", false)
     val filterData = sharedPreferences.getString("filterSetting", "")
@@ -1384,12 +1412,12 @@ fun updateFilterList(
 }
 
 fun setGroupBackground(
-    context: Context,
-    marker: Int,
-    color: Int,
-    textViewGroup: TextView,
-    textViewGroupSep: TextView,
-    textViewGroupMarker: TextView
+        context: Context,
+        marker: Int,
+        color: Int,
+        textViewGroup: TextView,
+        textViewGroupSep: TextView,
+        textViewGroupMarker: TextView
 ) {
     // Set top textview to group color
     setBackgroundColor(textViewGroup, color)
@@ -1406,7 +1434,7 @@ fun setGroupBackground(
 
         // Set separator textview to background color.
         textViewGroupSep.setBackgroundColor(
-            context.getColor(R.color.backgroundListColor)
+                context.getColor(R.color.backgroundListColor)
         )
 
         // Set bottom textview to marker cmolor.
