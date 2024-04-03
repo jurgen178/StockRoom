@@ -26,6 +26,7 @@ import android.view.View;
 
 import com.thecloudsite.stockroom.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ public class MapLayoutView extends View {
     private final Paint mTextPaint;
     private final android.graphics.Rect drawingRect = new android.graphics.Rect(0, 0, 0, 0);
     private OnClickCallback onClickCallback;
+    private List<Mappable> emptyList = new ArrayList<>();
 
     public interface OnClickCallback {
         void run(String symbol);
@@ -136,10 +138,9 @@ public class MapLayoutView extends View {
         // and use Reg/Green instead.
         boolean sameBackgroundColor = false;
 
-        // Don't use small rectangles.
-        List<Mappable> items = Arrays.stream(mappableItems)
+        List<Mappable> items = mappableItems.length > 0 ? Arrays.stream(mappableItems)
                 .filter(mappableItem -> ((AndroidMapItem) mappableItem).getBoundsRectF().width() > 40)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()) : emptyList;
 
         if (items.size() > 1) {
             Integer firstBackgroundColor = ((AndroidMapItem) items.get(0)).getBackgroundColor();
