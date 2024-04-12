@@ -138,51 +138,53 @@ public class MapLayoutView extends View {
         // and use Reg/Green instead.
         boolean sameBackgroundColor = false;
 
-        List<Mappable> items = mappableItems.length > 0 ? Arrays.stream(mappableItems)
-                .filter(mappableItem -> ((AndroidMapItem) mappableItem).getBoundsRectF().width() > 40)
-                .collect(Collectors.toList()) : emptyList;
+        if(mappableItems != null) {
+            List<Mappable> items = mappableItems.length > 0 ? Arrays.stream(mappableItems)
+                    .filter(mappableItem -> ((AndroidMapItem) mappableItem).getBoundsRectF().width() > 40)
+                    .collect(Collectors.toList()) : emptyList;
 
-        if (items.size() > 1) {
-            Integer firstBackgroundColor = ((AndroidMapItem) items.get(0)).getBackgroundColor();
-            // Color must be different than the -1 value for Red/green colors.
-            if (firstBackgroundColor != -1) {
-                sameBackgroundColor = true;
-                for (Mappable displayableMappableItem : items) {
+            if (items.size() > 1) {
+                Integer firstBackgroundColor = ((AndroidMapItem) items.get(0)).getBackgroundColor();
+                // Color must be different than the -1 value for Red/green colors.
+                if (firstBackgroundColor != -1) {
+                    sameBackgroundColor = true;
+                    for (Mappable displayableMappableItem : items) {
 
-                    AndroidMapItem item = (AndroidMapItem) displayableMappableItem;
-                    Integer color = item.getBackgroundColor();
+                        AndroidMapItem item = (AndroidMapItem) displayableMappableItem;
+                        Integer color = item.getBackgroundColor();
 
-                    // Exclude Gray, as it is used for selecting the item.
-                    if (!color.equals(Color.GRAY) && !color.equals(firstBackgroundColor)) {
-                        sameBackgroundColor = false;
-                        break;
+                        // Exclude Gray, as it is used for selecting the item.
+                        if (!color.equals(Color.GRAY) && !color.equals(firstBackgroundColor)) {
+                            sameBackgroundColor = false;
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        // Draw all the rectangles and their labels
-        for (Mappable mappableItem : items) {
+            // Draw all the rectangles and their labels
+            for (Mappable mappableItem : items) {
 
-            AndroidMapItem item = (AndroidMapItem) mappableItem;
-            RectF rectF = item.getBoundsRectF();
+                AndroidMapItem item = (AndroidMapItem) mappableItem;
+                RectF rectF = item.getBoundsRectF();
 
-            Integer backgroundColor = item.getBackgroundColor();
+                Integer backgroundColor = item.getBackgroundColor();
 
-            // Color in Red/Green when all background colors are the same or backgroundColor is -1
-            // Exclude Gray, as it is used for selecting the item.
-            if (!backgroundColor.equals(Color.GRAY))
-                if (sameBackgroundColor || backgroundColor == -1) {
-                    if (item.getValue() >= 0.0) {
-                        backgroundColor = item.getColorGreen();
-                    } else {
-                        backgroundColor = item.getColorRed();
+                // Color in Red/Green when all background colors are the same or backgroundColor is -1
+                // Exclude Gray, as it is used for selecting the item.
+                if (!backgroundColor.equals(Color.GRAY))
+                    if (sameBackgroundColor || backgroundColor == -1) {
+                        if (item.getValue() >= 0.0) {
+                            backgroundColor = item.getColorGreen();
+                        } else {
+                            backgroundColor = item.getColorRed();
+                        }
                     }
-                }
 
-            Integer textColor = item.getTextColor();
-            drawRectangle(canvas, rectF, backgroundColor);
-            drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF, backgroundColor, textColor);
+                Integer textColor = item.getTextColor();
+                drawRectangle(canvas, rectF, backgroundColor);
+                drawText(canvas, item.getLabel(), item.getText(), item.getChange(), rectF, backgroundColor, textColor);
+            }
         }
     }
 

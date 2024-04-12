@@ -509,19 +509,23 @@ object OkxSymbolsApiFactory : StockMarketDataApiFactoryBase("https://www.okx.com
 
 object StockYahooChartDataApiFactory : StockMarketDataApiFactoryYahooBase("https://query2.finance.yahoo.com/v8/finance/") {
 
+    // Neu
+    // https://query1.finance.yahoo.com/v8/finance/chart/aapl?range=5y&interval=5d
+
+    // Alt
     // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
     // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
 
     override fun assignApi() {
         chartDataApi =
                 try {
-                    retrofit().create(YahooApiChartData::class.java)
+                    retrofit().create(YahooApiChartData2::class.java)
                 } catch (e: Exception) {
                     null
                 }
     }
 
-    var chartDataApi: YahooApiChartData? = null
+    var chartDataApi: YahooApiChartData2? = null
 }
 
 object StockCoingeckoChartDataApiFactory : StockMarketDataApiFactoryBase("https://api.coingecko.com/api/v3/coins/") {

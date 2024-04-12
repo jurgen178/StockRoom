@@ -915,22 +915,120 @@ no file will be written. To write to stdout, set the file name to a single dash,
 //    suspend fun getPhotos(): String
 //}
 
-interface YahooApiChartData {
+//interface YahooApiChartData {
+//    // Altes format bis 04/2024
+//
+//    // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
+//    // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
+//    // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
+//    @GET("chart/")
+//    fun getYahooChartDataAsync(
+//        @Query(
+//            value = "symbol"
+//        ) symbol: String,
+//        @Query(
+//            value = "interval"
+//        ) interval: String,
+//        @Query(
+//            value = "range"
+//        ) range: String,
+//        @Query(
+//                value = "crumb"
+//        ) crumb: String
+//    ): Deferred<Response<YahooChartData>>
+//}
+
+/*
+{
+    "chart": {
+        "result": [
+            {
+                "meta": {
+                    "currency": "USD",
+                    "symbol": "AAPL",
+                    "exchangeName": "NMS",
+                    "fullExchangeName": "NasdaqGS",
+                    "instrumentType": "EQUITY",
+                    "firstTradeDate": 345479400,
+                    "regularMarketTime": 1712946511,
+                    "hasPrePostMarketData": true,
+                    "gmtoffset": -14400,
+                    "timezone": "EDT",
+                    "exchangeTimezoneName": "America/New_York",
+                    "regularMarketPrice": 175.91,
+                    "fiftyTwoWeekHigh": 178.36,
+                    "fiftyTwoWeekLow": 174.21,
+                    "regularMarketDayHigh": 178.36,
+                    "regularMarketDayLow": 174.21,
+                    "regularMarketVolume": 71069885,
+                    "chartPreviousClose": 49.717,
+                    "priceHint": 2,
+                    "currentTradingPeriod": {
+                        "pre": {
+                            "timezone": "EDT",
+                            "end": 1712928600,
+                            "start": 1712908800,
+                            "gmtoffset": -14400
+                        },
+                        "regular": {
+                            "timezone": "EDT",
+                            "end": 1712952000,
+                            "start": 1712928600,
+                            "gmtoffset": -14400
+                        },
+                        "post": {
+                            "timezone": "EDT",
+                            "end": 1712966400,
+                            "start": 1712952000,
+                            "gmtoffset": -14400
+                        }
+                    },
+                    "dataGranularity": "5d",
+                    "range": "5y",
+                    "validRanges": [
+                        "1d",
+                        "5d",
+                        "1mo",
+                        "3mo",
+                        "6mo",
+                        "1y",
+                        "2y",
+                        "5y",
+                        "10y",
+                        "ytd",
+                        "max"
+                    ]
+                },
+                "timestamp": [
+                    1555075800,
+                    1555507800,
+                    1555939800,
+ */
+interface YahooApiChartData2 {
+    // Neues format seit 04/2024
+    // https://query1.finance.yahoo.com/v8/finance/chart/msft
+    // https://query1.finance.yahoo.com/v8/finance/chart/aapl?range=5y&interval=5d
+
+    // Altes format
     // https://query1.finance.yahoo.com/v7/finance/chart/?symbol=aapl&interval=1d&range=3mo
-    // https://query1.finance.yahoo.com/v8/finance/chart/?symbol=aapl&interval=1d&range=3mo
+
     // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
     // Valid ranges: ["1d","5d","1mo","3mo","6mo","1y","2y","5y","ytd","max"]
-    @GET("chart/")
-    fun getYahooChartDataAsync(
-        @Query(
-            value = "symbol"
-        ) symbol: String,
-        @Query(
-            value = "interval"
-        ) interval: String,
-        @Query(
-            value = "range"
-        ) range: String
+
+    @GET("chart/{symbol}")
+    fun getYahooChartDataAsync2(
+            @Path(
+                    value = "symbol"
+            ) symbol: String,
+            @Query(
+                    value = "interval"
+            ) interval: String,
+            @Query(
+                    value = "range"
+            ) range: String,
+            @Query(
+                    value = "crumb"
+            ) crumb: String
     ): Deferred<Response<YahooChartData>>
 }
 

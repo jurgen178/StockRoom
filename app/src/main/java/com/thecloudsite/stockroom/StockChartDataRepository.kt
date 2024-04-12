@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class StockChartDataRepository(
-    private val yahooApi: () -> YahooApiChartData?,
+    private val yahooApi: () -> YahooApiChartData2?,
     private val coingeckoApi: () -> CoingeckoApiChartData?,
     private val coinpaprikaApi: () -> CoinpaprikaApiChartData?,
     private val geminiApi: () -> GeminiApiChartData?,
@@ -55,19 +55,23 @@ class StockChartDataRepository(
     ): List<StockDataEntry> {
 
         val stockDataEntries: MutableList<StockDataEntry> = mutableListOf()
-        val api: YahooApiChartData = yahooApi() ?: return emptyList()
+        val api: YahooApiChartData2 = yahooApi() ?: return emptyList()
+        var errorMsg = ""
+        val crumb: String = SharedRepository.yahooCrumb.value ?: ""
+
+        if (crumb.isNotEmpty()) {
 
         val quoteResponse: YahooChartData? = try {
             apiCall(
                 call = {
                     updateCounter()
-                    api.getYahooChartDataAsync(stockSymbol.symbol, interval, range)
+                    api.getYahooChartDataAsync2(stockSymbol.symbol, interval, range, crumb)
                         .await()
                 },
                 errorMessage = "Error getting finance data."
             )
         } catch (e: Exception) {
-            Log.d("StockChartDataRepository.getYahooChartDataAsync() failed", "Exception=$e")
+            Log.d("StockChartDataRepository.getYahooChartDataAsync2() failed", "Exception=$e")
             null
         }
 
@@ -106,6 +110,9 @@ class StockChartDataRepository(
                     }
                 }
             }
+        }
+        } else {
+            errorMsg = "Empty crumb value, queryYahooStockData skipped."
         }
 
         return stockDataEntries.toList()
