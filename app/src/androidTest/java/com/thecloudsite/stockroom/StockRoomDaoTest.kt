@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package io.bitfabrik.stockroom
 
 import android.content.Context
 import android.graphics.Color
@@ -22,15 +22,15 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.Dividend
-import com.thecloudsite.stockroom.database.Event
-import com.thecloudsite.stockroom.database.Group
-import com.thecloudsite.stockroom.database.StockDBdata
-import com.thecloudsite.stockroom.database.StockRoomDao
-import com.thecloudsite.stockroom.database.StockRoomDatabase
-import com.thecloudsite.stockroom.database.StoreData
-import com.thecloudsite.stockroom.utils.epsilon
+import io.bitfabrik.stockroom.database.Asset
+import io.bitfabrik.stockroom.database.Dividend
+import io.bitfabrik.stockroom.database.Event
+import io.bitfabrik.stockroom.database.Group
+import io.bitfabrik.stockroom.database.StockDBdata
+import io.bitfabrik.stockroom.database.StockRoomDao
+import io.bitfabrik.stockroom.database.StockRoomDatabase
+import io.bitfabrik.stockroom.database.StoreData
+import io.bitfabrik.stockroom.utils.epsilon
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals

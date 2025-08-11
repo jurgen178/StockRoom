@@ -209,14 +209,14 @@
             android:layout_marginEnd="4dp"
             >
 
-          <com.thecloudsite.stockroom.CustomCandleStickChart
+          <io.bitfabrik.stockroom.CustomCandleStickChart
               android:id="@+id/candleStickChart"
               android:layout_width="match_parent"
               android:layout_height="250dp"
               android:visibility="gone"
               />
 
-          <com.thecloudsite.stockroom.CustomLineChart
+          <io.bitfabrik.stockroom.CustomLineChart
               android:id="@+id/lineChart"
               android:layout_width="match_parent"
               android:layout_height="250dp"
@@ -551,7 +551,7 @@
             android:layout_margin="20dp"
             >
 
-          <com.thecloudsite.stockroom.utils.PickerKnob
+          <io.bitfabrik.stockroom.utils.PickerKnob
               android:id="@+id/picker_knob"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -588,7 +588,7 @@
               app:layout_constraintBottom_toBottomOf="parent"
               />
 
-          <com.thecloudsite.stockroom.utils.RotaryControl
+          <io.bitfabrik.stockroom.utils.RotaryControl
               android:id="@+id/rotaryControl"
               android:layout_width="0dp"
               android:layout_height="0dp"

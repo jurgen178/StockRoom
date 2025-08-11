@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:529593439965:android:79553340af16eb44a76d34",
         "android_client_info": {
-          "package_name": "com.thecloudsite.stockroom"
+          "package_name": "io.bitfabrik.stockroom"
         }
       },
       "oauth_client": [

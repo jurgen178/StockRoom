@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package io.bitfabrik.stockroom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.utils.*
+import io.bitfabrik.stockroom.database.Asset
+import io.bitfabrik.stockroom.utils.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

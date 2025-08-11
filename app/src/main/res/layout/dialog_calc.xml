@@ -17,7 +17,7 @@
         android:padding="8dp"
         >
 
-      <com.thecloudsite.stockroom.ColorSyntaxEditText
+      <io.bitfabrik.stockroom.ColorSyntaxEditText
           android:id="@+id/calc_code"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

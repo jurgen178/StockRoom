@@ -11,7 +11,7 @@
       android:layout_height="match_parent"
       >
 
-    <com.thecloudsite.stockroom.calc.CustomSpinner
+    <io.bitfabrik.stockroom.calc.CustomSpinner
         android:id="@+id/calc_stocks"
         android:text="@string/calc_stocks"
         app:layout_constraintBottom_toTopOf="@id/guidelineF2"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package io.bitfabrik.stockroom
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.thecloudsite.stockroom.database.StockRoomDatabase
+import io.bitfabrik.stockroom.database.StockRoomDatabase
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

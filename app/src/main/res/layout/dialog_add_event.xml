@@ -77,7 +77,7 @@
             />
       </com.google.android.material.textfield.TextInputLayout>
 
-      <com.thecloudsite.stockroom.CustomDatePicker
+      <io.bitfabrik.stockroom.CustomDatePicker
           android:id="@+id/datePickerEventDate"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
           app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
           />
 
-      <com.thecloudsite.stockroom.CustomTimePicker
+      <io.bitfabrik.stockroom.CustomTimePicker
           android:id="@+id/datePickerEventTime"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

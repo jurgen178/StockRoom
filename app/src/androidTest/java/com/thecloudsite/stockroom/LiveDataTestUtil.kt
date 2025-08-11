@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package io.bitfabrik.stockroom
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

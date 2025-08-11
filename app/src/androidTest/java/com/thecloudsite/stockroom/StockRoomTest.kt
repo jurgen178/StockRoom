@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package io.bitfabrik.stockroom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import com.google.type.DateTime
-import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.Dividend
-import com.thecloudsite.stockroom.database.Event
-import com.thecloudsite.stockroom.database.StockDBdata
-import com.thecloudsite.stockroom.utils.DecimalFormat0To4Digits
-import com.thecloudsite.stockroom.utils.epsilon
-import com.thecloudsite.stockroom.utils.validateDouble
+import io.bitfabrik.stockroom.database.Asset
+import io.bitfabrik.stockroom.database.Dividend
+import io.bitfabrik.stockroom.database.Event
+import io.bitfabrik.stockroom.database.StockDBdata
+import io.bitfabrik.stockroom.utils.DecimalFormat0To4Digits
+import io.bitfabrik.stockroom.utils.epsilon
+import io.bitfabrik.stockroom.utils.validateDouble
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test

@@ -138,7 +138,7 @@
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintHorizontal_bias="0.0"
           />
-      <com.thecloudsite.stockroom.CustomDatePicker
+      <io.bitfabrik.stockroom.CustomDatePicker
           android:id="@+id/datePickerDividendDate"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
           app:layout_constraintEnd_toStartOf="@+id/guideline1"
           app:layout_constraintHorizontal_bias="0.0"
           />
-      <com.thecloudsite.stockroom.CustomDatePicker
+      <io.bitfabrik.stockroom.CustomDatePicker
           android:id="@+id/datePickerDividendExDate"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

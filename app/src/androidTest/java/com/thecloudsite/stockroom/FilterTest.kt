@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.thecloudsite.stockroom
+package io.bitfabrik.stockroom
 
 import android.text.SpannableStringBuilder
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.thecloudsite.stockroom.database.Asset
-import com.thecloudsite.stockroom.database.Dividend
-import com.thecloudsite.stockroom.database.Event
-import com.thecloudsite.stockroom.database.StockDBdata
-import com.thecloudsite.stockroom.utils.epsilon
+import io.bitfabrik.stockroom.database.Asset
+import io.bitfabrik.stockroom.database.Dividend
+import io.bitfabrik.stockroom.database.Event
+import io.bitfabrik.stockroom.database.StockDBdata
+import io.bitfabrik.stockroom.utils.epsilon
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
