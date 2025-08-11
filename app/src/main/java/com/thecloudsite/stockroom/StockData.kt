@@ -870,11 +870,12 @@ interface YahooApiRawMarketData {
 
 interface YahooCookieApiService {
     // https://finance.yahoo.com
-    @GET(" ")
+    @GET("/")
     suspend fun getCookie(): Response<String?>
 
     @POST
-    suspend fun cookieConsent(@Url url: String?, @Body body: RequestBody): Response<String?>}
+    suspend fun cookieConsent(@Url url: String?, @Body body: RequestBody): Response<String?>
+}
 
 interface YahooCrumbApiService {
     // https://query1.finance.yahoo.com/v1/test/getcrumb
