@@ -23,8 +23,8 @@ android {
         applicationId 'io.bitfabrik.stockroom'
         minSdkVersion 34
         targetSdkVersion 34
-        versionCode 19
-        versionName "19"
+        versionCode 20
+        versionName "20"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
