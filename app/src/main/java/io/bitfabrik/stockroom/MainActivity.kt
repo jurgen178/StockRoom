@@ -43,11 +43,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.get
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import io.bitfabrik.stockroom.R.array
 import io.bitfabrik.stockroom.StockRoomViewModel.AlertData
 import io.bitfabrik.stockroom.database.Asset
@@ -500,7 +497,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateRemoteConfig() {
         // Get Remote Config instance.
         // [START get_remote_config_instance]
-        remoteConfig = Firebase.remoteConfig
+        remoteConfig = FirebaseRemoteConfig.getInstance()
         // [END get_remote_config_instance]
 
         // Create a Remote Config Setting to enable developer mode, which you can use to increase
@@ -508,13 +505,13 @@ class MainActivity : AppCompatActivity() {
         // Setting to set the minimum fetch interval.
         // [START enable_dev_mode]
 
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) {
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setMinimumFetchIntervalInSeconds(if (BuildConfig.DEBUG) {
                 1
             } else {
                 3600
-            }
-        }
+            })
+            .build()
         remoteConfig.setConfigSettingsAsync(configSettings)
         // [END enable_dev_mode]
 
@@ -534,11 +531,11 @@ class MainActivity : AppCompatActivity() {
                     stockRoomViewModel.logDebug("Config activated.")
 
                     // Update configuration
-                    val marketDataUrl = remoteConfig[STOCKMARKETDATA_URL].asString()
+                    val marketDataUrl = remoteConfig.getString(STOCKMARKETDATA_URL)
                     StockMarketDataApiFactory.update(marketDataUrl)
                     //stockRoomViewModel.logDebug("Remote Config [url=$marketDataUrl]")
 
-                    val chartDataUrl = remoteConfig[STOCKCHARTDATA_URL].asString()
+                    val chartDataUrl = remoteConfig.getString(STOCKCHARTDATA_URL)
                     StockYahooChartDataApiFactory.update(chartDataUrl)
                     //stockRoomViewModel.logDebug("Remote Config [url=$chartDataUrl]")
 
@@ -558,10 +555,10 @@ class MainActivity : AppCompatActivity() {
 //            GoogleAllNewsApiFactory.update(googleAllNewsUrl)
 //            //stockRoomViewModel.logDebug("Remote Config [url=$googleNewsUrl]")
 
-                    val userMsgTitle = remoteConfig[USER_MSG_TITLE].asString()
-                    val userMsg = remoteConfig[USER_MSG].asString()
+                    val userMsgTitle = remoteConfig.getString(USER_MSG_TITLE)
+                    val userMsg = remoteConfig.getString(USER_MSG)
                     if (userMsgTitle.isNotEmpty() && userMsg.isNotEmpty()) {
-                        AlertDialog.Builder(this)
+                        AlertDialog.Builder(this@MainActivity)
                             .setTitle(userMsgTitle)
                             .setMessage(userMsg)
                             .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }

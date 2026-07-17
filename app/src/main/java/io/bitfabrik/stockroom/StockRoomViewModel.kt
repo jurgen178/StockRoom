@@ -283,6 +283,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
             Pair(onlineDataTimerDelay, MarketState.UNKNOWN)
     private var nextUpdate: Long = onlineDataTimerDelay
     private var onlineUpdateTime: Long = onlineDataTimerDelay
+    private val onlineLock = Any()
     private var isActive = false
     private var onlineNow = false
     private var onlineBefore = false
@@ -629,7 +630,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun runOnlineTask() {
         if (SharedRepository.dbDataValid) {
-            synchronized(onlineUpdateTime)
+            synchronized(onlineLock)
             {
                 onlineTask()
             }
@@ -638,7 +639,7 @@ class StockRoomViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun runOnlineTaskNow(msg: String = "") {
         if (SharedRepository.dbDataValid) {
-            synchronized(onlineUpdateTime)
+            synchronized(onlineLock)
             {
                 if (msg.isNotEmpty()) {
                     logDebug(msg)
